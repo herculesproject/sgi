@@ -3,9 +3,9 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.mapper.ConvocatoriaConceptoGastoMapper;
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
+import org.crue.hercules.sgi.csp.mapper.ConvocatoriaConceptoGastoMapper;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -16,17 +16,14 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaConceptoGastoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * ConvocatoriaConceptoGastoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
 
   @Mock
@@ -41,11 +38,13 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   private ConvocatoriaConceptoGastoMapper convocatoriaConceptoGastoMapper;
   @Mock
   private ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  @Mock
+  private ConvocatoriaService convocatoriaService;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaConceptoGastoServiceImpl(repository, convocatoriaRepository, conceptoGastoRepository,
-        convocatoriaConceptoGastoMapper, convocatoriaConceptoGastoCodigoEcRepository);
+        convocatoriaConceptoGastoMapper, convocatoriaConceptoGastoCodigoEcRepository, convocatoriaService);
   }
 
   @Test
@@ -55,6 +54,8 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(conceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConceptoGasto()));
     BDDMockito
@@ -119,6 +120,28 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaConceptoGasto when modificable returns False
+    ConvocatoriaConceptoGasto newConvocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(1L);
+    newConvocatoriaConceptoGasto.setId(null);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConvocatoria()));
+    BDDMockito.given(conceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConceptoGasto()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaConceptoGasto
+        () -> service.create(newConvocatoriaConceptoGasto))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede crear ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
   public void update_ReturnsConvocatoriaConceptoGasto() {
     // given: Un nuevo ConvocatoriaConceptoGasto con el nombre actualizado
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(1L);
@@ -128,6 +151,9 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
 
     BDDMockito.given(conceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaConceptoGasto.getConceptoGasto()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaConceptoGasto));
@@ -187,6 +213,10 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaConceptoGasto));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
+
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaConceptoGasto>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -206,11 +236,36 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaConceptoGasto when modificable return false
+    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(1L);
+
+    BDDMockito.given(conceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaConceptoGasto.getConceptoGasto()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoriaConceptoGasto));
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaConceptoGasto
+        () -> service.update(convocatoriaConceptoGasto))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede modificar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
   public void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing convocatoriaConceptoGasto
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaConceptoGasto(id)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -237,13 +292,31 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaConceptoGastoNotFoundException.class);
+  }
+
+  @Test
+  public void delete_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: existing ConvocatoriaConceptoGasto when modificable returns false
+    Long id = 1L;
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaConceptoGasto(id)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede eliminar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

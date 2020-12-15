@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadConvocanteNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
@@ -17,12 +18,10 @@ import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaEntidadConvocanteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,23 +31,23 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * ConvocatoriaEntidadConvocanteServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaEntidadConvocanteRepository repository;
-
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
-
   @Mock
   private ProgramaRepository programaRepository;
+  @Mock
+  private ConvocatoriaService convocatoriaService;
 
   private ConvocatoriaEntidadConvocanteService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaEntidadConvocanteServiceImpl(repository, convocatoriaRepository, programaRepository);
+    service = new ConvocatoriaEntidadConvocanteServiceImpl(repository, convocatoriaRepository, programaRepository,
+        convocatoriaService);
   }
 
   @Test
@@ -58,6 +57,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(programaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante.getPrograma()));
     BDDMockito
@@ -133,6 +134,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(convocatoriaEntidadConvocanteExistente));
@@ -153,6 +156,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
@@ -173,6 +178,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
@@ -187,6 +194,27 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaEntidadConvocante when modificable returns false
+    ConvocatoriaEntidadConvocante newConvocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    newConvocatoriaEntidadConvocante.setId(null);
+    newConvocatoriaEntidadConvocante.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaEntidadConvocante.getConvocatoria()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaEntidadConvocante
+        () -> service.create(newConvocatoriaEntidadConvocante))
+        // then: throw exception as modificable return false
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede crear ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
   public void update_ReturnsConvocatoriaEntidadConvocante() {
     // given: Un nuevo ConvocatoriaEntidadConvocante con el nombre actualizado
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
@@ -197,6 +225,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
 
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
@@ -245,6 +275,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(convocatoriaEntidadConvocanteExistente));
@@ -265,6 +297,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
@@ -290,6 +324,9 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
 
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
+
     BDDMockito
         .given(repository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
@@ -305,11 +342,35 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaEntidadConvocante when modificable returns false
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    convocatoriaEntidadConvocante.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEntidadConvocante));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaEntidadConvocante
+        () -> service.update(convocatoriaEntidadConvocante))
+        // then: throw exception as Convocatoria is registrada and has Solicitudes or
+        // Proyectos
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede modificar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
   public void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing ConvocatoriaEntidadConvocante
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(id)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -324,13 +385,31 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaEntidadConvocanteNotFoundException.class);
+  }
+
+  @Test
+  public void delete_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: existing ConvocatoriaEntidadConvocante when modificable returns false
+    Long id = 1L;
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(id)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: throw exception as modificable returns false
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede eliminar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

@@ -36,7 +36,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V")));
+        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V", "CSP-CONV-C")));
 
     HttpEntity<ConvocatoriaPeriodoSeguimientoCientifico> request = new HttpEntity<>(entity, headers);
     return request;
@@ -48,7 +48,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V")));
+        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V", "CSP-CONV-C")));
 
     HttpEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> request = new HttpEntity<>(entity, headers);
     return request;

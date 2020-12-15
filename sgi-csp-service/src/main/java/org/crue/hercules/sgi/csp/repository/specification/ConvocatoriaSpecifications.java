@@ -1,9 +1,18 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematica_;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -11,19 +20,10 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase_;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
-import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.AreaTematica_;
-import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion_;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class ConvocatoriaSpecifications {
 
@@ -172,5 +172,4 @@ public class ConvocatoriaSpecifications {
       return root.get(Convocatoria_.id).in(queryConfiguracionSolicitud);
     };
   }
-
 }

@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepo
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaPeriodoJustificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -37,12 +38,14 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
 
   private final ConvocatoriaPeriodoJustificacionRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
+  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaPeriodoJustificacionServiceImpl(
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
-      ConvocatoriaRepository convocatoriaRepository) {
+      ConvocatoriaRepository convocatoriaRepository, ConvocatoriaService convocatoriaService) {
     this.repository = convocatoriaPeriodoJustificacionRepository;
     this.convocatoriaRepository = convocatoriaRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -69,6 +72,10 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
 
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
+
+    // comprobar si convocatoria es modificable
+    Assert.isTrue(convocatoriaService.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef()),
+        "No se puede modificar ConvocatoriaPeriodoJustificacion. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificacionesBD = repository
         .findAllByConvocatoriaId(convocatoriaId);

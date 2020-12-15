@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadFinanciadoraSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -38,15 +39,17 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
   private final ConvocatoriaRepository convocatoriaRepository;
   private final FuenteFinanciacionRepository fuenteFinanciacionRepository;
   private final TipoFinanciacionRepository tipoFinanciacionRepository;
+  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaEntidadFinanciadoraServiceImpl(
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
       ConvocatoriaRepository convocatoriaRepository, FuenteFinanciacionRepository fuenteFinanciacionRepository,
-      TipoFinanciacionRepository tipoFinanciacionRepository) {
+      TipoFinanciacionRepository tipoFinanciacionRepository, ConvocatoriaService convocatoriaService) {
     this.repository = convocatoriaEntidadFinanciadoraRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.fuenteFinanciacionRepository = fuenteFinanciacionRepository;
     this.tipoFinanciacionRepository = tipoFinanciacionRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -76,6 +79,12 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     convocatoriaEntidadFinanciadora.setConvocatoria(
         convocatoriaRepository.findById(convocatoriaEntidadFinanciadora.getConvocatoria().getId()).orElseThrow(
             () -> new ConvocatoriaNotFoundException(convocatoriaEntidadFinanciadora.getConvocatoria().getId())));
+
+    // comprobar si convocatoria es modificable
+    Assert.isTrue(
+        convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
+            convocatoriaEntidadFinanciadora.getConvocatoria().getUnidadGestionRef()),
+        "No se puede crear ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     if (convocatoriaEntidadFinanciadora.getFuenteFinanciacion() != null) {
       if (convocatoriaEntidadFinanciadora.getFuenteFinanciacion().getId() == null) {
@@ -173,6 +182,12 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
                 "El TipoFinanciacion debe estar Activo");
           }
 
+          // comprobar si convocatoria es modificable
+          Assert.isTrue(
+              convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
+                  convocatoriaEntidadFinanciadora.getConvocatoria().getUnidadGestionRef()),
+              "No se puede modificar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
           convocatoriaEntidadFinanciadora
               .setFuenteFinanciacion(convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion());
           convocatoriaEntidadFinanciadora
@@ -200,9 +215,16 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     Assert.notNull(id,
         "ConvocatoriaEntidadFinanciadora id no puede ser null para desactivar un ConvocatoriaEntidadFinanciadora");
 
-    if (!repository.existsById(id)) {
-      throw new ConvocatoriaEntidadFinanciadoraNotFoundException(id);
-    }
+    repository.findById(id).map(convocatoriaEntidadFinanciadora -> {
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
+              convocatoriaEntidadFinanciadora.getConvocatoria().getUnidadGestionRef()),
+          "No se puede eliminar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
+      return convocatoriaEntidadFinanciadora;
+    }).orElseThrow(() -> new ConvocatoriaEntidadFinanciadoraNotFoundException(id));
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");

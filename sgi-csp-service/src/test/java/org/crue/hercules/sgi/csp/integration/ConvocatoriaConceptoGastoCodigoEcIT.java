@@ -45,7 +45,7 @@ public class ConvocatoriaConceptoGastoCodigoEcIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CGAS-B", "CSP-CGAS-C", "CSP-CGAS-E", "CSP-CGAS-V")));
+        tokenBuilder.buildToken("user", "CSP-CGAS-B", "CSP-CGAS-C", "CSP-CGAS-E", "CSP-CGAS-V", "CSP-CONV-C")));
 
     HttpEntity<ConvocatoriaConceptoGastoCodigoEc> request = new HttpEntity<>(entity, headers);
     return request;

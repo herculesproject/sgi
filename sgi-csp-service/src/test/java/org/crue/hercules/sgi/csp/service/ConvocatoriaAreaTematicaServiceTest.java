@@ -17,12 +17,10 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaAreaTematicaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -31,7 +29,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-@ExtendWith(MockitoExtension.class)
 public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
   @Mock
@@ -40,13 +37,15 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   private ConvocatoriaRepository convocatoriaRepository;
   @Mock
   private AreaTematicaRepository areaTematicaRepository;
+  @Mock
+  private ConvocatoriaService convocatoriaService;
 
   private ConvocatoriaAreaTematicaService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaAreaTematicaServiceImpl(convocatoriaAreaTematicaRepository, convocatoriaRepository,
-        areaTematicaRepository);
+        areaTematicaRepository, convocatoriaService);
   }
 
   @Test
@@ -56,6 +55,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematica()));
     BDDMockito.given(convocatoriaAreaTematicaRepository
@@ -97,7 +98,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
         // when: create ConvocatoriaAreaTematica
         () -> service.create(newConvocatoriaAreaTematica))
         // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Id tiene que ser null para crear ConvocatoriaAreaTematica");
   }
 
   @Test
@@ -109,7 +111,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
         // when: create ConvocatoriaAreaTematica
         () -> service.create(newConvocatoriaAreaTematica))
         // then: throw exception as ConvocatoriaId is null
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaAreaTematica");
   }
 
   @Test
@@ -121,7 +124,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
         // when: create ConvocatoriaAreaTematica
         () -> service.create(newConvocatoriaAreaTematica))
         // then: throw exception as AreaTematica is null
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Id AreaTematica no puede ser null para crear ConvocatoriaAreaTematica");
   }
 
   @Test
@@ -145,6 +149,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
@@ -163,6 +169,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematica()));
     BDDMockito.given(convocatoriaAreaTematicaRepository
@@ -174,7 +182,27 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaAreaTematica))
         // then: throw exception as assigned with same Convocatoria And EntidadRef
         // exists
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe una asociación activa para esa Convocatoria y AreaTematica");
+  }
+
+  @Test
+  public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaAreaTematica when modificable returns False
+    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaAreaTematica
+        () -> service.create(newConvocatoriaAreaTematica))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede crear ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -184,7 +212,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaAreaTematica));
-
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(convocatoriaAreaTematicaRepository.save(ArgumentMatchers.<ConvocatoriaAreaTematica>any()))
         .willAnswer(new Answer<ConvocatoriaAreaTematica>() {
           @Override
@@ -233,7 +262,27 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
         // when: update ConvocatoriaAreaTematica
         () -> service.update(convocatoriaAreaTematica))
         // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ConvocatoriaAreaTematica id no puede ser null para actualizar un ConvocatoriaAreaTematica");
+  }
+
+  @Test
+  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaAreaTematica when modificable return false
+    ConvocatoriaAreaTematica convocatoriaAreaTematica = generarConvocatoriaAreaTematica(1L, 1L, 1L);
+
+    BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaAreaTematica));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaAreaTematica
+        () -> service.update(convocatoriaAreaTematica))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede modificar ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -241,7 +290,9 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     // given: existing ConvocatoriaAreaTematica
     Long id = 1L;
 
-    BDDMockito.given(convocatoriaAreaTematicaRepository.existsById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarConvocatoriaAreaTematica(1L, 1L, 1L)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(convocatoriaAreaTematicaRepository).deleteById(ArgumentMatchers.anyLong());
 
@@ -261,7 +312,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
         // when: delete
         () -> service.delete(id))
         // then: IllegalArgumentException is thrown
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ConvocatoriaAreaTematica id no puede ser null para eliminar un ConvocatoriaAreaTematica");
   }
 
   @Test
@@ -269,14 +321,32 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(convocatoriaAreaTematicaRepository.existsById(ArgumentMatchers.anyLong()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaAreaTematicaNotFoundException.class);
+  }
+
+  @Test
+  public void delete_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: existing ConvocatoriaAreaTematica when modificable returns false
+    Long id = 1L;
+
+    BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarConvocatoriaAreaTematica(1L, 1L, 1L)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede eliminar ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

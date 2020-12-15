@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoIPNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -12,29 +13,28 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.RequisitoIPServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * RequisitoIPServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class RequisitoIPServiceTest extends BaseServiceTest {
 
   @Mock
   private RequisitoIPRepository repository;
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
+  @Mock
+  private ConvocatoriaService convocatoriaService;
 
   private RequisitoIPService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new RequisitoIPServiceImpl(repository, convocatoriaRepository);
+    service = new RequisitoIPServiceImpl(repository, convocatoriaRepository, convocatoriaService);
   }
 
   @Test
@@ -107,6 +107,8 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(repository.save(ArgumentMatchers.<RequisitoIP>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -126,11 +128,32 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
 
     // when: Actualizamos el RequisitoIP
     // then: Lanza una excepcion porque el RequisitoIP no existe
     Assertions.assertThatThrownBy(() -> service.update(requisitoIP, 1L))
         .isInstanceOf(RequisitoIPNotFoundException.class);
+  }
+
+  @Test
+  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a RequisitoIP when modificable return false
+    RequisitoIP requisitoIP = generarMockRequisitoIP(1L);
+    requisitoIP.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+
+    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(requisitoIP));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: update RequisitoIP
+        () -> service.update(requisitoIP, requisitoIP.getConvocatoria().getId()))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede modificar RequisitoIP. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

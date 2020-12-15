@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
@@ -54,4 +57,50 @@ public class ConvocatoriaConceptoGastoCodigoEcSpecifications {
     };
   }
 
+  /**
+   * Se obtienen los {@link ConvocatoriaConceptoGastoCodigoEc} con valores para
+   * las fechas de inicio y fin
+   * 
+   * @return specification para obtener los
+   *         {@link ConvocatoriaConceptoGastoCodigoEc} con valor en las fechas
+   */
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> withFechas() {
+    return (root, query, cb) -> {
+
+      return cb.and(cb.isNotNull(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio)),
+          cb.isNotNull(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin)));
+    };
+  }
+
+  /**
+   * {@link ConvocatoriaConceptoGastoCodigoEc} de la {@link Convocatoria} con
+   * fechas solapadas
+   * 
+   * @param fechaInicio fecha inicio de {@link ConvocatoriaConceptoGastoCodigoEc}
+   * @param fechaFin    fecha fin de la {@link ConvocatoriaConceptoGastoCodigoEc}.
+   * @return specification para obtener los
+   *         {@link ConvocatoriaConceptoGastoCodigoEc} con rango de fechas
+   *         solapadas
+   */
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> byRangoFechaSolapados(LocalDate fechaInicio,
+      LocalDate fechaFin) {
+    return (root, query, cb) -> {
+      return cb.and(cb.lessThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio), fechaFin),
+          cb.greaterThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin), fechaInicio));
+    };
+  }
+
+  /**
+   * {@link ConvocatoriaConceptoGastoCodigoEc} excluido en la lista.
+   * 
+   * @param excluidos lista de ids excluidos
+   * @return specification para obtener los
+   *         {@link ConvocatoriaConceptoGastoCodigoEc} cuyo id no se encuentre
+   *         entre los recibidos.
+   */
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> notIn(List<Long> excluidos) {
+    return (root, query, cb) -> {
+      return root.get(ConvocatoriaConceptoGastoCodigoEc_.id).in(excluidos).not();
+    };
+  }
 }

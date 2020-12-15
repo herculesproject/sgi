@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -35,14 +36,17 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaFaseRepository convocatoriaFaseRepository;
   private final DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository;
+  private final ConvocatoriaService convocatoriaService;
 
   public ConfiguracionSolicitudServiceImpl(ConfiguracionSolicitudRepository repository,
       ConvocatoriaRepository convocatoriaRepository, ConvocatoriaFaseRepository convocatoriaFaseRepository,
-      DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository) {
+      DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository,
+      ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.convocatoriaFaseRepository = convocatoriaFaseRepository;
     this.documentoRequeridoSolicitudRepository = documentoRequeridoSolicitudRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -99,6 +103,12 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
 
     configuracionSolicitud.setConvocatoria(convocatoriaRepository.findById(convocatoriaId)
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId)));
+
+    // comprobar si convocatoria es modificable
+    Assert.isTrue(
+        convocatoriaService.modificable(configuracionSolicitud.getConvocatoria().getId(),
+            configuracionSolicitud.getConvocatoria().getUnidadGestionRef()),
+        "No se puede modificar ConfiguracionSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     return repository.findByConvocatoriaId(configuracionSolicitud.getConvocatoria().getId()).map((data) -> {
 

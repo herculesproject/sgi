@@ -1,11 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -15,6 +15,10 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
@@ -28,9 +32,12 @@ import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecificat
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.access.expression.SgiMethodSecurityExpressionRoot;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -85,9 +92,9 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     Assert.isNull(convocatoria.getId(), "Id tiene que ser null para crear la Convocatoria");
 
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setActivo(Boolean.TRUE);
     Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, null, acronimosUnidadGestion);
-    validConvocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
-    validConvocatoria.setActivo(Boolean.TRUE);
     Convocatoria returnValue = repository.save(validConvocatoria);
 
     log.debug("create(Convocatoria convocatoria) - end");
@@ -107,8 +114,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     log.debug("update(Convocatoria convocatoria) - start");
 
     Assert.notNull(convocatoria.getId(), "Id no puede ser null para actualizar Convocatoria");
-    // TODO: FALTA AÑADIR VALIDACIÓN DE QUE NO EXISTAN SOLICITUDES ASOCIADAS O
-    // PROYECTOS (update y delete)
 
     return repository.findById(convocatoria.getId()).map((data) -> {
 
@@ -203,18 +208,120 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     log.debug("disable(Long id) - start");
 
     Assert.notNull(id, "Convocatoria id no puede ser null para desactivar un Convocatoria");
-    // TODO: FALTA AÑADIR VALIDACIÓN DE QUE NO EXISTAN SOLICITUDES ASOCIADAS O
-    // PROYECTOS (update y delete)
 
     return repository.findById(id).map(convocatoria -> {
       if (!convocatoria.getActivo()) {
         return convocatoria;
       }
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(this.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef()),
+          "No se puede eliminar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
+
       convocatoria.setActivo(Boolean.FALSE);
       Convocatoria returnValue = repository.save(convocatoria);
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link Convocatoria} de
+   * {@link TipoFase}, {@link TipoHito}, {@link TipoEnlace} y
+   * {@link TipoDocumento}
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return true existen datos vinculados/false no existen datos vinculados.
+   */
+  @Override
+  public Boolean tieneVinculaciones(Long id) {
+    log.debug("vinculaciones(Long id) - start");
+    boolean returnValue = repository.tieneVinculaciones(id);
+    log.debug("vinculaciones(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede ser modificada. También se utilizará para permitir la creación,
+   * modificación o eliminación de ciertas entidades relacionadas con la propia
+   * {@link Convocatoria}.
+   *
+   * @param id                 Id del {@link Convocatoria}.
+   * @param unidadConvocatoria unidadGestionRef {@link Convocatoria}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  @Override
+  public Boolean modificable(Long id, String unidadConvocatoria) {
+    log.debug("modificable(Long id) - start");
+
+    // permiso para operar con convocatorias
+    final String authority = "CSP-CONV-C";
+    boolean returnValue = Boolean.FALSE;
+
+    // Se comprueba si el usuario tiene el permiso correspondiente
+    if (checkAuthority(authority, unidadConvocatoria)) {
+      // Será modificable si no tiene solicitudes o proyectos asociados
+      returnValue = !(repository.esRegistradaConSolicitudesOProyectos(id));
+    } else {
+      // Recupera la UnidadGestionRef si fuera necesario
+      if (StringUtils.isBlank(unidadConvocatoria)) {
+        Optional<String> unidadGestionRef = repository.findById(id).map(mapper -> mapper.getUnidadGestionRef());
+        if (unidadGestionRef.isPresent()) {
+          unidadConvocatoria = unidadGestionRef.get();
+          // Se comprueba si el usuario tiene el permiso para la UnidadGestionRef
+          if (checkAuthority(authority, unidadConvocatoria)) {
+            // Será modificable si no tiene solicitudes o proyectos asociados
+            returnValue = !(repository.esRegistradaConSolicitudesOProyectos(id));
+          }
+        }
+      }
+    }
+    log.debug("modificable(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Hace las comprobaciones para determinar si el usuario tiene la autorización
+   * indicada tanto de manera independiente como dentro de la unidad organizativa
+   * indicada.
+   *
+   * @param authority Permiso a comprobar.
+   * @param unidad    unidad organizativa
+   * @return true tiene autorización / false no tiene autorización
+   */
+  protected Boolean checkAuthority(String authority, String unidad) {
+    log.debug("checkAuthority(String authority, String unidad) - start");
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
+        authentication);
+
+    Boolean returnValue = Boolean.FALSE;
+
+    if (StringUtils.isBlank(unidad)) {
+      returnValue = sgiMethodSecurityExpressionRoot.hasAuthority(authority);
+    } else {
+      returnValue = (sgiMethodSecurityExpressionRoot.hasAuthority(authority)
+          || sgiMethodSecurityExpressionRoot.hasAuthority(authority + "_" + unidad));
+    }
+
+    log.debug("checkAuthority(String authority, String unidad) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba la existencia del {@link Convocatoria} por id.
+   *
+   * @param id el id de la entidad {@link Convocatoria}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsById(final Long id) {
+    log.debug("existsById(final Long id)  - start", id);
+    final boolean existe = repository.existsById(id);
+    log.debug("existsById(final Long id)  - end", id);
+    return existe;
   }
 
   /**
@@ -350,11 +457,43 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       validarRequeridosConvocatoriaBorrador(datosConvocatoria);
     }
 
+    // comprobar si es modificable
+    if (datosOriginales != null) {
+      Assert.isTrue(this.modificable(datosOriginales.getId(), datosOriginales.getUnidadGestionRef()),
+          "No se puede modificar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
+    }
+
+    Boolean tieneVinculaciones = null;
+
     // ModeloUnidadGestion
     if (datosConvocatoria.getUnidadGestionRef() != null && !CollectionUtils.isEmpty(acronimosUnidadGestion)) {
 
       Assert.isTrue(acronimosUnidadGestion.contains(datosConvocatoria.getUnidadGestionRef()),
           "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
+    }
+
+    // Permitir actualizar UnidadGestionRef
+    if (datosOriginales != null
+        && !datosConvocatoria.getUnidadGestionRef().equals(datosOriginales.getUnidadGestionRef())) {
+      tieneVinculaciones = this.tieneVinculaciones(datosConvocatoria.getId());
+
+      Assert.isTrue(!tieneVinculaciones,
+          "No se puede modificar la unidad de gestión al existir registros dependientes en las pantallas Enlaces, Plazos y fases, Hitos o Documentos");
+    }
+
+    // Permitir actualizar ModeloEjecucion
+    if (datosOriginales != null && ((datosOriginales.getModeloEjecucion() == null
+        && datosOriginales.getModeloEjecucion() != null)
+        || (datosOriginales.getModeloEjecucion() != null && datosOriginales.getModeloEjecucion() == null)
+        || (datosOriginales.getModeloEjecucion() != null && datosConvocatoria.getModeloEjecucion() != null
+            && !datosConvocatoria.getModeloEjecucion().getId().equals(datosOriginales.getModeloEjecucion().getId())))) {
+
+      if (tieneVinculaciones == null) {
+        tieneVinculaciones = this.tieneVinculaciones(datosConvocatoria.getId());
+      }
+
+      Assert.isTrue(!tieneVinculaciones,
+          "No se puede modificar el modelo de ejecución al existir registros dependientes en las pantallas Enlaces, Plazos y fases, Hitos o Documentos");
     }
 
     // ModeloEjecucion
@@ -692,10 +831,9 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       }
     }
 
-    log.debug("getFiltroAplicado(List<QueryCriteria> query) - start");
+    log.debug("getFiltroAplicado(List<QueryCriteria> query) - end");
 
     return spec;
 
   }
-
 }

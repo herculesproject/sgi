@@ -48,6 +48,8 @@ public class ConvocatoriaIT extends BaseIT {
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
+  private static final String PATH_PARAMETER_VINCULACIONES = "/vinculaciones";
+  private static final String PATH_PARAMETER_MODIFICABLE = "/modificable";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/convocatoriadocumentos";
@@ -68,7 +70,7 @@ public class ConvocatoriaIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "SYSADMIN", "CSP-TFAS-B",
-        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V", "CSP-CENL-V_OPE")));
+        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V", "CSP-CENL-V_OPE", "CSP-CONV-C")));
 
     HttpEntity<Convocatoria> request = new HttpEntity<>(entity, headers);
     return request;
@@ -130,7 +132,7 @@ public class ConvocatoriaIT extends BaseIT {
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setCodigo("codigo-modificado");
     convocatoria.setTitulo("titulo-modificado");
-    convocatoria.setObservaciones("observaciones-modifcadas");
+    convocatoria.setObservaciones("observaciones-modificadas");
 
     // when: update Convocatoria
     final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -230,6 +232,103 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(convocatoria.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(convocatoria.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
 
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void convocatoria_WithVinculaciones_Returns200() throws Exception {
+
+    // given: existing Convocatoria with vinculaciones enlaces, hitos, fases or
+    // documentos
+    Long id = 1L;
+
+    // when: check vinculaciones
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VINCULACIONES, HttpMethod.HEAD,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Response is 200 OK
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void convocatoria_WithoutVinculaciones_Returns204() throws Exception {
+
+    // given: existing Convocatoria without vinculaciones enlaces, hitos, fases or
+    // documentos
+    Long id = 1L;
+
+    // when: check vinculaciones
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VINCULACIONES, HttpMethod.HEAD,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Response is 204 No Content
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void modificable_WhenModificableReturnsTrue_Returns200() throws Exception {
+
+    // given: existing Convocatoria When modificable returns true
+    Long id = 1L;
+
+    // when: check modificable
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODIFICABLE, HttpMethod.HEAD,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Response is 200 OK
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void modificable_ConvocatoriaRegistradaWithSolicitudesOrProyectosIsTrue_Returns204() throws Exception {
+
+    // given: existing Convocatoria registrada with Solicitudes or Proyectos
+    Long id = 1L;
+
+    // when: check vinculaciones
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODIFICABLE, HttpMethod.HEAD,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Response is 204 No Content
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void existsById_Returns200() throws Exception {
+    // given: existing id
+    Long id = 1L;
+    // when: exists by id
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.HEAD, buildRequest(null, null), Convocatoria.class, id);
+    // then: 200 OK
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void existsById_Returns204() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    // when: exists by id
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.HEAD, buildRequest(null, null), Convocatoria.class, id);
+    // then: 204 No Content
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   @Sql

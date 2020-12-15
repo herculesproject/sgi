@@ -22,17 +22,14 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoEnlaceRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaEnlaceServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * ConvocatoriaEnlaceServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
 
   @Mock

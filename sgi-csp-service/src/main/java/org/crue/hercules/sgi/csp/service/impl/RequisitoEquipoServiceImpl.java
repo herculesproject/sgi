@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.RequisitoEquipoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +26,13 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
 
   private final RequisitoEquipoRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
+  private final ConvocatoriaService convocatoriaService;
 
-  public RequisitoEquipoServiceImpl(RequisitoEquipoRepository repository,
-      ConvocatoriaRepository convocatoriaRepository) {
+  public RequisitoEquipoServiceImpl(RequisitoEquipoRepository repository, ConvocatoriaRepository convocatoriaRepository,
+      ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -80,6 +83,13 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId)));
 
     return repository.findByConvocatoriaId(convocatoriaId).map(requisitoEquipo -> {
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(
+          convocatoriaService.modificable(requisitoEquipo.getConvocatoria().getId(),
+              requisitoEquipo.getConvocatoria().getUnidadGestionRef()),
+          "No se puede modificar RequisitoEquipo. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
       requisitoEquipo.setAniosNivelAcademico(requisitoEquipoActualizar.getAniosNivelAcademico());
       requisitoEquipo.setAniosVinculacion(requisitoEquipoActualizar.getAniosVinculacion());
       requisitoEquipo.setEdadMaxima(requisitoEquipoActualizar.getEdadMaxima());

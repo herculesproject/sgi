@@ -28,12 +28,10 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaDocumentoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -43,8 +41,7 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * ConvocatoriaDocumentoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
-public class ConvocatoriaDocumentoServiceTest {
+public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaDocumentoRepository repository;

@@ -11,12 +11,10 @@ import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoAmbitoGeograficoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,7 +25,6 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * TipoAmbitoGeograficoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class TipoAmbitoGeograficoServiceTest extends BaseServiceTest {
 
   @Mock

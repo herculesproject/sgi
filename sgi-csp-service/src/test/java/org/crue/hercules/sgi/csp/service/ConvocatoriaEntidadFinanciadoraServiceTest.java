@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
@@ -21,12 +22,10 @@ import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaEntidadFinanciadoraServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -36,27 +35,25 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * ConvocatoriaEntidadFinanciadoraServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaEntidadFinanciadoraRepository repository;
-
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
-
   @Mock
   private FuenteFinanciacionRepository fuenteFinanciacionRepository;
-
   @Mock
   private TipoFinanciacionRepository tipoFinanciacionRepository;
+  @Mock
+  private ConvocatoriaService convocatoriaService;
 
   private ConvocatoriaEntidadFinanciadoraService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaEntidadFinanciadoraServiceImpl(repository, convocatoriaRepository,
-        fuenteFinanciacionRepository, tipoFinanciacionRepository);
+        fuenteFinanciacionRepository, tipoFinanciacionRepository, convocatoriaService);
   }
 
   @Test
@@ -66,6 +63,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -157,6 +156,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
@@ -174,6 +175,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
 
@@ -191,6 +194,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
@@ -210,6 +215,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -220,6 +227,27 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
         () -> service.create(convocatoriaEntidadFinanciadora))
         // then: throw exception as TipoFinanciacion is not activo
         .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoFinanciacion debe estar Activo");
+  }
+
+  @Test
+  public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaEntidadFinanciadora when modificable returns False
+    ConvocatoriaEntidadFinanciadora newConvocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    newConvocatoriaEntidadFinanciadora.setId(null);
+    newConvocatoriaEntidadFinanciadora.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaEntidadFinanciadora.getConvocatoria()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaEntidadFinanciadora
+        () -> service.create(newConvocatoriaEntidadFinanciadora))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede crear ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -237,6 +265,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaEntidadFinanciadora>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -373,11 +403,38 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   }
 
   @Test
+  public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaEntidadFinanciadora when modificable return false
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    convocatoriaEntidadFinanciadora.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEntidadFinanciadora));
+    BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
+    BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getTipoFinanciacion()));
+
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaEntidadFinanciadora
+        () -> service.update(convocatoriaEntidadFinanciadora))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede modificar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
   public void delete_WithExistingId_ReturnsConvocatoriaEntidadFinanciadora() {
     // given: existing ConvocatoriaEntidadFinanciadora
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(id)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -392,13 +449,32 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaEntidadFinanciadoraNotFoundException.class);
+  }
+
+  @Test
+  public void delete_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: existing ConvocatoriaEntidadFinanciadora when modificable returns
+    // false
+    Long id = 1L;
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(1L)));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede eliminar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

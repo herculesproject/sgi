@@ -11,12 +11,10 @@ import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoFinanciacionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -28,7 +26,6 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * TipoFinanciacionServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class TipoFinanciacionServiceTest extends BaseServiceTest {
 
   @Mock

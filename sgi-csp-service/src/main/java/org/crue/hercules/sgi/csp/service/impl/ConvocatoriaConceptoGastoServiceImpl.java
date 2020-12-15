@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRep
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -38,16 +39,19 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
   private final ConceptoGastoRepository conceptoGastoRepository;
   private final ConvocatoriaConceptoGastoMapper convocatoriaConceptoGastoMapper;
   private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaConceptoGastoServiceImpl(ConvocatoriaConceptoGastoRepository repository,
       ConvocatoriaRepository convocatoriaRepository, ConceptoGastoRepository conceptoGastoRepository,
       ConvocatoriaConceptoGastoMapper convocatoriaConceptoGastoMapper,
-      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository) {
+      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository,
+      ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.conceptoGastoRepository = conceptoGastoRepository;
     this.convocatoriaConceptoGastoMapper = convocatoriaConceptoGastoMapper;
     this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -79,16 +83,22 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
       }
     }
 
+    convocatoriaConceptoGasto
+        .setConvocatoria(convocatoriaRepository.findById(convocatoriaConceptoGasto.getConvocatoria().getId())
+            .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaConceptoGasto.getConvocatoria().getId())));
+
+    // comprobar si convocatoria es modificable
+    Assert.isTrue(
+        convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoria().getId(),
+            convocatoriaConceptoGasto.getConvocatoria().getUnidadGestionRef()),
+        "No se puede crear ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
     Assert
         .isTrue(!repository
             .findByConvocatoriaIdAndConceptoGastoActivoTrueAndConceptoGastoIdAndPermitidoIs(
                 convocatoriaConceptoGasto.getConvocatoria().getId(),
                 convocatoriaConceptoGasto.getConceptoGasto().getId(), convocatoriaConceptoGasto.getPermitido())
             .isPresent(), "Ya existe una asociación activa para esa Convocatoria y ConceptoGasto");
-
-    convocatoriaConceptoGasto
-        .setConvocatoria(convocatoriaRepository.findById(convocatoriaConceptoGasto.getConvocatoria().getId())
-            .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaConceptoGasto.getConvocatoria().getId())));
 
     ConvocatoriaConceptoGasto returnValue = repository.save(convocatoriaConceptoGasto);
 
@@ -128,6 +138,13 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     }
 
     return repository.findById(convocatoriaConceptoGastoActualizar.getId()).map(convocatoriaConceptoGasto -> {
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoria().getId(),
+              convocatoriaConceptoGasto.getConvocatoria().getUnidadGestionRef()),
+          "No se puede modificar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
       convocatoriaConceptoGasto.setConceptoGasto(convocatoriaConceptoGastoActualizar.getConceptoGasto());
       convocatoriaConceptoGasto.setConvocatoria(convocatoriaConceptoGastoActualizar.getConvocatoria());
       convocatoriaConceptoGasto.setImporteMaximo(convocatoriaConceptoGastoActualizar.getImporteMaximo());
@@ -155,9 +172,17 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     log.debug("delete(Long id) - start");
 
     Assert.notNull(id, "ConvocatoriaConceptoGasto id no puede ser null para eliminar un ConvocatoriaConceptoGasto");
-    if (!repository.existsById(id)) {
-      throw new ConvocatoriaConceptoGastoNotFoundException(id);
-    }
+
+    repository.findById(id).map(convocatoriaConvocatoriaConceptoGasto -> {
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaConvocatoriaConceptoGasto.getConvocatoria().getId(),
+              convocatoriaConvocatoriaConceptoGasto.getConvocatoria().getUnidadGestionRef()),
+          "No se puede eliminar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
+      return convocatoriaConvocatoriaConceptoGasto;
+    }).orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(id));
 
     List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicos = convocatoriaConceptoGastoCodigoEcRepository
         .findByConvocatoriaConceptoGastoId(id);

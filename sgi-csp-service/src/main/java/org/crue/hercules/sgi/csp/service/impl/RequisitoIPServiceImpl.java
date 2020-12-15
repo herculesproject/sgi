@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,13 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
 
   private final RequisitoIPRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
+  private final ConvocatoriaService convocatoriaService;
 
-  public RequisitoIPServiceImpl(RequisitoIPRepository repository, ConvocatoriaRepository convocatoriaRepository) {
+  public RequisitoIPServiceImpl(RequisitoIPRepository repository, ConvocatoriaRepository convocatoriaRepository,
+      ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -76,6 +80,13 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
     Assert.notNull(idConvocatoria, "Id Convocatoria no puede ser null para actualizar RequisitoIP");
 
     return repository.findByConvocatoriaId(idConvocatoria).map(requisitoIP -> {
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(
+          convocatoriaService.modificable(requisitoIP.getConvocatoria().getId(),
+              requisitoIP.getConvocatoria().getUnidadGestionRef()),
+          "No se puede modificar RequisitoIP. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
       requisitoIP.setAniosNivelAcademico(requisitoIPActualizar.getAniosNivelAcademico());
       requisitoIP.setAniosVinculacion(requisitoIPActualizar.getAniosVinculacion());
       requisitoIP.setEdadMaxima(requisitoIPActualizar.getEdadMaxima());

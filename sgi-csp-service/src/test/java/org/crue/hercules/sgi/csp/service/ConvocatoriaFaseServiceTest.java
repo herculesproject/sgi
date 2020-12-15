@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -29,12 +30,10 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaFaseServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -44,28 +43,26 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * ConvocatoriaFaseServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 
 public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaFaseRepository repository;
-
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
-
   @Mock
   private ConfiguracionSolicitudRepository configuracionSolicitudRepository;
-
   @Mock
   private ModeloTipoFaseRepository modeloTipoFaseRepository;
+  @Mock
+  private ConvocatoriaService convocatoriaService;
 
   private ConvocatoriaFaseService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
-        modeloTipoFaseRepository);
+        modeloTipoFaseRepository, convocatoriaService);
   }
 
   @Test
@@ -452,11 +449,34 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_SelectedInConfiguracionSolicitudWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaFase selected in ConfiguracionSolicitud when
+    // modificable return false
+    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .fasePresentacionSolicitudes(convocatoriaFase).convocatoria(convocatoriaFase.getConvocatoria()).build();
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaFase
+        () -> service.update(convocatoriaFase))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede modificar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
   public void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing ConvocatoriaFase
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaFase(1L)));
 
     BDDMockito.given(configuracionSolicitudRepository.findByFasePresentacionSolicitudesId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
@@ -475,13 +495,36 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaFaseNotFoundException.class);
+  }
+
+  @Test
+  public void delete_SelectedInConfiguracionSolicitudWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
+    // given: existing ConvocatoriaFase when modificable returns false
+    Long id = 1L;
+    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(id);
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .fasePresentacionSolicitudes(convocatoriaFase).convocatoria(convocatoriaFase.getConvocatoria()).build();
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoriaFase(id)));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: throw exception as Convocatoria is not modificable
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede eliminar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

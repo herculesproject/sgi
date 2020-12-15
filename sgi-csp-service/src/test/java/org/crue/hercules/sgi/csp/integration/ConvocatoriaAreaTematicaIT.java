@@ -31,7 +31,7 @@ public class ConvocatoriaAreaTematicaIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CATEM-C", "CSP-CATEM-E", "CSP-CATEM-B", "CSP-CATEM-V")));
+        tokenBuilder.buildToken("user", "CSP-CATEM-C", "CSP-CATEM-E", "CSP-CATEM-B", "CSP-CATEM-V", "CSP-CONV-C")));
 
     HttpEntity<ConvocatoriaAreaTematica> request = new HttpEntity<>(entity, headers);
     return request;

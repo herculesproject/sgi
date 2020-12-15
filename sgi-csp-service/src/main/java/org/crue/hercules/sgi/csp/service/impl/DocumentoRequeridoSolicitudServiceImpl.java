@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepositor
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -39,14 +40,17 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
   private final ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
+  private final ConvocatoriaService convocatoriaService;
 
   public DocumentoRequeridoSolicitudServiceImpl(DocumentoRequeridoSolicitudRepository repository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository,
-      ModeloTipoFaseRepository modeloTipoFaseRepository, ModeloTipoDocumentoRepository modeloTipoDocumentoRepository) {
+      ModeloTipoFaseRepository modeloTipoFaseRepository, ModeloTipoDocumentoRepository modeloTipoDocumentoRepository,
+      ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
     this.modeloTipoDocumentoRepository = modeloTipoDocumentoRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -114,9 +118,18 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
     log.debug("delete(Long id) - start");
 
     Assert.notNull(id, "DocumentoRequeridoSolicitud id no puede ser null para eliminar un DocumentoRequeridoSolicitud");
-    if (!repository.existsById(id)) {
-      throw new DocumentoRequeridoSolicitudNotFoundException(id);
-    }
+    repository.findById(id).map(convocatoriaAreaTematica -> {
+
+      // comprobar si convocatoria es modificable
+      Assert.isTrue(
+          convocatoriaService.modificable(
+              convocatoriaAreaTematica.getConfiguracionSolicitud().getConvocatoria().getId(),
+              convocatoriaAreaTematica.getConfiguracionSolicitud().getConvocatoria().getUnidadGestionRef()),
+          "No se puede eliminar DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
+      return convocatoriaAreaTematica;
+    }).orElseThrow(() -> new DocumentoRequeridoSolicitudNotFoundException(id));
+
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
   }
@@ -193,6 +206,14 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
         .findByConvocatoriaId(documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId())
         .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(
             documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId())));
+
+    // comprobar si convocatoria es modificable
+    Assert.isTrue(
+        convocatoriaService.modificable(
+            documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId(),
+            documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getUnidadGestionRef()),
+        "No se puede " + ((datosOriginales != null) ? "modificar" : "crear")
+            + " DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
     Long modeloEjecucionId = (documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria()

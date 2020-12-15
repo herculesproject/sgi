@@ -17,12 +17,10 @@ import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ModeloTipoHitoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -34,7 +32,6 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * ModeloTipoHitoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class ModeloTipoHitoServiceTest extends BaseServiceTest {
 
   @Mock

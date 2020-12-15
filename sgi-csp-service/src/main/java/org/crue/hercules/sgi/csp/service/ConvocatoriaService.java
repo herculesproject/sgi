@@ -3,6 +3,10 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +61,37 @@ public interface ConvocatoriaService {
    * @return la entidad {@link Convocatoria} persistida.
    */
   Convocatoria disable(Long id);
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link Convocatoria} de
+   * {@link TipoFase}, {@link TipoHito}, {@link TipoEnlace} y
+   * {@link TipoDocumento} con el fin de permitir la edición de los campos
+   * unidadGestionRef y modeloEjecucion.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return true existen datos vinculados/false no existen datos vinculados.
+   */
+  Boolean tieneVinculaciones(Long id);
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede ser modificada. También se utilizará para permitir la creación,
+   * modificación o eliminación de ciertas entidades relacionadas con la propia
+   * {@link Convocatoria}.
+   *
+   * @param id                 Id del {@link Convocatoria}.
+   * @param unidadConvocatoria unidadGestionRef {@link Convocatoria}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  Boolean modificable(Long id, String unidadConvocatoria);
+
+  /**
+   * Comprueba la existencia del {@link Convocatoria} por id.
+   *
+   * @param id el id de la entidad {@link Convocatoria}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsById(Long id);
 
   /**
    * Obtiene una entidad {@link Convocatoria} por id.

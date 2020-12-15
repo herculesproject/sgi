@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -40,14 +41,16 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
+  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaFaseServiceImpl(ConvocatoriaFaseRepository repository,
       ConvocatoriaRepository convocatoriaRepository, ConfiguracionSolicitudRepository configuracionSolicitudRepository,
-      ModeloTipoFaseRepository modeloTipoFaseRepository) {
+      ModeloTipoFaseRepository modeloTipoFaseRepository, ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
+    this.convocatoriaService = convocatoriaService;
   }
 
   /**
@@ -151,6 +154,11 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
     return repository.findById(convocatoriaFaseActualizar.getId()).map(convocatoriaFase -> {
 
+      // Si la fase es la asignada a la ConfiguracionSolicitud comprobar si
+      // convocatoria es modificable
+      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoria().getId(), convocatoriaFase.getId()),
+          "No se puede modificar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
+
       // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
       Long modeloEjecucionId = (convocatoriaFase.getConvocatoria().getModeloEjecucion() != null
           && convocatoriaFase.getConvocatoria().getModeloEjecucion().getId() != null)
@@ -211,9 +219,16 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     log.debug("delete(Long id) - start");
 
     Assert.notNull(id, "ConvocatoriaFase id no puede ser null para eliminar un ConvocatoriaFase");
-    if (!repository.existsById(id)) {
-      throw new ConvocatoriaFaseNotFoundException(id);
-    }
+
+    repository.findById(id).map(convocatoriaFase -> {
+
+      // Si la fase es la asignada a la ConfiguracionSolicitud comprobar si
+      // convocatoria es modificable
+      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoria().getId(), convocatoriaFase.getId()),
+          "No se puede eliminar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
+
+      return convocatoriaFase;
+    }).orElseThrow(() -> new ConvocatoriaFaseNotFoundException(id));
 
     Page<ConfiguracionSolicitud> configuracionesSolicitud = configuracionSolicitudRepository
         .findByFasePresentacionSolicitudesId(id, null);
@@ -299,5 +314,33 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
     return returnValue;
 
+  }
+
+  /**
+   * Comprueba si la {@link ConvocatoriaFase} está la asignada a la
+   * {@link ConfiguracionSolicitud} y si la {@link Convocatoria} correspondiente
+   * es modificable para permitir la modificación o eliminación de la
+   * {@link ConvocatoriaFase}
+   * 
+   * @param convocatoriaId     id de la {@link Convocatoria}
+   * @param convocatoriaFaseId id de la {@link ConvocatoriaFase}
+   * @return
+   */
+  private Boolean isModificable(Long convocatoriaId, Long convocatoriaFaseId) {
+    log.debug("Boolean isModificable(Long convocatoriaId, Long convocatoriaFaseId) - start");
+
+    Boolean returnValue = Boolean.TRUE;
+    Optional<ConfiguracionSolicitud> configuraciSolicitud = configuracionSolicitudRepository
+        .findByConvocatoriaId(convocatoriaId);
+    if (configuraciSolicitud.isPresent()) {
+      if (configuraciSolicitud.get().getFasePresentacionSolicitudes() != null
+          && configuraciSolicitud.get().getFasePresentacionSolicitudes().getId() == convocatoriaFaseId) {
+
+        returnValue = convocatoriaService.modificable(convocatoriaId,
+            configuraciSolicitud.get().getConvocatoria().getUnidadGestionRef());
+      }
+    }
+    log.debug("Boolean isModificable(Long convocatoriaId, Long convocatoriaFaseId) - end");
+    return returnValue;
   }
 }
