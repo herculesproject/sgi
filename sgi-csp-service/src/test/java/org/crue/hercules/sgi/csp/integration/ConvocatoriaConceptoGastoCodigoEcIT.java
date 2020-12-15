@@ -156,7 +156,7 @@ public class ConvocatoriaConceptoGastoCodigoEcIT {
     convocatoriaConceptoGastoCodigoEc.setId(id);
     convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("cod-" + (id == null ? 1 : id));
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now().minusDays(1));
     convocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now());
 
     return convocatoriaConceptoGastoCodigoEc;

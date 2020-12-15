@@ -103,4 +103,19 @@ public class ConvocatoriaConceptoGastoCodigoEcSpecifications {
       return root.get(ConvocatoriaConceptoGastoCodigoEc_.id).in(excluidos).not();
     };
   }
+
+  /**
+   * {@link ConvocatoriaConceptoGastoCodigoEc} por Código económico.
+   * 
+   * @param codigoEconomicoRef código económico de
+   *                           {@link ConvocatoriaConceptoGastoCodigoEc}
+   * @return specification para obtener los
+   *         {@link ConvocatoriaConceptoGastoCodigoEc} con el codigoEconomicoRef
+   *         indicado.
+   */
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> bycodigoEconomicoRef(String codigoEconomicoRef) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ConvocatoriaConceptoGastoCodigoEc_.codigoEconomicoRef), codigoEconomicoRef);
+    };
+  }
 }

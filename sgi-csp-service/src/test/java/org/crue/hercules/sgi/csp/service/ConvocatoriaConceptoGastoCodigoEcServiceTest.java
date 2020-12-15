@@ -102,44 +102,105 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGastoCodigoEc))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id ConvocatoriaConceptoGasto no puede ser null para crear ConvocatoriaConceptoGastoCodigoEc");
+        .hasMessage("ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
   }
 
   @Test
-  public void create_DatesOverlapsWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaConceptoGastoCodigoEc existing dates overlaps when
-    // modificable returns False
+  public void create_WithoutCodigoEconomicoRef_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc sin codigoEconomicoRef
+    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
+        null);
+    convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef(null);
+
+    // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
+    // then: Lanza una excepcion porque CodigoEconomicoRef es requerido
+    Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGastoCodigoEc))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("CodigoEconomicoRef es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
+  }
+
+  @Test
+  public void create_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc Fecha Inicio > fechaFin
+    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
+        null);
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(convocatoriaConceptoGastoCodigoEc.getFechaFin().plusDays(1));
+
+    // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
+    // then: Lanza una excepcion porque fecha fin debe ser posterior a fecha inicio
+    Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGastoCodigoEc))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+  }
+
+  @Test
+  public void create_WhenModificableIsFalse_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc cuando la convocatoria no
+    // es modificable
+    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
+        null);
+
+    BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto()));
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.FALSE);
+
+    // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
+    // then: Lanza una excepcion porque la convocatoria no es modificable
+    Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGastoCodigoEc))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "No se puede crear ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+  }
+
+  @Test
+  public void create_DuplicatedCodigoOverlapsDates_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaConceptoGastoCodigoEc duplicate codigo Overlaps Dates
     ConvocatoriaConceptoGastoCodigoEc newConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
     newConvocatoriaConceptoGastoCodigoEc.setId(null);
+    newConvocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("codigoEconomicoRef");
+
+    ConvocatoriaConceptoGastoCodigoEc existingConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
+        2L);
+    existingConvocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("codigoEconomicoRef");
+
     List<ConvocatoriaConceptoGastoCodigoEc> solapadas = new ArrayList<ConvocatoriaConceptoGastoCodigoEc>();
-    solapadas.add(generarMockConvocatoriaConceptoGastoCodigoEc(2L));
+    solapadas.add(existingConvocatoriaConceptoGastoCodigoEc);
 
     BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto()));
 
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(Boolean.TRUE);
+
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaConceptoGastoCodigoEc>>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(solapadas));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaConceptoGastoCodigoEc
         () -> service.create(newConvocatoriaConceptoGastoCodigoEc))
-        // then: throw exception as Convocatoria is not modificable
+        // then: throw exception as Codigo exists and dates overlaps
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede crear ConvocatoriaConceptoGastoCodigoEc. Las fechas se solapan con otras existentes y no tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "El código económico '%s' ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
+            newConvocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef());
   }
 
   @Test
-  public void create_DatesOKWhenModificableReturnsFalse_doesNotThrowAnyException() {
-    // given: a ConvocatoriaConceptoGastoCodigoEc existing dates OK when modificable
-    // returns False
+  public void create_DuplicatedCodigoNotOverlapsDates_NotThrowAnyException() {
+    // given: a ConvocatoriaConceptoGastoCodigoEc with duplicate codigo that
+    // Overlaps Dates
     ConvocatoriaConceptoGastoCodigoEc newConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
     newConvocatoriaConceptoGastoCodigoEc.setId(null);
+    newConvocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("codigoEconomicoRef");
+
+    ConvocatoriaConceptoGastoCodigoEc existingConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
+        2L);
+    existingConvocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("codigoEconomicoRef");
+    existingConvocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now().plusDays(1));
+    existingConvocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now().plusDays(2));
     List<ConvocatoriaConceptoGastoCodigoEc> solapadas = new ArrayList<ConvocatoriaConceptoGastoCodigoEc>();
+    solapadas.add(existingConvocatoriaConceptoGastoCodigoEc);
 
     BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto()));
@@ -148,12 +209,12 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(solapadas));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+        .willReturn(Boolean.TRUE);
 
     Assertions.assertThatCode(
         // when: create ConvocatoriaConceptoGastoCodigoEc
         () -> service.create(newConvocatoriaConceptoGastoCodigoEc))
-        // then: doesNotThrowAnyException
+        // then: no exception thrown as dates don't overlap
         .doesNotThrowAnyException();
   }
 
@@ -210,7 +271,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
 
   @Test
   public void update_WithConvocatoriaConceptoGastoIdNoExists_ThrowsConceptoGastoNotFoundException() {
-    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc sin tipo de enlace
+    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc sin concepto gasto
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
 
@@ -219,8 +280,35 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
     // then: Lanza una excepcion porque el concepto gasto es null
     Assertions.assertThatThrownBy(() -> service.update(convocatoriaConceptoGastoCodigoEcActualizar))
-        .isInstanceOf(ConvocatoriaConceptoGastoNotFoundException.class)
-        .hasMessage("ConvocatoriaConceptoGasto 1 does not exist.");
+        .isInstanceOf(ConvocatoriaConceptoGastoNotFoundException.class);
+  }
+
+  @Test
+  public void update_WithoutCodigoEconomico_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc sin código económico
+    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar = generarMockConvocatoriaConceptoGastoCodigoEc(
+        1L);
+    convocatoriaConceptoGastoCodigoEcActualizar.setCodigoEconomicoRef(null);
+
+    // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
+    // then: Lanza una excepcion porque no tiene código económico
+    Assertions.assertThatThrownBy(() -> service.update(convocatoriaConceptoGastoCodigoEcActualizar))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("CodigoEconomicoRef es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
+  }
+
+  @Test
+  public void update_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaConceptoGastoCodigoEc Fecha Inicio > fechaFin
+    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
+        1L);
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(convocatoriaConceptoGastoCodigoEc.getFechaFin().plusDays(1));
+
+    // when: Modificamos ConvocatoriaConceptoGastoCodigoEc
+    // then: Lanza una excepcion porque fecha fin debe ser posterior a fecha inicio
+    Assertions.assertThatThrownBy(() -> service.update(convocatoriaConceptoGastoCodigoEc))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
   }
 
   @Test
@@ -249,14 +337,12 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
   }
 
   @Test
-  public void update_DateOverlapsWhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaConceptoGastoCodigoEc update dates that overlaps when
-    // modificable return false
+  public void update_DuplicatedCodigoOverlapsDates_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaConceptoGastoCodigoEc duplicate codigo Overlaps Dates
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizado = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
-    convocatoriaConceptoGastoCodigoEcActualizado.setFechaFin(LocalDate.of(2050, 10, 10));
     List<ConvocatoriaConceptoGastoCodigoEc> solapadas = new ArrayList<ConvocatoriaConceptoGastoCodigoEc>();
     solapadas.add(generarMockConvocatoriaConceptoGastoCodigoEc(2L));
 
@@ -274,15 +360,15 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaConceptoGastoCodigoEc
         () -> service.update(convocatoriaConceptoGastoCodigoEcActualizado))
-        // then: throw exception as Convocatoria is not modificable
+        // then: throw exception as Codigo exists and dates overlaps
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar ConvocatoriaConceptoGastoCodigoEc. Las fechas se solapan con otras existentes y no tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "El código económico '%s' ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
+            convocatoriaConceptoGastoCodigoEcActualizado.getCodigoEconomicoRef());
   }
 
   @Test
-  public void update_DateOKWhenModificableReturnsFalse_doesNotThrowAnyException() {
-    // given: a ConvocatoriaConceptoGastoCodigoEc update dates OK when
-    // modificable return false
+  public void update_DuplicatedCodigoNotOverlapsDates_NotThrowAnyException() {
+    // given: a ConvocatoriaConceptoGastoCodigoEc duplicate codigo Dates OK
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizado = generarMockConvocatoriaConceptoGastoCodigoEc(
@@ -437,7 +523,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     convocatoriaConceptoGastoCodigoEc.setId(id);
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("Cod-" + (id == null ? 1 : id));
     convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now().minusDays(1));
     convocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now());
 
     return convocatoriaConceptoGastoCodigoEc;

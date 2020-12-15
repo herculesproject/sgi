@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -63,20 +65,45 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   public ConvocatoriaConceptoGastoCodigoEc create(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) {
     log.debug("create(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) - start");
 
+    // comprobar campos
     Assert.isNull(convocatoriaConceptoGastoCodigoEc.getId(),
         "Id tiene que ser null para crear ConvocatoriaConceptoGastoCodigoEc");
 
     Assert.notNull(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId(),
-        "Id ConvocatoriaConceptoGasto no puede ser null para crear ConvocatoriaConceptoGastoCodigoEc");
+        "ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
 
+    Assert.isTrue(StringUtils.isNotBlank(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()),
+        "CodigoEconomicoRef es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
+
+    if (convocatoriaConceptoGastoCodigoEc.getFechaInicio() != null
+        && convocatoriaConceptoGastoCodigoEc.getFechaFin() != null) {
+      Assert.isTrue(
+          convocatoriaConceptoGastoCodigoEc.getFechaFin().isAfter(convocatoriaConceptoGastoCodigoEc.getFechaInicio()),
+          "La fecha de fin debe ser posterior a la fecha de inicio");
+    }
+
+    // recuperar ConvocatoriaConceptoGasto
     convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGastoRepository
         .findById(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId())
         .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
             convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId())));
 
-    // Si no es modificable no se podrán solapar las fechas
-    Assert.isTrue(esModificable(convocatoriaConceptoGastoCodigoEc),
-        "No se puede crear ConvocatoriaConceptoGastoCodigoEc. Las fechas se solapan con otras existentes y no tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+    // Comprobar si convocatoria es modificable
+    Assert
+        .isTrue(
+            convocatoriaService.modificable(
+                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
+                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria()
+                    .getUnidadGestionRef()),
+            "No se puede crear ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+
+    // Unicidad código económico y solapamiento de fechas
+    Assert.isTrue(validarUnicidadCodigoEconomico(
+        convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
+        convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef(), convocatoriaConceptoGastoCodigoEc.getFechaInicio(),
+        convocatoriaConceptoGastoCodigoEc.getFechaFin(), Arrays.asList(convocatoriaConceptoGastoCodigoEc.getId())),
+        "El código económico '" + convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()
+            + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
 
     ConvocatoriaConceptoGastoCodigoEc returnValue = repository.save(convocatoriaConceptoGastoCodigoEc);
 
@@ -99,12 +126,25 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
       ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar) {
     log.debug("update(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar) - start");
 
+    // comprobar campos
     Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getId(),
         "ConvocatoriaConceptoGastoCodigoEc id no puede ser null para actualizar un ConvocatoriaConceptoGastoCodigoEc");
 
     Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getId(),
-        "Id ConvocatoriaConceptoGasto no puede ser null para actualizar ConvocatoriaConceptoGastoCodigoEc");
+        "ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
 
+    Assert.isTrue(StringUtils.isNotBlank(convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef()),
+        "CodigoEconomicoRef es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
+
+    if (convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio() != null
+        && convocatoriaConceptoGastoCodigoEcActualizar.getFechaFin() != null) {
+      Assert.isTrue(
+          convocatoriaConceptoGastoCodigoEcActualizar.getFechaFin()
+              .isAfter(convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio()),
+          "La fecha de fin debe ser posterior a la fecha de inicio");
+    }
+
+    // recuperar ConvocatoriaConceptoGasto
     convocatoriaConceptoGastoCodigoEcActualizar.setConvocatoriaConceptoGasto(convocatoriaConceptoGastoRepository
         .findById(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getId())
         .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
@@ -127,17 +167,20 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
                     && StringUtils.equals(convocatoriaConceptoGastoCodigoEc.getObservaciones(),
                         convocatoriaConceptoGastoCodigoEcActualizar.getObservaciones()),
                 "No se puede modificar ConvocatoriaConceptoGastoCodigoEc. Solo está permitido modificar las fechas de inicio y fin. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-
-            // Si no es modificable no se podrán solapar las fechas
-            if (convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio() != null
-                && convocatoriaConceptoGastoCodigoEcActualizar.getFechaFin() != null) {
-              Assert.isTrue(!this.existenFechasSolapadas(
-                  convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
-                  convocatoriaConceptoGastoCodigoEc.getFechaInicio(), convocatoriaConceptoGastoCodigoEc.getFechaFin(),
-                  Arrays.asList(convocatoriaConceptoGastoCodigoEc.getId())),
-                  "No se puede modificar ConvocatoriaConceptoGastoCodigoEc. Las fechas se solapan con otras existentes y no tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-            }
           }
+
+          // Unicidad código económico y solapamiento de fechas
+          Assert
+              .isTrue(
+                  validarUnicidadCodigoEconomico(
+                      convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getConvocatoria()
+                          .getId(),
+                      convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef(),
+                      convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio(),
+                      convocatoriaConceptoGastoCodigoEc.getFechaFin(),
+                      Arrays.asList(convocatoriaConceptoGastoCodigoEcActualizar.getId())),
+                  "El código económico '" + convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef()
+                      + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
 
           convocatoriaConceptoGastoCodigoEc
               .setConvocatoriaConceptoGasto(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto());
@@ -268,69 +311,69 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   }
 
   /**
-   * Comprueba que existen {@link ConvocatoriaConceptoGastoCodigoEc} activos para
-   * una {@link Convocatoria} con las fechas solapadas. Solo se comprueban
-   * aquellos que tienen valores en las fechas de inicio y de fin
+   * Se valida la unicidad del código económico. Para una {@link Convocatoria} el
+   * mismo código económico solo puede aparecer una vez, salvo que lo haga en
+   * periodos de vigencia no solapados (independientemente del valor del campo
+   * "permitido").
    * 
    * @param convocatoriaId id {@link Convocatoria}
    * @param fechaInicio    fecha inicial
    * @param fechaFin       fecha final
    * @param excluirId      identificadores a excluir de la busqueda
-   * @return
+   * @return true validación correcta/ false validacion incorrecta
    */
-  private boolean existenFechasSolapadas(Long convocatoriaId, LocalDate fechaInicio, LocalDate fechaFin,
-      List<Long> excluidos) {
-    log.debug("existenFechasSolapadas(Long convocatoriaId, LocalDate fechaInicio, LocalDate fechaFin) - start");
+  private boolean validarUnicidadCodigoEconomico(Long convocatoriaId, String codigoEconomicoRef, LocalDate fechaInicio,
+      LocalDate fechaFin, List<Long> excluidos) {
+    log.debug(
+        "validarUnicidadCodigoEconomico(Long convocatoriaId, String codigoEconomicoRef, LocalDate fechaInicio, LocalDate fechaFin, List<Long> excluidos - start");
 
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConvocatoria = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byConvocatoria(convocatoriaId);
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConceptoGastoActivo = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byConceptoGastoActivo();
-    Specification<ConvocatoriaConceptoGastoCodigoEc> specByRangoFechaSolapados = ConvocatoriaConceptoGastoCodigoEcSpecifications
-        .byRangoFechaSolapados(fechaInicio, fechaFin);
-    Specification<ConvocatoriaConceptoGastoCodigoEc> specWithFechas = ConvocatoriaConceptoGastoCodigoEcSpecifications
-        .withFechas();
+    Specification<ConvocatoriaConceptoGastoCodigoEc> specByCodigoEconomicoRef = ConvocatoriaConceptoGastoCodigoEcSpecifications
+        .bycodigoEconomicoRef(codigoEconomicoRef);
+
     Specification<ConvocatoriaConceptoGastoCodigoEc> specExcluidos = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .notIn(excluidos);
 
-    Specification<ConvocatoriaConceptoGastoCodigoEc> specs = Specification.where(specByConvocatoria).and(specExcluidos)
-        .and(specByConceptoGastoActivo).and(specWithFechas).and(specByRangoFechaSolapados);
+    Specification<ConvocatoriaConceptoGastoCodigoEc> specs = Specification.where(specByConvocatoria)
+        .and(specByConceptoGastoActivo).and(specByCodigoEconomicoRef).and(specExcluidos);
 
-    Page<ConvocatoriaConceptoGastoCodigoEc> listaSolapados = repository.findAll(specs, Pageable.unpaged());
-    Boolean returnValue = !listaSolapados.isEmpty();
+    Page<ConvocatoriaConceptoGastoCodigoEc> results = repository.findAll(specs, Pageable.unpaged());
+    List<ConvocatoriaConceptoGastoCodigoEc> listaCodigos = (results == null)
+        ? new ArrayList<ConvocatoriaConceptoGastoCodigoEc>()
+        : results.getContent();
 
-    log.debug("existenFechasSolapadas(Long convocatoriaId, LocalDate fechaInicio, LocalDate fechaFin) - end");
-    return returnValue;
-  }
-
-  /**
-   * Comprueba si es posible modificar las fechas de la
-   * {@link ConvocatoriaConceptoGastoCodigoEc}. Cuando la {@link Convocatoria} no
-   * es modificable solamente se podrán modificar cuando no se solapen con otras
-   * existentes. Para hacer esa comprobación tanto la fecha de inicio como la
-   * fecha de fin tienen que tener valor.
-   * 
-   * @param convocatoriaConceptoGastoCodigoEc
-   * @return
-   */
-  private boolean esModificable(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) {
     Boolean returnValue = Boolean.TRUE;
+    // Si fechaIni y fechaFin están vacíos siempre habrá solapamiento.
+    if (fechaInicio == null && fechaFin == null) {
+      returnValue = Boolean.FALSE;
+    } else {
 
-    if (convocatoriaConceptoGastoCodigoEc.getFechaInicio() != null
-        && convocatoriaConceptoGastoCodigoEc.getFechaFin() != null) {
-
-      boolean esConvocatoriaModificable = convocatoriaService.modificable(
-          convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
-          convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getUnidadGestionRef());
-
-      if (!esConvocatoriaModificable) {
-        returnValue = !this.existenFechasSolapadas(
-            convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
-            convocatoriaConceptoGastoCodigoEc.getFechaInicio(), convocatoriaConceptoGastoCodigoEc.getFechaFin(),
-            Arrays.asList(convocatoriaConceptoGastoCodigoEc.getId()));
+      Iterator<ConvocatoriaConceptoGastoCodigoEc> it = listaCodigos.iterator();
+      ConvocatoriaConceptoGastoCodigoEc item = null;
+      while (it.hasNext() && returnValue) {
+        item = it.next();
+        // Si fechaIni y fechaFin están vacíos siempre habrá solapamiento.
+        if (item.getFechaInicio() == null && item.getFechaFin() == null) {
+          returnValue = Boolean.FALSE;
+        } else {
+          // Si la fecha de inicio o fin está vacía es que tiene vigencia y se solapará.
+          if ((fechaInicio == null || item.getFechaInicio() == null)
+              || (fechaFin == null || item.getFechaFin() == null)) {
+            returnValue = Boolean.FALSE;
+          } else {
+            returnValue = !((item.getFechaInicio().isEqual(fechaInicio) && item.getFechaFin().isEqual(fechaFin))
+                || (item.getFechaInicio().isBefore(fechaFin) && item.getFechaFin().isAfter(fechaInicio)));
+          }
+        }
       }
+
     }
+
+    log.debug(
+        "validarUnicidadCodigoEconomico(Long convocatoriaId, String codigoEconomicoRef, LocalDate fechaInicio, LocalDate fechaFin, List<Long> excluidos - end");
     return returnValue;
   }
-
 }
