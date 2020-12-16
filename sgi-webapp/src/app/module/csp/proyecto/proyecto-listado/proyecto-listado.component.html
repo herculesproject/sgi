@@ -1,0 +1,137 @@
+<div class="scrollable-panel-with-footer">
+  <section class="proyecto-listado">
+
+    <!-- Buscador de proyectos - Unidades de gestión -->
+    <form class="formulario mat-elevation-z8" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+      [fxLayout]="fxLayoutProperties.layout" [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+      <div fxFlex="84%" fxFlex.sm="50%" fxFlex.md="72%" [fxLayout.xs]="fxLayoutProperties.xs"
+        [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+        <!-- Titulo -->
+        <div class="col">
+          <mat-form-field>
+            <mat-label>{{'csp.proyecto.titulo' | translate}}</mat-label>
+            <input matInput placeholder="{{'csp.proyecto.titulo' | translate}}" formControlName="titulo">
+          </mat-form-field>
+        </div>
+
+        <!-- Acronimo -->
+        <div class="col">
+          <mat-form-field>
+            <mat-label>{{'csp.proyecto.acronimo' | translate}}</mat-label>
+            <input matInput placeholder="{{'csp.proyecto.acronimo' | translate}}" formControlName="acronimo">
+          </mat-form-field>
+        </div>
+
+        <!-- Estado -->
+        <ng-container>
+          <div class="col">
+            <mat-form-field>
+              <mat-label>{{'csp.proyecto.estado' | translate}}</mat-label>
+              <mat-select matNativeControl formControlName="estado">
+                <mat-option *ngFor="let estado of estadoProyecto" [value]="estado | translate">
+                  {{ estado | translate}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <div class="buttons-final">
+        <div class="col filter-button">
+          <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+            <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
+          </button>
+          <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
+            mat-button>{{'botones.limpiar'| translate}}
+          </button>
+        </div>
+      </div>
+
+    </form>
+    <!-- FIN Buscador de proyectos -->
+
+    <!-- Listado de proyectos -->
+    <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="proyecto$ | async" matSort matSortActive="id"
+      matSortDirection="asc" matSortDisableClear>
+
+      <!-- Acronimo -->
+      <ng-container matColumnDef="acronimo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.acronimo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let proyecto">{{proyecto.acronimo}}</td>
+      </ng-container>
+
+      <!-- Titulo -->
+      <ng-container matColumnDef="titulo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.titulo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let proyecto">{{proyecto.titulo}}</td>
+      </ng-container>
+
+      <!-- Fecha inicio -->
+      <ng-container matColumnDef="fechaInicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto.fechaInicio' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          {{proyecto.fechaInicio | date:'dd/MM/yyyy'}}
+        </td>
+      </ng-container>
+
+      <!-- Fecha fin -->
+      <ng-container matColumnDef="fechaFin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto.fechaFin' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          {{proyecto.fechaFin | date:'dd/MM/yyyy'}}
+        </td>
+      </ng-container>
+
+      <!-- Estado proyecto -->
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef> {{'csp.proyecto.estado' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          {{proyecto.estado.estado}}
+        </td>
+      </ng-container>
+
+      <!-- Activo  -->
+      <ng-container matColumnDef="activo">
+        <ng-container>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.activo' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let proyecto">{{(proyecto.activo ? 'label.si' : 'label.no') | translate}}
+          </td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> {{'columna.acciones' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          <ng-container>
+            <button *ngIf="proyecto.activo ? true : false" mat-button matTooltip="{{'botones.desactivar' | translate}}"
+              (click)="deactivateProyecto(proyecto)">
+              <mat-icon color="warn">highlight_off</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container>
+            <button *ngIf="(proyecto.estado.estado === TipoEstadoProyecto.BORRADOR && proyecto.activo === false)"
+              (click)="activateProyecto(proyecto)" mat-button matTooltip="{{'botones.reactivar' | translate}}">
+              <mat-icon color="accent">add_circle_outline</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+    </mat-paginator>
+  </section>
+</div>
+<sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW"></sgi-footer-crear>

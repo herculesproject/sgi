@@ -9,7 +9,8 @@
     <mat-icon color="primary" mat-list-icon>description</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.solicitudes' | translate}}</p>
   </a>
-  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'CSP-PRO-C'" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'CSP-PRO-C'" [routerLink]="[CSP_ROUTE_NAMES.PROYECTO]"
+    [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>work</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.proyectos' | translate}}</p>
   </a>

@@ -22,6 +22,7 @@ const MSG_TIPO_FINANCIACION_TITLE = marker('menu.principal.csp.tipo.financiacion
 
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.principal.csp.fuenteFinanciacion');
 const MSG_AREA_TEMATICA_TITLE = marker('menu.principal.csp.area.tematica');
+const MSG_PROYECTO_TITLE = marker('menu.principal.csp.proyectos');
 
 const routes: SgiRoutes = [
   {
@@ -59,6 +60,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_SOLICITUD_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.PROYECTO,
+        loadChildren: () =>
+          import('./proyecto/proyecto.module').then(
+            (m) => m.ProyectoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PROYECTO_TITLE,
         }
       },
       {
