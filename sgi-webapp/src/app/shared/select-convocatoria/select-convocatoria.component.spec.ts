@@ -1,19 +1,20 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { BuscarConvocatoriaDialogoComponent } from './buscar-convocatoria-dialogo.component';
 
-describe('BuscarConvocatoriaDialogoComponent', () => {
-  let component: BuscarConvocatoriaDialogoComponent;
-  let fixture: ComponentFixture<BuscarConvocatoriaDialogoComponent>;
+import { SelectConvocatoriaComponent } from './select-convocatoria.component';
+
+describe('SelectConvocatoriaComponent', () => {
+  let component: SelectConvocatoriaComponent;
+  let fixture: ComponentFixture<SelectConvocatoriaComponent>;
 
   beforeEach(async(() => {
     const mockDialogRef = {
@@ -33,6 +34,7 @@ describe('BuscarConvocatoriaDialogoComponent', () => {
         MatDialogModule,
         TestUtils.getIdiomas(),
         FormsModule,
+        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
@@ -41,13 +43,14 @@ describe('BuscarConvocatoriaDialogoComponent', () => {
           useValue: mockDialogRef,
         },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
+        SgiAuthService
       ],
-      declarations: [BuscarConvocatoriaDialogoComponent, HeaderComponent],
+      declarations: [SelectConvocatoriaComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BuscarConvocatoriaDialogoComponent);
+    fixture = TestBed.createComponent(SelectConvocatoriaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

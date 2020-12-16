@@ -25,7 +25,7 @@ import { SearchEmpresaEconomicaModalComponent, SearchEmpresaEconomicaModalData }
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
-    '[attr.aria-describedby]': '_ariaDescribedby || null',
+    '[attr.aria-describedby]': 'ariaDescribedby || null',
     '[class.mat-select-disabled]': 'disabled',
     '[class.mat-select-invalid]': 'errorState',
     '[class.mat-select-required]': 'required',

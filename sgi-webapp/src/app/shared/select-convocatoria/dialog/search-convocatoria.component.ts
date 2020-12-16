@@ -30,10 +30,10 @@ interface IConvocatoriaListado {
 }
 
 @Component({
-  templateUrl: './buscar-convocatoria-dialogo.component.html',
-  styleUrls: ['./buscar-convocatoria-dialogo.component.scss']
+  templateUrl: './search-convocatoria.component.html',
+  styleUrls: ['./search-convocatoria.component.scss']
 })
-export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
+export class SearchConvocatoriaModalComponent implements AfterViewInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -51,7 +51,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
   convocatorias$: Observable<IConvocatoriaListado[]> = of();
 
   constructor(
-    public dialogRef: MatDialogRef<BuscarConvocatoriaDialogoComponent>,
+    public dialogRef: MatDialogRef<SearchConvocatoriaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoria,
     private readonly convocatoriaService: ConvocatoriaService,
     private empresaEconomicaService: EmpresaEconomicaService,
@@ -71,7 +71,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'ngAfterViewInit()', 'start');
+    this.logger.debug(SearchConvocatoriaModalComponent.name, 'ngAfterViewInit()', 'start');
 
     merge(
       this.paginator.page,
@@ -82,7 +82,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
       })
     ).subscribe();
 
-    this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'ngAfterViewInit()', 'end');
+    this.logger.debug(SearchConvocatoriaModalComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   onNoClick(): void {
@@ -90,7 +90,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
   }
 
   buscarConvocatorias(reset?: boolean) {
-    this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buscarConvocatorias()', 'start');
+    this.logger.debug(SearchConvocatoriaModalComponent.name, 'buscarConvocatorias()', 'start');
 
     this.convocatorias$ = this.convocatoriaService
       .findAllRestringidos(
@@ -216,18 +216,18 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.showError(MSG_LISTADO_ERROR);
-          this.logger.error(BuscarConvocatoriaDialogoComponent.name, 'buscarConvocatorias()', 'error');
+          this.logger.error(SearchConvocatoriaModalComponent.name, 'buscarConvocatorias()', 'error');
           return of([]);
         })
       );
   }
 
   private buildFilters(convocatoria: IConvocatoria): SgiRestFilter[] {
-    this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buildFilters()', 'start');
+    this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'start');
 
     this.filter = [];
     if (convocatoria.titulo) {
-      this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buildFilters()', 'titulo');
+      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'titulo');
       const filterTitulo: SgiRestFilter = {
         field: 'titulo',
         type: SgiRestFilterType.LIKE,
@@ -238,7 +238,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
     }
 
     if (convocatoria.codigo) {
-      this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buildFilters()', 'codigo');
+      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'codigo');
       const filterCodigo: SgiRestFilter = {
         field: 'codigo',
         type: SgiRestFilterType.LIKE,
@@ -249,7 +249,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
     }
 
     if (convocatoria.anio) {
-      this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buildFilters()', 'anio');
+      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'anio');
       const filterAnio: SgiRestFilter = {
         field: 'anio',
         type: SgiRestFilterType.EQUALS,
@@ -260,7 +260,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
     }
 
     if (convocatoria.abiertoPlazoPresentacionSolicitud) {
-      this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buildFilters()', 'abiertoPlazoPresentacionSolicitud');
+      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'abiertoPlazoPresentacionSolicitud');
       const filterPlazoAbierto: SgiRestFilter = {
         field: 'abiertoPlazoPresentacionSolicitud',
         type: SgiRestFilterType.EQUALS,
@@ -270,7 +270,7 @@ export class BuscarConvocatoriaDialogoComponent implements AfterViewInit {
       this.filter.push(filterPlazoAbierto);
     }
 
-    this.logger.debug(BuscarConvocatoriaDialogoComponent.name, 'buildFilters()', 'end');
+    this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'end');
     return this.filter;
   }
 

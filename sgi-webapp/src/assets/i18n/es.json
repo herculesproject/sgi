@@ -598,6 +598,7 @@
   "csp.solicitud.datosGenerales.codigoExterno.error.maxlength": "El código externo ha superado el límite máximo permitido",
   "csp.solicitud.datosGenerales.codigoRegistro": "Código de registro",
   "csp.solicitud.datosGenerales.comentariosEstado": "Comentarios del estado",
+  "csp.solicitud.datosGenerales.convocatoria": "Convocatoria",
   "csp.solicitud.datosGenerales.convocatoriaExterna": "Referencia externa convocatoria",
   "csp.solicitud.datosGenerales.convocatoriaExterna.maxlength": "La referencia ha superado el límite máximo permitido",
   "csp.solicitud.datosGenerales.convocatoriaExterna.vacio": "La referencia es requerida",

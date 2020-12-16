@@ -34,14 +34,12 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   solicitud: ISolicitud;
 
-  selectedConvocatoria: IConvocatoria;
-
   entidadesConvocantes = [] as IConvocatoriaEntidadConvocante[];
 
   entidadesConvocantesModalidad$ = new BehaviorSubject<SolicitudModalidadEntidadConvocanteListado[]>([]);
 
   public showComentariosEstado$ = new BehaviorSubject<boolean>(false);
-  public disabledSolicitante = false;
+
   convocatoriaRequired = false;
   convocatoriaExternaRequired = false;
 
@@ -75,14 +73,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         return this.loadSolicitante(this.solicitud.solicitante.personaRef);
       }),
       switchMap(() => {
-        return this.solicitud.convocatoria ? this.loadConvocatoria(this.solicitud.convocatoria.id) : of(EMPTY);
-      }),
-      switchMap(() => {
         return this.loadUnidadGestion(this.solicitud.unidadGestion.acronimo);
       }),
       switchMap(() => {
         return this.solicitud.convocatoria ?
-          this.loadEntidadesConvocantesModalidad(this.solicitud.id, this.solicitud.convocatoria.id) : of(EMPTY);
+          this.loadEntidadesConvocantesModalidad(this.solicitud.id, this.solicitud.convocatoria.id) : of([]);
       }),
       map(() => {
         this.logger.debug(SolicitudDatosGeneralesFragment.name, `initializer(key: ${key})`, 'end');
@@ -117,7 +112,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     const form = new FormGroup({
       estado: new FormControl({ value: TipoEstadoSolicitud.BORRADOR, disabled: true }),
       solicitante: new FormControl('', Validators.required),
-      convocatoria: new FormControl(''),
+      convocatoria: new FormControl({ value: '', disabled: this.isEdit() }),
       comentariosEstado: new FormControl({ value: '', disabled: true }),
       convocatoriaExterna: new FormControl(''),
       tipoFormulario: new FormControl({ value: '', disabled: this.isEdit() }),
@@ -138,6 +133,12 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       ).subscribe(_ => {
         this.setConditionalValidators(form);
       })
+    );
+
+    this.subscriptions.push(
+      form.controls.convocatoria.valueChanges.subscribe(
+        (convocatoria) => this.onConvocatoriaChange(convocatoria)
+      )
     );
 
     this.logger.debug(SolicitudDatosGeneralesFragment.name, `${this.buildFormGroup.name}()`, 'end');
@@ -378,54 +379,40 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    *
    * @param convocatoria una convocatoria
    */
-  setConvocatoria(convocatoria: IConvocatoria): void {
+  private onConvocatoriaChange(convocatoria: IConvocatoria): void {
     this.logger.debug(SolicitudDatosGeneralesFragment.name, `setConvocatoria(${convocatoria})`, 'start');
 
-    this.selectedConvocatoria = convocatoria;
-    this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
-    this.getFormGroup().controls.convocatoria.setValue(convocatoria);
+    if (convocatoria) {
+      this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
 
-    this.subscriptions.push(
-      this.unidadGestionService.findByAcronimo(convocatoria.unidadGestionRef).subscribe(unidadGestion => {
-        this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
-      })
-    );
+      this.subscriptions.push(
+        this.unidadGestionService.findByAcronimo(convocatoria.unidadGestionRef).subscribe(unidadGestion => {
+          this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
+        })
+      );
 
-    this.subscriptions.push(
-      this.configuracionSolicitudService.findById(convocatoria.id).subscribe(configuracionSolicitud => {
-        this.getFormGroup().controls.tipoFormulario.setValue(configuracionSolicitud.formularioSolicitud);
-      })
-    );
+      this.subscriptions.push(
+        this.configuracionSolicitudService.findById(convocatoria.id).subscribe(configuracionSolicitud => {
+          this.getFormGroup().controls.tipoFormulario.setValue(configuracionSolicitud.formularioSolicitud);
+        })
+      );
 
-    this.subscriptions.push(
-      this.loadEntidadesConvocantesModalidad(this.solicitud?.id, convocatoria.id).subscribe()
-    );
+      this.subscriptions.push(
+        this.loadEntidadesConvocantesModalidad(this.solicitud?.id, convocatoria.id).subscribe()
+      );
+    } else if (!this.isEdit()) {
+      // Clean dependencies
+      this.getFormGroup().controls.unidadGestion.setValue(null);
+      this.getFormGroup().controls.tipoFormulario.setValue(null);
+      this.entidadesConvocantesModalidad$.next([]);
+
+      // Enable fields
+      this.getFormGroup().controls.convocatoriaExterna.enable();
+      this.getFormGroup().controls.unidadGestion.enable();
+      this.getFormGroup().controls.tipoFormulario.enable();
+    }
 
     this.logger.debug(SolicitudDatosGeneralesFragment.name, `setConvocatoria(${convocatoria})`, 'end');
-  }
-
-  get convocatoriaText(): string {
-    return this.selectedConvocatoria ? this.selectedConvocatoria.titulo : '';
-  }
-
-  /**
-   * Carga los datos de la convocatoria en la solicitud
-   *
-   * @param solicitanteRef Identificador del solicitante
-   * @returns observable para recuperar los datos
-   */
-  private loadConvocatoria(convocatoriaId: number): Observable<IConvocatoria> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `loadConvocatoria(convocatoriaId: ${convocatoriaId})`, 'start');
-
-    return this.convocatoriaService.findById(convocatoriaId).pipe(
-      tap(convocatoria => {
-        this.solicitud.convocatoria = convocatoria;
-        this.selectedConvocatoria = this.solicitud.convocatoria;
-        this.logger.debug(SolicitudDatosGeneralesFragment.name,
-          `loadConvocatoria(convocatoriaId: ${convocatoriaId})`, 'end');
-      })
-    );
   }
 
   /**
@@ -471,7 +458,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       tap(result => {
         if (result.items.length > 0) {
           this.solicitud.unidadGestion = result.items[0];
-          this.getFormGroup().controls.unidadGestion.setValue(this.solicitud.unidadGestion);
         }
         this.logger.debug(SolicitudDatosGeneralesFragment.name,
           `loadUnidadGestion(acronimo: ${acronimo})`, 'end');
@@ -614,15 +600,17 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     const convocatoriaExternaSolicitud = solicitud ? solicitud.convocatoriaExterna : convocatoriaExternaControl.value;
 
     if (!this.isEdit()) {
-      if (!convocatoriaSolicitud) {
+      if (!convocatoriaSolicitud && !convocatoriaExternaSolicitud) {
+        convocatoriaControl.setValidators([Validators.required]);
+        convocatoriaExternaControl.setValidators([Validators.required, Validators.maxLength(50)]);
+      }
+      else if (!convocatoriaSolicitud) {
+        convocatoriaControl.setValidators(null);
         convocatoriaExternaControl.setValidators([Validators.required, Validators.maxLength(50)]);
         tipoFormularioControl.setValidators([Validators.required]);
         unidadGestionControl.setValidators([Validators.required, IsEntityValidator.isValid()]);
-
-        convocatoriaControl.setValidators(null);
       } else {
         convocatoriaControl.setValidators([Validators.required]);
-
         convocatoriaExternaControl.setValidators(null);
         tipoFormularioControl.setValidators(null);
         unidadGestionControl.setValidators(null);
@@ -671,12 +659,12 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         unidadGestionControl.disable({ emitEvent: false });
         unidadGestionControl.updateValueAndValidity({ emitEvent: false });
 
-        this.disabledSolicitante = true;
-
 
       } else if (convocatoriaSolicitud) {
         unidadGestionControl.disable({ emitEvent: false });
         unidadGestionControl.updateValueAndValidity({ emitEvent: false });
+        convocatoriaControl.disable({ emitEvent: false });
+        convocatoriaControl.updateValueAndValidity({ emitEvent: false });
         convocatoriaExternaControl.disable({ emitEvent: false });
         convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
       }

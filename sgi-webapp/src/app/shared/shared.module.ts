@@ -14,11 +14,11 @@ import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-p
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
 import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/action-fragment-link-item.component';
 import { ActionFooterButtonComponent } from './action-footer-button/action-footer-button.component';
-import { BuscarConvocatoriaComponent } from './buscar-convocatoria/buscar-convocatoria.component';
-import { BuscarConvocatoriaDialogoComponent } from './buscar-convocatoria/dialogo/buscar-convocatoria-dialogo.component';
 import { SelectPersonaComponent } from './select-persona/select-persona.component';
 import { SelectEmpresaEconomicaComponent } from './select-empresa-economica/select-empresa-economica.component';
 import { SearchEmpresaEconomicaModalComponent } from './select-empresa-economica/dialog/search-empresa-economica.component';
+import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
+import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/search-convocatoria.component';
 
 @NgModule({
   declarations: [
@@ -31,11 +31,11 @@ import { SearchEmpresaEconomicaModalComponent } from './select-empresa-economica
     BuscarPersonaDialogoComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
-    BuscarConvocatoriaComponent,
-    BuscarConvocatoriaDialogoComponent,
     SelectPersonaComponent,
     SelectEmpresaEconomicaComponent,
-    SearchEmpresaEconomicaModalComponent
+    SearchEmpresaEconomicaModalComponent,
+    SelectConvocatoriaComponent,
+    SearchConvocatoriaModalComponent
   ],
   imports: [
     CommonModule,
@@ -52,11 +52,11 @@ import { SearchEmpresaEconomicaModalComponent } from './select-empresa-economica
     ActionFooterButtonComponent,
     RootComponent,
     BuscarPersonaComponent,
-    BuscarConvocatoriaComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,
-    SelectEmpresaEconomicaComponent
+    SelectEmpresaEconomicaComponent,
+    SelectConvocatoriaComponent
   ]
 })
 export class SharedModule {

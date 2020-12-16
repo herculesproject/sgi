@@ -3,12 +3,13 @@ import { NgControl } from '@angular/forms';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 
 import { MatDialog } from '@angular/material/dialog';
-import { IPersona } from '@core/models/sgp/persona';
-import { BuscarPersonaDialogoComponent } from '@shared/buscar-persona/dialogo/buscar-persona-dialogo.component';
 import { SelectDialogComponent } from '@core/component/select-dialog/select-dialog.component';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { SearchConvocatoriaModalComponent } from './dialog/search-convocatoria.component';
+
 
 @Component({
-  selector: 'sgi-select-persona',
+  selector: 'sgi-select-convocatoria',
   templateUrl: '../../core/component/select-dialog/select-dialog.component.html',
   styleUrls: ['../../core/component/select-dialog/select-dialog.component.scss'],
   // tslint:disable-next-line: no-inputs-metadata-property
@@ -37,11 +38,11 @@ import { SelectDialogComponent } from '@core/component/select-dialog/select-dial
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: SelectPersonaComponent
+      useExisting: SelectConvocatoriaComponent
     }
   ],
 })
-export class SelectPersonaComponent extends SelectDialogComponent<BuscarPersonaDialogoComponent, IPersona> {
+export class SelectConvocatoriaComponent extends SelectDialogComponent<SearchConvocatoriaModalComponent, IConvocatoria> {
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -51,7 +52,7 @@ export class SelectPersonaComponent extends SelectDialogComponent<BuscarPersonaD
     @Attribute('tabindex') tabIndex: string,
     dialog: MatDialog) {
 
-    super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, BuscarPersonaDialogoComponent);
+    super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, SearchConvocatoriaModalComponent);
   }
 
   get displayValue(): string {
@@ -59,6 +60,6 @@ export class SelectPersonaComponent extends SelectDialogComponent<BuscarPersonaD
       return '';
     }
 
-    return `${this.value.nombre} ${this.value.primerApellido} ${this.value.segundoApellido} (${this.value.identificadorNumero}${this.value.identificadorLetra})`;
+    return `${this.value.titulo}`;
   }
 }

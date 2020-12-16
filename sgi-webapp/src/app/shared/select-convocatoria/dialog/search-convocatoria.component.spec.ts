@@ -1,20 +1,19 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SearchConvocatoriaModalComponent } from './search-convocatoria.component';
 
-import { BuscarConvocatoriaComponent } from './buscar-convocatoria.component';
-
-describe('BuscarConvocatoriaComponent', () => {
-  let component: BuscarConvocatoriaComponent;
-  let fixture: ComponentFixture<BuscarConvocatoriaComponent>;
+describe('BuscarConvocatoriaDialogoComponent', () => {
+  let component: SearchConvocatoriaModalComponent;
+  let fixture: ComponentFixture<SearchConvocatoriaModalComponent>;
 
   beforeEach(async(() => {
     const mockDialogRef = {
@@ -34,7 +33,6 @@ describe('BuscarConvocatoriaComponent', () => {
         MatDialogModule,
         TestUtils.getIdiomas(),
         FormsModule,
-        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
@@ -43,14 +41,13 @@ describe('BuscarConvocatoriaComponent', () => {
           useValue: mockDialogRef,
         },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
-        SgiAuthService
       ],
-      declarations: [BuscarConvocatoriaComponent, HeaderComponent],
+      declarations: [SearchConvocatoriaModalComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BuscarConvocatoriaComponent);
+    fixture = TestBed.createComponent(SearchConvocatoriaModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

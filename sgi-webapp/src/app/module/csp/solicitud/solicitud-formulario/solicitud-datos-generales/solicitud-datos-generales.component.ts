@@ -47,8 +47,8 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   elementosPagina: number[];
 
   dataSourceEntidadesConvocantes: MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   private subscriptions = [] as Subscription[];
 
@@ -105,7 +105,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     this.loadTiposFormulario();
 
     this.dataSourceEntidadesConvocantes = new MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>();
-    this.dataSourceEntidadesConvocantes.paginator = this.paginator;
+
     this.dataSourceEntidadesConvocantes.sortingDataAccessor =
       (entidadConvocanteModalidad: SolicitudModalidadEntidadConvocanteListado, property: string) => {
         switch (property) {
@@ -121,10 +121,14 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
             return entidadConvocanteModalidad[property];
         }
       };
-    this.sort.sort(({ id: 'entidadConvocante', start: 'asc' }) as MatSortable);
-    this.dataSourceEntidadesConvocantes.sort = this.sort;
 
     this.subscriptions.push(this.formPart.entidadesConvocantesModalidad$.subscribe(elements => {
+      //Bind on new data where convocatoria is selected
+      if (this.formGroup.controls.convocatoria.value) {
+        this.dataSourceEntidadesConvocantes.paginator = this.paginator;
+        this.sort.sort(({ id: 'entidadConvocante', start: 'asc' }) as MatSortable);
+        this.dataSourceEntidadesConvocantes.sort = this.sort;
+      }
       this.dataSourceEntidadesConvocantes.data = elements;
     }));
 
