@@ -334,7 +334,11 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       return throwError('Errores');
     }
     if (this.isEdit()) {
-      return this.plazosFases.saveOrUpdate().pipe(
+      return this.datosGenerales.saveOrUpdate().pipe(
+        switchMap(() => {
+          this.datosGenerales.refreshInitialState(true);
+          return this.plazosFases.saveOrUpdate();
+        }),
         switchMap(() => {
           this.plazosFases.refreshInitialState(true);
           return this.elegibilidad.saveOrUpdate();
