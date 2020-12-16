@@ -220,7 +220,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       `checkUnidadModelo(key: ${id})`, 'end');
   }
 
-private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
+  private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadUnidadGestion()`, 'start');
     const options = {
       filters: [
@@ -388,7 +388,7 @@ private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
   private saveOrUpdateConvocatoriaEntidadGestora(result: IConvocatoria): Observable<IConvocatoria> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
       `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'start');
-    let observable$ = of();
+    let observable$: Observable<any>;
     const entidadRef = this.getFormGroup().controls.entidadGestora.value?.personaRef;
     this.convocatoriaEntidadGestora.convocatoria = result;
     if (entidadRef !== this.convocatoriaEntidadGestora.empresaEconomica?.personaRef) {
@@ -399,12 +399,13 @@ private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
         observable$ = this.convocatoriaEntidadGestora.id ?
           this.updateConvocatoriaEntidadGestora() : this.createConvocatoriaEntidadGestora();
       }
+      return observable$.pipe(
+        map(() => result),
+        tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
+          `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'end'))
+      );
     }
-    return observable$.pipe(
-      switchMap(() => of(result)),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'end'))
-    );
+    return of(result);
   }
 
   private createConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
