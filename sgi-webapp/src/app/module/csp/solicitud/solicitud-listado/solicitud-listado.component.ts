@@ -91,7 +91,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       fechaFinDesde: new FormControl(undefined),
       fechaFinHasta: new FormControl(undefined),
       solicitante: new FormControl(undefined),
-      activo: new FormControl(undefined),
+      activo: new FormControl('true'),
       añoConvocatoria: new FormControl(undefined),
       tituloConvocatoria: new FormControl(undefined),
       entidadConvocante: new FormControl(undefined),
@@ -287,7 +287,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup.controls.fechaFinDesde.setValue(undefined);
     this.formGroup.controls.fechaFinHasta.setValue(undefined);
     this.formGroup.controls.solicitante.setValue(undefined);
-    this.formGroup.controls.activo.setValue(undefined);
+    this.formGroup.controls.activo.setValue('true');
     this.formGroup.controls.añoConvocatoria.setValue(undefined);
     this.formGroup.controls.entidadConvocante.setValue(undefined);
     this.formGroup.controls.entidadFinanciadora.setValue(undefined);

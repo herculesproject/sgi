@@ -102,7 +102,7 @@ export class TipoFinanciacionListadoComponent extends AbstractTablePaginationCom
 
   onClearFilters() {
     this.logger.debug(TipoFinanciacionListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup.controls.activo.setValue('');
+    this.formGroup.controls.activo.setValue('true');
     this.onSearch();
     this.logger.debug(TipoFinanciacionListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
