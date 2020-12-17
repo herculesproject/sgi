@@ -11,7 +11,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { map, tap, catchError, switchMap, mergeMap } from 'rxjs/operators';
+import { map, tap, catchError, switchMap, mergeAll } from 'rxjs/operators';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -124,90 +124,64 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
             items: convocatorias
           } as SgiRestListResult<IConvocatoriaListado>;
         }),
-        mergeMap(convocatoriaListados => {
-          return from(convocatoriaListados.items).pipe(
-            mergeMap((element) => {
-              return this.convocatoriaService.findEntidadesFinanciadoras(element.convocatoria.id).pipe(
+        switchMap((result) => {
+          return from(result.items).pipe(
+            map((convocatoriaListado) => {
+              return this.convocatoriaService.findEntidadesFinanciadoras(convocatoriaListado.convocatoria.id).pipe(
                 map(entidadFinanciadora => {
                   if (entidadFinanciadora.items.length > 0) {
-                    element.entidadFinanciadora = entidadFinanciadora.items[0];
+                    convocatoriaListado.entidadFinanciadora = entidadFinanciadora.items[0];
                   }
-                  return element;
+                  return convocatoriaListado;
                 }),
-                switchMap(convocatoriaListado => {
+                switchMap(() => {
                   if (convocatoriaListado.entidadFinanciadora.id) {
                     return this.empresaEconomicaService.findById(convocatoriaListado.entidadFinanciadora.entidadRef).pipe(
                       map(empresaEconomica => {
                         convocatoriaListado.entidadFinanciadoraEmpresa = empresaEconomica;
-                        return empresaEconomica;
+                        return convocatoriaListado;
                       }),
                     );
                   }
-                  return of({} as IEmpresaEconomica);
+                  return of(convocatoriaListado);
                 }),
-                catchError(() => of(element))
+                switchMap(() => {
+                  return this.convocatoriaService.findAllConvocatoriaFases(convocatoriaListado.convocatoria.id).pipe(
+                    map(convocatoriaFase => {
+                      if (convocatoriaFase.items.length > 0) {
+                        convocatoriaListado.fase = convocatoriaFase.items[0];
+                      }
+                      return convocatoriaListado;
+                    })
+                  );
+                }),
+                switchMap(() => {
+                  return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(convocatoriaListado.convocatoria.id).pipe(
+                    map(convocatoriaEntidadConvocante => {
+                      if (convocatoriaEntidadConvocante.items.length > 0) {
+                        convocatoriaListado.entidadConvocante = convocatoriaEntidadConvocante.items[0];
+                      }
+                      return convocatoriaListado;
+                    }),
+                    switchMap(() => {
+                      if (convocatoriaListado.entidadFinanciadora.id) {
+                        return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidad.personaRef).pipe(
+                          map(empresaEconomica => {
+                            convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
+                            return convocatoriaListado;
+                          }),
+                        );
+                      }
+                      return of(convocatoriaListado);
+                    }),
+                  );
+                })
               );
-            })
-          ).pipe(
-            switchMap(() => {
-              return of({
-                page: convocatoriaListados.page,
-                total: convocatoriaListados.total,
-                items: convocatoriaListados.items
-              } as SgiRestListResult<IConvocatoriaListado>);
-            })
-          );
-        }),
-        mergeMap(convocatoriaListados => {
-          return from(convocatoriaListados.items).pipe(
-            mergeMap((element) => {
-              return this.convocatoriaService.findAllConvocatoriaFases(element.convocatoria.id).pipe(
-                map(convocatoriaFase => {
-                  if (convocatoriaFase.items.length > 0) {
-                    element.fase = convocatoriaFase.items[0];
-                  }
-                  return element;
-                }),
-                catchError(() => of(element))
-              );
-            })
-          ).pipe(
-            switchMap(() => {
-              return of({
-                page: convocatoriaListados.page,
-                total: convocatoriaListados.total,
-                items: convocatoriaListados.items
-              } as SgiRestListResult<IConvocatoriaListado>);
-            })
-          );
-        }),
-        mergeMap(convocatoriaListados => {
-          return from(convocatoriaListados.items).pipe(
-            mergeMap((element) => {
-              return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(element.convocatoria.id).pipe(
-                map(convocatoriaEntidadConvocante => {
-                  if (convocatoriaEntidadConvocante.items.length > 0) {
-                    element.entidadConvocante = convocatoriaEntidadConvocante.items[0];
-                  }
-                  return element;
-                }),
-                switchMap(convocatoriaListado => {
-                  if (convocatoriaListado.entidadFinanciadora.id) {
-                    return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidad.personaRef).pipe(
-                      map(empresaEconomica => {
-                        convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
-                        return empresaEconomica;
-                      }),
-                    );
-                  }
-                  return of({} as IEmpresaEconomica);
-                }),
-                catchError(() => of(element))
-              );
-            })
-          ).pipe(
-            switchMap(() => {
-              return of(convocatoriaListados.items);
+            }),
+            mergeAll(),
+            map(() => {
+              this.totalElementos = result.total;
+              return result.items;
             })
           );
         }),

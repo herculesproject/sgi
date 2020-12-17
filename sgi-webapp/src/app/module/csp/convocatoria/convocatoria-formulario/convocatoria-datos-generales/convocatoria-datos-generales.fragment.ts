@@ -184,8 +184,18 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
           })
         );
       }),
+      switchMap(convocatoria => {
+        return this.convocatoriaService.vinculaciones(key).pipe(
+          map(status => {
+            if (status) {
+              this.getFormGroup().controls.unidadGestion.disable();
+              this.getFormGroup().controls.modeloEjecucion.disable();
+            }
+            return convocatoria;
+          })
+        );
+      }),
       tap(() => this.loadAreasTematicas(key)),
-      tap(() => this.checkVinculaciones(key)),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
         `initializer(key: ${key})`, 'end')),
       catchError((error) => {
@@ -194,30 +204,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         return EMPTY;
       })
     );
-  }
-
-  private checkVinculaciones(id: number): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `checkUnidadModelo(key: ${id})`, 'start');
-    if (id) {
-      const subscription = this.convocatoriaService.vinculaciones(id).subscribe(
-        status => {
-          if (status) {
-            this.getFormGroup().controls.unidadGestion.disable();
-            this.getFormGroup().controls.modeloEjecucion.disable();
-            this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-              `checkUnidadModelo(key: ${id})`, 'end');
-          }
-        },
-        error => {
-          this.logger.error(ConvocatoriaDatosGeneralesFragment.name,
-            `checkUnidadModelo(key: ${id})`, error);
-        }
-      );
-      this.subscriptions.push(subscription);
-    }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `checkUnidadModelo(key: ${id})`, 'end');
   }
 
   private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
