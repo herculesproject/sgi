@@ -14,7 +14,6 @@ import { map, startWith, tap } from 'rxjs/operators';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { DateValidator } from '@core/validators/date-validator';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { DateUtils } from '@core/utils/date-utils';
@@ -123,12 +122,12 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
    */
   private createValidatorDate(tipoFase: ITipoFase | string): void {
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, `createValidatorDate(tipoFase: ${tipoFase})`, 'end');
-    let rangoFechas: IRange[];
-    if (!tipoFase || typeof tipoFase === 'string') {
-      rangoFechas = [];
-    } else {
+    let rangoFechas: IRange[] = [];
+    if (tipoFase && typeof tipoFase !== 'string') {
+      console.log(this.data.plazos);
       const convocatoriasFases = this.data.plazos.filter(plazo =>
-        plazo.tipoFase.id === tipoFase.id && plazo.id !== this.data.plazo.id);
+        plazo.tipoFase.id === (tipoFase as ITipoFase).id &&
+        (plazo.fechaInicio != this.data.plazo.fechaInicio && plazo.fechaFin != this.data.plazo.fechaFin));
       rangoFechas = convocatoriasFases.map(
         fase => {
           const rango: IRange = {
