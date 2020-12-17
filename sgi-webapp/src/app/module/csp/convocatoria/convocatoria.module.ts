@@ -35,6 +35,7 @@ import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convo
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
+import { HasAnyAuthorityForAnyUODirective, SgiAuthModule } from '@sgi/framework/auth';
 
 @NgModule({
   declarations: [
@@ -74,11 +75,12 @@ import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolv
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    SgiAuthModule
   ],
   providers: [
     ConvocatoriaResolver,
-    ConfiguracionSolicitudResolver
+    ConfiguracionSolicitudResolver,
   ]
 })
 export class ConvocatoriaModule { }
