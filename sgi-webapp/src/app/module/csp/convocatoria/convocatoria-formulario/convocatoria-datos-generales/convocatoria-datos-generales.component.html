@@ -232,7 +232,7 @@
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria.destinatarios' | translate}}</mat-label>
         <input matInput formControlName="destinatarios" type="text" id="destinatarios"
-          placeholder="{{'csp.convocatoria.destinatarios' | translate}}" required [matAutocomplete]="autoDestinatarios">
+          placeholder="{{'csp.convocatoria.destinatarios' | translate}}" [matAutocomplete]="autoDestinatarios">
         <mat-autocomplete #autoDestinatarios="matAutocomplete">
           <mat-option *ngFor="let destinatario of destinatarios" [value]="destinatario">
             {{destinatario}}
@@ -240,9 +240,6 @@
         </mat-autocomplete>
         <mat-error *ngIf="formGroup.controls.destinatarios.errors?.invalid">
           {{'csp.convocatoria.destinatarios.error.invalid' | translate}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.destinatarios.errors?.required">
-          {{'csp.convocatoria.destinatarios.error.required' | translate}}
         </mat-error>
       </mat-form-field>
     </div>

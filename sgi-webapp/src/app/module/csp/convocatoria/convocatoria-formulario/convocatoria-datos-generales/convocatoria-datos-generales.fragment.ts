@@ -86,8 +86,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       regimenConcurrencia: new FormControl(''),
       colaborativos: new FormControl(null),
       destinatarios: new FormControl(
-        '', [Validators.required,
-        EnumValidador.isValid(TipoDestinatario)]),
+        '', [EnumValidador.isValid(TipoDestinatario)]),
       entidadGestora: new FormControl(''),
       objeto: new FormControl('',
         Validators.maxLength(2000)),
