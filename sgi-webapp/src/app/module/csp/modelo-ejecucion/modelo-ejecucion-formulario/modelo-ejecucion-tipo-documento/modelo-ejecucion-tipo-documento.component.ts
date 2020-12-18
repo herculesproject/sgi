@@ -93,22 +93,19 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
       tipoDocumento: undefined
     };
     const tipoDocumentos: ITipoDocumento[] = [];
-    const selectedTipoFases: ITipoFase[] = [];
+    const modeloTipoDocumentos: IModeloTipoDocumento[] = [];
+
     this.modelosTipoDocumentos.data.forEach(wrapper => {
       tipoDocumentos.push(wrapper.value.tipoDocumento);
-      if (wrapper.value.modeloTipoFase) {
-        selectedTipoFases.push(wrapper.value.modeloTipoFase.tipoFase);
-      }
+      modeloTipoDocumentos.push(wrapper.value);
     });
     let availableTipoFases = this.actionService.getTipoFases();
-    availableTipoFases = availableTipoFases.filter(availableTipoFase => {
-      return selectedTipoFases.find((currentTipo) =>
-        currentTipo.id === availableTipoFase.id) ? false : true;
-    });
+
     const data: ModeloTipoDocumentoModalData = {
       modeloTipoDocumento,
       tipoDocumentos,
       tipoFases: availableTipoFases,
+      modeloTipoDocumentos: modeloTipoDocumentos,
       id: this.formPart.getKey() as number
     };
     const config = {
