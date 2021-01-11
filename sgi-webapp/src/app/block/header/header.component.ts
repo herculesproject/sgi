@@ -29,13 +29,4 @@ export class HeaderComponent implements OnDestroy {
     this.subscription.unsubscribe();
     this.logger.debug(HeaderComponent.name, 'ngOnDestroy()', 'end');
   }
-
-  /**
-   * Cambiar el estado del menú acordeón
-   */
-  toggleSidenav(): void {
-    this.logger.debug(HeaderComponent.name, 'toggleSidenav()', 'start');
-    this.layout.toggleMenu();
-    this.logger.debug(HeaderComponent.name, 'toggleSidenav()', 'end');
-  }
 }
