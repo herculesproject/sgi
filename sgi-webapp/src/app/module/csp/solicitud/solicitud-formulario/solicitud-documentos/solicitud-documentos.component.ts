@@ -1,5 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -10,15 +10,15 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Group } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
-import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { DialogService } from '@core/services/dialog.service';
-import { DocumentoService, FileModel, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { NodeDocumentoSolicitud, SolicitudDocumentosFragment } from './solicitud-documentos.fragment';
 
@@ -52,7 +52,8 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   treeControl: FlatTreeControl<NodeDocumentoSolicitud>;
   private treeFlattener: MatTreeFlattener<NodeDocumentoSolicitud, NodeDocumentoSolicitud>;
   dataSource: MatTreeFlatDataSource<NodeDocumentoSolicitud, NodeDocumentoSolicitud>;
-  @ViewChild('fileUpload') private fileUploadInput: ElementRef;
+  @ViewChild('uploader') private uploader: SgiFileUploadComponent;
+
 
   viewingNode: NodeDocumentoSolicitud;
   viewMode = VIEW_MODE.NONE;
@@ -62,10 +63,10 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     return this.group.form;
   }
 
-  fileToUpload: FileModel;
-  tiposDocumento: ITipoDocumento[] = [];
+  uploading = false;
 
   disableUpload = true;
+  tiposDocumento: ITipoDocumento[] = [];
 
   private getLevel = (node: NodeDocumentoSolicitud) => node.level;
   private isExpandable = (node: NodeDocumentoSolicitud) => node.childs.length > 0;
@@ -78,7 +79,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   constructor(
     protected logger: NGXLogger,
     public actionService: SolicitudActionService,
-    private modeloEjecucionService: ModeloEjecucionService,
     private documentoService: DocumentoService,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private snackBar: SnackBarService,
@@ -119,8 +119,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.subscriptions.push(subcription);
     this.group.load(new FormGroup({
       nombre: new FormControl('', Validators.required),
-      fileInfo: new FormControl(null),
-      fichero: new FormControl({ value: null, disabled: this.disableUpload }, Validators.required),
+      fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       comentarios: new FormControl('')
     }));
@@ -192,42 +191,18 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   private loadDetails(node: NodeDocumentoSolicitud) {
     this.logger.debug(SolicitudDocumentosComponent.name, `loadDetails(node: ${node})`, 'start');
     this.formGroup.enable();
-    this.setUploadDisabled(false);
 
     this.formGroup.reset();
     this.formGroup.get('nombre').patchValue(node?.documento?.value?.nombre);
-    this.cleanFileUploadInput();
-    this.formGroup.get('fileInfo').patchValue(node?.fichero);
-    this.formGroup.get('fichero').patchValue(node?.fichero?.nombre);
+    this.formGroup.get('fichero').patchValue(node?.fichero);
     this.formGroup.get('tipoDocumento').patchValue(node?.documento?.value?.tipoDocumento);
     this.formGroup.get('comentarios').patchValue(node?.documento?.value?.comentario);
 
     this.group.refreshInitialState(Boolean(node?.documento));
     if (this.viewMode !== VIEW_MODE.NEW && this.viewMode !== VIEW_MODE.EDIT) {
       this.formGroup.disable();
-      this.setUploadDisabled(true);
     }
     this.logger.debug(SolicitudDocumentosComponent.name, `loadDetails(node: ${node})`, 'end');
-  }
-
-  private setUploadDisabled(value: boolean): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `setUploadDisabled(value: ${value})`, 'start');
-    if (value) {
-      this.disableUpload = true;
-      this.formGroup.controls.fichero.disable();
-    } else {
-      this.disableUpload = false;
-      this.formGroup.controls.fichero.enable();
-    }
-    this.logger.debug(SolicitudDocumentosComponent.name, `setUploadDisabled(value: ${value})`, 'start');
-  }
-
-  private cleanFileUploadInput(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `cleanFileUploadInput()`, 'start');
-    if (this.fileUploadInput) {
-      this.fileUploadInput.nativeElement.value = null;
-    }
-    this.logger.debug(SolicitudDocumentosComponent.name, `cleanFileUploadInput()`, 'end');
   }
 
   hideNodeDetails() {
@@ -237,35 +212,22 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.logger.debug(SolicitudDocumentosComponent.name, `hideNodeDetails()`, 'end');
   }
 
-  onSelectFile(files: FileList) {
-    this.logger.debug(SolicitudDocumentosComponent.name, `onSelectFile(files: ${files})`, 'start');
-    if (files && files.length) {
-      this.fileToUpload = {
-        progress: 0,
-        file: files.item(0),
-        status: undefined
-      };
-      this.setUploadDisabled(true);
-      this.subscriptions.push(this.documentoService.uploadFichero(this.fileToUpload).subscribe(
-        (fileModel) => {
-          this.snackBar.showSuccess(MSG_UPLOAD_SUCCESS);
-          this.formGroup.controls.fichero.setValue(fileModel.nombre);
-          this.formGroup.controls.fileInfo.setValue(fileModel);
-          this.setUploadDisabled(false);
-          this.logger.debug(SolicitudDocumentosComponent.name, `onSelectFile(files: ${files})`, 'end');
-        },
-        (error) => {
-          this.fileToUpload.status = 'error';
-          this.snackBar.showError(MSG_UPLOAD_ERROR);
-          this.setUploadDisabled(false);
-          this.logger.error(SolicitudDocumentosComponent.name, `onSelectFile(files: ${files})`, error);
-        }
-      ));
-    } else {
-      this.fileToUpload = undefined;
-      this.logger.debug(SolicitudDocumentosComponent.name, `onSelectFile(files: ${files})`, 'end');
+  onUploadProgress(event: UploadEvent) {
+    switch (event.status) {
+      case 'start':
+        this.uploading = true;
+        break;
+      case 'end':
+        this.snackBar.showSuccess(MSG_UPLOAD_SUCCESS);
+        this.uploading = false;
+        break;
+      case 'error':
+        this.snackBar.showError(MSG_UPLOAD_ERROR);
+        this.uploading = false;
+        break;
     }
   }
+
 
   downloadFile(node: NodeDocumentoSolicitud): void {
     this.logger.debug(SolicitudDocumentosComponent.name, `downloadFile()`, 'start');
@@ -286,10 +248,14 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.formGroup.markAllAsTouched();
     if (this.formGroup.valid) {
       if (this.viewMode === VIEW_MODE.NEW) {
-        this.addNode(this.getDetailNode());
+        this.uploader.uploadSelection().subscribe(
+          () => this.addNode(this.getDetailNode())
+        );
       }
       else if (this.viewMode === VIEW_MODE.EDIT) {
-        this.updateNode(this.getDetailNode());
+        this.uploader.uploadSelection().subscribe(
+          () => this.updateNode(this.getDetailNode())
+        );
       }
     }
     this.logger.debug(SolicitudDocumentosComponent.name, `acceptDetail()`, 'end');
@@ -302,7 +268,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     detail.title = detail.documento.value.nombre;
     detail.documento.value.tipoDocumento = this.formGroup.get('tipoDocumento').value;
     detail.documento.value.comentario = this.formGroup.get('comentarios').value;
-    detail.fichero = this.formGroup.get('fileInfo').value;
+    detail.fichero = this.formGroup.get('fichero').value;
     this.logger.debug(SolicitudDocumentosComponent.name, `getDetailNode()`, 'end');
     return detail;
   }

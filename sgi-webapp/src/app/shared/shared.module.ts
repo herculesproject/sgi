@@ -19,6 +19,7 @@ import { SelectEmpresaEconomicaComponent } from './select-empresa-economica/sele
 import { SearchEmpresaEconomicaModalComponent } from './select-empresa-economica/dialog/search-empresa-economica.component';
 import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
 import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/search-convocatoria.component';
+import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/s
     SelectEmpresaEconomicaComponent,
     SearchEmpresaEconomicaModalComponent,
     SelectConvocatoriaComponent,
-    SearchConvocatoriaModalComponent
+    SearchConvocatoriaModalComponent,
+    SgiFileUploadComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +58,8 @@ import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/s
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,
     SelectEmpresaEconomicaComponent,
-    SelectConvocatoriaComponent
+    SelectConvocatoriaComponent,
+    SgiFileUploadComponent
   ]
 })
 export class SharedModule {

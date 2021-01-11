@@ -43,10 +43,7 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
   uploadFichero(fileModel: FileModel): Observable<IDocumento> {
     this.logger.debug(DocumentoService.name, `uploadFichero()`, '-', 'START');
 
-    const formData = new FormData();
-    formData.append('archivo', fileModel.file);
-
-    return this.http.post(`${this.endpointUrl}`, formData, { observe: 'events', reportProgress: true }).pipe(
+    return this.uploadFicheroWithStatus(fileModel.file).pipe(
       map((event: HttpEvent<any>) => {
         console.log(event);
         switch (event.type) {
@@ -67,7 +64,15 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
         return throwError(err);
       })
     );
+  }
 
+  uploadFicheroWithStatus(file: File): Observable<HttpEvent<any>> {
+    this.logger.debug(DocumentoService.name, `uploadFicheroWithStatus()`, '-', 'START');
+
+    const formData = new FormData();
+    formData.append('archivo', file);
+
+    return this.http.post(`${this.endpointUrl}`, formData, { observe: 'events', reportProgress: true });
   }
 
   /**

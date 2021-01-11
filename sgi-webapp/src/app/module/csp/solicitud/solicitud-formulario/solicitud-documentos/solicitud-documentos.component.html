@@ -47,26 +47,15 @@
             {{'csp.solicitud.documentos.documento.nombre.error' | translate}}
           </mat-error>
         </mat-form-field>
-        <div>
-          <mat-form-field class="input-form file-upload" (click)="fileUpload.click()">
-            <mat-label>{{'csp.solicitud.documentos.documento.fichero' | translate}}</mat-label>
-            <input type="file" #fileUpload (change)="onSelectFile($event.target.files)" style="display:none;"
-              [disabled]="disableUpload" />
-            <input matInput type="text" tabindex="0" #fichero="matInput"
-              placeholder="{{'csp.solicitud.documentos.documento.fichero.selecciona' | translate}}"
-              (focus)="fichero.focused = true" (blur)="fichero.focused = false" (keyup.enter)="fileUpload.click()"
-              formControlName="fichero" [readonly]="true" required>
-            <mat-error *ngIf="formGroup.get('fichero').errors?.required">
-              {{'csp.solicitud.documentos.documento.fichero.error' | translate}}
-            </mat-error>
-            <mat-icon matSuffix>
-              arrow_upward
-            </mat-icon>
-          </mat-form-field>
-          <mat-progress-bar
-            *ngIf="(viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT) && fileToUpload?.status === 'uploading'"
-            [value]="fileToUpload?.progress"></mat-progress-bar>
-        </div>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.solicitud.documentos.documento.fichero' | translate}}</mat-label>
+          <sgi-file-upload #uploader placeholder="{{'csp.solicitud.documentos.documento.fichero' | translate}}"
+            formControlName="fichero" required autoUpload="false" (uploadEventChange)="onUploadProgress($event)">
+          </sgi-file-upload>
+          <mat-error *ngIf="formGroup.get('fichero').errors?.required">
+            {{'csp.solicitud.documentos.documento.fichero.error' | translate}}
+          </mat-error>
+        </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.solicitud.documentos.documento.tipoDocumento' | translate}}</mat-label>
           <mat-select placeholder="{{'csp.solicitud.documentos.documento.tipoDocumento' | translate}}"
@@ -89,7 +78,7 @@
         </button>
         <button *ngIf="viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT" color="accent" mat-button
           mat-raised-button (click)="acceptDetail()"
-          [disabled]="!status.complete">{{'botones.aceptar' | translate}}</button>
+          [disabled]="!status.complete || (status.complete && uploading)">{{'botones.aceptar' | translate}}</button>
         <button *ngIf="viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT" class="link-cancelar" mat-button><span
             class="underline" (click)="cancelDetail()">{{'botones.cancelar' | translate}}</span></button>
         <button *ngIf="viewMode === VIEW_MODE.VIEW" color="accent" class="rounded" mat-button mat-raised-button
