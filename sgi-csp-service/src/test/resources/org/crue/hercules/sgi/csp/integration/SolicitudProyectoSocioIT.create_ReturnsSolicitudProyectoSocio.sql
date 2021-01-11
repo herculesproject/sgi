@@ -35,8 +35,6 @@ VALUES(1, 1, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
 
 -- PROGRAMA
 INSERT INTO csp.programa (id, nombre, descripcion, programa_padre_id, activo) VALUES (1, 'nombre-001', 'descripcion-001', null, true);
-INSERT INTO csp.programa (id, nombre, descripcion, programa_padre_id, activo) VALUES (2, 'nombre-002', 'descripcion-002', 1, true);
-INSERT INTO csp.programa (id, nombre, descripcion, programa_padre_id, activo) VALUES (3, 'nombre-003', 'descripcion-003', 1, true);
 
 -- CONVOCATORIA ENTIDAD CONVOCANTE
 INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (1, 1, 'entidad-001', 1);
@@ -51,5 +49,8 @@ INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_s
  VALUES (1, null, 'SGI_SLC1202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'Estándar', true);
 
 -- SOLICITUD PROYECTO DATOS
-INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades) 
+INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades ) 
 VALUES (1, 1, 'titulo-1', true, true);
+
+-- ROL SOCIO
+INSERT INTO csp.rol_socio (id, abreviatura, nombre, descripcion, coordinador, activo) VALUES(1, '001', 'nombre-001', 'descripcion-001' , false, false);

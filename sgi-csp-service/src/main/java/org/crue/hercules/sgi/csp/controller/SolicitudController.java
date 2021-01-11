@@ -13,12 +13,14 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -66,6 +68,9 @@ public class SolicitudController {
   /** SolicitudProyectoDatosService service */
   private final SolicitudProyectoDatosService solicitudProyectoDatosService;
 
+  /** SolicitudProyectoSocioService service */
+  private final SolicitudProyectoSocioService solicitudProyectoSocioService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -75,16 +80,19 @@ public class SolicitudController {
    * @param estadoSolicitudService        {@link EstadoSolicitudService}.
    * @param solicitudHitoService          {@link SolicitudHitoService}.
    * @param solicitudProyectoDatosService {@link SolicitudProyectoDatosService}
+   * @param solicitudProyectoSocioService {@link SolicitudProyectoSocioService}
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
-      SolicitudHitoService solicitudHitoService, SolicitudProyectoDatosService solicitudProyectoDatosService) {
+      SolicitudHitoService solicitudHitoService, SolicitudProyectoDatosService solicitudProyectoDatosService,
+      SolicitudProyectoSocioService solicitudProyectoSocioService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
     this.solicitudDocumentoService = solicitudDocumentoService;
     this.solicitudHitoService = solicitudHitoService;
     this.solicitudProyectoDatosService = solicitudProyectoDatosService;
+    this.solicitudProyectoSocioService = solicitudProyectoSocioService;
   }
 
   /**
@@ -410,6 +418,30 @@ public class SolicitudController {
 
     log.debug("SolicitudProyectoDatos findSolictudProyectoDatos(Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoSocio}
+   * 
+   * @param id     Identificador de {@link SolicitudProyectoSocio}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectosocio")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoSocio>> findAllSolicitudProyectoSocio(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoSocio> page = solicitudProyectoSocioService.findAllBySolicitud(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

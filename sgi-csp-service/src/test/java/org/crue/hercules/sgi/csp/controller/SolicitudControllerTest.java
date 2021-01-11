@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,18 +16,21 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
-import org.crue.hercules.sgi.csp.model.TipoHito;
-import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
+import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -69,6 +73,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudHitoService solicitudHitoService;
+
+  @MockBean
+  private SolicitudProyectoSocioService solicitudProyectoSocioService;
 
   @MockBean
   private SolicitudProyectoDatosService solicitudProyectoDatosService;
@@ -874,6 +881,100 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * Solicitud proyecto equipo
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudProyectoSocio_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudProyectoEquipo para la Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudProyectoSocio> solicitudProyectoSocio = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudProyectoSocio.add(generarSolicitudProyectoSocio(i, i, i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoSocioService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudProyectoSocio.size() ? solicitudProyectoSocio.size() : toIndex;
+          List<SolicitudProyectoSocio> content = solicitudProyectoSocio.subList(fromIndex, toIndex);
+          Page<SolicitudProyectoSocio> pageResponse = new PageImpl<>(content, pageable, solicitudProyectoSocio.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectosocio", solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudProyectoSocio del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudProyectoSocio> solicitudProyectoSocioResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<SolicitudProyectoSocio>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudProyectoSocio solicitudProyectoSocioRecuperado = solicitudProyectoSocioResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudProyectoSocioRecuperado.getImporteSolicitado()).isEqualTo(new BigDecimal(i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void SolicitudProyectoSocio() throws Exception {
+    // given: Una lista vacia de SolicitudProyectoSocio para la
+    // Solicitud
+    Long solicitudId = 1L;
+    List<SolicitudProyectoSocio> solicitudProyectoSocio = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoSocioService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<SolicitudProyectoSocio> pageResponse = new PageImpl<>(solicitudProyectoSocio, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectosocio", solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto Solicitud
    * 
    * @param id id del Solicitud
@@ -1006,6 +1107,24 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitudProyectoDatos.getSolicitud().setEstado(new EstadoSolicitud());
     solicitudProyectoDatos.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
     return solicitudProyectoDatos;
+  }
+
+  /**
+   * Función que devuelve un objeto SolicitudProyectoSocio
+   * 
+   * @param solicitudProyectoSocioId
+   * @param solicitudProyectoDatosId
+   * @return el objeto SolicitudProyectoSocio
+   */
+  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId,
+      Long solicitudProyectoDatosId, Long rolSocioId) {
+
+    SolicitudProyectoSocio solicitudProyectoSocio = SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1).mesFin(3).numInvestigadores(2)
+        .importeSolicitado(new BigDecimal(solicitudProyectoSocioId)).empresaRef("002").build();
+
+    return solicitudProyectoSocio;
   }
 
 }

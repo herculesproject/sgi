@@ -49,7 +49,34 @@ INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, coment
 -- SOLICITUD
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
  VALUES (1, null, 'SGI_SLC1202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'Estándar', true);
+INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (2, null, 'SGI_SLC1202011061028', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'Estándar', true);
+INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (3, null, 'SGI_SLC1202011061029', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'Estándar', true);
+INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (4, null, 'SGI_SLC1202011061026', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'Estándar', true);
+
 
 -- SOLICITUD PROYECTO DATOS
-INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades) 
+INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades ) 
 VALUES (1, 1, 'titulo-1', true, true);
+INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades ) 
+VALUES (2, 2, 'titulo-2', true, true);
+INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades ) 
+VALUES (3, 3, 'titulo-3', true, true);
+INSERT INTO csp.solicitud_proyecto_datos (id, solicitud_id, titulo, colaborativo, presupuesto_por_entidades ) 
+VALUES (4, 4, 'titulo-4', true, true);
+
+-- ROL SOCIO
+INSERT INTO csp.rol_socio (id, abreviatura, nombre, descripcion, coordinador, activo) VALUES(1, '001', 'nombre-001', 'descripcion-001' , false, false);
+
+
+-- SOLICITUD PROYECTO SOCIO
+INSERT INTO csp.solicitud_proyecto_socio (id, solicitud_proyecto_datos_id, rol_socio_id, mes_inicio, mes_fin, num_investigadores, importe_solicitado, empresa_ref) 
+VALUES (1, 1, 1, 2, 6, 8, 4, '001');
+INSERT INTO csp.solicitud_proyecto_socio (id, solicitud_proyecto_datos_id, rol_socio_id, mes_inicio, mes_fin, num_investigadores, importe_solicitado, empresa_ref) 
+VALUES (2, 2, 1, 2, 6, 2, 4, '001');
+INSERT INTO csp.solicitud_proyecto_socio (id, solicitud_proyecto_datos_id, rol_socio_id, mes_inicio, mes_fin, num_investigadores, importe_solicitado, empresa_ref) 
+VALUES (3, 3, 1, 2, 6, 2, 4, '001');
+INSERT INTO csp.solicitud_proyecto_socio (id, solicitud_proyecto_datos_id, rol_socio_id, mes_inicio, mes_fin, num_investigadores, importe_solicitado, empresa_ref) 
+VALUES (4, 4, 1, 2, 6, 2, 4, '001');
