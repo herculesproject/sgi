@@ -94,7 +94,7 @@ public class Proyecto extends BaseEntity {
 
   /** Tipo Finalidad */
   @ManyToOne
-  @JoinColumn(name = "tipo_finalidad_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_FINALIDAD"))
+  @JoinColumn(name = "tipo_finalidad_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_FINALIDAD"))
   private TipoFinalidad finalidad;
 
   /** Convocatoria */
@@ -114,7 +114,7 @@ public class Proyecto extends BaseEntity {
 
   /** Ambito Geografico */
   @ManyToOne
-  @JoinColumn(name = "tipo_ambito_geografico_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_AMBITOGEOGRAFICO"))
+  @JoinColumn(name = "tipo_ambito_geografico_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_AMBITOGEOGRAFICO"))
   private TipoAmbitoGeografico ambitoGeografico;
 
   // /** Plantilla justificación */
@@ -123,7 +123,7 @@ public class Proyecto extends BaseEntity {
   private TipoPlantillaJustificacionEnum plantillaJustificacion;
 
   /** Confidencial */
-  @Column(name = "confidencial", nullable = false)
+  @Column(name = "confidencial", nullable = true)
   private Boolean confidencial;
 
   /** Clasificacion CVN */

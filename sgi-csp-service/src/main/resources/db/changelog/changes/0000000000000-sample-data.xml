@@ -1550,7 +1550,7 @@
   <changeSet context="dev" author="master" id="0000000000000-proyecto">
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
-      <column name="titulo" value="PRO1" />
+      <column name="titulo" value="PROYECTO 1" />
       <column name="codigo_externo" value="codigo-externo-001" />
       <column name="fecha_inicio" value="2020-12-12" />
       <column name="fecha_fin" value="2020-12-31" />
@@ -1563,7 +1563,8 @@
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
-      <column name="titulo" value="PRO2" />
+      <column name="titulo" value="PROYECTO 2" />
+      <column name="acronimo" value="PRO2" />
       <column name="codigo_externo" value="codigo-externo-002" />
       <column name="fecha_inicio" value="2020-12-12" />
       <column name="fecha_fin" value="2020-12-31" />
@@ -1576,7 +1577,7 @@
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
-      <column name="titulo" value="PRO3" />
+      <column name="titulo" value="PROYECTO 3" />
       <column name="codigo_externo" value="codigo-externo-003" />
       <column name="fecha_inicio" value="2020-12-12" />
       <column name="fecha_fin" value="2020-12-31" />
@@ -1585,6 +1586,20 @@
       <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_finalidad where nombre like '% CCC')" />
       <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Propio')" />
       <column name="confidencial" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="proyecto">
+      <column name="id" valueSequenceNext="proyecto_seq" />
+      <column name="titulo" value="PROYECTO 4" />
+      <column name="acronimo" value="PRO4" />
+      <column name="codigo_externo" value="codigo-externo-004" />
+      <column name="fecha_inicio" value="2020-12-18" />
+      <column name="fecha_fin" value="2020-12-31" />
+      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_finalidad where nombre like '% BBB')" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Propio')" />
+      <column name="confidencial" value="true" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -1599,32 +1614,85 @@
     </insert>
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="estado" value="Provisional" />
+      <column name="fecha_estado" value="2020-12-02 10:27:00" />
+      <column name="comentario" value="comentario2" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-002')" />
       <column name="estado" value="Borrador" />
       <column name="fecha_estado" value="2020-11-06 10:35:00" />
-      <column name="comentario" value="comentario2" />
+      <column name="comentario" value="comentario3" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-002')" />
+      <column name="estado" value="Provisional" />
+      <column name="fecha_estado" value="2020-12-01 10:35:00" />
+      <column name="comentario" value="comentario4" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-002')" />
+      <column name="estado" value="Abierto" />
+      <column name="fecha_estado" value="2020-12-03 10:35:00" />
+      <column name="comentario" value="comentario5" />
     </insert>
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-003')" />
       <column name="estado" value="Borrador" />
       <column name="fecha_estado" value="2020-11-06 10:35:00" />
-      <column name="comentario" value="comentario3" />
+      <column name="comentario" value="comentario6" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+      <column name="estado" value="Borrador" />
+      <column name="fecha_estado" value="2020-11-06 10:35:00" />
+      <column name="comentario" value="comentario7" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+      <column name="estado" value="Provisional" />
+      <column name="fecha_estado" value="2020-12-01 10:35:00" />
+      <column name="comentario" value="comentario8" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+      <column name="estado" value="Abierto" />
+      <column name="fecha_estado" value="2020-12-05 10:35:00" />
+      <column name="comentario" value="comentario9" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="id_proyecto" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+      <column name="estado" value="Finalizado" />
+      <column name="fecha_estado" value="2020-12-11 10:35:00" />
+      <column name="comentario" value="comentario10" />
     </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-proyecto-update_estado">
     <update tableName="proyecto">
-      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto  where comentario = 'comentario1')" />
+      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto where comentario = 'comentario2')" />
       <where>codigo_externo = 'codigo-externo-001'</where>
     </update>
     <update tableName="proyecto">
-      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto  where comentario = 'comentario2')" />
+      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto where comentario = 'comentario5')" />
       <where>codigo_externo = 'codigo-externo-002'</where>
     </update>
     <update tableName="proyecto">
-      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto  where comentario = 'comentario3')" />
+      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto where comentario = 'comentario6')" />
       <where>codigo_externo = 'codigo-externo-003'</where>
+    </update>
+    <update tableName="proyecto">
+      <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto where comentario = 'comentario10')" />
+      <where>codigo_externo = 'codigo-externo-004'</where>
     </update>
   </changeSet>
 

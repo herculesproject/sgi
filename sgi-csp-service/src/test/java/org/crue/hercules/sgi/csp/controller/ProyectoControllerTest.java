@@ -108,8 +108,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Proyecto proyecto = generarMockProyecto(1L);
     proyecto.setObservaciones("observaciones actualizadas");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<Proyecto>any(), ArgumentMatchers.<String>anyList(),
-        ArgumentMatchers.anyBoolean())).willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(service.update(ArgumentMatchers.<Proyecto>any(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: update Proyecto
     mockMvc
@@ -133,7 +133,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Proyecto proyecto = generarMockProyecto(1L);
 
     BDDMockito.willThrow(new ProyectoNotFoundException(id)).given(service).update(ArgumentMatchers.<Proyecto>any(),
-        ArgumentMatchers.<String>anyList(), ArgumentMatchers.anyBoolean());
+        ArgumentMatchers.<String>anyList());
 
     // when: update Proyecto
     mockMvc
@@ -322,7 +322,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data Proyecto
     BDDMockito
@@ -394,7 +394,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data Proyecto
     BDDMockito

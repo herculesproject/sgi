@@ -8,14 +8,25 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
+import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
+import org.crue.hercules.sgi.csp.enums.TipoHorasAnualesEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
+import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
+import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,16 +51,444 @@ public class ProyectoServiceTest {
 
   @Mock
   private ProyectoRepository repository;
+  @Mock
+  private EstadoProyectoRepository estadoProyectoRepository;
+  @Mock
+  private ModeloUnidadRepository modeloUnidadRepository;
+  @Mock
+  private ConvocatoriaRepository convocatoriaRepository;
 
   private ProyectoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ProyectoServiceImpl(repository);
+    service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
+        convocatoriaRepository);
   }
 
-  // TODO implementar tests de creación y actualización cuando se implemente su
-  // lógica en el servicio
+  @Test
+  public void create_ReturnsProyecto() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoCreado = invocation.getArgument(0);
+      if (proyectoCreado.getId() == null) {
+        proyectoCreado.setId(1L);
+      }
+
+      return proyectoCreado;
+    });
+
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto estadoProyectoCreado = invocation.getArgument(0);
+          estadoProyectoCreado.setId(1L);
+          return estadoProyectoCreado;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    // when: Creamos el Proyecto
+    Proyecto proyectoCreado = service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef()));
+
+    // then: El Proyecto se crea correctamente
+    Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoCreado.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+  }
+
+  @Test
+  public void createWithConvocatoria_ReturnsProyecto() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setConvocatoria(Convocatoria.builder().id(1L).build());
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoCreado = invocation.getArgument(0);
+      if (proyectoCreado.getId() == null) {
+        proyectoCreado.setId(1L);
+      }
+
+      return proyectoCreado;
+    });
+
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE)));
+
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto estadoProyectoCreado = invocation.getArgument(0);
+          estadoProyectoCreado.setId(1L);
+          return estadoProyectoCreado;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    // when: Creamos el Proyecto
+    Proyecto proyectoCreado = service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef()));
+
+    // then: El Proyecto se crea correctamente
+    Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoCreado.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+  }
+
+  @Test
+  public void create_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setConvocatoria(Convocatoria.builder().id(1L).build());
+
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La convocatoria con id '" + proyecto.getConvocatoria().getId() + "' no existe");
+  }
+
+  @Test
+  public void create_WithId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto que ya tiene id
+    Proyecto proyecto = generarMockProyecto(1L);
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Proyecto id tiene que ser null para crear un Proyecto");
+  }
+
+  @Test
+  public void create_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setUnidadGestionRef(null);
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
+  }
+
+  @Test
+  public void create_WithConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setConvocatoria(Convocatoria.builder().id(1L).build());
+    proyecto.setConvocatoriaExterna("conv-001");
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
+  }
+
+  @Test
+  public void create_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.empty());
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
+            + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
+  }
+
+  @Test
+  public void create_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTimesheet(false);
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El proyecto requiere timesheet");
+  }
+
+  @Test
+  public void create_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTipoHorasAnuales(null);
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
+  }
+
+  @Test
+  public void update_ReturnsProyecto() {
+    // given: Un nuevo Proyecto con las observaciones actualizadas
+    Proyecto proyecto = generarMockProyecto(1L);
+    Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
+    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el Proyecto
+    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas,
+        Arrays.asList(proyecto.getUnidadGestionRef()));
+
+    // then: El Proyecto se actualiza correctamente.
+    Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getId()).as("getId()").isEqualTo(proyecto.getId());
+    Assertions.assertThat(proyectoActualizada.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoActualizada.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+  }
+
+  @Test
+  public void updateWithConvocatoria_ReturnsProyecto() {
+    // given: Un nuevo Proyecto con las observaciones actualizadas
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setConvocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE));
+    Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
+    proyectoObservacionesActualizadas.setConvocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE));
+    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE)));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el Proyecto
+    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas,
+        Arrays.asList(proyecto.getUnidadGestionRef()));
+
+    // then: El Proyecto se actualiza correctamente.
+    Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getId()).as("getId()").isEqualTo(proyecto.getId());
+    Assertions.assertThat(proyectoActualizada.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoActualizada.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoActualizada.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+  }
+
+  @Test
+  public void update_WithNotCorrectEstado_ThrowsIllegalArgumentException() {
+    // given: Actualizar un proyecto con estado Finalizado
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.getEstado().setId(4L);
+    proyecto.getEstado().setEstado(TipoEstadoProyectoEnum.FINALIZADO);
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El proyecto no está en un estado en el que puede ser actualizado");
+  }
+
+  @Test
+  public void update_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
+    // given: Actualizar proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setConvocatoria(Convocatoria.builder().id(1L).build());
+
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La convocatoria con id '" + proyecto.getConvocatoria().getId() + "' no existe");
+  }
+
+  @Test
+  public void update_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
+    // given: Actualizar Proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setUnidadGestionRef(null);
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
+  }
+
+  @Test
+  public void update_WithConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
+    // given: Actualizar Proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setConvocatoria(Convocatoria.builder().id(1L).build());
+    proyecto.setConvocatoriaExterna("conv-001");
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
+  }
+
+  @Test
+  public void update_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
+    // given: Actualizar Proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.empty());
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
+            + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
+  }
+
+  @Test
+  public void update_WithDistinctConvocatoria_ThrowsIllegalArgumentException() {
+    // given: Actualizar Proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setConvocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE));
+    Proyecto proyectoConvocatoriaUpdate = generarMockProyecto(1L);
+    proyecto.setConvocatoria(generarMockConvocatoria(2L, 2L, 2L, 2L, 2L, 2L, Boolean.TRUE));
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    // then: Lanza una excepcion porque no se puede modificar la convocatoria del
+    // proyecto
+    Assertions
+        .assertThatThrownBy(
+            () -> service.update(proyectoConvocatoriaUpdate, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Existen campos del proyecto modificados que no se pueden modificar");
+  }
+
+  @Test
+  public void update_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setTimesheet(false);
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El proyecto requiere timesheet");
+  }
+
+  @Test
+  public void update_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setTipoHorasAnuales(null);
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion
+    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
+  }
 
   @Test
   public void enable_ReturnsProyecto() {
@@ -253,6 +692,9 @@ public class ProyectoServiceTest {
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
     proyecto.setConfidencial(Boolean.FALSE);
+    proyecto.setCosteHora(true);
+    proyecto.setTimesheet(true);
+    proyecto.setTipoHorasAnuales(TipoHorasAnualesEnum.REALES);
     proyecto.setActivo(true);
 
     if (id != null) {
@@ -277,6 +719,80 @@ public class ProyectoServiceTest {
     estadoProyecto.setIdProyecto(1L);
 
     return estadoProyecto;
+  }
+
+  /**
+   * Función que genera Convocatoria
+   * 
+   * @param convocatoriaId
+   * @param unidadGestionId
+   * @param modeloEjecucionId
+   * @param modeloTipoFinalidadId
+   * @param tipoRegimenConcurrenciaId
+   * @param tipoAmbitoGeogragicoId
+   * @param activo
+   * @return la convocatoria
+   */
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
+      Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
+
+    ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
+        : ModeloEjecucion.builder()//
+            .id(modeloEjecucionId)//
+            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
+        : TipoFinalidad.builder()//
+            .id(modeloTipoFinalidadId)//
+            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
+        : ModeloTipoFinalidad.builder()//
+            .id(modeloTipoFinalidadId)//
+            .modeloEjecucion(modeloEjecucion)//
+            .tipoFinalidad(tipoFinalidad)//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
+        : TipoRegimenConcurrencia.builder()//
+            .id(tipoRegimenConcurrenciaId)//
+            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
+        : TipoAmbitoGeografico.builder()//
+            .id(tipoAmbitoGeogragicoId)//
+            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    Convocatoria convocatoria = Convocatoria.builder()//
+        .id(convocatoriaId)//
+        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))//
+        .modeloEjecucion(modeloEjecucion)//
+        .codigo("codigo-" + String.format("%03d", convocatoriaId))//
+        .anio(2020)//
+        .titulo("titulo-" + String.format("%03d", convocatoriaId))//
+        .objeto("objeto-" + String.format("%03d", convocatoriaId))//
+        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
+        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
+        .regimenConcurrencia(tipoRegimenConcurrencia)//
+        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .colaborativos(Boolean.TRUE)//
+        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .duracion(12)//
+        .ambitoGeografico(tipoAmbitoGeografico)//
+        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .activo(activo)//
+        .build();
+
+    return convocatoria;
   }
 
 }

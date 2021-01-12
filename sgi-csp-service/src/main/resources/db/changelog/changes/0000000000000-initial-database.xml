@@ -780,9 +780,7 @@
       <column name="clasificacion_cvn" type="VARCHAR(50)" />
       <column name="codigo_externo" type="VARCHAR(50)" />
       <column name="colaborativo" type="BOOLEAN" />
-      <column name="confidencial" type="BOOLEAN">
-        <constraints nullable="false" />
-      </column>
+      <column name="confidencial" type="BOOLEAN" />
       <column name="contratos" type="BOOLEAN" />
       <column name="convocatoria_externa" type="VARCHAR(50)" />
       <column name="coordinador_externo" type="BOOLEAN" />
@@ -810,14 +808,10 @@
       <column name="unidad_gestion_ref" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
-      <column name="tipo_ambito_geografico_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
+      <column name="tipo_ambito_geografico_id" type="BIGINT" />
       <column name="convocatoria_id" type="BIGINT" />
       <column name="estado_proyecto_id" type="BIGINT" />
-      <column name="tipo_finalidad_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
+      <column name="tipo_finalidad_id" type="BIGINT" />
       <column name="modelo_ejecucion_id" type="BIGINT">
         <constraints nullable="false" />
       </column>

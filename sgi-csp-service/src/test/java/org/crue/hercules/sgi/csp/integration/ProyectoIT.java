@@ -1,10 +1,17 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -50,6 +57,51 @@ public class ProyectoIT {
 
     HttpEntity<Proyecto> request = new HttpEntity<>(entity, headers);
     return request;
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void create_ReturnsProyecto() throws Exception {
+    Proyecto proyecto = generarMockProyecto(null);
+
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(null, proyecto), Proyecto.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+    Proyecto proyectoCreado = response.getBody();
+    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void update_ReturnsProyecto() throws Exception {
+    Long idProyecto = 1L;
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setObservaciones("observaciones actualizadas");
+
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, proyecto), Proyecto.class, idProyecto);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    Proyecto proyectoActualizado = response.getBody();
+    Assertions.assertThat(proyectoActualizado.getId()).as("getId()").isEqualTo(proyecto.getId());
+    Assertions.assertThat(proyectoActualizado.getEstado().getId()).as("getEstado().getId()")
+        .isEqualTo(proyecto.getEstado().getId());
+    Assertions.assertThat(proyectoActualizado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoActualizado.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
 
   }
 
@@ -180,5 +232,61 @@ public class ProyectoIT {
         .isEqualTo("observaciones" + String.format("%03d", 2));
     Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
         .isEqualTo("observaciones" + String.format("%03d", 1));
+  }
+
+  /**
+   * Función que devuelve un objeto Proyecto
+   * 
+   * @param id id del Proyecto
+   * @return el objeto Proyecto
+   */
+  private Proyecto generarMockProyecto(Long id) {
+    EstadoProyecto estadoProyecto = generarMockEstadoProyecto(1L);
+
+    ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
+    modeloEjecucion.setId(1L);
+
+    TipoFinalidad tipoFinalidad = new TipoFinalidad();
+    tipoFinalidad.setId(1L);
+
+    TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
+    tipoAmbitoGeografico.setId(1L);
+
+    Proyecto proyecto = new Proyecto();
+    proyecto.setId(id);
+    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
+    proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
+    proyecto.setUnidadGestionRef("OPE");
+    proyecto.setFechaInicio(LocalDate.now());
+    proyecto.setFechaFin(LocalDate.now());
+    proyecto.setModeloEjecucion(modeloEjecucion);
+    proyecto.setFinalidad(tipoFinalidad);
+    proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
+    proyecto.setConfidencial(Boolean.FALSE);
+    proyecto.setActivo(true);
+
+    if (id != null) {
+      proyecto.setEstado(estadoProyecto);
+    }
+
+    return proyecto;
+  }
+
+  /**
+   * Función que devuelve un objeto EstadoProyecto
+   * 
+   * @param id id del EstadoProyecto
+   * @return el objeto EstadoProyecto
+   */
+  private EstadoProyecto generarMockEstadoProyecto(Long id) {
+    EstadoProyecto estadoProyecto = new EstadoProyecto();
+    estadoProyecto.setId(id);
+    estadoProyecto.setComentario("Estado-" + id);
+    estadoProyecto.setEstado(TipoEstadoProyectoEnum.BORRADOR);
+    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setIdProyecto(1L);
+
+    return estadoProyecto;
   }
 }

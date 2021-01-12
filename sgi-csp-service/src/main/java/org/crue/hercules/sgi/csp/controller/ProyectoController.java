@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -94,12 +92,8 @@ public class ProyectoController {
       return null;
     }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
 
-    Boolean isAdministradorOrGestor = CollectionUtils.isNotEmpty(
-        authentication.getAuthorities().stream().filter(authority -> authority.getAuthority().startsWith("CSP-PRO-C"))
-            .filter(Objects::nonNull).distinct().collect(Collectors.toList()));
-
     proyecto.setId(id);
-    Proyecto returnValue = service.update(proyecto, unidadGestionRefs, isAdministradorOrGestor);
+    Proyecto returnValue = service.update(proyecto, unidadGestionRefs);
     log.debug("update(Proyecto proyecto, Long id, Authentication authentication) - end");
     return returnValue;
   }

@@ -25,14 +25,12 @@ public interface ProyectoService {
   /**
    * Actualiza los datos del {@link Proyecto}.
    * 
-   * @param proyecto                {@link Proyecto} con los datos actualizados.
-   * @param unidadGestionRefs       lista de referencias de las unidades de
-   *                                gestion permitidas para el usuario.
-   * @param isAdministradorOrGestor Indicador de si el usuario que realiza la
-   *                                actualización es administrador o gestor.
+   * @param proyecto          {@link Proyecto} con los datos actualizados.
+   * @param unidadGestionRefs lista de referencias de las unidades de gestion
+   *                          permitidas para el usuario.
    * @return proyecto {@link Proyecto} actualizado.
    */
-  Proyecto update(final Proyecto proyecto, List<String> unidadGestionRefs, Boolean isAdministradorOrGestor);
+  Proyecto update(final Proyecto proyecto, List<String> unidadGestionRefs);
 
   /**
    * Reactiva el {@link Proyecto}.
