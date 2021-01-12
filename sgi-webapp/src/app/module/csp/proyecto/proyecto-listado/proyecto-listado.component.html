@@ -113,6 +113,22 @@
         <th mat-header-cell *matHeaderCellDef> {{'columna.acciones' | translate}} </th>
         <td mat-cell *matCellDef="let proyecto">
           <ng-container>
+            <button *ngIf="(proyecto.estado.estado === TipoEstadoProyecto.CANCELADO || 
+                        proyecto.estado.estado === TipoEstadoProyecto.FINALIZADO)" mat-button
+              matTooltip="{{'botones.ver' | translate}}" [routerLink]="[proyecto.id]">
+              <mat-icon color="primary">visibility</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container>
+            <button *ngIf="proyecto.activo && 
+                        (proyecto.estado.estado === TipoEstadoProyecto.ABIERTO || 
+                        proyecto.estado.estado === TipoEstadoProyecto.BORRADOR || 
+                        proyecto.estado.estado === TipoEstadoProyecto.PROVISIONAL)" mat-button
+              matTooltip="{{'botones.editar' | translate}}" [routerLink]="[proyecto.id]">
+              <mat-icon color="primary">border_color</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container>
             <button *ngIf="proyecto.activo ? true : false" mat-button matTooltip="{{'botones.desactivar' | translate}}"
               (click)="deactivateProyecto(proyecto)">
               <mat-icon color="warn">highlight_off</mat-icon>

@@ -7,10 +7,17 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ProyectoRoutingModule } from './proyecto-routing.module';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
+import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
+import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
+import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
+import { ProyectoResolver } from './proyecto.resolver';
 
 @NgModule({
   declarations: [
-  ProyectoListadoComponent],
+    ProyectoListadoComponent,
+    ProyectoCrearComponent,
+    ProyectoEditarComponent,
+    ProyectoFichaGeneralComponent],
   imports: [
     SharedModule,
     CommonModule,
@@ -20,6 +27,9 @@ import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.co
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule,
+  ],
+  providers: [
+    ProyectoResolver
   ]
 })
 export class ProyectoModule { }

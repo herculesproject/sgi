@@ -3,8 +3,18 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
+import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
+import { PROYECTO_ROUTE_NAMES } from './proyecto-route-names';
+import { ROUTE_NAMES } from '@core/route.names';
+import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { ProyectoResolver } from './proyecto.resolver';
+import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
+import { FragmentGuard } from '@core/guards/detail-form.guard';
 
 const MSG_LISTADO_TITLE = marker('csp.proyecto.listado.titulo');
+const MSG_EDIT_TITLE = marker('csp.proyecto.editar.titulo');
+const MSG_NEW_TITLE = marker('csp.proyecto.crear.titulo');
 
 const routes: SgiAuthRoutes = [
   {
@@ -14,6 +24,51 @@ const routes: SgiAuthRoutes = [
     data: {
       title: MSG_LISTADO_TITLE,
     }
+  },
+  {
+    path: ROUTE_NAMES.NEW,
+    component: ProyectoCrearComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    data: {
+      title: MSG_NEW_TITLE,
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: PROYECTO_ROUTE_NAMES.FICHA_GENERAL
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.FICHA_GENERAL,
+        component: ProyectoFichaGeneralComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
+  },
+  {
+    path: `:id`,
+    component: ProyectoEditarComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      proyecto: ProyectoResolver
+    },
+    data: {
+      title: MSG_EDIT_TITLE
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: PROYECTO_ROUTE_NAMES.FICHA_GENERAL
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.FICHA_GENERAL,
+        component: ProyectoFichaGeneralComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
   }
 ];
 

@@ -43,11 +43,17 @@ export interface IProyecto {
   /** Fecha Fin */
   fechaFin: Date;
 
+  /** Comentario */
+  comentario: string;
+
   /** Unidad gestion */
   unidadGestion: IUnidadGestion;
 
   /** modelo ejecucion */
   modeloEjecucion: IModeloEjecucion;
+
+  /** convocatoriaExterna */
+  convocatoriaExterna: string;
 
   /** finalidad */
   finalidad: ITipoFinalidad;
@@ -67,7 +73,7 @@ export interface IProyecto {
   /** confidencial */
   confidencial: boolean;
 
-  /** convocatoriaExterna */
+  /** clasificacionCVN */
   clasificacionCVN: ClasificacionCVN;
 
   /** colaborativo */
@@ -105,6 +111,15 @@ export interface IProyecto {
 
   /** observaciones */
   observaciones: string;
+
+  /** finalista */
+  finalista: boolean;
+
+  /** limitativo */
+  limitativo: boolean;
+
+  /** anualidades */
+  anualidades: boolean;
 
   /** activo  */
   activo: boolean;
