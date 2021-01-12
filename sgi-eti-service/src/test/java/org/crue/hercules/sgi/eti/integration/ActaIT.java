@@ -205,8 +205,13 @@ public class ActaIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
-    final ResponseEntity<List<ActaWithNumEvaluaciones>> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<ActaWithNumEvaluaciones>>() {
+    // when: Ordenación por id asc
+    String sort = "id+";
+
+    URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
+
+    final ResponseEntity<List<ActaWithNumEvaluaciones>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ActaWithNumEvaluaciones>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header

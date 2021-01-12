@@ -78,6 +78,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Nueva entidad
     final ConvocatoriaReunion newConvocatoriaReunion = getMockData(1L, 1L, 1L);
+    newConvocatoriaReunion.setAnio(LocalDate.now().getYear());
     newConvocatoriaReunion.setId(null);
 
     // when: Se crea la entidad
@@ -275,10 +276,15 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
+    // when: Ordenación por id asc
+    String sort = "id+";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
+
     // when: Se buscan los datos paginados
-    final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
+    final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
         });
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
