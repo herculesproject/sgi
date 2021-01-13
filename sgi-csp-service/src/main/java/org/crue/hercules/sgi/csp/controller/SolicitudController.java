@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -70,6 +72,8 @@ public class SolicitudController {
 
   /** SolicitudProyectoSocioService service */
   private final SolicitudProyectoSocioService solicitudProyectoSocioService;
+  /** SolicitudProyectoEquipoService service */
+  private final SolicitudProyectoEquipoService solicitudProyectoEquipoService;
 
   /**
    * Instancia un nuevo SolicitudController.
@@ -81,11 +85,14 @@ public class SolicitudController {
    * @param solicitudHitoService          {@link SolicitudHitoService}.
    * @param solicitudProyectoDatosService {@link SolicitudProyectoDatosService}
    * @param solicitudProyectoSocioService {@link SolicitudProyectoSocioService}
+   *                                      * @param solicitudProyectoEquipoService
+   *                                      {@link SolicitudProyectoEquipoService}
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
       SolicitudHitoService solicitudHitoService, SolicitudProyectoDatosService solicitudProyectoDatosService,
-      SolicitudProyectoSocioService solicitudProyectoSocioService) {
+      SolicitudProyectoSocioService solicitudProyectoSocioService,
+      SolicitudProyectoEquipoService solicitudProyectoEquipoService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
@@ -93,6 +100,7 @@ public class SolicitudController {
     this.solicitudHitoService = solicitudHitoService;
     this.solicitudProyectoDatosService = solicitudProyectoDatosService;
     this.solicitudProyectoSocioService = solicitudProyectoSocioService;
+    this.solicitudProyectoEquipoService = solicitudProyectoEquipoService;
   }
 
   /**
@@ -442,6 +450,46 @@ public class SolicitudController {
 
     log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoEquipo}
+   * 
+   * @param id     Identificador de {@link SolicitudProyectoDatos}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectoequipo")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoEquipo>> findAllSolicitudProyectoEquipo(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoEquipo> page = solicitudProyectoEquipoService.findAllBySolicitud(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Recupera un {@link SolicitudProyectoDatos} de una solicitud
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link SolicitudProyectoDatos}
+   */
+  @RequestMapping(path = "/{id}/solicitudproyectodatos", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  public ResponseEntity<?> existSolictudProyectoDatos(@PathVariable Long id) {
+    log.debug("existSolictudProyectoDatos(Long id) - start");
+    boolean returnValue = solicitudProyectoDatosService.existsBySolicitudId(id);
+
+    log.debug("SolicitudProyectoDatos existSolictudProyectoDatos(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

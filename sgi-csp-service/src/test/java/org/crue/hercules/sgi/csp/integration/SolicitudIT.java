@@ -442,6 +442,41 @@ public class SolicitudIT {
 
   }
 
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void existSolictudProyectoDatos_Returns204() throws Exception {
+
+    // given: existing Solicitud datos proyecto for solicitud
+    Long id = 1L;
+
+    // when: check exist solicitud datos proyecto
+    final ResponseEntity<SolicitudProyectoDatos> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", HttpMethod.HEAD, buildRequest(null, null),
+        SolicitudProyectoDatos.class, id);
+
+    // then: Response is 200 OK
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void existSolictudProyectoDatos_Returns200() throws Exception {
+
+    // given: existing Solicitud datos proyecto for solicitud
+    Long id = 1L;
+
+    // when: check exist solicitud datos proyecto
+    final ResponseEntity<SolicitudProyectoDatos> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", HttpMethod.HEAD, buildRequest(null, null),
+        SolicitudProyectoDatos.class, id);
+
+    // then: Response is 204 No Content
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
   /**
    * 
    * SOLICITUD PROYECTO SOCIO

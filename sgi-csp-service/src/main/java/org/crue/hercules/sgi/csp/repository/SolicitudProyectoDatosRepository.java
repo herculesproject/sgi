@@ -18,4 +18,6 @@ public interface SolicitudProyectoDatosRepository
    */
   Optional<SolicitudProyectoDatos> findBySolicitudId(Long solicitudId);
 
+  boolean existsBySolicitudId(Long solicitudId);
+
 }

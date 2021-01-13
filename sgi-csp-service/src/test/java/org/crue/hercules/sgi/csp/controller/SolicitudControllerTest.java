@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -79,6 +80,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudProyectoDatosService solicitudProyectoDatosService;
+
+  @MockBean
+  private SolicitudProyectoEquipoService solicitudProyectoEquipoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -878,6 +882,39 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void existSolictudProyectoDatos_ReturnsOK() throws Exception {
+    // given: Existing solicitud datos proyecto by solicitud
+    Long id = 1L;
+    BDDMockito.given(solicitudProyectoDatosService.existsBySolicitudId(ArgumentMatchers.<Long>any()))
+        .willReturn(Boolean.TRUE);
+
+    // when: check exist solicitud datos proyecto by solicitud
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 204 No Content
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void existSolictudProyectoDatos_Returns204() throws Exception {
+    // given: not Existing solicitud datos proyecto by solicitud
+    Long id = 1L;
+    BDDMockito.given(solicitudProyectoDatosService.findBySolicitud(ArgumentMatchers.<Long>any())).willReturn(null);
+
+    // when: check exist solicitud datos proyecto by solicitud
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 204 No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**

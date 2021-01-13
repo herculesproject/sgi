@@ -199,6 +199,18 @@ public class SolicitudProyectoDatosServiceImpl implements SolicitudProyectoDatos
   }
 
   /**
+   * Comprueba si existe una solicitud proyecto datos
+   * 
+   * @param id Identificador de la {@link Solicitud}
+   * @return Indicador de si existe o no solicitud datos proyecto.
+   */
+  @Override
+  public boolean existsBySolicitudId(Long id) {
+
+    return repository.existsBySolicitudId(id);
+  }
+
+  /**
    * Realiza las validaciones comunes para las operaciones de creación y
    * acutalización de solicitud proyecto datos.
    * 

@@ -62,4 +62,12 @@ public interface SolicitudProyectoDatosService {
    */
   SolicitudProyectoDatos findBySolicitud(Long solicitudId);
 
+  /**
+   * Comprueba si existe una solicitud proyecto datos
+   * 
+   * @param id Identificador de la {@link Solicitud}
+   * @return Indicador de si existe o no solicitud datos proyecto.
+   */
+  boolean existsBySolicitudId(Long id);
+
 }
