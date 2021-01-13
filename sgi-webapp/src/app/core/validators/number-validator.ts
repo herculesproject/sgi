@@ -8,7 +8,7 @@ export class NumberValidator {
    * @param firstNumberFieldName Nombre del campo contra el que se quiere hacer la validacion.
    * @param secondNumberFieldName Nombre del campo que se quiere validar.
    */
-  static isAfer(firstNumberFieldName: string, secondNumberFieldName: string): ValidatorFn {
+  static isAfter(firstNumberFieldName: string, secondNumberFieldName: string): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 
       const numeroAnteriorControl = formGroup.controls[firstNumberFieldName];

@@ -10,9 +10,8 @@ import { SolicitudActionService } from '../solicitud.action.service';
 import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
-const MSG_BUTTON_REGISTRAR = marker('csp.convocatoria.registrar');
-const MSG_SUCCESS = marker('csp.convocatoria.editar.correcto');
-const MSG_ERROR = marker('csp.convocatoria.editar.error');
+const MSG_SUCCESS = marker('csp.solicitud.editar.correcto');
+const MSG_ERROR = marker('csp.solicitud.editar.error');
 
 @Component({
   selector: 'sgi-solicitud-editar',
@@ -26,7 +25,6 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   SOLICITUD_ROUTE_NAMES = SOLICITUD_ROUTE_NAMES;
 
   textoCrear = MSG_BUTTON_EDIT;
-  textoRegistrar = MSG_BUTTON_REGISTRAR;
 
   tipoEstandar = false;
   disableRegistrar = false;

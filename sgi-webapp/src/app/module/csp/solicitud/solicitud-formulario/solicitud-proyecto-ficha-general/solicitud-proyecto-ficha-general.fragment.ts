@@ -72,12 +72,12 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       resultadosPrevistos: value.resultadosPrevistos,
       envioEtica: value.envioEtica
     };
-
     const form = this.getFormGroup();
-    const formControl = form.get('colaborativo');
-    const subscription = formControl.valueChanges.pipe(
+    const coordinadorExterno = form.get('coordinadorExterno');
+    coordinadorExterno.disable();
+    const colaborativo = form.get('colaborativo');
+    const subscription = colaborativo.valueChanges.pipe(
       tap((colaborativo) => {
-        const coordinadorExterno = form.get('coordinadorExterno');
         if (colaborativo === false) {
           coordinadorExterno.disable();
         } else {

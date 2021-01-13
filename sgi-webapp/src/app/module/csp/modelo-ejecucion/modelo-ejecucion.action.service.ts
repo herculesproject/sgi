@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ActionService, IFragment } from '@core/services/action-service';
+import { ActionService } from '@core/services/action-service';
 import { ActivatedRoute } from '@angular/router';
 
 import { NGXLogger } from 'ngx-logger';
@@ -21,8 +21,8 @@ import { ModeloEjecucionTipoUnidadGestionFragment } from './modelo-ejecucion-for
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
-import { from, Observable, of, throwError } from 'rxjs';
-import { filter, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class ModeloEjecucionActionService extends ActionService {

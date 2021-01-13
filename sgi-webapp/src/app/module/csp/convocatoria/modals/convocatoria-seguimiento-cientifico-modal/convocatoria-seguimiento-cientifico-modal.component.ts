@@ -102,7 +102,7 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     }, {
       validators: [
         this.isFinalUltimoPeriodo(ultimoseguimientoCientificoNoFinal?.value.mesFinal),
-        NumberValidator.isAfer('desdeMes', 'hastaMes'),
+        NumberValidator.isAfter('desdeMes', 'hastaMes'),
         RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });

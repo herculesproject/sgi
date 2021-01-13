@@ -60,15 +60,14 @@ export class SolicitudAreaTematicaModalComponent extends
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  areasTematicas$: Observable<IAreaTematica[]>;
   areaTematicaTree$ = new BehaviorSubject<NodeAreaTematica[]>([]);
   treeControl = new NestedTreeControl<NodeAreaTematica>(node => node.childs);
   dataSource = new MatTreeNestedDataSource<NodeAreaTematica>();
   private nodeMap = new Map<number, NodeAreaTematica>();
 
   checkedNode: NodeAreaTematica;
-  hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
   textSaveOrUpdate: string;
+  hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
 
   constructor(
     protected logger: NGXLogger,

@@ -38,9 +38,9 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<BuscarPersonaDialogoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IPersona,
-    private readonly personaFisicaService: PersonaFisicaService,
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService) {
+    private personaFisicaService: PersonaFisicaService,
+    private logger: NGXLogger,
+    private snackBarService: SnackBarService) {
 
     this.displayedColumns = ['nombre', 'primerApellido', 'segundoApellido', 'numIdentificadorPersonal'];
     this.elementosPagina = [5, 10, 25, 100];

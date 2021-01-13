@@ -4,4 +4,5 @@ export const SOLICITUD_ROUTE_NAMES = {
   DOCUMENTOS: 'documentos',
   PROYECTO_DATOS: 'proyectoDatos',
   HITOS: 'hitos',
+  EQUIPO_PROYECTO: 'equipoProyecto'
 };

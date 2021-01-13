@@ -39,7 +39,8 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(protected logger: NGXLogger,
+  constructor(
+    protected logger: NGXLogger,
     protected convocatoriaReunionService: ConvocatoriaService,
     private actionService: SolicitudActionService,
     private matDialog: MatDialog,

@@ -57,7 +57,7 @@ export class BuscarPersonaComponent implements OnChanges {
   selectUsuario(persona: IPersona) {
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'start');
     this.persona = persona;
-    this.datosUsuario = persona !== null ? persona.nombre + ' ' + persona.primerApellido + ' ' +
+    this.datosUsuario = persona ? persona.nombre + ' ' + persona.primerApellido + ' ' +
       persona.segundoApellido + '(' + persona.identificadorNumero + persona.identificadorLetra + ')' : '';
     this.emitValue();
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'end');

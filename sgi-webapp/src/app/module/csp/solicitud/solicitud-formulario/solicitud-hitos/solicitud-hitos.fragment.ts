@@ -1,24 +1,19 @@
-import { FormGroup } from '@angular/forms';
 import { ISolicitud } from '@core/models/csp/solicitud';
-import { FormFragment, Fragment } from '@core/services/action-service';
+import { Fragment } from '@core/services/action-service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, BehaviorSubject, merge, of, from, } from 'rxjs';
 import { map, tap, mergeMap, takeLast, switchMap } from 'rxjs/operators';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { OnDestroy } from '@angular/core';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
-
-
-
+import { Subscription } from 'rxjs/internal/Subscription';
 
 export class SolicitudHitosFragment extends Fragment implements OnDestroy {
-
-
   hitos$ = new BehaviorSubject<StatusWrapper<ISolicitudHito>[]>([]);
   private hitosEliminados: StatusWrapper<ISolicitudHito>[] = [];
+  private subscriptions: Subscription[] = [];
 
   solicitud: ISolicitud;
 
@@ -26,20 +21,18 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
     private readonly logger: NGXLogger,
     key: number,
     private service: SolicitudHitoService,
-    private solicitudService: SolicitudService,
-    private sgiAuthService: SgiAuthService,
+    private solicitudService: SolicitudService
   ) {
     super(key);
-    this.setComplete(true);
     this.logger.debug(SolicitudHitosFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.logger.debug(SolicitudHitosFragment.name, 'constructor()', 'end');
   }
-
 
   protected onInitialize(): void {
     this.logger.debug(SolicitudHitosFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
-      this.solicitudService.findById(this.getKey() as number).pipe(
+      const subscription = this.solicitudService.findById(this.getKey() as number).pipe(
         switchMap((solicitud) => {
           this.solicitud = solicitud as ISolicitud;
           return this.solicitudService.findHitosSolicitud(this.solicitud.id);
@@ -48,10 +41,9 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
         this.hitos$.next(hitos.items.map(
           listaHitos => new StatusWrapper<ISolicitudHito>(listaHitos))
         );
-
-
         this.logger.debug(SolicitudHitosFragment.name, 'onInitialize()', 'end');
       });
+      this.subscriptions.push(subscription);
     }
   }
 
@@ -191,6 +183,7 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.debug(SolicitudHitosFragment.name, `ngOnDestroy()`, 'start');
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.logger.debug(SolicitudHitosFragment.name, `ngOnDestroy()`, 'end');
   }
 }

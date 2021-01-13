@@ -11,7 +11,7 @@ import { SgiRestListResult, SgiRestFilterType, SgiRestFilter } from '@sgi/framew
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { switchMap, map, startWith } from 'rxjs/operators';
+import { switchMap, map, startWith, catchError } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
@@ -127,7 +127,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
             });
 
             return response;
-          })
+          }),
+          catchError(() => of(response))
         );
 
         return solicitudesWithDatosSolicitante$;

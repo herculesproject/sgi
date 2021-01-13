@@ -17,6 +17,8 @@ import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solic
 import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
+import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
+import { SolicitudEquipoProyectoModalComponent } from './modals/solicitud-equipo-proyecto-modal/solicitud-equipo-proyecto-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tem
     SolicitudHitosComponent,
     SolicitudProyectoFichaGeneralComponent,
     SolicitudAreaTematicaModalComponent,
+    SolicitudEquipoProyectoComponent,
+    SolicitudEquipoProyectoModalComponent,
   ],
   imports: [
     CommonModule,

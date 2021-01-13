@@ -20,9 +20,9 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
+import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
+import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { switchMap, tap } from 'rxjs/operators';
-
-
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
@@ -33,6 +33,7 @@ export class SolicitudActionService extends ActionService {
     DOCUMENTOS: 'documentos',
     PROYECTO_DATOS: 'proyectoDatos',
     HITOS: 'hitos',
+    EQUIPO_PROYECTO: 'equipoProyecto'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -40,6 +41,7 @@ export class SolicitudActionService extends ActionService {
   private documentos: SolicitudDocumentosFragment;
   private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
   private hitos: SolicitudHitosFragment;
+  private equipoProyecto: SolicitudEquipoProyectoFragment;
 
   solicitud: ISolicitud;
 
@@ -47,9 +49,9 @@ export class SolicitudActionService extends ActionService {
   isSociosColaboradores = false;
 
   constructor(
-    logger: NGXLogger,
+    private logger: NGXLogger,
     route: ActivatedRoute,
-    solicitudService: SolicitudService,
+    private solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
     convocatoriaService: ConvocatoriaService,
     empresaEconomicaService: EmpresaEconomicaService,
@@ -59,10 +61,13 @@ export class SolicitudActionService extends ActionService {
     unidadGestionService: UnidadGestionService,
     sgiAuthService: SgiAuthService,
     solicitudDocumentoService: SolicitudDocumentoService,
-    solicitudProyectoDatosService: SolicitudProyectoDatosService
+    solicitudProyectoDatosService: SolicitudProyectoDatosService,
+    solicitudProyectoEquipoService: SolicitudProyectoEquipoService
   ) {
     super();
-    this.solicitud = {} as ISolicitud;
+    this.solicitud = {
+      solicitante: undefined
+    } as ISolicitud;
     if (route.snapshot.data.solicitud) {
       this.solicitud = route.snapshot.data.solicitud;
       this.enableEdit();
@@ -72,7 +77,7 @@ export class SolicitudActionService extends ActionService {
       convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
     this.documentos = new SolicitudDocumentosFragment(logger, this.solicitud?.id, this.solicitud?.convocatoria?.id,
       configuracionSolicitudService, solicitudService, solicitudDocumentoService);
-    this.hitos = new SolicitudHitosFragment(logger, this.solicitud?.id, solicitudHitoService, solicitudService, sgiAuthService);
+    this.hitos = new SolicitudHitosFragment(logger, this.solicitud?.id, solicitudHitoService, solicitudService);
 
     if (this.solicitud?.id) {
       solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
@@ -84,15 +89,69 @@ export class SolicitudActionService extends ActionService {
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.solicitud, solicitudService,
       solicitudProyectoDatosService, convocatoriaService, this);
+    this.equipoProyecto = new SolicitudEquipoProyectoFragment(logger, this.solicitud?.id, solicitudService,
+      solicitudProyectoEquipoService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
+    this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
   }
 
   getDatosGeneralesSolicitud(): ISolicitud {
     return this.datosGenerales.isInitialized() ? this.datosGenerales.solicitud : this.solicitud;
+  }
+
+  getSolicitantePersonaRef(): string {
+    return this.datosGenerales.isInitialized() ? this.datosGenerales.getFormGroup().get('solicitante').value?.personaRef :
+      this.solicitud.solicitante?.personaRef;
+  }
+
+  existsDatosProyectos(): void {
+    this.logger.debug(SolicitudActionService.name, 'existsDatosProyectos()', 'start');
+    if (this.proyectoDatos.isInitialized()) {
+      this.equipoProyecto.existsDatosProyecto = Boolean(this.proyectoDatos.solicitudProyectoDatos.id) ||
+        !this.proyectoDatos.hasErrors();
+    } else {
+      const id = this.solicitud?.id;
+      if (id) {
+        const subscription = this.solicitudService.existsSolictudProyectoDatos(id).subscribe(
+          res => {
+            this.equipoProyecto.existsDatosProyecto = res;
+          },
+          () => {
+            this.equipoProyecto.existsDatosProyecto = false;
+          }
+        );
+        this.subscriptions.push(subscription);
+      }
+    }
+    this.logger.debug(SolicitudActionService.name, 'existsDatosProyectos()', 'end');
+  }
+
+  saveOrUpdate(): Observable<void> {
+    this.logger.debug(SolicitudActionService.name, 'saveOrUpdate()', 'start');
+    this.performChecks(true);
+    if (this.hasErrors()) {
+      this.logger.error(SolicitudActionService.name, 'saveOrUpdate()', 'error');
+      return throwError('Errores');
+    }
+    if (this.isEdit() && this.proyectoDatos.isInitialized()) {
+      return this.proyectoDatos.saveOrUpdate().pipe(
+        switchMap(() => {
+          this.proyectoDatos.refreshInitialState(true);
+          return super.saveOrUpdate();
+        }),
+        tap(() => this.logger.debug(SolicitudActionService.name,
+          'saveOrUpdate()', 'end'))
+      );
+    } else {
+      return super.saveOrUpdate().pipe(
+        tap(() => this.logger.debug(SolicitudActionService.name,
+          'saveOrUpdate()', 'end'))
+      );
+    }
   }
 }

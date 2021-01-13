@@ -111,7 +111,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     }, {
       validators: [
         this.isFinalUltimoPeriodo(ultimoPeriodoJustificacionNoFinal?.value.mesFinal),
-        NumberValidator.isAfer('desdeMes', 'hastaMes'),
+        NumberValidator.isAfter('desdeMes', 'hastaMes'),
         RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });

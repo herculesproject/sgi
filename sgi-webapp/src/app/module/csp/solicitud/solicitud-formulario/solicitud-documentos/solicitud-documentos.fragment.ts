@@ -1,6 +1,5 @@
 import { OnDestroy } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
@@ -159,8 +158,6 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
     this.logger.debug(SolicitudDocumentosFragment.name, `buildTree(documentos: ${documentos})`, 'end');
     return nodes;
   }
-
-
 
   publishNodes(rootNodes?: NodeDocumentoSolicitud[]) {
     this.logger.debug(SolicitudDocumentosFragment.name, `publishNodes(rootNodes?: ${rootNodes})`, 'start');

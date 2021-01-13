@@ -18,9 +18,9 @@ export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
   protected subscriptions: Subscription[] = [];
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<U>,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<U>,
     @Inject(MAT_DIALOG_DATA) public entity: T
   ) {
     this.logger.debug(BaseModalComponent.name, 'constructor()', 'start');

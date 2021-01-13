@@ -11,12 +11,15 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { Observable, of } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
+import { Observable, of, from } from 'rxjs';
+import { tap, map, catchError, mergeMap, switchMap } from 'rxjs/operators';
 import { ISolicitudModalidadBackend, SolicitudModalidadService } from './solicitud-modalidad.service';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
+import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
+import { SolicitudProyectoEquipoService, ISolicitudProyectoEquipoBackend } from './solicitud-proyecto-equipo.service';
+import { PersonaFisicaService } from '../sgp/persona-fisica.service';
 
 
 interface ISolicitudBackend {
@@ -101,7 +104,11 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(
+    logger: NGXLogger,
+    protected http: HttpClient,
+    private personaFisicaService: PersonaFisicaService
+  ) {
     super(
       SolicitudService.name,
       logger,
@@ -242,6 +249,63 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectodatos`;
     return this.http.get<ISolicitudProyectoDatos>(endpointUrl).pipe(
       tap(() => this.logger.debug(SolicitudService.name, `findSolicitudProyectoDatos(${solicitudId})`, '-', 'end')),
+    );
+  }
+
+  /**
+   * Devuelve los proyectoEquipos de una solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   */
+  findAllSolicitudProyectoEquipo(solicitudId: number): Observable<SgiRestListResult<ISolicitudProyectoEquipo>> {
+    this.logger.debug(SolicitudService.name, `findAllSolicitudProyectoEquipo(${solicitudId})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectoequipo`;
+    return this.find<ISolicitudProyectoEquipo, ISolicitudProyectoEquipoBackend>(endpointUrl).pipe(
+      map((result) => {
+        const converted: SgiRestListResult<ISolicitudProyectoEquipo> = {
+          items: result.items.map(solicitudProyectoEquipoBackend =>
+            SolicitudProyectoEquipoService.CONVERTER.toTarget(solicitudProyectoEquipoBackend)),
+          page: result.page,
+          total: result.total
+        };
+        return converted;
+      }),
+      switchMap(resultList =>
+        from(resultList.items).pipe(
+          mergeMap(wrapper => this.loadSolicitante(wrapper)),
+          switchMap(() => of(resultList))
+        )
+      ),
+      tap(() => this.logger.debug(SolicitudService.name, `findAllSolicitudProyectoEquipo(${solicitudId})`, '-', 'end')),
+    );
+  }
+
+  private loadSolicitante(solicitudProyectoEquipo: ISolicitudProyectoEquipo): Observable<ISolicitudProyectoEquipo> {
+    this.logger.debug(SolicitudService.name,
+      `loadSolicitante(solicitanteRef: ${solicitudProyectoEquipo})`, 'start');
+    const personaRef = solicitudProyectoEquipo.persona.personaRef;
+    return this.personaFisicaService.getInformacionBasica(personaRef).pipe(
+      map(solicitante => {
+        solicitudProyectoEquipo.persona = solicitante;
+        return solicitudProyectoEquipo;
+      }),
+      tap(() => this.logger.debug(SolicitudService.name,
+        `loadSolicitante(solicitanteRef: ${solicitudProyectoEquipo})`, 'end')),
+      catchError(() => of(solicitudProyectoEquipo))
+    );
+  }
+
+  /**
+   * Comprueba si existe una solicitudProyectoDatos asociada a una solicitud
+   *
+   * @param id Id de la solicitud
+   */
+  existsSolictudProyectoDatos(id: number): Observable<boolean> {
+    this.logger.debug(SolicitudService.name, `existsSolictudProyectoDatos(id: ${id})`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}/solicitudproyectodatos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200),
+      tap(() => this.logger.debug(SolicitudService.name, `existsSolictudProyectoDatos(id: ${id})`, '-', 'end')),
     );
   }
 }
