@@ -469,6 +469,8 @@
           <excludes>
             <exclude>**/generated/**</exclude>
             <exclude>**/scratch/**</exclude>
+            <exclude>**/config/**</exclude>
+            <exclude>**/model/**</exclude>
           </excludes>
         </configuration>
         <executions>
