@@ -38,6 +38,24 @@ public class TipoTareaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
+  public void create_ReturnsTipoTarea() {
+    // given: Un nuevo TipoTarea
+    TipoTarea tipoTareaNew = generarMockTipoTarea(1L, "TipoTareaNew");
+
+    TipoTarea tipoTarea = generarMockTipoTarea(1L, "TipoTareaNew");
+
+    BDDMockito.given(tipoTareaRepository.save(tipoTareaNew)).willReturn(tipoTarea);
+
+    // when: Creamos el tipo Tarea
+    TipoTarea tipoTareaCreado = tipoTareaService.create(tipoTareaNew);
+
+    // then: El tipo Tarea se crea correctamente
+    Assertions.assertThat(tipoTareaCreado).isNotNull();
+    Assertions.assertThat(tipoTareaCreado.getId()).isEqualTo(1L);
+    Assertions.assertThat(tipoTareaCreado.getNombre()).isEqualTo("TipoTareaNew");
+  }
+
   /**
    * Función que devuelve un objeto TipoTarea
    * 
