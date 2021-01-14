@@ -1,0 +1,63 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+/**
+ * Service Interface para gestionar {@link ProyectoEntidadConvocante}.
+ */
+public interface ProyectoEntidadConvocanteService {
+
+  /**
+   * Guardar un nuevo {@link ProyectoEntidadConvocante}.
+   *
+   * @param proyectoEntidadConvocante la entidad {@link ProyectoEntidadConvocante}
+   *                                  a guardar.
+   * @return la entidad {@link ProyectoEntidadConvocante} persistida.
+   */
+  ProyectoEntidadConvocante create(ProyectoEntidadConvocante proyectoEntidadConvocante);
+
+  /**
+   * Establece el {@link Programa} de {@link ProyectoEntidadConvocante}.
+   *
+   * @param idProyectoEntidadConvocante el id de la entidad
+   *                                    {@link ProyectoEntidadConvocante} a
+   *                                    actualizar.
+   * @param programa                    el {@link Programa} a fijar.
+   * @return la entidad {@link ProyectoEntidadConvocante} persistida.
+   */
+  ProyectoEntidadConvocante setPrograma(Long idProyectoEntidadConvocante, Programa programa);
+
+  /**
+   * Elimina el {@link ProyectoEntidadConvocante}.
+   *
+   * @param id Id del {@link ProyectoEntidadConvocante}.
+   */
+  void delete(Long id);
+
+  /**
+   * Obtiene {@link ProyectoEntidadConvocante} por su id.
+   *
+   * @param id el id de la entidad {@link ProyectoEntidadConvocante}.
+   * @return la entidad {@link ProyectoEntidadConvocante}.
+   */
+  ProyectoEntidadConvocante findById(Long id);
+
+  /**
+   * Obtiene las {@link ProyectoEntidadConvocante} para una {@link Proyecto}.
+   *
+   * @param idProyecto el id de la {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ProyectoEntidadConvocante} de la
+   *         {@link Proyecto} paginadas.
+   */
+  Page<ProyectoEntidadConvocante> findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable);
+
+}

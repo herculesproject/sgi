@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.config;
 
 import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,5 +12,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class WebConfig extends SgiWebConfig {
+
+  @Bean
+  public ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
 
 }

@@ -1,0 +1,183 @@
+package org.crue.hercules.sgi.csp.service.impl;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoEntidadConvocanteNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
+import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoEntidadConvocanteSpecifications;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Service Implementation para la gestión de {@link ProyectoEntidadConvocante}.
+ */
+@Service
+@Slf4j
+@Transactional(readOnly = true)
+public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConvocanteService {
+
+  private final ProyectoEntidadConvocanteRepository repository;
+  private final ProyectoRepository proyectoRepository;
+  private final ProgramaRepository programaRepository;
+
+  public ProyectoEntidadConvocanteServiceImpl(ProyectoEntidadConvocanteRepository proyectoEntidadConvocanteRepository,
+      ProyectoRepository proyectoRepository, ProgramaRepository programaRepository) {
+    this.repository = proyectoEntidadConvocanteRepository;
+    this.proyectoRepository = proyectoRepository;
+    this.programaRepository = programaRepository;
+  }
+
+  /**
+   * Guardar un nuevo {@link ProyectoEntidadConvocante}.
+   *
+   * @param proyectoEntidadConvocante la entidad {@link ProyectoEntidadConvocante}
+   *                                  a guardar.
+   * @return la entidad {@link ProyectoEntidadConvocante} persistida.
+   */
+  @Override
+  @Transactional
+  public ProyectoEntidadConvocante create(ProyectoEntidadConvocante proyectoEntidadConvocante) {
+    log.debug("create(ProyectoEntidadConvocante proyectoEntidadConvocante) - start");
+    Assert.isNull(proyectoEntidadConvocante.getId(), "ProyectoEntidadConvocante id tiene que ser null");
+    Assert.notNull(proyectoEntidadConvocante.getProyectoId(), "Proyecto id no puede ser null");
+    Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
+    ProyectoHelper.checkCanUpdate(proyecto);
+    Assert
+        .isTrue(
+            !repository.existsByProyectoIdAndEntidadRef(proyectoEntidadConvocante.getProyectoId(),
+                proyectoEntidadConvocante.getEntidadRef()),
+            "Ya existe una asociación activa para esa Proyecto y Entidad");
+    if (proyectoEntidadConvocante.getPrograma() != null) {
+      if (proyectoEntidadConvocante.getPrograma().getId() == null) {
+        proyectoEntidadConvocante.setPrograma(null);
+      } else {
+        proyectoEntidadConvocante
+            .setPrograma(programaRepository.findById(proyectoEntidadConvocante.getPrograma().getId())
+                .orElseThrow(() -> new ProgramaNotFoundException(proyectoEntidadConvocante.getPrograma().getId())));
+        Assert.isTrue(proyectoEntidadConvocante.getPrograma().getActivo(), "El Programa debe estar Activo");
+      }
+    }
+    ProyectoEntidadConvocante returnValue = repository.save(proyectoEntidadConvocante);
+    log.debug("create(ProyectoEntidadConvocante proyectoEntidadConvocante) - end");
+    return returnValue;
+  }
+
+  /**
+   * Establece el {@link Programa} de {@link ProyectoEntidadConvocante}.
+   *
+   * @param idProyectoEntidadConvocante el id de la entidad
+   *                                    {@link ProyectoEntidadConvocante} a
+   *                                    actualizar.
+   * @param programa                    el {@link Programa} a fijar.
+   * @return la entidad {@link ProyectoEntidadConvocante} persistida.
+   */
+  @Override
+  @Transactional
+  public ProyectoEntidadConvocante setPrograma(Long idProyectoEntidadConvocante, Programa programa) {
+    log.debug("setPrograma(Long idProyectoEntidadConvocante, Programa programa) - start");
+    Assert.notNull(idProyectoEntidadConvocante, "ProyectoEntidadConvocante id no puede ser null");
+    return repository.findById(idProyectoEntidadConvocante).map(proyectoEntidadConvocante -> {
+      Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
+          .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
+      ProyectoHelper.checkCanUpdate(proyecto);
+      if (programa == null || programa.getId() == null) {
+        proyectoEntidadConvocante.setPrograma(null);
+      } else {
+        Long idPrograma = programa.getId();
+        proyectoEntidadConvocante.setPrograma(
+            programaRepository.findById(idPrograma).orElseThrow(() -> new ProgramaNotFoundException(idPrograma)));
+        Assert.isTrue(proyectoEntidadConvocante.getPrograma().getActivo(), "El Programa debe estar Activo");
+      }
+      ProyectoEntidadConvocante returnValue = repository.save(proyectoEntidadConvocante);
+      log.debug("setPrograma(Long idProyectoEntidadConvocante, Programa programa) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ProyectoEntidadConvocanteNotFoundException(idProyectoEntidadConvocante));
+  }
+
+  /**
+   * Elimina el {@link ProyectoEntidadConvocante}.
+   *
+   * @param id Id del {@link ProyectoEntidadConvocante}.
+   */
+  @Override
+  @Transactional
+  public void delete(Long id) {
+    log.debug("delete(Long id) - start");
+    Assert.notNull(id, "ProyectoEntidadConvocante id no puede ser null");
+    repository.findById(id).map(proyectoEntidadConvocante -> {
+      Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
+          .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
+      ProyectoHelper.checkCanUpdate(proyecto);
+      repository.deleteById(id);
+      return proyectoEntidadConvocante;
+    }).orElseThrow(() -> new ProyectoEntidadConvocanteNotFoundException(id));
+
+    log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtiene {@link ProyectoEntidadConvocante} por su id.
+   *
+   * @param id el id de la entidad {@link ProyectoEntidadConvocante}.
+   * @return la entidad {@link ProyectoEntidadConvocante}.
+   */
+  @Override
+  public ProyectoEntidadConvocante findById(Long id) {
+    log.debug("findById(Long id)  - start");
+    Assert.notNull(id, "ProyectoEntidadConvocante id no puede ser null");
+    final ProyectoEntidadConvocante returnValue = repository.findById(id)
+        .orElseThrow(() -> new ProyectoEntidadConvocanteNotFoundException(id));
+    Proyecto proyecto = proyectoRepository.findById(returnValue.getProyectoId())
+        .orElseThrow(() -> new ProyectoNotFoundException(returnValue.getProyectoId()));
+    ProyectoHelper.checkCanRead(proyecto);
+    log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene las {@link ProyectoEntidadConvocante} para una {@link Proyecto}.
+   *
+   * @param idProyecto el id de la {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ProyectoEntidadConvocante} de la
+   *         {@link Proyecto} paginadas.
+   */
+  public Page<ProyectoEntidadConvocante> findAllByProyecto(Long idProyecto, List<QueryCriteria> query,
+      Pageable pageable) {
+    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable) - start");
+    Assert.notNull(idProyecto, "Proyecto id no puede ser null");
+    Proyecto proyecto = proyectoRepository.findById(idProyecto)
+        .orElseThrow(() -> new ProyectoNotFoundException(idProyecto));
+    ProyectoHelper.checkCanRead(proyecto);
+
+    Specification<ProyectoEntidadConvocante> specByQuery = new QuerySpecification<ProyectoEntidadConvocante>(query);
+    Specification<ProyectoEntidadConvocante> specByProyecto = ProyectoEntidadConvocanteSpecifications
+        .byProyectoId(idProyecto);
+
+    Specification<ProyectoEntidadConvocante> specs = Specification.where(specByProyecto).and(specByQuery);
+
+    Page<ProyectoEntidadConvocante> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+}

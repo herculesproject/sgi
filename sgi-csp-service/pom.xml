@@ -89,6 +89,10 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.oracle.ojdbc</groupId>
       <artifactId>ojdbc8</artifactId>
       <scope>runtime</scope>
@@ -133,6 +137,7 @@
     <liquibase-hibernate5.version>4.1.1</liquibase-hibernate5.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
     <org.hibernate-jpamodelgen.version>5.3.15.Final</org.hibernate-jpamodelgen.version>
+    <org.modelmapper.version>2.3.5</org.modelmapper.version>
 
     <!-- Plugin versions (only those that are not defined in `spring-boot-starter-parent`) -->
     <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
@@ -174,6 +179,11 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
         <version>${org.hibernate-jpamodelgen.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>${org.modelmapper.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

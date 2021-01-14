@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -60,13 +61,18 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
   @Mock
   private ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
+  @Mock
+  private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
+  @Mock
+  private ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
 
   private ProyectoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
-        convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService);
+        convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
+        convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService);
   }
 
   @Test
@@ -362,6 +368,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
     proyecto.getEstado().setId(4L);
     proyecto.getEstado().setEstado(TipoEstadoProyectoEnum.FINALIZADO);
 
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(new ModeloUnidad()));
+
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
@@ -388,12 +398,15 @@ public class ProyectoServiceTest extends BaseServiceTest {
   public void update_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
-    proyecto.setUnidadGestionRef(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(new ModeloUnidad()));
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
+        .hasMessage("El proyecto no pertenece a una Unidad de Gestión gestionable por el usuario");
   }
 
   @Test

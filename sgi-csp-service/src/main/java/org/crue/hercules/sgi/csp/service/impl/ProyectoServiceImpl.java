@@ -11,19 +11,25 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -55,17 +61,23 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
   private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
+  private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
+  private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
-      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService) {
+      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
+      ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
+      ProyectoEntidadConvocanteService proyectoEntidadConvocanteService) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
+    this.convocatoriaEntidadConvocanteRepository = convocatoriaEntidadConvocanteRepository;
+    this.proyectoEntidadConvocanteService = proyectoEntidadConvocanteService;
   }
 
   /**
@@ -100,8 +112,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     // correspondientes con los datos de la convocatoria
     if (proyecto.getConvocatoria() != null) {
       // TODO implementar a medida que se vayan haciendo las pestañas de proyecto
-      this.guardarDatosEntidadesRelacionadas(proyecto.getConvocatoria());
       this.copyEntidadesFinanciadoras(proyecto.getId(), proyecto.getConvocatoria().getId());
+      copiarEntidadesConvocatesDeConvocatoria(proyecto, proyecto.getConvocatoria());
     }
 
     log.debug("create(Proyecto proyecto) - end");
@@ -119,19 +131,11 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Transactional
   public Proyecto update(Proyecto proyectoActualizar) {
     log.debug("update(Proyecto proyecto) - start");
-    // TODO: Add right authority
-    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyectoActualizar.getUnidadGestionRef()),
-        "La Unidad de Gestión no es gestionable por el usuario");
-
-    Assert.isTrue(
-        !proyectoActualizar.getEstado().getEstado().equals(TipoEstadoProyectoEnum.FINALIZADO)
-            && !proyectoActualizar.getEstado().getEstado().equals(TipoEstadoProyectoEnum.CANCELADO),
-        "El proyecto no está en un estado en el que puede ser actualizado");
 
     this.validarDatos(proyectoActualizar);
 
     return repository.findById(proyectoActualizar.getId()).map((data) -> {
-
+      ProyectoHelper.checkCanUpdate(data);
       Assert.isTrue(
           proyectoActualizar.getEstado().getId() == data.getEstado().getId()
               && ((proyectoActualizar.getConvocatoria() == null && data.getConvocatoria() == null)
@@ -283,13 +287,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Proyecto findById(Long id) {
     log.debug("findById(Long id) - start");
     final Proyecto returnValue = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
-
-    // TODO: Add right authority
-    Assert.isTrue(
-        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-C", "CSP-PRO-V-INV" },
-            returnValue.getUnidadGestionRef()),
-        "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
-
+    ProyectoHelper.checkCanRead(returnValue);
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -463,13 +461,29 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Guarda los datos de la convocatoria asociada al proyecto en las entidades
-   * relacionadas con el proyecto
+   * Copia la informaci&oacute;n de EntidadesConvocantes de la Convocatoria en el
+   * Proyecto
    * 
-   * @param convocatoriaProyecto la {@link Convocatoria}
+   * @param proyecto     el {@link Proyecto}
+   * @param convocatoria la {@link Convocatoria}
    */
-  private void guardarDatosEntidadesRelacionadas(Convocatoria convocatoriaProyecto) {
+  private void copiarEntidadesConvocatesDeConvocatoria(Proyecto proyecto, Convocatoria convocatoria) {
+    log.debug("copiarEntidadesConvocatesDeConvocatoria(Proyecto proyecto, Convocatoria convocatoria) - start");
+    Specification<ConvocatoriaEntidadConvocante> specByConvocatoriaId = ConvocatoriaEntidadConvocanteSpecifications
+        .byConvocatoriaId(convocatoria.getId());
 
+    List<ConvocatoriaEntidadConvocante> convocatoriaEntidadConvocantes = convocatoriaEntidadConvocanteRepository
+        .findAll(specByConvocatoriaId);
+
+    for (ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante : convocatoriaEntidadConvocantes) {
+      ProyectoEntidadConvocante proyectoEntidadConvocante = new ProyectoEntidadConvocante();
+      proyectoEntidadConvocante.setProyectoId(proyecto.getId());
+      proyectoEntidadConvocante.setEntidadRef(convocatoriaEntidadConvocante.getEntidadRef());
+      proyectoEntidadConvocante.setProgramaConvocatoria(convocatoriaEntidadConvocante.getPrograma());
+      proyectoEntidadConvocanteService.create(proyectoEntidadConvocante);
+    }
+
+    log.debug("copiarEntidadesConvocatesDeConvocatoria(Proyecto proyecto, Convocatoria convocatoria) - end");
   }
 
   /**

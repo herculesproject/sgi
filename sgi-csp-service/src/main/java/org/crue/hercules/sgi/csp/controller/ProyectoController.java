@@ -40,9 +40,12 @@ import lombok.extern.slf4j.Slf4j;
  * ProyectoController
  */
 @RestController
-@RequestMapping("/proyectos")
+@RequestMapping(ProyectoController.REQUEST_MAPPING)
 @Slf4j
 public class ProyectoController {
+
+  /** El path que gestiona este controlador */
+  public static final String REQUEST_MAPPING = "/proyectos";
 
   /** Proyecto service */
   private final ProyectoService service;
@@ -403,4 +406,5 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
+
 }
