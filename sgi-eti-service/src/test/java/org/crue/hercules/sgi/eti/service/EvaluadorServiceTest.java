@@ -26,6 +26,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import liquibase.pro.packaged.e;
+
 /**
  * EvaluadorServiceTest
  */
@@ -76,6 +78,28 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     Assertions.assertThat(evaluadorCreado).isNotNull();
     Assertions.assertThat(evaluadorCreado.getId()).isEqualTo(1L);
     Assertions.assertThat(evaluadorCreado.getResumen()).isEqualTo("EvaluadorNew");
+  }
+
+  @Test
+  public void create_ReturnsEvaluador_WithCargoPresident() {
+    // given: Un nuevo Evaluador
+    Evaluador evaluadorNew = generarMockEvaluador(null, "EvaluadorNew");
+
+    Evaluador evaluador = generarMockEvaluador(1L, "EvaluadorNew");
+
+    BDDMockito.given(evaluadorRepository.save(evaluadorNew)).willReturn(evaluador);
+
+    // when: Creamos el cargo comité y el Evaluador con ese cargo
+    CargoComite cargoComite = new CargoComite();
+    cargoComite.setId(1L);
+    cargoComite.setNombre("presidente");
+    cargoComite.setActivo(Boolean.TRUE);
+
+    Evaluador evaluadorCreado = evaluadorService.create(evaluadorNew);
+    evaluadorCreado.setCargoComite(cargoComite);
+
+    // then: El evaluador tiene cargo presidente
+    Assertions.assertThat(evaluadorCreado.getCargoComite().getNombre().toLowerCase().equals("presidente"));
   }
 
   @Test
