@@ -552,6 +552,65 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
+    // given: existing Proyecto id
+    Proyecto proyectoExistente = generarMockProyecto(1L);
+    proyectoExistente.getModeloEjecucion().setId(99L);
+
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.getModeloEjecucion(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(proyectoExistente.getModeloEjecucion()));
+
+    // when: getModeloEjecucion by id Proyecto
+    ModeloEjecucion modeloEjecucion = service.getModeloEjecucion(proyectoExistente.getId());
+
+    // then: returns ModeloEjecucion
+    Assertions.assertThat(modeloEjecucion).isNotNull();
+    Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(99L);
+
+  }
+
+  @Test
+  public void getModeloEjecucion_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing Proyecto id
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: getModeloEjecucion by id Proyecto
+        () -> service.getModeloEjecucion(1L))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ProyectoNotFoundException.class);
+  }
+
+  @Test
+  public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
+    // given: existing id
+    Long id = 1L;
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    // when: exists by id
+    boolean responseData = service.existsById(id);
+
+    // then: returns TRUE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isTrue();
+  }
+
+  @Test
+  public void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    // when: exists by id
+    boolean responseData = service.existsById(id);
+
+    // then: returns TRUE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
   public void findById_ReturnsProyecto() {
     // given: Un Proyecto con el id buscado
     Long idBuscado = 1L;

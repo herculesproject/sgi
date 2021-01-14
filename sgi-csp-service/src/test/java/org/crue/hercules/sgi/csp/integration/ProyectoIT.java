@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -45,8 +46,10 @@ public class ProyectoIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
+  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/proyectos";
   private static final String PATH_TODOS = "/todos";
+  private static final String PATH_HITOS = "/proyectohitos";
 
   private HttpEntity<Proyecto> buildRequest(HttpHeaders headers, Proyecto entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -60,7 +63,9 @@ public class ProyectoIT {
 
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void create_ReturnsProyecto() throws Exception {
@@ -81,7 +86,10 @@ public class ProyectoIT {
 
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void update_ReturnsProyecto() throws Exception {
@@ -105,7 +113,10 @@ public class ProyectoIT {
 
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void desactivar_ReturnProyecto() throws Exception {
@@ -122,11 +133,14 @@ public class ProyectoIT {
     Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isEqualTo(false);
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void reactivar_ReturnProyecto() throws Exception {
-    Long idProyecto = 1L;
+    Long idProyecto = 99L;
 
     final ResponseEntity<Proyecto> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
@@ -139,7 +153,60 @@ public class ProyectoIT {
     Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getModeloEjecucion_ReturnsModeloEjecucion() throws Exception {
+
+    // given: Proyecto id
+    Long id = 1L;
+    // when: getModeloEjecucion by Proyecto id
+    final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, HttpMethod.GET,
+        buildRequest(null, null), ModeloEjecucion.class, id);
+
+    // then: returns ModeloEjecucion assigned to Proyecto
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    ModeloEjecucion responseData = response.getBody();
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void existsById_Returns200() throws Exception {
+    // given: existing id
+    Long id = 1L;
+    // when: exists by id
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.HEAD, buildRequest(null, null), Proyecto.class, id);
+    // then: 200 OK
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void existsById_Returns204() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    // when: exists by id
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.HEAD, buildRequest(null, null), Proyecto.class, id);
+    // then: 204 No Content
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findById_ReturnsProyecto() throws Exception {
@@ -152,11 +219,14 @@ public class ProyectoIT {
     Proyecto proyecto = response.getBody();
     Assertions.assertThat(proyecto.getId()).as("getId()").isEqualTo(idProyecto);
     Assertions.assertThat(proyecto.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
-    Assertions.assertThat(proyecto.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones 1");
+    Assertions.assertThat(proyecto.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-proyecto-001");
     Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("OPE");
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsProyectoSubList() throws Exception {
@@ -188,14 +258,17 @@ public class ProyectoIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
     Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
-        .isEqualTo("observaciones" + String.format("%03d", 3));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 3));
     Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
-        .isEqualTo("observaciones" + String.format("%03d", 2));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 2));
     Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
-        .isEqualTo("observaciones" + String.format("%03d", 1));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 1));
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllTodos_WithPagingSortingAndFiltering_ReturnsProyectoSubList() throws Exception {
@@ -224,14 +297,59 @@ public class ProyectoIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("4");
 
     Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
-        .isEqualTo("observaciones" + String.format("%03d", 3));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 5));
     Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
-        .isEqualTo("observaciones" + String.format("%03d", 2));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 3));
     Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
-        .isEqualTo("observaciones" + String.format("%03d", 1));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 2));
+  }
+
+  /*
+   * PROYECTO HITO
+   * 
+   */
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/tipo_hito.sql",
+      "classpath:scripts/modelo_ejecucion.sql", "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql", "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/modelo_tipo_hito.sql", "classpath:scripts/proyecto_hito.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllProyectoHito_WithPagingSortingAndFiltering_ReturnsProyectoHitoSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "comentario~%-00%";
+
+    Long proyectoId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_HITOS)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(proyectoId).toUri();
+
+    final ResponseEntity<List<ProyectoHito>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ProyectoHito>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<ProyectoHito> proyectosHitos = response.getBody();
+    Assertions.assertThat(proyectosHitos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+    Assertions.assertThat(proyectosHitos.get(0).getComentario()).as("get(0).getComentario()")
+        .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", 3));
+    Assertions.assertThat(proyectosHitos.get(1).getComentario()).as("get(1).getComentario())")
+        .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", 2));
+    Assertions.assertThat(proyectosHitos.get(2).getComentario()).as("get(2).getComentario()")
+        .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", 1));
+
   }
 
   /**

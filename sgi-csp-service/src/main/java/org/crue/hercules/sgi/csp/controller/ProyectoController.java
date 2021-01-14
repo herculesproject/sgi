@@ -6,7 +6,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,13 +43,18 @@ public class ProyectoController {
   /** Proyecto service */
   private final ProyectoService service;
 
+  /** ProyectoHitoservice */
+  private final ProyectoHitoService proyectoHitoService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
-   * @param proyectoService {@link ProyectoService}.
+   * @param proyectoService     {@link ProyectoService}.
+   * @param proyectoHitoService {@link ProyectoHitoService}.
    */
-  public ProyectoController(ProyectoService proyectoService) {
+  public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService) {
     this.service = proyectoService;
+    this.proyectoHitoService = proyectoHitoService;
   }
 
   /**
@@ -145,6 +155,39 @@ public class ProyectoController {
   }
 
   /**
+   * Comprueba la existencia del {@link Proyecto} con el id indicado.
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  public ResponseEntity<?> exists(@PathVariable Long id) {
+    log.debug("Proyecto exists(Long id) - start");
+    if (service.existsById(id)) {
+      log.debug("Proyecto exists(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Proyecto exists(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada al {@link Proyecto}.
+   * 
+   * @param id Id del {@link Proyecto}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  @GetMapping("/{id}/modeloejecucion")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  public ModeloEjecucion getModeloEjecucion(@PathVariable Long id) {
+    log.debug("getModeloEjecucion(Long id) - start");
+    ModeloEjecucion returnValue = service.getModeloEjecucion(id);
+    log.debug("getModeloEjecucion(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Devuelve el {@link Proyecto} con el id indicado.
    * 
    * @param id             Identificador de {@link Proyecto}.
@@ -228,6 +271,37 @@ public class ProyectoController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging, Authentication authentication) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO HITO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoHito} de la
+   * {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectohitos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-THIT-V')")
+  ResponseEntity<Page<ProyectoHito>> findAllProyectoHito(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoHito(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoHito> page = proyectoHitoService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

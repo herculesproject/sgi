@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
@@ -223,6 +224,40 @@ public class ProyectoServiceImpl implements ProyectoService {
       log.debug("disable(Long id, List<String> unidadGestionRefs) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
+  }
+
+  /**
+   * Comprueba la existencia del {@link Proyecto} por id.
+   *
+   * @param id el id de la entidad {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsById(final Long id) {
+    log.debug("existsById(final Long id)  - start", id);
+    final boolean existe = repository.existsById(id);
+    log.debug("existsById(final Long id)  - end", id);
+    return existe;
+  }
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada al {@link Proyecto}.
+   * 
+   * @param id Id del {@link Proyecto}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  @Override
+  public ModeloEjecucion getModeloEjecucion(Long id) {
+    log.debug("getModeloEjecucion(Long id) - start");
+
+    Optional<ModeloEjecucion> returnValue = null;
+    if (repository.existsById(id)) {
+      returnValue = repository.getModeloEjecucion(id);
+    } else {
+      throw (new ProyectoNotFoundException(id));
+    }
+    log.debug("getModeloEjecucion(Long id) - end");
+    return returnValue.isPresent() ? returnValue.get() : null;
   }
 
   /**

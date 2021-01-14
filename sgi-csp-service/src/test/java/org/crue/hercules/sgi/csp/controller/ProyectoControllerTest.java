@@ -14,8 +14,11 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -46,12 +49,16 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoService service;
+  @MockBean
+  private ProyectoHitoService proyectoHitoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
+  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/proyectos";
   private static final String PATH_TODOS = "/todos";
+  private static final String PATH_HITO = "/proyectohitos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
@@ -231,6 +238,77 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
+    // given: existing Proyecto id
+    Proyecto proyectoExistente = generarMockProyecto(1L);
+    proyectoExistente.getModeloEjecucion().setId(99L);
+    BDDMockito.given(service.getModeloEjecucion(ArgumentMatchers.<Long>any()))
+        .willReturn(proyectoExistente.getModeloEjecucion());
+
+    // when: getModeloEjecucion by existing Proyecto id
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: response is OK
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        // and the requested ModeloEjecucion is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(99L));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void getModeloEjecucion_WithNoExistingId_Returns404() throws Exception {
+    // given: no existing Proyecto id
+    BDDMockito.given(service.getModeloEjecucion(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new ProyectoNotFoundException(1L);
+    });
+
+    // when: getModeloEjecucion by non existing Proyecto id
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).
+        // then: HTTP code 404 NotFound pressent
+        andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void existsById_WithExistingId_Returns200() throws Exception {
+    // given: existing id
+    Long id = 1L;
+    BDDMockito.given(service.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    // when: exists by id
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 200 OK
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void existsById_WithNoExistingId_Returns204() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(service.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    // when: exists by id
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 204 No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -419,6 +497,107 @@ public class ProyectoControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * PROYECTO HITO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  public void findAllProyectoHito_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoHito para el Proyecto
+    Long proyectoId = 1L;
+
+    List<ProyectoHito> proyectoHitos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoHitos.add(generarMockProyectoHito(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoHitoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoHito>>() {
+          @Override
+          public Page<ProyectoHito> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoHitos.size() ? proyectoHitos.size() : toIndex;
+            List<ProyectoHito> content = proyectoHitos.subList(fromIndex, toIndex);
+            Page<ProyectoHito> page = new PageImpl<>(content, pageable, proyectoHitos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_HITO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoHito del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoHito> proyectoHitoResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ProyectoHito>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoHito proyectoHito = proyectoHitoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoHito.getComentario()).isEqualTo("comentario-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  public void findAllProyectoHito_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoHito para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoHito> proyectoHitos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoHitoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoHito>>() {
+          @Override
+          public Page<ProyectoHito> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ProyectoHito> page = new PageImpl<>(proyectoHitos, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_HITO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * MOCKS
+   * 
+   */
+
+  /**
    * Función que devuelve un objeto Proyecto
    * 
    * @param id id del Proyecto
@@ -472,6 +651,31 @@ public class ProyectoControllerTest extends BaseControllerTest {
     estadoProyecto.setIdProyecto(1L);
 
     return estadoProyecto;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoHito
+   * 
+   * @param id id del ProyectoHito
+   * @return el objeto ProyectoHito
+   */
+  private ProyectoHito generarMockProyectoHito(Long id) {
+    Proyecto proyecto = new Proyecto();
+    proyecto.setId(id == null ? 1 : id);
+
+    TipoHito tipoHito = new TipoHito();
+    tipoHito.setId(id == null ? 1 : id);
+    tipoHito.setActivo(true);
+
+    ProyectoHito proyectoHito = new ProyectoHito();
+    proyectoHito.setId(id);
+    proyectoHito.setProyecto(proyecto);
+    proyectoHito.setFecha(LocalDate.of(2020, 10, 19));
+    proyectoHito.setComentario("comentario-" + id);
+    proyectoHito.setGeneraAviso(true);
+    proyectoHito.setTipoHito(tipoHito);
+
+    return proyectoHito;
   }
 
 }

@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM csp.proyecto_hito;
 DELETE FROM csp.solicitud_hito;
 DELETE FROM csp.solicitud_modalidad;
 DELETE FROM csp.solicitud_documento;
