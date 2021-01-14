@@ -14,6 +14,7 @@ import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ProyectoEntidadesFinanciadorasComponent } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.component';
 import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
+import { ProyectoEntidadesConvocantesComponent } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.component';
 
 const MSG_LISTADO_TITLE = marker('csp.proyecto.listado.titulo');
 const MSG_EDIT_TITLE = marker('csp.proyecto.editar.titulo');
@@ -90,7 +91,12 @@ const routes: SgiAuthRoutes = [
         path: PROYECTO_ROUTE_NAMES.SOCIOS,
         component: ProyectoSociosComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
+        component: ProyectoEntidadesConvocantesComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   }
 ];

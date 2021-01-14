@@ -16,6 +16,9 @@ import { CspModalsModule } from '../modals/csp-modals.module';
 import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
 import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
+import { ProyectoEntidadesConvocantesComponent } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.component';
+import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-convocante-plan.pipe';
+import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/p
     ProyectoEntidadesFinanciadorasComponent,
     ProyectoHitosComponent,
     ProyectoHitosModalComponent,
-    ProyectoSociosComponent
+    ProyectoSociosComponent,
+    ProyectoEntidadesConvocantesComponent,
+    ProyectoEntidadConvocantePlanPipe,
+    ProyectoEntidadConvocanteModalComponent,
   ],
   imports: [
     SharedModule,
@@ -40,7 +46,8 @@ import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/p
     CspModalsModule
   ],
   providers: [
-    ProyectoResolver
+    ProyectoResolver,
+    ProyectoEntidadConvocantePlanPipe
   ]
 })
 export class ProyectoModule { }

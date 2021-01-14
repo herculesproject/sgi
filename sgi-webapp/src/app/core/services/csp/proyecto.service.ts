@@ -1,24 +1,27 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService } from './proyecto-entidad-financiadora.service';
+import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
 
 interface IProyectoBackend {
 
@@ -122,13 +125,19 @@ interface IProyectoBackend {
   activo: boolean;
 }
 
+export interface IProyectoEntidadConvocanteBackend {
+  id: number;
+  entidadRef: string;
+  programaConvocatoria: IPrograma;
+  programa: IPrograma;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoService extends SgiMutableRestService<number, IProyectoBackend, IProyecto> {
   private static readonly MAPPING = '/proyectos';
-
+  private static readonly ENTIDAD_CONVOCANTES_MAPPING = '/entidadconvocantes';
 
   private static readonly CONVERTER = new class extends SgiBaseConverter<IProyectoBackend, IProyecto> {
     toTarget(value: IProyectoBackend): IProyecto {
@@ -208,6 +217,27 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       };
     }
   }();
+
+  static readonly ENTIDAD_CONVOCANTE_CONVERTER =
+    new class extends SgiBaseConverter<IProyectoEntidadConvocanteBackend, IProyectoEntidadConvocante> {
+      toTarget(value: IProyectoEntidadConvocanteBackend): IProyectoEntidadConvocante {
+        return {
+          id: value.id,
+          entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
+          programaConvocatoria: value.programaConvocatoria,
+          programa: value.programa
+        };
+      }
+
+      fromTarget(value: IProyectoEntidadConvocante): IProyectoEntidadConvocanteBackend {
+        return {
+          id: value.id,
+          entidadRef: value.entidad?.personaRef,
+          programaConvocatoria: value.programaConvocatoria,
+          programa: value.programa
+        };
+      }
+    }();
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
@@ -327,10 +357,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
- * Recupera los hitos de un proyecto
- * @param idProyecto Identificador del proyecto.
- * @returns Listado de hitos.
- */
+   * Recupera los hitos de un proyecto
+   * @param idProyecto Identificador del proyecto.
+   * @returns Listado de hitos.
+   */
   findHitosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoHito>> {
     this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectohitos`;
@@ -361,4 +391,65 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       );
   }
 
+  /**
+   * Recupera los ProyectoEntidadConvocante de un proyecto
+   * @param id Identificador del proyecto.
+   * @returns Listado de ProyectoEntidadConvocante.
+   */
+  findAllEntidadConvocantes(idProyecto: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoEntidadConvocante>> {
+    this.logger.debug(ProyectoService.name,
+      'findAllEntidadConvocantes()', '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
+    return this.find<IProyectoEntidadConvocanteBackend, IProyectoEntidadConvocante>(endpointUrl, options,
+      ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name,
+          'findAllEntidadConvocantes()', '-', 'end'))
+      );
+  }
+
+  public createEntidadConvocante(idProyecto: number, element: IProyectoEntidadConvocante): Observable<IProyectoEntidadConvocante> {
+    this.logger.debug(ProyectoService.name, 'createEntidadConvocante()', '-', 'START');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
+    return this.http.post<IProyectoEntidadConvocanteBackend>(endpointUrl,
+      ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER.fromTarget(element)).pipe(
+        // TODO: Explore the use a global HttpInterceptor with or without a custom error
+        catchError((error: HttpErrorResponse) => {
+          // Log the error
+          this.logger.error(ProyectoService.name, 'createEntidadConvocante():', error);
+          // Pass the error to subscribers. Anyway they would decide what to do with the error.
+          return throwError(error);
+        }),
+        map(response => {
+          this.logger.debug(ProyectoService.name, 'createEntidadConvocante()', '-', 'END');
+          return ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER.toTarget(response);
+        })
+      );
+  }
+
+  public deleteEntidadConvocanteById(idProyecto: number, id: number) {
+    this.logger.debug(ProyectoService.name, 'deleteEntidadConvocanteById()', '-', 'START');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
+    return this.http.delete<IProyectoEntidadConvocante>(`${endpointUrl}/${id}`).pipe(
+      // TODO: Explore the use a global HttpInterceptor with or without a custom error
+      catchError((error: HttpErrorResponse) => {
+        // Log the error
+        this.logger.error(ProyectoService.name, 'deleteEntidadConvocanteById():', error);
+        // Pass the error to subscribers. Anyway they would decide what to do with the error.
+        return throwError(error);
+      }),
+      map(() => {
+        this.logger.debug(ProyectoService.name, 'deleteEntidadConvocanteById()', '-', 'END');
+      })
+    );
+  }
+
+  setEntidadConvocantePrograma(idProyecto: number, id: number, programa: IPrograma): Observable<IProyectoEntidadConvocante> {
+    this.logger.debug(ProyectoService.name, 'setEntidadConvocantePrograma()', '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
+    return this.http.patch<IProyectoEntidadConvocante>(`${endpointUrl}/${id}/programa`, programa).pipe(
+      tap(() => this.logger.debug(ProyectoService.name, 'setEntidadConvocantePrograma()', '-', 'end'))
+    );
+  }
 }

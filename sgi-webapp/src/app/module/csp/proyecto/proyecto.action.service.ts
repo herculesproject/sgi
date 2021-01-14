@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ActionService } from '@core/services/action-service';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { NGXLogger } from 'ngx-logger';
 import { FormBuilder } from '@angular/forms';
-import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { ActivatedRoute } from '@angular/router';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { ActionService } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
-import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
+import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
+import { ProyectoEntidadesConvocantesFragment } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.fragment';
+import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
+import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
+import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 
 
 @Injectable()
@@ -25,13 +26,15 @@ export class ProyectoActionService extends ActionService {
     FICHA_GENERAL: 'ficha-general',
     ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
     SOCIOS: 'socios',
-    HITOS: 'hitos'
+    HITOS: 'hitos',
+    ENTIDADES_CONVOCANTES: 'entidades-convocantes',
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
   private entidadesFinanciadoras: ProyectoEntidadesFinanciadorasFragment;
   private hitos: ProyectoHitosFragment;
   private socios: ProyectoSociosFragment;
+  private entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -52,7 +55,7 @@ export class ProyectoActionService extends ActionService {
     unidadGestionService: UnidadGestionService,
     convocatoriaService: ConvocatoriaService,
     proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
-    proyectoHitoService: ProyectoHitoService
+    proyectoHitoService: ProyectoHitoService,
   ) {
     super();
 
@@ -61,20 +64,28 @@ export class ProyectoActionService extends ActionService {
       this.enableEdit();
     }
 
-    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id, proyectoService, unidadGestionService, convocatoriaService, this);
-    if (this.isEdit()) {
-      this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(logger, this.proyecto?.id, proyectoService, proyectoEntidadFinanciadoraService, empresaEconomicaService, false);
-      this.socios = new ProyectoSociosFragment(logger, this.proyecto?.id, empresaEconomicaService, proyectoService, proyectoSocioService, this);
-      this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService, proyectoHitoService, this.readonly);
-    }
+    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id,
+      proyectoService, unidadGestionService, convocatoriaService, this);
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
     if (this.isEdit()) {
+      this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(logger, this.proyecto?.id,
+        proyectoService, proyectoEntidadFinanciadoraService, empresaEconomicaService, false);
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
-      this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
-      this.addFragment(this.FRAGMENT.HITOS, this.hitos);
-    }
 
+      this.socios = new ProyectoSociosFragment(logger, this.proyecto?.id, empresaEconomicaService,
+        proyectoService, proyectoSocioService, this);
+      this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
+
+      this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService,
+        proyectoHitoService, this.readonly);
+      this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+
+      this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(
+        logger, this.proyecto?.id, proyectoService,
+        empresaEconomicaService);
+      this.addFragment(this.FRAGMENT.ENTIDADES_CONVOCANTES, this.entidadesConvocantes);
+    }
   }
 
   /**

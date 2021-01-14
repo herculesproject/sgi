@@ -1,0 +1,138 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { ProyectoEntidadConvocanteModalComponent, ProyectoEntidadConvocanteModalData } from '../../modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
+import { ProyectoActionService } from '../../proyecto.action.service';
+import { ProyectoEntidadesConvocantesFragment } from './proyecto-entidades-convocantes.fragment';
+import { ProyectoEntidadConvocantePlanPipe } from '../../pipes/proyecto-entidad-convocante-plan.pipe';
+
+const MSG_ENTITY_DELETE_KEY = marker('msg.entity.delete');
+const PROYECTO_ENTIDAD_CONVOCANTE_KEY = marker('csp.proyecto-entidad-convocante');
+const PROYECTO_ENTIDAD_CONVOCANTES_KEY = marker('csp.proyecto-entidad-convocantes');
+
+@Component({
+  selector: 'sgi-proyecto-entidades-convocantes',
+  templateUrl: './proyecto-entidades-convocantes.component.html',
+  styleUrls: ['./proyecto-entidades-convocantes.component.scss']
+})
+export class ProyectoEntidadesConvocantesComponent extends FragmentComponent implements OnInit, OnDestroy {
+  proyectoEntidadesConvocantesFragment: ProyectoEntidadesConvocantesFragment;
+  private subscriptions: Subscription[] = [];
+
+  columns = ['nombre', 'cif', 'plan', 'programaConvocatoria', 'programa', 'acciones'];
+  elementsPage = [5, 10, 25, 100];
+
+  msgParamEntity = {};
+  msgParamEntities = {};
+
+  dataSource = new MatTableDataSource<IProyectoEntidadConvocante>();
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  constructor(
+    protected logger: NGXLogger,
+    protected actionService: ProyectoActionService,
+    private matDialog: MatDialog,
+    private dialogService: DialogService,
+    private readonly translate: TranslateService,
+    private proyectoEntidadConvocantePlanPipe: ProyectoEntidadConvocantePlanPipe
+  ) {
+    super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService);
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'constructor()', 'start');
+    this.proyectoEntidadesConvocantesFragment = this.fragment as ProyectoEntidadesConvocantesFragment;
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'constructor()', 'end');
+  }
+
+  ngOnInit(): void {
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnInit()', 'start');
+    super.ngOnInit();
+    this.setupI18N();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (proyectoEntidadConvocante: IProyectoEntidadConvocante, property: string) => {
+      switch (property) {
+        case 'nombre': return proyectoEntidadConvocante.entidad.razonSocial;
+        case 'cif': return proyectoEntidadConvocante.entidad.numeroDocumento;
+        case 'plan': return this.proyectoEntidadConvocantePlanPipe.transform(proyectoEntidadConvocante);
+        case 'programaConvocatoria': return proyectoEntidadConvocante.programaConvocatoria?.nombre;
+        case 'programa': return proyectoEntidadConvocante.programa?.nombre;
+        default: return proyectoEntidadConvocante[property];
+      }
+    };
+    this.dataSource.sort = this.sort;
+    this.subscriptions.push(this.proyectoEntidadesConvocantesFragment.proyectoEntidadConvocantes$.subscribe(
+      (data) => {
+        this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `formPart.data$.next()`, 'start');
+        this.dataSource.data = data;
+        this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `formPart.data$.next()`, 'end');
+      })
+    );
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnInit()', 'end');
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_ENTIDAD_CONVOCANTE_KEY
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+    this.translate.get(
+      PROYECTO_ENTIDAD_CONVOCANTES_KEY
+    ).subscribe((value) => this.msgParamEntities = { entities: value });
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnDestroy()', 'end');
+  }
+
+  openModal(value?: IProyectoEntidadConvocante): void {
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `openModal()`, 'start');
+    const data: ProyectoEntidadConvocanteModalData = {
+      proyectoEntidadConvocante: value,
+      selectedEmpresas: this.proyectoEntidadesConvocantesFragment.
+        proyectoEntidadConvocantes$.value.map((convocanteData) => convocanteData.entidad)
+    };
+    const config = {
+      width: GLOBAL_CONSTANTS.widthModalCSP,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data
+    };
+    const dialogRef = this.matDialog.open(ProyectoEntidadConvocanteModalComponent, config);
+    dialogRef.afterClosed().subscribe((entidadConvocante: ProyectoEntidadConvocanteModalData) => {
+      if (entidadConvocante) {
+        if (value) {
+          this.proyectoEntidadesConvocantesFragment.updateProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
+        } else {
+          this.proyectoEntidadesConvocantesFragment.addProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
+        }
+      }
+      this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `openModal()`, 'end');
+    });
+  }
+
+  deleteProyectoEntidadConvocante(data: IProyectoEntidadConvocante) {
+    this.logger.debug(ProyectoEntidadesConvocantesComponent.name,
+      `deleteProyectoEntidadConvocante(${data})`, 'start');
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(MSG_ENTITY_DELETE_KEY, this.msgParamEntity).subscribe(
+        (aceptado: boolean) => {
+          if (aceptado) {
+            this.proyectoEntidadesConvocantesFragment.deleteProyectoEntidadConvocante(data);
+          }
+          this.logger.debug(ProyectoEntidadesConvocantesComponent.name,
+            `deleteProyectoEntidadConvocante(${data})`, 'end');
+        }
+      )
+    );
+  }
+}

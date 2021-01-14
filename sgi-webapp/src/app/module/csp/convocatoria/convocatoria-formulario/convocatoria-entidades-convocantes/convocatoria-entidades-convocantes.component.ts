@@ -68,7 +68,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
 
     const data: ConvocatoriaEntidadConvocanteModalData = {
       entidadConvocanteData: value,
-      selectedEmpresas: this.formPart.data$.value.map((convocanteData) => convocanteData.empresaEconomica),
+      selectedEmpresas: this.dataSource.data.map((convocanteData) => convocanteData.empresaEconomica),
       readonly: this.formPart.readonly
     };
     const config = {
