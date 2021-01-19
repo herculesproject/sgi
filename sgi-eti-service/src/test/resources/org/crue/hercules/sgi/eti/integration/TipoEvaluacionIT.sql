@@ -7,3 +7,7 @@ INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (5, 'TipoEvaluacion5
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (6, 'TipoEvaluacion6', true);
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (7, 'TipoEvaluacion7', true);
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (8, 'TipoEvaluacion8', true);
+
+-- DICTAMEN
+INSERT INTO eti.dictamen (id, nombre, tipo_evaluacion_id, activo) VALUES (5, 'Favorable', 3, true);
+INSERT INTO eti.dictamen (id, nombre, tipo_evaluacion_id, activo) VALUES (6, 'Solicitud de modificaciones', 3, true);
