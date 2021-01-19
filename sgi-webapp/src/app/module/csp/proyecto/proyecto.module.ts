@@ -11,13 +11,17 @@ import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.componen
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
 import { ProyectoResolver } from './proyecto.resolver';
+import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
+import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
 
 @NgModule({
   declarations: [
     ProyectoListadoComponent,
     ProyectoCrearComponent,
     ProyectoEditarComponent,
-    ProyectoFichaGeneralComponent],
+    ProyectoFichaGeneralComponent,
+    ProyectoHitosComponent,
+    ProyectoHitosModalComponent],
   imports: [
     SharedModule,
     CommonModule,

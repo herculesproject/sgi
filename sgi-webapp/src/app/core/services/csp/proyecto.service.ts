@@ -4,6 +4,7 @@ import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -246,5 +247,19 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
       tap(() => this.logger.debug(ProyectoService.name, `${this.reactivar.name}()`, '-', 'end'))
     );
+  }
+
+  /**
+ * Recupera los hitos de un proyecto
+ * @param idProyecto Identificador del proyecto.
+ * @returns Listado de hitos.
+ */
+  findHitosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoHito>> {
+    this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectohitos`;
+    return this.find<IProyectoHito, IProyectoHito>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'end'))
+      );
   }
 }

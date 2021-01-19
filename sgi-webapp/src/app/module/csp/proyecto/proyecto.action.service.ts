@@ -8,6 +8,8 @@ import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-dat
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
+import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
 
 
 
@@ -15,12 +17,19 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 export class ProyectoActionService extends ActionService {
 
   public readonly FRAGMENT = {
-    FICHA_GENERAL: 'ficha-general'
+    FICHA_GENERAL: 'ficha-general',
+    HITOS: 'hitos'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
+  private hitos: ProyectoHitosFragment;
 
   proyecto: IProyecto;
+  readonly = false;
+
+  get modeloEjecucionId(): number {
+    return this.getDatosGeneralesProyecto().modeloEjecucion?.id;
+  }
 
   constructor(
     fb: FormBuilder,
@@ -28,7 +37,8 @@ export class ProyectoActionService extends ActionService {
     route: ActivatedRoute,
     proyectoService: ProyectoService,
     unidadGestionService: UnidadGestionService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    proyectoHitoService: ProyectoHitoService,
   ) {
     super();
 
@@ -38,9 +48,26 @@ export class ProyectoActionService extends ActionService {
       this.enableEdit();
     }
 
-    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id, proyectoService, unidadGestionService, convocatoriaService);
-
+    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id,
+      proyectoService, unidadGestionService, convocatoriaService);
+    this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService,
+      proyectoHitoService, this.readonly);
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
+
+    if (this.isEdit()) {
+      this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+    }
+
+  }
+
+  /**
+   * Recupera los datos del proyecto del formulario de datos generales,
+   * si no se ha cargado el formulario de datos generales se recuperan los datos de la proyecto que se esta editando.
+   *
+   * @returns los datos generales del proyecto.
+   */
+  private getDatosGeneralesProyecto(): IProyecto {
+    return this.fichaGeneral.isInitialized() ? this.fichaGeneral.getValue() : {} as IProyecto;
   }
 }
