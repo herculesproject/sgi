@@ -18,12 +18,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de TipoInvestigacionTutelada.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+@Sql
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 @ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 
 public class TipoInvestigacionTuteladaIT extends BaseIT {
@@ -42,8 +48,6 @@ public class TipoInvestigacionTuteladaIT extends BaseIT {
     return request;
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsTipoInvestigacionTuteladaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -71,8 +75,6 @@ public class TipoInvestigacionTuteladaIT extends BaseIT {
     Assertions.assertThat(tipoInvestigacionTuteladas.get(0).getNombre()).isEqualTo("Trabajo Fin de Grado");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoInvestigacionTuteladaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -97,8 +99,6 @@ public class TipoInvestigacionTuteladaIT extends BaseIT {
     Assertions.assertThat(tipoInvestigacionTuteladas.get(0).getNombre()).startsWith("Tesis doctoral");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoInvestigacionTuteladaList() throws Exception {
     // when: Ordenación por nombre desc
@@ -124,8 +124,6 @@ public class TipoInvestigacionTuteladaIT extends BaseIT {
     Assertions.assertThat(tipoInvestigacionTuteladas.get(2).getNombre()).isEqualTo("Tesis doctoral");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoInvestigacionTuteladaSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
