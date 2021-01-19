@@ -56,42 +56,48 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     return form;
   }
 
-  protected buildPatch(value: ISolicitudProyectoDatos): { [key: string]: any; } {
+  protected buildPatch(proyectoDatos: ISolicitudProyectoDatos): { [key: string]: any; } {
     this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `buildPatch(convocatoria: ${value})`, 'start');
+      `buildPatch(convocatoria: ${proyectoDatos})`, 'start');
     const result = {
-      titulo: value.titulo,
-      acronimo: value.acronimo,
-      duracion: value.duracion,
-      colaborativo: value.colaborativo,
-      coordinadorExterno: value.coordinadorExterno,
-      universidadSubcontratada: value.universidadSubcontratada,
-      presupuestoPorEntidades: value.presupuestoPorEntidades,
-      objetivos: value.objetivos,
-      intereses: value.intereses,
-      resultadosPrevistos: value.resultadosPrevistos,
-      envioEtica: value.envioEtica
+      titulo: proyectoDatos.titulo,
+      acronimo: proyectoDatos.acronimo,
+      duracion: proyectoDatos.duracion,
+      colaborativo: proyectoDatos.colaborativo,
+      coordinadorExterno: proyectoDatos.coordinadorExterno,
+      universidadSubcontratada: proyectoDatos.universidadSubcontratada,
+      presupuestoPorEntidades: proyectoDatos.presupuestoPorEntidades,
+      objetivos: proyectoDatos.objetivos,
+      intereses: proyectoDatos.intereses,
+      resultadosPrevistos: proyectoDatos.resultadosPrevistos,
+      envioEtica: proyectoDatos.envioEtica
     };
+    this.actionService.setSociosColaboradores(proyectoDatos.colaborativo);
+    this.actionService.setEnableAddSocioColaborador(proyectoDatos.coordinadorExterno);
+
     const form = this.getFormGroup();
     const coordinadorExterno = form.get('coordinadorExterno');
-    coordinadorExterno.disable();
-    const colaborativo = form.get('colaborativo');
-    const subscription = colaborativo.valueChanges.pipe(
-      tap((colaborativo) => {
-        if (colaborativo === false) {
-          coordinadorExterno.disable();
-        } else {
-          coordinadorExterno.enable();
-          coordinadorExterno.setValue(undefined);
-        }
-        // TODO Conectarla con la pestaña "Socios colaboradores" para ocultarla
-        this.actionService.isSociosColaboradores = colaborativo;
-      })
-    ).subscribe();
-    this.subscriptions.push(subscription);
+    this.subscriptions.push(
+      form.get('colaborativo').valueChanges.pipe(
+        tap((colaborativo) => {
+          if (colaborativo === false) {
+            coordinadorExterno.disable();
+          } else {
+            coordinadorExterno.enable();
+            coordinadorExterno.setValue(undefined);
+          }
+          this.actionService.setSociosColaboradores = colaborativo;
+        })
+      ).subscribe()
+    );
+    this.subscriptions.push(
+      coordinadorExterno.valueChanges.pipe(
+        tap((value) => this.actionService.setEnableAddSocioColaborador = value)
+      ).subscribe()
+    );
 
     this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `buildPatch(convocatoria: ${value})`, 'end');
+      `buildPatch(convocatoria: ${proyectoDatos})`, 'end');
     return result;
   }
 
@@ -172,7 +178,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     if (this.solicitudProyectoDatos.colaborativo) {
       this.solicitudProyectoDatos.coordinadorExterno = form.coordinadorExterno;
     } else {
-      this.solicitudProyectoDatos.coordinadorExterno = undefined;
+      this.solicitudProyectoDatos.coordinadorExterno = false;
     }
     this.solicitudProyectoDatos.universidadSubcontratada = form.universidadSubcontratada;
     this.solicitudProyectoDatos.objetivos = form.objetivos;

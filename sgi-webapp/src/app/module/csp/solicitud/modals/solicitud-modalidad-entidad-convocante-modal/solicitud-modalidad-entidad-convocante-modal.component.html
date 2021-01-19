@@ -1,7 +1,8 @@
 <div class="modal-solicitud-modalidad">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{ (isEdit ? 'csp.solicitud.solicitudModalidad.modal.titulo.editar' : 'csp.solicitud.solicitudModalidad.modal.titulo.aniadir') | translate}}
+      {{ (isEdit ? 'csp.solicitud.solicitudModalidad.modal.titulo.editar' :
+      'csp.solicitud.solicitudModalidad.modal.titulo.aniadir') | translate}}
     </h3>
   </header>
   <main>
@@ -92,7 +93,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" md-button mat-raised-button type="submit" (click)="saveOrUpdate()">
       {{'botones.aceptar' | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+      translate}}</button>
   </div>
 </div>

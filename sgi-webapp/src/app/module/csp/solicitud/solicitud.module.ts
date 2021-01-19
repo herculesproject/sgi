@@ -19,6 +19,7 @@ import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/s
 import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
 import { SolicitudEquipoProyectoModalComponent } from './modals/solicitud-equipo-proyecto-modal/solicitud-equipo-proyecto-modal.component';
+import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { SolicitudEquipoProyectoModalComponent } from './modals/solicitud-equipo
     SolicitudAreaTematicaModalComponent,
     SolicitudEquipoProyectoComponent,
     SolicitudEquipoProyectoModalComponent,
+    SolicitudSociosColaboradoresComponent,
   ],
   imports: [
     CommonModule,

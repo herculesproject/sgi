@@ -1,46 +1,49 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { TipoFinanciacionModalComponent } from './tipo-financiacion-modal.component';
+import { SolicitudActionService } from '../../solicitud.action.service';
 
-describe('TipoFinanciacionModalComponent', () => {
-  let component: TipoFinanciacionModalComponent;
-  let fixture: ComponentFixture<TipoFinanciacionModalComponent>;
+import { SolicitudSociosColaboradoresComponent } from './solicitud-socios-colaboradores.component';
+
+describe('SolicitudSociosColaboradoresComponent', () => {
+  let component: SolicitudSociosColaboradoresComponent;
+  let fixture: ComponentFixture<SolicitudSociosColaboradoresComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        TipoFinanciacionModalComponent
+        SolicitudSociosColaboradoresComponent
       ],
       imports: [
-        BrowserAnimationsModule,
+        TestUtils.getIdiomas(),
         MaterialDesignModule,
+        BrowserAnimationsModule,
         HttpClientTestingModule,
         LoggerTestingModule,
-        TestUtils.getIdiomas(),
-        RouterTestingModule,
+        FlexModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterTestingModule,
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as ITipoFinanciacion },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoFinanciacion },
-      ]
+        SolicitudActionService,
+        SgiAuthService
+      ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TipoFinanciacionModalComponent);
+    fixture = TestBed.createComponent(SolicitudSociosColaboradoresComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -48,5 +51,4 @@ describe('TipoFinanciacionModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });

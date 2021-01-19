@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActionComponent } from '@core/component/action.component';
 import { SOLICITUD_ROUTE_NAMES } from '../solicitud-route-names';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -10,6 +10,7 @@ import { SolicitudActionService } from '../solicitud.action.service';
 import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
+const MSG_BUTTON_REGISTRAR = marker('csp.solicitud.registrar');
 const MSG_SUCCESS = marker('csp.solicitud.editar.correcto');
 const MSG_ERROR = marker('csp.solicitud.editar.error');
 
@@ -28,7 +29,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
 
   tipoEstandar = false;
   disableRegistrar = false;
-
+  private from: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -51,7 +52,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   }
 
   /**
-   * Comprueba que el tipo de la solcitud sea "Estándar"
+   * Comprueba que el tipo de la solcitud sea 'Estándar'
    */
   isTipoEstandar(): void {
     this.logger.debug(SolicitudEditarComponent.name, 'isTipoEstandar()', 'start');

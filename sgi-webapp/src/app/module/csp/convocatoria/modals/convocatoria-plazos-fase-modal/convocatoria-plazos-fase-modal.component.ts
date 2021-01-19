@@ -127,7 +127,7 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
       console.log(this.data.plazos);
       const convocatoriasFases = this.data.plazos.filter(plazo =>
         plazo.tipoFase.id === (tipoFase as ITipoFase).id &&
-        (plazo.fechaInicio != this.data.plazo.fechaInicio && plazo.fechaFin != this.data.plazo.fechaFin));
+        (plazo.fechaInicio !== this.data.plazo.fechaInicio && plazo.fechaFin !== this.data.plazo.fechaFin));
       rangoFechas = convocatoriasFases.map(
         fase => {
           const rango: IRange = {

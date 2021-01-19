@@ -20,9 +20,16 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
+import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { switchMap, tap } from 'rxjs/operators';
+import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
+import { ROUTE_NAMES } from '@core/route.names';
+import { CSP_ROUTE_NAMES } from '../csp-route-names';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+const MSG_SOLICITUD_PROYECTO_SOCIO = marker('eti.memoria.link.peticionEvaluacion');
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
@@ -33,7 +40,8 @@ export class SolicitudActionService extends ActionService {
     DOCUMENTOS: 'documentos',
     PROYECTO_DATOS: 'proyectoDatos',
     HITOS: 'hitos',
-    EQUIPO_PROYECTO: 'equipoProyecto'
+    EQUIPO_PROYECTO: 'equipoProyecto',
+    SOCIOS_COLABORADORES: 'sociosColaboradores'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -42,11 +50,11 @@ export class SolicitudActionService extends ActionService {
   private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
   private hitos: SolicitudHitosFragment;
   private equipoProyecto: SolicitudEquipoProyectoFragment;
+  private sociosColaboradores: SolicitudSociosColaboradoresFragment;
 
   solicitud: ISolicitud;
 
   showHitos$ = new BehaviorSubject<boolean>(false);
-  isSociosColaboradores = false;
 
   constructor(
     private logger: NGXLogger,
@@ -62,7 +70,8 @@ export class SolicitudActionService extends ActionService {
     sgiAuthService: SgiAuthService,
     solicitudDocumentoService: SolicitudDocumentoService,
     solicitudProyectoDatosService: SolicitudProyectoDatosService,
-    solicitudProyectoEquipoService: SolicitudProyectoEquipoService
+    solicitudProyectoEquipoService: SolicitudProyectoEquipoService,
+    solicitudProyectoSocioService: SolicitudProyectoSocioService
   ) {
     super();
     this.solicitud = {
@@ -91,6 +100,8 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoDatosService, convocatoriaService, this);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(logger, this.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService);
+    this.sociosColaboradores = new SolicitudSociosColaboradoresFragment(logger, this.solicitud?.id, solicitudService,
+      solicitudProyectoSocioService, empresaEconomicaService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
@@ -98,6 +109,9 @@ export class SolicitudActionService extends ActionService {
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
     this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
+    this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.sociosColaboradores);
+
+    this.checkSociosColaboradores();
   }
 
   getDatosGeneralesSolicitud(): ISolicitud {
@@ -153,5 +167,55 @@ export class SolicitudActionService extends ActionService {
           'saveOrUpdate()', 'end'))
       );
     }
+  }
+
+  /**
+   * Indica si se puede mostrar la pestaña SociosColaboradores
+   */
+  get isSociosColaboradores(): boolean {
+    return this.sociosColaboradores.isSociosColaboradores;
+  }
+
+  /**
+   * Modifica la visibilidad de la pestaña SociosColaboradores
+   *
+   * @param value Valor boolean
+   */
+  setSociosColaboradores(value: boolean) {
+    this.sociosColaboradores.isSociosColaboradores = value;
+  }
+
+  /**
+   * Habilita la edición de socios colaboradores
+   *
+   * @param value Valor boolean
+   */
+  setEnableAddSocioColaborador(value: boolean) {
+    this.sociosColaboradores.enableAddSocioColaborador = value;
+  }
+
+  /**
+   * Hace la comprobación de mostrar la pestaña SociosColaboradores en el back
+   * si no esta inicializada la pestaña ProyectoDatos
+   */
+  checkSociosColaboradores(): void {
+    this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'start');
+    const id = this.solicitud?.id;
+    if (!this.proyectoDatos.isInitialized() && id) {
+      const subscription = this.solicitudService.findSolicitudProyectoDatos(id).subscribe(
+        (proyectoDatos) => {
+          this.setSociosColaboradores(proyectoDatos ? proyectoDatos.colaborativo : false);
+          this.setEnableAddSocioColaborador(proyectoDatos ? proyectoDatos.coordinadorExterno : false);
+          this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'end');
+        },
+        (error) => {
+          this.setSociosColaboradores(false);
+          this.setEnableAddSocioColaborador(false);
+          this.logger.error(SolicitudActionService.name, 'checkSociosColaboradores()', error);
+        }
+      );
+      this.subscriptions.push(subscription);
+    }
+    this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'end');
   }
 }

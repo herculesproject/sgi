@@ -23,6 +23,7 @@ const MSG_TIPO_FINANCIACION_TITLE = marker('menu.principal.csp.tipo.financiacion
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.principal.csp.fuenteFinanciacion');
 const MSG_AREA_TEMATICA_TITLE = marker('menu.principal.csp.area.tematica');
 const MSG_PROYECTO_TITLE = marker('menu.principal.csp.proyectos');
+const MSG_SOLICITUD_PROYECTO_SOCIO = marker('menu.principal.csp.solicitud-proyecto-socio');
 
 const routes: SgiRoutes = [
   {
@@ -194,6 +195,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_AREA_TEMATICA_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.SOLICITUD_PROYECTO_SOCIO,
+        loadChildren: () =>
+          import('./solicitud-proyecto-socio/solicitud-proyecto-socio.module').then(
+            (m) => m.SolicitudProyectoSocioModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SOLICITUD_PROYECTO_SOCIO,
         }
       },
       { path: '**', component: null }

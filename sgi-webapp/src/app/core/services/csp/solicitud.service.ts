@@ -20,6 +20,9 @@ import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-dat
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { SolicitudProyectoEquipoService, ISolicitudProyectoEquipoBackend } from './solicitud-proyecto-equipo.service';
 import { PersonaFisicaService } from '../sgp/persona-fisica.service';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { SolicitudProyectoSocioService, ISolicitudProyectoSocioBackend } from './solicitud-proyecto-socio.service';
+import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
 
 
 interface ISolicitudBackend {
@@ -107,7 +110,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   constructor(
     logger: NGXLogger,
     protected http: HttpClient,
-    private personaFisicaService: PersonaFisicaService
+    private personaFisicaService: PersonaFisicaService,
+    private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(
       SolicitudService.name,
@@ -307,5 +311,27 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       map(x => x.status === 200),
       tap(() => this.logger.debug(SolicitudService.name, `existsSolictudProyectoDatos(id: ${id})`, '-', 'end')),
     );
+  }
+
+
+  /**
+   * Recupera los ISolicitudProyectoSocio de la solicitud
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoSocio de la solicitud
+   */
+  findAllSolicitudProyectoSocio(id: number, options?: SgiRestFindOptions): Observable<ISolicitudProyectoSocio[]> {
+    this.logger.debug(SolicitudService.name,
+      `findAllSolicitudProyectoSocio(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectosocio`;
+    return this.find<ISolicitudProyectoSocio, ISolicitudProyectoSocioBackend>(endpointUrl, options)
+      .pipe(
+        map((result) => result.items.map(solicitudProyectoSocioBackend =>
+          SolicitudProyectoSocioService.CONVERTER.toTarget(solicitudProyectoSocioBackend))
+        ),
+        tap(() => this.logger.debug(SolicitudService.name,
+          `findAllSolicitudProyectoSocio(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
   }
 }

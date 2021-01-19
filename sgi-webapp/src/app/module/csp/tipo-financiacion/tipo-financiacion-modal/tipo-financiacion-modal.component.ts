@@ -5,8 +5,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
@@ -84,5 +84,4 @@ export class TipoFinanciacionModalComponent implements OnInit {
     this.tipoFinanciacion.descripcion = this.formGroup.get('descripcion').value;
     this.logger.debug(TipoFinanciacionModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
-
 }

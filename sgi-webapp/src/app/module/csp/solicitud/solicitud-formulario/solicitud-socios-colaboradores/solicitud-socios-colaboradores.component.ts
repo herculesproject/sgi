@@ -1,0 +1,111 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ROUTE_NAMES } from '@core/route.names';
+import { DialogService } from '@core/services/dialog.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NGXLogger } from 'ngx-logger';
+import { Subscription } from 'rxjs';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { SolicitudActionService } from '../../solicitud.action.service';
+import { SolicitudSociosColaboradoresFragment } from './solicitud-socios-colaboradores.fragment';
+import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-socio/solicitud-proyecto-socio-route-names';
+
+const MSG_DELETE = marker('csp.solicitud.socios.colaboradores.borrar');
+
+interface ISolicitudProyectoSocioState {
+  solicitudId: number;
+  solicitudProyectoSocio: ISolicitudProyectoSocio;
+  selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
+}
+
+@Component({
+  selector: 'sgi-solicitud-socios-colaboradores',
+  templateUrl: './solicitud-socios-colaboradores.component.html',
+  styleUrls: ['./solicitud-socios-colaboradores.component.scss']
+})
+export class SolicitudSociosColaboradoresComponent extends FragmentComponent implements OnInit, OnDestroy {
+  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
+  SOLICITUD_PROYECTO_SOCIO_ROUTE = SOLICITUD_PROYECTO_SOCIO_ROUTE;
+  ROUTE_NAMES = ROUTE_NAMES;
+
+  private subscriptions: Subscription[] = [];
+  formPart: SolicitudSociosColaboradoresFragment;
+
+  fxFlexProperties: FxFlexProperties;
+  fxLayoutProperties: FxLayoutProperties;
+
+  displayedColumns = ['empresa', 'rolSocio', 'numInvestigadores', 'mesInicio', 'mesFin', 'importeSolicitado', 'acciones'];
+
+  dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocio>>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  constructor(
+    protected logger: NGXLogger,
+    public actionService: SolicitudActionService,
+    private dialogService: DialogService,
+  ) {
+    super(actionService.FRAGMENT.SOCIOS_COLABORADORES, actionService);
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'start');
+    this.formPart = this.fragment as SolicitudSociosColaboradoresFragment;
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'end');
+  }
+
+  ngOnInit(): void {
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'start');
+    super.ngOnInit();
+    const subscription = this.formPart.proyectoSocios$.subscribe(
+      (proyectoSocios) => {
+        this.dataSource.data = proyectoSocios;
+      }
+    );
+    this.subscriptions.push(subscription);
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'end');
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnDestroy()`, 'start');
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnDestroy()`, 'end');
+  }
+
+  deleteProyectoSocio(wrapper: StatusWrapper<ISolicitudProyectoSocio>) {
+    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `deleteSocioColaborador(${wrapper})`, 'start');
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deleteProyectoSocio(wrapper);
+          }
+          this.logger.debug(SolicitudSociosColaboradoresComponent.name, `deleteSocioColaborador(${wrapper})`, 'end');
+        }
+      )
+    );
+  }
+
+  createState(wrapper?: StatusWrapper<ISolicitudProyectoSocio>): ISolicitudProyectoSocioState {
+    const solicitudProyectoSocio: ISolicitudProyectoSocio = {
+      empresa: undefined,
+      id: undefined,
+      importeSolicitado: undefined,
+      mesFin: undefined,
+      mesInicio: undefined,
+      numInvestigadores: undefined,
+      rolSocio: undefined,
+      solicitudProyectoDatos: undefined
+    };
+    const state: ISolicitudProyectoSocioState = {
+      solicitudId: this.fragment.getKey() as number,
+      solicitudProyectoSocio: wrapper ? wrapper.value : solicitudProyectoSocio,
+      selectedSolicitudProyectoSocios: this.dataSource.data.map(element => element.value)
+    };
+    return state;
+  }
+}

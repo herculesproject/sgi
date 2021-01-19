@@ -34,7 +34,6 @@ export class SolicitudCrearComponent extends ActionComponent {
     public readonly actionService: SolicitudActionService,
     dialogService: DialogService
   ) {
-
     super(router, route, actionService, dialogService);
   }
 
