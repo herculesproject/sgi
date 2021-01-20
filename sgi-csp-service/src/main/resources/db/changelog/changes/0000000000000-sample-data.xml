@@ -1559,6 +1559,7 @@
       <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_finalidad where nombre like '% AAA')" />
       <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Propio')" />
       <column name="confidencial" value="false" />
+      <column name="colaborativo" value="true" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="proyecto">
@@ -1694,6 +1695,40 @@
       <column name="estado_proyecto_id" valueComputed="(select id from csp.estado_proyecto where comentario = 'comentario10')" />
       <where>codigo_externo = 'codigo-externo-004'</where>
     </update>
+  </changeSet>
+
+
+  <changeSet context="dev" author="master" id="0000000000000-proyecto_socio">
+    <insert tableName="proyecto_socio">
+      <column name="id" valueSequenceNext="proyecto_socio_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="empresa_ref" value="ent-001" />
+      <column name="rol_socio_id" valueComputed="(select id from csp.rol_socio where nombre = 'Colaborador')" />
+      <column name="fecha_inicio" value="2021-01-01" />
+      <column name="fecha_fin" value="2022-01-11" />
+      <column name="num_investigadores" value="5"></column>
+      <column name="importe_concedido" value="1000" />
+    </insert>
+    <insert tableName="proyecto_socio">
+      <column name="id" valueSequenceNext="proyecto_socio_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="empresa_ref" value="ent-002" />
+      <column name="rol_socio_id" valueComputed="(select id from csp.rol_socio where nombre = 'Lider')" />
+      <column name="fecha_inicio" value="2021-02-01" />
+      <column name="fecha_fin" value="2022-02-11" />
+      <column name="num_investigadores" value="10"></column>
+      <column name="importe_concedido" value="2000" />
+    </insert>
+    <insert tableName="proyecto_socio">
+      <column name="id" valueSequenceNext="proyecto_socio_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="empresa_ref" value="ent-003" />
+      <column name="rol_socio_id" valueComputed="(select id from csp.rol_socio where nombre = 'Colaborador')" />
+      <column name="fecha_inicio" value="2021-03-01" />
+      <column name="fecha_fin" value="2022-03-11" />
+      <column name="num_investigadores" value="15"></column>
+      <column name="importe_concedido" value="3000" />
+    </insert>
   </changeSet>
 
 </databaseChangeLog>

@@ -11,7 +11,9 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
+import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -46,15 +48,21 @@ public class ProyectoController {
   /** ProyectoHitoservice */
   private final ProyectoHitoService proyectoHitoService;
 
+  /** ProyectoSocio service */
+  private final ProyectoSocioService proyectoSocioService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
-   * @param proyectoService     {@link ProyectoService}.
-   * @param proyectoHitoService {@link ProyectoHitoService}.
+   * @param proyectoService      {@link ProyectoService}.
+   * @param proyectoHitoService  {@link ProyectoHitoService}.
+   * @param proyectoSocioService {@link ProyectoSocioService}.
    */
-  public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService) {
+  public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
+      ProyectoSocioService proyectoSocioService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
+    this.proyectoSocioService = proyectoSocioService;
   }
 
   /**
@@ -302,6 +310,37 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO SOCIO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoSocio} del
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectosocios")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Page<ProyectoSocio>> findAllProyectoSocio(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoSocio> page = proyectoSocioService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
