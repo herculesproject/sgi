@@ -3,6 +3,7 @@ DELETE FROM csp.proyecto_hito;
 DELETE FROM csp.solicitud_hito;
 DELETE FROM csp.solicitud_modalidad;
 DELETE FROM csp.solicitud_documento;
+DELETE FROM csp.solicitud_proyecto_periodo_pago;
 DELETE FROM csp.solicitud_proyecto_socio;
 DELETE FROM csp.solicitud_proyecto_equipo;
 DELETE FROM csp.solicitud_proyecto_datos;

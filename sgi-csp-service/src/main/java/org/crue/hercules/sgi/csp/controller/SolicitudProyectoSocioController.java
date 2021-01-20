@@ -1,9 +1,17 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,13 +39,19 @@ public class SolicitudProyectoSocioController {
   /** SolicitudProyectoSocioService service */
   private final SolicitudProyectoSocioService service;
 
+  /** SolicitudProyectoPeriodoPagoService service */
+  private final SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService;
+
   /**
    * Instancia un nuevo SolicitudProyectoSocioController.
    * 
-   * @param solicitudProyectoSocioService {@link SolicitudProyectoSocioService}.
+   * @param solicitudProyectoSocioService       {@link SolicitudProyectoSocioService}.
+   * @param solicitudProyectoPeriodoPagoService {@link SolicitudProyectoPeriodoPagoService}
    */
-  public SolicitudProyectoSocioController(SolicitudProyectoSocioService solicitudProyectoSocioService) {
+  public SolicitudProyectoSocioController(SolicitudProyectoSocioService solicitudProyectoSocioService,
+      SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService) {
     this.service = solicitudProyectoSocioService;
+    this.solicitudProyectoPeriodoPagoService = solicitudProyectoPeriodoPagoService;
   }
 
   /**
@@ -123,6 +138,31 @@ public class SolicitudProyectoSocioController {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoPeriodoPago}
+   * 
+   * @param id     Identificador de {@link SolicitudProyectoPeriodoPago}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectoperiodopago")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoPeriodoPago>> findAllSolicitudProyectoPeriodoPago(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoPeriodoPago> page = solicitudProyectoPeriodoPagoService.findAllBySolicitudProyectoSocio(id,
+        query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

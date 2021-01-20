@@ -982,7 +982,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
-  public void SolicitudProyectoSocio() throws Exception {
+  public void findAllSolicitudProyectoSocio_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudProyectoSocio para la
     // Solicitud
     Long solicitudId = 1L;
