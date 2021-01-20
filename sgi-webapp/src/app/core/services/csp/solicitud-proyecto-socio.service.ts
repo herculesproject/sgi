@@ -6,11 +6,12 @@ import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-soc
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
+import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
 
 export interface ISolicitudProyectoSocioBackend {
   id: number;
@@ -97,5 +98,21 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
       }),
       tap(() => this.logger.debug(SolicitudProyectoSocioService.name, `findById()`, '-', 'end'))
     );
+  }
+
+  /**
+   * Devuelve el listado de ISolicitudProyectoPeriodoPago de un ISolicitudProyectoSocio
+   *
+   * @param id Id del ISolicitudProyectoSocio
+   */
+  findAllSolicitudProyectoPeriodoPago(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<ISolicitudProyectoPeriodoPago>> {
+    this.logger.debug(SolicitudProyectoSocioService.name,
+      `findAllSolicitudProyectoPeriodoPago(id: ${id})`, '-', 'start');
+    return this.find<ISolicitudProyectoPeriodoPago, ISolicitudProyectoPeriodoPago>(
+      `${this.endpointUrl}/${id}/solicitudproyectoperiodopago`, options).pipe(
+        tap(() => this.logger.debug(SolicitudProyectoSocioService.name,
+          `findAllSolicitudProyectoPeriodoPago(id: ${id})`, '-', 'end'))
+      );
   }
 }

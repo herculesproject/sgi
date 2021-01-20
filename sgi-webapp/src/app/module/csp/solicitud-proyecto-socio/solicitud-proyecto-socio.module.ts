@@ -10,12 +10,16 @@ import { SolicitudProyectoSocioEditarComponent } from './solicitud-proyecto-soci
 import { SolicitudProyectoSocioRouting } from './solicitud-proyecto-socio-routing.module';
 import { SolicitudProyectoSocioDatosGeneralesComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.component';
 import { SolicitudProyectoSocioGuard } from './solicitud-proyecto-socio.guard';
+import { SolicitudProyectoSocioPeriodoPagoComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.component';
+import { SolicitudProyectoSocioPeriodoPagoModalComponent } from './modals/solicitud-proyecto-socio-periodo-pago-modal/solicitud-proyecto-socio-periodo-pago-modal.component';
 
 @NgModule({
   declarations: [
     SolicitudProyectoSocioCrearComponent,
     SolicitudProyectoSocioEditarComponent,
-    SolicitudProyectoSocioDatosGeneralesComponent
+    SolicitudProyectoSocioDatosGeneralesComponent,
+    SolicitudProyectoSocioPeriodoPagoComponent,
+    SolicitudProyectoSocioPeriodoPagoModalComponent
   ],
   imports: [
     SharedModule,

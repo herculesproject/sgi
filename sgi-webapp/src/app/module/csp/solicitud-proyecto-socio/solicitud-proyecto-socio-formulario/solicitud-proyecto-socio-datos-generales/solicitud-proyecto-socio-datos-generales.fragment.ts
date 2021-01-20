@@ -107,6 +107,7 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
     return observable$.pipe(
       map(result => {
         this.solicitudProyectoSocio = result;
+        this.actionService.solicitudProyectoSocio = result;
         return this.solicitudProyectoSocio.id;
       }),
       tap(() => this.logger.debug(SolicitudProyectoSocioDatosGeneralesFragment.name,

@@ -5,24 +5,31 @@ import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-soc
 import { NGXLogger } from 'ngx-logger';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { SolicitudProyectoPeriodoPagoService } from '@core/services/csp/solicitud-proyecto-periodo-pago.service';
+import { SolicitudProyectoSocioPeriodoPagoFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.fragment';
+import { Observable, throwError } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class SolicitudProyectoSocioActionService extends ActionService {
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
+    PERIODOS_PAGOS: 'periodos-pagos'
   };
 
   solicitudId: number;
 
   datosGenerales: SolicitudProyectoSocioDatosGeneralesFragment;
+  periodosPago: SolicitudProyectoSocioPeriodoPagoFragment;
 
-  private solicitudProyectoSocio: ISolicitudProyectoSocio;
+  solicitudProyectoSocio: ISolicitudProyectoSocio;
   selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
 
   constructor(
     logger: NGXLogger,
     solicitudService: SolicitudService,
-    solicitudProyectoSocioService: SolicitudProyectoSocioService
+    solicitudProyectoSocioService: SolicitudProyectoSocioService,
+    solicitudProyectoPeriodoPagoService: SolicitudProyectoPeriodoPagoService
   ) {
     super();
     this.solicitudProyectoSocio = {} as ISolicitudProyectoSocio;
@@ -36,7 +43,10 @@ export class SolicitudProyectoSocioActionService extends ActionService {
 
     this.datosGenerales = new SolicitudProyectoSocioDatosGeneralesFragment(
       logger, this.solicitudProyectoSocio?.id, solicitudProyectoSocioService, solicitudService, this);
+    this.periodosPago = new SolicitudProyectoSocioPeriodoPagoFragment(logger, this.solicitudProyectoSocio?.id,
+      solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
+    this.addFragment(this.FRAGMENT.PERIODOS_PAGOS, this.periodosPago);
   }
 }
