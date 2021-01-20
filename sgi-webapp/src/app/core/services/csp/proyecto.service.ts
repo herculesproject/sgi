@@ -5,6 +5,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
+import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -14,7 +15,8 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
 
 interface IProyectoBackend {
 
@@ -262,4 +264,26 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
         tap(() => this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'end'))
       );
   }
+
+  /**
+   * Recupera los IProyectoSocio del proyecto
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IProyectoSocio del proyecto
+   */
+  findAllProyectoSocioProyecto(id: number, options?: SgiRestFindOptions): Observable<IProyectoSocio[]> {
+    this.logger.debug(ProyectoService.name,
+      `findAllProyectoSocioProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/proyectosocios`;
+    return this.find<IProyectoSocio, IProyectoSocioBackend>(endpointUrl, options)
+      .pipe(
+        map((result) => result.items.map(solicitudProyectoSocioBackend =>
+          ProyectoSocioService.CONVERTER.toTarget(solicitudProyectoSocioBackend))
+        ),
+        tap(() => this.logger.debug(ProyectoService.name,
+          `findAllProyectoSocioProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
 }

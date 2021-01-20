@@ -9,8 +9,9 @@ export class DateValidator {
    *
    * @param firstDateFieldName Nombre del campo contra el que se quiere hacer la validacion.
    * @param secondDateFieldName Nombre del campo que se quiere validar.
+   * @param errorIfFirstDateEmpty Mostrar error si la primera fecha no esta rellena (por defecto true).
    */
-  static isAfter(firstDateFieldName: string, secondDateFieldName: string): ValidatorFn {
+  static isAfter(firstDateFieldName: string, secondDateFieldName: string, errorIfFirstDateEmpty = true): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 
       const fechaAnteriorControl = formGroup.controls[firstDateFieldName];
@@ -23,7 +24,8 @@ export class DateValidator {
       const fechaAnteriorDate = DateUtils.fechaToDate(fechaAnteriorControl.value);
       const fechaPosteriorDate = DateUtils.fechaToDate(fechaPosteriorControl.value);
 
-      if (fechaPosteriorDate && (!fechaAnteriorDate || fechaAnteriorDate >= fechaPosteriorDate)) {
+      if (fechaPosteriorDate && ((!fechaAnteriorDate && errorIfFirstDateEmpty)
+        || (fechaAnteriorDate && fechaAnteriorDate >= fechaPosteriorDate))) {
         fechaPosteriorControl.setErrors({ after: true });
         fechaPosteriorControl.markAsTouched({ onlySelf: true });
       } else if (fechaPosteriorControl.errors) {

@@ -130,6 +130,12 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       tap(() => this.validarTimesheet())
     ).subscribe());
 
+    this.subscriptions.push(
+      this.formGroup.controls.colaborativo.valueChanges.subscribe(_ => {
+        this.actionService.isProyectoColaborativo = this.formGroup.controls.colaborativo.value ? this.formGroup.controls.colaborativo.value : false;
+      })
+    );
+
     this.formGroup.controls.horasAnuales.disable();
 
     this.logger.debug(ProyectoFichaGeneralComponent.name, 'ngOnInit()', 'end');

@@ -13,6 +13,7 @@ import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-da
 import { ProyectoResolver } from './proyecto.resolver';
 import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
 import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
+import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proye
     ProyectoEditarComponent,
     ProyectoFichaGeneralComponent,
     ProyectoHitosComponent,
-    ProyectoHitosModalComponent],
+    ProyectoHitosModalComponent,
+    ProyectoSociosComponent],
   imports: [
     SharedModule,
     CommonModule,

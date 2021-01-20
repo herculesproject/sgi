@@ -12,6 +12,7 @@ import { ProyectoResolver } from './proyecto.resolver';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
+import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
 const MSG_LISTADO_TITLE = marker('csp.proyecto.listado.titulo');
 const MSG_EDIT_TITLE = marker('csp.proyecto.editar.titulo');
@@ -77,6 +78,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.HITOS,
         component: ProyectoHitosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.SOCIOS,
+        component: ProyectoSociosComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

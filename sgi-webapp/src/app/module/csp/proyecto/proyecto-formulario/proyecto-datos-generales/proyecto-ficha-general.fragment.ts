@@ -13,6 +13,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { ProyectoActionService } from '../../proyecto.action.service';
 
 export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
@@ -29,7 +30,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     key: number,
     private service: ProyectoService,
     private unidadGestionService: UnidadGestionService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    private actionService: ProyectoActionService
   ) {
     super(key);
     this.logger.debug(ProyectoFichaGeneralFragment.name, 'constructor()', 'start');
@@ -154,6 +156,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario
     };
+
+    this.actionService.isProyectoColaborativo = proyecto.colaborativo;
     this.checkEstado(this.getFormGroup(), proyecto);
 
     if (proyecto.convocatoria && this.isEdit()) {

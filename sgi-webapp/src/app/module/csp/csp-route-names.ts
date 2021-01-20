@@ -13,5 +13,6 @@ export const CSP_ROUTE_NAMES = {
   TIPO_FINANCIACION: 'tipo-financiaciones',
   AREA_TEMATICA: 'area-tematica',
   PROYECTO: 'proyectos',
-  SOLICITUD_PROYECTO_SOCIO: 'solicitud-proyecto-socio'
+  SOLICITUD_PROYECTO_SOCIO: 'solicitud-proyecto-socio',
+  PROYECTO_SOCIO: 'proyecto-socio'
 };
