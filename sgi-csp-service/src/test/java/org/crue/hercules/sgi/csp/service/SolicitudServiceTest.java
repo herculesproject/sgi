@@ -32,6 +32,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * SolicitudServiceTest
@@ -231,6 +232,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
   public void update_ReturnsSolicitud() {
     // given: Un nuevo Solicitud con las observaciones actualizadas
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -244,7 +246,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Actualizamos el Solicitud
     Solicitud solicitudActualizada = service.update(solicitudoObservacionesActualizadas,
-        Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE);
+        Arrays.asList(solicitud.getUnidadGestionRef()));
 
     // then: El Solicitud se actualiza correctamente.
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
@@ -268,6 +270,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
   public void update_WithIdNotExist_ThrowsSolicitudNotFoundException() {
     // given: Un Solicitud actualizado con un id que no existe
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -276,13 +279,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Actualizamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud no existe
-    Assertions
-        .assertThatThrownBy(
-            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
         .isInstanceOf(SolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
   public void update_SolicitudActiveFalse_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -292,9 +294,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions
-        .assertThatThrownBy(
-            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Solicitud tiene que estar activo para actualizarse");
   }
 
@@ -307,9 +307,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions
-        .assertThatThrownBy(
-            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
   }
@@ -322,9 +320,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions
-        .assertThatThrownBy(
-            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El solicitante no puede ser null para actualizar Solicitud");
   }

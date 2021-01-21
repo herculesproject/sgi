@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -180,6 +181,42 @@ public class SolicitudProyectoSocioIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudProyectoPeriodoPago> solicitudProyectoPeriodoPago = response.getBody();
     Assertions.assertThat(solicitudProyectoPeriodoPago.size()).isEqualTo(1);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+  }
+
+  /**
+   * 
+   * SOLICITUD PROYECTO EQUIPO SOCIO
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllSolicitudProyectoEquipoSocio_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoSocioSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "personaRef:user-003";
+
+    Long solicitudProyectoSocioId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoequiposocio").queryParam("s", sort)
+        .queryParam("q", filter).buildAndExpand(solicitudProyectoSocioId).toUri();
+
+    final ResponseEntity<List<SolicitudProyectoEquipoSocio>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudProyectoEquipoSocio>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocio = response.getBody();
+    Assertions.assertThat(solicitudProyectoEquipoSocio.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

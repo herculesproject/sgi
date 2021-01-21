@@ -11,6 +11,8 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundExcept
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioServiceImpl;
@@ -41,11 +43,18 @@ public class SolicitudProyectoSocioServiceTest {
   @Mock
   private SolicitudRepository solicitudRepository;
 
+  @Mock
+  private SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepositor;
+
+  @Mock
+  private SolicitudProyectoEquipoSocioRepository solicitudProyectoPeriodoPagoRepository;
+
   private SolicitudProyectoSocioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudProyectoSocioServiceImpl(repository, solicitudRepository);
+    service = new SolicitudProyectoSocioServiceImpl(repository, solicitudRepository,
+        solicitudProyectoPeriodoPagoRepository, solicitudProyectoPeriodoPagoRepositor);
   }
 
   @Test

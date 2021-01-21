@@ -49,6 +49,7 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
 
   private SolicitudProyectoPeriodoPagoService service;
 
+  @Mock
   private SolicitudService solicitudService;
 
   @BeforeEach

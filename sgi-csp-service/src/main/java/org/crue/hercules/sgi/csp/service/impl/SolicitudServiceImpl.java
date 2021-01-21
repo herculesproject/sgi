@@ -23,9 +23,12 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecification
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.access.expression.SgiMethodSecurityExpressionRoot;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -113,17 +116,15 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Actualiza los datos del {@link Solicitud}.
    * 
-   * @param solicitud               solicitudActualizar {@link Solicitud} con los
-   *                                datos actualizados.
-   * @param unidadGestionRefs       lista de referencias de las unidades de
-   *                                gestion permitidas para el usuario.
-   * @param isAdministradorOrGestor Indicador de si el usuario que realiza la
-   *                                acutalización es administrador o gestor.
+   * @param solicitud         solicitudActualizar {@link Solicitud} con los datos
+   *                          actualizados.
+   * @param unidadGestionRefs lista de referencias de las unidades de gestion
+   *                          permitidas para el usuario.
    * @return {@link Solicitud} actualizado.
    */
   @Override
   @Transactional
-  public Solicitud update(Solicitud solicitud, List<String> unidadGestionRefs, Boolean isAdministradorOrGestor) {
+  public Solicitud update(Solicitud solicitud, List<String> unidadGestionRefs) {
     log.debug("update(Solicitud solicitud) - start");
 
     Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
@@ -135,26 +136,7 @@ public class SolicitudServiceImpl implements SolicitudService {
             || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()),
         "Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
 
-    if (isAdministradorOrGestor) {
-      Assert.isTrue(solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-          || solicitud.getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
-          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-          || solicitud.getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
-          "La solicitud no se encuentra en un estado adecuado para ser actualizada");
-    } else {
-      Assert.isTrue(
-          solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitud.getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-              || solicitud.getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
-          "La solicitud no se encuentra en un estado adecuado para ser actualizada");
-    }
+    isEditable(solicitud.getEstado().getEstado().getValue());
 
     return repository.findById(solicitud.getId()).map((data) -> {
 
@@ -465,6 +447,46 @@ public class SolicitudServiceImpl implements SolicitudService {
       log.debug("hasConvocatoriaSgi(Long id) - end");
       return solicitud.getConvocatoria() != null;
     }).orElseThrow(() -> new SolicitudNotFoundException(id));
+  }
+
+  /**
+   * Comprueba si la solicitud a la que está asociada está en el estado correcto
+   * para el usuario que la está modificando.
+   *
+   * @param estadoSolicitud estado de la solicitud
+   */
+  @Override
+  public void isEditable(String estadoSolicitud) {
+    log.debug("isEditable(String estadoSolicitud) - start");
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
+        authentication);
+
+    Boolean isAdministradorOrGestor = sgiMethodSecurityExpressionRoot.hasAuthority("CSP-SOL-C");
+
+    if (isAdministradorOrGestor) {
+
+      Assert.isTrue(
+          estadoSolicitud.equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
+          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
+
+    } else {
+
+      Assert.isTrue(
+          estadoSolicitud.equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
+              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
+          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
+    }
+
+    log.debug("isEditable(String estadoSolicitud) - end");
   }
 
   /**

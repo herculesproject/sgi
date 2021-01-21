@@ -25,14 +25,12 @@ public interface SolicitudService {
   /**
    * Actualiza los datos del {@link Solicitud}.
    * 
-   * @param solicitud               {@link Solicitud} con los datos actualizados.
-   * @param unidadGestionRefs       lista de referencias de las unidades de
-   *                                gestion permitidas para el usuario.
-   * @param isAdministradorOrGestor Indicador de si el usuario que realiza la
-   *                                acutalización es administrador o gestor.
+   * @param solicitud         {@link Solicitud} con los datos actualizados.
+   * @param unidadGestionRefs lista de referencias de las unidades de gestion
+   *                          permitidas para el usuario.
    * @return solicitud {@link Solicitud} actualizado.
    */
-  Solicitud update(final Solicitud solicitud, List<String> unidadGestionRefs, Boolean isAdministradorOrGestor);
+  Solicitud update(final Solicitud solicitud, List<String> unidadGestionRefs);
 
   /**
    * Reactiva el {@link Solicitud}.
@@ -93,5 +91,13 @@ public interface SolicitudService {
    *         convocatoria SGI
    */
   boolean hasConvocatoriaSgi(Long id);
+
+  /**
+   * Comprueba si la solicitud a la que está asociada está en el estado correcto
+   * para el usuario que la está modificando.
+   *
+   * @param estadoSolicitud estado de la solicitud
+   */
+  void isEditable(String estadoSolicitud);
 
 }

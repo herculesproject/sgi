@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoPagoService;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -42,16 +44,22 @@ public class SolicitudProyectoSocioController {
   /** SolicitudProyectoPeriodoPagoService service */
   private final SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService;
 
+  /** SolicitudProyectoEquipoSocio service */
+  private final SolicitudProyectoEquipoSocioService solicitudProyectoEquipoSocioService;
+
   /**
    * Instancia un nuevo SolicitudProyectoSocioController.
    * 
    * @param solicitudProyectoSocioService       {@link SolicitudProyectoSocioService}.
    * @param solicitudProyectoPeriodoPagoService {@link SolicitudProyectoPeriodoPagoService}
+   * @param solicitudProyectoEquipoSocioService {@link SolicitudProyectoEquipoSocioService}.
    */
   public SolicitudProyectoSocioController(SolicitudProyectoSocioService solicitudProyectoSocioService,
-      SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService) {
+      SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService,
+      SolicitudProyectoEquipoSocioService solicitudProyectoEquipoSocioService) {
     this.service = solicitudProyectoSocioService;
     this.solicitudProyectoPeriodoPagoService = solicitudProyectoPeriodoPagoService;
+    this.solicitudProyectoEquipoSocioService = solicitudProyectoEquipoSocioService;
   }
 
   /**
@@ -162,6 +170,34 @@ public class SolicitudProyectoSocioController {
     }
 
     log.debug("findAllSolicitudProyectoPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - end");
+
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /*
+   * Devuelve una lista paginada de {@link SolicitudProyectoEquipoSocio}
+   * 
+   * @param id Identificador de {@link SolicitudProyectoEquipoSocio}.
+   * 
+   * @param query filtro de {@link QueryCriteria}.
+   * 
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectoequiposocio")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoEquipoSocio>> findAllSolicitudProyectoEquipoSocio(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoEquipoSocio(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoEquipoSocio> page = solicitudProyectoEquipoSocioService.findAllBySolicitudProyectoSocio(id,
+        query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoEquipoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoEquipoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

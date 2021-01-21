@@ -2,26 +2,26 @@ package org.crue.hercules.sgi.csp.repository;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface SolicitudProyectoPeriodoPagoRepository
-    extends JpaRepository<SolicitudProyectoPeriodoPago, Long>, JpaSpecificationExecutor<SolicitudProyectoPeriodoPago> {
+public interface SolicitudProyectoEquipoSocioRepository
+    extends JpaRepository<SolicitudProyectoEquipoSocio, Long>, JpaSpecificationExecutor<SolicitudProyectoEquipoSocio> {
 
   /**
-   * Recupera todos los {@link SolicitudProyectoPeriodoPago} asociados a un
-   * {@link SolicitudProyectoSocio}.
+   * Recupera los {@link SolicitudProyectoEquipoSocio} asociados al id de
+   * {@link SolicitudProyectoSocio} recibido por parámetro
    * 
    * @param solicitudProyectoSocioId Identificador de
    *                                 {@link SolicitudProyectoSocio}
-   * @return listado de {@link SolicitudProyectoPeriodoPago}
+   * @return listado {@link SolicitudProyectoEquipoSocio}
    */
-  List<SolicitudProyectoPeriodoPago> findAllBySolicitudProyectoSocioId(Long solicitudProyectoSocioId);
+  List<SolicitudProyectoEquipoSocio> findAllBySolicitudProyectoSocioId(Long solicitudProyectoSocioId);
 
   /**
-   * Se eliminan todos los {@link SolicitudProyectoPeriodoPago} asociadosal id de
+   * Se eliminan todos los {@link SolicitudProyectoEquipoSocio} asociadosal id de
    * {@link SolicitudProyectoSocio} recibido por parámetro.
    * 
    * @param solicitudProyectoSocioId Identificador de

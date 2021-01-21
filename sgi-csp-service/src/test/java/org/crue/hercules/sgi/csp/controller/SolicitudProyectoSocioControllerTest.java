@@ -10,12 +10,15 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoPagoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -46,6 +49,9 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudProyectoSocioService service;
+
+  @MockBean
+  private SolicitudProyectoEquipoSocioService solicitudProyectoEquipoSocioService;
 
   @MockBean
   private SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService;
@@ -344,6 +350,101 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * Solicitud proyecto equipo socio
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudProyectoEquipoSocio_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudProyectoEquipo para la Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocio = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudProyectoEquipoSocio.add(generarSolicitudProyectoEquipoSocio(i, i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoEquipoSocioService.findAllBySolicitudProyectoSocio(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudProyectoEquipoSocio.size() ? solicitudProyectoEquipoSocio.size() : toIndex;
+          List<SolicitudProyectoEquipoSocio> content = solicitudProyectoEquipoSocio.subList(fromIndex, toIndex);
+          Page<SolicitudProyectoEquipoSocio> pageResponse = new PageImpl<>(content, pageable,
+              solicitudProyectoEquipoSocio.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoequiposocio", solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudProyectoSocio del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocioResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<SolicitudProyectoEquipoSocio>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudProyectoEquipoSocio solicitudProyectoEquipoSocioRecuperado = solicitudProyectoEquipoSocioResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudProyectoEquipoSocioRecuperado.getId()).isEqualTo(new Long(i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudProyectoEquipoSocio_Returns204() throws Exception {
+    // given: Una lista vacia de SolicitudProyectoSocio para la
+    // Solicitud
+    Long solicitudId = 1L;
+    List<SolicitudProyectoEquipoSocio> solicitudProyectoSocio = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoEquipoSocioService.findAllBySolicitudProyectoSocio(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<SolicitudProyectoEquipoSocio> pageResponse = new PageImpl<>(solicitudProyectoSocio, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoequiposocio", solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto SolicitudProyectoSocio
    * 
    * @param solicitudProyectoSocioId
@@ -383,5 +484,31 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()
         .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
     return solicitudProyectoPeriodoPago;
+  }
+
+  /**
+   * Función que devuelve un objeto SolicitudProyectoEquipoSocio
+   * 
+   * @param solicitudProyectoEquipoSocioId
+   * @param entidadesRelacionadasId
+   * @return el objeto SolicitudProyectoEquipoSocio
+   */
+  private SolicitudProyectoEquipoSocio generarSolicitudProyectoEquipoSocio(Long solicitudProyectoEquipoSocioId,
+      Long entidadesRelacionadasId) {
+
+    SolicitudProyectoEquipoSocio solicitudProyectoEquipoSocio = SolicitudProyectoEquipoSocio.builder()
+        .id(solicitudProyectoEquipoSocioId)
+        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(entidadesRelacionadasId).build())
+        .rolProyecto(RolProyecto.builder().id(entidadesRelacionadasId).build())
+        .personaRef("user-" + solicitudProyectoEquipoSocioId).mesInicio(1).mesFin(3).build();
+
+    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().setSolicitudProyectoDatos(new SolicitudProyectoDatos());
+    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().setSolicitud(new Solicitud());
+    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
+        .setEstado(new EstadoSolicitud());
+    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()
+        .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+
+    return solicitudProyectoEquipoSocio;
   }
 }

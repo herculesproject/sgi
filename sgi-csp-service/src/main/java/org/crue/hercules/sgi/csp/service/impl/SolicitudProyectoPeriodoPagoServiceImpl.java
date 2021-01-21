@@ -80,12 +80,9 @@ public class SolicitudProyectoPeriodoPagoServiceImpl implements SolicitudProyect
     SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
-    // TODO
     // comprobar si solicitud es modificable
-    // Assert.isTrue(solicitudService.,
-    // "No se puede modificar ConvocatoriaPeriodoJustificacion. No tiene los
-    // permisos necesarios o la convocatoria está registrada y cuenta con
-    // solicitudes o proyectos asociados");
+    solicitudService.isEditable(
+        solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue());
 
     List<SolicitudProyectoPeriodoPago> solicitudProyectoPeriodoPagosBD = repository
         .findAllBySolicitudProyectoSocioId(solicitudProyectoSocioId);

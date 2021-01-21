@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
@@ -148,12 +146,8 @@ public class SolicitudController {
       return null;
     }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
 
-    Boolean isAdministradorOrGestor = CollectionUtils.isNotEmpty(
-        authentication.getAuthorities().stream().filter(authority -> authority.getAuthority().startsWith("CSP-SOL-C"))
-            .filter(Objects::nonNull).distinct().collect(Collectors.toList()));
-
     solicitud.setId(id);
-    Solicitud returnValue = service.update(solicitud, unidadGestionRefs, isAdministradorOrGestor);
+    Solicitud returnValue = service.update(solicitud, unidadGestionRefs);
     log.debug("update(Solicitud solicitud, Long id) - end");
     return returnValue;
   }

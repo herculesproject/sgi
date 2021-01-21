@@ -5,7 +5,11 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioSpecifications;
@@ -31,12 +35,21 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   private final SolicitudProyectoSocioRepository repository;
 
+  private final SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository;
+
+  private final SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository;
+
   private final SolicitudRepository solicitudRepository;
 
   public SolicitudProyectoSocioServiceImpl(SolicitudProyectoSocioRepository repository,
-      SolicitudRepository solicitudRepository) {
+      SolicitudRepository solicitudRepository,
+      SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository,
+      SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
+    this.solicitudProyectoEquipoSocioRepository = solicitudProyectoEquipoSocioRepository;
+    this.solicitudProyectoPeriodoPagoRepository = solicitudProyectoPeriodoPagoRepository;
+
   }
 
   /**
@@ -122,7 +135,8 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
   }
 
   /**
-   * Elimina la {@link SolicitudProyectoSocio}.
+   * Elimina la {@link SolicitudProyectoSocio} y sus entidades relacionadas:
+   * {@link SolicitudProyectoEquipoSocio}, {@link SolicitudProyectoPeriodoPago}
    *
    * @param id Id del {@link SolicitudProyectoSocio}.
    */
@@ -136,6 +150,8 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
       throw new SolicitudProyectoSocioNotFoundException(id);
     }
 
+    solicitudProyectoPeriodoPagoRepository.deleteBySolicitudProyectoSocioId(id);
+    solicitudProyectoEquipoSocioRepository.deleteBySolicitudProyectoSocioId(id);
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
 

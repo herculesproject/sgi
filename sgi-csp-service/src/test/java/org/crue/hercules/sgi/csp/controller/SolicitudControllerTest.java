@@ -151,8 +151,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Solicitud solicitud = generarMockSolicitud(1L);
     solicitud.setObservaciones("observaciones actualizadas");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList(),
-        ArgumentMatchers.anyBoolean())).willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList())).willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: update Solicitud
     mockMvc
@@ -182,7 +181,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Solicitud solicitud = generarMockSolicitud(1L);
 
     BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).update(ArgumentMatchers.<Solicitud>any(),
-        ArgumentMatchers.<String>anyList(), ArgumentMatchers.anyBoolean());
+        ArgumentMatchers.<String>anyList());
 
     // when: update Solicitud
     mockMvc
