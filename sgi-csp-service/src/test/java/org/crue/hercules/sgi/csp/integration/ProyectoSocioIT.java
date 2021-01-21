@@ -1,17 +1,21 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de ProyectoSocio.
@@ -157,6 +162,49 @@ public class ProyectoSocioIT extends BaseIT {
     Assertions.assertThat(responseData.getImporteConcedido()).as("getImporteConcedido()")
         .isEqualTo(new BigDecimal("1000.00"));
 
+  }
+
+  /*
+   *
+   * PROYECTO PERIODO EQUIPO
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllProyectoSocioEquipo_WithPagingSortingAndFiltering_ReturnsProyectoSocioEquipoSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CPSCI-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "personaRef~%-00%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/proyectosocioequipos")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ProyectoSocioEquipo>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ProyectoSocioEquipo>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ProyectoSocioEquipo> proyectoSocioEquipos = response.getBody();
+    Assertions.assertThat(proyectoSocioEquipos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(proyectoSocioEquipos.get(0).getPersonaRef()).as("get(0).getPersonaRef()")
+        .isEqualTo("personaRef-" + String.format("%03d", 3));
+    Assertions.assertThat(proyectoSocioEquipos.get(1).getPersonaRef()).as("get(1).getPersonaRef())")
+        .isEqualTo("personaRef-" + String.format("%03d", 2));
+    Assertions.assertThat(proyectoSocioEquipos.get(2).getPersonaRef()).as("get(2).getPersonaRef()")
+        .isEqualTo("personaRef-" + String.format("%03d", 1));
   }
 
   /**

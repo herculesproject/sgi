@@ -1,9 +1,17 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,13 +39,19 @@ public class ProyectoSocioController {
   /** ProyectoSocioService service */
   private final ProyectoSocioService service;
 
+  /** ProyectoSocioEquipoService service */
+  private final ProyectoSocioEquipoService proyectoSocioEquipoService;
+
   /**
    * Instancia un nuevo ProyectoSocioController.
    * 
-   * @param proyectoSocioService {@link ProyectoSocioService}.
+   * @param proyectoSocioService       {@link ProyectoSocioService}.
+   * @param proyectoSocioEquipoService {@link ProyectoSocioEquipoService}
    */
-  public ProyectoSocioController(ProyectoSocioService proyectoSocioService) {
+  public ProyectoSocioController(ProyectoSocioService proyectoSocioService,
+      ProyectoSocioEquipoService proyectoSocioEquipoService) {
     this.service = proyectoSocioService;
+    this.proyectoSocioEquipoService = proyectoSocioEquipoService;
   }
 
   /**
@@ -116,6 +131,30 @@ public class ProyectoSocioController {
     ProyectoSocio returnValue = service.findById(id);
     log.debug("findById(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link ProyectoSocioEquipo}
+   * 
+   * @param id     Identificador de {@link ProyectoSocio}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectosocioequipos")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<ProyectoSocioEquipo>> findAllProyectoSocioEquipo(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoSocioEquipo(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoSocioEquipo> page = proyectoSocioEquipoService.findAllByProyectoSocio(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoSocioEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoSocioEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }
