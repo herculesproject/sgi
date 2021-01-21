@@ -4,30 +4,30 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { ConvocatoriaEntidadFinanciadoraData } from '../../convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
 
-import { ConvocatoriaEntidadFinanciadoraModalComponent } from './convocatoria-entidad-financiadora-modal.component';
+import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from './entidad-financiadora-modal.component';
 
-describe('ConvocatoriaEntidadFinanciadoraModalComponent', () => {
-  let component: ConvocatoriaEntidadFinanciadoraModalComponent;
-  let fixture: ComponentFixture<ConvocatoriaEntidadFinanciadoraModalComponent>;
+describe('EntidadFinanciadoraModalComponent', () => {
+  let component: EntidadFinanciadoraModalComponent;
+  let fixture: ComponentFixture<EntidadFinanciadoraModalComponent>;
 
-  const data = {
-    empresa: {} as IEmpresaEconomica,
-    entidad: {} as IConvocatoriaEntidadFinanciadora
-  } as ConvocatoriaEntidadFinanciadoraData;
+  const data: EntidadFinanciadoraDataModal = {
+    title: '',
+    entidad: {} as IEntidadFinanciadora,
+    selectedEmpresas: [],
+    readonly: false
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ConvocatoriaEntidadFinanciadoraModalComponent
+        EntidadFinanciadoraModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -50,7 +50,7 @@ describe('ConvocatoriaEntidadFinanciadoraModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaEntidadFinanciadoraModalComponent);
+    fixture = TestBed.createComponent(EntidadFinanciadoraModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

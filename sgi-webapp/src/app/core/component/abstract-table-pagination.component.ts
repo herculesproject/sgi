@@ -119,12 +119,12 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
         // Return the values
         return response.items;
       }),
-      catchError(() => {
+      catchError((error) => {
         // On error reset pagination values
         this.paginator?.firstPage();
         this.totalElementos = 0;
         this.showMensajeErrorLoadTable();
-        this.logger.error(AbstractTablePaginationComponent.name, `${this.getObservableLoadTable.name}(${reset})`, 'error');
+        this.logger.error(AbstractTablePaginationComponent.name, `${this.getObservableLoadTable.name}(${reset})`, 'error:', error);
         return of([]);
       })
     );

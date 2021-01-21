@@ -4,6 +4,7 @@ import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -12,11 +13,12 @@ import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configu
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
+import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService } from './proyecto-entidad-financiadora.service';
 
 interface IProyectoBackend {
 
@@ -248,6 +250,79 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     this.logger.debug(ProyectoService.name, `${this.reactivar.name}(`, '-', 'start');
     return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
       tap(() => this.logger.debug(ProyectoService.name, `${this.reactivar.name}()`, '-', 'end'))
+    );
+  }
+
+  private findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
+    this.logger.debug(ProyectoService.name,
+      `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IProyectoEntidadFinanciadoraBackend, IProyectoEntidadFinanciadora>(
+      `${this.endpointUrl}/${id}/proyectoentidadfinanciadoras`, options, ProyectoEntidadFinanciadoraService.CONVERTER).pipe(
+        tap(() => this.logger.debug(ProyectoService.name,
+          `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  private findEntidadesFinanciadorasFilterAjenas(id: number, ajenas: boolean, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
+    this.logger.debug(ProyectoService.name,
+      `findEntidadesFinanciadorasFilterAjenas(${id}, ${ajenas}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    let queryOptions: SgiRestFindOptions = options;
+    if (queryOptions) {
+      let filterExists: SgiRestFilter;
+      if (queryOptions.filters) {
+        filterExists = queryOptions.filters.find(filter => filter.field === 'ajena');
+      }
+      else {
+        filterExists = { field: 'ajena' } as SgiRestFilter;
+      }
+      if (filterExists) {
+        // Force value
+        filterExists.type = SgiRestFilterType.EQUALS;
+        filterExists.value = `${ajenas}`;
+      }
+    }
+    else {
+      queryOptions = {
+        filters: [
+          {
+            field: 'ajena',
+            type: SgiRestFilterType.EQUALS,
+            value: `${ajenas}`
+          }
+        ]
+      };
+    }
+    return this.findEntidadesFinanciadoras(id, queryOptions).pipe(
+      tap(() => this.logger.debug(ProyectoService.name,
+        `findEntidadesFinanciadorasFilterAjenas(${id}, ${ajenas}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Obtiene el listado de entidades financiadores asociadas al proyecto que NO son ajenas a la convocatoria
+   * @param id Identificador del proyecto
+   * @param options Opciones de filtrado/ordenación
+   */
+  findEntidadesFinanciadorasPropias(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
+    this.logger.debug(ProyectoService.name,
+      `findEntidadesFinanciadorasPropias(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.findEntidadesFinanciadorasFilterAjenas(id, false, options).pipe(
+      tap(() => this.logger.debug(ProyectoService.name,
+        `findEntidadesFinanciadorasPropias(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Obtiene el listado de entidades financiadores asociadas al proyecto que son ajenas a la convocatoria
+   * @param id Identificador del proyecto
+   * @param options Opciones de filtrado/ordenación
+   */
+  findEntidadesFinanciadorasAjenas(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
+    this.logger.debug(ProyectoService.name,
+      `findEntidadesFinanciadorasAjenas(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.findEntidadesFinanciadorasFilterAjenas(id, true, options).pipe(
+      tap(() => this.logger.debug(ProyectoService.name,
+        `findEntidadesFinanciadorasAjenas(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
     );
   }
 

@@ -9,22 +9,18 @@ import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaEntidadFinanciadoraDataModal, ConvocatoriaEntidadFinanciadoraModalComponent } from '../../modals/convocatoria-entidad-financiadora-modal/convocatoria-entidad-financiadora-modal.component';
+
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-entidades-financiadoras.fragment';
 
+const MODAL_ENTIDAD_FINANCIADORA_TITLE = marker('csp.convocatoria.entidades-financiadoras.modal.titulo');
 const MSG_DELETE = marker('csp.convocatoria.entidad.financiadora.listado.borrar');
-
-export interface ConvocatoriaEntidadFinanciadoraData {
-  entidad: IConvocatoriaEntidadFinanciadora;
-  empresa: IEmpresaEconomica;
-}
 
 @Component({
   selector: 'sgi-convocatoria-entidades-financiadoras',
@@ -39,7 +35,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     'porcentajeFinanciacion', 'acciones'];
   elementsPage = [5, 10, 25, 100];
 
-  dataSource = new MatTableDataSource<StatusWrapper<ConvocatoriaEntidadFinanciadoraData>>();
+  dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaEntidadFinanciadora>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -73,19 +69,10 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     this.selectedEmpresas = [];
     this.subscriptions.push(
       this.formPart.convocatoriaEntidadesFinanciadoras$.pipe(
-        map(wrappers => {
-          return wrappers.map(wrapper => {
-            const data = {
-              empresa: {} as IEmpresaEconomica,
-              entidad: wrapper.value
-            } as ConvocatoriaEntidadFinanciadoraData;
-            return new StatusWrapper<ConvocatoriaEntidadFinanciadoraData>(data);
-          });
-        }),
         switchMap(wrappers => {
           return forkJoin(wrappers.map(
             wrapper => {
-              return this.empresaEconomicaService.findById(wrapper.value.entidad.entidadRef).pipe(
+              return this.empresaEconomicaService.findById(wrapper.value.empresa.personaRef).pipe(
                 map(empresa => {
                   this.selectedEmpresas.push(empresa);
                   wrapper.value.empresa = empresa;
@@ -111,26 +98,24 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnDestroy()', 'end');
   }
 
-  openModal(wrapper?: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>): void {
+  openModal(wrapper?: StatusWrapper<IConvocatoriaEntidadFinanciadora>): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `openModal()`, 'start');
-    const data: ConvocatoriaEntidadFinanciadoraDataModal = {
-      empresa: wrapper?.value?.empresa,
-      entidad: wrapper ? wrapper.value.entidad : {} as IConvocatoriaEntidadFinanciadora,
+    const data: EntidadFinanciadoraDataModal = {
+      title: MODAL_ENTIDAD_FINANCIADORA_TITLE,
+      entidad: wrapper ? wrapper.value : {} as IConvocatoriaEntidadFinanciadora,
       selectedEmpresas: this.selectedEmpresas,
       readonly: this.formPart.readonly
     };
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
       data
     };
-    const dialogRef = this.matDialog.open(ConvocatoriaEntidadFinanciadoraModalComponent, config);
+    const dialogRef = this.matDialog.open(EntidadFinanciadoraModalComponent, config);
     dialogRef.afterClosed().subscribe(entidadFinanciadora => {
       if (entidadFinanciadora) {
         if (!wrapper) {
           this.formPart.addConvocatoriaEntidadFinanciadora(entidadFinanciadora);
-        } else if (wrapper.value.entidad?.id) {
-          const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value.entidad);
+        } else if (wrapper.value.id) {
+          const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value);
           this.formPart.updateConvocatoriaEntidadFinanciadora(entidad);
         }
       }
@@ -139,7 +124,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     );
   }
 
-  deleteConvocatoriaEntidadFinanciadora(wrapper: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>) {
+  deleteConvocatoriaEntidadFinanciadora(wrapper: StatusWrapper<IConvocatoriaEntidadFinanciadora>) {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name,
       `deleteConvocatoriaEntidadFinanciadora(${wrapper})`, 'start');
     this.subscriptions.push(
@@ -148,7 +133,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
           if (aceptado) {
             const empresa = wrapper.value.empresa;
             this.selectedEmpresas = this.selectedEmpresas.filter(x => x.personaRef !== empresa.personaRef);
-            const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value.entidad);
+            const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value);
             this.formPart.deleteConvocatoriaEntidadFinanciadora(entidad);
             this.getDataSource();
           }

@@ -8,12 +8,14 @@ import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-dat
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
+import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { BehaviorSubject } from 'rxjs';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 
 
 @Injectable()
@@ -21,11 +23,13 @@ export class ProyectoActionService extends ActionService {
 
   public readonly FRAGMENT = {
     FICHA_GENERAL: 'ficha-general',
-    HITOS: 'hitos',
-    SOCIOS: 'socios'
+    ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
+    SOCIOS: 'socios',
+    HITOS: 'hitos'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
+  private entidadesFinanciadoras: ProyectoEntidadesFinanciadorasFragment;
   private hitos: ProyectoHitosFragment;
   private socios: ProyectoSociosFragment;
 
@@ -46,28 +50,29 @@ export class ProyectoActionService extends ActionService {
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
-    private convocatoriaService: ConvocatoriaService,
-    proyectoHitoService: ProyectoHitoService,
+    convocatoriaService: ConvocatoriaService,
+    proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
+    proyectoHitoService: ProyectoHitoService
   ) {
     super();
 
-    this.logger = logger;
     if (route.snapshot.data.proyecto) {
       this.proyecto = route.snapshot.data.proyecto;
       this.enableEdit();
     }
 
-    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id,
-      proyectoService, unidadGestionService, convocatoriaService, this);
-    this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService,
-      proyectoHitoService, this.readonly);
-    this.socios = new ProyectoSociosFragment(logger, this.proyecto?.id, empresaEconomicaService, proyectoService, proyectoSocioService, this);
+    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id, proyectoService, unidadGestionService, convocatoriaService, this);
+    if (this.isEdit()) {
+      this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(logger, this.proyecto?.id, proyectoService, proyectoEntidadFinanciadoraService, empresaEconomicaService, false);
+      this.socios = new ProyectoSociosFragment(logger, this.proyecto?.id, empresaEconomicaService, proyectoService, proyectoSocioService, this);
+      this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService, proyectoHitoService, this.readonly);
+    }
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
-
     if (this.isEdit()) {
-      this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+      this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
+      this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     }
 
   }

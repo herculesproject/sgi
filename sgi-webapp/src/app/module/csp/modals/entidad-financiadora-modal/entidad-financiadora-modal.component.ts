@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
-import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoFinalidad, ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -15,10 +14,11 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 
-export interface ConvocatoriaEntidadFinanciadoraDataModal {
-  entidad: IConvocatoriaEntidadFinanciadora;
-  empresa: IEmpresaEconomica;
+export interface EntidadFinanciadoraDataModal {
+  title: string;
+  entidad: IEntidadFinanciadora;
   selectedEmpresas: IEmpresaEconomica[];
   readonly: boolean;
 }
@@ -26,26 +26,27 @@ export interface ConvocatoriaEntidadFinanciadoraDataModal {
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
-  templateUrl: './convocatoria-entidad-financiadora-modal.component.html',
-  styleUrls: ['./convocatoria-entidad-financiadora-modal.component.scss']
+  templateUrl: './entidad-financiadora-modal.component.html',
+  styleUrls: ['./entidad-financiadora-modal.component.scss']
 })
-export class ConvocatoriaEntidadFinanciadoraModalComponent extends
-  BaseModalComponent<IConvocatoriaEntidadFinanciadora, ConvocatoriaEntidadFinanciadoraModalComponent> implements OnInit {
+export class EntidadFinanciadoraModalComponent extends
+  BaseModalComponent<IEntidadFinanciadora, EntidadFinanciadoraModalComponent> implements OnInit {
 
   fuentesFinanciacion$: Observable<IFuenteFinanciacion[]>;
   tiposFinanciacion$: Observable<ITipoFinalidad[]>;
   textSaveOrUpdate: string;
+  title: string;
 
   constructor(
     protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<ConvocatoriaEntidadFinanciadoraModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadFinanciadoraDataModal,
+    public matDialogRef: MatDialogRef<EntidadFinanciadoraModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: EntidadFinanciadoraDataModal,
     private tipoFinanciacionService: TipoFinanciacionService,
     private fuenteFinanciacionService: FuenteFinanciacionService
   ) {
     super(logger, snackBarService, matDialogRef, data.entidad);
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'constructor()', 'start');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -54,41 +55,41 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'constructor()', 'end');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
-    this.textSaveOrUpdate = this.data.empresa ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'end');
+    this.textSaveOrUpdate = this.data.entidad?.empresa ? MSG_ACEPTAR : MSG_ANADIR;
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'end');
   }
 
-  protected getDatosForm(): IConvocatoriaEntidadFinanciadora {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'start');
+  protected getDatosForm(): IEntidadFinanciadora {
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'start');
     const entidad = this.data.entidad;
-    entidad.entidadRef = this.formGroup.get('empresaEconomica').value?.personaRef;
+    entidad.empresa = this.formGroup.get('empresaEconomica').value;
     entidad.fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
     entidad.tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'end');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'end');
     return entidad;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'start');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
-      empresaEconomica: new FormControl(this.data.empresa),
+      empresaEconomica: new FormControl(this.data.entidad.empresa),
       fuenteFinanciacion: new FormControl(this.data.entidad.fuenteFinanciacion),
       tipoFinanciacion: new FormControl(this.data.entidad.tipoFinanciacion),
-      porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion)
+      porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion, [Validators.min(0)])
     });
     if (this.data.readonly) {
       formGroup.disable();
     }
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'end');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
@@ -96,22 +97,22 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
    * Carga todas las fuentes de financiación
    */
   private loadFuentesFinanciacion(): void {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'start');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'start');
     this.fuentesFinanciacion$ = this.fuenteFinanciacionService.findAll().pipe(
       map((fuenteFinanciones) => fuenteFinanciones.items)
     );
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'end');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'end');
   }
 
   /**
    * Carga todos los tipos de financiación
    */
   private loadTiposFinanciacion(): void {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'start');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'start');
     this.tiposFinanciacion$ = this.tipoFinanciacionService.findAll().pipe(
       map((tipoFinanciaciones) => tipoFinanciaciones.items)
     );
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'end');
+    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'end');
   }
 
   getNombreFuenteFinanciacion(fuenteFinanciacion: IFuenteFinanciacion): string {

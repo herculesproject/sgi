@@ -19,7 +19,6 @@ import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-form
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 import { ConvocatoriaHitosModalComponent } from './modals/convocatoria-hitos-modal/convocatoria-hitos-modal.component';
 import { ConvocatoriaPeriodosJustificacionModalComponent } from './modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
-import { ConvocatoriaEntidadFinanciadoraModalComponent } from './modals/convocatoria-entidad-financiadora-modal/convocatoria-entidad-financiadora-modal.component';
 import { ConvocatoriaEnlaceModalComponent } from './modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
 import { ConvocatoriaEntidadConvocanteModalComponent } from './modals/convocatoria-entidad-convocante-modal/convocatoria-entidad-convocante-modal.component';
 import { ConvocatoriaPlazosFaseModalComponent } from './modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
@@ -35,7 +34,8 @@ import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convo
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
-import { HasAnyAuthorityForAnyUODirective, SgiAuthModule } from '@sgi/framework/auth';
+import { SgiAuthModule } from '@sgi/framework/auth';
+import { CspModalsModule } from '../modals/csp-modals.module';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,6 @@ import { HasAnyAuthorityForAnyUODirective, SgiAuthModule } from '@sgi/framework/
     ConvocatoriaEnlaceComponent,
     ConvocatoriaHitosModalComponent,
     ConvocatoriaPeriodosJustificacionModalComponent,
-    ConvocatoriaEntidadFinanciadoraModalComponent,
     ConvocatoriaEnlaceModalComponent,
     ConvocatoriaEntidadConvocanteModalComponent,
     ConvocatoriaPlazosFaseModalComponent,
@@ -76,7 +75,8 @@ import { HasAnyAuthorityForAnyUODirective, SgiAuthModule } from '@sgi/framework/
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    CspModalsModule
   ],
   providers: [
     ConvocatoriaResolver,

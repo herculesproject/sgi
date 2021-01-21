@@ -11,6 +11,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { ProyectoResolver } from './proyecto.resolver';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { ProyectoEntidadesFinanciadorasComponent } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.component';
 import { ProyectoHitosComponent } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
@@ -73,6 +74,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.FICHA_GENERAL,
         component: ProyectoFichaGeneralComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.ENTIDADES_FINANCIADORAS,
+        component: ProyectoEntidadesFinanciadorasComponent,
         canDeactivate: [FragmentGuard]
       },
       {

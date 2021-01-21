@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
@@ -20,6 +20,7 @@ import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento'
 import { ConvocatoriaEntidadConvocanteService, IConvocatoriaEntidadConvocanteBackend } from './convocatoria-entidad-convocante.service';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { ConvocatoriaEntidadGestoraService, IConvocatoriaEntidadGestoraBackend } from './convocatoria-entidad-gestora.service';
+import { ConvocatoriaEntidadFinanciadoraService, IConvocatoriaEntidadFinanciadoraBackend } from './convocatoria-entidad-financiadora.service';
 
 @Injectable({
   providedIn: 'root'
@@ -114,8 +115,8 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
     this.logger.debug(ConvocatoriaService.name,
       `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<IConvocatoriaEntidadFinanciadora, IConvocatoriaEntidadFinanciadora>(
-      `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`, options).pipe(
+    return this.find<IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`, options, ConvocatoriaEntidadFinanciadoraService.CONVERTER).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );

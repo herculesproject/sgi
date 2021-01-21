@@ -1,5 +1,6 @@
 export const PROYECTO_ROUTE_NAMES = {
   FICHA_GENERAL: 'ficha-general',
-  HITOS: 'hitos',
-  SOCIOS: 'socios'
+  ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
+  SOCIOS: 'socios',
+  HITOS: 'hitos'
 };
