@@ -16,12 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de TipoConvocatoriaReunion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class TipoConvocatoriaReunionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -41,8 +46,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoConvocatoriaReunion_WithId_ReturnsTipoConvocatoriaReunion() throws Exception {
     final ResponseEntity<TipoConvocatoriaReunion> response = restTemplate.exchange(
@@ -57,8 +60,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     Assertions.assertThat(tipoConvocatoriaReunion.getNombre()).isEqualTo("Ordinaria");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addTipoConvocatoriaReunion_ReturnsTipoConvocatoriaReunion() throws Exception {
 
@@ -75,8 +76,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     Assertions.assertThat(response.getBody().getId()).isNotNull();
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoConvocatoriaReunion_Success() throws Exception {
 
@@ -91,21 +90,17 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoConvocatoriaReunion_DoNotGetTipoConvocatoriaReunion() throws Exception {
 
     final ResponseEntity<TipoConvocatoriaReunion> response = restTemplate.exchange(
         TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        TipoConvocatoriaReunion.class, 1L);
+        TipoConvocatoriaReunion.class, 4L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceTipoConvocatoriaReunion_ReturnsTipoConvocatoriaReunion() throws Exception {
 
@@ -125,8 +120,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     Assertions.assertThat(tipoConvocatoriaReunion.getActivo()).isEqualTo(replaceTipoConvocatoriaReunion.getActivo());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -155,8 +148,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).isEqualTo("Extraordinaria");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoConvocatoriaReunionList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -185,8 +176,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).startsWith("Seguimiento");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoConvocatoriaReunionList() throws Exception {
     // when: Ordenación por nombre desc
@@ -216,8 +205,6 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     Assertions.assertThat(tipoConvocatoriaReunions.get(2).getNombre()).isEqualTo("Extraordinaria");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
