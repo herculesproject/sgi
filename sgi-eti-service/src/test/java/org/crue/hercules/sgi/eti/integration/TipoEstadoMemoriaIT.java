@@ -16,12 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de TipoEstadoMemoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class TipoEstadoMemoriaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -38,8 +43,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     return request;
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoEstadoMemoria_WithId_ReturnsTipoEstadoMemoria() throws Exception {
     final ResponseEntity<TipoEstadoMemoria> response = restTemplate.exchange(
@@ -54,8 +57,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(tipoEstadoMemoria.getNombre()).isEqualTo("En elaboración");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addTipoEstadoMemoria_ReturnsTipoEstadoMemoria() throws Exception {
 
@@ -68,8 +69,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(response.getBody()).isEqualTo(nuevoTipoEstadoMemoria);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoEstadoMemoria_Success() throws Exception {
 
@@ -84,8 +83,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoEstadoMemoria_DoNotGetTipoEstadoMemoria() throws Exception {
     restTemplate.exchange(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
@@ -93,14 +90,12 @@ public class TipoEstadoMemoriaIT extends BaseIT {
 
     final ResponseEntity<TipoEstadoMemoria> response = restTemplate.exchange(
         TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        TipoEstadoMemoria.class, 1L);
+        TipoEstadoMemoria.class, 12L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceTipoEstadoMemoria_ReturnsTipoEstadoMemoria() throws Exception {
 
@@ -120,8 +115,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(tipoEstadoMemoria.getActivo()).isEqualTo(replaceTipoEstadoMemoria.getActivo());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsTipoEstadoMemoriaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -155,8 +148,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(tipoEstadoMemorias.get(4).getNombre()).isEqualTo("Archivado");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoMemoriaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -180,8 +171,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).startsWith("En evaluación");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoEstadoMemoriaList() throws Exception {
     // when: Ordenación por nombre desc
@@ -224,8 +213,6 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(tipoEstadoMemorias.get(9).getNombre()).isEqualTo("Archivado");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoEstadoMemoriaSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
