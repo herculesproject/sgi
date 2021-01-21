@@ -20,12 +20,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de Tarea.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class TareaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -42,8 +47,6 @@ public class TareaIT extends BaseIT {
     return request;
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTarea_WithId_ReturnsTarea() throws Exception {
     final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -66,8 +69,6 @@ public class TareaIT extends BaseIT {
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceTarea_ReturnsTarea() throws Exception {
 
@@ -93,8 +94,6 @@ public class TareaIT extends BaseIT {
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsTareaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=5
@@ -123,8 +122,6 @@ public class TareaIT extends BaseIT {
     Assertions.assertThat(tareas.get(2).getTarea()).as("2.tarea").isEqualTo("Tarea8");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTareaList() throws Exception {
     // when: Búsqueda por tarea like e id equals
@@ -148,8 +145,6 @@ public class TareaIT extends BaseIT {
     Assertions.assertThat(tareas.get(0).getTarea()).as("tarea").startsWith("Tarea5");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTareaList() throws Exception {
     // when: Ordenación por tarea desc
@@ -170,12 +165,10 @@ public class TareaIT extends BaseIT {
     for (int i = 0; i < 8; i++) {
       Tarea tarea = tareas.get(i);
       Assertions.assertThat(tarea.getId()).as((8 - i) + ".id").isEqualTo(8 - i);
-      Assertions.assertThat(tarea.getTarea()).as((8 - i) + ".tarea").isEqualTo("Tarea" + String.format("%03d", 8 - i));
+      Assertions.assertThat(tarea.getTarea()).as((8 - i) + ".tarea").isEqualTo("Tarea" + String.format("%d", 8 - i));
     }
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTareaSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=3
@@ -185,7 +178,7 @@ public class TareaIT extends BaseIT {
     // when: Ordena por tarea desc
     String sort = "tarea-";
     // when: Filtra por tarea like
-    String filter = "tarea~%00%";
+    String filter = "tarea~%";
 
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -202,12 +195,12 @@ public class TareaIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("x-page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("x-page-size").isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("8");
 
-    // Contiene tarea='Tarea003', 'Tarea002', 'Tarea001'
-    Assertions.assertThat(tareas.get(0).getTarea()).as("0.tarea").isEqualTo("Tarea" + String.format("%03d", 3));
-    Assertions.assertThat(tareas.get(1).getTarea()).as("1.tarea").isEqualTo("Tarea" + String.format("%03d", 2));
-    Assertions.assertThat(tareas.get(2).getTarea()).as("2.tarea").isEqualTo("Tarea" + String.format("%03d", 1));
+    // Contiene tarea='Tarea8', 'Tarea7', 'Tarea6'
+    Assertions.assertThat(tareas.get(0).getTarea()).as("0.tarea").isEqualTo("Tarea" + String.format("%d", 8));
+    Assertions.assertThat(tareas.get(1).getTarea()).as("1.tarea").isEqualTo("Tarea" + String.format("%d", 7));
+    Assertions.assertThat(tareas.get(2).getTarea()).as("2.tarea").isEqualTo("Tarea" + String.format("%d", 6));
   }
 
   /**
