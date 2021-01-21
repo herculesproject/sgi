@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
-import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
+import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -45,8 +46,11 @@ public class ProyectoController {
   /** Proyecto service */
   private final ProyectoService service;
 
-  /** ProyectoHitoservice */
+  /** ProyectoHitoService */
   private final ProyectoHitoService proyectoHitoService;
+
+  /** ProyectoFaseService */
+  private final ProyectoFaseService proyectoFaseService;
 
   /** ProyectoSocio service */
   private final ProyectoSocioService proyectoSocioService;
@@ -56,12 +60,14 @@ public class ProyectoController {
    * 
    * @param proyectoService      {@link ProyectoService}.
    * @param proyectoHitoService  {@link ProyectoHitoService}.
+   * @param proyectoFaseService  {@link ProyectoFaseService}.
    * @param proyectoSocioService {@link ProyectoSocioService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
-      ProyectoSocioService proyectoSocioService) {
+      ProyectoFaseService proyectoFaseService, ProyectoSocioService proyectoSocioService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
+    this.proyectoFaseService = proyectoFaseService;
     this.proyectoSocioService = proyectoSocioService;
   }
 
@@ -289,8 +295,8 @@ public class ProyectoController {
    */
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link ProyectoHito} de la
-   * {@link Convocatoria}.
+   * Devuelve una lista paginada y filtrada de {@link ProyectoHito} del
+   * {@link Proyecto}.
    * 
    * @param id     Identificador de {@link Proyecto}.
    * @param query  filtro de {@link QueryCriteria}.
@@ -310,6 +316,37 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO FASE
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoFase} del
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectofases")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-THIT-V')")
+  ResponseEntity<Page<ProyectoFase>> findAllProyectoFase(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoFase(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoFase> page = proyectoFaseService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

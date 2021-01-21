@@ -1,0 +1,67 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoFase;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+/**
+ * Service Interface para gestionar {@link ProyectoFase}.
+ */
+
+public interface ProyectoFaseService {
+
+  /**
+   * Guarda la entidad {@link ProyectoFase}.
+   * 
+   * @param ProyectoFase la entidad {@link ProyectoFase} a guardar.
+   * @return ProyectoFase la entidad {@link ProyectoFase} persistida.
+   */
+  ProyectoFase create(ProyectoFase ProyectoFase);
+
+  /**
+   * Actualiza la entidad {@link ProyectoFase}.
+   * 
+   * @param ProyectoFaseActualizar la entidad {@link ProyectoFase} a guardar.
+   * @return ProyectoFase la entidad {@link ProyectoFase} persistida.
+   */
+  ProyectoFase update(ProyectoFase ProyectoFaseActualizar);
+
+  /**
+   * Elimina la {@link ProyectoFase}.
+   *
+   * @param id Id del {@link ProyectoFase}.
+   */
+  void delete(Long id);
+
+  /**
+   * Comprueba la existencia del {@link ProyectoFase} por id.
+   *
+   * @param id el id de la entidad {@link ProyectoFase}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsById(Long id);
+
+  /**
+   * Obtiene {@link ProyectoFase} por su id.
+   *
+   * @param id el id de la entidad {@link ProyectoFase}.
+   * @return la entidad {@link ProyectoFase}.
+   */
+  ProyectoFase findById(Long id);
+
+  /**
+   * Obtiene las {@link ProyectoFase} para una {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ProyectoFase} de la {@link Proyecto}
+   *         paginadas.
+   */
+  Page<ProyectoFase> findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable);
+
+}

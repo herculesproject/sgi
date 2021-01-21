@@ -16,12 +16,15 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
@@ -56,7 +59,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private ProyectoService service;
   @MockBean
   private ProyectoHitoService proyectoHitoService;
-
+  @MockBean
+  private ProyectoFaseService proyectoFaseService;
   @MockBean
   private ProyectoSocioService proyectoSocioService;
 
@@ -67,6 +71,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/proyectos";
   private static final String PATH_TODOS = "/todos";
   private static final String PATH_HITO = "/proyectohitos";
+  private static final String PATH_FASE = "/proyectofases";
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
 
   @Test
@@ -649,7 +654,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ProyectoHito proyectoHito = proyectoHitoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoHito.getComentario()).isEqualTo("comentario-" + i);
+      Assertions.assertThat(proyectoHito.getComentario())
+          .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", i));
     }
   }
 
@@ -678,6 +684,102 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // when: Get page=0 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_HITO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * PROYECTO FASE
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  public void findAllProyectoFase_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoFase para el Proyecto
+    Long proyectoId = 1L;
+
+    List<ProyectoFase> proyectoFases = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoFases.add(generarMockProyectoFase(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoFaseService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoFase>>() {
+          @Override
+          public Page<ProyectoFase> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoFases.size() ? proyectoFases.size() : toIndex;
+            List<ProyectoFase> content = proyectoFases.subList(fromIndex, toIndex);
+            Page<ProyectoFase> page = new PageImpl<>(content, pageable, proyectoFases.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASE, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoFase del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoFase> proyectoFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ProyectoFase>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoFase proyectoFase = proyectoFaseResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoFase.getObservaciones())
+          .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  public void findAllProyectoFase_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoFase para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoFase> proyectoFases = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoFaseService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoFase>>() {
+          @Override
+          public Page<ProyectoFase> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ProyectoFase> page = new PageImpl<>(proyectoFases, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASE, proyectoId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -765,7 +867,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     proyectoHito.setId(id);
     proyectoHito.setProyecto(proyecto);
     proyectoHito.setFecha(LocalDate.of(2020, 10, 19));
-    proyectoHito.setComentario("comentario-" + id);
+    proyectoHito.setComentario("comentario-proyecto-hito-" + String.format("%03d", id));
     proyectoHito.setGeneraAviso(true);
     proyectoHito.setTipoHito(tipoHito);
 
@@ -794,6 +896,32 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .build();
 
     return proyectoSocio;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoFase
+   * 
+   * @param id id del ProyectoFase
+   * @return el objeto ProyectoFase
+   */
+  private ProyectoFase generarMockProyectoFase(Long id) {
+    Proyecto proyecto = new Proyecto();
+    proyecto.setId(id == null ? 1 : id);
+
+    TipoFase tipoFase = new TipoFase();
+    tipoFase.setId(id == null ? 1 : id);
+    tipoFase.setActivo(true);
+
+    ProyectoFase proyectoFase = new ProyectoFase();
+    proyectoFase.setId(id);
+    proyectoFase.setProyecto(proyecto);
+    proyectoFase.setFechaInicio(LocalDateTime.of(2020, 10, 19, 0, 0, 0));
+    proyectoFase.setFechaFin(LocalDateTime.of(2020, 10, 20, 23, 59, 59));
+    proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
+    proyectoFase.setGeneraAviso(true);
+    proyectoFase.setTipoFase(tipoFase);
+
+    return proyectoFase;
   }
 
 }

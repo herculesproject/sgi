@@ -57,7 +57,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
     log.debug("create(ProyectoHito ProyectoHito) - start");
 
     Assert.isNull(proyectoHito.getId(), "ProyectoHito id tiene que ser null para crear un nuevo ProyectoHito");
-
+    this.validarRequeridosProyectoHito(proyectoHito);
     this.validarProyectoHito(proyectoHito, null);
 
     ProyectoHito returnValue = repository.save(proyectoHito);
@@ -78,6 +78,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
     log.debug("update(ProyectoHito ProyectoHitoActualizar) - start");
 
     Assert.notNull(proyectoHitoActualizar.getId(), "ProyectoHito id no puede ser null para actualizar un ProyectoHito");
+    this.validarRequeridosProyectoHito(proyectoHitoActualizar);
 
     return repository.findById(proyectoHitoActualizar.getId()).map(proyectoHito -> {
 
@@ -176,8 +177,6 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
   private void validarProyectoHito(ProyectoHito datosProyectoHito, ProyectoHito datosOriginales) {
     log.debug("validarProyectoHito(ProyectoHito datosProyectoHito, ProyectoHito datosOriginales) - start");
 
-    this.validarRequeridosProyectoHito(datosProyectoHito, datosOriginales);
-
     // Se comprueba la existencia del proyecto
     Long proyectoId = datosProyectoHito.getProyecto().getId();
     if (!proyectoRepository.existsById(proyectoId)) {
@@ -228,22 +227,19 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
    * {@link ProyectoHito}
    * 
    * @param datosProyectoHito
-   * @param datosOriginales
    */
-  private void validarRequeridosProyectoHito(ProyectoHito datosProyectoHito, ProyectoHito datosOriginales) {
-    log.debug("validarRequeridosProyectoHito(ProyectoHito datosProyectoHito, ProyectoHito datosOriginales) - start");
+  private void validarRequeridosProyectoHito(ProyectoHito datosProyectoHito) {
+    log.debug("validarRequeridosProyectoHito(ProyectoHito datosProyectoHito) - start");
 
     Assert.isTrue(datosProyectoHito.getProyecto() != null && datosProyectoHito.getProyecto().getId() != null,
-        "Id Proyecto no puede ser null para " + ((datosOriginales == null) ? "crear" : "actualizar") + " ProyectoHito");
+        "Id Proyecto no puede ser null para realizar la acción sobre ProyectoHito");
 
     Assert.isTrue(datosProyectoHito.getTipoHito() != null && datosProyectoHito.getTipoHito().getId() != null,
-        "Id Tipo Hito no puede ser null para " + ((datosOriginales == null) ? "crear" : "actualizar")
-            + " ProyectoHito");
+        "Id Tipo Hito no puede ser null para realizar la acción sobre ProyectoHito");
 
-    Assert.notNull(datosProyectoHito.getFecha(),
-        "Fecha no puede ser null para " + ((datosOriginales == null) ? "crear" : "actualizar") + " ProyectoHito");
+    Assert.notNull(datosProyectoHito.getFecha(), "Fecha no puede ser null para realizar la acción sobre ProyectoHito");
 
-    log.debug("validarRequeridosProyectoHito(ProyectoHito datosProyectoHito, ProyectoHito datosOriginales) - end");
+    log.debug("validarRequeridosProyectoHito(ProyectoHito datosProyectoHito) - end");
 
   }
 

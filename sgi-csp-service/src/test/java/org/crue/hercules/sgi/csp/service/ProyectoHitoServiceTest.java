@@ -155,7 +155,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para crear ProyectoHito");
+        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoHito");
   }
 
   @Test
@@ -170,7 +170,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as TipoHitoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Tipo Hito no puede ser null para crear ProyectoHito");
+        .hasMessage("Id Tipo Hito no puede ser null para realizar la acción sobre ProyectoHito");
   }
 
   @Test
@@ -184,7 +184,8 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
         // when: create ProyectoHito
         () -> service.create(proyectoHito))
         // then: throw exception as Fecha is null
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Fecha no puede ser null para crear ProyectoHito");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Fecha no puede ser null para realizar la acción sobre ProyectoHito");
   }
 
   @Test
@@ -401,55 +402,46 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without ProyectoId
-    ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
     proyectoHito.setComentario("comentario modificado");
     proyectoHito.setProyecto(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHitoOriginal));
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoHito
         () -> service.update(proyectoHito))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para actualizar ProyectoHito");
+        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoHito");
   }
 
   @Test
   public void update_WithoutTipoHitoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without TipoHitoId
-    ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
     proyectoHito.setComentario("comentario modificado");
     proyectoHito.setTipoHito(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHitoOriginal));
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoHito
         () -> service.update(proyectoHito))
         // then: throw exception as TipoHitoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Tipo Hito no puede ser null para actualizar ProyectoHito");
+        .hasMessage("Id Tipo Hito no puede ser null para realizar la acción sobre ProyectoHito");
   }
 
   @Test
   public void update_WithoutFecha_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without Fecha
-    ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
     proyectoHito.setComentario("comentario modificado");
     proyectoHito.setFecha(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHitoOriginal));
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoHito
         () -> service.update(proyectoHito))
         // then: throw exception as Fecha is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha no puede ser null para actualizar ProyectoHito");
+        .hasMessage("Fecha no puede ser null para realizar la acción sobre ProyectoHito");
   }
 
   @Test
