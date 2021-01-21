@@ -14,6 +14,7 @@ DELETE FROM csp.rol_proyecto;
 DELETE FROM csp.rol_socio;
 DELETE FROM csp.solicitud;
 DELETE FROM csp.estado_solicitud;
+DELETE FROM csp.proyecto_entidad_financiadora;
 DELETE FROM csp.proyecto;
 DELETE FROM csp.estado_proyecto;
 DELETE FROM csp.convocatoria_documento;

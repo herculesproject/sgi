@@ -62,7 +62,7 @@ public class ProyectoIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-V_OPE")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-C_OPE")));
 
     HttpEntity<Proyecto> request = new HttpEntity<>(entity, headers);
     return request;

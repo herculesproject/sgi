@@ -16,42 +16,34 @@ public interface ProyectoService {
   /**
    * Guarda la entidad {@link Proyecto}.
    * 
-   * @param proyecto          la entidad {@link Proyecto} a guardar.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param proyecto la entidad {@link Proyecto} a guardar.
    * @return proyecto la entidad {@link Proyecto} persistida.
    */
-  Proyecto create(Proyecto proyecto, List<String> unidadGestionRefs);
+  Proyecto create(Proyecto proyecto);
 
   /**
    * Actualiza los datos del {@link Proyecto}.
    * 
-   * @param proyecto          {@link Proyecto} con los datos actualizados.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param proyecto {@link Proyecto} con los datos actualizados.
    * @return proyecto {@link Proyecto} actualizado.
    */
-  Proyecto update(final Proyecto proyecto, List<String> unidadGestionRefs);
+  Proyecto update(final Proyecto proyecto);
 
   /**
    * Reactiva el {@link Proyecto}.
    *
-   * @param id                Id del {@link Proyecto}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Proyecto}.
    * @return la entidad {@link Proyecto} persistida.
    */
-  Proyecto enable(Long id, List<String> unidadGestionRefs);
+  Proyecto enable(Long id);
 
   /**
    * Desactiva el {@link Proyecto}.
    *
-   * @param id                Id del {@link Proyecto}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Proyecto}.
    * @return la entidad {@link Proyecto} persistida.
    */
-  Proyecto disable(Long id, List<String> unidadGestionRefs);
+  Proyecto disable(Long id);
 
   /**
    * Comprueba la existencia del {@link Proyecto} por id.
@@ -72,32 +64,28 @@ public interface ProyectoService {
   /**
    * Obtiene una entidad {@link Proyecto} por id.
    * 
-   * @param id                Identificador de la entidad {@link Proyecto}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Identificador de la entidad {@link Proyecto}.
    * @return Proyecto la entidad {@link Proyecto}.
    */
-  Proyecto findById(final Long id, List<String> unidadGestionRefs);
+  Proyecto findById(final Long id);
 
   /**
    * Obtiene todas las entidades {@link Proyecto} activas paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Proyecto} activas paginadas y
    *         filtradas.
    */
-  Page<Proyecto> findAllRestringidos(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs);
+  Page<Proyecto> findAllRestringidos(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene todas las entidades {@link Proyecto} paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Proyecto} paginadas y filtradas.
    */
-  Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs);
+  Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging);
 
 }

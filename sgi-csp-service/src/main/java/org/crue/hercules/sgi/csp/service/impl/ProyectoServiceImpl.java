@@ -10,18 +10,23 @@ import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,33 +44,45 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ProyectoServiceImpl implements ProyectoService {
 
+  /**
+   * Valor por defecto del atributo ajena en la copia de entidades financiadoras
+   */
+  private static final Boolean DEFAULT_COPY_ENTIDAD_FINANCIADORA_AJENA_VALUE = Boolean.FALSE;
+
   private final ProyectoRepository repository;
   private final EstadoProyectoRepository estadoProyectoRepository;
   private final ModeloUnidadRepository modeloUnidadRepository;
   private final ConvocatoriaRepository convocatoriaRepository;
+  private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
+  private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
-      ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository) {
+      ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
+      ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
+      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
     this.convocatoriaRepository = convocatoriaRepository;
+    this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
+    this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
   }
 
   /**
    * Guarda la entidad {@link Proyecto}.
    * 
-   * @param proyecto          la entidad {@link Proyecto} a guardar.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param proyecto la entidad {@link Proyecto} a guardar.
    * @return proyecto la entidad {@link Proyecto} persistida.
    */
   @Override
   @Transactional
-  public Proyecto create(Proyecto proyecto, List<String> unidadGestionRefs) {
-    log.debug("create(Proyecto proyecto, List<String> unidadGestionRefs) - start");
+  public Proyecto create(Proyecto proyecto) {
+    log.debug("create(Proyecto proyecto) - start");
     Assert.isNull(proyecto.getId(), "Proyecto id tiene que ser null para crear un Proyecto");
-    this.validarDatos(proyecto, unidadGestionRefs);
+    // TODO: Add right authority
+    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
+        "La Unidad de Gestión no es gestionable por el usuario");
+    this.validarDatos(proyecto);
 
     proyecto.setActivo(Boolean.TRUE);
 
@@ -84,9 +101,10 @@ public class ProyectoServiceImpl implements ProyectoService {
     if (proyecto.getConvocatoria() != null) {
       // TODO implementar a medida que se vayan haciendo las pestañas de proyecto
       this.guardarDatosEntidadesRelacionadas(proyecto.getConvocatoria());
+      this.copyEntidadesFinanciadoras(proyecto.getId(), proyecto.getConvocatoria().getId());
     }
 
-    log.debug("create(Proyecto proyecto, List<String> unidadGestionRefs) - end");
+    log.debug("create(Proyecto proyecto) - end");
     return returnValue;
   }
 
@@ -95,20 +113,22 @@ public class ProyectoServiceImpl implements ProyectoService {
    * 
    * @param proyectoActualizar proyectoActualizar {@link Proyecto} con los datos
    *                           actualizados.
-   * @param unidadGestionRefs  lista de referencias de las unidades de gestion
-   *                           permitidas para el usuario.
    * @return {@link Proyecto} actualizado.
    */
   @Override
   @Transactional
-  public Proyecto update(Proyecto proyectoActualizar, List<String> unidadGestionRefs) {
-    log.debug("update(Proyecto proyecto, List<String> unidadGestionRefs) - start");
+  public Proyecto update(Proyecto proyectoActualizar) {
+    log.debug("update(Proyecto proyecto) - start");
+    // TODO: Add right authority
+    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyectoActualizar.getUnidadGestionRef()),
+        "La Unidad de Gestión no es gestionable por el usuario");
+
     Assert.isTrue(
         !proyectoActualizar.getEstado().getEstado().equals(TipoEstadoProyectoEnum.FINALIZADO)
             && !proyectoActualizar.getEstado().getEstado().equals(TipoEstadoProyectoEnum.CANCELADO),
         "El proyecto no está en un estado en el que puede ser actualizado");
 
-    this.validarDatos(proyectoActualizar, unidadGestionRefs);
+    this.validarDatos(proyectoActualizar);
 
     return repository.findById(proyectoActualizar.getId()).map((data) -> {
 
@@ -152,7 +172,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setUnidadGestionRef(proyectoActualizar.getUnidadGestionRef());
 
       Proyecto returnValue = repository.save(data);
-      log.debug("update(Proyecto proyecto, List<String> unidadGestionRefs) - end");
+      log.debug("update(Proyecto proyecto) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(proyectoActualizar.getId()));
   }
@@ -160,23 +180,19 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Reactiva el {@link Proyecto}.
    *
-   * @param id                Id del {@link Proyecto}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Proyecto}.
    * @return la entidad {@link Proyecto} persistida.
    */
   @Override
   @Transactional
-  public Proyecto enable(Long id, List<String> unidadGestionRefs) {
-    log.debug("enable(Long id, List<String> unidadGestionRefs) - start");
+  public Proyecto enable(Long id) {
+    log.debug("enable(Long id) - start");
 
     Assert.notNull(id, "Proyecto id no puede ser null para reactivar un Proyecto");
 
     return repository.findById(id).map(proyecto -> {
-
-      Assert.isTrue(
-          unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(proyecto.getUnidadGestionRef())),
+      // TODO: Add right authority
+      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
           "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       if (proyecto.getActivo()) {
@@ -187,7 +203,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setActivo(true);
 
       Proyecto returnValue = repository.save(proyecto);
-      log.debug("enable(Long id, List<String> unidadGestionRefs) - end");
+      log.debug("enable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
   }
@@ -195,22 +211,19 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Desactiva el {@link Proyecto}.
    *
-   * @param id                Id del {@link Proyecto}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Proyecto}.
    * @return la entidad {@link Proyecto} persistida.
    */
   @Override
   @Transactional
-  public Proyecto disable(Long id, List<String> unidadGestionRefs) {
-    log.debug("disable(Long id, List<String> unidadGestionRefs) - start");
+  public Proyecto disable(Long id) {
+    log.debug("disable(Long id) - start");
 
     Assert.notNull(id, "Proyecto id no puede ser null para desactivar un Proyecto");
 
     return repository.findById(id).map(proyecto -> {
-      Assert.isTrue(
-          unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(proyecto.getUnidadGestionRef())),
+      // TODO: Add right authority
+      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
           "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       if (!proyecto.getActivo()) {
@@ -221,7 +234,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setActivo(false);
 
       Proyecto returnValue = repository.save(proyecto);
-      log.debug("disable(Long id, List<String> unidadGestionRefs) - end");
+      log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
   }
@@ -263,75 +276,85 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Obtiene una entidad {@link Proyecto} por id.
    * 
-   * @param id                Identificador de la entidad {@link Proyecto}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Identificador de la entidad {@link Proyecto}.
    * @return Proyecto la entidad {@link Proyecto}.
    */
   @Override
-  public Proyecto findById(Long id, List<String> unidadGestionRefs) {
-    log.debug("findById(Long id, List<String> unidadGestionRefs) - start");
+  public Proyecto findById(Long id) {
+    log.debug("findById(Long id) - start");
     final Proyecto returnValue = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
 
+    // TODO: Add right authority
     Assert.isTrue(
-        unidadGestionRefs.stream()
-            .anyMatch(unidadGestionRef -> unidadGestionRef.equals(returnValue.getUnidadGestionRef())),
+        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-C", "CSP-PRO-V-INV" },
+            returnValue.getUnidadGestionRef()),
         "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
-    log.debug("findById(Long id, List<String> unidadGestionRefs) - end");
+    log.debug("findById(Long id) - end");
     return returnValue;
   }
 
   /**
    * Obtiene todas las entidades {@link Proyecto} activas paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Proyecto} activas paginadas y
    *         filtradas.
    */
   @Override
-  public Page<Proyecto> findAllRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> unidadGestionRefs) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - start");
+  public Page<Proyecto> findAllRestringidos(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
     if (query == null) {
       query = new ArrayList<>();
     }
 
     Specification<Proyecto> specByQuery = new QuerySpecification<Proyecto>(query);
     Specification<Proyecto> specActivos = ProyectoSpecifications.activos();
-    Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications.unidadGestionRefIn(unidadGestionRefs);
-    Specification<Proyecto> specs = Specification.where(specActivos).and(specByUnidadGestionRefIn).and(specByQuery);
+    Specification<Proyecto> specs = Specification.where(specActivos).and(specByQuery);
+
+    // TODO: Add right authority
+    // No tiene acceso a todos los UO
+    if (!SgiSecurityContextHolder.hasAuthority("CSP-PRO-C")) {
+      Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
+          .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
+      specs = Specification.where(specActivos).and(specByUnidadGestionRefIn).and(specByQuery);
+    }
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - end");
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 
   /**
    * Obtiene todas las entidades {@link Proyecto} paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Proyecto} paginadas y filtradas.
    */
   @Override
-  public Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> unidadGestionRefs) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - start");
+  public Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
     if (query == null) {
       query = new ArrayList<>();
     }
 
     Specification<Proyecto> specByQuery = new QuerySpecification<Proyecto>(query);
-    Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications.unidadGestionRefIn(unidadGestionRefs);
-    Specification<Proyecto> specs = Specification.where(specByUnidadGestionRefIn).and(specByQuery);
+    Specification<Proyecto> specs = Specification.where(specByQuery);
+
+    // TODO: Add right authority
+    // No tiene acceso a todos los UO
+    if (!SgiSecurityContextHolder.hasAuthority("CSP-PRO-C")) {
+      Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
+          .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
+      specs = Specification.where(specByUnidadGestionRefIn).and(specByQuery);
+    }
+
     // TODO implementar buscador avanzado
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - end");
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -370,12 +393,7 @@ public class ProyectoServiceImpl implements ProyectoService {
    * @param unidadGestionRefs las unidades de gestión del usuario
    * 
    */
-  private void validarDatos(Proyecto proyecto, List<String> unidadGestionRefs) {
-    Assert.isTrue(
-        unidadGestionRefs.stream()
-            .anyMatch(unidadGestionRef -> unidadGestionRef.equals(proyecto.getUnidadGestionRef())),
-        "La Unidad de Gestión no es gestionable por el usuario");
-
+  private void validarDatos(Proyecto proyecto) {
     Assert.isTrue(
         (proyecto.getConvocatoria() != null && proyecto.getConvocatoriaExterna() == null)
             || proyecto.getConvocatoria() == null,
@@ -454,4 +472,28 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   }
 
+  /**
+   * Copia las entidades financiadores de una convocatoria a un proyecto
+   * 
+   * @param proyectoId     Identificador del proyecto de destino
+   * @param convocatoriaId Identificador de la convocatoria
+   */
+  private void copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) {
+    log.debug("copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) - start");
+    List<ConvocatoriaEntidadFinanciadora> entidadesConvocatoria = convocatoriaEntidadFinanciadoraRepository
+        .findAllByConvocatoriaId(convocatoriaId);
+    entidadesConvocatoria.stream().forEach((entidadConvocatoria) -> {
+      log.debug("Copy ConvocatoriaEntidadFinanciadora with id: {0}", entidadConvocatoria.getId());
+      ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
+      entidadProyecto.setProyectoId(proyectoId);
+      entidadProyecto.setEntidadRef(entidadConvocatoria.getEntidadRef());
+      entidadProyecto.setFuenteFinanciacion(entidadConvocatoria.getFuenteFinanciacion());
+      entidadProyecto.setTipoFinanciacion(entidadConvocatoria.getTipoFinanciacion());
+      entidadProyecto.setPorcentajeFinanciacion(entidadConvocatoria.getPorcentajeFinanciacion());
+      entidadProyecto.setAjena(DEFAULT_COPY_ENTIDAD_FINANCIADORA_AJENA_VALUE);
+
+      this.proyectoEntidadFinanciadoraService.create(entidadProyecto);
+    });
+    log.debug("copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) - start");
+  }
 }

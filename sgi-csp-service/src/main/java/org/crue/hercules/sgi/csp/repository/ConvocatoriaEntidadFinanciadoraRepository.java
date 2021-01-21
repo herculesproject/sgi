@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,4 +14,11 @@ import org.springframework.stereotype.Repository;
 public interface ConvocatoriaEntidadFinanciadoraRepository extends JpaRepository<ConvocatoriaEntidadFinanciadora, Long>,
     JpaSpecificationExecutor<ConvocatoriaEntidadFinanciadora> {
 
+  /**
+   * Obtiene las Entidades Financiadoras asociadas a una convocatoria
+   * 
+   * @param convocatoriaId Identificador de la convocatoria
+   * @return Listado de convocatorias
+   */
+  List<ConvocatoriaEntidadFinanciadora> findAllByConvocatoriaId(Long convocatoriaId);
 }

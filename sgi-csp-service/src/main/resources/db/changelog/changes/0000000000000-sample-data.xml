@@ -1731,4 +1731,83 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-proyecto-entidad-financiadora">
+    <!-- Proyecto 1 -->
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="entidad_ref" value="ent-001" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-001')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')" />
+      <column name="porcentaje_financiacion" value="40" />
+      <column name="ajena" value="false" />
+    </insert>
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="entidad_ref" value="ent-004" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-002')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion2')" />
+      <column name="porcentaje_financiacion" value="60" />
+      <column name="ajena" value="true" />
+    </insert>
+    <!-- Proyecto 2 -->
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-002')" />
+      <column name="entidad_ref" value="ent-001" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-001')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')" />
+      <column name="porcentaje_financiacion" value="40" />
+      <column name="ajena" value="false" />
+    </insert>
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-002')" />
+      <column name="entidad_ref" value="ent-004" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-002')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion2')" />
+      <column name="porcentaje_financiacion" value="60" />
+      <column name="ajena" value="true" />
+    </insert>
+    <!-- Proyecto 3 -->
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-003')" />
+      <column name="entidad_ref" value="ent-001" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-001')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')" />
+      <column name="porcentaje_financiacion" value="40" />
+      <column name="ajena" value="false" />
+    </insert>
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-003')" />
+      <column name="entidad_ref" value="ent-004" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-002')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion2')" />
+      <column name="porcentaje_financiacion" value="60" />
+      <column name="ajena" value="true" />
+    </insert>
+    <!-- Proyecto 4 -->
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+      <column name="entidad_ref" value="ent-001" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-001')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')" />
+      <column name="porcentaje_financiacion" value="40" />
+      <column name="ajena" value="false" />
+    </insert>
+    <insert tableName="proyecto_entidad_financiadora">
+      <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+      <column name="entidad_ref" value="ent-004" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-002')" />
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion2')" />
+      <column name="porcentaje_financiacion" value="60" />
+      <column name="ajena" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

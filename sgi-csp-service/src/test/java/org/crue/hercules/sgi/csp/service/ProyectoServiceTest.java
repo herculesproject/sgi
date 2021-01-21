@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -28,26 +28,25 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ProyectoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
-public class ProyectoServiceTest {
+public class ProyectoServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoRepository repository;
@@ -57,16 +56,21 @@ public class ProyectoServiceTest {
   private ModeloUnidadRepository modeloUnidadRepository;
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
+  @Mock
+  private ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
+  @Mock
+  private ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
 
   private ProyectoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
-        convocatoriaRepository);
+        convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService);
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -96,7 +100,7 @@ public class ProyectoServiceTest {
     BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
     // when: Creamos el Proyecto
-    Proyecto proyectoCreado = service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef()));
+    Proyecto proyectoCreado = service.create(proyecto);
 
     // then: El Proyecto se crea correctamente
     Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
@@ -110,6 +114,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void createWithConvocatoria_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -145,7 +150,7 @@ public class ProyectoServiceTest {
     BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
     // when: Creamos el Proyecto
-    Proyecto proyectoCreado = service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef()));
+    Proyecto proyectoCreado = service.create(proyecto);
 
     // then: El Proyecto se crea correctamente
     Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
@@ -159,6 +164,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -168,24 +174,24 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La convocatoria con id '" + proyecto.getConvocatoria().getId() + "' no existe");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto que ya tiene id
     Proyecto proyecto = generarMockProyecto(1L);
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Proyecto id tiene que ser null para crear un Proyecto");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_UGI" })
   public void create_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -193,12 +199,12 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList()))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -207,12 +213,12 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -222,13 +228,13 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
             + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -245,11 +251,12 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El proyecto requiere timesheet");
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El proyecto requiere timesheet");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -266,12 +273,12 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Proyecto proyecto = generarMockProyecto(1L);
@@ -292,8 +299,7 @@ public class ProyectoServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Actualizamos el Proyecto
-    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas,
-        Arrays.asList(proyecto.getUnidadGestionRef()));
+    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas);
 
     // then: El Proyecto se actualiza correctamente.
     Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
@@ -307,6 +313,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void updateWithConvocatoria_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Proyecto proyecto = generarMockProyecto(1L);
@@ -334,8 +341,7 @@ public class ProyectoServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Actualizamos el Proyecto
-    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas,
-        Arrays.asList(proyecto.getUnidadGestionRef()));
+    Proyecto proyectoActualizada = service.update(proyectoObservacionesActualizadas);
 
     // then: El Proyecto se actualiza correctamente.
     Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
@@ -349,6 +355,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithNotCorrectEstado_ThrowsIllegalArgumentException() {
     // given: Actualizar un proyecto con estado Finalizado
     Proyecto proyecto = generarMockProyecto(1L);
@@ -357,12 +364,12 @@ public class ProyectoServiceTest {
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El proyecto no está en un estado en el que puede ser actualizado");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Actualizar proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -372,12 +379,12 @@ public class ProyectoServiceTest {
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La convocatoria con id '" + proyecto.getConvocatoria().getId() + "' no existe");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_UGI" })
   public void update_WithoutUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -385,12 +392,12 @@ public class ProyectoServiceTest {
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList()))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -399,12 +406,12 @@ public class ProyectoServiceTest {
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -414,13 +421,13 @@ public class ProyectoServiceTest {
 
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
             + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithDistinctConvocatoria_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -440,14 +447,13 @@ public class ProyectoServiceTest {
 
     // then: Lanza una excepcion porque no se puede modificar la convocatoria del
     // proyecto
-    Assertions
-        .assertThatThrownBy(
-            () -> service.update(proyectoConvocatoriaUpdate, Arrays.asList(proyecto.getUnidadGestionRef())))
+    Assertions.assertThatThrownBy(() -> service.update(proyectoConvocatoriaUpdate))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Existen campos del proyecto modificados que no se pueden modificar");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -464,11 +470,12 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El proyecto requiere timesheet");
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El proyecto requiere timesheet");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void update_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -485,12 +492,12 @@ public class ProyectoServiceTest {
 
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto, Arrays.asList(proyecto.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void enable_ReturnsProyecto() {
     // given: Un nuevo Proyecto inactivo
     Proyecto proyecto = generarMockProyecto(1L);
@@ -502,7 +509,7 @@ public class ProyectoServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Activamos el Proyecto
-    Proyecto programaActualizado = service.enable(proyecto.getId(), Arrays.asList(proyecto.getUnidadGestionRef()));
+    Proyecto programaActualizado = service.enable(proyecto.getId());
 
     // then: El Proyecto se activa correctamente.
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
@@ -511,17 +518,18 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void enable_WithIdNotExist_ThrowsProyectoNotFoundException() {
     // given: Un id de un Proyecto que no existe
     Long idNoExiste = 1L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     // when: activamos el Proyecto
     // then: Lanza una excepcion porque el Proyecto no existe
-    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste, Arrays.asList("OPE")))
-        .isInstanceOf(ProyectoNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste)).isInstanceOf(ProyectoNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void disable_ReturnsProyecto() {
     // given: Un Proyecto activo
     Proyecto proyecto = generarMockProyecto(1L);
@@ -532,7 +540,7 @@ public class ProyectoServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Desactivamos el Proyecto
-    Proyecto proyectoActualizada = service.disable(proyecto.getId(), Arrays.asList(proyecto.getUnidadGestionRef()));
+    Proyecto proyectoActualizada = service.disable(proyecto.getId());
 
     // then: El Proyecto se desactivan correctamente
     Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
@@ -541,17 +549,18 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void disable_WithIdNotExist_ThrowsProyectoNotFoundException() {
     // given: Un id de un Proyecto que no existe
     Long idNoExiste = 1L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     // when: desactivamos el Proyecto
     // then: Lanza una excepcion porque el Proyecto no existe
-    Assertions.assertThatThrownBy(() -> service.disable(idNoExiste, Arrays.asList("OPE")))
-        .isInstanceOf(ProyectoNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.disable(idNoExiste)).isInstanceOf(ProyectoNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
     // given: existing Proyecto id
     Proyecto proyectoExistente = generarMockProyecto(1L);
@@ -571,6 +580,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void getModeloEjecucion_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing Proyecto id
     BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
@@ -583,6 +593,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -597,6 +608,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -611,6 +623,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void findById_ReturnsProyecto() {
     // given: Un Proyecto con el id buscado
     Long idBuscado = 1L;
@@ -618,7 +631,7 @@ public class ProyectoServiceTest {
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(proyectoBuscada));
 
     // when: Buscamos el Proyecto por su id
-    Proyecto proyecto = service.findById(idBuscado, Arrays.asList(proyectoBuscada.getUnidadGestionRef()));
+    Proyecto proyecto = service.findById(idBuscado);
 
     // then: el Proyecto
     Assertions.assertThat(proyecto).as("isNotNull()").isNotNull();
@@ -630,6 +643,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void findById_WithIdNotExist_ThrowsProyectoNotFoundException() throws Exception {
     // given: Ningun Proyecto con el id buscado
     Long idBuscado = 1L;
@@ -637,11 +651,11 @@ public class ProyectoServiceTest {
 
     // when: Buscamos el Proyecto por su id
     // then: lanza un ProyectoNotFoundException
-    Assertions.assertThatThrownBy(() -> service.findById(idBuscado, Arrays.asList("OPE")))
-        .isInstanceOf(ProyectoNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.findById(idBuscado)).isInstanceOf(ProyectoNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void findAll_ReturnsPage() {
     // given: Una lista con 37 Proyecto
     List<Proyecto> proyectos = new ArrayList<>();
@@ -668,7 +682,7 @@ public class ProyectoServiceTest {
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Proyecto> page = service.findAllRestringidos(null, paging, Arrays.asList("OPE"));
+    Page<Proyecto> page = service.findAllRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
     Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
@@ -682,6 +696,7 @@ public class ProyectoServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void findAllTodos_ReturnsPage() {
     // given: Una lista con 37 Proyecto
     List<Proyecto> proyectos = new ArrayList<>();
@@ -708,7 +723,7 @@ public class ProyectoServiceTest {
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Proyecto> page = service.findAllTodosRestringidos(null, paging, Arrays.asList("OPE"));
+    Page<Proyecto> page = service.findAllTodosRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
     Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);

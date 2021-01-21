@@ -78,15 +78,14 @@ public class SolicitudController {
   /**
    * Instancia un nuevo SolicitudController.
    * 
-   * @param solicitudService              {@link SolicitudService}.
-   * @param solicitudModalidadService     {@link SolicitudModalidadService}.
-   * @param solicitudDocumentoService     {@link SolicitudDocumentoService}
-   * @param estadoSolicitudService        {@link EstadoSolicitudService}.
-   * @param solicitudHitoService          {@link SolicitudHitoService}.
-   * @param solicitudProyectoDatosService {@link SolicitudProyectoDatosService}
-   * @param solicitudProyectoSocioService {@link SolicitudProyectoSocioService}
-   *                                      * @param solicitudProyectoEquipoService
-   *                                      {@link SolicitudProyectoEquipoService}
+   * @param solicitudService               {@link SolicitudService}.
+   * @param solicitudModalidadService      {@link SolicitudModalidadService}.
+   * @param solicitudDocumentoService      {@link SolicitudDocumentoService}
+   * @param estadoSolicitudService         {@link EstadoSolicitudService}.
+   * @param solicitudHitoService           {@link SolicitudHitoService}.
+   * @param solicitudProyectoDatosService  {@link SolicitudProyectoDatosService}
+   * @param solicitudProyectoSocioService  {@link SolicitudProyectoSocioService}
+   * @param solicitudProyectoEquipoService {@link SolicitudProyectoEquipoService}
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,

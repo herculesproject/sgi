@@ -1,14 +1,14 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,119 +59,93 @@ public class ProyectoController {
   /** ProyectoSocio service */
   private final ProyectoSocioService proyectoSocioService;
 
+  /** ConvocatoriaEntidadFinanciadora service */
+  private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
-   * @param proyectoService               {@link ProyectoService}.
-   * @param proyectoHitoService           {@link ProyectoHitoService}.
-   * @param proyectoFaseService           {@link ProyectoFaseService}.
-   * @param proyectoPaqueteTrabajoService {@link ProyectoPaqueteTrabajoService}.
-   * @param proyectoSocioService          {@link ProyectoSocioService}.
+   * @param proyectoService                    {@link ProyectoService}.
+   * @param proyectoHitoService                {@link ProyectoHitoService}.
+   * @param proyectoFaseService                {@link ProyectoFaseService}.
+   * @param proyectoPaqueteTrabajoService      {@link ProyectoPaqueteTrabajoService}.
+   * @param proyectoSocioService               {@link ProyectoSocioService}.
+   * @param proyectoEntidadFinanciadoraService {@link ProyectoEntidadFinanciadoraService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
-      ProyectoSocioService proyectoSocioService) {
+      ProyectoSocioService proyectoSocioService,
+      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
     this.proyectoPaqueteTrabajoService = proyectoPaqueteTrabajoService;
     this.proyectoSocioService = proyectoSocioService;
+    this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
   }
 
   /**
    * Crea nuevo {@link Proyecto}
    * 
-   * @param proyecto       {@link Proyecto} que se quiere crear.
-   * @param authentication {@link Authentication}.
+   * @param proyecto {@link Proyecto} que se quiere crear.
    * @return Nuevo {@link Proyecto} creado.
    */
   @PostMapping
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
-  public ResponseEntity<Proyecto> create(@Valid @RequestBody Proyecto proyecto, Authentication authentication) {
-    log.debug("create(Proyecto proyecto, Authentication authentication) - start");
+  public ResponseEntity<Proyecto> create(@Valid @RequestBody Proyecto proyecto) {
+    log.debug("create(Proyecto proyecto) - start");
 
-    List<String> acronimosUnidadGestion = authentication.getAuthorities().stream().map(acronimo -> {
-      if (acronimo.getAuthority().indexOf("_") > 0) {
-        return acronimo.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-
-    Proyecto returnValue = service.create(proyecto, acronimosUnidadGestion);
-    log.debug("create(Proyecto proyecto, Authentication authentication) - end");
+    Proyecto returnValue = service.create(proyecto);
+    log.debug("create(Proyecto proyecto) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
   /**
    * Actualiza {@link Proyecto}.
    * 
-   * @param proyecto       {@link Proyecto} a actualizar.
-   * @param id             Identificador {@link Proyecto} a actualizar.
-   * @param authentication {@link Authentication}.
+   * @param proyecto {@link Proyecto} a actualizar.
+   * @param id       Identificador {@link Proyecto} a actualizar.
    * @return Proyecto {@link Proyecto} actualizado
    */
   @PutMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  public Proyecto update(@Valid @RequestBody Proyecto proyecto, @PathVariable Long id, Authentication authentication) {
-    log.debug("update(Proyecto proyecto, Long id, Authentication authentication) - start");
-
-    List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
-      if (authority.getAuthority().indexOf("_") > 0) {
-
-        return authority.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+  public Proyecto update(@Valid @RequestBody Proyecto proyecto, @PathVariable Long id) {
+    log.debug("update(Proyecto proyecto, Long id) - start");
 
     proyecto.setId(id);
-    Proyecto returnValue = service.update(proyecto, unidadGestionRefs);
-    log.debug("update(Proyecto proyecto, Long id, Authentication authentication) - end");
+    Proyecto returnValue = service.update(proyecto);
+    log.debug("update(Proyecto proyecto, Long id) - end");
     return returnValue;
   }
 
   /**
    * Reactiva el {@link Proyecto} con id indicado.
    * 
-   * @param id             Identificador de {@link Proyecto}.
-   * @param authentication {@link Authentication}.
+   * @param id Identificador de {@link Proyecto}.
    * @return {@link Proyecto} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  Proyecto reactivar(@PathVariable Long id, Authentication authentication) {
-    log.debug("reactivar(Long id, Authentication authentication) - start");
-    List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
-      if (authority.getAuthority().indexOf("_") > 0) {
-        return authority.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-
-    Proyecto returnValue = service.enable(id, unidadGestionRefs);
-    log.debug("reactivar(Long id, Authentication authentication) - end");
+  Proyecto reactivar(@PathVariable Long id) {
+    log.debug("reactivar(Long id) - start");
+    Proyecto returnValue = service.enable(id);
+    log.debug("reactivar(Long id) - end");
     return returnValue;
   }
 
   /**
    * Desactiva la {@link Proyecto} con id indicado.
    * 
-   * @param id             Identificador de {@link Proyecto}.
-   * @param authentication {@link Authentication}.
+   * @param id Identificador de {@link Proyecto}.
    * @return {@link Proyecto} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
-  Proyecto desactivar(@PathVariable Long id, Authentication authentication) {
-    log.debug("desactivar(Long id, Authentication authentication) - start");
-    List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
-      if (authority.getAuthority().indexOf("_") > 0) {
-        return authority.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+  Proyecto desactivar(@PathVariable Long id) {
+    log.debug("desactivar(Long id) - start");
 
-    Proyecto returnValue = service.disable(id, unidadGestionRefs);
-    log.debug("desactivar(Long id, Authentication authentication) - end");
+    Proyecto returnValue = service.disable(id);
+    log.debug("desactivar(Long id) - end");
     return returnValue;
   }
 
@@ -212,23 +185,16 @@ public class ProyectoController {
   /**
    * Devuelve el {@link Proyecto} con el id indicado.
    * 
-   * @param id             Identificador de {@link Proyecto}.
-   * @param authentication {@link Authentication}.
+   * @param id Identificador de {@link Proyecto}.
    * @return Proyecto {@link Proyecto} correspondiente al id
    */
   @GetMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
-  Proyecto findById(@PathVariable Long id, Authentication authentication) {
-    log.debug("Proyecto findById(Long id, Authentication authentication) - start");
-    List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
-      if (authority.getAuthority().indexOf("_") > 0) {
-        return authority.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+  Proyecto findById(@PathVariable Long id) {
+    log.debug("Proyecto findById(Long id) - start");
 
-    Proyecto returnValue = service.findById(id, unidadGestionRefs);
-    log.debug("Proyecto findById(Long id, Authentication authentication) - end");
+    Proyecto returnValue = service.findById(id);
+    log.debug("Proyecto findById(Long id) - end");
     return returnValue;
   }
 
@@ -244,23 +210,16 @@ public class ProyectoController {
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
   ResponseEntity<Page<Proyecto>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, Authentication authentication) - start");
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
 
-    List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
-      if (authority.getAuthority().indexOf("_") > 0) {
-        return authority.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-
-    Page<Proyecto> page = service.findAllRestringidos(query, paging, unidadGestionRefs);
+    Page<Proyecto> page = service.findAllRestringidos(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging, Authentication authentication) - end");
+      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, Authentication authentication) - end");
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -276,23 +235,16 @@ public class ProyectoController {
   @GetMapping("/todos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
   ResponseEntity<Page<Proyecto>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging, Authentication authentication) - start");
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
 
-    List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
-      if (authority.getAuthority().indexOf("_") > 0) {
-        return authority.getAuthority().split("_")[1];
-      }
-      return null;
-    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-
-    Page<Proyecto> page = service.findAllTodosRestringidos(query, paging, unidadGestionRefs);
+    Page<Proyecto> page = service.findAllTodosRestringidos(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging, Authentication authentication) - end");
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging, Authentication authentication) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -420,4 +372,35 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * 
+   * PROYECTO ENTIDAD FINANCIADORA
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoEntidadFinanciadora}
+   * del {@link Proyecto}.
+   * 
+   * @param id     Identificador del {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoentidadfinanciadoras")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  ResponseEntity<Page<ProyectoEntidadFinanciadora>> findAllProyectoEntidadFinanciadora(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoEntidadFinanciadora> page = proyectoEntidadFinanciadoraService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
 }
