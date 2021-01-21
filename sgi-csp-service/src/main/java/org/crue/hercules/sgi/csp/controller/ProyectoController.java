@@ -10,9 +10,11 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -46,11 +48,14 @@ public class ProyectoController {
   /** Proyecto service */
   private final ProyectoService service;
 
-  /** ProyectoHitoService */
+  /** ProyectoHito service */
   private final ProyectoHitoService proyectoHitoService;
 
   /** ProyectoFaseService */
   private final ProyectoFaseService proyectoFaseService;
+
+  /** ProyectoPaqueteTrabajo service */
+  private final ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService;
 
   /** ProyectoSocio service */
   private final ProyectoSocioService proyectoSocioService;
@@ -58,16 +63,19 @@ public class ProyectoController {
   /**
    * Instancia un nuevo ProyectoController.
    * 
-   * @param proyectoService      {@link ProyectoService}.
-   * @param proyectoHitoService  {@link ProyectoHitoService}.
-   * @param proyectoFaseService  {@link ProyectoFaseService}.
-   * @param proyectoSocioService {@link ProyectoSocioService}.
+   * @param proyectoService               {@link ProyectoService}.
+   * @param proyectoHitoService           {@link ProyectoHitoService}.
+   * @param proyectoFaseService           {@link ProyectoFaseService}.
+   * @param proyectoPaqueteTrabajoService {@link ProyectoPaqueteTrabajoService}.
+   * @param proyectoSocioService          {@link ProyectoSocioService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
-      ProyectoFaseService proyectoFaseService, ProyectoSocioService proyectoSocioService) {
+      ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
+      ProyectoSocioService proyectoSocioService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
+    this.proyectoPaqueteTrabajoService = proyectoPaqueteTrabajoService;
     this.proyectoSocioService = proyectoSocioService;
   }
 
@@ -347,6 +355,37 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO PAQUETE TRABAJO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoPaqueteTrabajo} del
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectopaquetetrabajos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Page<ProyectoPaqueteTrabajo>> findAllProyectoPaqueteTrabajo(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoPaqueteTrabajo(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoPaqueteTrabajo> page = proyectoPaqueteTrabajoService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoPaqueteTrabajo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoPaqueteTrabajo(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

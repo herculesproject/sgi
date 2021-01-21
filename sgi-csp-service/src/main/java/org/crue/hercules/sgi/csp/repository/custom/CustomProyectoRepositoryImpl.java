@@ -11,6 +11,7 @@ import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +49,33 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
 
     log.debug("getModeloEjecucion(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Indica si en el {@link Proyecto} se permiten {@link ProyectoPaqueteTrabajo}.
+   * 
+   * @param id Id de la {@link Proyecto}.
+   * @return true si se permiten {@link ProyectoPaqueteTrabajo}, false si no se
+   *         permiten {@link ProyectoPaqueteTrabajo}
+   */
+  public Optional<Boolean> getPaquetesTrabajo(Long id) {
+    log.debug("getpaquetesTrabajo(Long id) - start");
+    Optional<Boolean> returnValue = Optional.empty();
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Boolean> cq = cb.createQuery(Boolean.class);
+    Root<Proyecto> root = cq.from(Proyecto.class);
+
+    Predicate finalPredicate = cb.equal(root.get(Proyecto_.id), id);
+    cq.select(root.get(Proyecto_.paquetesTrabajo)).where(finalPredicate);
+
+    try {
+      returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
+    } catch (NullPointerException e) {
+    }
+
+    log.debug("getpaquetesTrabajo(Long id) - stop");
     return returnValue;
   }
 

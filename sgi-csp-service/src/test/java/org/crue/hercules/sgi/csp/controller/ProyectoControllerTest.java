@@ -20,12 +20,14 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -60,7 +62,10 @@ public class ProyectoControllerTest extends BaseControllerTest {
   @MockBean
   private ProyectoHitoService proyectoHitoService;
   @MockBean
+  private ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService;
+  @MockBean
   private ProyectoFaseService proyectoFaseService;
+
   @MockBean
   private ProyectoSocioService proyectoSocioService;
 
@@ -72,6 +77,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String PATH_TODOS = "/todos";
   private static final String PATH_HITO = "/proyectohitos";
   private static final String PATH_FASE = "/proyectofases";
+  private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
 
   @Test
@@ -510,91 +516,6 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
-  public void findAllProyectoSocio_WithPaging_ReturnsProyectoSocioSubList() throws Exception {
-    // given: 37 ProyectoSocio
-    Long proyectoId = 1L;
-
-    List<ProyectoSocio> proyectoSocios = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      proyectoSocios.add(generarMockProyectoSocio(i));
-    }
-
-    Integer page = 3;
-    Integer pageSize = 10;
-
-    BDDMockito
-        .given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(2, Pageable.class);
-          int size = pageable.getPageSize();
-          int index = pageable.getPageNumber();
-          int fromIndex = size * index;
-          int toIndex = fromIndex + size;
-          toIndex = toIndex > proyectoSocios.size() ? proyectoSocios.size() : toIndex;
-          List<ProyectoSocio> content = proyectoSocios.subList(fromIndex, toIndex);
-          Page<ProyectoSocio> pageResponse = new PageImpl<>(content, pageable, proyectoSocios.size());
-          return pageResponse;
-        });
-
-    // when: get page=3 with pagesize=10
-    MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_SOCIO, proyectoId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: the asked ProyectoSocio are returned with the right page information in
-        // headers
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
-
-    // this uses a TypeReference to inform Jackson about the Lists's generic type
-    List<ProyectoSocio> actual = mapper.readValue(
-        requestResult.getResponse().getContentAsString(StandardCharsets.UTF_8),
-        new TypeReference<List<ProyectoSocio>>() {
-        });
-
-    // containing id='31' to '37'
-    for (int i = 31; i <= 37; i++) {
-      ProyectoSocio item = actual.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(item.getId()).isEqualTo(Long.valueOf(i));
-    }
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
-  public void findAllProyectoSocio_EmptyList_Returns204() throws Exception {
-    // given: no data ProyectoSocio
-    Long proyectoId = 1L;
-
-    BDDMockito
-        .given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoSocio>>() {
-          @Override
-          public Page<ProyectoSocio> answer(InvocationOnMock invocation) throws Throwable {
-            Page<ProyectoSocio> page = new PageImpl<>(Collections.emptyList());
-            return page;
-          }
-        });
-
-    // when: get page=3 with pagesize=10
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_SOCIO, proyectoId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: returns 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
   /**
    * 
    * PROYECTO HITO
@@ -789,6 +710,192 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * PROYECTO PAQUETE TRABAJO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoPaqueteTrabajo_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoPaqueteTrabajo para el Proyecto
+    Long proyectoId = 1L;
+
+    List<ProyectoPaqueteTrabajo> proyectoPaqueteTrabajos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoPaqueteTrabajos.add(generarMockProyectoPaqueteTrabajo(i, proyectoId));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoPaqueteTrabajoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoPaqueteTrabajo>>() {
+          @Override
+          public Page<ProyectoPaqueteTrabajo> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoPaqueteTrabajos.size() ? proyectoPaqueteTrabajos.size() : toIndex;
+            List<ProyectoPaqueteTrabajo> content = proyectoPaqueteTrabajos.subList(fromIndex, toIndex);
+            Page<ProyectoPaqueteTrabajo> page = new PageImpl<>(content, pageable, proyectoPaqueteTrabajos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PAQUETE_TRABAJO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoPaqueteTrabajo del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoPaqueteTrabajo> proyectoPaqueteTrabajoResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<ProyectoPaqueteTrabajo>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = proyectoPaqueteTrabajoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoPaqueteTrabajo.getNombre())
+          .isEqualTo("proyecto-paquete-trabajo-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoPaqueteTrabajo_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoPaqueteTrabajo para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoPaqueteTrabajo> proyectoPaqueteTrabajos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoPaqueteTrabajoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoPaqueteTrabajo>>() {
+          @Override
+          public Page<ProyectoPaqueteTrabajo> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ProyectoPaqueteTrabajo> page = new PageImpl<>(proyectoPaqueteTrabajos, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PAQUETE_TRABAJO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * PROYECTO SOCIO
+   * 
+   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoSocio_WithPaging_ReturnsProyectoSocioSubList() throws Exception {
+    // given: 37 ProyectoSocio
+    Long proyectoId = 1L;
+
+    List<ProyectoSocio> proyectoSocios = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoSocios.add(generarMockProyectoSocio(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > proyectoSocios.size() ? proyectoSocios.size() : toIndex;
+          List<ProyectoSocio> content = proyectoSocios.subList(fromIndex, toIndex);
+          Page<ProyectoSocio> pageResponse = new PageImpl<>(content, pageable, proyectoSocios.size());
+          return pageResponse;
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_SOCIO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked ProyectoSocio are returned with the right page information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<ProyectoSocio> actual = mapper.readValue(
+        requestResult.getResponse().getContentAsString(StandardCharsets.UTF_8),
+        new TypeReference<List<ProyectoSocio>>() {
+        });
+
+    // containing id='31' to '37'
+    for (int i = 31; i <= 37; i++) {
+      ProyectoSocio item = actual.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(item.getId()).isEqualTo(Long.valueOf(i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoSocio_EmptyList_Returns204() throws Exception {
+    // given: no data ProyectoSocio
+    Long proyectoId = 1L;
+
+    BDDMockito
+        .given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoSocio>>() {
+          @Override
+          public Page<ProyectoSocio> answer(InvocationOnMock invocation) throws Throwable {
+            Page<ProyectoSocio> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_SOCIO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * MOCKS
    * 
    */
@@ -875,30 +982,6 @@ public class ProyectoControllerTest extends BaseControllerTest {
   }
 
   /**
-   * Función que genera un ProyectoSocio
-   * 
-   * @param proyectoSocioId Identificador del {@link ProyectoSocio}
-   * @return el ProyectoSocio
-   */
-  private ProyectoSocio generarMockProyectoSocio(Long proyectoSocioId) {
-
-    String suffix = String.format("%03d", proyectoSocioId);
-
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder()//
-        .id(proyectoSocioId)//
-        .proyecto(Proyecto.builder().id(1L).build())//
-        .empresaRef("empresa-" + suffix)//
-        .rolSocio(RolSocio.builder().id(1L).build())//
-        .fechaInicio(LocalDate.of(2021, 1, 11))//
-        .fechaFin(LocalDate.of(2022, 1, 11))//
-        .numInvestigadores(5)//
-        .importeConcedido(BigDecimal.valueOf(1000))//
-        .build();
-
-    return proyectoSocio;
-  }
-
-  /**
    * Función que devuelve un objeto ProyectoFase
    * 
    * @param id id del ProyectoFase
@@ -922,6 +1005,50 @@ public class ProyectoControllerTest extends BaseControllerTest {
     proyectoFase.setTipoFase(tipoFase);
 
     return proyectoFase;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoPaqueteTrabajo
+   * 
+   * @param id         id del ProyectoPaqueteTrabajo
+   * @param proyectoId id del Proyecto
+   * @return el objeto ProyectoPaqueteTrabajo
+   */
+  private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
+
+    return ProyectoPaqueteTrabajo.builder()//
+        .id(id)//
+        .proyecto(Proyecto.builder().id(proyectoId).build())//
+        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
+        .fechaInicio(LocalDate.of(2020, 01, 01))//
+        .fechaFin(LocalDate.of(2020, 01, 15))//
+        .personaMes(1D)//
+        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
+        .build();
+  }
+
+  /**
+   * Función que genera un ProyectoSocio
+   * 
+   * @param proyectoSocioId Identificador del {@link ProyectoSocio}
+   * @return el ProyectoSocio
+   */
+  private ProyectoSocio generarMockProyectoSocio(Long proyectoSocioId) {
+
+    String suffix = String.format("%03d", proyectoSocioId);
+
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder()//
+        .id(proyectoSocioId)//
+        .proyecto(Proyecto.builder().id(1L).build())//
+        .empresaRef("empresa-" + suffix)//
+        .rolSocio(RolSocio.builder().id(1L).build())//
+        .fechaInicio(LocalDate.of(2021, 1, 11))//
+        .fechaFin(LocalDate.of(2022, 1, 11))//
+        .numInvestigadores(5)//
+        .importeConcedido(BigDecimal.valueOf(1000))//
+        .build();
+
+    return proyectoSocio;
   }
 
 }

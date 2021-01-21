@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -54,6 +55,7 @@ public class ProyectoIT {
   private static final String PATH_HITOS = "/proyectohitos";
   private static final String PATH_FASES = "/proyectofases";
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
+  private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
 
   private HttpEntity<Proyecto> buildRequest(HttpHeaders headers, Proyecto entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -144,7 +146,7 @@ public class ProyectoIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void reactivar_ReturnProyecto() throws Exception {
-    Long idProyecto = 99L;
+    Long idProyecto = 5L;
 
     final ResponseEntity<Proyecto> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
@@ -441,6 +443,51 @@ public class ProyectoIT {
         .isEqualTo("empresa-" + String.format("%03d", 2));
     Assertions.assertThat(proyectoSocios.get(2).getEmpresaRef()).as("get(2).getEmpresaRef())")
         .isEqualTo("empresa-" + String.format("%03d", 1));
+  }
+
+  /*
+   * PROYECTO PAQUETE TRABAJO
+   * 
+   */
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_paquete_trabajo.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllProyectoPaqueteTrabajo_WithPagingSortingAndFiltering_ReturnsProyectoPaqueteTrabajoSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "nombre~%-00%";
+
+    Long proyectoId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PAQUETE_TRABAJO)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(proyectoId).toUri();
+
+    final ResponseEntity<List<ProyectoPaqueteTrabajo>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ProyectoPaqueteTrabajo>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<ProyectoPaqueteTrabajo> proyectosPaqueteTrabajos = response.getBody();
+    Assertions.assertThat(proyectosPaqueteTrabajos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+    Assertions.assertThat(proyectosPaqueteTrabajos.get(0).getNombre()).as("get(0).getNombre()")
+        .isEqualTo("proyecto-paquete-trabajo-" + String.format("%03d", 3));
+    Assertions.assertThat(proyectosPaqueteTrabajos.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("proyecto-paquete-trabajo-" + String.format("%03d", 2));
+    Assertions.assertThat(proyectosPaqueteTrabajos.get(2).getNombre()).as("get(2).getNombre()")
+        .isEqualTo("proyecto-paquete-trabajo-" + String.format("%03d", 1));
+
   }
 
   /**
