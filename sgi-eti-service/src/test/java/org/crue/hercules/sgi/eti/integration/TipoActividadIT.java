@@ -16,12 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de TipoActividad.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class TipoActividadIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -38,8 +43,6 @@ public class TipoActividadIT extends BaseIT {
     return request;
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoActividad_WithId_ReturnsTipoActividad() throws Exception {
     final ResponseEntity<TipoActividad> response = restTemplate.exchange(
@@ -51,15 +54,13 @@ public class TipoActividadIT extends BaseIT {
     final TipoActividad tipoActividad = response.getBody();
 
     Assertions.assertThat(tipoActividad.getId()).isEqualTo(1L);
-    Assertions.assertThat(tipoActividad.getNombre()).isEqualTo("Proyecto de investigación");
+    Assertions.assertThat(tipoActividad.getNombre()).isEqualTo("Proyecto de investigacion");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addTipoActividad_ReturnsTipoActividad() throws Exception {
 
-    TipoActividad nuevoTipoActividad = new TipoActividad(1L, "Proyecto de investigación", Boolean.TRUE);
+    TipoActividad nuevoTipoActividad = new TipoActividad(1L, "Proyecto de investigacion", Boolean.TRUE);
 
     final ResponseEntity<TipoActividad> response = restTemplate.exchange(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoTipoActividad), TipoActividad.class);
@@ -68,8 +69,6 @@ public class TipoActividadIT extends BaseIT {
     Assertions.assertThat(response.getBody()).isEqualTo(nuevoTipoActividad);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoActividad_Success() throws Exception {
 
@@ -84,8 +83,6 @@ public class TipoActividadIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoActividad_DoNotGetTipoActividad() throws Exception {
     restTemplate.exchange(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
@@ -93,14 +90,12 @@ public class TipoActividadIT extends BaseIT {
 
     final ResponseEntity<TipoActividad> response = restTemplate.exchange(
         TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        TipoActividad.class, 1L);
+        TipoActividad.class, 4L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceTipoActividad_ReturnsTipoActividad() throws Exception {
 
@@ -119,8 +114,6 @@ public class TipoActividadIT extends BaseIT {
     Assertions.assertThat(tipoActividad.getActivo()).isEqualTo(replaceTipoActividad.getActivo());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsTipoActividadSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -143,12 +136,10 @@ public class TipoActividadIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Contiene de nombre='Investigación tutelada'
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Investigación tutelada");
+    // Contiene de nombre='Investigacion tutelada'
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Investigacion tutelada");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoActividadList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -169,11 +160,9 @@ public class TipoActividadIT extends BaseIT {
     final List<TipoActividad> tipoActividades = response.getBody();
     Assertions.assertThat(tipoActividades.size()).isEqualTo(1);
     Assertions.assertThat(tipoActividades.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).startsWith("Proyecto de investigación");
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).startsWith("Proyecto de investigacion");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoActividadList() throws Exception {
     // when: Ordenación por nombre desc
@@ -192,14 +181,12 @@ public class TipoActividadIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoActividad> tipoActividades = response.getBody();
     Assertions.assertThat(tipoActividades.size()).isEqualTo(3);
-    Assertions.assertThat(tipoActividades.get(0).getId()).isEqualTo(2);
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Pructica docente");
+    Assertions.assertThat(tipoActividades.get(0).getId()).isEqualTo(1);
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Proyecto de investigacion");
     Assertions.assertThat(tipoActividades.get(2).getId()).isEqualTo(3);
     Assertions.assertThat(tipoActividades.get(2).getNombre()).isEqualTo("Investigacion tutelada");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoActividadSubList() throws Exception {
     // when: Obtiene page=0 con pagesize=2
@@ -228,8 +215,8 @@ public class TipoActividadIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene nombre='Proyecto de investigación'
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Proyecto de investigación");
+    // Contiene nombre='Proyecto de investigacion'
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Proyecto de investigacion");
 
   }
 
