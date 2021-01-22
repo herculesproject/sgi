@@ -16,12 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de CargoComite.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = { "classpath:scripts/cargo_comite.sql" })
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class CargoComiteIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -39,8 +44,6 @@ public class CargoComiteIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getCargoComite_WithId_ReturnsCargoComite() throws Exception {
     final ResponseEntity<CargoComite> response = restTemplate.exchange(
@@ -55,8 +58,6 @@ public class CargoComiteIT extends BaseIT {
     Assertions.assertThat(cargoComite.getNombre()).isEqualTo("PRESIDENTE");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addCargoComite_ReturnsCargoComite() throws Exception {
 
@@ -72,8 +73,6 @@ public class CargoComiteIT extends BaseIT {
     Assertions.assertThat(response.getBody().getId()).isNotNull();
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeCargoComite_Success() throws Exception {
 
@@ -88,21 +87,17 @@ public class CargoComiteIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeCargoComite_DoNotGetCargoComite() throws Exception {
 
     final ResponseEntity<CargoComite> response = restTemplate.exchange(
         CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        CargoComite.class, 1L);
+        CargoComite.class, 3L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceCargoComite_ReturnsCargoComite() throws Exception {
 
@@ -121,8 +116,6 @@ public class CargoComiteIT extends BaseIT {
     Assertions.assertThat(cargoComite.getActivo()).isEqualTo(replaceCargoComite.getActivo());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsCargoComiteSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -147,8 +140,6 @@ public class CargoComiteIT extends BaseIT {
     Assertions.assertThat(cargoComites.get(0).getNombre()).isEqualTo("VOCAL");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredCargoComiteList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -172,8 +163,6 @@ public class CargoComiteIT extends BaseIT {
     Assertions.assertThat(cargoComites.get(0).getNombre()).startsWith("PRESIDENTE");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedCargoComiteList() throws Exception {
     // when: Ordenación por nombre desc
@@ -198,8 +187,6 @@ public class CargoComiteIT extends BaseIT {
     Assertions.assertThat(cargoComites.get(1).getNombre()).isEqualTo("PRESIDENTE");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsCargoComiteSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10

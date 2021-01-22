@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoActividad.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql
+@Sql(scripts = { "classpath:scripts/tipo_actividad.sql" })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class TipoActividadIT extends BaseIT {

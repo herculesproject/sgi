@@ -16,12 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de FormacionEspecifica.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = { "classpath:scripts/formacion_especifica.sql" })
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class FormacionEspecificaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -40,8 +45,6 @@ public class FormacionEspecificaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getFormacionEspecifica_WithId_ReturnsFormacionEspecifica() throws Exception {
     final ResponseEntity<FormacionEspecifica> response = restTemplate.exchange(
@@ -56,8 +59,6 @@ public class FormacionEspecificaIT extends BaseIT {
     Assertions.assertThat(formacionEspecifica.getNombre()).isEqualTo("A: Cuidado de los animales");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addFormacionEspecifica_ReturnsFormacionEspecifica() throws Exception {
 
@@ -74,8 +75,6 @@ public class FormacionEspecificaIT extends BaseIT {
     Assertions.assertThat(response.getBody()).isEqualTo(nuevoFormacionEspecifica);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeFormacionEspecifica_Success() throws Exception {
 
@@ -90,21 +89,17 @@ public class FormacionEspecificaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeFormacionEspecifica_DoNotGetFormacionEspecifica() throws Exception {
 
     final ResponseEntity<FormacionEspecifica> response = restTemplate.exchange(
         FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        FormacionEspecifica.class, 1L);
+        FormacionEspecifica.class, 9L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceFormacionEspecifica_ReturnsFormacionEspecifica() throws Exception {
 
@@ -123,8 +118,6 @@ public class FormacionEspecificaIT extends BaseIT {
     Assertions.assertThat(formacionEspecifica.getActivo()).isEqualTo(replaceFormacionEspecifica.getActivo());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsFormacionEspecificaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -152,8 +145,6 @@ public class FormacionEspecificaIT extends BaseIT {
     Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("H: No requiere");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredFormacionEspecificaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -177,8 +168,6 @@ public class FormacionEspecificaIT extends BaseIT {
     Assertions.assertThat(formacionEspecificas.get(0).getNombre()).startsWith("E: Responsable de la");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedFormacionEspecificaList() throws Exception {
     // when: Ordenación por nombre desc
@@ -205,8 +194,6 @@ public class FormacionEspecificaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsFormacionEspecificaSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
@@ -239,7 +226,7 @@ public class FormacionEspecificaIT extends BaseIT {
     // cuidado de los animales', 'B: Eutanasia de los animales',
     // 'A: Cuidado de los animales'
     Assertions.assertThat(formacionEspecificas.get(0).getNombre())
-        .isEqualTo("E: Responsable de la supervisión <<in situ>> del bienestar y cuidado de los animales");
+        .isEqualTo("E: Responsable de la supervisión &lt;&lt;in situ&gt;&gt; del bienestar y cuidado de los animales");
     Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("B: Eutanasia de los animales");
     Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("A: Cuidado de los animales");
 

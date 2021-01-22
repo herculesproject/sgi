@@ -16,12 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de Formulario.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = { "classpath:scripts/formulario.sql" })
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class FormularioIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -39,8 +44,6 @@ public class FormularioIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getFormulario_WithId_ReturnsFormulario() throws Exception {
     final ResponseEntity<Formulario> response = restTemplate.exchange(
@@ -56,8 +59,6 @@ public class FormularioIT extends BaseIT {
     Assertions.assertThat(formulario.getDescripcion()).isEqualTo("Descripcion");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsFormularioSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -84,8 +85,6 @@ public class FormularioIT extends BaseIT {
     Assertions.assertThat(formularios.get(2).getNombre()).isEqualTo("Retrospectiva");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredFormularioList() throws Exception {
     // when: Búsqueda por nombre like e id equals
@@ -109,8 +108,6 @@ public class FormularioIT extends BaseIT {
     Assertions.assertThat(formularios.get(0).getNombre()).startsWith("M");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedFormularioList() throws Exception {
     // when: Ordenación por nombre desc
@@ -136,8 +133,6 @@ public class FormularioIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsFormularioSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
