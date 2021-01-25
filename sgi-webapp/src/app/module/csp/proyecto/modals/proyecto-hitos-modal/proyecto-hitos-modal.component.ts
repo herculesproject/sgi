@@ -99,17 +99,16 @@ export class ProyectoHitosModalComponent implements OnInit {
       this.formGroup.disable();
     }
 
-    const suscription = this.formGroup.controls.tipoHito.valueChanges.pipe(tap((value) => this.createValidatorDate(value))).subscribe();
+    const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.suscripciones.push(suscription);
 
-    const suscriptionFecha = this.formGroup.controls.fecha.valueChanges.pipe(tap(() => this.createValidatorDate(this.formGroup.controls.tipoHito.value))).subscribe();
+    const suscriptionFecha = this.formGroup.controls.fecha.valueChanges.subscribe(() => this.createValidatorDate(this.formGroup.controls.tipoHito.value));
     this.suscripciones.push(suscriptionFecha);
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
-    this.suscripciones.push(this.formGroup.get('fecha').valueChanges.pipe(
-      tap(() => this.validarFecha())
-    ).subscribe());
+    this.suscripciones.push(this.formGroup.get('fecha').valueChanges.subscribe(() => this.validarFecha())
+    );
     this.validarFecha();
     this.logger.debug(ProyectoHitosModalComponent.name, 'ngOnInit()', 'start');
   }
@@ -122,7 +121,7 @@ export class ProyectoHitosModalComponent implements OnInit {
     this.logger.debug(ProyectoHitosModalComponent.name, 'validarFecha()', 'start');
     if (new Date(this.formGroup.get('fecha').value) <= new Date()) {
       this.formGroup.get('aviso').disable();
-      this.formGroup.get('aviso').patchValue(false);
+      this.formGroup.get('aviso').setValue(false);
     } else {
       this.formGroup.get('aviso').enable();
     }

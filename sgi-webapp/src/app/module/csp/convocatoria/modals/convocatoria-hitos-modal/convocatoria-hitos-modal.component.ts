@@ -11,7 +11,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Observable, Subscription } from 'rxjs';
 import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, tap } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -20,6 +20,8 @@ import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { DateUtils } from '@core/utils/date-utils';
+import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.hitos.error.cargar');
@@ -27,6 +29,7 @@ const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaHitosModalComponentData {
+  hitos: IConvocatoriaHito[],
   hito: IConvocatoriaHito;
   idModeloEjecucion: number;
   readonly: boolean;
@@ -97,9 +100,44 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     if (this.data.readonly) {
       this.formGroup.disable();
     }
+
+    this.createValidatorDate(this.data?.hito?.tipoHito);
+
+    const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
+    this.suscripciones.push(suscription);
+
+    const suscriptionFecha = this.formGroup.controls.fechaInicio.valueChanges.subscribe(() => this.createValidatorDate(this.formGroup.controls.tipoHito.value));
+    this.suscripciones.push(suscriptionFecha);
+
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
+
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
+  }
+
+  /**
+   * Validacion de fechas a la hora de seleccionar
+   * un tipo de hito en el modal
+   * @param tipoHito convocatoria tipoHito
+   */
+  private createValidatorDate(tipoHito: ITipoHito): void {
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
+    let fechas: Date[] = [];
+    if (tipoHito && typeof tipoHito !== 'string') {
+      const convocatoriasHitos = this.data.hitos.filter(hito =>
+        hito.tipoHito.id === (tipoHito as ITipoHito).id &&
+        (hito.fecha != this.data.hito.fecha));
+      fechas = convocatoriasHitos.map(
+        hito => {
+          const fecha = DateUtils.fechaToDate(hito.fecha);
+          return fecha;
+        }
+      );
+    }
+    this.formGroup.setValidators([
+      TipoHitoValidator.notInDate('fechaInicio', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
+    ]);
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
   }
 
   loadTiposHito() {

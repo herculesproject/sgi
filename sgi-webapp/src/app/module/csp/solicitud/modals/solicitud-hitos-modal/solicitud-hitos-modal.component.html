@@ -44,6 +44,10 @@
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{'csp.solicitud.hitos.fecha.inicio.error.vacio' | translate}}
             </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.notIn">
+              {{'csp.solicitud.hitos.fechaInicio.fechaExistente' | translate}}
+            </mat-error>
+
           </mat-form-field>
 
         </div>

@@ -289,7 +289,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   getValue(): IConvocatoria {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().controls;
-    this.convocatoria.unidadGestionRef = form.unidadGestion.value.acronimo;
+    this.convocatoria.unidadGestionRef = form.unidadGestion.value?.acronimo;
     if (typeof form.modeloEjecucion.value === 'string') {
       this.convocatoria.modeloEjecucion = undefined;
     } else {

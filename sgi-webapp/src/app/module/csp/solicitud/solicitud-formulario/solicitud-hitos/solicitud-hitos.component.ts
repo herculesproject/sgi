@@ -89,6 +89,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
     this.logger.debug(SolicitudHitosComponent.name, `openModal()`, 'start');
 
     const data: SolicitudHitosModalComponentData = {
+      hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as ISolicitudHito,
       idModeloEjecucion: this.formPart.solicitud.convocatoria.modeloEjecucion.id,
     };
