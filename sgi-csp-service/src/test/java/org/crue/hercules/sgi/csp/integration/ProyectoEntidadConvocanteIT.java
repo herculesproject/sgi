@@ -4,8 +4,8 @@ import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.ProyectoEntidadConvocanteController;
+import org.crue.hercules.sgi.csp.dto.ProyectoEntidadConvocanteDto;
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -19,17 +19,14 @@ import org.springframework.test.context.jdbc.Sql;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProyectoEntidadConvocanteIT extends BaseIT {
 
-  private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_PROGRAMA = "/programa";
-
-  private HttpEntity<ProyectoEntidadConvocante> buildRequest(HttpHeaders headers, ProyectoEntidadConvocante entity,
-      String... roles) throws Exception {
+  private HttpEntity<ProyectoEntidadConvocanteDto> buildRequest(HttpHeaders headers,
+      ProyectoEntidadConvocanteDto entity, String... roles) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
 
-    HttpEntity<ProyectoEntidadConvocante> request = new HttpEntity<>(entity, headers);
+    HttpEntity<ProyectoEntidadConvocanteDto> request = new HttpEntity<>(entity, headers);
     return request;
 
   }
@@ -58,21 +55,20 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void create_ReturnsProyectoEntidadConvocante() throws Exception {
-    // given: new ProyectoEntidadConvocante
-    ProyectoEntidadConvocante proyectoEntidadConvocante = ProyectoEntidadConvocante.builder().proyectoId(1L)
+    // given: new ProyectoEntidadConvocanteDto
+    Long proyectoId = 1L;
+    ProyectoEntidadConvocanteDto proyectoEntidadConvocante = ProyectoEntidadConvocanteDto.builder()
         .entidadRef("Entidad").build();
 
-    // when: create ProyectoEntidadConvocante
-    final ResponseEntity<ProyectoEntidadConvocante> response = restTemplate.exchange(
+    // when: create ProyectoEntidadConvocanteDto
+    final ResponseEntity<ProyectoEntidadConvocanteDto> response = restTemplate.exchange(
         ProyectoEntidadConvocanteController.REQUEST_MAPPING, HttpMethod.POST,
-        buildRequest(null, proyectoEntidadConvocante, "CSP-PRO-C"), ProyectoEntidadConvocante.class);
+        buildRequest(null, proyectoEntidadConvocante, "CSP-PRO-C"), ProyectoEntidadConvocanteDto.class, proyectoId);
 
-    // then: new ProyectoEntidadConvocante is created
+    // then: new ProyectoEntidadConvocanteDto is created
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    ProyectoEntidadConvocante proyectoEntidadConvocanteCreado = response.getBody();
+    ProyectoEntidadConvocanteDto proyectoEntidadConvocanteCreado = response.getBody();
     Assertions.assertThat(proyectoEntidadConvocanteCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoEntidadConvocanteCreado.getProyectoId()).as("getProyectoId()")
-        .isEqualTo(proyectoEntidadConvocante.getProyectoId());
     Assertions.assertThat(proyectoEntidadConvocanteCreado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(proyectoEntidadConvocante.getEntidadRef());
   }
@@ -92,18 +88,21 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void setPrograma_WithExistingId_ReturnsProyectoEntidadConvocante() throws Exception {
-    // given: existing ProyectoEntidadConvocante
+    // given: existing ProyectoEntidadConvocanteDto
+    Long proyectoId = 1L;
     Long proyectoEntidadConvocanteId = 1L;
-    Programa programa = Programa.builder().id(1L).build();
+    Programa programa = Programa.builder().id(proyectoEntidadConvocanteId).build();
 
-    // when: Programa set for ProyectoEntidadConvocante
-    final ResponseEntity<ProyectoEntidadConvocante> response = restTemplate.exchange(
-        ProyectoEntidadConvocanteController.REQUEST_MAPPING + PATH_PARAMETER_ID + PATH_PROGRAMA, HttpMethod.PATCH,
-        buildRequest(null, programa, "CSP-PRO-E"), ProyectoEntidadConvocante.class, proyectoEntidadConvocanteId);
+    // when: Programa set for ProyectoEntidadConvocanteDto
+    final ResponseEntity<ProyectoEntidadConvocanteDto> response = restTemplate.exchange(
+        ProyectoEntidadConvocanteController.REQUEST_MAPPING
+            + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE_PROGRAMA,
+        HttpMethod.PATCH, buildRequest(null, programa, "CSP-PRO-E"), ProyectoEntidadConvocanteDto.class, proyectoId,
+        proyectoEntidadConvocanteId);
 
-    // then: ProyectoEntidadConvocante is updated
+    // then: ProyectoEntidadConvocanteDto is updated
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    ProyectoEntidadConvocante proyectoEntidadConvocanteActualizado = response.getBody();
+    ProyectoEntidadConvocanteDto proyectoEntidadConvocanteActualizado = response.getBody();
     Assertions.assertThat(proyectoEntidadConvocanteActualizado.getId()).as("getId()")
         .isEqualTo(proyectoEntidadConvocanteId);
     Assertions.assertThat(proyectoEntidadConvocanteActualizado.getPrograma()).isNotNull();
@@ -127,13 +126,15 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
   @Test
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
+    Long proyectoId = 1L;
     Long proyectoEntidadConvocanteId = 1L;
 
     // when: delete by id
-    final ResponseEntity<ProyectoEntidadConvocante> response = restTemplate.exchange(
-        ProyectoEntidadConvocanteController.REQUEST_MAPPING + PATH_PARAMETER_ID, HttpMethod.DELETE,
-        buildRequest(null, (ProyectoEntidadConvocante) null, "CSP-PRO-E"), ProyectoEntidadConvocante.class,
-        proyectoEntidadConvocanteId);
+    final ResponseEntity<ProyectoEntidadConvocanteDto> response = restTemplate.exchange(
+        ProyectoEntidadConvocanteController.REQUEST_MAPPING
+            + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE,
+        HttpMethod.DELETE, buildRequest(null, (ProyectoEntidadConvocanteDto) null, "CSP-PRO-E"),
+        ProyectoEntidadConvocanteDto.class, proyectoId, proyectoEntidadConvocanteId);
 
     // then: 204
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -155,18 +156,20 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
   @Test
   public void findById_WithExistingId_ReturnsProyectoEntidadConvocante() throws Exception {
     // given: existing id
+    Long proyectoId = 1L;
     Long proyectoEntidadConvocanteId = 1L;
 
     // when: find by existing id
-    final ResponseEntity<ProyectoEntidadConvocante> response = restTemplate.exchange(
-        ProyectoEntidadConvocanteController.REQUEST_MAPPING + PATH_PARAMETER_ID, HttpMethod.GET,
-        buildRequest(null, (ProyectoEntidadConvocante) null, "CSP-PRO-E"), ProyectoEntidadConvocante.class,
-        proyectoEntidadConvocanteId);
+    final ResponseEntity<ProyectoEntidadConvocanteDto> response = restTemplate.exchange(
+        ProyectoEntidadConvocanteController.REQUEST_MAPPING
+            + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE,
+        HttpMethod.GET, buildRequest(null, (ProyectoEntidadConvocanteDto) null, "CSP-PRO-E"),
+        ProyectoEntidadConvocanteDto.class, proyectoId, proyectoEntidadConvocanteId);
 
     // then: response is OK
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    // and the requested ProyectoEntidadConvocante is resturned
-    ProyectoEntidadConvocante proyectoEntidadConvocante = response.getBody();
+    // and the requested ProyectoEntidadConvocanteDto is resturned
+    ProyectoEntidadConvocanteDto proyectoEntidadConvocante = response.getBody();
     Assertions.assertThat(proyectoEntidadConvocante.getId()).as("getId()").isEqualTo(proyectoEntidadConvocanteId);
   }
 
