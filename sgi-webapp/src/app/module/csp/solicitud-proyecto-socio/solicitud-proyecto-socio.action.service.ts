@@ -7,29 +7,31 @@ import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proy
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { SolicitudProyectoPeriodoPagoService } from '@core/services/csp/solicitud-proyecto-periodo-pago.service';
 import { SolicitudProyectoSocioPeriodoPagoFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.fragment';
-import { Observable, throwError } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
+import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-periodo-justificaciones/solicitud-proyecto-periodo-justificaciones.fragment';
+import { SolicitudProyectoPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-periodo-justificacion.service';
 
 @Injectable()
 export class SolicitudProyectoSocioActionService extends ActionService {
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
-    PERIODOS_PAGOS: 'periodos-pagos'
+    PERIODOS_PAGOS: 'periodos-pagos',
+    PERIODOS_JUSTIFICACION: 'periodos-justificacion',
   };
 
-  solicitudId: number;
+  private datosGenerales: SolicitudProyectoSocioDatosGeneralesFragment;
+  private periodosPago: SolicitudProyectoSocioPeriodoPagoFragment;
+  private periodoJustificaciones: SolicitudProyectoPeriodoJustificacionesFragment;
 
-  datosGenerales: SolicitudProyectoSocioDatosGeneralesFragment;
-  periodosPago: SolicitudProyectoSocioPeriodoPagoFragment;
-
-  solicitudProyectoSocio: ISolicitudProyectoSocio;
-  selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
+  private solicitudId: number;
+  private solicitudProyectoSocio: ISolicitudProyectoSocio;
+  private selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
 
   constructor(
     logger: NGXLogger,
     solicitudService: SolicitudService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
-    solicitudProyectoPeriodoPagoService: SolicitudProyectoPeriodoPagoService
+    solicitudProyectoPeriodoPagoService: SolicitudProyectoPeriodoPagoService,
+    solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService
   ) {
     super();
     this.solicitudProyectoSocio = {} as ISolicitudProyectoSocio;
@@ -45,8 +47,23 @@ export class SolicitudProyectoSocioActionService extends ActionService {
       logger, this.solicitudProyectoSocio?.id, solicitudProyectoSocioService, solicitudService, this);
     this.periodosPago = new SolicitudProyectoSocioPeriodoPagoFragment(logger, this.solicitudProyectoSocio?.id,
       solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService);
+    this.periodoJustificaciones = new SolicitudProyectoPeriodoJustificacionesFragment(logger, this.solicitudProyectoSocio?.id,
+      solicitudProyectoSocioService, solicitudProyectoPeriodoJustificacionService, this);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.PERIODOS_PAGOS, this.periodosPago);
+    this.addFragment(this.FRAGMENT.PERIODOS_JUSTIFICACION, this.periodoJustificaciones);
+  }
+
+  getSolicitudId(): number {
+    return this.solicitudId;
+  }
+
+  getSolicitudProyectoSocio(): ISolicitudProyectoSocio {
+    return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : this.solicitudProyectoSocio;
+  }
+
+  getSelectedSolicitudProyectoSocios(): ISolicitudProyectoSocio[] {
+    return this.selectedSolicitudProyectoSocios;
   }
 }

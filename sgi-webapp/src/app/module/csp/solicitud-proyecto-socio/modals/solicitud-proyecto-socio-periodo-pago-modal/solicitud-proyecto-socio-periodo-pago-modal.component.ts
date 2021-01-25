@@ -8,7 +8,6 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { tap } from 'rxjs/operators';
 import { RangeValidator } from '@core/validators/range-validator';
 
 const MSG_ANADIR = marker('botones.aniadir');

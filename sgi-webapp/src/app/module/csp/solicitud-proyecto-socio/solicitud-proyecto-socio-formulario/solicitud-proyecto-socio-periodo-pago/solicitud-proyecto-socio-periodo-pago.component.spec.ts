@@ -11,10 +11,29 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from '@shared/shared.module';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { ISolicitudProyectoSocioState } from '../../../solicitud/solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 
 describe('SolicitudProyectoSocioPeriodoPagoComponent', () => {
   let component: SolicitudProyectoSocioPeriodoPagoComponent;
   let fixture: ComponentFixture<SolicitudProyectoSocioPeriodoPagoComponent>;
+
+  const solicitudProyectoSocio: ISolicitudProyectoSocio = {
+    empresa: undefined,
+    id: undefined,
+    importeSolicitado: undefined,
+    mesFin: undefined,
+    mesInicio: undefined,
+    numInvestigadores: undefined,
+    rolSocio: undefined,
+    solicitudProyectoDatos: undefined
+  };
+
+  const state: ISolicitudProyectoSocioState = {
+    solicitudId: 1,
+    solicitudProyectoSocio,
+    selectedSolicitudProyectoSocios: []
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,6 +60,9 @@ describe('SolicitudProyectoSocioPeriodoPagoComponent', () => {
   }));
 
   beforeEach(() => {
+    history.pushState(state.solicitudProyectoSocio, 'solicitudProyectoSocio');
+    history.pushState(state.selectedSolicitudProyectoSocios, 'selectedSolicitudProyectoSocios');
+    history.pushState(state.solicitudId, 'solicitudId');
     fixture = TestBed.createComponent(SolicitudProyectoSocioPeriodoPagoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

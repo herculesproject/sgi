@@ -37,7 +37,7 @@ import { SgiFileUploadComponent } from './file-upload/file-upload.component';
     SearchEmpresaEconomicaModalComponent,
     SelectConvocatoriaComponent,
     SearchConvocatoriaModalComponent,
-    SgiFileUploadComponent
+    SgiFileUploadComponent,
   ],
   imports: [
     CommonModule,
@@ -59,7 +59,7 @@ import { SgiFileUploadComponent } from './file-upload/file-upload.component';
     SelectPersonaComponent,
     SelectEmpresaEconomicaComponent,
     SelectConvocatoriaComponent,
-    SgiFileUploadComponent
+    SgiFileUploadComponent,
   ]
 })
 export class SharedModule {

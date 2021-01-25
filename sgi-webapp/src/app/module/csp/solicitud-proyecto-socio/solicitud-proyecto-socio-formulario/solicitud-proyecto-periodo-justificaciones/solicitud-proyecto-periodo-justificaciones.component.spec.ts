@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SolicitudProyectoPeriodoJustificacionesComponent } from './solicitud-proyecto-periodo-justificaciones.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,16 +9,14 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { SolicitudProyectoSocioDatosGeneralesComponent } from './solicitud-proyecto-socio-datos-generales.component';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { ISolicitudProyectoSocioState } from '../../../solicitud/solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 
-describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
-  let component: SolicitudProyectoSocioDatosGeneralesComponent;
-  let fixture: ComponentFixture<SolicitudProyectoSocioDatosGeneralesComponent>;
+describe('SolicitudProyectoPeriodoJustificacionesComponent', () => {
+  let component: SolicitudProyectoPeriodoJustificacionesComponent;
+  let fixture: ComponentFixture<SolicitudProyectoPeriodoJustificacionesComponent>;
 
   const solicitudProyectoSocio: ISolicitudProyectoSocio = {
     empresa: undefined,
@@ -39,7 +38,7 @@ describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SolicitudProyectoSocioDatosGeneralesComponent
+        SolicitudProyectoPeriodoJustificacionesComponent
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -55,7 +54,6 @@ describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
       ],
       providers: [
         SolicitudProyectoSocioActionService,
-        SgiAuthService
       ],
     })
       .compileComponents();
@@ -65,7 +63,7 @@ describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
     history.pushState(state.solicitudProyectoSocio, 'solicitudProyectoSocio');
     history.pushState(state.selectedSolicitudProyectoSocios, 'selectedSolicitudProyectoSocios');
     history.pushState(state.solicitudId, 'solicitudId');
-    fixture = TestBed.createComponent(SolicitudProyectoSocioDatosGeneralesComponent);
+    fixture = TestBed.createComponent(SolicitudProyectoPeriodoJustificacionesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

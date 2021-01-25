@@ -18,7 +18,7 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
     key: number,
     private service: SolicitudProyectoSocioService,
     private solicitudService: SolicitudService,
-    private actionService: SolicitudProyectoSocioActionService
+    private actionService: SolicitudProyectoSocioActionService,
   ) {
     super(key);
     this.logger.debug(SolicitudProyectoSocioDatosGeneralesFragment.name, 'constructor()', 'start');
@@ -107,7 +107,6 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
     return observable$.pipe(
       map(result => {
         this.solicitudProyectoSocio = result;
-        this.actionService.solicitudProyectoSocio = result;
         return this.solicitudProyectoSocio.id;
       }),
       tap(() => this.logger.debug(SolicitudProyectoSocioDatosGeneralesFragment.name,
@@ -118,7 +117,7 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
   private create(solicitudProyectoSocio: ISolicitudProyectoSocio): Observable<ISolicitudProyectoSocio> {
     this.logger.debug(SolicitudProyectoSocioDatosGeneralesFragment.name,
       `create(solicitudProyectoSocio: ${solicitudProyectoSocio})`, 'start');
-    return this.solicitudService.findSolicitudProyectoDatos(this.actionService.solicitudId).pipe(
+    return this.solicitudService.findSolicitudProyectoDatos(this.actionService.getSolicitudId()).pipe(
       switchMap((solicitudProyectoDatos) => {
         solicitudProyectoSocio.solicitudProyectoDatos = solicitudProyectoDatos;
         return this.service.create(solicitudProyectoSocio);

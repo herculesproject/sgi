@@ -19,7 +19,7 @@ import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-soci
 
 const MSG_DELETE = marker('csp.solicitud.socios.colaboradores.borrar');
 
-interface ISolicitudProyectoSocioState {
+export interface ISolicitudProyectoSocioState {
   solicitudId: number;
   solicitudProyectoSocio: ISolicitudProyectoSocio;
   selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];

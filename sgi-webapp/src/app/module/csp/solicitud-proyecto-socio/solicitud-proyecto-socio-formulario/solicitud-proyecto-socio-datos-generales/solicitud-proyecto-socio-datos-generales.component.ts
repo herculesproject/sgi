@@ -112,7 +112,7 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
 
-    const proyectoSocios = this.actionService.selectedSolicitudProyectoSocios.filter(
+    const proyectoSocios = this.actionService.getSelectedSolicitudProyectoSocios().filter(
       element => element.empresa.personaRef === empresa.value.personaRef
         && element.id !== this.formPart.solicitudProyectoSocio.id);
     if (proyectoSocios.length > 0) {
