@@ -9,6 +9,9 @@ import { SolicitudProyectoPeriodoPagoService } from '@core/services/csp/solicitu
 import { SolicitudProyectoSocioPeriodoPagoFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.fragment';
 import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-periodo-justificaciones/solicitud-proyecto-periodo-justificaciones.fragment';
 import { SolicitudProyectoPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-periodo-justificacion.service';
+import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-equipo-socio/solicitud-proyecto-socio-equipo-socio.fragment';
+import { SolicitudProyectoEquipoSocioService } from '@core/services/csp/solicitud-proyecto-equipo-socio.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 
 @Injectable()
 export class SolicitudProyectoSocioActionService extends ActionService {
@@ -16,11 +19,13 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     DATOS_GENERALES: 'datos-generales',
     PERIODOS_PAGOS: 'periodos-pagos',
     PERIODOS_JUSTIFICACION: 'periodos-justificacion',
+    EQUIPO_SOCIO: 'equipo-socio'
   };
 
   private datosGenerales: SolicitudProyectoSocioDatosGeneralesFragment;
   private periodosPago: SolicitudProyectoSocioPeriodoPagoFragment;
   private periodoJustificaciones: SolicitudProyectoPeriodoJustificacionesFragment;
+  private socioEquipoSocio: SolicitudProyectoSocioEquipoSocioFragment;
 
   private solicitudId: number;
   private solicitudProyectoSocio: ISolicitudProyectoSocio;
@@ -31,7 +36,9 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     solicitudService: SolicitudService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
     solicitudProyectoPeriodoPagoService: SolicitudProyectoPeriodoPagoService,
-    solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService
+    solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService,
+    solicitudProyectoEquipoSocioService: SolicitudProyectoEquipoSocioService,
+    personaFisicaService: PersonaFisicaService
   ) {
     super();
     this.solicitudProyectoSocio = {} as ISolicitudProyectoSocio;
@@ -49,10 +56,13 @@ export class SolicitudProyectoSocioActionService extends ActionService {
       solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService);
     this.periodoJustificaciones = new SolicitudProyectoPeriodoJustificacionesFragment(logger, this.solicitudProyectoSocio?.id,
       solicitudProyectoSocioService, solicitudProyectoPeriodoJustificacionService, this);
+    this.socioEquipoSocio = new SolicitudProyectoSocioEquipoSocioFragment(logger, this.solicitudProyectoSocio?.id,
+      solicitudProyectoSocioService, solicitudProyectoEquipoSocioService, personaFisicaService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.PERIODOS_PAGOS, this.periodosPago);
     this.addFragment(this.FRAGMENT.PERIODOS_JUSTIFICACION, this.periodoJustificaciones);
+    this.addFragment(this.FRAGMENT.EQUIPO_SOCIO, this.socioEquipoSocio);
   }
 
   getSolicitudId(): number {

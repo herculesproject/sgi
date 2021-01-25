@@ -6,7 +6,6 @@ import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -72,28 +71,28 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       resultadosPrevistos: proyectoDatos.resultadosPrevistos,
       envioEtica: proyectoDatos.envioEtica
     };
-    this.actionService.setSociosColaboradores(proyectoDatos.colaborativo);
-    this.actionService.setEnableAddSocioColaborador(proyectoDatos.coordinadorExterno);
+    this.actionService.sociosColaboradores = proyectoDatos.colaborativo;
+    this.actionService.enableAddSocioColaborador = proyectoDatos.colaborativo;
 
     const form = this.getFormGroup();
     const coordinadorExterno = form.get('coordinadorExterno');
+    const colaborativo = form.get('colaborativo');
     this.subscriptions.push(
-      form.get('colaborativo').valueChanges.pipe(
-        tap((colaborativo) => {
-          if (colaborativo === false) {
+      colaborativo.valueChanges.subscribe(
+        (value) => {
+          if (value === false) {
             coordinadorExterno.disable();
           } else {
             coordinadorExterno.enable();
             coordinadorExterno.setValue(undefined);
           }
-          this.actionService.setSociosColaboradores = colaborativo;
-        })
-      ).subscribe()
+          this.actionService.sociosColaboradores = value;
+        }
+      )
     );
     this.subscriptions.push(
-      coordinadorExterno.valueChanges.pipe(
-        tap((value) => this.actionService.setEnableAddSocioColaborador = value)
-      ).subscribe()
+      colaborativo.valueChanges.subscribe(
+        (value) => this.actionService.enableAddSocioColaborador = value)
     );
 
     this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,

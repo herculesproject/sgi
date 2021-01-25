@@ -25,11 +25,6 @@ import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitu
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
-import { ROUTE_NAMES } from '@core/route.names';
-import { CSP_ROUTE_NAMES } from '../csp-route-names';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-
-const MSG_SOLICITUD_PROYECTO_SOCIO = marker('eti.memoria.link.peticionEvaluacion');
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
@@ -50,7 +45,7 @@ export class SolicitudActionService extends ActionService {
   private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
   private hitos: SolicitudHitosFragment;
   private equipoProyecto: SolicitudEquipoProyectoFragment;
-  private sociosColaboradores: SolicitudSociosColaboradoresFragment;
+  private socioColaboradores: SolicitudSociosColaboradoresFragment;
 
   solicitud: ISolicitud;
 
@@ -100,7 +95,7 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoDatosService, convocatoriaService, this);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(logger, this.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService);
-    this.sociosColaboradores = new SolicitudSociosColaboradoresFragment(logger, this.solicitud?.id, solicitudService,
+    this.socioColaboradores = new SolicitudSociosColaboradoresFragment(logger, this.solicitud?.id, solicitudService,
       solicitudProyectoSocioService, empresaEconomicaService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
@@ -109,7 +104,7 @@ export class SolicitudActionService extends ActionService {
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
     this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
-    this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.sociosColaboradores);
+    this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.socioColaboradores);
 
     this.checkSociosColaboradores();
   }
@@ -173,7 +168,7 @@ export class SolicitudActionService extends ActionService {
    * Indica si se puede mostrar la pestaña SociosColaboradores
    */
   get isSociosColaboradores(): boolean {
-    return this.sociosColaboradores.isSociosColaboradores;
+    return this.socioColaboradores.isSociosColaboradores;
   }
 
   /**
@@ -181,8 +176,8 @@ export class SolicitudActionService extends ActionService {
    *
    * @param value Valor boolean
    */
-  setSociosColaboradores(value: boolean) {
-    this.sociosColaboradores.isSociosColaboradores = value;
+  set sociosColaboradores(value: boolean) {
+    this.socioColaboradores.isSociosColaboradores = value;
   }
 
   /**
@@ -190,8 +185,8 @@ export class SolicitudActionService extends ActionService {
    *
    * @param value Valor boolean
    */
-  setEnableAddSocioColaborador(value: boolean) {
-    this.sociosColaboradores.enableAddSocioColaborador = value;
+  set enableAddSocioColaborador(value: boolean) {
+    this.socioColaboradores.enableAddSocioColaborador = value;
   }
 
   /**
@@ -204,13 +199,13 @@ export class SolicitudActionService extends ActionService {
     if (!this.proyectoDatos.isInitialized() && id) {
       const subscription = this.solicitudService.findSolicitudProyectoDatos(id).subscribe(
         (proyectoDatos) => {
-          this.setSociosColaboradores(proyectoDatos ? proyectoDatos.colaborativo : false);
-          this.setEnableAddSocioColaborador(proyectoDatos ? proyectoDatos.coordinadorExterno : false);
+          this.sociosColaboradores = proyectoDatos ? proyectoDatos.colaborativo : false;
+          this.enableAddSocioColaborador = proyectoDatos ? proyectoDatos.colaborativo : false;
           this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'end');
         },
         (error) => {
-          this.setSociosColaboradores(false);
-          this.setEnableAddSocioColaborador(false);
+          this.sociosColaboradores = false;
+          this.enableAddSocioColaborador = false;
           this.logger.error(SolicitudActionService.name, 'checkSociosColaboradores()', error);
         }
       );

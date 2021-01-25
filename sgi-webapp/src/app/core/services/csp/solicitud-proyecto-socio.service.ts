@@ -13,6 +13,8 @@ import { Observable } from 'rxjs';
 import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
 import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
 import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
+import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
+import { ISolicitudProyectoEquipoSocioBackend, SolicitudProyectoEquipoSocioService } from './solicitud-proyecto-equipo-socio.service';
 
 export interface ISolicitudProyectoSocioBackend {
   id: number;
@@ -130,6 +132,23 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
       `${this.endpointUrl}/${id}/solicitudproyectoperiodojustificaciones`, options).pipe(
         tap(() => this.logger.debug(SolicitudProyectoSocioService.name,
           `findAllSolicitudProyectoPeriodoJustificacion(id: ${id})`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Devuelve el listado de ISolicitudProyectoEquipoSocio de un ISolicitudProyectoSocio
+   *
+   * @param id Id del ISolicitudProyectoSocio
+   */
+  findAllSolicitudProyectoEquipoSocio(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<ISolicitudProyectoEquipoSocio>> {
+    this.logger.debug(SolicitudProyectoSocioService.name,
+      `findAllSolicitudProyectoEquipoSocio(id: ${id})`, '-', 'start');
+    return this.find<ISolicitudProyectoEquipoSocioBackend, ISolicitudProyectoEquipoSocio>(
+      `${this.endpointUrl}/${id}/solicitudproyectoequiposocio`, options,
+      SolicitudProyectoEquipoSocioService.CONVERTER).pipe(
+        tap(() => this.logger.debug(SolicitudProyectoSocioService.name,
+          `findAllSolicitudProyectoEquipoSocio(id: ${id})`, '-', 'end'))
       );
   }
 }

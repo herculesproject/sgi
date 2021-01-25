@@ -44,7 +44,6 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
   displayedColumns = ['empresa', 'rolSocio', 'numInvestigadores', 'mesInicio', 'mesFin', 'importeSolicitado', 'acciones'];
 
   dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocio>>();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
@@ -66,6 +65,17 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
         this.dataSource.data = proyectoSocios;
       }
     );
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (wrapper, property) => {
+      switch (property) {
+        case 'empresa':
+          return wrapper.value.empresa.razonSocial;
+        case 'rolSocio':
+          return wrapper.value.rolSocio.nombre;
+        default:
+          return wrapper.value[property];
+      }
+    };
     this.subscriptions.push(subscription);
     this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'end');
   }
