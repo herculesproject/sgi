@@ -11,7 +11,7 @@
           <mat-label>{{'csp.modal.entidad-financiadora.empresa-economica' | translate}}</mat-label>
           <sgi-select-empresa-economica formControlName="empresaEconomica"
             placeholder="{{'csp.modal.entidad-financiadora.empresa-economica' | translate}}"
-            [disabled]="data.entidad.empresa || data.readonly" [filter]="data.selectedEmpresas" required>
+            [filter]="data.selectedEmpresas" required>
           </sgi-select-empresa-economica>
           <mat-error *ngIf="formGroup.controls.empresaEconomica.errors?.required">
             {{'csp.modal.entidad-financiadora.empresa-economica.error.requerido' | translate}}
@@ -63,9 +63,12 @@
             <mat-label>{{'csp.modal.entidad-financiadora.porcentaje-financiacion' | translate}}
             </mat-label>
             <input matInput formControlName="porcentajeFinanciacion" type="number" id="porcentajeFinanciacion" min="0"
-              step="1" placeholder="{{'csp.modal.entidad-financiadora.porcentaje-financiacion' | translate}}">
+              max="100" step="1" placeholder="{{'csp.modal.entidad-financiadora.porcentaje-financiacion' | translate}}">
             <mat-error *ngIf="formGroup.controls.porcentajeFinanciacion.errors?.min">
               {{'csp.modal.entidad-financiadora.porcentaje-financiacion.error.min' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.porcentajeFinanciacion.errors?.max">
+              {{'csp.modal.entidad-financiadora.porcentaje-financiacion.error.max' | translate}}
             </mat-error>
           </mat-form-field>
         </div>

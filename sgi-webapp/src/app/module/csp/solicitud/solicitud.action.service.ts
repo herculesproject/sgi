@@ -16,7 +16,7 @@ import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solici
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
@@ -25,6 +25,9 @@ import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitu
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
+import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.fragment';
+import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
+
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
@@ -36,7 +39,8 @@ export class SolicitudActionService extends ActionService {
     PROYECTO_DATOS: 'proyectoDatos',
     HITOS: 'hitos',
     EQUIPO_PROYECTO: 'equipoProyecto',
-    SOCIOS_COLABORADORES: 'sociosColaboradores'
+    SOCIOS_COLABORADORES: 'sociosColaboradores',
+    ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -46,8 +50,10 @@ export class SolicitudActionService extends ActionService {
   private hitos: SolicitudHitosFragment;
   private equipoProyecto: SolicitudEquipoProyectoFragment;
   private socioColaboradores: SolicitudSociosColaboradoresFragment;
+  private entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
 
   solicitud: ISolicitud;
+  readonly = false;
 
   showHitos$ = new BehaviorSubject<boolean>(false);
 
@@ -66,7 +72,8 @@ export class SolicitudActionService extends ActionService {
     solicitudDocumentoService: SolicitudDocumentoService,
     solicitudProyectoDatosService: SolicitudProyectoDatosService,
     solicitudProyectoEquipoService: SolicitudProyectoEquipoService,
-    solicitudProyectoSocioService: SolicitudProyectoSocioService
+    solicitudProyectoSocioService: SolicitudProyectoSocioService,
+    solicitudEntidadFinanciadoraService: SolicitudProyectoEntidadFinanciadoraAjenaService
   ) {
     super();
     this.solicitud = {
@@ -97,6 +104,8 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoEquipoService);
     this.socioColaboradores = new SolicitudSociosColaboradoresFragment(logger, this.solicitud?.id, solicitudService,
       solicitudProyectoSocioService, empresaEconomicaService);
+    this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(logger, this.solicitud?.id, solicitudService,
+      solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
@@ -105,8 +114,10 @@ export class SolicitudActionService extends ActionService {
     this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
     this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
     this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.socioColaboradores);
+    this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
 
     this.checkSociosColaboradores();
+
   }
 
   getDatosGeneralesSolicitud(): ISolicitud {
@@ -120,23 +131,30 @@ export class SolicitudActionService extends ActionService {
 
   existsDatosProyectos(): void {
     this.logger.debug(SolicitudActionService.name, 'existsDatosProyectos()', 'start');
+
+    let existsDatosProyecto$: Observable<boolean>;
     if (this.proyectoDatos.isInitialized()) {
-      this.equipoProyecto.existsDatosProyecto = Boolean(this.proyectoDatos.solicitudProyectoDatos.id) ||
+      const existsDatosProyecto = Boolean(this.proyectoDatos.solicitudProyectoDatos.id) ||
         !this.proyectoDatos.hasErrors();
+      existsDatosProyecto$ = of(existsDatosProyecto);
+    } else if (this.solicitud?.id) {
+      existsDatosProyecto$ = this.solicitudService.existsSolictudProyectoDatos(this.solicitud?.id);
     } else {
-      const id = this.solicitud?.id;
-      if (id) {
-        const subscription = this.solicitudService.existsSolictudProyectoDatos(id).subscribe(
-          res => {
-            this.equipoProyecto.existsDatosProyecto = res;
-          },
-          () => {
-            this.equipoProyecto.existsDatosProyecto = false;
-          }
-        );
-        this.subscriptions.push(subscription);
-      }
+      existsDatosProyecto$ = of(false);
     }
+
+    const subscription = existsDatosProyecto$.subscribe(
+      exists => {
+        this.equipoProyecto.existsDatosProyecto = exists;
+        this.entidadesFinanciadoras.existsDatosProyecto = exists;
+      },
+      () => {
+        this.equipoProyecto.existsDatosProyecto = false;
+        this.entidadesFinanciadoras.existsDatosProyecto = false;
+      }
+    );
+    this.subscriptions.push(subscription);
+
     this.logger.debug(SolicitudActionService.name, 'existsDatosProyectos()', 'end');
   }
 

@@ -69,10 +69,14 @@ export class EntidadFinanciadoraModalComponent extends
 
   protected getDatosForm(): IEntidadFinanciadora {
     this.logger.debug(EntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'start');
+
+    const fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
+    const tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
+
     const entidad = this.data.entidad;
     entidad.empresa = this.formGroup.get('empresaEconomica').value;
-    entidad.fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
-    entidad.tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
+    entidad.fuenteFinanciacion = typeof fuenteFinanciacion === 'string' ? undefined : fuenteFinanciacion;
+    entidad.tipoFinanciacion = typeof tipoFinanciacion === 'string' ? undefined : tipoFinanciacion;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
     this.logger.debug(EntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'end');
     return entidad;
@@ -81,10 +85,18 @@ export class EntidadFinanciadoraModalComponent extends
   protected getFormGroup(): FormGroup {
     this.logger.debug(EntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
-      empresaEconomica: new FormControl(this.data.entidad.empresa),
+      empresaEconomica: new FormControl(
+        {
+          value: this.data.entidad.empresa,
+          disabled: this.data.entidad.empresa || this.data.readonly
+        },
+        [Validators.required]),
       fuenteFinanciacion: new FormControl(this.data.entidad.fuenteFinanciacion),
       tipoFinanciacion: new FormControl(this.data.entidad.tipoFinanciacion),
-      porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion, [Validators.min(0)])
+      porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion, [
+        Validators.min(0),
+        Validators.max(100)
+      ])
     });
     if (this.data.readonly) {
       formGroup.disable();

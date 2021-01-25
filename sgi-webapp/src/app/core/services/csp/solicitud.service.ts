@@ -23,6 +23,8 @@ import { PersonaFisicaService } from '../sgp/persona-fisica.service';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { SolicitudProyectoSocioService, ISolicitudProyectoSocioBackend } from './solicitud-proyecto-socio.service';
 import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
+import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
+import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend, SolicitudProyectoEntidadFinanciadoraAjenaService } from './solicitud-proyecto-entidad-financiadora-ajena.service';
 
 
 interface ISolicitudBackend {
@@ -313,7 +315,6 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
-
   /**
    * Recupera los ISolicitudProyectoSocio de la solicitud
    *
@@ -334,4 +335,23 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
           `findAllSolicitudProyectoSocio(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
+
+  /**
+   * Devuelve las entidades financiadoras de una solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   * @param options opciones de busqueda
+   */
+  findAllSolicitudProyectoEntidadFinanciadora(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudProyectoEntidadFinanciadoraAjena>> {
+    this.logger.debug(SolicitudService.name,
+      `findAllSolicitudProyectoEntidadFinanciadora(${solicitudId}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectoentidadfinanciadoraajenas`;
+    return this.find<ISolicitudProyectoEntidadFinanciadoraAjenaBackend, ISolicitudProyectoEntidadFinanciadoraAjena>(
+      endpointUrl, options, SolicitudProyectoEntidadFinanciadoraAjenaService.CONVERTER)
+      .pipe(
+        tap(() => this.logger.debug(SolicitudService.name,
+          `findAllSolicitudProyectoEntidadFinanciadora(${solicitudId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
+      );
+  }
+
 }
