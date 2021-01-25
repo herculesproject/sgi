@@ -12,6 +12,7 @@ import { ProyectoSocioDatosGeneralesComponent } from './proyecto-socio-formulari
 import { PROYECTO_SOCIO_ROUTE_NAMES } from './proyecto-socio-route-names';
 import { ProyectoSocioGuard } from './proyecto-socio.guard';
 import { ProyectoSocioEquipoComponent } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.component';
+import { ProyectoSocioPeriodoPagoComponent } from './proyecto-socio-formulario/proyecto-socio-periodo-pago/proyecto-socio-periodo-pago.component';
 
 
 const MSG_NEW_TITLE = marker('csp.proyecto.socios.crear.titulo');
@@ -41,6 +42,11 @@ const routes: SgiRoutes = [
         path: PROYECTO_SOCIO_ROUTE_NAMES.EQUIPO,
         component: ProyectoSocioEquipoComponent,
         canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_SOCIO_ROUTE_NAMES.PERIODO_PAGO,
+        component: ProyectoSocioPeriodoPagoComponent,
+        canDeactivate: [FragmentGuard]
       }
     ]
   },
@@ -66,6 +72,11 @@ const routes: SgiRoutes = [
       {
         path: PROYECTO_SOCIO_ROUTE_NAMES.EQUIPO,
         component: ProyectoSocioEquipoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_SOCIO_ROUTE_NAMES.PERIODO_PAGO,
+        component: ProyectoSocioPeriodoPagoComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

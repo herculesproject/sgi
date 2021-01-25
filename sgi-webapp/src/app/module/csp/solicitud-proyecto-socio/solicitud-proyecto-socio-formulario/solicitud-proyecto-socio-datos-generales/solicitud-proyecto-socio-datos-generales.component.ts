@@ -5,17 +5,16 @@ import { NGXLogger } from 'ngx-logger';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { IRolSocio } from '@core/models/csp/rol-socio';
-import { Observable, Subscription, merge, of, from } from 'rxjs';
+import { Observable, Subscription, merge } from 'rxjs';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { RolSocioService } from '@core/services/csp/rol-socio.service';
-import { map, startWith, tap, catchError, mergeMap, switchMap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyecto-socio-datos-generales.fragment';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 
-const MSG_ERROR_INIT = marker('csp.solicitud.equipo.socio.rol.error.cargar');
+
+const MSG_ERROR_INIT = marker('csp.solicitud-proyecto-socio.rol.error.cargar');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-datos-generales',

@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
 import { ProyectoSocioEquipoService, IProyectoSocioEquipoBackend } from './proyecto-socio-equipo.service';
+import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 
 export interface IProyectoSocioBackend {
   id: number;
@@ -98,6 +99,21 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
       ProyectoSocioEquipoService.CONVERTER).pipe(
         tap(() => this.logger.debug(ProyectoSocioService.name,
           `findAllProyectoEquipoSocio(id: ${id})`, '-', 'end'))
+      );
+  }
+  /**
+   * Devuelve el listado de IProyectoSocioPeriodoPago de un IProyectoSocio
+   *
+   * @param id Id del proyecto socio
+   */
+  findAllProyectoSocioPeriodoPago(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IProyectoSocioPeriodoPago>> {
+    this.logger.debug(ProyectoSocioService.name,
+      `findAllProyectoSocioPeriodoPago(id: ${id})`, '-', 'start');
+    return this.find<IProyectoSocioPeriodoPago, IProyectoSocioPeriodoPago>(
+      `${this.endpointUrl}/${id}/proyectosocioperiodopagos`, options).pipe(
+        tap(() => this.logger.debug(ProyectoSocioService.name,
+          `findAllProyectoSocioPeriodoPago(id: ${id})`, '-', 'end'))
       );
   }
 }

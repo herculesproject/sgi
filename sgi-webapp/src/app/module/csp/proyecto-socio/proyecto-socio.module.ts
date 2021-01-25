@@ -12,6 +12,8 @@ import { ProyectoSocioDatosGeneralesComponent } from './proyecto-socio-formulari
 import { ProyectoSocioGuard } from './proyecto-socio.guard';
 import { ProyectoSocioEquipoModalComponent } from './modals/proyecto-socio-equipo-modal/proyecto-socio-equipo-modal.component';
 import { ProyectoSocioEquipoComponent } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.component';
+import { ProyectoSocioPeriodoPagoComponent } from './proyecto-socio-formulario/proyecto-socio-periodo-pago/proyecto-socio-periodo-pago.component';
+import { ProyectoSocioPeriodoPagoModalComponent } from './modals/proyecto-socio-periodo-pago-modal/proyecto-socio-periodo-pago-modal.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ProyectoSocioEquipoComponent } from './proyecto-socio-formulario/proyec
     ProyectoSocioEditarComponent,
     ProyectoSocioDatosGeneralesComponent,
     ProyectoSocioEquipoComponent,
-    ProyectoSocioEquipoModalComponent
+    ProyectoSocioEquipoModalComponent,
+    ProyectoSocioPeriodoPagoComponent,
+    ProyectoSocioPeriodoPagoModalComponent
   ],
   imports: [
     SharedModule,

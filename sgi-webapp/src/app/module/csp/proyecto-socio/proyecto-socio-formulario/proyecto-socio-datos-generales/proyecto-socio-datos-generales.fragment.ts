@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { tap, map, switchMap } from 'rxjs/operators';
-import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
@@ -19,8 +18,7 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
     key: number,
     private proyectoId: number,
     private service: ProyectoSocioService,
-    private empresaEconomicaService: EmpresaEconomicaService,
-    private actionService: ProyectoSocioActionService
+    private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(key);
     this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, 'constructor()', 'start');
