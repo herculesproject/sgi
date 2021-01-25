@@ -8,6 +8,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -217,6 +218,43 @@ public class SolicitudProyectoSocioIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocio = response.getBody();
     Assertions.assertThat(solicitudProyectoEquipoSocio.size()).isEqualTo(1);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+  }
+
+  /**
+   * 
+   * SOLICITUD PROYECTO PERIODO JUSTIFICANTE
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllSolicitudProyectoPeriodoJustificacion_WithPagingSortingAndFiltering_ReturnsSolicitudPeriodoJustificacionSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "solicitudProyectoSocio.id:1";
+
+    Long solicitudId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoperiodojustificaciones")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
+
+    final ResponseEntity<List<SolicitudProyectoPeriodoJustificacion>> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<SolicitudProyectoPeriodoJustificacion>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<SolicitudProyectoPeriodoJustificacion> solicitudProyectoPeriodoJustificacion = response.getBody();
+    Assertions.assertThat(solicitudProyectoPeriodoJustificacion.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");

@@ -81,8 +81,6 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newSolicitudProyectoPeriodoPago.getSolicitudProyectoSocio()));
 
-    // TODO is editable solicitud
-
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoPagoExistentes);
 

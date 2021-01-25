@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
@@ -39,16 +40,20 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   private final SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository;
 
+  private final SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository;
+
   private final SolicitudRepository solicitudRepository;
 
   public SolicitudProyectoSocioServiceImpl(SolicitudProyectoSocioRepository repository,
       SolicitudRepository solicitudRepository,
       SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository,
-      SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository) {
+      SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository,
+      SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
     this.solicitudProyectoEquipoSocioRepository = solicitudProyectoEquipoSocioRepository;
     this.solicitudProyectoPeriodoPagoRepository = solicitudProyectoPeriodoPagoRepository;
+    this.solicitudProyectoPeriodoJustificacionRepository = solicitudProyectoPeriodoJustificacionRepository;
 
   }
 
@@ -152,6 +157,7 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
     solicitudProyectoPeriodoPagoRepository.deleteBySolicitudProyectoSocioId(id);
     solicitudProyectoEquipoSocioRepository.deleteBySolicitudProyectoSocioId(id);
+    solicitudProyectoPeriodoJustificacionRepository.deleteBySolicitudProyectoSocioId(id);
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
 

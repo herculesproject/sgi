@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
@@ -44,17 +45,21 @@ public class SolicitudProyectoSocioServiceTest {
   private SolicitudRepository solicitudRepository;
 
   @Mock
-  private SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepositor;
+  private SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository;
 
   @Mock
-  private SolicitudProyectoEquipoSocioRepository solicitudProyectoPeriodoPagoRepository;
+  private SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository;
+
+  @Mock
+  private SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository;
 
   private SolicitudProyectoSocioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudProyectoSocioServiceImpl(repository, solicitudRepository,
-        solicitudProyectoPeriodoPagoRepository, solicitudProyectoPeriodoPagoRepositor);
+        solicitudProyectoEquipoSocioRepository, solicitudProyectoPeriodoPagoRepository,
+        solicitudProyectoPeriodoJustificacionRepository);
   }
 
   @Test
