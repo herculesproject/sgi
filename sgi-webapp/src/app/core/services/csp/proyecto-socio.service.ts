@@ -6,10 +6,12 @@ import { IRolSocio } from '@core/models/csp/rol-socio';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
+import { ProyectoSocioEquipoService, IProyectoSocioEquipoBackend } from './proyecto-socio-equipo.service';
 
 export interface IProyectoSocioBackend {
   id: number;
@@ -82,4 +84,20 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
     );
   }
 
+  /**
+   * Devuelve el listado de IProyectoSocioEquipo de un IProyectoSocio
+   *
+   * @param id Id del IProyectoSocio
+   */
+  findAllProyectoEquipoSocio(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IProyectoSocioEquipo>> {
+    this.logger.debug(ProyectoSocioService.name,
+      `findAllProyectoEquipoSocio(id: ${id})`, '-', 'start');
+    return this.find<IProyectoSocioEquipoBackend, IProyectoSocioEquipo>(
+      `${this.endpointUrl}/${id}/proyectosocioequipos`, options,
+      ProyectoSocioEquipoService.CONVERTER).pipe(
+        tap(() => this.logger.debug(ProyectoSocioService.name,
+          `findAllProyectoEquipoSocio(id: ${id})`, '-', 'end'))
+      );
+  }
 }

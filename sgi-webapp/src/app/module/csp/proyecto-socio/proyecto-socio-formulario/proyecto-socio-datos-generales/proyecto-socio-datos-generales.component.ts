@@ -114,7 +114,7 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
 
   private loadSociosSelectedProyecto(): void {
     this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `loadSociosSelectedProyecto()`, 'start');
-    this.sociosSelectedProyecto = this.actionService.selectedProyectoSocios;
+    this.sociosSelectedProyecto = this.actionService.getSelectedProyectoSocios();
     this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `loadSociosSelectedProyecto()`, 'end');
   }
 

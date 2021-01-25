@@ -97,7 +97,7 @@ export class ProyectoActionService extends ActionService {
 
 
   /**
-   * Comprueba si es un proyecto colaborativo, si la pestaña fichaGeneral no esta inicializada 
+   * Comprueba si es un proyecto colaborativo, si la pestaña fichaGeneral no esta inicializada
    * y es una edicion se hace la consulta y si no se recupera el valor previo de isProyectoColavorativo.
    */
   checkProyectoColavorativo(): void {

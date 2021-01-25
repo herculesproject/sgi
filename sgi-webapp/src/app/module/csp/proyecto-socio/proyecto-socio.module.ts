@@ -10,13 +10,16 @@ import { ProyectoSocioEditarComponent } from './proyecto-socio-editar/proyecto-s
 import { ProyectoSocioRouting } from './proyecto-socio-routing.module';
 import { ProyectoSocioDatosGeneralesComponent } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.component';
 import { ProyectoSocioGuard } from './proyecto-socio.guard';
-
+import { ProyectoSocioEquipoModalComponent } from './modals/proyecto-socio-equipo-modal/proyecto-socio-equipo-modal.component';
+import { ProyectoSocioEquipoComponent } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.component';
 
 @NgModule({
   declarations: [
     ProyectoSocioCrearComponent,
     ProyectoSocioEditarComponent,
-    ProyectoSocioDatosGeneralesComponent
+    ProyectoSocioDatosGeneralesComponent,
+    ProyectoSocioEquipoComponent,
+    ProyectoSocioEquipoModalComponent
   ],
   imports: [
     SharedModule,

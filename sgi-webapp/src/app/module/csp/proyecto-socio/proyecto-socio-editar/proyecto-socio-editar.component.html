@@ -5,6 +5,10 @@
         [title]="'label.datos-generales' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_SOCIO_ROUTE_NAMES.EQUIPO]"
+        [title]="'csp.proyecto-socio-equipo.titulo' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO)">
+      </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>
   <mat-drawer-content class="mat-drawer-content">
