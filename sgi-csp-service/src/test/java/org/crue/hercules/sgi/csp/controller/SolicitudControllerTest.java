@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -22,16 +23,19 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -84,12 +88,16 @@ public class SolicitudControllerTest extends BaseControllerTest {
   @MockBean
   private SolicitudProyectoEquipoService solicitudProyectoEquipoService;
 
+  @MockBean
+  private SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/solicitudes";
   private static final String PATH_SOLICITUD_MODALIDADES = "/solicitudmodalidades";
   private static final String PATH_ESTADOS_SOLICITUD = "/estadosolicitudes";
+  private static final String PATH_ENTIDAD_FINANCIADORA_AJENA = "/solicitudproyectoentidadfinanciadoraajenas";
   private static final String PATH_TODOS = "/todos";
 
   @Test
@@ -979,6 +987,77 @@ public class SolicitudControllerTest extends BaseControllerTest {
     }
   }
 
+  /**
+   * 
+   * Solicitud proyecto entidad financiadora ajena
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void findAllSolicitudProyectoEntidadFinanciadoraAjena_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudProyectoEntidadFinanciadoraAjena para la
+    // Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudProyectoEntidadFinanciadoraAjena> solicitudProyectoEntidadFinanciadoraAjenas = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudProyectoEntidadFinanciadoraAjenas.add(generarMockSolicitudProyectoEntidadFinanciadoraAjena(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoEntidadFinanciadoraAjenaService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudProyectoEntidadFinanciadoraAjenas.size()
+              ? solicitudProyectoEntidadFinanciadoraAjenas.size()
+              : toIndex;
+          List<SolicitudProyectoEntidadFinanciadoraAjena> content = solicitudProyectoEntidadFinanciadoraAjenas
+              .subList(fromIndex, toIndex);
+          Page<SolicitudProyectoEntidadFinanciadoraAjena> pageResponse = new PageImpl<>(content, pageable,
+              solicitudProyectoEntidadFinanciadoraAjenas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_FINANCIADORA_AJENA, solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudProyectoEntidadFinanciadoraAjena
+        // del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudProyectoEntidadFinanciadoraAjena> solicitudProyectoEntidadFinanciadoraAjenasResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(),
+            new TypeReference<List<SolicitudProyectoEntidadFinanciadoraAjena>>() {
+            });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = solicitudProyectoEntidadFinanciadoraAjenasResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjena.getId()).isEqualTo(Long.valueOf(i));
+      Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjena.getEntidadRef())
+          .isEqualTo("entidad-" + String.format("%03d", i));
+    }
+  }
+
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
   public void findAllSolicitudProyectoSocio_Returns204() throws Exception {
@@ -1163,4 +1242,38 @@ public class SolicitudControllerTest extends BaseControllerTest {
     return solicitudProyectoSocio;
   }
 
+  /**
+   * Función que devuelve un objeto SolicitudProyectoEntidadFinanciadoraAjena
+   * 
+   * @param id id del SolicitudProyectoEntidadFinanciadoraAjena
+   * @return el objeto SolicitudProyectoEntidadFinanciadoraAjena
+   */
+  private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
+    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()//
+        .id(id == null ? 1 : id)//
+        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())//
+        .build();
+
+    FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()//
+        .id(id == null ? 1 : id)//
+        .activo(true)//
+        .build();
+
+    TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()//
+        .id(id == null ? 1 : id)//
+        .activo(true)//
+        .build();
+
+    SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = SolicitudProyectoEntidadFinanciadoraAjena
+        .builder()//
+        .id(id)//
+        .solicitudProyectoDatos(solicitudProyectoDatos)//
+        .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))//
+        .fuenteFinanciacion(fuenteFinanciacion)//
+        .tipoFinanciacion(tipoFinanciacion)//
+        .porcentajeFinanciacion(50)//
+        .build();
+
+    return solicitudProyectoEntidadFinanciadoraAjena;
+  }
 }
