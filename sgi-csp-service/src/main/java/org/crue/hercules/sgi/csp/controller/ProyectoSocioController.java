@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -42,16 +44,24 @@ public class ProyectoSocioController {
   /** ProyectoSocioEquipoService service */
   private final ProyectoSocioEquipoService proyectoSocioEquipoService;
 
+  /** ProyectoSocioPeriodoPagoService service */
+  private final ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
+
   /**
    * Instancia un nuevo ProyectoSocioController.
    * 
-   * @param proyectoSocioService       {@link ProyectoSocioService}.
-   * @param proyectoSocioEquipoService {@link ProyectoSocioEquipoService}
+   * @param proyectoSocioService            {@link ProyectoSocioService}.
+   * @param proyectoSocioEquipoService      {@link ProyectoSocioEquipoService}
+   * @param proyectoSocioService            {@link ProyectoSocioService}.
+   * @param proyectoSocioPeriodoPagoService {@link ProyectoSocioPeriodoPagoService}.
    */
   public ProyectoSocioController(ProyectoSocioService proyectoSocioService,
-      ProyectoSocioEquipoService proyectoSocioEquipoService) {
+      ProyectoSocioEquipoService proyectoSocioEquipoService,
+      ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService) {
     this.service = proyectoSocioService;
     this.proyectoSocioEquipoService = proyectoSocioEquipoService;
+    this.proyectoSocioPeriodoPagoService = proyectoSocioPeriodoPagoService;
+
   }
 
   /**
@@ -134,12 +144,13 @@ public class ProyectoSocioController {
   }
 
   /**
-   * Devuelve una lista paginada de {@link ProyectoSocioEquipo}
+   * Devuelve una lista paginada de {@link ProyectoSocioEquipo}**
    * 
-   * @param id     Identificador de {@link ProyectoSocio}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param id     Identificador de {@link ProyectoSocio}.*
+   * @param query  filtro de {@link QueryCriteria}.*
    * @param paging pageable.
    */
+
   @GetMapping("/{id}/proyectosocioequipos")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<ProyectoSocioEquipo>> findAllProyectoSocioEquipo(@PathVariable Long id,
@@ -154,6 +165,30 @@ public class ProyectoSocioController {
     }
 
     log.debug("findAllProyectoSocioEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoPeriodoPago}
+   * 
+   * @param id     Identificador de {@link SolicitudProyectoPeriodoPago}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectosocioperiodopagos")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<ProyectoSocioPeriodoPago>> findAllProyectoSocioPeriodoPago(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoSocioPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoSocioPeriodoPago> page = proyectoSocioPeriodoPagoService.findAllByProyectoSocio(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoSocioPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoSocioPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

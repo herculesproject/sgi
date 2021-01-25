@@ -13,6 +13,7 @@ DELETE FROM csp.solicitud_proyecto_equipo;
 DELETE FROM csp.solicitud_proyecto_datos;
 DELETE FROM csp.solicitud;
 DELETE FROM csp.proyecto_socio_equipo;
+DELETE FROM csp.proyecto_socio_periodo_pago;
 DELETE FROM csp.proyecto_socio;
 DELETE FROM csp.rol_proyecto;
 DELETE FROM csp.rol_socio;

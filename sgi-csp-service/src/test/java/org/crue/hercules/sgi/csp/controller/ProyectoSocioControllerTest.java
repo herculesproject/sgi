@@ -16,7 +16,9 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -51,6 +53,9 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoSocioEquipoService proyectoSocioEquipoService;
+
+  @MockBean
+  private ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/proyectosocios";
@@ -267,6 +272,104 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * proyecto socio periodo pago
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllProyectoSocioPeriodoPago_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoSocioPeriodoPago para la
+    // ProyectoSocioPeriodoPago
+    Long proyectoSocioId = 1L;
+
+    List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = generarMockProyectoSocioPeriodoPago(i);
+      proyectoSocioPeriodoPago.setImporte(new BigDecimal(i));
+      proyectoSocioPeriodoPagos.add(proyectoSocioPeriodoPago);
+
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoSocioPeriodoPagoService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > proyectoSocioPeriodoPagos.size() ? proyectoSocioPeriodoPagos.size() : toIndex;
+          List<ProyectoSocioPeriodoPago> content = proyectoSocioPeriodoPagos.subList(fromIndex, toIndex);
+          Page<ProyectoSocioPeriodoPago> pageResponse = new PageImpl<>(content, pageable,
+              proyectoSocioPeriodoPagos.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/proyectosocioperiodopagos", proyectoSocioId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoSocioPeriodoPago del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoSocioPeriodoPago> proyectoSocioResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ProyectoSocioPeriodoPago>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoSocioPeriodoPago proyectoPeriodoPagoRecuperado = proyectoSocioResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoPeriodoPagoRecuperado.getImporte()).isEqualTo(new BigDecimal(i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllProyectoSocioPeriodoPago_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoSocioPeriodoPago para la
+    // ProyectoSocio
+    Long proyectoSocioId = 1L;
+    List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPago = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoSocioPeriodoPagoService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<ProyectoSocioPeriodoPago> pageResponse = new PageImpl<>(proyectoSocioPeriodoPago, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/proyectosocioperiodopagos", proyectoSocioId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * proyecto socio equipo
    * 
    */
@@ -391,6 +494,38 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
         .build();
 
     return proyectoSocio;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoSocioPeriodoPago
+   * 
+   * @param id id del ProyectoSocioPeriodoPago
+   * 
+   * @return el objeto ProyectoSocioPeriodoPago
+   */
+  private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(id, "nombre-1", "descripcion-1", true);
+
+    Proyecto proyecto1 = Proyecto.builder()//
+        .id(id).titulo("proyecto 1").acronimo("PR1").fechaInicio(LocalDate.of(2020, 11, 20))
+        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE).build();
+
+    RolSocio rolSocio = RolSocio.builder()//
+        .id(id).abreviatura("001")//
+        .nombre("nombre-001")//
+        .descripcion("descripcion-001")//
+        .coordinador(Boolean.FALSE)//
+        .activo(Boolean.TRUE)//
+        .build();
+
+    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()//
+        .id(id).proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build();
+
+    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago(id, proyectoSocio1, 1,
+        new BigDecimal(3500), LocalDate.of(2021, 4, 10), null);
+
+    return proyectoSocioPeriodoPago;
   }
 
   /**
