@@ -21,6 +21,9 @@ import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-conv
 import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
 import { ProyectoPaqueteTrabajoComponent } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.component';
 import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquetes-trabajo-modal/proyecto-paquetes-trabajo-modal.component';
+import { ProyectoPlazosComponent } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.component';
+import { ProyectoPlazosModalComponent } from './modals/proyecto-plazos-modal/proyecto-plazos-modal.component';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquete
     ProyectoEntidadConvocantePlanPipe,
     ProyectoEntidadConvocanteModalComponent,
     ProyectoPaqueteTrabajoComponent,
-    ProyectoPaquetesTrabajoModalComponent],
+    ProyectoPaquetesTrabajoModalComponent,
+    ProyectoPlazosComponent,
+    ProyectoPlazosModalComponent],
   imports: [
     SharedModule,
     CommonModule,
@@ -46,7 +51,10 @@ import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquete
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule,
-    CspModalsModule
+    CspModalsModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
   ],
   providers: [
     ProyectoResolver,

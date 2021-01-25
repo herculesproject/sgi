@@ -1,8 +1,13 @@
 import { ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 
 export interface IRange {
-  inicio: number;
-  fin: number;
+  inicio: number | Date;
+  fin: number | Date;
+}
+
+export interface IRangeDates {
+  inicio: Date;
+  fin: Date;
 }
 
 export class RangeValidator {

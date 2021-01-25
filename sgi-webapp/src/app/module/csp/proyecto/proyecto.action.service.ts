@@ -21,6 +21,8 @@ import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-p
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
 
 
+import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
+import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -31,7 +33,8 @@ export class ProyectoActionService extends ActionService {
     SOCIOS: 'socios',
     HITOS: 'hitos',
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
-    PAQUETE_TRABAJO: 'paquete-trabajo'
+    PAQUETE_TRABAJO: 'paquete-trabajo',
+    PLAZOS: 'plazos'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -41,6 +44,7 @@ export class ProyectoActionService extends ActionService {
   private entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
   private paqueteTrabajo: ProyectoPaqueteTrabajoFragment;
   private paqueteTrabajoValue: boolean;
+  private plazos: ProyectoPlazosFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -66,6 +70,7 @@ export class ProyectoActionService extends ActionService {
     proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
     proyectoHitoService: ProyectoHitoService,
     proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
+    proyectoPlazoService: ProyectoPlazoService
   ) {
     super();
 
@@ -90,6 +95,9 @@ export class ProyectoActionService extends ActionService {
       this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService,
         proyectoHitoService, this.readonly);
       this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+
+      this.plazos = new ProyectoPlazosFragment(logger, this.proyecto?.id, proyectoService, proyectoPlazoService, this.readonly);
+      this.addFragment(this.FRAGMENT.PLAZOS, this.plazos);
 
       this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(
         logger, this.proyecto?.id, proyectoService,

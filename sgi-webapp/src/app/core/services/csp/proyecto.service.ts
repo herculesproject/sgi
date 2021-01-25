@@ -10,6 +10,7 @@ import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
+import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -263,16 +264,30 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
-  * Recupera los paquete trabajo de un proyecto
-  * @param idProyecto Identificador del proyecto.
-  * @returns Listado de paquete trabajo.
-  */
+   * Recupera los paquete trabajo de un proyecto
+   * @param idProyecto Identificador del proyecto.
+   * @returns Listado de paquete trabajo.
+   */
   findPaqueteTrabajoProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPaqueteTrabajo>> {
     this.logger.debug(ProyectoService.name, `findPaqueteTrabajoProyecto(${idProyecto}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectopaquetetrabajos`;
     return this.find<IProyectoPaqueteTrabajo, IProyectoPaqueteTrabajo>(endpointUrl, options)
       .pipe(
         tap(() => this.logger.debug(ProyectoService.name, `findPaqueteTrabajoProyecto(${idProyecto}, ${options})`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Recupera los plazos de un proyecto
+   * @param idProyecto Identificador del proyecto.
+   * @returns Listado de plazos.
+   */
+  findPlazosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPlazos>> {
+    this.logger.debug(ProyectoService.name, `findPlazosProyecto(${idProyecto}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectofases`;
+    return this.find<IProyectoPlazos, IProyectoPlazos>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name, `findPlazosProyecto(${idProyecto}, ${options})`, '-', 'end'))
       );
   }
 

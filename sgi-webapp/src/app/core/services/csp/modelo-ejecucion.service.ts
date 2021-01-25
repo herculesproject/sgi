@@ -81,6 +81,18 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     );
   }
 
+  /**
+   * Muestra todos los modelos tipo de fase de modelo ejecución proyecto
+   * @param id modelo de ejecucion
+   * @param options opciones de búsqueda.
+   */
+  findModeloTipoFaseModeloEjecucionProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFaseModeloEjecucionProyecto.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases/proyecto`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFaseModeloEjecucionProyecto.name}(id: ${id})`, '-', 'END'))
+    );
+  }
+
 
   /**
    * Muestra todos los modelos tipo de fase del modelo de ejecución
