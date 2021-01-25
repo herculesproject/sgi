@@ -6,7 +6,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, EMPTY, of } from 'rxjs';
+import { Observable, EMPTY, of, Subject } from 'rxjs';
 import { map, tap, switchMap, catchError } from 'rxjs/operators';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -23,6 +23,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   abiertoRequired: boolean;
   comentarioEstadoCancelado: boolean;
+
+  paquetesTrabajo$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private fb: FormBuilder,
@@ -163,6 +165,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     if (proyecto.convocatoria && this.isEdit()) {
       this.getFormGroup().controls.convocatoriaExterna.disable();
     }
+
+    this.subscriptions.push(
+      this.getFormGroup().get('paquetesTrabajo').valueChanges.subscribe((value) => {
+        this.paquetesTrabajo$.next(value)
+      })
+    );
 
     this.logger.debug(ProyectoFichaGeneralFragment.name,
       `${this.buildPatch.name}(proyecto: ${proyecto})`, 'end');

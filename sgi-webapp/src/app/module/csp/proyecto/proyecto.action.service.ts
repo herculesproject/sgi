@@ -17,6 +17,9 @@ import { ProyectoEntidadesConvocantesFragment } from './proyecto-formulario/proy
 import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
 import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
+import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
+import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
+
 
 
 @Injectable()
@@ -28,6 +31,7 @@ export class ProyectoActionService extends ActionService {
     SOCIOS: 'socios',
     HITOS: 'hitos',
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
+    PAQUETE_TRABAJO: 'paquete-trabajo'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -35,6 +39,8 @@ export class ProyectoActionService extends ActionService {
   private hitos: ProyectoHitosFragment;
   private socios: ProyectoSociosFragment;
   private entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
+  private paqueteTrabajo: ProyectoPaqueteTrabajoFragment;
+  private paqueteTrabajoValue: boolean;
 
   proyecto: IProyecto;
   readonly = false;
@@ -44,6 +50,9 @@ export class ProyectoActionService extends ActionService {
   }
 
   public disabledAddSocios$ = new BehaviorSubject<boolean>(false);
+  get getProyecto(): IProyecto {
+    return this.getDatosGeneralesProyecto();
+  }
 
   constructor(
     fb: FormBuilder,
@@ -56,6 +65,7 @@ export class ProyectoActionService extends ActionService {
     convocatoriaService: ConvocatoriaService,
     proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
     proyectoHitoService: ProyectoHitoService,
+    proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
   ) {
     super();
 
@@ -85,8 +95,22 @@ export class ProyectoActionService extends ActionService {
         logger, this.proyecto?.id, proyectoService,
         empresaEconomicaService);
       this.addFragment(this.FRAGMENT.ENTIDADES_CONVOCANTES, this.entidadesConvocantes);
+
+      this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(logger, this.proyecto?.id, proyectoService,
+        proyectoPaqueteTrabajoService, this.readonly);
+      this.addFragment(this.FRAGMENT.PAQUETE_TRABAJO, this.paqueteTrabajo);
     }
   }
+
+  /**
+   * Modifica la visibilidad de la pestaña paquete trabajo
+   *
+   * @param value Valor boolean
+   */
+  get disabledPaqueteTrabajo(): boolean {
+    return this.paqueteTrabajoValue;
+  }
+
 
   /**
    * Recupera los datos del proyecto del formulario de datos generales,

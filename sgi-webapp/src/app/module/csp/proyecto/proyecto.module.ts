@@ -19,6 +19,8 @@ import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/p
 import { ProyectoEntidadesConvocantesComponent } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.component';
 import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-convocante-plan.pipe';
 import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
+import { ProyectoPaqueteTrabajoComponent } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.component';
+import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquetes-trabajo-modal/proyecto-paquetes-trabajo-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entid
     ProyectoEntidadesConvocantesComponent,
     ProyectoEntidadConvocantePlanPipe,
     ProyectoEntidadConvocanteModalComponent,
-  ],
+    ProyectoPaqueteTrabajoComponent,
+    ProyectoPaquetesTrabajoModalComponent],
   imports: [
     SharedModule,
     CommonModule,

@@ -40,7 +40,7 @@ export class ProyectoSocioActionService extends ActionService {
 
     this.proyectoSocio = history.state.proyectoSocio;
     this.proyectoId = history.state.proyectoId;
-    this.selectedProyectoSocios = history.state.selectedProyectoSocios;
+    this.selectedProyectoSocios = history?.state?.selectedProyectoSocios;
 
     if (this.proyectoSocio?.id) {
       this.enableEdit();

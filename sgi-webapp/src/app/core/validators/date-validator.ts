@@ -1,7 +1,6 @@
 import { ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
-import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { DateUtils } from '@core/utils/date-utils';
-import moment from 'moment';
+
 export class DateValidator {
 
   /**

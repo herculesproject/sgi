@@ -3,5 +3,6 @@ export const PROYECTO_ROUTE_NAMES = {
   ENTIDADES_CONVOCANTES: 'entidades-convocantes',
   ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
   SOCIOS: 'socios',
-  HITOS: 'hitos'
+  HITOS: 'hitos',
+  PAQUETE_TRABAJO: 'paquete-trabajo'
 };

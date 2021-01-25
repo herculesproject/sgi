@@ -9,6 +9,7 @@ import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-co
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -259,6 +260,20 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.find<IProyecto, IProyecto>(`${this.endpointUrl}/todos`, options).pipe(
       tap(() => this.logger.debug(ProyectoService.name, `${this.findTodos.name}()`, '-', 'END'))
     );
+  }
+
+  /**
+  * Recupera los paquete trabajo de un proyecto
+  * @param idProyecto Identificador del proyecto.
+  * @returns Listado de paquete trabajo.
+  */
+  findPaqueteTrabajoProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPaqueteTrabajo>> {
+    this.logger.debug(ProyectoService.name, `findPaqueteTrabajoProyecto(${idProyecto}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectopaquetetrabajos`;
+    return this.find<IProyectoPaqueteTrabajo, IProyectoPaqueteTrabajo>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name, `findPaqueteTrabajoProyecto(${idProyecto}, ${options})`, '-', 'end'))
+      );
   }
 
   /**
