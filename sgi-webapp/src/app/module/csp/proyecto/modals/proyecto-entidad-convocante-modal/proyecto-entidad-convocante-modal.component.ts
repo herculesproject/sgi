@@ -213,6 +213,10 @@ export class ProyectoEntidadConvocanteModalComponent extends
         this.checkedNode = undefined;
         const subscription = this.programaService.findAllHijosPrograma(id).pipe(
           switchMap(response => {
+            if (response.items.length === 0) {
+              this.updateProgramas([]);
+              this.nodeMap.clear();
+            }
             return from(response.items).pipe(
               mergeMap((programa) => {
                 const node = new NodePrograma(programa);
