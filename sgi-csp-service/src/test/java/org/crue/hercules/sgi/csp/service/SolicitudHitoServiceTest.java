@@ -168,6 +168,25 @@ public class SolicitudHitoServiceTest {
   }
 
   @Test
+  public void create_WithFechaYTipoHitoDuplicado_ThrowsIllegalArgumentException() {
+    // given: a SolicitudHito fecha duplicada
+    SolicitudHito solicitudHitoExistente = generarSolicitudHito(2L, 1L, 1L);
+    SolicitudHito solicitudHito = generarSolicitudHito(1L, 1L, 1L);
+    solicitudHito.setId(null);
+
+    BDDMockito
+        .given(repository.findBySolicitudIdAndFechaAndTipoHitoId(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(solicitudHitoExistente));
+
+    Assertions.assertThatThrownBy(
+        // when: create SolicitudHito
+        () -> service.create(solicitudHito))
+        // then: throw exception as fecha is null
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+  }
+
+  @Test
   public void update_ReturnsSolicitudHito() {
     // given: Un nuevo SolicitudHito con los comentarios actualizados
     SolicitudHito solicitudHito = generarSolicitudHito(3L, 1L, 1L);
@@ -240,6 +259,21 @@ public class SolicitudHitoServiceTest {
     // then: Lanza una excepcion porque el SolicitudHito no existe
     Assertions.assertThatThrownBy(() -> service.update(solicitudHito, Boolean.TRUE))
         .isInstanceOf(SolicitudHitoNotFoundException.class);
+  }
+
+  @Test
+  public void update_WithFechaYTipoHitoDuplicado_ThrowsIllegalArgumentException() {
+    // given: Un SolicitudHito a actualizar con fecha duplicada
+    SolicitudHito solicitudHitoExistente = generarSolicitudHito(2L, 1L, 1L);
+    SolicitudHito solicitudHito = generarSolicitudHito(1L, 1L, 1L);
+
+    BDDMockito.given(repository.findBySolicitudIdAndFechaAndTipoHitoId(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.any(), ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitudHitoExistente));
+
+    // when: Actualizamos el SolicitudHito
+    // then: Lanza una excepcion porque la fecha ya existe para ese tipo
+    Assertions.assertThatThrownBy(() -> service.update(solicitudHito, Boolean.TRUE))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
   }
 
   @Test

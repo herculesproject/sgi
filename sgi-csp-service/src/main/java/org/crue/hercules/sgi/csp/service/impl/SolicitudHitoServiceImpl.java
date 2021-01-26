@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
@@ -62,6 +63,15 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
     Assert.notNull(solicitudHito.getTipoHito(), "El tipo hito no puede ser null para crear la SolicitudHito");
     Assert.notNull(solicitudHito.getGeneraAviso(), "Generar aviso no puede ser null para crear la SolicitudHito");
 
+    if (solicitudHito.getFecha().isBefore(LocalDate.now())) {
+      solicitudHito.setGeneraAviso(false);
+    }
+
+    Assert.isTrue(
+        !repository.findBySolicitudIdAndFechaAndTipoHitoId(solicitudHito.getSolicitud().getId(),
+            solicitudHito.getFecha(), solicitudHito.getTipoHito().getId()).isPresent(),
+        "Ya existe un Hito con el mismo tipo en esa fecha");
+
     solicitudHito.setSolicitud(solicitudRepository.findById(solicitudHito.getSolicitud().getId())
         .orElseThrow(() -> new SolicitudNotFoundException(solicitudHito.getSolicitud().getId())));
 
@@ -94,6 +104,16 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
     Assert.notNull(solicitudHito.getTipoHito(),
         "La referencia del documento no puede ser null para actualizar la SolicitudHito");
     Assert.notNull(solicitudHito.getGeneraAviso(), "Generar aviso no puede ser null para crear la SolicitudHito");
+
+    if (solicitudHito.getFecha().isBefore(LocalDate.now())) {
+      solicitudHito.setGeneraAviso(false);
+    }
+
+    repository.findBySolicitudIdAndFechaAndTipoHitoId(solicitudHito.getSolicitud().getId(), solicitudHito.getFecha(),
+        solicitudHito.getTipoHito().getId()).ifPresent((solicitudHitoExistente) -> {
+          Assert.isTrue(solicitudHito.getId() == solicitudHitoExistente.getId(),
+              "Ya existe un Hito con el mismo tipo en esa fecha");
+        });
 
     solicitudHito.setSolicitud(solicitudRepository.findById(solicitudHito.getSolicitud().getId())
         .orElseThrow(() -> new SolicitudNotFoundException(solicitudHito.getSolicitud().getId())));
