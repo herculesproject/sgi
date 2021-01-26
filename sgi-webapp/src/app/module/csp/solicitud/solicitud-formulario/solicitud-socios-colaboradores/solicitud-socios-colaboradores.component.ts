@@ -31,6 +31,7 @@ export interface ISolicitudProyectoSocioState {
   styleUrls: ['./solicitud-socios-colaboradores.component.scss']
 })
 export class SolicitudSociosColaboradoresComponent extends FragmentComponent implements OnInit, OnDestroy {
+
   CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
   SOLICITUD_PROYECTO_SOCIO_ROUTE = SOLICITUD_PROYECTO_SOCIO_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;

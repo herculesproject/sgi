@@ -111,6 +111,8 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
+    this.suscripciones.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
+      (value) => this.validarFecha(new Date(value))));
 
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
   }
@@ -138,6 +140,21 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
       TipoHitoValidator.notInDate('fechaInicio', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
     ]);
     this.logger.debug(ConvocatoriaHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
+  }
+
+  /**
+   * Si la fecha actual es inferior - Checkbox disabled
+   * Si la fecha actual es superior - Checkbox enable
+   */
+  private validarFecha(date: Date) {
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'validarFecha()', 'start');
+    if (date <= new Date()) {
+      this.formGroup.get('aviso').disable();
+      this.formGroup.get('aviso').setValue(false);
+    } else {
+      this.formGroup.get('aviso').enable();
+    }
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'validarFecha()', 'end');
   }
 
   loadTiposHito() {

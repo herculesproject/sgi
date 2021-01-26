@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SolicitudProyectoSocioPeriodoPagoComponent } from './solicitud-proyecto-socio-periodo-pago.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -28,13 +27,11 @@ describe('SolicitudProyectoSocioPeriodoPagoComponent', () => {
     rolSocio: undefined,
     solicitudProyectoDatos: undefined
   };
-
   const state: ISolicitudProyectoSocioState = {
     solicitudId: 1,
     solicitudProyectoSocio,
     selectedSolicitudProyectoSocios: []
   };
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -58,7 +55,6 @@ describe('SolicitudProyectoSocioPeriodoPagoComponent', () => {
     })
       .compileComponents();
   }));
-
   beforeEach(() => {
     history.pushState(state.solicitudProyectoSocio, 'solicitudProyectoSocio');
     history.pushState(state.selectedSolicitudProyectoSocios, 'selectedSolicitudProyectoSocios');
@@ -67,7 +63,6 @@ describe('SolicitudProyectoSocioPeriodoPagoComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
