@@ -168,8 +168,8 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoHito(1L, convocatoriaHito, Boolean.TRUE)));
 
-    BDDMockito.given(repository.findByFechaAndTipoHitoId(ArgumentMatchers.any(), ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaHito));
+    BDDMockito.given(repository.findByConvocatoriaIdAndFechaAndTipoHitoId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.any(), ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaHito));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaHito
@@ -369,8 +369,8 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoHito(1L, convocatoriaHitoActualizado, Boolean.TRUE)));
 
-    BDDMockito.given(repository.findByFechaAndTipoHitoId(ArgumentMatchers.any(), ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaHito(2L)));
+    BDDMockito.given(repository.findByConvocatoriaIdAndFechaAndTipoHitoId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.any(), ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockConvocatoriaHito(2L)));
 
     // when: Actualizamos el ConvocatoriaHito
     // then: Lanza una excepcion porque la fecha no existe

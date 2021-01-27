@@ -13,12 +13,15 @@ public interface ConvocatoriaHitoRepository
     extends JpaRepository<ConvocatoriaHito, Long>, JpaSpecificationExecutor<ConvocatoriaHito> {
 
   /**
-   * Busca un {@link ConvocatoriaHito} por su {@link Convocatoria} y url.
+   * Busca un {@link ConvocatoriaHito} por su {@link Convocatoria},
+   * {@link TipoHito} y fecha
    * 
-   * @param fecha      fecha de la {@link ConvocatoriaHito}
-   * @param tipoHitoId Id de la {@link TipoHito}
+   * @param convocatoriaId Id de la convocatoria de la {@link ConvocatoriaHito}
+   * @param fecha          fecha de la {@link ConvocatoriaHito}
+   * @param tipoHitoId     Id de la {@link TipoHito}
    * @return una {@link ConvocatoriaHito}
    */
-  Optional<ConvocatoriaHito> findByFechaAndTipoHitoId(LocalDate fecha, Long tipoHitoId);
+  Optional<ConvocatoriaHito> findByConvocatoriaIdAndFechaAndTipoHitoId(Long convocatoriaId, LocalDate fecha,
+      Long tipoHitoId);
 
 }

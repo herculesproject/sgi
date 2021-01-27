@@ -99,7 +99,7 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
     convocatoriaHito.setTipoHito(modeloTipoHito.get().getTipoHito());
 
     Assert.isTrue(!repository
-        .findByFechaAndTipoHitoId(convocatoriaHito.getFecha(), convocatoriaHito.getTipoHito().getId()).isPresent(),
+        .findByConvocatoriaIdAndFechaAndTipoHitoId(convocatoriaHito.getConvocatoria().getId(), convocatoriaHito.getFecha(), convocatoriaHito.getTipoHito().getId()).isPresent(),
         "Ya existe un Hito con el mismo tipo en esa fecha");
 
     Assert.isTrue(convocatoriaHito.getTipoHito().getActivo(), "El TipoHito debe estar activo");
@@ -173,8 +173,10 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
       if (convocatoriaHitoActualizar.getFecha().isBefore(LocalDate.now())) {
         convocatoriaHitoActualizar.setGeneraAviso(false);
       }
-      repository.findByFechaAndTipoHitoId(convocatoriaHitoActualizar.getFecha(),
-          convocatoriaHitoActualizar.getTipoHito().getId()).ifPresent((convocatoriaHitoExistente) -> {
+      repository
+          .findByConvocatoriaIdAndFechaAndTipoHitoId(convocatoriaHitoActualizar.getConvocatoria().getId(),
+              convocatoriaHitoActualizar.getFecha(), convocatoriaHitoActualizar.getTipoHito().getId())
+          .ifPresent((convocatoriaHitoExistente) -> {
             Assert.isTrue(convocatoriaHitoActualizar.getId() == convocatoriaHitoExistente.getId(),
                 "Ya existe un Hito con el mismo tipo en esa fecha");
           });
