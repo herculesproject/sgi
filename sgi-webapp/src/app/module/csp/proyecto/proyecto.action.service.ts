@@ -19,10 +19,10 @@ import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proy
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
-
-
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
+import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
+import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -34,7 +34,8 @@ export class ProyectoActionService extends ActionService {
     HITOS: 'hitos',
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
     PAQUETE_TRABAJO: 'paquete-trabajo',
-    PLAZOS: 'plazos'
+    PLAZOS: 'plazos',
+    CONTEXTO_PROYECTO: 'contexto-proyecto'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -44,7 +45,9 @@ export class ProyectoActionService extends ActionService {
   private entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
   private paqueteTrabajo: ProyectoPaqueteTrabajoFragment;
   private paqueteTrabajoValue: boolean;
+  private proyectoConvocatoriaValue: IProyecto;
   private plazos: ProyectoPlazosFragment;
+  private proyectoContexto: ProyectoContextoFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -70,7 +73,8 @@ export class ProyectoActionService extends ActionService {
     proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
     proyectoHitoService: ProyectoHitoService,
     proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
-    proyectoPlazoService: ProyectoPlazoService
+    proyectoPlazoService: ProyectoPlazoService,
+    contextoProyectoService: ContextoProyectoService
   ) {
     super();
 
@@ -81,6 +85,9 @@ export class ProyectoActionService extends ActionService {
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id,
       proyectoService, unidadGestionService, convocatoriaService, this);
+
+    this.fichaGeneral.paquetesTrabajo$.subscribe((value) => this.paqueteTrabajoValue = Boolean(value));
+    this.fichaGeneral.proyectoConvocatoria$.subscribe((value) => this.proyectoConvocatoriaValue = value);
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
     if (this.isEdit()) {
@@ -107,6 +114,10 @@ export class ProyectoActionService extends ActionService {
       this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(logger, this.proyecto?.id, proyectoService,
         proyectoPaqueteTrabajoService, this.readonly);
       this.addFragment(this.FRAGMENT.PAQUETE_TRABAJO, this.paqueteTrabajo);
+
+      this.proyectoContexto = new ProyectoContextoFragment(logger, this.proyecto, proyectoService,
+        contextoProyectoService, convocatoriaService, this.proyectoConvocatoriaValue);
+      this.addFragment(this.FRAGMENT.CONTEXTO_PROYECTO, this.proyectoContexto);
     }
   }
 
@@ -118,7 +129,6 @@ export class ProyectoActionService extends ActionService {
   get disabledPaqueteTrabajo(): boolean {
     return this.paqueteTrabajoValue;
   }
-
 
   /**
    * Recupera los datos del proyecto del formulario de datos generales,

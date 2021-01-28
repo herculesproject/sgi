@@ -26,6 +26,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   paquetesTrabajo$: Subject<boolean> = new Subject<boolean>();
 
+  proyectoConvocatoria$: Subject<IProyecto> = new Subject<IProyecto>();
+
   constructor(
     private fb: FormBuilder,
     private readonly logger: NGXLogger,
@@ -56,6 +58,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       }),
       map(() => {
         this.logger.debug(ProyectoFichaGeneralFragment.name, `initializer(key: ${key})`, 'end');
+        this.proyectoConvocatoria$.next(this.proyecto);
         return this.proyecto;
       }),
       catchError(() => {

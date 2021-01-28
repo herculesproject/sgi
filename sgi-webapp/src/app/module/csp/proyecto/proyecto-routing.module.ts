@@ -17,6 +17,7 @@ import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/p
 import { ProyectoEntidadesConvocantesComponent } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.component';
 import { ProyectoPaqueteTrabajoComponent } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.component';
 import { ProyectoPlazosComponent } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.component';
+import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 
 const MSG_LISTADO_TITLE = marker('csp.proyecto.listado.titulo');
 const MSG_EDIT_TITLE = marker('csp.proyecto.editar.titulo');
@@ -102,6 +103,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.PLAZOS,
         component: ProyectoPlazosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.CONTEXTO_PROYECTO,
+        component: ProyectoContextoComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

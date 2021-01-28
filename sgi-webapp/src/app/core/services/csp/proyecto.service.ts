@@ -11,6 +11,7 @@ import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
+import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -289,6 +290,19 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       .pipe(
         tap(() => this.logger.debug(ProyectoService.name, `findPlazosProyecto(${idProyecto}, ${options})`, '-', 'end'))
       );
+  }
+
+  /**
+   * Devuelve los datos del proyecto contexto
+   *
+   * @param proyectoID Id del proyecto
+   */
+  findProyectoContexto(proyectoID: number): Observable<IProyectoContexto> {
+    this.logger.debug(ProyectoService.name, `findProyectoContexto(${proyectoID})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${proyectoID}/proyecto-contextoproyectos`;
+    return this.http.get<IProyectoContexto>(endpointUrl).pipe(
+      tap(() => this.logger.debug(ProyectoService.name, `findProyectoContexto(${proyectoID})`, '-', 'end')),
+    );
   }
 
   /**

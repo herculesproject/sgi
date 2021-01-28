@@ -5,5 +5,6 @@ export const PROYECTO_ROUTE_NAMES = {
   SOCIOS: 'socios',
   HITOS: 'hitos',
   PAQUETE_TRABAJO: 'paquete-trabajo',
-  PLAZOS: 'plazos'
+  PLAZOS: 'plazos',
+  CONTEXTO_PROYECTO: 'contexto-proyecto'
 };
