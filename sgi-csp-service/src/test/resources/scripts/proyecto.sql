@@ -12,7 +12,7 @@
 
 INSERT INTO csp.proyecto 
 (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)
- VALUES (1, 'PRO1', 'cod-externo-001', '2020-09-12', '2020-12-31', 'OPE', 1, 1, 1, false, 'observaciones-proyecto-001', 1, true);
+ VALUES (1, 'PRO1', 'cod-externo-001', '2020-01-12', '2021-12-31', 'OPE', 1, 1, 1, false, 'observaciones-proyecto-001', 1, true);
 
 INSERT INTO csp.proyecto 
 (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, paquetes_trabajo, activo)
@@ -24,7 +24,7 @@ INSERT INTO csp.proyecto
 
 INSERT INTO csp.proyecto 
 (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, paquetes_trabajo, activo)
- VALUES (4, 'PRO4', 'cod-externo-004', '2020-01-01', '2020-12-31', 'OTRI', 1, 1, 1, false, 'observaciones-proyecto-004', 1, true, true);
+ VALUES (4, 'PRO4', 'cod-externo-004', '2020-01-01', '2021-12-31', 'OTRI', 1, 1, 1, false, 'observaciones-proyecto-004', 1, true, true);
 
 INSERT INTO csp.proyecto 
 (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, paquetes_trabajo, activo)
