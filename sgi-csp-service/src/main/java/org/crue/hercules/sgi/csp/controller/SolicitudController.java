@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
@@ -22,6 +23,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -79,6 +81,9 @@ public class SolicitudController {
   /** SolicitudProyectoEntidadFinanciadoraAjena service */
   private final SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService;
 
+  /** SolicitudProyectoPresupuesto service */
+  private final SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -91,13 +96,15 @@ public class SolicitudController {
    * @param solicitudProyectoSocioService                    {@link SolicitudProyectoSocioService}
    * @param solicitudProyectoEquipoService                   {@link SolicitudProyectoEquipoService}
    * @param solicitudProyectoEntidadFinanciadoraAjenaService {@link SolicitudProyectoEntidadFinanciadoraAjenaService}.
+   * @param solicitudProyectoPresupuestoService              {@link SolicitudProyectoPresupuestoService}.
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
       SolicitudHitoService solicitudHitoService, SolicitudProyectoDatosService solicitudProyectoDatosService,
       SolicitudProyectoSocioService solicitudProyectoSocioService,
       SolicitudProyectoEquipoService solicitudProyectoEquipoService,
-      SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService) {
+      SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService,
+      SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
@@ -107,6 +114,7 @@ public class SolicitudController {
     this.solicitudProyectoSocioService = solicitudProyectoSocioService;
     this.solicitudProyectoEquipoService = solicitudProyectoEquipoService;
     this.solicitudProyectoEntidadFinanciadoraAjenaService = solicitudProyectoEntidadFinanciadoraAjenaService;
+    this.solicitudProyectoPresupuestoService = solicitudProyectoPresupuestoService;
   }
 
   /**
@@ -520,6 +528,47 @@ public class SolicitudController {
     boolean returnValue = solicitudProyectoDatosService.existsBySolicitudId(id);
 
     log.debug("SolicitudProyectoDatos existSolictudProyectoDatos(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoPresupuesto}
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectopresupuestos")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuesto(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoPresupuesto(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitud(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoPresupuesto(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoPresupuesto(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si el {@link SolicitudProyectoDatos} de una solicitud tiene
+   * presupuesto por entidades.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link SolicitudProyectoDatos}
+   */
+  @RequestMapping(path = "/{id}/presupuestoporentidades", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  public ResponseEntity<?> hasPresupuestoPorEntidades(@PathVariable Long id) {
+    log.debug("hasPresupuestoPorEntidades(Long id) - start");
+    boolean returnValue = solicitudProyectoDatosService.hasPresupuestoPorEntidades(id);
+
+    log.debug("hasPresupuestoPorEntidades(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

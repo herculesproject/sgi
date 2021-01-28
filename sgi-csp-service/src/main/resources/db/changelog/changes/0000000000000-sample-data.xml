@@ -1892,4 +1892,37 @@
   </changeSet>
 
 
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_presupuesto">
+    <insert tableName="solicitud_proyecto_presupuesto">
+      <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
+      <column name="solicitud_proyecto_datos_id" valueComputed="(select id from csp.solicitud_proyecto_datos where titulo = 'titulo-001')"></column>
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto1')" />
+      <column name="entidad_ref" value="null" />
+      <column name="anualidad" value="2021" />
+      <column name="importe_solicitado" value="1000" />
+      <column name="observaciones" value="observaciones-001"></column>
+      <column name="financiacion_ajena" value="false" />
+    </insert>
+    <insert tableName="solicitud_proyecto_presupuesto">
+      <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
+      <column name="solicitud_proyecto_datos_id" valueComputed="(select id from csp.solicitud_proyecto_datos where titulo = 'titulo-001')"></column>
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto2')" />
+      <column name="entidad_ref" value="null" />
+      <column name="anualidad" value="2021" />
+      <column name="importe_solicitado" value="300000" />
+      <column name="observaciones" value="observaciones-002"></column>
+      <column name="financiacion_ajena" value="false" />
+    </insert>
+    <insert tableName="solicitud_proyecto_presupuesto">
+      <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
+      <column name="solicitud_proyecto_datos_id" valueComputed="(select id from csp.solicitud_proyecto_datos where titulo = 'titulo-001')"></column>
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto1')" />
+      <column name="entidad_ref" value="null" />
+      <column name="anualidad" value="2022" />
+      <column name="importe_solicitado" value="2000" />
+      <column name="observaciones" value="observaciones-003"></column>
+      <column name="financiacion_ajena" value="false" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

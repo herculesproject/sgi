@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -54,6 +55,7 @@ public class SolicitudIT {
   private static final String PATH_SOLICITUD_MODALIDADES = "/solicitudmodalidades";
   private static final String PATH_ESTADOS_SOLICITUD = "/estadosolicitudes";
   private static final String PATH_ENTIDAD_FINANCIADORA_AJENA = "/solicitudproyectoentidadfinanciadoraajenas";
+  private static final String PATH_SOLICITUD_PROYECTO_PRESUPUESTO = "/solicitudproyectopresupuestos";
   private static final String PATH_TODOS = "/todos";
 
   private HttpEntity<Solicitud> buildRequest(HttpHeaders headers, Solicitud entity) throws Exception {
@@ -558,6 +560,63 @@ public class SolicitudIT {
         .as("get(1).getEntidadRef())").isEqualTo("entidad-" + String.format("%03d", 2));
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenas.get(2).getEntidadRef())
         .as("get(2).getEntidadRef()").isEqualTo("entidad-" + String.format("%03d", 1));
+  }
+
+  /**
+   * 
+   * SOLICITUD PROYECTO PRESUPUESTO
+   * 
+   */
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/solicitud_proyecto_presupuesto.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllSolicitudProyectoPresupuesto_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoPresupuestoSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "observaciones~%00%";
+
+    Long solicitudId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTO)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
+
+    final ResponseEntity<List<SolicitudProyectoPresupuesto>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudProyectoPresupuesto>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<SolicitudProyectoPresupuesto> solicitudProyectoPresupuestos = response.getBody();
+    Assertions.assertThat(solicitudProyectoPresupuestos.size()).as("size").isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(solicitudProyectoPresupuestos.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo("observaciones-" + String.format("%03d", 3));
+    Assertions.assertThat(solicitudProyectoPresupuestos.get(1).getObservaciones()).as("get(1).getObservaciones())")
+        .isEqualTo("observaciones-" + String.format("%03d", 2));
+    Assertions.assertThat(solicitudProyectoPresupuestos.get(2).getObservaciones()).as("get(2).getObservaciones()")
+        .isEqualTo("observaciones-" + String.format("%03d", 1));
   }
 
   /**

@@ -9,7 +9,9 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoDatosSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -208,6 +210,27 @@ public class SolicitudProyectoDatosServiceImpl implements SolicitudProyectoDatos
   public boolean existsBySolicitudId(Long id) {
 
     return repository.existsBySolicitudId(id);
+  }
+
+  /**
+   * Comprueba si tiene presupuesto por entidades.
+   * 
+   * @param solicitudId Identificador de la {@link Solicitud}
+   * @return Indicador de si tiene o no presupuesto por entidades.
+   */
+  @Override
+  public boolean hasPresupuestoPorEntidades(Long solicitudId) {
+    log.debug("hasPresupuestoPorEntidades(Long solicitudId) - start");
+
+    Specification<SolicitudProyectoDatos> specByProyecto = SolicitudProyectoDatosSpecifications
+        .bySolicitudId(solicitudId);
+    Specification<SolicitudProyectoDatos> specPresupuestoPorEntidades = SolicitudProyectoDatosSpecifications
+        .presupuestoPorEntidades();
+
+    Specification<SolicitudProyectoDatos> specs = Specification.where(specByProyecto).and(specPresupuestoPorEntidades);
+    boolean returnValue = repository.count(specs) > 0 ? true : false;
+    log.debug("hasPresupuestoPorEntidades(Long solicitudId) - end");
+    return returnValue;
   }
 
   /**

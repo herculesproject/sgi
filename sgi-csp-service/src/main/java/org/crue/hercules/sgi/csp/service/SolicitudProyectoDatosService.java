@@ -70,4 +70,12 @@ public interface SolicitudProyectoDatosService {
    */
   boolean existsBySolicitudId(Long id);
 
+  /**
+   * Comprueba si tiene presupuesto por entidades.
+   * 
+   * @param solicitudId Identificador de la {@link Solicitud}
+   * @return Indicador de si tiene o no presupuesto por entidades.
+   */
+  boolean hasPresupuestoPorEntidades(Long solicitudId);
+
 }

@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
@@ -24,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
@@ -35,6 +37,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -91,6 +94,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
   @MockBean
   private SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService;
 
+  @MockBean
+  private SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
@@ -98,6 +104,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   private static final String PATH_SOLICITUD_MODALIDADES = "/solicitudmodalidades";
   private static final String PATH_ESTADOS_SOLICITUD = "/estadosolicitudes";
   private static final String PATH_ENTIDAD_FINANCIADORA_AJENA = "/solicitudproyectoentidadfinanciadoraajenas";
+  private static final String PATH_SOLICITUD_PROYECTO_PRESUPUESTOS = "/solicitudproyectopresupuestos";
   private static final String PATH_TODOS = "/todos";
 
   @Test
@@ -159,7 +166,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Solicitud solicitud = generarMockSolicitud(1L);
     solicitud.setObservaciones("observaciones actualizadas");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList())).willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: update Solicitud
     mockMvc
@@ -1090,6 +1098,102 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * Solicitud proyecto presupuestos
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void findAllSolicitudProyectoPresupuesto_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudProyectoPresupuesto para la Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudProyectoPresupuesto> solicitudProyectoPresupuestos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudProyectoPresupuestos.add(generarSolicitudProyectoPresupuesto(i, i, i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoPresupuestoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudProyectoPresupuestos.size() ? solicitudProyectoPresupuestos.size() : toIndex;
+          List<SolicitudProyectoPresupuesto> content = solicitudProyectoPresupuestos.subList(fromIndex, toIndex);
+          Page<SolicitudProyectoPresupuesto> pageResponse = new PageImpl<>(content, pageable,
+              solicitudProyectoPresupuestos.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTOS, solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudProyectoPresupuesto
+        // del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudProyectoPresupuesto> solicitudProyectoEntidadFinanciadoraAjenasResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<SolicitudProyectoPresupuesto>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudProyectoPresupuesto solicitudProyectoEntidadFinanciadoraAjena = solicitudProyectoEntidadFinanciadoraAjenasResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjena.getId()).isEqualTo(Long.valueOf(i));
+      Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjena.getObservaciones())
+          .isEqualTo("observaciones-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudProyectoPresupuesto_Returns204() throws Exception {
+    // given: Una lista vacia de SolicitudProyectoPresupuesto para la Solicitud
+    Long solicitudId = 1L;
+    List<SolicitudProyectoPresupuesto> solicitudProyectoPresupuestos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudProyectoPresupuestoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<SolicitudProyectoPresupuesto> pageResponse = new PageImpl<>(solicitudProyectoPresupuestos, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_PROYECTO_PRESUPUESTOS, solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto Solicitud
    * 
    * @param id id del Solicitud
@@ -1276,4 +1380,33 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     return solicitudProyectoEntidadFinanciadoraAjena;
   }
+
+  /**
+   * Función que devuelve un objeto SolicitudProyectoPresupuesto
+   * 
+   * @param id                       Id {@link SolicitudProyectoPresupuesto}.
+   * @param solicitudProyectoDatosId Id {@link SolicitudProyectoDatos}.
+   * @param conceptoGastoId          Id {@link ConceptoGasto}.
+   * @return el objeto {@link SolicitudProyectoPresupuesto}.
+   */
+  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoDatosId,
+      Long conceptoGastoId) {
+
+    String suffix = String.format("%03d", id);
+
+    SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
+        .builder()// @formatter:off
+        .id(id)
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
+        .entidadRef(null)
+        .anualidad(1000)
+        .importeSolicitado(new BigDecimal("335"))
+        .observaciones("observaciones-" + suffix)
+        .financiacionAjena(false)
+        .build();// @formatter:on
+
+    return solicitudProyectoPresupuesto;
+  }
+
 }
