@@ -26,6 +26,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService } from './proyecto-entidad-financiadora.service';
 import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
+import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
+import { IProyectoEntidadGestoraBackend, ProyectoEntidadGestoraService } from './proyecto-entidad-gestora.service';
 
 interface IProyectoBackend {
 
@@ -412,6 +414,22 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.find<IProyectoHito, IProyectoHito>(endpointUrl, options)
       .pipe(
         tap(() => this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Recupera las entidades gestoras de un proyecto
+   * @param idProyecto Identificador del proyecto.
+   * @returns entidaded gestora.
+   */
+  findEntidadGestora(id: number, options?:
+    SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadGestora>> {
+    this.logger.debug(ProyectoService.name,
+      `${this.findEntidadGestora.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IProyectoEntidadGestoraBackend, IProyectoEntidadGestora>(
+      `${this.endpointUrl}/${id}/proyectoentidadgestoras`, options, ProyectoEntidadGestoraService.CONVERTER).pipe(
+        tap(() => this.logger.debug(ProyectoService.name,
+          `${this.findEntidadGestora.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 

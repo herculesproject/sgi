@@ -23,6 +23,8 @@ import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proye
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { ProyectoEntidadGestoraFragment } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.fragment';
+import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
 
 
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
@@ -42,7 +44,8 @@ export class ProyectoActionService extends ActionService {
     PAQUETE_TRABAJO: 'paquete-trabajo',
     PLAZOS: 'plazos',
     CONTEXTO_PROYECTO: 'contexto-proyecto',
-    SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos'
+    SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
+    ENTIDAD_GESTORA: 'entidad-gestora'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -56,12 +59,17 @@ export class ProyectoActionService extends ActionService {
   private plazos: ProyectoPlazosFragment;
   private proyectoContexto: ProyectoContextoFragment;
   private seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
+  private entidadGestora: ProyectoEntidadGestoraFragment;
 
   proyecto: IProyecto;
   readonly = false;
 
   get modeloEjecucionId(): number {
     return this.getDatosGeneralesProyecto().modeloEjecucion?.id;
+  }
+
+  get proyectoDatosGenerales(): IProyecto {
+    return this.getDatosGeneralesProyecto();
   }
 
   public disabledAddSocios$ = new BehaviorSubject<boolean>(false);
@@ -73,7 +81,7 @@ export class ProyectoActionService extends ActionService {
     fb: FormBuilder,
     private logger: NGXLogger,
     route: ActivatedRoute,
-    protected proyectoService: ProyectoService,
+    private proyectoService: ProyectoService,
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
@@ -84,7 +92,8 @@ export class ProyectoActionService extends ActionService {
     proyectoPlazoService: ProyectoPlazoService,
     contextoProyectoService: ContextoProyectoService,
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
-    documentoService: DocumentoService
+    documentoService: DocumentoService,
+    proyectoEntidadGestora: ProyectoEntidadGestoraService
   ) {
     super();
 
@@ -133,6 +142,11 @@ export class ProyectoActionService extends ActionService {
         proyectoPeriodoSeguimientoService, documentoService, this.proyecto);
       this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
     }
+
+    this.entidadGestora =
+      new ProyectoEntidadGestoraFragment(fb, logger, this.proyecto?.id,
+        proyectoService, proyectoEntidadGestora, empresaEconomicaService, this);
+    this.addFragment(this.FRAGMENT.ENTIDAD_GESTORA, this.entidadGestora);
   }
 
   /**

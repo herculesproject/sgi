@@ -171,7 +171,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     this.subscriptions.push(
       this.getFormGroup().get('paquetesTrabajo').valueChanges.subscribe((value) => {
-        this.paquetesTrabajo$.next(value)
+        this.paquetesTrabajo$.next(value);
       })
     );
 
