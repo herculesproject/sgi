@@ -19,11 +19,14 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -65,6 +68,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
   @Mock
   private ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
+  @Mock
+  private ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
+  @Mock
+  private ContextoProyectoService contextoProyectoService;
 
   private ProyectoService service;
 
@@ -72,7 +79,8 @@ public class ProyectoServiceTest extends BaseServiceTest {
   public void setUp() throws Exception {
     service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
-        convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService);
+        convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaAreaTematicaRepository,
+        contextoProyectoService);
   }
 
   @Test
@@ -139,6 +147,62 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE)));
+
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto estadoProyectoCreado = invocation.getArgument(0);
+          estadoProyectoCreado.setId(1L);
+          return estadoProyectoCreado;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+    // when: Creamos el Proyecto
+    Proyecto proyectoCreado = service.create(proyecto);
+
+    // then: El Proyecto se crea correctamente
+    Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyecto.getObservaciones());
+    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(proyecto.getUnidadGestionRef());
+    Assertions.assertThat(proyectoCreado.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  public void createWithConvocatoriaAndConvocatoriaAreaTematica_ReturnsProyecto() {
+    // given: Un nuevo Proyecto
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setConvocatoria(Convocatoria.builder().id(1L).build());
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoCreado = invocation.getArgument(0);
+      if (proyectoCreado.getId() == null) {
+        proyectoCreado.setId(1L);
+      }
+
+      return proyectoCreado;
+    });
+
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE)));
+
+    ConvocatoriaAreaTematica convocatoriaAreaTematica = generarMockConvocatoriaAreaTematica(
+        generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE));
+
+    BDDMockito.given(convocatoriaAreaTematicaRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaAreaTematica));
 
     BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
         .will((InvocationOnMock invocation) -> {
@@ -880,6 +944,25 @@ public class ProyectoServiceTest extends BaseServiceTest {
         .build();
 
     return convocatoria;
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaAreaTematica
+   * 
+   * @param convocatoria la Convocatoria
+   * @return el objeto ConvocatoriaAreaTematica
+   */
+  private ConvocatoriaAreaTematica generarMockConvocatoriaAreaTematica(Convocatoria convocatoria) {
+    AreaTematica areaTematica = new AreaTematica();
+    areaTematica.setId(1L);
+    areaTematica.setNombre("AreaTematica");
+    areaTematica.setDescripcion("descripcion");
+    areaTematica.setActivo(true);
+    ConvocatoriaAreaTematica convocatoriaAreaTematica = new ConvocatoriaAreaTematica();
+    convocatoriaAreaTematica.setConvocatoria(convocatoria);
+    convocatoriaAreaTematica.setAreaTematica(areaTematica);
+
+    return convocatoriaAreaTematica;
   }
 
 }

@@ -1,4 +1,4 @@
--- DEPENDENCIAS: modelo_ejecucion, modelo_unidad, tipo_finalidad, tipo_ambito_geografico, estado_proyecto 
+-- DEPENDENCIAS: modelo_ejecucion, modelo_unidad, tipo_finalidad, tipo_ambito_geografico, estado_proyecto, contexto_proyecto 
 /*
   scripts = { 
     "classpath:scripts/modelo_ejecucion.sql",
@@ -6,6 +6,7 @@
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/estado_proyecto.sql"
+    "classpath:scripts/contexto_proyecto.sql"
   }
 */
 

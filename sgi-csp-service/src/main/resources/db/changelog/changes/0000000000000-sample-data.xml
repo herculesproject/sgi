@@ -1846,4 +1846,23 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-contexto_proyecto">
+    <insert tableName="contexto_proyecto">
+      <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+    </insert>
+    <insert tableName="contexto_proyecto">
+      <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-002')" />
+    </insert>
+    <insert tableName="contexto_proyecto">
+      <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-003')" />
+    </insert>
+    <insert tableName="contexto_proyecto">
+      <column name="id" valueSequenceNext="contexto_proyecto_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-004')" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

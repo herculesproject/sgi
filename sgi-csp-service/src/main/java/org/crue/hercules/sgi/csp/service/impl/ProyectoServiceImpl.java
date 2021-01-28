@@ -9,9 +9,11 @@ import java.util.Optional;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -20,6 +22,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -28,6 +31,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadCon
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
+import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -63,13 +67,17 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
   private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
   private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
+  private final ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
+  private final ContextoProyectoService contextoProyectoService;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
       ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
       ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
-      ProyectoEntidadConvocanteService proyectoEntidadConvocanteService) {
+      ProyectoEntidadConvocanteService proyectoEntidadConvocanteService,
+      ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository,
+      ContextoProyectoService contextoProyectoService) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -78,6 +86,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
     this.convocatoriaEntidadConvocanteRepository = convocatoriaEntidadConvocanteRepository;
     this.proyectoEntidadConvocanteService = proyectoEntidadConvocanteService;
+    this.convocatoriaAreaTematicaRepository = convocatoriaAreaTematicaRepository;
+    this.contextoProyectoService = contextoProyectoService;
   }
 
   /**
@@ -114,6 +124,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       // TODO implementar a medida que se vayan haciendo las pestañas de proyecto
       this.copyEntidadesFinanciadoras(proyecto.getId(), proyecto.getConvocatoria().getId());
       copiarEntidadesConvocatesDeConvocatoria(proyecto, proyecto.getConvocatoria());
+      this.guardarDatosEntidadesRelacionadas(proyecto.getConvocatoria());
+      this.copyAreaTematica(proyecto);
     }
 
     log.debug("create(Proyecto proyecto) - end");
@@ -484,6 +496,39 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
 
     log.debug("copiarEntidadesConvocatesDeConvocatoria(Proyecto proyecto, Convocatoria convocatoria) - end");
+  }
+
+  /**
+   * Copia la informaci&oacute;n de EntidadesConvocantes de la Convocatoria en el
+   * Proyecto
+   * 
+   * @param convocatoriaProyecto la {@link Convocatoria}
+   */
+  private void guardarDatosEntidadesRelacionadas(Convocatoria convocatoriaProyecto) {
+
+  }
+
+  /**
+   * Copia la entidad área temática de una convocatoria a unproyecto
+   * 
+   * @param proyecto la entidad {@link Proyecto}
+   */
+  private void copyAreaTematica(Proyecto proyecto) {
+
+    // si en la convocatoria se ha rellenado "ConvocatoriaAreaTematica" se rellenará
+    // el campo "areaTematicaConvocatoria" de la tabla "ContextoProyecto" con el
+    // campo "areaTematica" de la tabla "ConvocatoriaAreaTematica" de la
+    // convocatoria, dejando vacío el campo "areaTematica" de la tabla
+    // "ContextoProyecto" para que lo pueda seleccionar el usuario.
+    Optional<ConvocatoriaAreaTematica> convocatoriaAreaTematica = convocatoriaAreaTematicaRepository
+        .findByConvocatoriaId(proyecto.getConvocatoria().getId());
+
+    if (convocatoriaAreaTematica.isPresent()) {
+      ContextoProyecto contextoProyectoNew = new ContextoProyecto();
+      contextoProyectoNew.setProyecto(proyecto);
+      contextoProyectoNew.setAreaTematicaConvocatoria(convocatoriaAreaTematica.get().getAreaTematica());
+      contextoProyectoService.create(contextoProyectoNew);
+    }
   }
 
   /**

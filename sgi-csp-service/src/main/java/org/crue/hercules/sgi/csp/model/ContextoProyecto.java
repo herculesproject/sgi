@@ -1,0 +1,80 @@
+package org.crue.hercules.sgi.csp.model;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+
+import org.crue.hercules.sgi.csp.converter.TipoPropiedadResultadosConverter;
+import org.crue.hercules.sgi.csp.enums.TipoPropiedadResultadosEnum;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "contexto_proyecto", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "proyecto_id" }, name = "UK_CONTEXTOPROYECTO_PROYECTO") })
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class ContextoProyecto extends BaseEntity {
+
+  /**
+   * Serial version
+   */
+  private static final long serialVersionUID = 1L;
+
+  /** Id. */
+  @Id
+  @Column(name = "id", nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contexto_proyecto_seq")
+  @SequenceGenerator(name = "contexto_proyecto_seq", sequenceName = "contexto_proyecto_seq", allocationSize = 1)
+  private Long id;
+
+  /** Proyecto */
+  @OneToOne
+  @JoinColumn(name = "proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTO_PROYECTO"))
+  @NotNull
+  private Proyecto proyecto;
+
+  /** Objetivos */
+  @Column(name = "objetivos", length = 2000, nullable = true)
+  private String objetivos;
+
+  /** Intereses */
+  @Column(name = "intereses", length = 2000, nullable = true)
+  private String intereses;
+
+  /** Resultados previstos */
+  @Column(name = "resultados_previstos", length = 2000, nullable = true)
+  private String resultadosPrevistos;
+
+  /** Propiedad resultados */
+  @Column(name = "propiedad_resultados", length = 25, nullable = true)
+  @Convert(converter = TipoPropiedadResultadosConverter.class)
+  private TipoPropiedadResultadosEnum propiedadResultados;
+
+  /** AreaTematica convocatoria */
+  @ManyToOne
+  @JoinColumn(name = "area_tematica_convocatoria_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTOAREATEMATICACONVOCATORIA_AREATEMATICA"))
+  private AreaTematica areaTematicaConvocatoria;
+
+  /** AreaTematica */
+  @ManyToOne
+  @JoinColumn(name = "area_tematica_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTOAREATEMATICA_AREATEMATICA"))
+  private AreaTematica areaTematica;
+
+}
