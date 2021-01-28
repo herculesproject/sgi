@@ -16,10 +16,12 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
@@ -28,6 +30,7 @@ import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
+import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
@@ -80,6 +83,9 @@ public class ProyectoControllerTest extends BaseControllerTest {
   @MockBean
   private ProyectoEntidadGestoraService proyectoEntidadGestoraService;
 
+  @MockBean
+  private ProyectoEquipoService proyectoEquipoService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
@@ -92,6 +98,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
   private static final String PATH_ENTIDAD_GESTORA = "/proyectoentidadgestoras";
   private static final String PATH_SEGUIMIENTO = "/proyectoperiodoseguimientos";
+  private static final String PATH_PROYECTO_EQUIPO = "/proyectoequipos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
@@ -898,6 +905,97 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * PROYECTO Equipo
+   * 
+   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  public void findAllProyectoEquipo_WithPaging_ReturnsProyectoEquipoSubList() throws Exception {
+    // given: 37 ProyectoEquipo
+    Long proyectoId = 1L;
+
+    List<ProyectoEquipo> proyectoEquipos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoEquipos.add(generarMockProyectoEquipo(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoEquipoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > proyectoEquipos.size() ? proyectoEquipos.size() : toIndex;
+          List<ProyectoEquipo> content = proyectoEquipos.subList(fromIndex, toIndex);
+          Page<ProyectoEquipo> pageResponse = new PageImpl<>(content, pageable, proyectoEquipos.size());
+          return pageResponse;
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_EQUIPO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked ProyectoEquipo are returned with the right page information
+        // in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<ProyectoEquipo> actual = mapper.readValue(
+        requestResult.getResponse().getContentAsString(StandardCharsets.UTF_8),
+        new TypeReference<List<ProyectoEquipo>>() {
+        });
+
+    // containing id='31' to '37'
+    for (int i = 31; i <= 37; i++) {
+      ProyectoEquipo item = actual.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(item.getId()).isEqualTo(Long.valueOf(i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  public void findAllProyectoEquipo_EmptyList_Returns204() throws Exception {
+    // given: no data ProyectoEquipo
+    Long proyectoId = 1L;
+
+    BDDMockito
+        .given(proyectoEquipoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoEquipo>>() {
+          @Override
+          public Page<ProyectoEquipo> answer(InvocationOnMock invocation) throws Throwable {
+            Page<ProyectoEquipo> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_EQUIPO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * PROYECTO PERIODO SEGUIMIENTO
    * 
    */
@@ -1243,6 +1341,23 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .build();
 
     return proyectoSocio;
+  }
+
+  /**
+   * Función que genera un ProyectoEquipo
+   * 
+   * @param proyectoEquipoId Id proyecto equipo
+   * @return proyecto equipo
+   */
+  private ProyectoEquipo generarMockProyectoEquipo(Long proyectoEquipoId) {
+
+    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(proyectoEquipoId)
+        .proyecto(Proyecto.builder().id(1L).build()).rolProyecto(RolProyecto.builder().id(1L).build())
+        .fechaInicio(LocalDate.now()).fechaFin(LocalDate.now()).personaRef("001").horasDedicacion(new Double(2))
+        .build();
+
+    return proyectoEquipo;
+
   }
 
   /*

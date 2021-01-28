@@ -8,8 +8,10 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
+import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -75,6 +77,9 @@ public class ProyectoController {
   /** ProyectoEntidadGestoraService */
   private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
 
+  /** ProyectoEquipo service */
+  private final ProyectoEquipoService proyectoEquipoService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -86,10 +91,12 @@ public class ProyectoController {
    * @param proyectoEntidadFinanciadoraService {@link ProyectoEntidadFinanciadoraService}.
    * @param proyectoPeriodoSeguimientoService  {@link ProyectoPeriodoSeguimientoService}
    * @param proyectoEntidadGestoraService      {@link ProyectoEntidadGestoraService}
+   * @param proyectoEquipoService              {@link ProyectoEquipoService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
-      ProyectoSocioService proyectoSocioService, ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
+      ProyectoEquipoService proyectoEquipoService, ProyectoSocioService proyectoSocioService,
+      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
       ProyectoEntidadGestoraService proyectoEntidadGestoraService) {
     this.service = proyectoService;
@@ -100,6 +107,7 @@ public class ProyectoController {
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
     this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
     this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
+    this.proyectoEquipoService = proyectoEquipoService;
   }
 
   /**
@@ -484,4 +492,35 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * 
+   * PROYECTO EQUIPO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoEquipo} del
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador del {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoequipos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  ResponseEntity<Page<ProyectoEquipo>> findAllProyectoEquipo(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoEquipo> page = proyectoEquipoService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
 }

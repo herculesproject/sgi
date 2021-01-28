@@ -94,9 +94,6 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     // given: data ConvocatoriaAreaTematica to find by Convocatoria and
     // AreaTematicaId
 
-    ConvocatoriaAreaTematica convocatoriaAreaTematica1 = generarConvocatoriaAreaTematica("-001");
-    ConvocatoriaAreaTematica convocatoriaAreaTematica2 = generarConvocatoriaAreaTematica("-002");
-
     // when: find by by Convocatoria and AreaTematicaId
     Optional<ConvocatoriaAreaTematica> dataFound = repository.findByConvocatoriaId(5L);
 

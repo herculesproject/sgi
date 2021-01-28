@@ -97,23 +97,4 @@ public class ProyectoPaqueteTrabajoIT extends BaseIT {
 
   }
 
-  /**
-   * Función que devuelve un objeto ProyectoPaqueteTrabajo
-   * 
-   * @param id         id del ProyectoPaqueteTrabajo
-   * @param proyectoId id del Proyecto
-   * @return el objeto ProyectoPaqueteTrabajo
-   */
-  private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
-
-    return ProyectoPaqueteTrabajo.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 01, 15))//
-        .personaMes(1D)//
-        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
-        .build();
-  }
 }
