@@ -25,6 +25,8 @@ import { SolicitudProyectoSocioService, ISolicitudProyectoSocioBackend } from '.
 import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend, SolicitudProyectoEntidadFinanciadoraAjenaService } from './solicitud-proyecto-entidad-financiadora-ajena.service';
+import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
+import { ISolicitudProyectoPresupuestoBackend, SolicitudProyectoPresupuestoService } from './solicitud-proyecto-presupuesto.service';
 
 
 interface ISolicitudBackend {
@@ -352,6 +354,40 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
         tap(() => this.logger.debug(SolicitudService.name,
           `findAllSolicitudProyectoEntidadFinanciadora(${solicitudId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
       );
+  }
+
+  /**
+   * Recupera los ISolicitudProyectoPresupuesto de la solicitud
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoPresupuesto de la solicitud
+   */
+  findAllSolicitudProyectoPresupuesto(id: number, options?: SgiRestFindOptions): Observable<ISolicitudProyectoPresupuesto[]> {
+    this.logger.debug(SolicitudService.name,
+      `findAllSolicitudProyectoPresupuesto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectopresupuestos`;
+    return this.find<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto>(
+      endpointUrl, options, SolicitudProyectoPresupuestoService.CONVERTER)
+      .pipe(
+        map((result) => result.items),
+        tap(() => this.logger.debug(SolicitudService.name,
+          `findAllSolicitudProyectoPresupuesto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Comprueba si existe una solicitudProyectoDatos asociada a una solicitud
+   *
+   * @param id Id de la solicitud
+   */
+  hasPresupuestoPorEntidades(id: number): Observable<boolean> {
+    this.logger.debug(SolicitudService.name, `hasPresupuestoPorEntidades(id: ${id})`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}/presupuestoporentidades`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200),
+      tap(() => this.logger.debug(SolicitudService.name, `hasPresupuestoPorEntidades(id: ${id})`, '-', 'end')),
+    );
   }
 
 }

@@ -64,6 +64,13 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadAreaTematicas();
+
+    this.subscriptions.push(
+      this.formGroup.controls.presupuestoPorEntidades.valueChanges.subscribe(value => {
+        this.actionService.isPresupuestoPorEntidades = value ? value : false;
+      })
+    );
+
     this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'ngOnInit()', 'end');
   }
 

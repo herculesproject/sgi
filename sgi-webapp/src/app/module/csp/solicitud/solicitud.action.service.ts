@@ -27,6 +27,8 @@ import { switchMap, tap } from 'rxjs/operators';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.fragment';
 import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
+import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
+import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
 
 
 @Injectable()
@@ -40,7 +42,8 @@ export class SolicitudActionService extends ActionService {
     HITOS: 'hitos',
     EQUIPO_PROYECTO: 'equipoProyecto',
     SOCIOS_COLABORADORES: 'sociosColaboradores',
-    ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras'
+    ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras',
+    DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -51,11 +54,13 @@ export class SolicitudActionService extends ActionService {
   private equipoProyecto: SolicitudEquipoProyectoFragment;
   private socioColaboradores: SolicitudSociosColaboradoresFragment;
   private entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
+  private desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
 
   solicitud: ISolicitud;
   readonly = false;
 
   showHitos$ = new BehaviorSubject<boolean>(false);
+  isPresupuestoPorEntidades$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private logger: NGXLogger,
@@ -73,7 +78,8 @@ export class SolicitudActionService extends ActionService {
     solicitudProyectoDatosService: SolicitudProyectoDatosService,
     solicitudProyectoEquipoService: SolicitudProyectoEquipoService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
-    solicitudEntidadFinanciadoraService: SolicitudProyectoEntidadFinanciadoraAjenaService
+    solicitudEntidadFinanciadoraService: SolicitudProyectoEntidadFinanciadoraAjenaService,
+    solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService
   ) {
     super();
     this.solicitud = {
@@ -106,6 +112,8 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoSocioService, empresaEconomicaService);
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(logger, this.solicitud?.id, solicitudService,
       solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
+    this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(logger, this.solicitud?.id, solicitudService,
+      solicitudProyectoPresupuestoService, empresaEconomicaService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
@@ -115,8 +123,10 @@ export class SolicitudActionService extends ActionService {
     this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
     this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.socioColaboradores);
     this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
+    this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
 
     this.checkSociosColaboradores();
+    this.checkPresupuestoPorEntidades();
 
   }
 
@@ -147,10 +157,12 @@ export class SolicitudActionService extends ActionService {
       exists => {
         this.equipoProyecto.existsDatosProyecto = exists;
         this.entidadesFinanciadoras.existsDatosProyecto = exists;
+        this.desglosePresupuestoGlobal.existsDatosProyecto = exists;
       },
       () => {
         this.equipoProyecto.existsDatosProyecto = false;
         this.entidadesFinanciadoras.existsDatosProyecto = false;
+        this.desglosePresupuestoGlobal.existsDatosProyecto = false;
       }
     );
     this.subscriptions.push(subscription);
@@ -231,4 +243,24 @@ export class SolicitudActionService extends ActionService {
     }
     this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'end');
   }
+
+  checkPresupuestoPorEntidades(): void {
+    this.logger.debug(SolicitudActionService.name, 'checkPresupuestoPorEntidades()', 'start');
+
+    const subscription = this.solicitudService.hasPresupuestoPorEntidades(this.solicitud.id).subscribe((result) => {
+      this.isPresupuestoPorEntidades$.next(result);
+    });
+
+    this.subscriptions.push(subscription);
+
+    this.logger.debug(SolicitudActionService.name, 'checkPresupuestoPorEntidades()', 'end');
+  }
+
+  /**
+   * Indica si el presupuesto es por entidades
+   */
+  set isPresupuestoPorEntidades(isPresupuestoPorEntidades: boolean) {
+    this.isPresupuestoPorEntidades$.next(isPresupuestoPorEntidades);
+  }
+
 }

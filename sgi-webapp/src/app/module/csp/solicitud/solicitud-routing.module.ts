@@ -23,6 +23,7 @@ import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/s
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
 import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
+import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.solicitud.editar.titulo');
@@ -114,6 +115,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.ENTIDADES_FINANCIADORAS,
         component: SolicitudProyectoEntidadesFinanciadorasComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_GLOBAL,
+        component: SolicitudProyectoPresupuestoGlobalComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

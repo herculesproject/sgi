@@ -21,6 +21,11 @@
         [title]="'csp.solicitud.menu.entidadesFinanciadoras' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_GLOBAL]"
+        *ngIf="!(actionService.isPresupuestoPorEntidades$ | async)"
+        [title]="'csp.solicitud.menu.desglose-presupuesto-global' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DOCUMENTOS]"
         [title]="'csp.solicitud.menu.documentos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">

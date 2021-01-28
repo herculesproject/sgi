@@ -6,5 +6,6 @@ export const SOLICITUD_ROUTE_NAMES = {
   HITOS: 'hitos',
   EQUIPO_PROYECTO: 'equipoProyecto',
   SOCIOS_COLABORADORES: 'sociosColaboradores',
-  ENTIDADES_FINANCIADORAS: 'entidades-financiadoras'
+  ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
+  DESGLOSE_PRESUPUESTO_GLOBAL: 'desglose-presupuesto-global'
 };
