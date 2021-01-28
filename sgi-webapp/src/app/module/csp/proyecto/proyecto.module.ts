@@ -26,6 +26,7 @@ import { ProyectoPlazosModalComponent } from './modals/proyecto-plazos-modal/pro
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
+import { ProyectoPeriodoSeguimientosComponent } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,9 @@ import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal
     ProyectoPlazosComponent,
     ProyectoPlazosModalComponent,
     ProyectoContextoComponent,
-    ProyectoContextoModalComponent],
+    ProyectoContextoModalComponent,
+    ProyectoPeriodoSeguimientosComponent
+  ],
   imports: [
     SharedModule,
     CommonModule,

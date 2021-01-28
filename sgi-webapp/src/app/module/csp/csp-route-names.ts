@@ -14,5 +14,6 @@ export const CSP_ROUTE_NAMES = {
   AREA_TEMATICA: 'area-tematica',
   PROYECTO: 'proyectos',
   SOLICITUD_PROYECTO_SOCIO: 'solicitud-proyecto-socio',
-  PROYECTO_SOCIO: 'proyecto-socio'
+  PROYECTO_SOCIO: 'proyecto-socio',
+  PROYECTO_SEGUIMIENTO_CIENTIFICO: 'proyecto-seguimiento-cientifico'
 };

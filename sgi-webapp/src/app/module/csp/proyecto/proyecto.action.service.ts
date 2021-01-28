@@ -19,6 +19,12 @@ import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proy
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
+import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
+import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
+import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
+
+
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
@@ -35,7 +41,8 @@ export class ProyectoActionService extends ActionService {
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
     PAQUETE_TRABAJO: 'paquete-trabajo',
     PLAZOS: 'plazos',
-    CONTEXTO_PROYECTO: 'contexto-proyecto'
+    CONTEXTO_PROYECTO: 'contexto-proyecto',
+    SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -48,6 +55,7 @@ export class ProyectoActionService extends ActionService {
   private proyectoConvocatoriaValue: IProyecto;
   private plazos: ProyectoPlazosFragment;
   private proyectoContexto: ProyectoContextoFragment;
+  private seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -74,7 +82,9 @@ export class ProyectoActionService extends ActionService {
     proyectoHitoService: ProyectoHitoService,
     proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
     proyectoPlazoService: ProyectoPlazoService,
-    contextoProyectoService: ContextoProyectoService
+    contextoProyectoService: ContextoProyectoService,
+    proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
+    documentoService: DocumentoService
   ) {
     super();
 
@@ -118,6 +128,10 @@ export class ProyectoActionService extends ActionService {
       this.proyectoContexto = new ProyectoContextoFragment(logger, this.proyecto, proyectoService,
         contextoProyectoService, convocatoriaService, this.proyectoConvocatoriaValue);
       this.addFragment(this.FRAGMENT.CONTEXTO_PROYECTO, this.proyectoContexto);
+
+      this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(logger, this.proyecto?.id, proyectoService,
+        proyectoPeriodoSeguimientoService, documentoService, this.proyecto);
+      this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
     }
   }
 

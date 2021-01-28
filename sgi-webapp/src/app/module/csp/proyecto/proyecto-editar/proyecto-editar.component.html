@@ -17,16 +17,20 @@
         [title]="'cps.proyecto.menu.entidades-financiadoras' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.HITOS]" [title]="'csp.proyecto.hitos' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.SOCIOS]"
+        [title]="'csp.proyecto.menu.socios' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PLAZOS]"
         [title]="'csp.proyecto.menu.proyectosPlazos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PLAZOS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.SOCIOS]"
-        [title]="'csp.proyecto.menu.socios' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.HITOS]" [title]="'csp.proyecto.hitos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO]"
+        [title]="'csp.proyecto.menu.seguimiento.cientifico' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PAQUETE_TRABAJO]"
         *ngIf="actionService.disabledPaqueteTrabajo" [title]="'csp.proyecto.paquete.trabajo' | translate"

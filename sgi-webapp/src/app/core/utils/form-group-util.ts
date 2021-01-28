@@ -193,4 +193,22 @@ export class FormGroupUtil {
   private static getErrorKey(key: string) {
     return `No existe el valor ${key} dentro del formGroup`;
   }
+
+  /**
+   * Comprueba si existe o no el validador indicado en el formGroup
+   * 
+   * @param formGroup FormGroup
+   * @param key Identificador del campo del formulario
+   * @param validator Validador a comprobar si existe
+   * @return true/false
+   */
+  static hasValidator(formGroup: FormGroup, key: string, validator: string): boolean {
+    const control = formGroup.get(key);
+    if (control.validator instanceof Function) {
+      const validators = control.validator(control);
+      return !!(validators && validators.hasOwnProperty(validator));
+    } else {
+      return false;
+    }
+  }
 }

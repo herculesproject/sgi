@@ -8,6 +8,7 @@ import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustif
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
+import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
@@ -417,7 +418,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   /**
    * Recupera los IProyectoSocio del proyecto
    *
-   * @param id Id de la solicitud
+   * @param id Id del proyecto
    * @param options opciones de busqueda
    * @returns observable con la lista de IProyectoSocio del proyecto
    */
@@ -496,4 +497,23 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       tap(() => this.logger.debug(ProyectoService.name, 'setEntidadConvocantePrograma()', '-', 'end'))
     );
   }
+
+  /**
+   * Recupera los IProyectoPeriodoSeguimiento del proyecto
+   *
+   * @param id Id del proyecto
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IProyectoPeriodoSeguimiento del proyecto
+   */
+  findAllProyectoPeriodoSeguimientoProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPeriodoSeguimiento>> {
+    this.logger.debug(ProyectoService.name,
+      `findAllProyectoPeriodoSeguimientoProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/proyectoperiodoseguimientos`;
+    return this.find<IProyectoPeriodoSeguimiento, IProyectoPeriodoSeguimiento>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name,
+          `findAllProyectoPeriodoSeguimientoProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
 }
