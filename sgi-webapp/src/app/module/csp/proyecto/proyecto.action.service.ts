@@ -31,6 +31,9 @@ import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service'
 import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
+import { ProyectoEquipoFragment } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.fragment';
+import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -45,7 +48,8 @@ export class ProyectoActionService extends ActionService {
     PLAZOS: 'plazos',
     CONTEXTO_PROYECTO: 'contexto-proyecto',
     SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
-    ENTIDAD_GESTORA: 'entidad-gestora'
+    ENTIDAD_GESTORA: 'entidad-gestora',
+    EQUIPO_PROYECTO: 'equipo-proyecto'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -60,6 +64,7 @@ export class ProyectoActionService extends ActionService {
   private proyectoContexto: ProyectoContextoFragment;
   private seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
   private entidadGestora: ProyectoEntidadGestoraFragment;
+  private proyectoEquipo: ProyectoEquipoFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -93,7 +98,9 @@ export class ProyectoActionService extends ActionService {
     contextoProyectoService: ContextoProyectoService,
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     documentoService: DocumentoService,
-    proyectoEntidadGestora: ProyectoEntidadGestoraService
+    proyectoEntidadGestora: ProyectoEntidadGestoraService,
+    proyectoEquipoService: ProyectoEquipoService,
+    personaFisicaService: PersonaFisicaService
   ) {
     super();
 
@@ -141,12 +148,17 @@ export class ProyectoActionService extends ActionService {
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(logger, this.proyecto?.id, proyectoService,
         proyectoPeriodoSeguimientoService, documentoService, this.proyecto);
       this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
+
+      this.proyectoEquipo = new ProyectoEquipoFragment(logger, this.proyecto?.id, proyectoService,
+        proyectoEquipoService, personaFisicaService);
+      this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.proyectoEquipo);
+
+      this.entidadGestora =
+        new ProyectoEntidadGestoraFragment(fb, logger, this.proyecto?.id,
+          proyectoService, proyectoEntidadGestora, empresaEconomicaService, this);
+      this.addFragment(this.FRAGMENT.ENTIDAD_GESTORA, this.entidadGestora);
     }
 
-    this.entidadGestora =
-      new ProyectoEntidadGestoraFragment(fb, logger, this.proyecto?.id,
-        proyectoService, proyectoEntidadGestora, empresaEconomicaService, this);
-    this.addFragment(this.FRAGMENT.ENTIDAD_GESTORA, this.entidadGestora);
   }
 
   /**

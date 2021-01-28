@@ -21,6 +21,10 @@
         [title]="'cps.proyecto.menu.entidades-financiadoras' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.EQUIPO_PROYECTO]"
+        [title]="'csp.proyecto.equipo.proyecto' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.SOCIOS]"
         [title]="'csp.proyecto.menu.socios' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">

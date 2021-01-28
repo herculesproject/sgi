@@ -28,6 +28,8 @@ import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService
 import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
 import { IProyectoEntidadGestoraBackend, ProyectoEntidadGestoraService } from './proyecto-entidad-gestora.service';
+import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
+import { IProyectoEquipoBackend, ProyectoEquipoService } from './proyecto-equipo.service';
 
 interface IProyectoBackend {
 
@@ -434,6 +436,20 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
+   * Recupera los equipos de un proyecto
+   * @param idProyecto Identificador del proyecto.
+   * @returns Listado de equipos.
+   */
+  findEquiposProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEquipo>> {
+    this.logger.debug(ProyectoService.name, `findEquiposProyecto(${idProyecto}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectoequipos`;
+    return this.find<IProyectoEquipo, IProyectoEquipo>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name, `findEquiposProyecto(${idProyecto}, ${options})`, '-', 'end'))
+      );
+  }
+
+  /**
    * Recupera los IProyectoSocio del proyecto
    *
    * @param id Id del proyecto
@@ -451,6 +467,23 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
         ),
         tap(() => this.logger.debug(ProyectoService.name,
           `findAllProyectoSocioProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Devuelve el listado de IProyectoEquipo de un IProyecto
+   *
+   * @param id Id del IProyecto
+   */
+  findAllProyectoEquipo(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IProyectoEquipo>> {
+    this.logger.debug(ProyectoSocioService.name,
+      `findAllProyectoEquipoSocio(id: ${id})`, '-', 'start');
+    return this.find<IProyectoEquipoBackend, IProyectoEquipo>(
+      `${this.endpointUrl}/${id}/proyectoequipos`, options,
+      ProyectoEquipoService.CONVERTER).pipe(
+        tap(() => this.logger.debug(ProyectoSocioService.name,
+          `findAllProyectoEquipoSocio(id: ${id})`, '-', 'end'))
       );
   }
 

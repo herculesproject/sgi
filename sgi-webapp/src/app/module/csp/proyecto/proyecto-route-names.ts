@@ -8,5 +8,6 @@ export const PROYECTO_ROUTE_NAMES = {
   PLAZOS: 'plazos',
   CONTEXTO_PROYECTO: 'contexto-proyecto',
   SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
-  ENTIDAD_GESTORA: 'entidad-gestora'
+  ENTIDAD_GESTORA: 'entidad-gestora',
+  EQUIPO_PROYECTO: 'equipo-proyecto'
 };

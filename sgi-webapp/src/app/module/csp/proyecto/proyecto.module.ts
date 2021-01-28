@@ -28,6 +28,8 @@ import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contex
 import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
 import { ProyectoPeriodoSeguimientosComponent } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.component';
 import { ProyectoEntidadGestoraComponent } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.component';
+import { ProyectoEquipoComponent } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.component';
+import { ProyectoEquipoModalComponent } from './modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
 
 @NgModule({
   declarations: [
@@ -49,8 +51,9 @@ import { ProyectoEntidadGestoraComponent } from './proyecto-formulario/proyecto-
     ProyectoContextoComponent,
     ProyectoContextoModalComponent,
     ProyectoPeriodoSeguimientosComponent,
-    ProyectoEntidadGestoraComponent
-  ],
+    ProyectoEntidadGestoraComponent,
+    ProyectoEquipoComponent,
+    ProyectoEquipoModalComponent],
   imports: [
     SharedModule,
     CommonModule,
