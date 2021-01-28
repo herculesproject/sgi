@@ -9,6 +9,8 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -47,21 +49,26 @@ public class ProyectoSocioController {
   /** ProyectoSocioPeriodoPagoService service */
   private final ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
 
+  /** ProyectoSocioPeriodoJustificacionService service */
+  private final ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
+
   /**
    * Instancia un nuevo ProyectoSocioController.
    * 
-   * @param proyectoSocioService            {@link ProyectoSocioService}.
-   * @param proyectoSocioEquipoService      {@link ProyectoSocioEquipoService}
-   * @param proyectoSocioService            {@link ProyectoSocioService}.
-   * @param proyectoSocioPeriodoPagoService {@link ProyectoSocioPeriodoPagoService}.
+   * @param proyectoSocioService                     {@link ProyectoSocioService}.
+   * @param proyectoSocioEquipoService               {@link ProyectoSocioEquipoService}
+   * @param proyectoSocioService                     {@link ProyectoSocioService}.
+   * @param proyectoSocioPeriodoPagoService          {@link ProyectoSocioPeriodoPagoService}.
+   * @param proyectoSocioPeriodoJustificacionService {@link ProyectoSocioPeriodoJustificacionService}.
    */
   public ProyectoSocioController(ProyectoSocioService proyectoSocioService,
       ProyectoSocioEquipoService proyectoSocioEquipoService,
-      ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService) {
+      ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService,
+      ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService) {
     this.service = proyectoSocioService;
     this.proyectoSocioEquipoService = proyectoSocioEquipoService;
     this.proyectoSocioPeriodoPagoService = proyectoSocioPeriodoPagoService;
-
+    this.proyectoSocioPeriodoJustificacionService = proyectoSocioPeriodoJustificacionService;
   }
 
   /**
@@ -189,6 +196,34 @@ public class ProyectoSocioController {
     }
 
     log.debug("findAllProyectoSocioPeriodoPago(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ProyectoSocioPeriodoJustificacion} de la {@link ProyectoSocio}.
+   * 
+   * @param id     Identificador de {@link ProyectoSocio}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectosocioperiodojustificaciones")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
+  ResponseEntity<Page<ProyectoSocioPeriodoJustificacion>> findAllProyectoSocioPeriodoJustificaciones(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug(
+        "findAllProyectoSocioPeriodoJustificaciones(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoSocioPeriodoJustificacion> page = proyectoSocioPeriodoJustificacionService.findAllByProyectoSocio(id,
+        query, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findAllProyectoSocioPeriodoJustificaciones(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoSocioPeriodoJustificaciones(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

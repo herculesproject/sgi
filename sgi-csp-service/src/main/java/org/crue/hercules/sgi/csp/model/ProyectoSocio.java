@@ -44,7 +44,7 @@ public class ProyectoSocio extends BaseEntity {
   @SequenceGenerator(name = "proyecto_socio_seq", sequenceName = "proyecto_socio_seq", allocationSize = 1)
   private Long id;
 
-  /** Rol socio. */
+  /** Proyecto. */
   @ManyToOne
   @JoinColumn(name = "proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOCIO_PROYECTO"))
   @NotNull

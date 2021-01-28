@@ -146,7 +146,7 @@ public class ProyectoSocioEquipoIT extends BaseIT {
     Assertions.assertThat(proyectoSocioEquipo.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(LocalDate.of(2021, 1, 11));
     Assertions.assertThat(proyectoSocioEquipo.getFechaFin()).as("getFechaFin()").isEqualTo(LocalDate.of(2022, 1, 11));
-    Assertions.assertThat(proyectoSocioEquipo.getPersonaRef()).as("getPersonaRef()").isEqualTo("personaRef-1");
+    Assertions.assertThat(proyectoSocioEquipo.getPersonaRef()).as("getPersonaRef()").isEqualTo("personaRef-001");
     Assertions.assertThat(proyectoSocioEquipo.getRolProyecto().getId()).as("getRolProyecto()").isEqualTo(1);
 
   }

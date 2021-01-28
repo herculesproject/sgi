@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +47,10 @@ public class ProyectoSocioIT extends BaseIT {
     return request;
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void create_ReturnsProyectoSocio() throws Exception {
@@ -79,7 +83,11 @@ public class ProyectoSocioIT extends BaseIT {
         .isEqualTo(proyectoSocio.getImporteConcedido());
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_socio.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void update_ReturnsProyectoSocio() throws Exception {
@@ -113,7 +121,11 @@ public class ProyectoSocioIT extends BaseIT {
 
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_socio.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void delete_Return204() throws Exception {
@@ -129,7 +141,11 @@ public class ProyectoSocioIT extends BaseIT {
 
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_socio.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void existsById_Returns200() throws Exception {
@@ -142,7 +158,11 @@ public class ProyectoSocioIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_socio.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findById_ReturnsProyectoSocio() throws Exception {
@@ -239,11 +259,59 @@ public class ProyectoSocioIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
     Assertions.assertThat(proyectoSocioEquipos.get(0).getPersonaRef()).as("get(0).getPersonaRef()")
-        .isEqualTo("personaRef-" + 3);
+        .isEqualTo("personaRef-" + String.format("%03d", 3));
     Assertions.assertThat(proyectoSocioEquipos.get(1).getPersonaRef()).as("get(1).getPersonaRef())")
-        .isEqualTo("personaRef-" + 2);
+        .isEqualTo("personaRef-" + String.format("%03d", 2));
     Assertions.assertThat(proyectoSocioEquipos.get(2).getPersonaRef()).as("get(2).getPersonaRef()")
-        .isEqualTo("personaRef-" + 1);
+        .isEqualTo("personaRef-" + String.format("%03d", 1));
+  }
+
+  /*
+   *
+   * PROYECTO SOCIO PERIODO JUSTIFICACION
+   * 
+   */
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_socio.sql", "classpath:scripts/proyecto_socio_periodo_justificacion.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllProyectoSocioPeriodoJustificacion_WithPagingSortingAndFiltering_ReturnsProyectoSocioPeriodoJustificacionSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "observaciones~%observ%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/proyectosocioperiodojustificaciones")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ProyectoSocioPeriodoJustificacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ProyectoSocioPeriodoJustificacion>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ProyectoSocioPeriodoJustificacion> convocatoriaPeriodoJustificaciones = response.getBody();
+    Assertions.assertThat(convocatoriaPeriodoJustificaciones.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(convocatoriaPeriodoJustificaciones.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo("observaciones " + 3);
+    Assertions.assertThat(convocatoriaPeriodoJustificaciones.get(1).getObservaciones()).as("get(1).getObservaciones())")
+        .isEqualTo("observaciones " + 2);
+    Assertions.assertThat(convocatoriaPeriodoJustificaciones.get(2).getObservaciones()).as("get(2).getObservaciones()")
+        .isEqualTo("observaciones " + 1);
   }
 
   /**

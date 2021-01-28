@@ -11,11 +11,11 @@ public interface ProyectoSocioEquipoRepository
     extends JpaRepository<ProyectoSocioEquipo, Long>, JpaSpecificationExecutor<ProyectoSocioEquipo> {
 
   /**
-   * Recupera la lista de {@link ProyectoSocioEquipo} asociados a un
-   * {@link ProyectoSocio}.
+   * Devuelve el listado de todos los {@link ProyectoSocioEquipo} asociados a un
+   * {@link ProyectoSocio}
    * 
-   * @param proyectoSocioId Identificador de {@link ProyectoSocio}.
-   * @return lista de {@link ProyectoSocioEquipo}
+   * @param proyectoSocioId Identificador del {@link ProyectoSocio}
+   * @return listado de {@link ProyectoSocioEquipo}
    */
   List<ProyectoSocioEquipo> findAllByProyectoSocioId(Long proyectoSocioId);
 

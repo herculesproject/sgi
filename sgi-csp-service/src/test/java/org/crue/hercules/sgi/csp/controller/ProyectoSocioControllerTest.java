@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,11 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -50,6 +53,10 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoSocioService service;
+
+  /** ProyectoSocioPeriodoJustificacionService service */
+  @MockBean
+  private ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
 
   @MockBean
   private ProyectoSocioEquipoService proyectoSocioEquipoService;
@@ -466,6 +473,105 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * PROYECTO PERIODO JUSTIFICACION
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllProyectoSocioPeriodoJustificacion_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoSocioPeriodoJustificacion para el
+    // ProyectoSocio
+    Long proyectoSocioId = 1L;
+
+    List<ProyectoSocioPeriodoJustificacion> proyectoSociosPeriodoJustificaciones = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoSociosPeriodoJustificaciones.add(generarMockProyectoSocioPeriodoJustificacion(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoSocioPeriodoJustificacionService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > proyectoSociosPeriodoJustificaciones.size() ? proyectoSociosPeriodoJustificaciones.size()
+              : toIndex;
+          List<ProyectoSocioPeriodoJustificacion> content = proyectoSociosPeriodoJustificaciones.subList(fromIndex,
+              toIndex);
+          Page<ProyectoSocioPeriodoJustificacion> pageResponse = new PageImpl<>(content, pageable,
+              proyectoSociosPeriodoJustificaciones.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/proyectosocioperiodojustificaciones", proyectoSocioId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoSocioEntidadConvocante del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoSocioPeriodoJustificacion> proyectoSociosPeriodoJustificacionesResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ProyectoSocioPeriodoJustificacion>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = proyectoSociosPeriodoJustificacionesResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoSocioPeriodoJustificacion.getObservaciones()).isEqualTo("observaciones-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllProyectoSocioPeriodoJustificacion_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoSocioPeriodoJustificacion para la
+    // ProyectoSocio
+    Long proyectoSocioId = 1L;
+    List<ProyectoSocioPeriodoJustificacion> proyectoSociosPeriodoJustificaciones = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoSocioPeriodoJustificacionService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<ProyectoSocioPeriodoJustificacion> pageResponse = new PageImpl<>(proyectoSociosPeriodoJustificaciones,
+              pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/proyectosocioperiodojustificaciones", proyectoSocioId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que genera un ProyectoSocio
    * 
    * @param proyectoSocioId Identificador del {@link ProyectoSocio}
@@ -565,6 +671,29 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
         LocalDate.of(2021, 4, 10), null);
 
     return proyectoSocioEquipo;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoSocioPeriodoJustificacion
+   * 
+   * @param id id del ProyectoSocioPeriodoJustificacion
+   * @return el objeto ProyectoSocioPeriodoJustificacion
+   */
+  private ProyectoSocioPeriodoJustificacion generarMockProyectoSocioPeriodoJustificacion(Long id) {
+    ProyectoSocio convocatoria = new ProyectoSocio();
+    convocatoria.setId(id == null ? 1 : id);
+
+    ProyectoSocioPeriodoJustificacion convocatoriaPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
+    convocatoriaPeriodoJustificacion.setId(id);
+    convocatoriaPeriodoJustificacion.setProyectoSocio(convocatoria);
+    convocatoriaPeriodoJustificacion.setNumPeriodo(1);
+    convocatoriaPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 10, 10));
+    convocatoriaPeriodoJustificacion.setFechaFin(LocalDate.of(2020, 10, 10));
+    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDateTime.of(2020, 10, 10, 0, 0, 0));
+    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDateTime.of(2020, 11, 20, 0, 0, 0));
+    convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
+
+    return convocatoriaPeriodoJustificacion;
   }
 
 }
