@@ -232,6 +232,17 @@ const routes: SgiRoutes = [
           title: MSG_SOLICITUD_PROYECTO_SOCIO,
         }
       },
+      {
+        path: CSP_ROUTE_NAMES.PROYECTO_SOCIO_PERIODO_JUSTIFICACION,
+        loadChildren: () =>
+          import('./proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion.module').then(
+            (m) => m.ProyectoSocioPeriodoJustificacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SOLICITUD_PROYECTO_SOCIO,
+        }
+      },
       { path: '**', component: null }
     ]
   }

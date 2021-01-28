@@ -36,7 +36,7 @@ export class ProyectoSocioEditarComponent extends ActionComponent {
     dialogService: DialogService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
+    this.urlFrom = history.state?.urlProyecto;
   }
 
   saveOrUpdate(): void {

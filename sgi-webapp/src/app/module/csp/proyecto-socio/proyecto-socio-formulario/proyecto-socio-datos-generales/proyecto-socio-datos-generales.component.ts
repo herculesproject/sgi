@@ -60,7 +60,6 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
     super.ngOnInit();
     this.loadRolProyectos();
     this.loadSociosSelectedProyecto();
-
     this.subscriptions.push(
       merge(
         this.formGroup.get('empresa').valueChanges,

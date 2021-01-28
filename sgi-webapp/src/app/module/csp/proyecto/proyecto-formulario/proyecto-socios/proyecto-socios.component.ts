@@ -16,15 +16,17 @@ import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoSociosFragment } from './proyecto-socios.fragment';
+import { Router } from '@angular/router';
 
 
 const MSG_DELETE = marker('csp.proyecto.socios.borrar');
 
 
-interface IProyectoSocioState {
+export interface IProyectoSocioState {
   proyectoId: number;
   proyectoSocio: IProyectoSocio;
   selectedProyectoSocios: IProyectoSocio[];
+  urlProyecto: string;
 }
 
 @Component({
@@ -53,6 +55,7 @@ export class ProyectoSociosComponent extends FragmentComponent implements OnInit
     protected logger: NGXLogger,
     public actionService: ProyectoActionService,
     private dialogService: DialogService,
+    private router: Router
   ) {
     super(actionService.FRAGMENT.SOCIOS, actionService);
     this.logger.debug(ProyectoSociosComponent.name, `ngOnInit()`, 'start');
@@ -99,7 +102,8 @@ export class ProyectoSociosComponent extends FragmentComponent implements OnInit
     const state: IProyectoSocioState = {
       proyectoId: this.fragment.getKey() as number,
       proyectoSocio: wrapper ? wrapper.value : {} as IProyectoSocio,
-      selectedProyectoSocios: this.dataSource.data.map(element => element.value)
+      selectedProyectoSocios: this.dataSource.data.map(element => element.value),
+      urlProyecto: this.router.url
     };
 
     this.logger.debug(ProyectoSociosComponent.name, `createState(${wrapper})`, 'end');

@@ -1,5 +1,6 @@
-import { ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
+import { ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { DateUtils } from '@core/utils/date-utils';
+import { Fragment } from '@core/services/action-service';
 
 export class DateValidator {
 
@@ -86,4 +87,60 @@ export class DateValidator {
     };
   }
 
+  static maxDate(maxDate: Date): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      const date = new Date(control.value);
+      if (date > maxDate) {
+        return { maxDate: true };
+      }
+      return null;
+    };
+  }
+
+  static minDate(minDate: Date): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      const date = new Date(control.value);
+      if (date < minDate) {
+        return { minDate: true };
+      }
+      return null;
+    };
+  }
+
+  static rangeWithTime(controlName: string, beforeControlName: string, afterControlName: string): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      const control = formGroup.controls[controlName];
+      if (control.errors) {
+        delete control.errors.rangeWithTime;
+        if (Object.keys(control.errors).length === 0) {
+          control.setErrors(null);
+        }
+      }
+      const beforeControl = formGroup.controls[beforeControlName];
+      const afterControl = formGroup.controls[afterControlName];
+      if (beforeControl.value && afterControl.value && control.value) {
+        const date = new Date(control.value);
+        const before = new Date(beforeControl.value);
+        before.setHours(0);
+        before.setMinutes(0);
+        before.setSeconds(0);
+        const after = new Date(afterControl.value);
+        after.setHours(23);
+        after.setMinutes(59);
+        after.setSeconds(59);
+        if (after >= date && date >= before) {
+          return;
+        }
+        control.setErrors({ rangeWithTime: true });
+        control.markAsTouched({ onlySelf: true });
+        return;
+      }
+    };
+  }
 }

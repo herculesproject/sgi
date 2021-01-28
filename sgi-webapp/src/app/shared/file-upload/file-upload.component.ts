@@ -427,7 +427,7 @@ export class SgiFileUploadComponent implements
       );
     }
     else {
-      of(void 0);
+      return of(void 0);
     }
   }
 }
