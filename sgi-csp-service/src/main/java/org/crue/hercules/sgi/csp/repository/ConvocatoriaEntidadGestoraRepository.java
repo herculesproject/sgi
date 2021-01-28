@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -19,4 +20,13 @@ public interface ConvocatoriaEntidadGestoraRepository
    * @return una {@link ConvocatoriaEntidadGestora}
    */
   Optional<ConvocatoriaEntidadGestora> findByConvocatoriaIdAndEntidadRef(Long convocatoriaId, String entidadRef);
+
+  /**
+   * Busca todas las {@link ConvocatoriaEntidadGestora} por su
+   * {@link Convocatoria}
+   * 
+   * @param convocatoriaId Id de la {@link Convocatoria}
+   * @return lista de {@link ConvocatoriaEntidadGestora}
+   */
+  List<ConvocatoriaEntidadGestora> findAllByConvocatoriaId(Long convocatoriaId);
 }

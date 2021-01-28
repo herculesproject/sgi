@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -28,6 +29,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
@@ -75,6 +77,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoSocioService proyectoSocioService;
+  @MockBean
+  private ProyectoEntidadGestoraService proyectoEntidadGestoraService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -86,6 +90,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String PATH_FASE = "/proyectofases";
   private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
+  private static final String PATH_ENTIDAD_GESTORA = "/proyectoentidadgestoras";
   private static final String PATH_SEGUIMIENTO = "/proyectoperiodoseguimientos";
 
   @Test
@@ -990,6 +995,101 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * PROYECTO ENTIDAD GESTORA
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoEntidadGestora_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoEntidadGestora para el Proyecto
+    Long proyectoId = 1L;
+
+    List<ProyectoEntidadGestora> proyectoEntidadGestoras = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoEntidadGestoras.add(generarMockProyectoEntidadGestora(i, proyectoId));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoEntidadGestoraService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoEntidadGestora>>() {
+          @Override
+          public Page<ProyectoEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoEntidadGestoras.size() ? proyectoEntidadGestoras.size() : toIndex;
+            List<ProyectoEntidadGestora> content = proyectoEntidadGestoras.subList(fromIndex, toIndex);
+            Page<ProyectoEntidadGestora> page = new PageImpl<>(content, pageable, proyectoEntidadGestoras.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_GESTORA, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoEntidadGestora del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoEntidadGestora> proyectoEntidadGestoraResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<ProyectoEntidadGestora>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoEntidadGestora proyectoEntidadGestora = proyectoEntidadGestoraResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoEntidadGestora.getEntidadRef()).isEqualTo("entidad-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoEntidadGestora_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoEntidadGestora para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoEntidadGestora> proyectoEntidadGestoras = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoEntidadGestoraService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoEntidadGestora>>() {
+          @Override
+          public Page<ProyectoEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ProyectoEntidadGestora> page = new PageImpl<>(proyectoEntidadGestoras, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_GESTORA, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * MOCKS
    * 
    */
@@ -1164,6 +1264,21 @@ public class ProyectoControllerTest extends BaseControllerTest {
     proyectoPeriodoSeguimiento.setObservaciones("obs-" + id);
 
     return proyectoPeriodoSeguimiento;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoEntidadGestora
+   * 
+   * @param id         id del ProyectoEntidadGestora
+   * @param proyectoId id del Proyecto
+   * @return el objeto ProyectoEntidadGestora
+   */
+  private ProyectoEntidadGestora generarMockProyectoEntidadGestora(Long id, Long proyectoId) {
+    return ProyectoEntidadGestora.builder()//
+        .id(id)//
+        .proyecto(Proyecto.builder().id(proyectoId).build())//
+        .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))//
+        .build();
   }
 
 }

@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
@@ -77,6 +78,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
   @Mock
   private ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
+  @Mock
+  private ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository;
+  @Mock
+  private ProyectoEntidadGestoraService proyectoEntidadGestoraService;
 
   private ProyectoService service;
 
@@ -84,8 +89,9 @@ public class ProyectoServiceTest extends BaseServiceTest {
   public void setUp() throws Exception {
     service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
-        convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaAreaTematicaRepository,
-        contextoProyectoService, convocatoriaPeriodoSeguimientoCientificoRepository, proyectoPeriodoSeguimientoService);
+        convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaEntidadGestoraRepository,
+        proyectoEntidadGestoraService, convocatoriaAreaTematicaRepository, contextoProyectoService,
+        convocatoriaPeriodoSeguimientoCientificoRepository, proyectoPeriodoSeguimientoService);
   }
 
   @Test

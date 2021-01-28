@@ -1,5 +1,6 @@
 -- vacia la bd
 DELETE FROM csp.proyecto_entidad_convocante;
+DELETE FROM csp.proyecto_entidad_gestora;
 DELETE FROM csp.proyecto_paquete_trabajo;
 DELETE FROM csp.proyecto_fase;
 DELETE FROM csp.contexto_proyecto;

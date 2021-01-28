@@ -7,11 +7,13 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
@@ -70,6 +72,9 @@ public class ProyectoController {
   /** ConvocatoriaEntidadFinanciadora service */
   private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
 
+  /** ProyectoEntidadGestoraService */
+  private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -80,11 +85,13 @@ public class ProyectoController {
    * @param proyectoSocioService               {@link ProyectoSocioService}.
    * @param proyectoEntidadFinanciadoraService {@link ProyectoEntidadFinanciadoraService}.
    * @param proyectoPeriodoSeguimientoService  {@link ProyectoPeriodoSeguimientoService}
+   * @param proyectoEntidadGestoraService      {@link ProyectoEntidadGestoraService}
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
       ProyectoSocioService proyectoSocioService, ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
-      ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService) {
+      ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
+      ProyectoEntidadGestoraService proyectoEntidadGestoraService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -92,6 +99,7 @@ public class ProyectoController {
     this.proyectoSocioService = proyectoSocioService;
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
     this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
+    this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
   }
 
   /**
@@ -442,6 +450,37 @@ public class ProyectoController {
     }
 
     log.debug("findAllProyectoPeriodoSeguimiento(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO ENTIDAD GESTORA
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoEntidadGestora} del
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoentidadgestoras")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Page<ProyectoEntidadGestora>> findAllProyectoEntidadGestora(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoEntidadGestora> page = proyectoEntidadGestoraService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

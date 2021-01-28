@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -21,7 +22,9 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
@@ -34,6 +37,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
@@ -72,6 +76,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
   private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
   private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
+  private final ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository;
+  private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
   private final ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
   private final ContextoProyectoService contextoProyectoService;
   private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
@@ -83,6 +89,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
       ProyectoEntidadConvocanteService proyectoEntidadConvocanteService,
+      ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository,
+      ProyectoEntidadGestoraService proyectoEntidadGestoraService,
       ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository,
       ContextoProyectoService contextoProyectoService,
       ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
@@ -99,6 +107,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.contextoProyectoService = contextoProyectoService;
     this.convocatoriaPeriodoSeguimientoCientificoRepository = convocatoriaPeriodoSeguimientoCientificoRepository;
     this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
+    this.convocatoriaEntidadGestoraRepository = convocatoriaEntidadGestoraRepository;
+    this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
   }
 
   /**
@@ -134,6 +144,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     if (proyecto.getConvocatoria() != null) {
       // TODO implementar a medida que se vayan haciendo las pestañas de proyecto
       this.copyEntidadesFinanciadoras(proyecto.getId(), proyecto.getConvocatoria().getId());
+      this.copyEntidadesGestoras(proyecto);
       copiarEntidadesConvocatesDeConvocatoria(proyecto, proyecto.getConvocatoria());
       this.guardarDatosEntidadesRelacionadas(proyecto.getConvocatoria());
       this.copyAreaTematica(proyecto);
@@ -599,4 +610,23 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyPeriodoSeguimiento(Proyecto proyecto) - start");
   }
 
+  /**
+   * Copia las entidades gestoras de una convocatoria a un proyecto
+   * 
+   * @param proyectoId     Identificador del proyecto de destino
+   * @param convocatoriaId Identificador de la convocatoria
+   */
+  private void copyEntidadesGestoras(Proyecto proyecto) {
+    log.debug("copyEntidadesGestoras(Long proyectoId, Long convocatoriaId) - start");
+    List<ConvocatoriaEntidadGestora> entidadesConvocatoria = convocatoriaEntidadGestoraRepository
+        .findAllByConvocatoriaId(proyecto.getConvocatoria().getId());
+    entidadesConvocatoria.stream().forEach((entidadConvocatoria) -> {
+      log.debug("Copy copyEntidadesGestoras with id: {0}", entidadConvocatoria.getId());
+      ProyectoEntidadGestora entidadProyecto = new ProyectoEntidadGestora();
+      entidadProyecto.setProyecto(proyecto);
+      entidadProyecto.setEntidadRef(entidadConvocatoria.getEntidadRef());
+      this.proyectoEntidadGestoraService.create(entidadProyecto);
+    });
+    log.debug("copyEntidadesGestoras(Long proyectoId, Long convocatoriaId) - start");
+  }
 }
