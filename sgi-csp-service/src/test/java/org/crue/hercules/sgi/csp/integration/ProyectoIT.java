@@ -515,7 +515,7 @@ public class ProyectoIT {
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
     proyecto.setFechaInicio(LocalDate.now());
-    proyecto.setFechaFin(LocalDate.now());
+    proyecto.setFechaFin(LocalDate.now().plusMonths(1));
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);

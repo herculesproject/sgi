@@ -3,6 +3,8 @@ DELETE FROM csp.proyecto_entidad_convocante;
 DELETE FROM csp.proyecto_paquete_trabajo;
 DELETE FROM csp.proyecto_fase;
 DELETE FROM csp.contexto_proyecto;
+DELETE FROM csp.proyecto_periodo_seguimiento_documento;
+DELETE FROM csp.proyecto_periodo_seguimiento;
 DELETE FROM csp.proyecto_hito;
 DELETE FROM csp.solicitud_hito;
 DELETE FROM csp.solicitud_modalidad;

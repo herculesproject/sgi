@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -72,6 +73,10 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
   @Mock
   private ContextoProyectoService contextoProyectoService;
+  @Mock
+  private ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
+  @Mock
+  private ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
 
   private ProyectoService service;
 
@@ -80,7 +85,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     service = new ProyectoServiceImpl(repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
         convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaAreaTematicaRepository,
-        contextoProyectoService);
+        contextoProyectoService, convocatoriaPeriodoSeguimientoCientificoRepository, proyectoPeriodoSeguimientoService);
   }
 
   @Test
@@ -838,7 +843,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
     proyecto.setFechaInicio(LocalDate.now());
-    proyecto.setFechaFin(LocalDate.now());
+    proyecto.setFechaFin(LocalDate.now().plusMonths(1));
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);

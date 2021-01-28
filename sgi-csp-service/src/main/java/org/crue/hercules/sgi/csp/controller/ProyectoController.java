@@ -15,6 +15,8 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -62,6 +64,9 @@ public class ProyectoController {
   /** ProyectoSocio service */
   private final ProyectoSocioService proyectoSocioService;
 
+  /** ProyectoPeriodoSeguimiento service */
+  private final ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
+
   /** ConvocatoriaEntidadFinanciadora service */
   private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
 
@@ -74,17 +79,19 @@ public class ProyectoController {
    * @param proyectoPaqueteTrabajoService      {@link ProyectoPaqueteTrabajoService}.
    * @param proyectoSocioService               {@link ProyectoSocioService}.
    * @param proyectoEntidadFinanciadoraService {@link ProyectoEntidadFinanciadoraService}.
+   * @param proyectoPeriodoSeguimientoService  {@link ProyectoPeriodoSeguimientoService}
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
-      ProyectoSocioService proyectoSocioService,
-      ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService) {
+      ProyectoSocioService proyectoSocioService, ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
+      ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
     this.proyectoPaqueteTrabajoService = proyectoPaqueteTrabajoService;
     this.proyectoSocioService = proyectoSocioService;
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
+    this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
   }
 
   /**
@@ -405,6 +412,37 @@ public class ProyectoController {
     log.debug("findAllProyectoEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
+  }
+
+  /**
+   * 
+   * PROYECTO PERIODO SEGUIMIENTO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoPeriodoSeguimiento}
+   * de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoperiodoseguimientos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Page<ProyectoPeriodoSeguimiento>> findAllProyectoPeriodoSeguimiento(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoPeriodoSeguimiento(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoPeriodoSeguimiento> page = proyectoPeriodoSeguimientoService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoPeriodoSeguimiento(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoPeriodoSeguimiento(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -29,6 +30,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -68,6 +70,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService;
   @MockBean
   private ProyectoFaseService proyectoFaseService;
+  @MockBean
+  private ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
 
   @MockBean
   private ProyectoSocioService proyectoSocioService;
@@ -82,6 +86,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String PATH_FASE = "/proyectofases";
   private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
+  private static final String PATH_SEGUIMIENTO = "/proyectoperiodoseguimientos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
@@ -888,6 +893,103 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * PROYECTO PERIODO SEGUIMIENTO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoPeriodoSeguimiento_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoPeriodoSeguimiento para el Proyecto
+    Long proyectoId = 1L;
+
+    List<ProyectoPeriodoSeguimiento> proyectoPeriodoSeguimientos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoPeriodoSeguimientos.add(generarMockProyectoPeriodoSeguimiento(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoPeriodoSeguimientoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoPeriodoSeguimiento>>() {
+          @Override
+          public Page<ProyectoPeriodoSeguimiento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoPeriodoSeguimientos.size() ? proyectoPeriodoSeguimientos.size() : toIndex;
+            List<ProyectoPeriodoSeguimiento> content = proyectoPeriodoSeguimientos.subList(fromIndex, toIndex);
+            Page<ProyectoPeriodoSeguimiento> page = new PageImpl<>(content, pageable,
+                proyectoPeriodoSeguimientos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SEGUIMIENTO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoPeriodoSeguimiento del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoPeriodoSeguimiento> proyectoPeriodoSeguimientoResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ProyectoPeriodoSeguimiento>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = proyectoPeriodoSeguimientoResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoPeriodoSeguimiento.getObservaciones()).isEqualTo("obs-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoPeriodoSeguimiento_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoPeriodoSeguimiento para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoPeriodoSeguimiento> proyectoPeriodoSeguimientos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoPeriodoSeguimientoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoPeriodoSeguimiento>>() {
+          @Override
+          public Page<ProyectoPeriodoSeguimiento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ProyectoPeriodoSeguimiento> page = new PageImpl<>(proyectoPeriodoSeguimientos, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SEGUIMIENTO, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * MOCKS
    * 
    */
@@ -1041,6 +1143,27 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .build();
 
     return proyectoSocio;
+  }
+
+  /*
+   * Función que devuelve un objeto ProyectoPeriodoSeguimiento
+   * 
+   * @param id id del ProyectoPeriodoSeguimiento
+   * 
+   * @return el objeto ProyectoPeriodoSeguimiento
+   */
+  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
+    Proyecto proyecto = new Proyecto();
+    proyecto.setId(id == null ? 1 : id);
+
+    ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
+    proyectoPeriodoSeguimiento.setId(id);
+    proyectoPeriodoSeguimiento.setProyecto(proyecto);
+    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 19));
+    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 12, 19));
+    proyectoPeriodoSeguimiento.setObservaciones("obs-" + id);
+
+    return proyectoPeriodoSeguimiento;
   }
 
 }

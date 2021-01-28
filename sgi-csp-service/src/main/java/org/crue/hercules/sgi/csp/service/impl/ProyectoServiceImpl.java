@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -23,6 +25,8 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepos
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -32,6 +36,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -69,6 +74,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
   private final ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
   private final ContextoProyectoService contextoProyectoService;
+  private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
+  private final ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -77,7 +84,9 @@ public class ProyectoServiceImpl implements ProyectoService {
       ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
       ProyectoEntidadConvocanteService proyectoEntidadConvocanteService,
       ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository,
-      ContextoProyectoService contextoProyectoService) {
+      ContextoProyectoService contextoProyectoService,
+      ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
+      ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -88,6 +97,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoEntidadConvocanteService = proyectoEntidadConvocanteService;
     this.convocatoriaAreaTematicaRepository = convocatoriaAreaTematicaRepository;
     this.contextoProyectoService = contextoProyectoService;
+    this.convocatoriaPeriodoSeguimientoCientificoRepository = convocatoriaPeriodoSeguimientoCientificoRepository;
+    this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
   }
 
   /**
@@ -126,6 +137,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       copiarEntidadesConvocatesDeConvocatoria(proyecto, proyecto.getConvocatoria());
       this.guardarDatosEntidadesRelacionadas(proyecto.getConvocatoria());
       this.copyAreaTematica(proyecto);
+      this.copyPeriodoSeguimiento(proyecto);
     }
 
     log.debug("create(Proyecto proyecto) - end");
@@ -416,6 +428,11 @@ public class ProyectoServiceImpl implements ProyectoService {
           .orElseThrow(() -> new ConvocatoriaNotFoundException(proyecto.getConvocatoria().getId())));
     }
 
+    if (proyecto.getFechaInicio() != null && proyecto.getFechaFin() != null) {
+      Assert.isTrue(proyecto.getFechaFin().isAfter(proyecto.getFechaInicio()),
+          "La fecha de fin debe ser posterior a la fecha de inicio");
+    }
+
     // TODO comprobar la solicitud cuando se implemente la posibilidad de la
     // creación de proyectos a través de la misma
 
@@ -555,4 +572,31 @@ public class ProyectoServiceImpl implements ProyectoService {
     });
     log.debug("copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) - start");
   }
+
+  /**
+   * Copia los periodos de seguimiento de una convocatoria a un proyecto
+   * 
+   * @param proyecto El proyecto de destino
+   */
+  private void copyPeriodoSeguimiento(Proyecto proyecto) {
+    log.debug("copyPeriodoSeguimiento(Proyecto proyecto) - start");
+    List<ConvocatoriaPeriodoSeguimientoCientifico> listadoConvocatoriaSeguimiento = convocatoriaPeriodoSeguimientoCientificoRepository
+        .findAllByConvocatoriaIdOrderByMesInicial(proyecto.getConvocatoria().getId());
+    listadoConvocatoriaSeguimiento.stream().forEach((convocatoriaSeguimiento) -> {
+      log.debug("Copy ConvocatoriaPeriodoSeguimientoCientifico with id: {0}", convocatoriaSeguimiento.getId());
+      ProyectoPeriodoSeguimiento entidadProyecto = new ProyectoPeriodoSeguimiento();
+      entidadProyecto.setProyecto(proyecto);
+      entidadProyecto.setFechaInicio(proyecto.getFechaInicio().plusMonths(convocatoriaSeguimiento.getMesInicial() - 1));
+      entidadProyecto.setFechaInicio(proyecto.getFechaFin().plusMonths(convocatoriaSeguimiento.getMesFinal() - 1));
+      entidadProyecto.setFechaInicioPresentacion(
+          LocalDateTime.of(convocatoriaSeguimiento.getFechaInicioPresentacion(), LocalTime.of(0, 0, 0)));
+      entidadProyecto.setFechaFinPresentacion(
+          LocalDateTime.of(convocatoriaSeguimiento.getFechaFinPresentacion(), LocalTime.of(23, 59, 59)));
+      entidadProyecto.setObservaciones(convocatoriaSeguimiento.getObservaciones());
+
+      this.proyectoPeriodoSeguimientoService.create(entidadProyecto);
+    });
+    log.debug("copyPeriodoSeguimiento(Proyecto proyecto) - start");
+  }
+
 }
