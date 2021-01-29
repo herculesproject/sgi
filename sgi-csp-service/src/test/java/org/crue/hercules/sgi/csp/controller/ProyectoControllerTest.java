@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
+import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -20,6 +21,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -36,6 +38,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
+import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -77,7 +80,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private ProyectoFaseService proyectoFaseService;
   @MockBean
   private ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
-
+  @MockBean
+  private ProyectoProrrogaService proyectoProrrogaService;
   @MockBean
   private ProyectoSocioService proyectoSocioService;
   @MockBean
@@ -99,6 +103,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String PATH_ENTIDAD_GESTORA = "/proyectoentidadgestoras";
   private static final String PATH_SEGUIMIENTO = "/proyectoperiodoseguimientos";
   private static final String PATH_PROYECTO_EQUIPO = "/proyectoequipos";
+  private static final String PATH_PRORROGA = "/proyectoprorrogas";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
@@ -1188,6 +1193,102 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * PROYECTO PRÓRROGA
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoProrroga_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ProyectoProrroga para el Proyecto
+    Long proyectoId = 1L;
+
+    List<ProyectoProrroga> proyectoProrrogas = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoProrrogas.add(generarMockProyectoProrroga(i, proyectoId));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoProrrogaService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoProrroga>>() {
+          @Override
+          public Page<ProyectoProrroga> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoProrrogas.size() ? proyectoProrrogas.size() : toIndex;
+            List<ProyectoProrroga> content = proyectoProrrogas.subList(fromIndex, toIndex);
+            Page<ProyectoProrroga> page = new PageImpl<>(content, pageable, proyectoProrrogas.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRORROGA, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ProyectoProrroga del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ProyectoProrroga> proyectoPeriodoSeguimientoResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<ProyectoProrroga>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ProyectoProrroga proyectoPeriodoSeguimiento = proyectoPeriodoSeguimientoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(proyectoPeriodoSeguimiento.getObservaciones())
+          .isEqualTo("observaciones-proyecto-prorroga-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  public void findAllProyectoProrroga_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ProyectoProrroga para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoProrroga> proyectoProrrogas = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(proyectoProrrogaService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoProrroga>>() {
+          @Override
+          public Page<ProyectoProrroga> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ProyectoProrroga> page = new PageImpl<>(proyectoProrrogas, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRORROGA, proyectoId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * MOCKS
    * 
    */
@@ -1393,6 +1494,27 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .id(id)//
         .proyecto(Proyecto.builder().id(proyectoId).build())//
         .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))//
+        .build();
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoProrroga
+   * 
+   * @param id         id del ProyectoProrroga
+   * @param proyectoId id del Proyecto
+   * @return el objeto ProyectoProrroga
+   */
+  private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
+
+    return ProyectoProrroga.builder()//
+        .id(id)//
+        .proyecto(Proyecto.builder().id(proyectoId).build())//
+        .numProrroga(1)//
+        .fechaConcesion(LocalDate.of(2020, 01, 01))//
+        .tipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE)//
+        .fechaFin(LocalDate.of(2020, 12, 31))//
+        .importe(BigDecimal.valueOf(123.45))//
+        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//
         .build();
   }
 

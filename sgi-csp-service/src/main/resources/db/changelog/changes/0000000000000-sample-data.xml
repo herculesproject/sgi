@@ -1891,6 +1891,16 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-proyecto_prorroga">
+    <insert tableName="proyecto_prorroga">
+      <column name="id" valueSequenceNext="proyecto_prorroga_seq" />
+      <column name="proyecto_id" valueComputed="(select id from csp.proyecto where codigo_externo = 'codigo-externo-001')" />
+      <column name="num_prorroga" value="1" />
+      <column name="fecha_concesion" value="2021-01-01" />
+      <column name="fecha_fin" value="2021-01-12" />
+      <column name="tipo_prorroga" value="Tiempo" />
+    </insert>
+  </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_presupuesto">
     <insert tableName="solicitud_proyecto_presupuesto">

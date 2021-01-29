@@ -1,0 +1,666 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.service.impl.ProyectoProrrogaServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
+/**
+ * ProyectoProrrogaServiceTest
+ */
+
+public class ProyectoProrrogaServiceTest extends BaseServiceTest {
+
+  @Mock
+  private ProyectoProrrogaRepository repository;
+  @Mock
+  private ProyectoRepository proyectoRepository;
+  @Mock
+  private ProrrogaDocumentoRepository prorrogaDocumentoRepository;
+
+  private ProyectoProrrogaService service;
+
+  @BeforeEach
+  public void setUp() throws Exception {
+    service = new ProyectoProrrogaServiceImpl(repository, proyectoRepository, prorrogaDocumentoRepository);
+  }
+
+  @Test
+  public void create_ReturnsProyectoProrroga() {
+    // given: Un nuevo ProyectoProrroga
+    ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plusDays(1));
+    proyectoProrroga.setId(null);
+
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaAnterior));
+    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrroga.getProyecto()));
+
+    BDDMockito.given(repository.save(proyectoProrroga)).will((InvocationOnMock invocation) -> {
+      ProyectoProrroga proyectoProrrogaCreado = invocation.getArgument(0);
+      proyectoProrrogaCreado.setId(1L);
+      return proyectoProrrogaCreado;
+    });
+
+    // when: Creamos el ProyectoProrroga
+    ProyectoProrroga proyectoProrrogaCreado = service.create(proyectoProrroga);
+
+    // then: El ProyectoProrroga se crea correctamente
+    Assertions.assertThat(proyectoProrrogaCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoProrrogaCreado.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(proyectoProrrogaCreado.getProyecto().getId()).as("getProyecto().getId()")
+        .isEqualTo(proyectoProrroga.getProyecto().getId());
+    Assertions.assertThat(proyectoProrrogaCreado.getNumProrroga()).as("getNumProrroga()")
+        .isEqualTo(proyectoProrroga.getNumProrroga());
+    Assertions.assertThat(proyectoProrrogaCreado.getFechaConcesion()).as("getFechaConcesion()")
+        .isEqualTo(proyectoProrroga.getFechaConcesion());
+    Assertions.assertThat(proyectoProrrogaCreado.getTipoProrroga()).as("getTipoProrroga()")
+        .isEqualTo(proyectoProrroga.getTipoProrroga());
+    Assertions.assertThat(proyectoProrrogaCreado.getFechaFin()).as("getFechaFin()")
+        .isEqualTo(proyectoProrroga.getFechaFin());
+    Assertions.assertThat(proyectoProrrogaCreado.getImporte()).as("getImporte()")
+        .isEqualTo(proyectoProrroga.getImporte());
+    Assertions.assertThat(proyectoProrrogaCreado.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyectoProrroga.getObservaciones());
+  }
+
+  @Test
+  public void create_WithId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ProyectoProrroga que ya tiene id
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    // when: Creamos el ProyectoProrroga
+    // then: Lanza una excepcion porque el ProyectoProrroga ya tiene id
+    Assertions.assertThatThrownBy(() -> service.create(proyectoProrroga)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ProyectoProrroga id tiene que ser null para crear un nuevo ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithoutProyectoId_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without ProyectoId
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+    proyectoProrroga.setProyecto(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as ProyectoId is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithoutNumProrroga_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without NumProrroga
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+    proyectoProrroga.setNumProrroga(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as NumProrroga is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Número de prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithoutTipoProrroga_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without TipoProrroga
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+    proyectoProrroga.setTipoProrroga(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as TipoProrroga is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Tipo prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithoutFechaConcesion_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without FechaConcesion
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+    proyectoProrroga.setFechaConcesion(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as FechaConcesion is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Fecha concesión no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithTipoTiempoAndWithoutFechaFin_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga tipo Tiempo without FechaFin
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setFechaFin(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as FechaFin is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Nueva fecha fin proyecto no puede ser null para  para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithTipoImporteAndWithoutImporte_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga tipo Tiempo without Importe
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setImporte(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as Importe is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Importe debe tener un valor para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void create_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
+    // given: a ProyectoProrroga with non existing Proyecto
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setId(null);
+
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as Proyecto is not found
+        .isInstanceOf(ProyectoNotFoundException.class);
+  }
+
+  @Test
+  public void create_WithFechaConcesionBeforePreviousProrroga_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga with fechaConcesion anterior a la última prórroga
+    ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minusDays(1));
+    proyectoProrroga.setId(null);
+
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaAnterior));
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: throw exception as Proyecto is not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Fecha de concesión debe ser posterior a la de la última prórroga");
+  }
+
+  @Test
+  public void creaye_FechaFinBeforeProyectoFechaInicio_ThrowsIllegalArgumentException() {
+    // given: Fecha Fin anterior a la de inicio del proyecto
+    ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plusDays(1));
+    proyectoProrroga.setFechaFin(proyectoProrroga.getProyecto().getFechaInicio().minusDays(1));
+    proyectoProrroga.setId(null);
+
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaAnterior));
+    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrroga.getProyecto()));
+
+    BDDMockito.given(repository.save(proyectoProrroga)).will((InvocationOnMock invocation) -> {
+      ProyectoProrroga proyectoProrrogaCreado = invocation.getArgument(0);
+      proyectoProrrogaCreado.setId(1L);
+      return proyectoProrrogaCreado;
+    });
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoProrroga
+        () -> service.create(proyectoProrroga))
+        // then: IllegalArgumentException is thrown
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio del proyecto");
+  }
+
+  @Test
+  public void update_ReturnsProyectoProrroga() {
+    // given: Un nuevo ProyectoProrroga con el tipoProrroga actualizado
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(2L, 1L);
+    proyectoProrrogaAnterior.setFechaConcesion(proyectoProrroga.getFechaConcesion().minusDays(1));
+    ProyectoProrroga proyectoProrrogaActualizado = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrrogaActualizado.setFechaFin(proyectoProrrogaActualizado.getFechaFin().plusDays(1));
+    proyectoProrrogaActualizado.setObservaciones("observaciones-modificada");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrroga));
+
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrroga));
+    BDDMockito.given(repository.findFirstByIdNotAndProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrrogaAnterior));
+    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrroga.getProyecto()));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoProrroga>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el ProyectoProrroga
+    ProyectoProrroga updated = service.update(proyectoProrrogaActualizado);
+
+    // then: El ProyectoProrroga se actualiza correctamente.
+    Assertions.assertThat(updated).as("isNotNull()").isNotNull();
+    Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoProrroga.getId());
+    Assertions.assertThat(updated.getProyecto().getId()).as("getProyecto().getId()")
+        .isEqualTo(proyectoProrroga.getProyecto().getId());
+    Assertions.assertThat(updated.getNumProrroga()).as("getNumProrroga()").isEqualTo(proyectoProrroga.getNumProrroga());
+    Assertions.assertThat(updated.getFechaConcesion()).as("getFechaConcesion()")
+        .isEqualTo(proyectoProrroga.getFechaConcesion());
+    Assertions.assertThat(updated.getTipoProrroga()).as("getTipoProrroga()")
+        .isEqualTo(proyectoProrroga.getTipoProrroga());
+    Assertions.assertThat(updated.getFechaFin()).as("getFechaFin()").isEqualTo(proyectoProrroga.getFechaFin());
+    Assertions.assertThat(updated.getImporte()).as("getImporte()").isEqualTo(proyectoProrroga.getImporte());
+    Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(proyectoProrrogaActualizado.getObservaciones());
+  }
+
+  @Test
+  public void update_WithIdNotExist_ThrowsProyectoProrrogaNotFoundException() {
+    // given: Un ProyectoProrroga a actualizar con un id que no existe
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+
+    // when: Actualizamos el ProyectoProrroga
+    // then: Lanza una excepcion porque el ProyectoProrroga no existe
+    Assertions.assertThatThrownBy(() -> service.update(proyectoProrroga))
+        .isInstanceOf(ProyectoProrrogaNotFoundException.class);
+  }
+
+  @Test
+  public void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without ProyectoId
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+    proyectoProrroga.setProyecto(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as ProyectoId is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void update_WithoutNumProrroga_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without NumProrroga
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+    proyectoProrroga.setNumProrroga(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as NumProrroga is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Número de prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void update_WithoutTipoProrroga_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without TipoProrroga
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+    proyectoProrroga.setTipoProrroga(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as TipoProrroga is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Tipo prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void update_WithoutFechaConcesion_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without FechaConcesion
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+    proyectoProrroga.setFechaConcesion(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as FechaConcesion is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Fecha concesión no puede ser null para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void update_WithTipoTiempoAndWithoutFechaFin_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without FechaFin
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setFechaFin(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as FechaFin is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Nueva fecha fin proyecto no puede ser null para  para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void update_WithTipoImporteAndWithoutImporte_ThrowsIllegalArgumentException() {
+    // given: a ProyectoProrroga without Importe
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setImporte(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as FechaFin is null
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Importe debe tener un valor para realizar la acción sobre ProyectoProrroga");
+  }
+
+  @Test
+  public void update_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
+    // given: a ProyectoProrroga with non existing Proyecto
+    ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal));
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: throw exception as Proyecto is not found
+        .isInstanceOf(ProyectoNotFoundException.class);
+  }
+
+  @Test
+  public void update_NotUltimaProrroga_ThrowsIllegalArgumentException() throws Exception {
+    // given: Not ultimo ProyectoProrroga
+    ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal));
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyectoProrroga(2L, 1L)));
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: IllegalArgumentException is thrown
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Sólo se permite modificar la última prórroga");
+  }
+
+  @Test
+  public void update_FechaConcesionNotBeforePreviousProrroga_ThrowsIllegalArgumentException() throws Exception {
+    // given: Fecha de concesión anterior a la de la última prorroga
+    ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
+    ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minusDays(1));
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal));
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal));
+    BDDMockito.given(repository.findFirstByIdNotAndProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrrogaAnterior));
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: IllegalArgumentException is thrown
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Fecha de concesión debe ser posterior a la de la última prórroga");
+  }
+
+  @Test
+  public void update_FechaFinBeforeProyectoFechaInicio_ThrowsIllegalArgumentException() throws Exception {
+    // given: Fecha Fin anterior a la de inicio del proyecto
+    ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
+    proyectoProrroga.setFechaFin(proyectoProrroga.getProyecto().getFechaInicio().minusDays(1));
+    proyectoProrroga.setObservaciones("observaciones-modificada");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal));
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal));
+    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrrogaOriginal.getProyecto()));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoProrroga>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoProrroga
+        () -> service.update(proyectoProrroga))
+        // then: IllegalArgumentException is thrown
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio del proyecto");
+  }
+
+  @Test
+  public void delete_WithExistingId_NoReturnsAnyException() {
+    // given: existing ProyectoProrroga
+    Long id = 1L;
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(id, 1L);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrroga));
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoProrroga));
+
+    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.<Long>any());
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: no exception is thrown
+        .doesNotThrowAnyException();
+  }
+
+  @Test
+  public void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: delete
+        () -> service.delete(id))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ProyectoProrrogaNotFoundException.class);
+  }
+
+  @Test
+  public void delete_NotUltimaProrroga_ThrowsIllegalArgumentException() throws Exception {
+    // given: Not ultimo ProyectoProrroga
+    Long id = 1L;
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyectoProrroga(id, 1L)));
+    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyectoProrroga(2L, 1L)));
+
+    Assertions.assertThatThrownBy(
+        // when: delete
+        () -> service.delete(id))
+        // then: IllegalArgumentException is thrown
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Sólo se permite eliminar la última prórroga");
+  }
+
+  @Test
+  public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
+    // given: existing id
+    Long id = 1L;
+    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+
+    // when: exists by id
+    boolean responseData = service.existsById(id);
+
+    // then: returns TRUE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isTrue();
+  }
+
+  @Test
+  public void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
+
+    // when: exists by id
+    boolean responseData = service.existsById(id);
+
+    // then: returns TRUE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  public void findById_ReturnsProyectoProrroga() {
+    // given: Un ProyectoProrroga con el id buscado
+    Long idBuscado = 1L;
+    Long idProyecto = 1L;
+
+    BDDMockito.given(repository.findById(idBuscado))
+        .willReturn(Optional.of(generarMockProyectoProrroga(idBuscado, idProyecto)));
+
+    // when: Buscamos el ProyectoProrroga por su id
+    ProyectoProrroga proyectoProrroga = service.findById(idBuscado);
+
+    // then: el ProyectoProrroga
+    Assertions.assertThat(proyectoProrroga).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoProrroga.getId()).as("getId()").isEqualTo(idBuscado);
+  }
+
+  @Test
+  public void findById_WithIdNotExist_ThrowsProyectoProrrogaNotFoundException() throws Exception {
+    // given: Ningun ProyectoProrroga con el id buscado
+    Long idBuscado = 1L;
+    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
+
+    // when: Buscamos el ProyectoProrroga por su id
+    // then: lanza un ProyectoProrrogaNotFoundException
+    Assertions.assertThatThrownBy(() -> service.findById(idBuscado))
+        .isInstanceOf(ProyectoProrrogaNotFoundException.class);
+  }
+
+  @Test
+  public void findAllByProyecto_ReturnsPage() {
+    // given: Una lista con 37 ProyectoProrroga para la Proyecto
+    Long proyectoId = 1L;
+    List<ProyectoProrroga> proyectosEntidadesConvocantes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectosEntidadesConvocantes.add(generarMockProyectoProrroga(Long.valueOf(i), proyectoId));
+    }
+
+    BDDMockito.given(
+        repository.findAll(ArgumentMatchers.<Specification<ProyectoProrroga>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > proyectosEntidadesConvocantes.size() ? proyectosEntidadesConvocantes.size() : toIndex;
+          List<ProyectoProrroga> content = proyectosEntidadesConvocantes.subList(fromIndex, toIndex);
+          Page<ProyectoProrroga> pageResponse = new PageImpl<>(content, pageable, proyectosEntidadesConvocantes.size());
+          return pageResponse;
+
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ProyectoProrroga> page = service.findAllByProyecto(proyectoId, null, paging);
+
+    // then: Devuelve la pagina 3 con los ProyectoProrroga del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      ProyectoProrroga proyectoProrroga = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(proyectoProrroga.getId()).isEqualTo(Long.valueOf(i));
+    }
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoProrroga
+   * 
+   * @param id         id del ProyectoProrroga
+   * @param proyectoId id del Proyecto
+   * @return el objeto ProyectoProrroga
+   */
+  private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
+
+    return ProyectoProrroga.builder()//
+        .id(id)//
+        .proyecto(Proyecto.builder()//
+            .id(proyectoId)//
+            .fechaInicio(LocalDate.of(2020, 01, 01))//
+            .fechaFin(LocalDate.of(2021, 01, 01))//
+            .build())//
+        .numProrroga(1)//
+        .fechaConcesion(LocalDate.of(2020, 01, 01))//
+        .tipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE)//
+        .fechaFin(LocalDate.of(2020, 12, 31))//
+        .importe(BigDecimal.valueOf(123.45))//
+        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//
+        .build();
+  }
+}

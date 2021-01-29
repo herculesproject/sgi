@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -60,6 +61,7 @@ public class ProyectoIT {
   private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
   private static final String PATH_PROYECTO_EQUIPO = "/proyectoequipos";
   private static final String PATH_ENTIDAD_GESTORA = "/proyectoentidadgestoras";
+  private static final String PATH_PRORROGA = "/proyectoprorrogas";
 
   private HttpEntity<Proyecto> buildRequest(HttpHeaders headers, Proyecto entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -507,7 +509,7 @@ public class ProyectoIT {
   public void findAllProyectoEntidadGestora_WithPagingSortingAndFiltering_ReturnsProyectoEntidadGestoraSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id-";
@@ -575,13 +577,57 @@ public class ProyectoIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
     Assertions.assertThat(proyectoEquipos.get(0).getPersonaRef()).as("get(0).getPersonaRef())")
         .isEqualTo("ref-" + String.format("%03d", 4));
     Assertions.assertThat(proyectoEquipos.get(1).getPersonaRef()).as("get(1).getPersonaRef())")
         .isEqualTo("ref-" + String.format("%03d", 2));
     Assertions.assertThat(proyectoEquipos.get(2).getPersonaRef()).as("get(2).getPersonaRef())")
         .isEqualTo("ref-" + String.format("%03d", 1));
+  }
+
+  /*
+   *
+   * PROYECTO PRÓRROGA
+   * 
+   */
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_prorroga.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllProyectoProrroga_WithPagingSortingAndFiltering_ReturnsProyectoProrrogaSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "entidadRef~%-00%";
+
+    Long proyectoId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRORROGA)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(proyectoId).toUri();
+
+    final ResponseEntity<List<ProyectoProrroga>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ProyectoProrroga>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<ProyectoProrroga> proyectosProrrogas = response.getBody();
+    Assertions.assertThat(proyectosProrrogas.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+    Assertions.assertThat(proyectosProrrogas.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo("observaciones-proyecto-prorroga-" + String.format("%03d", 3));
+    Assertions.assertThat(proyectosProrrogas.get(1).getObservaciones()).as("get(1).getObservaciones())")
+        .isEqualTo("observaciones-proyecto-prorroga-" + String.format("%03d", 2));
+    Assertions.assertThat(proyectosProrrogas.get(2).getObservaciones()).as("get(2).getObservaciones()")
+        .isEqualTo("observaciones-proyecto-prorroga-" + String.format("%03d", 1));
+
   }
 
   /**

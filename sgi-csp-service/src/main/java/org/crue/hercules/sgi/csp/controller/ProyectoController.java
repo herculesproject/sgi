@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
+import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -80,6 +82,9 @@ public class ProyectoController {
   /** ProyectoEquipo service */
   private final ProyectoEquipoService proyectoEquipoService;
 
+  /** ProyectoProrrogaservice */
+  private final ProyectoProrrogaService proyectoProrrogaService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -92,13 +97,14 @@ public class ProyectoController {
    * @param proyectoPeriodoSeguimientoService  {@link ProyectoPeriodoSeguimientoService}
    * @param proyectoEntidadGestoraService      {@link ProyectoEntidadGestoraService}
    * @param proyectoEquipoService              {@link ProyectoEquipoService}.
+   * @param proyectoProrrogaService            {@link ProyectoProrrogaService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
       ProyectoEquipoService proyectoEquipoService, ProyectoSocioService proyectoSocioService,
       ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
-      ProyectoEntidadGestoraService proyectoEntidadGestoraService) {
+      ProyectoEntidadGestoraService proyectoEntidadGestoraService, ProyectoProrrogaService proyectoProrrogaService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -108,6 +114,7 @@ public class ProyectoController {
     this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
     this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
     this.proyectoEquipoService = proyectoEquipoService;
+    this.proyectoProrrogaService = proyectoProrrogaService;
   }
 
   /**
@@ -523,4 +530,36 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
+
+  /**
+   * 
+   * PROYECTO PRÓRROGA
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoProrroga} del
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectoprorrogas")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Page<ProyectoProrroga>> findAllProyectoProrroga(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoProrroga(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ProyectoProrroga> page = proyectoProrrogaService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoProrroga(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoProrroga(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }
