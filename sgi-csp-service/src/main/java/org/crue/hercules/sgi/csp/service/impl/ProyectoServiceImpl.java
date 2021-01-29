@@ -598,7 +598,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoPeriodoSeguimiento entidadProyecto = new ProyectoPeriodoSeguimiento();
       entidadProyecto.setProyecto(proyecto);
       entidadProyecto.setFechaInicio(proyecto.getFechaInicio().plusMonths(convocatoriaSeguimiento.getMesInicial() - 1));
-      entidadProyecto.setFechaInicio(proyecto.getFechaFin().plusMonths(convocatoriaSeguimiento.getMesFinal() - 1));
+      entidadProyecto.setFechaFin(proyecto.getFechaFin().plusMonths(convocatoriaSeguimiento.getMesFinal() - 1));
       entidadProyecto.setFechaInicioPresentacion(
           LocalDateTime.of(convocatoriaSeguimiento.getFechaInicioPresentacion(), LocalTime.of(0, 0, 0)));
       entidadProyecto.setFechaFinPresentacion(
