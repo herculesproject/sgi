@@ -1830,6 +1830,8 @@
       <column name="titulo" value="titulo-001" />
       <column name="acronimo" value="T001" />
       <column name="colaborativo" value="true" />
+      <column name="coordinador_externo" value="false" />
+      <column name="presupuesto_por_entidades" value="false" />
     </insert>
   </changeSet>
 
