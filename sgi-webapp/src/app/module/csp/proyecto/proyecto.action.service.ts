@@ -27,6 +27,8 @@ import { ProyectoEntidadGestoraFragment } from './proyecto-formulario/proyecto-e
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
 
 
+import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
+import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
@@ -49,7 +51,8 @@ export class ProyectoActionService extends ActionService {
     CONTEXTO_PROYECTO: 'contexto-proyecto',
     SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
     ENTIDAD_GESTORA: 'entidad-gestora',
-    EQUIPO_PROYECTO: 'equipo-proyecto'
+    EQUIPO_PROYECTO: 'equipo-proyecto',
+    PRORROGAS: 'prorrogas'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -65,6 +68,7 @@ export class ProyectoActionService extends ActionService {
   private seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
   private entidadGestora: ProyectoEntidadGestoraFragment;
   private proyectoEquipo: ProyectoEquipoFragment;
+  private prorrogas: ProyectoProrrogasFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -75,6 +79,19 @@ export class ProyectoActionService extends ActionService {
 
   get proyectoDatosGenerales(): IProyecto {
     return this.getDatosGeneralesProyecto();
+  }
+
+  get readOnly(): boolean {
+    if (!this.proyecto?.unidadGestion) {
+      return true;
+    }
+    if (!this.proyecto?.activo) {
+      return true;
+    }
+    if (this.proyecto?.estado?.estado === TipoEstadoProyecto.CANCELADO || this.proyecto?.estado?.estado === TipoEstadoProyecto.FINALIZADO) {
+      return true;
+    }
+    return false;
   }
 
   public disabledAddSocios$ = new BehaviorSubject<boolean>(false);
@@ -100,7 +117,8 @@ export class ProyectoActionService extends ActionService {
     documentoService: DocumentoService,
     proyectoEntidadGestora: ProyectoEntidadGestoraService,
     proyectoEquipoService: ProyectoEquipoService,
-    personaFisicaService: PersonaFisicaService
+    personaFisicaService: PersonaFisicaService,
+    proyectoProrrogaService: ProyectoProrrogaService
   ) {
     super();
 
@@ -157,6 +175,10 @@ export class ProyectoActionService extends ActionService {
         new ProyectoEntidadGestoraFragment(fb, logger, this.proyecto?.id,
           proyectoService, proyectoEntidadGestora, empresaEconomicaService, this);
       this.addFragment(this.FRAGMENT.ENTIDAD_GESTORA, this.entidadGestora);
+
+      this.prorrogas = new ProyectoProrrogasFragment(logger, this.proyecto?.id, proyectoService,
+        proyectoProrrogaService, documentoService, this);
+      this.addFragment(this.FRAGMENT.PRORROGAS, this.prorrogas);
     }
 
   }

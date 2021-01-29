@@ -26,6 +26,7 @@ const MSG_PROYECTO_TITLE = marker('menu.principal.csp.proyectos');
 const MSG_SOLICITUD_PROYECTO_SOCIO = marker('menu.principal.csp.solicitud-proyecto-socio');
 const MSG_PROYECTO_SOCIO_TITLE = marker('menu.principal.csp.proyecto-socio');
 const MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE = marker('menu.principal.csp.proyecto-periodo-seguimiento')
+const MSG_PROYECTO_PRORROGA_TITLE = marker('menu.principal.csp.proyecto-prorroga')
 
 const routes: SgiRoutes = [
   {
@@ -96,6 +97,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.PROYECTO_PRORROGA,
+        loadChildren: () =>
+          import('./proyecto-prorroga/proyecto-prorroga.module').then(
+            (m) => m.ProyectoProrrogaModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PROYECTO_PRORROGA_TITLE,
         }
       },
       {

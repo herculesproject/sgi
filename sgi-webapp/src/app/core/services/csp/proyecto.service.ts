@@ -30,6 +30,7 @@ import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gesto
 import { IProyectoEntidadGestoraBackend, ProyectoEntidadGestoraService } from './proyecto-entidad-gestora.service';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IProyectoEquipoBackend, ProyectoEquipoService } from './proyecto-equipo.service';
+import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 
 interface IProyectoBackend {
 
@@ -564,6 +565,24 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       .pipe(
         tap(() => this.logger.debug(ProyectoService.name,
           `findAllProyectoPeriodoSeguimientoProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Recupera los IProyectoProrroga del proyecto
+   *
+   * @param id Id del proyecto
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IProyectoProrroga del proyecto
+   */
+  findAllProyectoProrrogaProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoProrroga>> {
+    this.logger.debug(ProyectoService.name,
+      `findAllProyectoProrrogaProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/proyectoprorrogas`;
+    return this.find<IProyectoProrroga, IProyectoProrroga>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ProyectoService.name,
+          `findAllProyectoProrrogaProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
