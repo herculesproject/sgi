@@ -48,10 +48,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
           Validators.required
         ]),
         fechaFin: new FormControl({ value: '', disabled: true }),
-        importe: new FormControl({ value: '', disabled: true },
-          [Validators.compose(
-            [Validators.min(0), NumberValidator.maxDecimalPlaces(5)])
-          ]),
+        importe: new FormControl({ value: '', disabled: true }),
         observaciones: new FormControl('', [Validators.maxLength(250)]),
         fechaUltimaConcesion: new FormControl(this?.getLastProrroga()?.fechaConcesion)
       },
@@ -124,6 +121,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     return observable$.pipe(
       map(result => {
         this.proyectoProrroga = result;
+        this.refreshInitialState(true);
         return this.proyectoProrroga.id;
       }),
       tap(() => this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
@@ -159,17 +157,28 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
       if (value === TipoProrrogaEnum.TIEMPO) {
         form.fechaFin.setValidators([Validators.required]);
         form.fechaFin.enable();
-        form.importe.setValidators(null);
+        form.importe.setValidators([
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]);
         form.importe.disable();
       } else if (value === TipoProrrogaEnum.IMPORTE) {
-        form.importe.setValidators([Validators.required]);
+        form.importe.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]);
         form.importe.enable();
         form.fechaFin.setValidators(null);
         form.fechaFin.disable();
       } else {
         form.fechaFin.setValidators([Validators.required]);
         form.fechaFin.enable();
-        form.importe.setValidators([Validators.required]);
+        form.importe.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]);
         form.importe.enable();
       }
     }

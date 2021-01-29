@@ -691,6 +691,7 @@
   "csp.proyecto-prorroga.listado.acciones": "Acciones",
   "csp.proyecto-prorroga.numProrroga": "Número prórroga",
   "csp.proyecto-prorroga.observaciones": "Observaciones",
+  "csp.proyecto-prorroga.saveOrUpdate.importe.msg": "Recuerde que debe actualizar el presupuesto del proyecto de acuerdo al nuevo importe concedido en esta prórroga",
   "csp.proyecto-prorroga.tipo": "Tipo",
   "csp.proyecto-prorroga.tipoProrroga": "Tipo de prórroga",
   "csp.proyecto-prorroga.title": "Prórroga del proyecto",
