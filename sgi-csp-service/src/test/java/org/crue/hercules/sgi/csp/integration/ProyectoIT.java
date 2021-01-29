@@ -602,7 +602,7 @@ public class ProyectoIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id-";
-    String filter = "entidadRef~%-00%";
+    String filter = "observaciones~%-00%";
 
     Long proyectoId = 1L;
 
