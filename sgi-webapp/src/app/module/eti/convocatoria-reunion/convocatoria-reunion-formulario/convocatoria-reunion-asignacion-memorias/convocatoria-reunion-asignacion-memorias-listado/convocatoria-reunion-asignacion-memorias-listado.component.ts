@@ -1,21 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Subscription, BehaviorSubject } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from '../convocatoria-reunion-asignacion-memorias-modal/convocatoria-reunion-asignacion-memorias-modal.component';
 import { DialogService } from '@core/services/dialog.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { FragmentComponent } from '@core/component/fragment.component';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ConvocatoriaReunionActionService } from '../../../convocatoria-reunion.action.service';
+import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from '../convocatoria-reunion-asignacion-memorias-modal/convocatoria-reunion-asignacion-memorias-modal.component';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-asignacion-memorias-listado.fragment';
-import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias-listado',
@@ -37,7 +36,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
   private subscriptions: Subscription[] = [];
 
   constructor(
-    protected readonly logger: NGXLogger,
     private readonly matDialog: MatDialog,
     protected readonly evaluacionService: EvaluacionService,
     protected readonly dialogService: DialogService,
@@ -53,7 +51,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.evaluaciones$.subscribe((evaluaciones) => {
       this.datasource.data = evaluaciones;
@@ -78,14 +75,11 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
             return wrapper.value[property];
         }
       };
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'ngOnInit()', 'start');
   }
 
 
   ngOnDestroy() {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
@@ -97,8 +91,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    *
    */
   openDialogAsignarMemoria(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'openDialogAsignarMemoria()', 'start');
-
     const evaluacion: IEvaluacion = {
       activo: true,
       comite: null,
@@ -140,9 +132,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
           }
         }
       ));
-
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'openDialogAsignarMemoria()', 'end');
-
   }
 
 
@@ -152,9 +141,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    * @param event evento lanzado.
    */
   borrar(wrappedEvaluacion: StatusWrapper<IEvaluacion>): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name,
-      'borrar(convocatoriaReunionId: number, $event: Event) - start');
-
     const dialogSubscription = this.dialogService.showConfirmation(
       'eti.convocatoriaReunion.listado.eliminar'
     ).subscribe((aceptado) => {
@@ -164,9 +150,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     });
 
     this.subscriptions.push(dialogSubscription);
-
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name,
-      'borrar(convocatoriaReunionId: number, $event: Event) - end');
   }
 
   /**
@@ -175,7 +158,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    * @param evaluacion evaluación a modificar
    */
   openUpdateModal(evaluacion: StatusWrapper<IEvaluacion>): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'openUpdateModal()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -199,7 +181,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
           this.fragment.setChanges(true);
           this.fragment.setComplete(true);
         }
-        this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'openUpdateModal()', 'end');
       }
     );
   }

@@ -1,16 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { Subscription, merge } from 'rxjs';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { DateUtils } from '@core/utils/date-utils';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { merge, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
 import { ProyectoPeriodoSeguimientoDatosGeneralesFragment } from './proyecto-periodo-seguimiento-datos-generales.fragment';
-import { DateUtils } from '@core/utils/date-utils';
-import { ThemePalette } from '@angular/material/core';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 
 @Component({
   selector: 'sgi-solicitud-proyecto-periodo-seguimiento-datos-generales',
@@ -34,11 +32,9 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
   /** ngx-mat-datetime-picker */
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ProyectoPeriodoSeguimientoActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoPeriodoSeguimientoDatosGeneralesFragment;
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(36%-10px)';
@@ -56,11 +52,9 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadPeriodoSeguimientosSelectedProyecto();
 
@@ -72,25 +66,17 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
         tap(() => this.checkOverlapsPeriodosSeguimiento())
       ).subscribe()
     );
-
-
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   private loadPeriodoSeguimientosSelectedProyecto(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, `loadPeriodoSeguimientosSelectedProyecto()`, 'start');
     this.periodoSeguimientosSelectedProyecto = this.formPart.selectedProyectoPeriodoSeguimientos;
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, `loadPeriodoSeguimientosSelectedProyecto()`, 'end');
   }
 
   private checkOverlapsPeriodosSeguimiento(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, `checkOverlapsPeriodosSeguimiento()`, 'start');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
@@ -102,7 +88,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
 
     const ranges = proyectoPeriodoSeguimientos.map(proyectoPeriodoSeguimiento => {
       return {
-        inicio: proyectoPeriodoSeguimiento.fechaInicio ? DateUtils.fechaToDate(proyectoPeriodoSeguimiento.fechaInicio).getTime() : Number.MIN_VALUE,
+        inicio: proyectoPeriodoSeguimiento.fechaInicio ?
+          DateUtils.fechaToDate(proyectoPeriodoSeguimiento.fechaInicio).getTime() : Number.MIN_VALUE,
         fin: proyectoPeriodoSeguimiento.fechaFin ? DateUtils.fechaToDate(proyectoPeriodoSeguimiento.fechaFin).getTime() : Number.MAX_VALUE
       };
     });
@@ -130,7 +117,5 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
       }
 
     }
-
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesComponent.name, `checkOverlapsPeriodosSeguimiento()`, 'end');
   }
 }

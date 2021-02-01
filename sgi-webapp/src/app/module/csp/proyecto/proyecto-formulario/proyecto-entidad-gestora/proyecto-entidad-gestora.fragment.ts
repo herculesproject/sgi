@@ -1,14 +1,13 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { FormFragment } from '@core/services/action-service';
-import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
-import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { FormFragment } from '@core/services/action-service';
+import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 
 export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntidadGestora> {
@@ -20,7 +19,6 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
 
   constructor(
     private fb: FormBuilder,
-    private logger: NGXLogger,
     key: number,
     private proyectoService: ProyectoService,
     private proyectoEntidadGestoraService: ProyectoEntidadGestoraService,
@@ -30,12 +28,9 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
     super(key, true);
     this.setComplete(true);
     this.proyectoEntidadGestora = {} as IProyectoEntidadGestora;
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, 'constructor()', 'start');
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, 'constructor()', 'end');
   }
 
   protected initializer(key: number): Observable<IProyectoEntidadGestora> {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `${this.initializer.name}(key: number)`, 'start');
     if (this.getKey()) {
       return this.proyectoService.findEntidadGestora(key).pipe(
         switchMap((entidadGestora) => {
@@ -53,11 +48,9 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
         })
       );
     }
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `${this.initializer.name}(${key})`, 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `${this.buildFormGroup.name}()`, 'start');
     const form = this.fb.group({
       entidadGestora: new FormControl({
         value: '',
@@ -111,27 +104,20 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
       )
     );
 
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `${this.buildFormGroup.name}()`, 'end');
-
     return form;
   }
 
   buildPatch(entidadGestora: IProyectoEntidadGestora): { [key: string]: any } {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name,
-      `${this.buildPatch.name}(entidadGestora: ${entidadGestora})`, 'start');
     return {};
   }
 
   getValue(): IProyectoEntidadGestora {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `${this.getValue.name}()`, 'start');
-
     if (this.proyectoEntidadGestora === null) {
       this.proyectoEntidadGestora = {} as IProyectoEntidadGestora;
     }
 
     this.proyectoEntidadGestora.proyecto = this.actionService.proyectoDatosGenerales;
 
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `${this.getValue.name}()`, 'end');
     return this.proyectoEntidadGestora;
   }
 
@@ -140,8 +126,6 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
    * @param entidadGestora empresa
    */
   private onEntidadGestoraChange(entidadGestora: IEmpresaEconomica): void {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `onEntidadGestoraChange(${entidadGestora})`, 'start');
-
     if (entidadGestora) {
 
       this.getFormGroup().controls.identificadorFiscal.setValue(entidadGestora.tipoDocumento);
@@ -186,12 +170,9 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
         this.ocultarSubEntidad = false;
       }
     }
-
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, `onEntidadGestoraChange(${entidadGestora})`, 'end');
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name, 'saveOrUpdate()', 'start');
     let observable$: Observable<any>;
     const fichaGeneral = this.getValue();
     fichaGeneral.proyecto = {
@@ -211,57 +192,42 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
           if (entidadRef) {
             this.proyectoEntidadGestora = value;
           }
-          this.logger.debug(ProyectoEntidadGestoraFragment.name, 'saveOrUpdate()', 'end');
           return this.proyectoEntidadGestora.id;
-        }),
-        tap(() => this.logger.debug(ProyectoEntidadGestoraFragment.name,
-          `saveOrUpdate()`, 'end'))
+        })
       );
     }
   }
 
 
   private createProyectoEntidadGestora(): Observable<IProyectoEntidadGestora> {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name,
-      `createProyectoEntidadGestora()`, 'start');
     this.proyectoEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.proyectoEntidadGestoraService.create(this.proyectoEntidadGestora).pipe(
       tap(result => {
         this.proyectoEntidadGestora = result;
         this.proyectoEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
-      }),
-      tap(() => this.logger.debug(ProyectoEntidadGestoraFragment.name,
-        `createProyectoEntidadGestora()`, 'end'))
+      })
     );
   }
 
   private updateProyectoEntidadGestora(): Observable<IProyectoEntidadGestora> {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name,
-      `updateProyectoEntidadGestora()`, 'start');
     this.proyectoEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.proyectoEntidadGestoraService.update(
       this.proyectoEntidadGestora.id, this.proyectoEntidadGestora).pipe(
         tap(result => {
           this.proyectoEntidadGestora = result;
           this.proyectoEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
-        }),
-        tap(() => this.logger.debug(ProyectoEntidadGestoraFragment.name,
-          `updateProyectoEntidadGestora()`, 'end'))
+        })
       );
   }
 
   private deleteProyectoEntidadGestora(): Observable<void> {
-    this.logger.debug(ProyectoEntidadGestoraFragment.name,
-      `deleteProyectoEntidadGestora()`, 'start');
     this.proyectoEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.proyectoEntidadGestoraService.deleteById(
       this.proyectoEntidadGestora.id).pipe(
         tap(() => {
           this.proyectoEntidadGestora = {} as IProyectoEntidadGestora;
           this.proyectoEntidadGestora.empresaEconomica = {} as IEmpresaEconomica;
-        }),
-        tap(() => this.logger.debug(ProyectoEntidadGestoraFragment.name,
-          `deleteProyectoEntidadGestora()`, 'end'))
+        })
       );
   }
 

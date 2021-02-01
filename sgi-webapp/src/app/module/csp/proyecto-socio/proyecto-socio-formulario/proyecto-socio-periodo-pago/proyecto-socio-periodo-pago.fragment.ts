@@ -1,11 +1,11 @@
-import { Fragment } from '@core/services/action-service';
 import { OnDestroy } from '@angular/core';
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
+import { Fragment } from '@core/services/action-service';
 import { ProyectoSocioPeriodoPagoService } from '@core/services/csp/proyecto-socio-periodo-pago.service';
+import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { map, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDestroy {
@@ -13,25 +13,20 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDest
   periodoPagos$ = new BehaviorSubject<StatusWrapper<IProyectoSocioPeriodoPago>[]>([]);
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     private proyectoSocioService: ProyectoSocioService,
     private proyectoSocioPeriodoPagoService: ProyectoSocioPeriodoPagoService
   ) {
     super(key);
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, 'constructor()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, `ngOnDestroy()`, 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       const id = this.getKey() as number;
       this.subscriptions.push(
@@ -42,10 +37,9 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDest
             this.periodoPagos$.next(
               result.map(value => new StatusWrapper<IProyectoSocioPeriodoPago>(value))
             );
-            this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, 'onInitialize()', 'end');
           },
           error => {
-            this.logger.error(ProyectoSocioPeriodoPagoFragment.name, 'onInitialize()', error);
+            this.logger.error(error);
           }
         )
       );
@@ -53,32 +47,23 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDest
   }
 
   addPeriodoPago(element: IProyectoSocioPeriodoPago) {
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name,
-      `addPeriodoPago(wrapper: ${element})`, 'start');
     const wrapped = new StatusWrapper<IProyectoSocioPeriodoPago>(element);
     wrapped.setCreated();
     const current = this.periodoPagos$.value;
     current.push(wrapped);
     this.recalcularNumPeriodos(current);
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name,
-      `addPeriodoPago(wrapper: ${element})`, 'end');
   }
 
   deletePeriodoPago(wrapper: StatusWrapper<IProyectoSocioPeriodoPago>) {
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name,
-      `deletePeriodoPago(wrapper: ${wrapper})`, 'start');
     const current = this.periodoPagos$.value;
     const index = current.findIndex((value) => value === wrapper);
     if (index >= 0) {
       current.splice(index, 1);
       this.recalcularNumPeriodos(current);
     }
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name,
-      `deletePeriodoPago(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, `saveOrUpdate()`, 'start');
     const values = this.periodoPagos$.value.map(wrapper => wrapper.value);
     const id = this.getKey() as number;
     return this.proyectoSocioPeriodoPagoService.updateList(id, values).pipe(
@@ -91,15 +76,12 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDest
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-        this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, `saveOrUpdate()`, 'end');
       })
     );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const hasTouched = this.periodoPagos$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ProyectoSocioPeriodoPagoFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return !hasTouched;
   }
 

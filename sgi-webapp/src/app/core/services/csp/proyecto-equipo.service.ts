@@ -6,10 +6,10 @@ import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SgiMutableRestService, SgiRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface IProyectoEquipoBackend {
   id: number;
@@ -66,7 +66,7 @@ export class ProyectoEquipoService extends
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoEquipoService.name,
       logger,
@@ -83,11 +83,9 @@ export class ProyectoEquipoService extends
    * @param entities Listado de IProyectoEquipo
    */
   updateList(id: number, entities: IProyectoEquipo[]): Observable<IProyectoEquipo[]> {
-    this.logger.debug(ProyectoEquipoService.name, `updateList()`, '-', 'start');
     const entitiesBack = entities.map(entity => this.converter.fromTarget(entity));
     return this.http.patch<IProyectoEquipoBackend[]>(`${this.endpointUrl}/${id}`, entitiesBack).pipe(
-      map(resultList => resultList.map(entity => this.converter.toTarget(entity))),
-      tap(() => this.logger.debug(ProyectoEquipoService.name, `updateList()`, '-', 'end'))
+      map(resultList => resultList.map(entity => this.converter.toTarget(entity)))
     );
   }
 

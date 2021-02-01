@@ -7,10 +7,9 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
-import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
-import moment from 'moment';
 import { StringValidator } from '@core/validators/string-validator';
+import moment from 'moment';
+import { Subscription } from 'rxjs';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ANADIR = marker('botones.aniadir');
@@ -41,12 +40,9 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
   private suscripciones: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
     public matDialogRef: MatDialogRef<ProyectoPaquetesTrabajoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PaquetesTrabajoModalData,
     private snackBarService: SnackBarService) {
-
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'constructor()', 'start');
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -69,23 +65,18 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
     this.fxFlexProperties2.md = '0 1 calc(50%-10px)';
     this.fxFlexProperties2.gtMd = '0 1 calc(50%-10px)';
     this.fxFlexProperties2.order = '3';
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'ngOnInit()', 'start');
     this.initFormGroup();
 
     this.textSaveOrUpdate = this.data?.paqueteTrabajo?.nombre ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'ngOnInit()', 'end');
   }
 
   /**
    * Inicializa formulario de creación/edición de paquetes trabajo
    */
   private initFormGroup() {
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'initFormGroup()', 'start');
-
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.data?.paqueteTrabajo?.nombre,
         [Validators.maxLength(250), Validators.required,
@@ -101,22 +92,18 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
           ValidarRangoProyecto.rangoProyecto('fechaInicio', 'fechaFin', this.data),
           DateValidator.isAfter('fechaInicio', 'fechaFin')]
       });
-
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'initFormGroup()', 'end');
   }
 
   /**
    * Actualizar o guardar datos
    */
   saveOrUpdate(): void {
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'saveOrUpdate()', 'start');
     if (this.formGroup.valid) {
       this.loadDatosForm();
       this.closeModal(this.data.paqueteTrabajo);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -125,14 +112,11 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'loadDatosForm()', 'start');
     this.data.paqueteTrabajo.nombre = this.formGroup.get('nombre').value;
     this.data.paqueteTrabajo.fechaFin = this.formGroup.get('fechaFin').value;
     this.data.paqueteTrabajo.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.paqueteTrabajo.personaMes = this.formGroup.get('personaMes').value;
     this.data.paqueteTrabajo.descripcion = this.formGroup.get('descripcion').value;
-
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'loadDatosForm()', 'end');
   }
 
   /**
@@ -141,15 +125,11 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
    * @param paqueteTrabajo paqueteTrabajo modificado o creado.
    */
   closeModal(paqueteTrabajo?: IProyectoPaqueteTrabajo): void {
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(paqueteTrabajo);
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'closeModal()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'ngOnDestroy()', 'start');
     this.suscripciones?.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPaquetesTrabajoModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
 }
@@ -188,7 +168,7 @@ export class ValidarRangoProyecto {
           fechaInicioForm.setErrors(null);
         }
 
-      };
-    }
+      }
+    };
   }
 }

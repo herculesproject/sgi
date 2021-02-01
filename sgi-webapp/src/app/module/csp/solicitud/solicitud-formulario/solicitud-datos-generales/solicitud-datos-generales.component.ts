@@ -1,24 +1,24 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortable } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { NGXLogger } from 'ngx-logger';
-import { SolicitudDatosGeneralesFragment, SolicitudModalidadEntidadConvocanteListado } from './solicitud-datos-generales.fragment';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { SolicitudActionService } from '../../solicitud.action.service';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { Subscription, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, MatSortable } from '@angular/material/sort';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SolicitudModalidadEntidadConvocanteModalData, SolicitudModalidadEntidadConvocanteModalComponent } from '../../modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
-import { MatDialog } from '@angular/material/dialog';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { SolicitudModalidadEntidadConvocanteModalComponent, SolicitudModalidadEntidadConvocanteModalData } from '../../modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
+import { SolicitudActionService } from '../../solicitud.action.service';
+import { SolicitudDatosGeneralesFragment, SolicitudModalidadEntidadConvocanteListado } from './solicitud-datos-generales.fragment';
 
 const MSG_ERROR_INIT = marker('csp.solicitud.datosGenerales.error.cargar');
 
@@ -53,14 +53,13 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   private subscriptions = [] as Subscription[];
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected actionService: SolicitudActionService,
     private snackBarService: SnackBarService,
     private unidadGestionService: UnidadGestionService,
     private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as SolicitudDatosGeneralesFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -94,12 +93,9 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
     this.elementosPagina = [5, 10, 25, 100];
     this.displayedColumns = ['entidadConvocante', 'plan', 'programaConvocatoria', 'modalidadSolicitud', 'acciones'];
-
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadUnidadesGestion();
     this.loadTiposFormulario();
@@ -131,14 +127,10 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       }
       this.dataSourceEntidadesConvocantes.data = elements;
     }));
-
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
@@ -157,8 +149,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
    * @param entidadConvocanteModalidad EntidadConvocanteModalidad que se carga en el modal para modificarlo.
    */
   openModalSelectModalidad(entidadConvocanteModalidad: SolicitudModalidadEntidadConvocanteListado): void {
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, `openModalSelectModalidad(${entidadConvocanteModalidad})`, 'start');
-
     const data: SolicitudModalidadEntidadConvocanteModalData = {
       entidad: entidadConvocanteModalidad.entidadConvocante.entidad,
       plan: entidadConvocanteModalidad.plan,
@@ -178,8 +168,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       (entidadConvocanteModalidadModal: SolicitudModalidadEntidadConvocanteModalData) => {
 
         if (!entidadConvocanteModalidadModal) {
-          this.logger.debug(SolicitudDatosGeneralesComponent.name,
-            `openModalSelectModalidad(${entidadConvocanteModalidadModal})`, 'end');
           return;
         }
 
@@ -190,8 +178,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
         } else if (!entidadConvocanteModalidad.modalidad.created) {
           this.formPart.updateSolicitudModalidad(entidadConvocanteModalidadModal.modalidad);
         }
-
-        this.logger.debug(SolicitudDatosGeneralesComponent.name, `openModalSelectModalidad(${entidadConvocanteModalidadModal})`, 'end');
       }
     );
 
@@ -201,16 +187,13 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
    * Carga los tipos de justificacion del enum TipoFormularioSolicitud
    */
   private loadTiposFormulario() {
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'loadTiposFormulario()', 'start');
     this.tiposFormulario = Object.keys(TipoFormularioSolicitud).map(key => TipoFormularioSolicitud[key]);
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, 'loadTiposFormulario()', 'end');
   }
 
   /**
    * Carga la lista de unidades de gestion seleccionables por el usuario
    */
   private loadUnidadesGestion() {
-    this.logger.debug(SolicitudDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'start');
     this.subscriptions.push(
       this.unidadGestionService.findAllRestringidos().subscribe(
         res => {
@@ -220,11 +203,10 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
               startWith(''),
               map(value => this.filtroUnidadGestion(value))
             );
-          this.logger.debug(SolicitudDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(SolicitudDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'error');
         }
       )
     );
@@ -245,8 +227,5 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     const filterValue = value.toString().toLowerCase();
     return this.unidadesGestion.filter(unidadGestion => unidadGestion.nombre.toLowerCase().includes(filterValue));
   }
-
-
-
 
 }

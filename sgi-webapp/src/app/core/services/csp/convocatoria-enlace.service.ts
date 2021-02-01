@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 export class ConvocatoriaEnlaceService extends SgiRestService<number, IConvocatoriaEnlace> {
   private static readonly MAPPING = '/convocatoriaenlaces';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaEnlaceService.name,
       logger,

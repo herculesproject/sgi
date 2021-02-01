@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 export class ConvocatoriaFaseService extends SgiRestService<number, IConvocatoriaFase> {
   private static readonly MAPPING = '/convocatoriafases';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaFaseService.name,
       logger,

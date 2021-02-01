@@ -6,12 +6,12 @@ import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-soli
 import { FormFragment } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
+import { DateUtils } from '@core/utils/date-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { ConvocatoriaPlazosFasesFragment } from '../convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
 
 export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<IConfiguracionSolicitud> implements OnDestroy {
@@ -21,7 +21,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   private subscriptionsFragment: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private documentoRequeridoService: DocumentoRequeridoService,
@@ -30,20 +30,15 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     public readonly: boolean
   ) {
     super(key, true);
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, 'constructor()', 'start');
     this.setComplete(true);
     this.configuracionSolicitud = {} as IConfiguracionSolicitud;
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, 'constructor()', 'start');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, 'ngOnDestroy()', 'start');
     this.subscriptionsFragment.forEach(x => x.unsubscribe());
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, 'ngOnDestroy()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `buildFormGroup()`, 'start');
     const form = new FormGroup({
       tramitacionSGI: new FormControl(false),
       fasePresentacionSolicitudes: new FormControl(undefined),
@@ -56,13 +51,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     if (this.readonly) {
       form.disable();
     }
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `buildFormGroup()`, 'start');
     return form;
   }
 
   protected buildPatch(configuracionSolicitud: IConfiguracionSolicitud): { [key: string]: any; } {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `buildPatch(configuracionSolicitud: ${configuracionSolicitud})`, 'start');
     const result = {
       tramitacionSGI: configuracionSolicitud?.tramitacionSGI,
       fasePresentacionSolicitudes: configuracionSolicitud?.fasePresentacionSolicitudes,
@@ -72,14 +64,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       fechaFinFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin,
       importeMaximoSolicitud: configuracionSolicitud?.importeMaximoSolicitud,
     };
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `buildPatch(configuracionSolicitud: ${configuracionSolicitud})`, 'end');
     return result;
   }
 
   protected initializer(key: number): Observable<IConfiguracionSolicitud> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `initializer(key: ${key})`, 'start');
     return this.configuracionSolicitudService.findById(key).pipe(
       switchMap((configuracionSolicitud) => {
         this.configuracionSolicitud = configuracionSolicitud;
@@ -96,18 +84,14 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           })
         );
       }),
-      tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-        `initializer(key: ${key})`, 'end')),
-      catchError(() => {
-        this.logger.error(ConvocatoriaConfiguracionSolicitudesFragment.name,
-          `initializer(key: ${key})`, 'error');
+      catchError((err) => {
+        this.logger.error(err);
         return of({} as IConfiguracionSolicitud);
       })
     );
   }
 
   getValue(): IConfiguracionSolicitud {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().value;
     if (this.configuracionSolicitud === null) {
       this.configuracionSolicitud = {} as IConfiguracionSolicitud;
@@ -120,26 +104,19 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     this.configuracionSolicitud.formularioSolicitud = form.formularioSolicitud;
     this.configuracionSolicitud.baremacionRef = form.tipoBaremacion;
     this.configuracionSolicitud.importeMaximoSolicitud = form.importeMaximoSolicitud;
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `getValue()`, 'end');
     return this.configuracionSolicitud;
   }
 
   public addDocumentoRequerido(docRequerido: IDocumentoRequerido): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `addDocumentoRequerido(addDocumentoRequerido: ${docRequerido})`, 'start');
     const wrapped = new StatusWrapper<IDocumentoRequerido>(docRequerido);
     wrapped.setCreated();
     const current = this.documentosRequeridos$.value;
     current.push(wrapped);
     this.documentosRequeridos$.next(current);
     this.setChanges(true);
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `addDocumentoRequerido(addDocumentoRequerido: ${docRequerido})`, 'end');
   }
 
   public deleteDocumentoRequerido(wrapper: StatusWrapper<IDocumentoRequerido>): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `deleteDocumentoRequerido(wrapper: ${wrapper})`, 'start');
     const current = this.documentosRequeridos$.value;
     const index = current.findIndex(
       (value: StatusWrapper<IDocumentoRequerido>) => value === wrapper
@@ -152,26 +129,20 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       this.documentosRequeridos$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `deleteDocumentoRequerido(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `saveOrUpdate()`, 'start');
     const configuracion = this.getValue();
     const observable$ = configuracion.id ? this.update(configuracion) : this.create(configuracion);
     return observable$.pipe(
       map(value => {
         this.configuracionSolicitud = value;
         return this.configuracionSolicitud.id;
-      }),
-      tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(configuracion: IConfiguracionSolicitud): Observable<IConfiguracionSolicitud> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `create(configuracion: ${configuracion})`, 'start');
     configuracion.convocatoria = {
       id: this.getKey(),
       activo: true
@@ -194,16 +165,11 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
     return this.configuracionSolicitudService.create(configuracion).pipe(
       tap(result => this.configuracionSolicitud = result),
-      switchMap(result => this.saveOrUpdateDocumentoRequeridos(result)),
-      tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-        `create(configuracion: ${configuracion})`, 'end'))
+      switchMap(result => this.saveOrUpdateDocumentoRequeridos(result))
     );
   }
 
   private update(configuracion: IConfiguracionSolicitud): Observable<IConfiguracionSolicitud> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `update(configuracion: ${configuracion})`, 'start');
-
     if (typeof configuracion.fasePresentacionSolicitudes === 'string') {
       configuracion.fasePresentacionSolicitudes = null;
     }
@@ -220,19 +186,13 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
             && plazoFase.value.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones)?.value;
     }
 
-
-
     return this.configuracionSolicitudService.update(Number(this.getKey()), configuracion).pipe(
       tap(result => this.configuracionSolicitud = result),
-      switchMap(result => this.saveOrUpdateDocumentoRequeridos(result)),
-      tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-        `update(configuracion: ${configuracion})`, 'end'))
+      switchMap(result => this.saveOrUpdateDocumentoRequeridos(result))
     );
   }
 
   private saveOrUpdateDocumentoRequeridos(result: IConfiguracionSolicitud) {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `saveOrUpdateDocumentoRequeridos()`, 'start');
     return merge(
       this.deleteDocumentoRequeridos(),
       this.updateDocumentoRequeridos(result),
@@ -244,18 +204,12 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           this.setChanges(false);
         }
       }),
-      switchMap(() => of(result)),
-      tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-        `saveOrUpdateDocumentoRequeridos()`, 'end'))
+      switchMap(() => of(result))
     );
   }
 
   private deleteDocumentoRequeridos(): Observable<void> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `deleteDocumentoRequeridos()`, 'start');
     if (this.documentosRequeridosEliminados.length === 0) {
-      this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-        `deleteDocumentoRequeridos()`, 'end');
       return of(void 0);
     }
     return from(this.documentosRequeridosEliminados).pipe(
@@ -265,19 +219,15 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
             tap(() => {
               this.documentosRequeridosEliminados = this.documentosRequeridosEliminados.filter(
                 deletedModelo => deletedModelo.value.id !== wrapped.value.id);
-            }),
-            tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-              `deleteDocumentoRequeridos()`, 'end'))
+            })
           );
       })
     );
   }
 
   private updateDocumentoRequeridos(result: IConfiguracionSolicitud): Observable<void> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `updateDocumentoRequeridos()`, 'start');
     const editedDocumentos = this.documentosRequeridos$.value.filter((value) => value.value.id && value.edited);
     if (editedDocumentos.length === 0) {
-      this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `updateDocumentoRequeridos()`, 'end');
       return of(void 0);
     }
     editedDocumentos.forEach(documento =>
@@ -288,20 +238,15 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           map((updatedEntidad) => {
             const index = this.documentosRequeridos$.value.findIndex((currentEntidad) => currentEntidad === wrapped);
             this.documentosRequeridos$.value[index] = new StatusWrapper<IDocumentoRequerido>(updatedEntidad);
-          }),
-          tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-            `updateDocumentoRequeridos()`, 'end')
-          )
+          })
         );
       })
     );
   }
 
   private createDocumentoRequeridos(configuracion: IConfiguracionSolicitud): Observable<void> {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `createDocumentoRequeridos()`, 'start');
     const createdDocumentos = this.documentosRequeridos$.value.filter((value) => !value.value.id && value.created);
     if (createdDocumentos.length === 0) {
-      this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `createDocumentoRequeridos()`, 'end');
       return of(void 0);
     }
     createdDocumentos.forEach(documento => {
@@ -314,18 +259,14 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           map((createdEntidad) => {
             const index = this.documentosRequeridos$.value.findIndex((currentEntidad) => currentEntidad === wrapped);
             this.documentosRequeridos$[index] = new StatusWrapper<IDocumentoRequerido>(createdEntidad);
-          }),
-          tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-            `createDocumentoRequeridos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.documentosRequeridos$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.documentosRequeridosEliminados.length > 0 || touched);
   }
 }

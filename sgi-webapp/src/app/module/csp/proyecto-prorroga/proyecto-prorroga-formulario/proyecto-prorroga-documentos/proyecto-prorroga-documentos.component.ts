@@ -16,10 +16,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { ProyectoProrrogaActionService } from '../../proyecto-prorroga.action.service';
-import { ProyectoProrrogaDocumentosFragment, NodeDocumento } from './proyecto-prorroga-documentos.fragment';
+import { NodeDocumento, ProyectoProrrogaDocumentosFragment } from './proyecto-prorroga-documentos.fragment';
 
 const MSG_DELETE = marker('csp.proyecto-prorroga.documentos.documento.eliminar.msg');
 const MSG_UPLOAD_SUCCES = marker('file.upload.success');
@@ -74,7 +73,6 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
   constructor(
-    protected logger: NGXLogger,
     private dialogService: DialogService,
     public actionService: ProyectoProrrogaActionService,
     private modeloEjecucionService: ModeloEjecucionService,
@@ -82,7 +80,6 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
     private snackBar: SnackBarService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService);
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -99,13 +96,10 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<NodeDocumento>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, 'ngOnInit()', 'start');
     this.subscriptions.push(this.formPart.documentos$.subscribe((documentos) => {
       this.dataSource.data = documentos;
     }));
@@ -127,17 +121,13 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
     );
 
     this.switchToNone();
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy() {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, 'ngOnDestroy()', 'end');
   }
 
   showNodeDetails(node: NodeDocumento) {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.showNodeDetails.name}(node: ${node})`, 'start');
     this.viewingNode = node;
     if (!node.fichero && node.documento?.value.documentoRef) {
       this.subscriptions.push(this.documentoService.getInfoFichero(node.documento.value.documentoRef).subscribe(
@@ -155,38 +145,29 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
     else {
       this.switchToView();
     }
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.showNodeDetails.name}(node: ${node})`, 'end');
   }
 
   hideNodeDetails() {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.hideNodeDetails.name}()`, 'start');
     this.viewMode = VIEW_MODE.NONE;
     this.viewingNode = undefined;
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.hideNodeDetails.name}()`, 'end');
   }
 
   switchToNew() {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.switchToNew.name}()`, 'start');
     const wrapper = new StatusWrapper<IProyectoProrrogaDocumento>({} as IProyectoProrrogaDocumento);
     const newNode: NodeDocumento = new NodeDocumento(null, undefined, 2, wrapper);
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.switchToNew.name}()`, 'end');
   }
 
   switchToEdit() {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.switchToEdit.name}()`, 'start');
     this.viewMode = VIEW_MODE.EDIT;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.switchToEdit.name}()`, 'end');
   }
 
   switchToView() {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.switchToView.name}()`, 'start');
     this.viewMode = VIEW_MODE.VIEW;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.switchToView.name}()`, 'end');
   }
 
   private switchToNone() {
@@ -196,8 +177,6 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
   }
 
   private loadDetails(node: NodeDocumento) {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name,
-      `${this.loadDetails.name}()`, 'start');
     this.formGroup.enable();
 
     this.formGroup.reset();
@@ -211,9 +190,6 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
     if (this.viewMode !== VIEW_MODE.NEW && this.viewMode !== VIEW_MODE.EDIT) {
       this.formGroup.disable();
     }
-
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name,
-      `${this.loadDetails.name}()`, 'start');
   }
 
   cancelDetail() {
@@ -261,23 +237,15 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
   }
 
   private addNode(node: NodeDocumento) {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.addNode.name}()`, 'start');
-
     const createdNode = this.formPart.addNode(node);
     this.expandParents(createdNode);
     this.switchToNone();
-
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.addNode.name}()`, 'end');
   }
 
   private updateNode(node: NodeDocumento) {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.updateNode.name}()`, 'start');
-
     this.formPart.updateNode(node);
     this.expandParents(node);
     this.switchToView();
-
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name, `${this.updateNode.name}()`, 'end');
   }
 
   private expandParents(node: NodeDocumento) {
@@ -288,8 +256,6 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
   }
 
   deleteDetail() {
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name,
-      `${this.deleteDetail.name}()`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
@@ -300,8 +266,6 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
         }
       )
     );
-    this.logger.debug(ProyectoProrrogaDocumentosComponent.name,
-      `${this.deleteDetail.name}()`, 'end');
   }
 
   onUploadProgress(event: UploadEvent) {

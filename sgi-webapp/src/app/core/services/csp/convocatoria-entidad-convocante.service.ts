@@ -44,7 +44,7 @@ export class ConvocatoriaEntidadConvocanteService
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaEntidadConvocanteService.name,
       logger,

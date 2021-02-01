@@ -11,10 +11,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { NGXLogger } from 'ngx-logger';
+import moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import moment from 'moment';
 
 
 interface CodigoEconomicoInfo {
@@ -64,15 +63,13 @@ export class DesglosePresupuestoGlobalModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudProyectoPresupuestoDataModal>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoPresupuestoDataModal,
     private conceptoGastoService: ConceptoGastoService,
     private convocatoriaService: ConvocatoriaService
   ) {
-    super(logger, snackBarService, matDialogRef, data.solicitudProyectoPresupuesto);
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data.solicitudProyectoPresupuesto);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -97,12 +94,9 @@ export class DesglosePresupuestoGlobalModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadConceptosGasto();
     this.loadConvocatoriaConceptoGastoCodigoEcPermitidos(this.data.convocatoriaId);
@@ -117,16 +111,12 @@ export class DesglosePresupuestoGlobalModalComponent extends
 
         this.conceptosGastosNoPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcNoPermitidos
           .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
-
-        this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, 'ngOnInit()', 'end');
       });
 
     this.textSaveOrUpdate = this.data.solicitudProyectoPresupuesto?.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, 'ngOnInit()', 'end');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       conceptoGasto: new FormControl(this.data.solicitudProyectoPresupuesto.conceptoGasto,
         [
@@ -152,19 +142,15 @@ export class DesglosePresupuestoGlobalModalComponent extends
     if (this.data.readonly) {
       formGroup.disable();
     }
-
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): ISolicitudProyectoPresupuesto {
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `getDatosForm()`, 'start');
     const entidad = this.data.solicitudProyectoPresupuesto;
     entidad.conceptoGasto = this.formGroup.controls.conceptoGasto.value;
     entidad.anualidad = this.formGroup.controls.anualidad.value;
     entidad.importeSolicitado = this.formGroup.controls.importeSolicitado.value;
     entidad.observaciones = this.formGroup.controls.observaciones.value;
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `getDatosForm()`, 'end');
     return entidad;
   }
 
@@ -172,12 +158,10 @@ export class DesglosePresupuestoGlobalModalComponent extends
    * Carga todos los conceptos de gasto
    */
   private loadConceptosGasto(): void {
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `loadConceptosGasto()`, 'start');
     this.conceptosGasto$ = this.conceptoGastoService.findAll()
       .pipe(
         map((conceptosGasto) => conceptosGasto.items)
       );
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `loadConceptosGasto()`, 'end');
   }
 
   /**
@@ -186,13 +170,11 @@ export class DesglosePresupuestoGlobalModalComponent extends
    * @param convocatoriaId Id de la convocatoria
    */
   private loadConvocatoriaConceptoGastoCodigoEcPermitidos(convocatoriaId: number): void {
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `loadConvocatoriaConceptoGastoCodigoEcPermitidos(${convocatoriaId})`, 'start');
     const subscription = this.convocatoriaService.getConvocatoriaConceptoGastoCodigoEcsPermitidos(convocatoriaId)
       .subscribe((conceptosGastoCodigoEc) => {
         this.conceptosGastoCodigoEcPermitidos = conceptosGastoCodigoEc.items;
       });
     this.subscriptions.push(subscription);
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `loadConvocatoriaConceptoGastoCodigoEcPermitidos(${convocatoriaId})`, 'end');
   }
 
   /**
@@ -201,13 +183,11 @@ export class DesglosePresupuestoGlobalModalComponent extends
    * @param convocatoriaId Id de la convocatoria
    */
   private loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(convocatoriaId: number): void {
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(${convocatoriaId})`, 'start');
     const subscription = this.convocatoriaService.getConvocatoriaConceptoGastoCodigoEcsNoPermitidos(convocatoriaId)
       .subscribe((conceptosGastoCodigoEc) => {
         this.conceptosGastoCodigoEcNoPermitidos = conceptosGastoCodigoEc.items;
       });
     this.subscriptions.push(subscription);
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, `loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(${convocatoriaId})`, 'end');
   }
 
   getNombreConceptoGasto(conceptoGasto: IConceptoGasto): string {
@@ -240,8 +220,6 @@ export class DesglosePresupuestoGlobalModalComponent extends
 
       conceptoGastoInfo.codigosEconomicos.push(codigoEconomicoInfo);
     });
-
-    this.logger.debug(DesglosePresupuestoGlobalModalComponent.name, 'ngOnInit()', 'end');
 
     return conceptosGastosInfo;
   }

@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 export class TipoComentarioService extends SgiRestService<number, TipoComentario> {
   private static readonly MAPPING = '/tipocomentarios';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoComentarioService.name,
       logger,

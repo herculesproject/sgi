@@ -1,20 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, from, of } from 'rxjs';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { NestedTreeControl } from '@angular/cdk/tree';
 import { ProgramaService } from '@core/services/csp/programa.service';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { switchMap, mergeMap, map, takeLast, tap } from 'rxjs/operators';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { from, Observable, of } from 'rxjs';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface SolicitudModalidadEntidadConvocanteModalData {
   entidad: IEmpresaEconomica;
@@ -87,14 +86,12 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
   hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
 
   constructor(
-    protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudModalidadEntidadConvocanteModalData,
     public readonly matDialogRef: MatDialogRef<SolicitudModalidadEntidadConvocanteModalComponent>,
     private programaService: ProgramaService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
 
     this.isEdit = data.modalidad ? true : false;
 
@@ -114,13 +111,10 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'ngOnInit()', 'start');
 
     const subscription = this.getTreePrograma(this.data.programa, this.data.modalidad?.programa)
       .subscribe((nodePrograma) => {
@@ -128,31 +122,21 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
       });
 
     this.subscriptions.push(subscription);
-
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'ngOnInit()', 'end');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getFormGroup()`, 'start');
-
     const formGroup = new FormGroup({
       entidadConvocante: new FormControl({ value: this.data.entidad?.razonSocial, disabled: true }),
       plan: new FormControl({ value: this.data.plan?.nombre, disabled: true })
     });
-
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): SolicitudModalidadEntidadConvocanteModalData {
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getDatosForm()`, 'start');
-
     const entidadConvocanteModalidad = this.data;
 
     if (!this.checkedNode) {
       entidadConvocanteModalidad.modalidad = null;
-      this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getDatosForm()`, 'end');
-
       return entidadConvocanteModalidad;
     }
 
@@ -163,8 +147,6 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
     }
 
     entidadConvocanteModalidad.modalidad.programa = this.checkedNode?.programa;
-
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getDatosForm()`, 'end');
     return entidadConvocanteModalidad;
   }
 
@@ -176,9 +158,6 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
    * @param checkedPrograma el programa seleccionado en el arbol.
    */
   getTreePrograma(rootPrograma: IPrograma, checkedPrograma?: IPrograma): Observable<NodePrograma> {
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
-      `getTreePrograma(rootPrograma: ${rootPrograma}, checkedPrograma?: ${checkedPrograma})`, 'start');
-
     const node = new NodePrograma(rootPrograma);
     this.rootNode = node;
     this.nodeMap.set(node.programa.id, node);
@@ -188,9 +167,6 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
         if (this.checkedNode) {
           this.expandParentNodes(this.checkedNode);
         }
-
-        this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
-          `getTreePrograma(rootPrograma: ${rootPrograma}, checkedPrograma?: ${checkedPrograma})`, 'end');
       })
     );
   }
@@ -199,11 +175,7 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
    * Actualiza el nodo del arbol que esta seleccionado.
    */
   onCheckNode(node: NodePrograma, $event: MatCheckboxChange): void {
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'start');
     this.checkedNode = $event.checked ? node : undefined;
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'end');
   }
 
   /**
@@ -213,8 +185,6 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
    * @returns observable con el arbol de nodos con parent como nodo raiz.
    */
   private getChilds(parent: NodePrograma): Observable<NodePrograma[]> {
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
-      `getChilds(parent: ${parent})`, 'start');
     return this.programaService.findAllHijosPrograma(parent.programa.id).pipe(
       map((result) => {
         const childs: NodePrograma[] = result.items.map(
@@ -238,9 +208,7 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
         }
         return of([]);
       }),
-      takeLast(1),
-      tap(() => this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
-        `getChilds(parent: ${parent})`, 'end'))
+      takeLast(1)
     );
   }
 
@@ -250,17 +218,12 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
    * @param node nodo del arbol
    */
   private expandParentNodes(node: NodePrograma): void {
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `expandParentNodes(node: ${node})`, 'start');
-
     if (!node || !node.parent) {
-      this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `expandParentNodes(node: ${node})`, 'end');
       return;
     }
 
     this.treeControl.expand(node.parent);
     this.expandParentNodes(node.parent);
-
-    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `expandParentNodes(node: ${node})`, 'end');
   }
 
 }

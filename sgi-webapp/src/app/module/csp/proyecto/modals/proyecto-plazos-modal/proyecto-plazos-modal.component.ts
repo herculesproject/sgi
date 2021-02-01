@@ -1,6 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
@@ -17,7 +16,7 @@ import { IRangeDates, RangeValidator } from '@core/validators/range-validator';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.proyecto.plazos.fases.error.cargar');
@@ -58,14 +57,12 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
   /** ngx-mat-datetime-picker */
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoPlazosModalComponentData,
     public matDialogRef: MatDialogRef<ProyectoPlazosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
   ) {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'constructor()', 'start');
-
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -87,12 +84,9 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
     this.fxFlexProperties2.md = '0 1 calc(50%-10px)';
     this.fxFlexProperties2.gtMd = '0 1 calc(50%-10px)';
     this.fxFlexProperties2.order = '3';
-
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'ngOnInit()', 'start');
     this.initFormGroup();
 
     const suscription = this.formGroup.controls.fechaFin.valueChanges.subscribe((value) => this.validatorGeneraAviso(value));
@@ -102,14 +96,12 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
 
     this.validatorGeneraAviso(this.formGroup.controls.fechaFin.value);
     this.textSaveOrUpdate = this.data.plazo?.tipoFase ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'ngOnInit()', 'start');
   }
 
   /**
    * Validamos fecha para activar o inactivar el checkbox generaAviso
    */
   private validatorGeneraAviso(fechaFinInput: Date) {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'validatorGeneraAviso()', 'start');
     const fechaActual = new Date();
     const fechaFin = fechaFinInput;
     if (fechaFin <= fechaActual) {
@@ -118,15 +110,12 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
     } else {
       this.formGroup.get('generaAviso').enable();
     }
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'validatorGeneraAviso()', 'end');
   }
 
   /**
    * Inicializa formulario de creación/edición de plazos y fases
    */
   private initFormGroup() {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'initFormGroup()', 'start');
-
     this.formGroup = new FormGroup({
       fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, [Validators.required]),
       fechaFin: new FormControl(this.data?.plazo?.fechaFin, Validators.required),
@@ -143,8 +132,6 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
 
     const suscription = this.formGroup.controls.tipoFase.valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.suscripciones.push(suscription);
-
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'initFormGroup()', 'end');
   }
 
   /**
@@ -153,7 +140,6 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
    * @param tipoFase proyecto tipoFase
    */
   private createValidatorDate(tipoFase: ITipoFase | string): void {
-    this.logger.debug(ProyectoPlazosModalComponent.name, `createValidatorDate(tipoFase: ${tipoFase})`, 'end');
     let rangoFechas: IRangeDates[] = [];
     if (tipoFase && typeof tipoFase !== 'string') {
       const proyectoFases = this.data.plazos.filter(plazo =>
@@ -174,11 +160,9 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
       DateValidator.isBefore('fechaFin', 'fechaInicio'),
       RangeValidator.notOverlaps('fechaInicio', 'fechaFin', rangoFechas)
     ]);
-    this.logger.debug(ProyectoPlazosModalComponent.name, `createValidatorDate(tipoFase: ${tipoFase})`, 'end');
   }
 
   loadTipoFases() {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'loadTipoFases()', 'start');
     this.suscripciones.push(
       this.modeloEjecucionService.findModeloTipoFaseModeloEjecucionProyecto(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoFase>) => {
@@ -188,34 +172,28 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
               startWith(''),
               map(value => this.filtroTipoPlazosFase(value))
             );
-          this.logger.debug(ProyectoPlazosModalComponent.name, 'loadTipoFases()', 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           if (this.data.idModeloEjecucion) {
             this.snackBarService.showError(MSG_ERROR_INIT);
           } else {
             this.snackBarService.showError(MSG_ERROR_TIPOS);
           }
-          this.logger.debug(ProyectoPlazosModalComponent.name, 'loadTipoFases()', 'end');
         })
     );
-
-
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'loadTipoFases()', 'end');
   }
 
   /**
    * Actualizar o guardar datos
    */
   saveOrUpdate(): void {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'saveOrUpdate()', 'start');
     if (this.formGroup.valid) {
       this.loadDatosForm();
       this.closeModal(this.data.plazo);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -224,13 +202,11 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'loadDatosForm()', 'start');
     this.data.plazo.fechaInicio = this.formGroup.controls.fechaInicio.value;
     this.data.plazo.fechaFin = this.formGroup.controls.fechaFin.value;
     this.data.plazo.tipoFase = this.formGroup.controls.tipoFase.value;
     this.data.plazo.observaciones = this.formGroup.controls.observaciones.value;
     this.data.plazo.generaAviso = this.formGroup.controls.generaAviso.value;
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'loadDatosForm()', 'end');
   }
 
   /**
@@ -258,16 +234,11 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
    *
    */
   closeModal(plazos?: IProyectoPlazos): void {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(plazos);
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'closeModal()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'ngOnDestroy()', 'start');
     this.suscripciones?.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPlazosModalComponent.name, 'ngOnDestroy()', 'end');
   }
-
 
 }

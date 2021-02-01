@@ -77,7 +77,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     public actionService: SolicitudActionService,
     private documentoService: DocumentoService,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
@@ -85,7 +85,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService);
-    this.logger.debug(SolicitudDocumentosComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -102,18 +101,16 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<NodeDocumentoSolicitud>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    this.logger.debug(SolicitudDocumentosComponent.name, 'constructor()', 'start');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     const subcription = this.formPart.documentos$.subscribe(
       (documentos) => {
         this.dataSource.data = documentos;
       },
       (error) => {
-        this.logger.error(SolicitudDocumentosComponent.name, 'ngOnInit()', error);
+        this.logger.error(error);
       }
     );
     this.subscriptions.push(subcription);
@@ -137,7 +134,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
       );
     }
     this.switchToNone();
-    this.logger.debug(SolicitudDocumentosComponent.name, 'ngOnInit()', 'end');
   }
 
   private sortTipoDocumentos(tipoDocumentos: ITipoDocumento[]): ITipoDocumento[] {
@@ -153,43 +149,35 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudDocumentosComponent.name, 'ngOnDestroy()', 'end');
   }
 
   showNodeDetails(node: NodeDocumentoSolicitud) {
-    this.logger.debug(SolicitudDocumentosComponent.name, `showNodeDetails(node: ${node})`, 'start');
     this.viewingNode = node;
     if (!node.fichero && node.documento?.value.documentoRef) {
       this.subscriptions.push(this.documentoService.getInfoFichero(node.documento.value.documentoRef).subscribe(
         (info) => {
           node.fichero = info;
           this.switchToView();
-          this.logger.debug(SolicitudDocumentosComponent.name, `showNodeDetails(node: ${node})`, 'end');
         },
         (error) => {
           // TODO: Eliminar cuando los datos sean consistentes
+          this.logger.error(error);
           this.snackBar.showError(MSG_FILE_NOT_FOUND_ERROR);
           this.switchToView();
-          this.logger.error(SolicitudDocumentosComponent.name, `showNodeDetails(node: ${node})`, error);
         }
       ));
     } else {
       this.switchToView();
-      this.logger.debug(SolicitudDocumentosComponent.name, `showNodeDetails(node: ${node})`, 'end');
     }
   }
 
   switchToView() {
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToView()`, 'start');
     this.viewMode = VIEW_MODE.VIEW;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToView()`, 'end');
   }
 
   private loadDetails(node: NodeDocumentoSolicitud) {
-    this.logger.debug(SolicitudDocumentosComponent.name, `loadDetails(node: ${node})`, 'start');
     this.formGroup.enable();
 
     this.formGroup.reset();
@@ -202,14 +190,11 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     if (this.viewMode !== VIEW_MODE.NEW && this.viewMode !== VIEW_MODE.EDIT) {
       this.formGroup.disable();
     }
-    this.logger.debug(SolicitudDocumentosComponent.name, `loadDetails(node: ${node})`, 'end');
   }
 
   hideNodeDetails() {
-    this.logger.debug(SolicitudDocumentosComponent.name, `hideNodeDetails()`, 'start');
     this.viewMode = VIEW_MODE.NONE;
     this.viewingNode = undefined;
-    this.logger.debug(SolicitudDocumentosComponent.name, `hideNodeDetails()`, 'end');
   }
 
   onUploadProgress(event: UploadEvent) {
@@ -230,21 +215,18 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
 
 
   downloadFile(node: NodeDocumentoSolicitud): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `downloadFile()`, 'start');
     this.subscriptions.push(this.documentoService.downloadFichero(node.fichero.documentoRef).subscribe(
       (data) => {
         triggerDownloadToUser(data, node.fichero.nombre);
-        this.logger.debug(SolicitudDocumentosComponent.name, `downloadFile()`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBar.showError(MSG_DOWNLOAD_ERROR);
-        this.logger.error(SolicitudDocumentosComponent.name, `downloadFile()`, error);
       }
     ));
   }
 
   acceptDetail(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `acceptDetail()`, 'start');
     this.formGroup.markAllAsTouched();
     if (this.formGroup.valid) {
       if (this.viewMode === VIEW_MODE.NEW) {
@@ -258,76 +240,60 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
         );
       }
     }
-    this.logger.debug(SolicitudDocumentosComponent.name, `acceptDetail()`, 'end');
   }
 
   private getDetailNode(): NodeDocumentoSolicitud {
-    this.logger.debug(SolicitudDocumentosComponent.name, `getDetailNode()`, 'start');
     const detail = this.viewingNode;
     detail.documento.value.nombre = this.formGroup.get('nombre').value;
     detail.title = detail.documento.value.nombre;
     detail.documento.value.tipoDocumento = this.formGroup.get('tipoDocumento').value;
     detail.documento.value.comentario = this.formGroup.get('comentarios').value;
     detail.fichero = this.formGroup.get('fichero').value;
-    this.logger.debug(SolicitudDocumentosComponent.name, `getDetailNode()`, 'end');
     return detail;
   }
 
   private addNode(node: NodeDocumentoSolicitud): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `addNode()`, 'start');
     const createdNode = this.formPart.addNode(node);
     this.expandParents(createdNode);
     this.switchToNone();
-    this.logger.debug(SolicitudDocumentosComponent.name, `addNode()`, 'end');
   }
 
   private switchToNone() {
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToNone()`, 'start');
     this.viewMode = VIEW_MODE.NONE;
     this.viewingNode = undefined;
     this.loadDetails(undefined);
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToNone()`, 'start');
   }
 
   private updateNode(node: NodeDocumentoSolicitud): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `updateNode(node: ${node})`, 'start');
     this.formPart.updateNode(node);
     this.expandParents(node);
     this.switchToView();
-    this.logger.debug(SolicitudDocumentosComponent.name, `updateNode(node: ${node})`, 'end');
   }
 
   private expandParents(node: NodeDocumentoSolicitud): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `expandParents(node: ${node})`, 'start');
     if (node.parent) {
       this.treeControl.expand(node.parent);
       this.expandParents(node.parent);
     }
-    this.logger.debug(SolicitudDocumentosComponent.name, `expandParents(node: ${node})`, 'end');
   }
 
   cancelDetail(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `cancelDetail()`, 'start');
     if (this.viewMode === VIEW_MODE.EDIT) {
       this.switchToView();
     }
     else {
       this.switchToNone();
     }
-    this.logger.debug(SolicitudDocumentosComponent.name, `cancelDetail()`, 'end');
   }
 
   switchToEdit(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToEdit()`, 'start');
     this.viewMode = VIEW_MODE.EDIT;
     this.loadDetails(this.viewingNode);
     this.formGroup.get('tipoDocumento').disable();
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToEdit()`, 'end');
   }
 
 
   deleteDetail(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `deleteDetail()`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
@@ -338,16 +304,13 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
         }
       )
     );
-    this.logger.debug(SolicitudDocumentosComponent.name, `deleteDetail()`, 'end');
   }
 
   switchToNew(): void {
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToNew()`, 'start');
     const wrapper = new StatusWrapper<ISolicitudDocumento>({} as ISolicitudDocumento);
     const newNode: NodeDocumentoSolicitud = new NodeDocumentoSolicitud(null, undefined, 2, wrapper);
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(SolicitudDocumentosComponent.name, `switchToNew()`, 'end');
   }
 }

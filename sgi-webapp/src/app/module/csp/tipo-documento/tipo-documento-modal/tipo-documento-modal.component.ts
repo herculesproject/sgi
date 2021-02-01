@@ -5,7 +5,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { NGXLogger } from 'ngx-logger';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
@@ -18,13 +17,11 @@ export class TipoDocumentoModalComponent extends BaseModalComponent<ITipoDocumen
   textSaveOrUpdate: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<TipoDocumentoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public tipoDocumento: ITipoDocumento
   ) {
-    super(logger, snackBarService, matDialogRef, tipoDocumento);
-    this.logger.debug(TipoDocumentoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, tipoDocumento);
     if (tipoDocumento.id) {
       this.tipoDocumento = { ...tipoDocumento };
       this.textSaveOrUpdate = MSG_ACEPTAR;
@@ -32,21 +29,16 @@ export class TipoDocumentoModalComponent extends BaseModalComponent<ITipoDocumen
       this.tipoDocumento = { activo: true } as ITipoDocumento;
       this.textSaveOrUpdate = MSG_ANADIR;
     }
-    this.logger.debug(TipoDocumentoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(TipoDocumentoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.logger.debug(TipoDocumentoModalComponent.name, 'ngOnInit()', 'end');
   }
 
   protected getDatosForm(): ITipoDocumento {
-    this.logger.debug(TipoDocumentoModalComponent.name, `${this.getDatosForm.name}()`, 'start');
     const tipoDocumento = this.tipoDocumento;
     tipoDocumento.nombre = this.formGroup.get('nombre').value;
     tipoDocumento.descripcion = this.formGroup.get('descripcion').value;
-    this.logger.debug(TipoDocumentoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return tipoDocumento;
   }
 

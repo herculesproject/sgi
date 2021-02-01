@@ -1,20 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IConvocatoriaPeriodoJustificacion, TipoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { StatusWrapper } from '@core/utils/status-wrapper';
 import { RangeValidator } from '@core/validators/range-validator';
 import { StringValidator } from '@core/validators/string-validator';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 export interface IConvocatoriaPeriodoJustificacionModalData {
   duracion: number;
@@ -42,13 +40,11 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaPeriodoJustificacionModalData,
     public matDialogRef: MatDialogRef<ConvocatoriaPeriodosJustificacionModalComponent>
   ) {
-    super(logger, snackBarService, matDialogRef, data.convocatoriaPeriodoJustificacion);
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data.convocatoriaPeriodoJustificacion);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -66,21 +62,15 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'ngOnInit()', 'start');
     this.loadTiposJustificacion();
     this.textSaveOrUpdate = this.data.convocatoriaPeriodoJustificacion?.numPeriodo ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'ngOnInit()', 'start');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getFormGroup()`, 'start');
-
     const rangosPeriodosExistentes = this.data.convocatoriaPeriodoJustificacionList
       .filter(periodoJustificacion =>
         periodoJustificacion.value.mesInicial !== this.data.convocatoriaPeriodoJustificacion.mesInicial)
@@ -140,14 +130,10 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
         formGroup.get('hastaMes').validator
       ]);
     }
-
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): IConvocatoriaPeriodoJustificacion {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getDatosForm()`, 'start');
-
     const convocatoriaPeriodoJustificacion = this.data.convocatoriaPeriodoJustificacion;
     convocatoriaPeriodoJustificacion.numPeriodo = this.formGroup.get('numPeriodo').value;
     convocatoriaPeriodoJustificacion.tipoJustificacion = this.formGroup.get('tipoJustificacion').value;
@@ -156,8 +142,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     convocatoriaPeriodoJustificacion.fechaInicioPresentacion = this.formGroup.get('fechaInicio').value;
     convocatoriaPeriodoJustificacion.fechaFinPresentacion = this.formGroup.get('fechaFin').value;
     convocatoriaPeriodoJustificacion.observaciones = this.formGroup.get('observaciones').value;
-
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getDatosForm()`, 'end');
     return convocatoriaPeriodoJustificacion;
   }
 
@@ -166,16 +150,13 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
    * Carga los tipos de justificacion del enum TipoJustificacion
    */
   loadTiposJustificacion() {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'loadTiposJustificacion()', 'start');
     this.tiposJustificacion = Object.keys(TipoJustificacion).map(key => TipoJustificacion[key]);
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'loadTiposJustificacion()', 'end');
   }
 
   /**
    * Recalcula el numero de periodo en funcion de la ordenacion por mes inicial de todos los periodos.
    */
   recalcularNumPeriodo(): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'recalcularNumPeriodo()', 'start');
     let numPeriodo = 1;
     const mesInicial = this.formGroup.get('desdeMes').value;
 
@@ -186,7 +167,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     });
 
     this.formGroup.get('numPeriodo').setValue(numPeriodo);
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'recalcularNumPeriodo()', 'end');
   }
 
   /**
@@ -217,6 +197,5 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       }
     };
   }
-
 
 }

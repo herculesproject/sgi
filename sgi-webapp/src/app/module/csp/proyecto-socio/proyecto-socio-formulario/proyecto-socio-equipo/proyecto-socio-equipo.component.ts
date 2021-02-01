@@ -1,19 +1,18 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { Subscription } from 'rxjs';
-import { ProyectoSocioEquipoFragment } from './proyecto-socio-equipo.fragment';
-import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
-import { MatTableDataSource } from '@angular/material/table';
-import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { NGXLogger } from 'ngx-logger';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
+import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
 import { ProyectoEquipoSocioModalData, ProyectoSocioEquipoModalComponent } from '../../modals/proyecto-socio-equipo-modal/proyecto-socio-equipo-modal.component';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
+import { ProyectoSocioEquipoFragment } from './proyecto-socio-equipo.fragment';
 
 const MSG_DELETE = marker('csp.proyecto-equipo.socio-equipo.borrar');
 
@@ -34,35 +33,27 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     actionService: ProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.EQUIPO, actionService);
-    this.logger.debug(ProyectoSocioEquipoComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as ProyectoSocioEquipoFragment;
-    this.logger.debug(ProyectoSocioEquipoComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoSocioEquipoComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subcription = this.formPart.proyectoEquipoSocios$.subscribe(
       (proyectoEquipos) => this.dataSource.data = proyectoEquipos
     );
     this.subscriptions.push(subcription);
-    this.logger.debug(ProyectoSocioEquipoComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioEquipoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioEquipoComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(wrapper?: StatusWrapper<IProyectoSocioEquipo>): void {
-    this.logger.debug(ProyectoSocioEquipoComponent.name, `openModal()`, 'start');
     const proyectoSocioEquipo: IProyectoSocioEquipo = {
       id: undefined,
       fechaFin: undefined,
@@ -104,20 +95,17 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
             this.formPart.addProyectoSocioEquipo(modalData.proyectoSocioEquipo);
           }
         }
-        this.logger.debug(ProyectoSocioEquipoComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deleteProyectoSocioEquipo(wrapper: StatusWrapper<IProyectoSocioEquipo>): void {
-    this.logger.debug(ProyectoSocioEquipoComponent.name, `deleteProyectoSocioEquipo(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoSocioEquipo(wrapper);
           }
-          this.logger.debug(ProyectoSocioEquipoComponent.name, `deleteProyectoSocioEquipo(${wrapper})`, 'end');
         }
       )
     );

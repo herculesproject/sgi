@@ -16,7 +16,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
@@ -78,7 +77,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
   constructor(
-    protected logger: NGXLogger,
     private dialogService: DialogService,
     public actionService: ConvocatoriaActionService,
     private modeloEjecucionService: ModeloEjecucionService,
@@ -86,7 +84,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     private snackBar: SnackBarService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService);
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -103,13 +100,10 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<NodeDocumento>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, 'ngOnInit()', 'start');
     this.subscriptions.push(this.formPart.documentos$.subscribe((documentos) => {
       this.dataSource.data = documentos;
     }));
@@ -151,17 +145,13 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
       this.tiposDocumento = this.tipoDocumentosFase.get(value ? value.id : null);
     }));
     this.switchToNone();
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy() {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, 'ngOnDestroy()', 'end');
   }
 
   showNodeDetails(node: NodeDocumento) {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.showNodeDetails.name}(node: ${node})`, 'start');
     this.viewingNode = node;
     if (!node.fichero && node.documento?.value.documentoRef) {
       this.subscriptions.push(this.documentoService.getInfoFichero(node.documento.value.documentoRef).subscribe(
@@ -179,38 +169,29 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     else {
       this.switchToView();
     }
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.showNodeDetails.name}(node: ${node})`, 'end');
   }
 
   hideNodeDetails() {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.hideNodeDetails.name}()`, 'start');
     this.viewMode = VIEW_MODE.NONE;
     this.viewingNode = undefined;
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.hideNodeDetails.name}()`, 'end');
   }
 
   switchToNew() {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.switchToNew.name}()`, 'start');
     const wrapper = new StatusWrapper<IConvocatoriaDocumento>({} as IConvocatoriaDocumento);
     const newNode: NodeDocumento = new NodeDocumento(null, undefined, 2, wrapper);
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.switchToNew.name}()`, 'end');
   }
 
   switchToEdit() {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.switchToEdit.name}()`, 'start');
     this.viewMode = VIEW_MODE.EDIT;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.switchToEdit.name}()`, 'end');
   }
 
   switchToView() {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.switchToView.name}()`, 'start');
     this.viewMode = VIEW_MODE.VIEW;
     this.loadDetails(this.viewingNode);
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.switchToView.name}()`, 'end');
   }
 
   private switchToNone() {
@@ -220,8 +201,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   }
 
   private loadDetails(node: NodeDocumento) {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name,
-      `${this.loadDetails.name}()`, 'start');
     this.formGroup.enable();
 
     this.formGroup.reset();
@@ -236,9 +215,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     if (this.viewMode !== VIEW_MODE.NEW && this.viewMode !== VIEW_MODE.EDIT) {
       this.formGroup.disable();
     }
-
-    this.logger.debug(ConvocatoriaDocumentosComponent.name,
-      `${this.loadDetails.name}()`, 'start');
   }
 
   cancelDetail() {
@@ -279,23 +255,15 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   }
 
   private addNode(node: NodeDocumento) {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.addNode.name}()`, 'start');
-
     const createdNode = this.formPart.addNode(node);
     this.expandParents(createdNode);
     this.switchToNone();
-
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.addNode.name}()`, 'end');
   }
 
   private updateNode(node: NodeDocumento) {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.updateNode.name}()`, 'start');
-
     this.formPart.updateNode(node);
     this.expandParents(node);
     this.switchToView();
-
-    this.logger.debug(ConvocatoriaDocumentosComponent.name, `${this.updateNode.name}()`, 'end');
   }
 
   private expandParents(node: NodeDocumento) {
@@ -306,8 +274,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   }
 
   deleteDetail() {
-    this.logger.debug(ConvocatoriaDocumentosComponent.name,
-      `${this.deleteDetail.name}()`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
@@ -318,8 +284,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
         }
       )
     );
-    this.logger.debug(ConvocatoriaDocumentosComponent.name,
-      `${this.deleteDetail.name}()`, 'end');
   }
 
   onUploadProgress(event: UploadEvent) {

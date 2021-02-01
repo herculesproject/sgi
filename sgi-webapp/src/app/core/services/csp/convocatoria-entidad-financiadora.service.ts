@@ -22,10 +22,12 @@ export interface IConvocatoriaEntidadFinanciadoraBackend {
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaEntidadFinanciadoraService extends SgiMutableRestService<number, IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora> {
+export class ConvocatoriaEntidadFinanciadoraService extends
+  SgiMutableRestService<number, IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora> {
   private static readonly MAPPING = '/convocatoriaentidadfinanciadoras';
 
-  public static readonly CONVERTER = new class extends SgiBaseConverter<IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora> {
+  public static readonly CONVERTER = new class extends
+    SgiBaseConverter<IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora> {
     toTarget(value: IConvocatoriaEntidadFinanciadoraBackend): IConvocatoriaEntidadFinanciadora {
       return {
         id: value.id,
@@ -49,7 +51,7 @@ export class ConvocatoriaEntidadFinanciadoraService extends SgiMutableRestServic
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaEntidadFinanciadoraService.name,
       logger,

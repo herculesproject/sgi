@@ -6,7 +6,6 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudHistoricoEstadosFragment } from './solicitud-historico-estados.fragment';
@@ -28,18 +27,14 @@ export class SolicitudHistoricoEstadosComponent extends FragmentComponent implem
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     private actionService: SolicitudActionService
   ) {
     super(actionService.FRAGMENT.HISTORICO_ESTADOS, actionService);
-    this.logger.debug(SolicitudHistoricoEstadosComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as SolicitudHistoricoEstadosFragment;
-    this.logger.debug(SolicitudHistoricoEstadosComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudHistoricoEstadosComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -58,13 +53,10 @@ export class SolicitudHistoricoEstadosComponent extends FragmentComponent implem
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.historicoEstado$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(SolicitudHistoricoEstadosComponent.name, 'ngOnInit()', 'end');
     }));
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudHistoricoEstadosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudHistoricoEstadosComponent.name, 'ngOnDestroy()', 'end');
   }
 }

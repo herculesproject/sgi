@@ -63,7 +63,7 @@ export class ProyectoSocioEquipoService extends
   }();
 
   constructor(
-    logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     protected http: HttpClient
   ) {
     super(
@@ -82,11 +82,9 @@ export class ProyectoSocioEquipoService extends
    * @param entities Listado de IProyectoSocioEquipo
    */
   updateList(id: number, entities: IProyectoSocioEquipo[]): Observable<IProyectoSocioEquipo[]> {
-    this.logger.debug(ProyectoSocioEquipoService.name, `updateList()`, '-', 'start');
     const entitiesBack = entities.map(entity => this.converter.fromTarget(entity));
     return this.http.patch<IProyectoSocioEquipoBackend[]>(`${this.endpointUrl}/${id}`, entitiesBack).pipe(
-      map(resultList => resultList.map(entity => this.converter.toTarget(entity))),
-      tap(() => this.logger.debug(ProyectoSocioEquipoService.name, `updateList()`, '-', 'end'))
+      map(resultList => resultList.map(entity => this.converter.toTarget(entity)))
     );
   }
 }

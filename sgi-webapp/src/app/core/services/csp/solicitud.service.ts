@@ -1,32 +1,32 @@
-import { Injectable } from '@angular/core';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@env';
-import { ISolicitud } from '@core/models/csp/solicitud';
+import { Injectable } from '@angular/core';
+import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
-import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { Observable, of, from } from 'rxjs';
-import { tap, map, catchError, mergeMap, switchMap } from 'rxjs/operators';
-import { ISolicitudModalidadBackend, SolicitudModalidadService } from './solicitud-modalidad.service';
+import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
+import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
-import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
-import { SolicitudProyectoEquipoService, ISolicitudProyectoEquipoBackend } from './solicitud-proyecto-equipo.service';
-import { PersonaFisicaService } from '../sgp/persona-fisica.service';
-import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
-import { SolicitudProyectoSocioService, ISolicitudProyectoSocioBackend } from './solicitud-proyecto-socio.service';
-import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
-import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend, SolicitudProyectoEntidadFinanciadoraAjenaService } from './solicitud-proyecto-entidad-financiadora-ajena.service';
+import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { IPersona } from '@core/models/sgp/persona';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
+import { PersonaFisicaService } from '../sgp/persona-fisica.service';
+import { ISolicitudModalidadBackend, SolicitudModalidadService } from './solicitud-modalidad.service';
+import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend, SolicitudProyectoEntidadFinanciadoraAjenaService } from './solicitud-proyecto-entidad-financiadora-ajena.service';
+import { ISolicitudProyectoEquipoBackend, SolicitudProyectoEquipoService } from './solicitud-proyecto-equipo.service';
 import { ISolicitudProyectoPresupuestoBackend, SolicitudProyectoPresupuestoService } from './solicitud-proyecto-presupuesto.service';
+import { ISolicitudProyectoSocioBackend, SolicitudProyectoSocioService } from './solicitud-proyecto-socio.service';
 
 
 interface ISolicitudBackend {
@@ -112,7 +112,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }();
 
   constructor(
-    logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     protected http: HttpClient,
     private personaFisicaService: PersonaFisicaService,
     private empresaEconomicaService: EmpresaEconomicaService
@@ -132,10 +132,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param id identificador de la solicitud.
    */
   desactivar(id: number): Observable<void> {
-    this.logger.debug(SolicitudService.name, `desactivar(`, '-', 'start');
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
-      tap(() => this.logger.debug(SolicitudService.name, `desactivar()`, '-', 'end'))
-    );
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined);
   }
 
   /**
@@ -144,10 +141,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param id identificador de la solicitud.
    */
   reactivar(id: number): Observable<void> {
-    this.logger.debug(SolicitudService.name, `reactivar(`, '-', 'start');
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
-      tap(() => this.logger.debug(SolicitudService.name, `reactivar()`, '-', 'end'))
-    );
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined);
   }
 
   /**
@@ -157,11 +151,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de solicitudes
    */
   findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
-    this.logger.debug(SolicitudService.name, `findAllTodos()`, '-', 'START');
-    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/todos`, options, SolicitudService.CONVERTER)
-      .pipe(
-        tap(() => this.logger.debug(SolicitudService.name, `findAllTodos()`, '-', 'END'))
-      );
+    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/todos`, options, SolicitudService.CONVERTER);
   }
 
   /**
@@ -172,15 +162,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de modalidades de la solicitud
    */
   findAllSolicitudModalidades(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudModalidad>> {
-    this.logger.debug(SolicitudService.name,
-      `findAllSolicitudModalidades(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-
     const endpointUrl = `${this.endpointUrl}/${solicitudId}${SolicitudModalidadService.MAPPING}`;
-    return this.find<ISolicitudModalidadBackend, ISolicitudModalidad>(endpointUrl, options, SolicitudModalidadService.CONVERTER)
-      .pipe(
-        tap(() => this.logger.debug(SolicitudService.name,
-          `findAllSolicitudModalidades(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
+    return this.find<ISolicitudModalidadBackend, ISolicitudModalidad>(endpointUrl, options, SolicitudModalidadService.CONVERTER);
   }
 
   /**
@@ -189,12 +172,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param options opciones de búsqueda.
    */
   findEstadoSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEstadoSolicitud>> {
-    this.logger.debug(SolicitudService.name, `findEstadoSolicitud(${solicitudId}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${solicitudId}/estadosolicitudes`;
-    return this.find<IEstadoSolicitud, IEstadoSolicitud>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(SolicitudService.name, `findEstadoSolicitud(${solicitudId}, ${options})`, '-', 'end'))
-      );
+    return this.find<IEstadoSolicitud, IEstadoSolicitud>(endpointUrl, options);
   }
 
   /**
@@ -205,13 +184,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de documentos de la solicitud
    */
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudDocumento>> {
-    this.logger.debug(SolicitudService.name,
-      `findDocumentos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const url = `${this.endpointUrl}/${id}/solicituddocumentos`;
-    return this.find<ISolicitudDocumento, ISolicitudDocumento>(url, options).pipe(
-      tap(() => this.logger.debug(SolicitudService.name, `findDocumentos(${id}, ${options ? JSON.stringify(options) : options}`,
-        '-', 'end'))
-    );
+    return this.find<ISolicitudDocumento, ISolicitudDocumento>(url, options);
   }
 
   /**
@@ -222,15 +196,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de modalidades de la solicitud
    */
   findHitosSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudHito>> {
-    this.logger.debug(SolicitudService.name,
-      `findHitosSolicitud(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-
     const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudhitos`;
-    return this.find<ISolicitudHito, ISolicitudHito>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(SolicitudService.name,
-          `findHitosSolicitud(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
+    return this.find<ISolicitudHito, ISolicitudHito>(endpointUrl, options);
   }
 
   /**
@@ -239,11 +206,9 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param id Id de la solicitud.
    */
   hasConvocatoriaSGI(id: number): Observable<boolean> {
-    this.logger.debug(SolicitudService.name, `hasConvocatoriaSGI(id: ${id})`, '-', 'start');
     const url = `${this.endpointUrl}/${id}/convocatoria-sgi`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200),
-      tap(() => this.logger.debug(SolicitudService.name, `hasConvocatoriaSGI(id: ${id})`, '-', 'end'))
+      map(x => x.status === 200)
     );
   }
 
@@ -253,11 +218,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param solicitudId Id de la solicitud
    */
   findSolicitudProyectoDatos(solicitudId: number): Observable<ISolicitudProyectoDatos> {
-    this.logger.debug(SolicitudService.name, `findSolicitudProyectoDatos(${solicitudId})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectodatos`;
-    return this.http.get<ISolicitudProyectoDatos>(endpointUrl).pipe(
-      tap(() => this.logger.debug(SolicitudService.name, `findSolicitudProyectoDatos(${solicitudId})`, '-', 'end')),
-    );
+    return this.http.get<ISolicitudProyectoDatos>(endpointUrl);
   }
 
   /**
@@ -266,7 +228,6 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param solicitudId Id de la solicitud
    */
   findAllSolicitudProyectoEquipo(solicitudId: number): Observable<SgiRestListResult<ISolicitudProyectoEquipo>> {
-    this.logger.debug(SolicitudService.name, `findAllSolicitudProyectoEquipo(${solicitudId})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectoequipo`;
     return this.find<ISolicitudProyectoEquipo, ISolicitudProyectoEquipoBackend>(endpointUrl).pipe(
       map((result) => {
@@ -283,23 +244,21 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
           mergeMap(wrapper => this.loadSolicitante(wrapper)),
           switchMap(() => of(resultList))
         )
-      ),
-      tap(() => this.logger.debug(SolicitudService.name, `findAllSolicitudProyectoEquipo(${solicitudId})`, '-', 'end')),
+      )
     );
   }
 
   private loadSolicitante(solicitudProyectoEquipo: ISolicitudProyectoEquipo): Observable<ISolicitudProyectoEquipo> {
-    this.logger.debug(SolicitudService.name,
-      `loadSolicitante(solicitanteRef: ${solicitudProyectoEquipo})`, 'start');
     const personaRef = solicitudProyectoEquipo.persona.personaRef;
     return this.personaFisicaService.getInformacionBasica(personaRef).pipe(
       map(solicitante => {
         solicitudProyectoEquipo.persona = solicitante;
         return solicitudProyectoEquipo;
       }),
-      tap(() => this.logger.debug(SolicitudService.name,
-        `loadSolicitante(solicitanteRef: ${solicitudProyectoEquipo})`, 'end')),
-      catchError(() => of(solicitudProyectoEquipo))
+      catchError((err) => {
+        this.logger.error(err);
+        return of(solicitudProyectoEquipo);
+      })
     );
   }
 
@@ -309,11 +268,9 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param id Id de la solicitud
    */
   existsSolictudProyectoDatos(id: number): Observable<boolean> {
-    this.logger.debug(SolicitudService.name, `existsSolictudProyectoDatos(id: ${id})`, '-', 'start');
     const url = `${this.endpointUrl}/${id}/solicitudproyectodatos`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200),
-      tap(() => this.logger.debug(SolicitudService.name, `existsSolictudProyectoDatos(id: ${id})`, '-', 'end')),
+      map(x => x.status === 200)
     );
   }
 
@@ -325,16 +282,12 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de ISolicitudProyectoSocio de la solicitud
    */
   findAllSolicitudProyectoSocio(id: number, options?: SgiRestFindOptions): Observable<ISolicitudProyectoSocio[]> {
-    this.logger.debug(SolicitudService.name,
-      `findAllSolicitudProyectoSocio(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectosocio`;
     return this.find<ISolicitudProyectoSocio, ISolicitudProyectoSocioBackend>(endpointUrl, options)
       .pipe(
         map((result) => result.items.map(solicitudProyectoSocioBackend =>
           SolicitudProyectoSocioService.CONVERTER.toTarget(solicitudProyectoSocioBackend))
-        ),
-        tap(() => this.logger.debug(SolicitudService.name,
-          `findAllSolicitudProyectoSocio(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+        )
       );
   }
 
@@ -344,16 +297,11 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param solicitudId Id de la solicitud
    * @param options opciones de busqueda
    */
-  findAllSolicitudProyectoEntidadFinanciadora(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudProyectoEntidadFinanciadoraAjena>> {
-    this.logger.debug(SolicitudService.name,
-      `findAllSolicitudProyectoEntidadFinanciadora(${solicitudId}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+  findAllSolicitudProyectoEntidadFinanciadora(solicitudId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoEntidadFinanciadoraAjena>> {
     const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectoentidadfinanciadoraajenas`;
     return this.find<ISolicitudProyectoEntidadFinanciadoraAjenaBackend, ISolicitudProyectoEntidadFinanciadoraAjena>(
-      endpointUrl, options, SolicitudProyectoEntidadFinanciadoraAjenaService.CONVERTER)
-      .pipe(
-        tap(() => this.logger.debug(SolicitudService.name,
-          `findAllSolicitudProyectoEntidadFinanciadora(${solicitudId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
-      );
+      endpointUrl, options, SolicitudProyectoEntidadFinanciadoraAjenaService.CONVERTER);
   }
 
   /**
@@ -364,15 +312,11 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de ISolicitudProyectoPresupuesto de la solicitud
    */
   findAllSolicitudProyectoPresupuesto(id: number, options?: SgiRestFindOptions): Observable<ISolicitudProyectoPresupuesto[]> {
-    this.logger.debug(SolicitudService.name,
-      `findAllSolicitudProyectoPresupuesto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectopresupuestos`;
     return this.find<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto>(
       endpointUrl, options, SolicitudProyectoPresupuestoService.CONVERTER)
       .pipe(
-        map((result) => result.items),
-        tap(() => this.logger.debug(SolicitudService.name,
-          `findAllSolicitudProyectoPresupuesto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+        map((result) => result.items)
       );
   }
 
@@ -382,11 +326,9 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param id Id de la solicitud
    */
   hasPresupuestoPorEntidades(id: number): Observable<boolean> {
-    this.logger.debug(SolicitudService.name, `hasPresupuestoPorEntidades(id: ${id})`, '-', 'start');
     const url = `${this.endpointUrl}/${id}/presupuestoporentidades`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(response => response.status === 200),
-      tap(() => this.logger.debug(SolicitudService.name, `hasPresupuestoPorEntidades(id: ${id})`, '-', 'end')),
+      map(response => response.status === 200)
     );
   }
 

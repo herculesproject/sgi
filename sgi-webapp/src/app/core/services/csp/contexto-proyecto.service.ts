@@ -13,7 +13,7 @@ import { catchError, tap } from 'rxjs/operators';
 export class ContextoProyectoService extends SgiRestService<number, IProyectoContexto> {
   private static readonly MAPPING = '/proyecto-contextoproyectos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ContextoProyectoService.name,
       logger,

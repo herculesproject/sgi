@@ -1,19 +1,18 @@
-import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { ProyectoSocioPeriodoJustificacionFragment } from './proyecto-socio-periodo-justificacion.fragment';
-import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
-import { MatSort } from '@angular/material/sort';
-import { NGXLogger } from 'ngx-logger';
-import { DialogService } from '@core/services/dialog.service';
-import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
-import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE } from '../../../proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-names';
-import { ROUTE_NAMES } from '@core/route.names';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
-import { Router } from '@angular/router';
+import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
+import { ROUTE_NAMES } from '@core/route.names';
+import { DialogService } from '@core/services/dialog.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE } from '../../../proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-names';
+import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
+import { ProyectoSocioPeriodoJustificacionFragment } from './proyecto-socio-periodo-justificacion.fragment';
 
 const MSG_DELETE = marker('csp.proyecto-socio.periodo-justificacion.borrar');
 
@@ -46,19 +45,15 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     private actionService: ProyectoSocioActionService,
     private dialogService: DialogService,
     private router: Router
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as ProyectoSocioPeriodoJustificacionFragment;
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subcription = this.formPart.periodoJustificaciones$.subscribe(
       (periodoJustificaciones) => {
@@ -68,26 +63,19 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
     this.subscriptions.push(subcription);
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (wrapper, property) => wrapper.value[property];
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name, 'ngOnDestroy()', 'end');
   }
 
   deletePeriodoJustificacion(wrapper: StatusWrapper<IProyectoSocioPeriodoJustificacion>): void {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name,
-      `deletePeriodoJustificacion(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoJustificacion(wrapper);
           }
-          this.logger.debug(ProyectoSocioPeriodoJustificacionComponent.name,
-            `deletePeriodoJustificacion(${wrapper})`, 'end');
         }
       )
     );

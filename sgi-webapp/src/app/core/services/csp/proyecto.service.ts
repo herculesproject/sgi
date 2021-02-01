@@ -5,14 +5,17 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
+import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
+import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
-import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
-import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
+import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
-import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
+import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -23,14 +26,11 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService } from './proyecto-entidad-financiadora.service';
-import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
-import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
 import { IProyectoEntidadGestoraBackend, ProyectoEntidadGestoraService } from './proyecto-entidad-gestora.service';
-import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IProyectoEquipoBackend, ProyectoEquipoService } from './proyecto-equipo.service';
-import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
 
 interface IProyectoBackend {
 
@@ -248,7 +248,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       }
     }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoService.name,
       logger,
@@ -264,10 +264,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda.
    */
   findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyecto>> {
-    this.logger.debug(ProyectoService.name, `${this.findTodos.name}(`, '-', 'START');
-    return this.find<IProyecto, IProyecto>(`${this.endpointUrl}/todos`, options).pipe(
-      tap(() => this.logger.debug(ProyectoService.name, `${this.findTodos.name}()`, '-', 'END'))
-    );
+    return this.find<IProyecto, IProyecto>(`${this.endpointUrl}/todos`, options);
   }
 
   /**
@@ -276,12 +273,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns Listado de paquete trabajo.
    */
   findPaqueteTrabajoProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPaqueteTrabajo>> {
-    this.logger.debug(ProyectoService.name, `findPaqueteTrabajoProyecto(${idProyecto}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectopaquetetrabajos`;
-    return this.find<IProyectoPaqueteTrabajo, IProyectoPaqueteTrabajo>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name, `findPaqueteTrabajoProyecto(${idProyecto}, ${options})`, '-', 'end'))
-      );
+    return this.find<IProyectoPaqueteTrabajo, IProyectoPaqueteTrabajo>(endpointUrl, options);
   }
 
   /**
@@ -290,12 +283,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns Listado de plazos.
    */
   findPlazosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPlazos>> {
-    this.logger.debug(ProyectoService.name, `findPlazosProyecto(${idProyecto}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectofases`;
-    return this.find<IProyectoPlazos, IProyectoPlazos>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name, `findPlazosProyecto(${idProyecto}, ${options})`, '-', 'end'))
-      );
+    return this.find<IProyectoPlazos, IProyectoPlazos>(endpointUrl, options);
   }
 
   /**
@@ -304,11 +293,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param proyectoID Id del proyecto
    */
   findProyectoContexto(proyectoID: number): Observable<IProyectoContexto> {
-    this.logger.debug(ProyectoService.name, `findProyectoContexto(${proyectoID})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${proyectoID}/proyecto-contextoproyectos`;
-    return this.http.get<IProyectoContexto>(endpointUrl).pipe(
-      tap(() => this.logger.debug(ProyectoService.name, `findProyectoContexto(${proyectoID})`, '-', 'end')),
-    );
+    return this.http.get<IProyectoContexto>(endpointUrl);
   }
 
   /**
@@ -316,10 +302,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda.
    */
   desactivar(id: number): Observable<void> {
-    this.logger.debug(ProyectoService.name, `${this.desactivar.name}(`, '-', 'start');
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
-      tap(() => this.logger.debug(ProyectoService.name, `${this.desactivar.name}()`, '-', 'end'))
-    );
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined);
   }
 
   /**
@@ -327,25 +310,17 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda.
    */
   reactivar(id: number): Observable<void> {
-    this.logger.debug(ProyectoService.name, `${this.reactivar.name}(`, '-', 'start');
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
-      tap(() => this.logger.debug(ProyectoService.name, `${this.reactivar.name}()`, '-', 'end'))
-    );
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined);
   }
 
-  private findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
-    this.logger.debug(ProyectoService.name,
-      `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+  private findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
     return this.find<IProyectoEntidadFinanciadoraBackend, IProyectoEntidadFinanciadora>(
-      `${this.endpointUrl}/${id}/proyectoentidadfinanciadoras`, options, ProyectoEntidadFinanciadoraService.CONVERTER).pipe(
-        tap(() => this.logger.debug(ProyectoService.name,
-          `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
+      `${this.endpointUrl}/${id}/proyectoentidadfinanciadoras`, options, ProyectoEntidadFinanciadoraService.CONVERTER);
   }
 
-  private findEntidadesFinanciadorasFilterAjenas(id: number, ajenas: boolean, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
-    this.logger.debug(ProyectoService.name,
-      `findEntidadesFinanciadorasFilterAjenas(${id}, ${ajenas}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+  private findEntidadesFinanciadorasFilterAjenas(id: number, ajenas: boolean, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
     let queryOptions: SgiRestFindOptions = options;
     if (queryOptions) {
       let filterExists: SgiRestFilter;
@@ -372,10 +347,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
         ]
       };
     }
-    return this.findEntidadesFinanciadoras(id, queryOptions).pipe(
-      tap(() => this.logger.debug(ProyectoService.name,
-        `findEntidadesFinanciadorasFilterAjenas(${id}, ${ajenas}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-    );
+    return this.findEntidadesFinanciadoras(id, queryOptions);
   }
 
   /**
@@ -384,12 +356,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options Opciones de filtrado/ordenación
    */
   findEntidadesFinanciadorasPropias(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
-    this.logger.debug(ProyectoService.name,
-      `findEntidadesFinanciadorasPropias(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.findEntidadesFinanciadorasFilterAjenas(id, false, options).pipe(
-      tap(() => this.logger.debug(ProyectoService.name,
-        `findEntidadesFinanciadorasPropias(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-    );
+    return this.findEntidadesFinanciadorasFilterAjenas(id, false, options);
   }
 
   /**
@@ -398,12 +365,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options Opciones de filtrado/ordenación
    */
   findEntidadesFinanciadorasAjenas(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
-    this.logger.debug(ProyectoService.name,
-      `findEntidadesFinanciadorasAjenas(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.findEntidadesFinanciadorasFilterAjenas(id, true, options).pipe(
-      tap(() => this.logger.debug(ProyectoService.name,
-        `findEntidadesFinanciadorasAjenas(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-    );
+    return this.findEntidadesFinanciadorasFilterAjenas(id, true, options);
   }
 
   /**
@@ -412,12 +374,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns Listado de hitos.
    */
   findHitosProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoHito>> {
-    this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectohitos`;
-    return this.find<IProyectoHito, IProyectoHito>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name, `findHitosProyecto(${idProyecto}, ${options})`, '-', 'end'))
-      );
+    return this.find<IProyectoHito, IProyectoHito>(endpointUrl, options);
   }
 
   /**
@@ -427,13 +385,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    */
   findEntidadGestora(id: number, options?:
     SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadGestora>> {
-    this.logger.debug(ProyectoService.name,
-      `${this.findEntidadGestora.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     return this.find<IProyectoEntidadGestoraBackend, IProyectoEntidadGestora>(
-      `${this.endpointUrl}/${id}/proyectoentidadgestoras`, options, ProyectoEntidadGestoraService.CONVERTER).pipe(
-        tap(() => this.logger.debug(ProyectoService.name,
-          `${this.findEntidadGestora.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
+      `${this.endpointUrl}/${id}/proyectoentidadgestoras`, options, ProyectoEntidadGestoraService.CONVERTER);
   }
 
   /**
@@ -442,12 +395,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns Listado de equipos.
    */
   findEquiposProyecto(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEquipo>> {
-    this.logger.debug(ProyectoService.name, `findEquiposProyecto(${idProyecto}, ${options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/proyectoequipos`;
-    return this.find<IProyectoEquipo, IProyectoEquipo>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name, `findEquiposProyecto(${idProyecto}, ${options})`, '-', 'end'))
-      );
+    return this.find<IProyectoEquipo, IProyectoEquipo>(endpointUrl, options);
   }
 
   /**
@@ -458,16 +407,12 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns observable con la lista de IProyectoSocio del proyecto
    */
   findAllProyectoSocioProyecto(id: number, options?: SgiRestFindOptions): Observable<IProyectoSocio[]> {
-    this.logger.debug(ProyectoService.name,
-      `findAllProyectoSocioProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/proyectosocios`;
     return this.find<IProyectoSocio, IProyectoSocioBackend>(endpointUrl, options)
       .pipe(
         map((result) => result.items.map(solicitudProyectoSocioBackend =>
           ProyectoSocioService.CONVERTER.toTarget(solicitudProyectoSocioBackend))
-        ),
-        tap(() => this.logger.debug(ProyectoService.name,
-          `findAllProyectoSocioProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+        )
       );
   }
 
@@ -476,16 +421,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    *
    * @param id Id del IProyecto
    */
-  findAllProyectoEquipo(id: number, options?: SgiRestFindOptions)
-    : Observable<SgiRestListResult<IProyectoEquipo>> {
-    this.logger.debug(ProyectoSocioService.name,
-      `findAllProyectoEquipoSocio(id: ${id})`, '-', 'start');
+  findAllProyectoEquipo(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEquipo>> {
     return this.find<IProyectoEquipoBackend, IProyectoEquipo>(
       `${this.endpointUrl}/${id}/proyectoequipos`, options,
-      ProyectoEquipoService.CONVERTER).pipe(
-        tap(() => this.logger.debug(ProyectoSocioService.name,
-          `findAllProyectoEquipoSocio(id: ${id})`, '-', 'end'))
-      );
+      ProyectoEquipoService.CONVERTER);
   }
 
   /**
@@ -493,61 +432,45 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param id Identificador del proyecto.
    * @returns Listado de ProyectoEntidadConvocante.
    */
-  findAllEntidadConvocantes(idProyecto: number, options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<IProyectoEntidadConvocante>> {
-    this.logger.debug(ProyectoService.name,
-      'findAllEntidadConvocantes()', '-', 'start');
+  findAllEntidadConvocantes(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadConvocante>> {
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
     return this.find<IProyectoEntidadConvocanteBackend, IProyectoEntidadConvocante>(endpointUrl, options,
-      ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name,
-          'findAllEntidadConvocantes()', '-', 'end'))
-      );
+      ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER);
   }
 
   public createEntidadConvocante(idProyecto: number, element: IProyectoEntidadConvocante): Observable<IProyectoEntidadConvocante> {
-    this.logger.debug(ProyectoService.name, 'createEntidadConvocante()', '-', 'START');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
     return this.http.post<IProyectoEntidadConvocanteBackend>(endpointUrl,
       ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER.fromTarget(element)).pipe(
         // TODO: Explore the use a global HttpInterceptor with or without a custom error
         catchError((error: HttpErrorResponse) => {
           // Log the error
-          this.logger.error(ProyectoService.name, 'createEntidadConvocante():', error);
+          this.logger.error(error);
           // Pass the error to subscribers. Anyway they would decide what to do with the error.
           return throwError(error);
         }),
         map(response => {
-          this.logger.debug(ProyectoService.name, 'createEntidadConvocante()', '-', 'END');
           return ProyectoService.ENTIDAD_CONVOCANTE_CONVERTER.toTarget(response);
         })
       );
   }
 
-  public deleteEntidadConvocanteById(idProyecto: number, id: number) {
-    this.logger.debug(ProyectoService.name, 'deleteEntidadConvocanteById()', '-', 'START');
+  public deleteEntidadConvocanteById(idProyecto: number, id: number): Observable<void> {
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
-    return this.http.delete<IProyectoEntidadConvocante>(`${endpointUrl}/${id}`).pipe(
+    return this.http.delete<void>(`${endpointUrl}/${id}`).pipe(
       // TODO: Explore the use a global HttpInterceptor with or without a custom error
       catchError((error: HttpErrorResponse) => {
         // Log the error
-        this.logger.error(ProyectoService.name, 'deleteEntidadConvocanteById():', error);
+        this.logger.error(error);
         // Pass the error to subscribers. Anyway they would decide what to do with the error.
         return throwError(error);
-      }),
-      map(() => {
-        this.logger.debug(ProyectoService.name, 'deleteEntidadConvocanteById()', '-', 'END');
       })
     );
   }
 
   setEntidadConvocantePrograma(idProyecto: number, id: number, programa: IPrograma): Observable<IProyectoEntidadConvocante> {
-    this.logger.debug(ProyectoService.name, 'setEntidadConvocantePrograma()', '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`;
-    return this.http.patch<IProyectoEntidadConvocante>(`${endpointUrl}/${id}/programa`, programa).pipe(
-      tap(() => this.logger.debug(ProyectoService.name, 'setEntidadConvocantePrograma()', '-', 'end'))
-    );
+    return this.http.patch<IProyectoEntidadConvocante>(`${endpointUrl}/${id}/programa`, programa);
   }
 
   /**
@@ -557,15 +480,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de busqueda
    * @returns observable con la lista de IProyectoPeriodoSeguimiento del proyecto
    */
-  findAllProyectoPeriodoSeguimientoProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPeriodoSeguimiento>> {
-    this.logger.debug(ProyectoService.name,
-      `findAllProyectoPeriodoSeguimientoProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+  findAllProyectoPeriodoSeguimientoProyecto(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoPeriodoSeguimiento>> {
     const endpointUrl = `${this.endpointUrl}/${id}/proyectoperiodoseguimientos`;
-    return this.find<IProyectoPeriodoSeguimiento, IProyectoPeriodoSeguimiento>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name,
-          `findAllProyectoPeriodoSeguimientoProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
+    return this.find<IProyectoPeriodoSeguimiento, IProyectoPeriodoSeguimiento>(endpointUrl, options);
   }
 
   /**
@@ -576,14 +494,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns observable con la lista de IProyectoProrroga del proyecto
    */
   findAllProyectoProrrogaProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoProrroga>> {
-    this.logger.debug(ProyectoService.name,
-      `findAllProyectoProrrogaProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/proyectoprorrogas`;
-    return this.find<IProyectoProrroga, IProyectoProrroga>(endpointUrl, options)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoService.name,
-          `findAllProyectoProrrogaProyecto(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
+    return this.find<IProyectoProrroga, IProyectoProrroga>(endpointUrl, options);
   }
 
 }

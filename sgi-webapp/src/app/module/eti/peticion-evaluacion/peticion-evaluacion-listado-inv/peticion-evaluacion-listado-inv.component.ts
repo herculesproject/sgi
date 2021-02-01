@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -14,10 +15,8 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 
 const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
 const MSG_FOOTER = marker('eti.peticionEvaluacion.listado.nuevaPeticionEvaluacion');
@@ -51,14 +50,13 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
   filteredComites: Observable<IComite[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
     private readonly peticionesEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly dialogService: DialogService
   ) {
 
-    super(logger, snackBarService, MSG_ERROR);
+    super(snackBarService, MSG_ERROR);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -70,21 +68,15 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
   }
 
 
   protected initColumns(): void {
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'initColumns()', 'start');
     this.displayedColumns = ['codigo', 'titulo', 'fuenteFinanciacion', 'fechaInicio', 'fechaFin', 'acciones'];
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'initColumns()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'ngOnInit()', 'start');
-
     super.ngOnInit();
-
 
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
@@ -93,22 +85,17 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     });
 
     this.getComites();
-
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacion>> {
     const observable$ = this.peticionesEvaluacionService.findAllPeticionEvaluacionMemoria(this.getFindOptions());
-
     return observable$;
   }
 
   protected createFilters(): SgiRestFilter[] {
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'createFilters()', 'start');
     this.filter = [];
 
     if (this.formGroup.controls.comite.value) {
-      this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'buildFiltersMemoria()', 'comite');
       const filterComite: SgiRestFilter = {
         field: 'comite.id',
         type: SgiRestFilterType.EQUALS,
@@ -119,7 +106,6 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     }
 
     if (this.formGroup.controls.codigo.value) {
-      this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'createFilters()', 'codigo');
       const filterCodigo: SgiRestFilter = {
         field: 'peticionEvaluacion.codigo',
         type: SgiRestFilterType.LIKE,
@@ -130,7 +116,6 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     }
 
     if (this.formGroup.controls.titulo.value) {
-      this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'createFilters()', 'titulo');
       const filterTitulo: SgiRestFilter = {
         field: 'peticionEvaluacion.titulo',
         type: SgiRestFilterType.LIKE,
@@ -140,16 +125,11 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
       this.filter.push(filterTitulo);
     }
 
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'createFilters()', 'end');
     return this.filter;
   }
 
   protected loadTable(reset?: boolean) {
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'loadTable()', 'start');
-
     this.peticionesEvaluacion$ = this.getObservableLoadTable(reset);
-
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'loadTable()', 'end');
   }
 
 
@@ -159,23 +139,16 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
    * returns nombre comité
    */
   getComite(comite: IComite): string {
-
     return comite?.comite;
-
   }
 
   /**
    * Recupera un listado de los comités que hay en el sistema.
    */
   getComites(): void {
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name,
-      'getComites()',
-      'start');
-
     const comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
-
         this.filteredComites = this.formGroup.controls.comite.valueChanges
           .pipe(
             startWith(''),
@@ -183,9 +156,6 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
           );
       });
     this.suscripciones.push(comitesSubscription);
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name,
-      'getComites()',
-      'end');
   }
 
   /**
@@ -211,9 +181,6 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
    * @param event evento lanzado
    */
   borrar(peticionEvaluacionId: number, $event: Event): void {
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name,
-      'borrar(peticionEvaluacionId: number, $event: Event) - start');
-
     $event.stopPropagation();
     $event.preventDefault();
 
@@ -234,8 +201,6 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
         aceptado = false;
       });
     this.suscripciones.push(dialogServiceSubscriptionGetSubscription);
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name,
-      'borrar(peticionEvaluacionId: number, $event: Event) - end');
   }
 
 }

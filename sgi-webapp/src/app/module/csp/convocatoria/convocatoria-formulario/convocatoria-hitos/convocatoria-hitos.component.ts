@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Subscription } from 'rxjs';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaHitosFragment } from './convocatoria-hitos.fragment';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { MatDialog } from '@angular/material/dialog';
-import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaHitosModalComponent, ConvocatoriaHitosModalComponentData } from '../../modals/convocatoria-hitos-modal/convocatoria-hitos-modal.component';
+import { ConvocatoriaHitosFragment } from './convocatoria-hitos.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.hito.listado.borrar');
 
@@ -41,20 +40,16 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected convocatoriaReunionService: ConvocatoriaService,
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.HITOS, actionService);
-    this.logger.debug(ConvocatoriaHitosComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaHitosFragment;
-    this.logger.debug(ConvocatoriaHitosComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -74,7 +69,6 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
     this.disableAddHito = !Boolean(this.actionService.modeloEjecucionId);
     this.subscriptions.push(this.formPart.hitos$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnInit()', 'end');
     }));
   }
 
@@ -83,7 +77,6 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
    * @param idHito Identificador de hito a editar.
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaHito>): void {
-    this.logger.debug(ConvocatoriaHitosComponent.name, `openModal()`, 'start');
     const data: ConvocatoriaHitosModalComponentData = {
       hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
@@ -108,35 +101,27 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
             this.formPart.addHito(convocatoriaHito);
           }
         }
-        this.logger.debug(ConvocatoriaHitosComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
    * Desactivar convocatoria hito
    */
   deleteHito(wrapper: StatusWrapper<IConvocatoriaHito>) {
-    this.logger.debug(ConvocatoriaHitosComponent.name,
-      `deleteHito(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteHito(wrapper);
           }
-          this.logger.debug(ConvocatoriaHitosComponent.name,
-            `deleteHito(${wrapper})`, 'end');
         }
       )
     );
   }
-
 
 }

@@ -14,7 +14,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { AreaTematicaSolicitudData } from '../../solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 
 class NodeAreaTematica {
@@ -70,14 +70,13 @@ export class SolicitudAreaTematicaModalComponent extends
   hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudAreaTematicaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AreaTematicaSolicitudData,
     private areaTematicaService: AreaTematicaService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -88,38 +87,29 @@ export class SolicitudAreaTematicaModalComponent extends
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
     this.textSaveOrUpdate = this.data.areaTematicaSolicitud ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadAreasTematicas(this.data.areaTematicaConvocatoria.id);
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, 'ngOnInit()', 'start');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       padre: new FormControl({
         value: this.data.areaTematicaConvocatoria.nombre,
         disabled: true
       }),
     });
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): AreaTematicaSolicitudData {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, `getDatosForm()`, 'start');
     this.data.areaTematicaSolicitud = this.checkedNode?.areaTematica?.value;
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
   private loadAreasTematicas(id: number): void {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-      `loadTreeAreaTematica()`, 'start');
     const susbcription = this.areaTematicaService.findAllHijosArea(id).pipe(
       switchMap(response => {
         return from(response.items).pipe(
@@ -139,12 +129,9 @@ export class SolicitudAreaTematicaModalComponent extends
         if (this.checkedNode) {
           this.expandNodes(this.checkedNode);
         }
-        this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-          `loadTreeAreaTematica()`, 'end');
       },
       (error) => {
-        this.logger.error(SolicitudAreaTematicaModalComponent.name,
-          `loadTreeAreaTematica()`, error);
+        this.logger.error(error);
       }
     );
     this.subscriptions.push(susbcription);
@@ -155,19 +142,13 @@ export class SolicitudAreaTematicaModalComponent extends
   }
 
   private expandNodes(node: NodeAreaTematica) {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
     if (node && node.parent) {
       this.treeControl.expand(node.parent);
       this.expandNodes(node.parent);
     }
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
   }
 
   private getChilds(parent: NodeAreaTematica): Observable<NodeAreaTematica[]> {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-      `getChilds(parent: ${parent})`, 'start');
     return this.areaTematicaService.findAllHijosArea(parent.areaTematica.value.id).pipe(
       map((result) => {
         const childs: NodeAreaTematica[] = result.items.map(
@@ -193,14 +174,11 @@ export class SolicitudAreaTematicaModalComponent extends
           return of([]);
         }
       }),
-      takeLast(1),
-      tap(() => this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-        `getChilds(parent: ${parent})`, 'end'))
+      takeLast(1)
     );
   }
 
   private publishNodes(rootNodes?: NodeAreaTematica[]) {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, `publishNodes()`, 'start');
     let nodes = rootNodes ? rootNodes : this.areaTematicaTree$.value;
     nodes = sortByName(nodes);
     this.areaTematicaTree$.next(nodes);
@@ -209,14 +187,9 @@ export class SolicitudAreaTematicaModalComponent extends
         this.dataSource.data = areaTematicas;
       }
     );
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name, `publishNodes()`, 'end');
   }
 
   onCheckNode(node: NodeAreaTematica, $event: MatCheckboxChange): void {
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'start');
     this.checkedNode = $event.checked ? node : undefined;
-    this.logger.debug(SolicitudAreaTematicaModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'end');
   }
 }

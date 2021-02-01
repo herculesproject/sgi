@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
+import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
+import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
@@ -9,11 +12,8 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
-import { ProyectoSocioEquipoService, IProyectoSocioEquipoBackend } from './proyecto-socio-equipo.service';
-import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
-import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
+import { map } from 'rxjs/operators';
+import { IProyectoSocioEquipoBackend, ProyectoSocioEquipoService } from './proyecto-socio-equipo.service';
 
 export interface IProyectoSocioBackend {
   id: number;
@@ -62,7 +62,7 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
   }();
 
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoSocioService.name,
       logger,
@@ -78,11 +78,9 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
    * @param id Id del proyecto socio
    */
   exists(id: number): Observable<boolean> {
-    this.logger.debug(ProyectoSocioService.name, `exists(id: ${id})`, '-', 'start');
     const url = `${this.endpointUrl}/${id}`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200),
-      tap(() => this.logger.debug(ProyectoSocioService.name, `exists(id: ${id})`, '-', 'end')),
+      map(x => x.status === 200)
     );
   }
 
@@ -93,14 +91,9 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
    */
   findAllProyectoEquipoSocio(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IProyectoSocioEquipo>> {
-    this.logger.debug(ProyectoSocioService.name,
-      `findAllProyectoEquipoSocio(id: ${id})`, '-', 'start');
     return this.find<IProyectoSocioEquipoBackend, IProyectoSocioEquipo>(
       `${this.endpointUrl}/${id}/proyectosocioequipos`, options,
-      ProyectoSocioEquipoService.CONVERTER).pipe(
-        tap(() => this.logger.debug(ProyectoSocioService.name,
-          `findAllProyectoEquipoSocio(id: ${id})`, '-', 'end'))
-      );
+      ProyectoSocioEquipoService.CONVERTER);
   }
   /**
    * Devuelve el listado de IProyectoSocioPeriodoPago de un IProyectoSocio
@@ -109,13 +102,8 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
    */
   findAllProyectoSocioPeriodoPago(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IProyectoSocioPeriodoPago>> {
-    this.logger.debug(ProyectoSocioService.name,
-      `findAllProyectoSocioPeriodoPago(id: ${id})`, '-', 'start');
     return this.find<IProyectoSocioPeriodoPago, IProyectoSocioPeriodoPago>(
-      `${this.endpointUrl}/${id}/proyectosocioperiodopagos`, options).pipe(
-        tap(() => this.logger.debug(ProyectoSocioService.name,
-          `findAllProyectoSocioPeriodoPago(id: ${id})`, '-', 'end'))
-      );
+      `${this.endpointUrl}/${id}/proyectosocioperiodopagos`, options);
   }
   /**
    * Devuelve el listado de IProyectoSocioPeriodoJustificacion de un IProyectoSocio
@@ -124,12 +112,7 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
    */
   findAllProyectoSocioPeriodoJustificacion(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IProyectoSocioPeriodoJustificacion>> {
-    this.logger.debug(ProyectoSocioService.name,
-      `findAllProyectoSocioPeriodoJustificacion(id: ${id})`, '-', 'start');
     return this.find<IProyectoSocioPeriodoJustificacion, IProyectoSocioPeriodoJustificacion>(
-      `${this.endpointUrl}/${id}/proyectosocioperiodojustificaciones`, options).pipe(
-        tap(() => this.logger.debug(ProyectoSocioService.name,
-          `findAllProyectoSocioPeriodoJustificacion(id: ${id})`, '-', 'end'))
-      );
+      `${this.endpointUrl}/${id}/proyectosocioperiodojustificaciones`, options);
   }
 }

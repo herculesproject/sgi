@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { ProyectoPeriodoSeguimientoActionService } from '../proyecto-periodo-seguimiento.action.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
-import { PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_NAMES } from '../proyecto-periodo-seguimiento-route-names';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { NGXLogger } from 'ngx-logger';
+import { PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_NAMES } from '../proyecto-periodo-seguimiento-route-names';
+import { ProyectoPeriodoSeguimientoActionService } from '../proyecto-periodo-seguimiento.action.service';
 
 const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('csp.proyecto-periodo-seguimiento.crear.correcto');
@@ -27,7 +27,7 @@ export class ProyectoPeriodoSeguimientoCrearComponent extends ActionComponent {
   private urlFrom: string;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -41,7 +41,8 @@ export class ProyectoPeriodoSeguimientoCrearComponent extends ActionComponent {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

@@ -20,7 +20,7 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
@@ -66,7 +66,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   disabledPlazoPresentacion: Observable<boolean>;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
     public translate: TranslateService,
     private matDialog: MatDialog,
@@ -75,7 +75,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
     private snackBarService: SnackBarService
   ) {
     super(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES, actionService);
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'constructor()', 'start');
 
     this.formPart = this.fragment as ConvocatoriaConfiguracionSolicitudesFragment;
 
@@ -95,11 +94,9 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadConvocatoriaFases();
     this.initializeDataSource();
@@ -110,11 +107,9 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       this.dataSource.data = elements;
       this.disabledPlazoPresentacion = of(elements.length > 0);
     }));
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnInit()', 'end');
   }
 
   private initializeDataSource(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.initializeDataSource.name}()`, 'start');
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IDocumentoRequerido>, property: string) => {
@@ -130,7 +125,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
         }
       };
     this.dataSource.sort = this.sort;
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.initializeDataSource.name}()`, 'end');
   }
 
   /**
@@ -138,9 +132,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * del fragment
    */
   loadConvocatoriaFases(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `${this.loadConvocatoriaFases.name}()`, 'start');
-
     if (this.actionService.isPlazosFasesInitialized()) {
       this.convocatoriaFaseFiltered = [];
       this.actionService.getPlazosFases().forEach((wrapper) => {
@@ -156,9 +147,8 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
               this.convocatoriaFaseFiltered = res.items;
             },
             (error) => {
+              this.logger.error(error);
               this.snackBarService.showError(MSG_ERROR_INIT);
-              this.logger.error(ConvocatoriaConfiguracionSolicitudesFragment.name,
-                `${this.loadConvocatoriaFases.name}()`, error);
             }
           )
         );
@@ -207,8 +197,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * Rellenos los campos FECHA correspondientes
    */
   habilitarCampos(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
-      `habilitarCampos()`, 'start');
     const tipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value;
     if (tipoFase) {
       this.convocatoriaFase = tipoFase;
@@ -218,8 +206,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       this.formGroup.controls.fechaInicioFase.patchValue('');
       this.formGroup.controls.fechaFinFase.patchValue('');
     }
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
-      `habilitarCampos()`, 'end');
   }
 
 
@@ -229,7 +215,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * @param wrapper convocatoria enlace
    */
   openModal(wrapper?: StatusWrapper<IDocumentoRequerido>): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.openModal.name}()`, 'start');
     const tipoFase: ITipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value.tipoFase;
     if (this.configuracionSolicitud) {
       this.configuracionSolicitud.fasePresentacionSolicitudes.tipoFase = tipoFase;
@@ -266,7 +251,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
           })
           );
         }
-        this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.openModal.name}()`, 'end');
       }
     );
   }
@@ -275,24 +259,18 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * Desactivar documento
    */
   deactivateDocumento(wrapper: StatusWrapper<IDocumentoRequerido>) {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
-      `${this.deactivateDocumento.name}(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteDocumentoRequerido(wrapper);
           }
-          this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
-            `${this.deactivateDocumento.name}(${wrapper})`, 'end');
         }
       )
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnDestroy()', 'end');
   }
 }

@@ -11,7 +11,7 @@ import { environment } from '@env';
 export class TipoAmbitoGeograficoService extends SgiRestService<number, ITipoAmbitoGeografico> {
   private static readonly MAPPING = '/tipoambitogeograficos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoAmbitoGeograficoService.name,
       logger,

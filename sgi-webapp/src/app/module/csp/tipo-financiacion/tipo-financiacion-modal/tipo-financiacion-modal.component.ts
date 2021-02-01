@@ -5,9 +5,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { NGXLogger } from 'ngx-logger';
+import { FormGroupUtil } from '@core/utils/form-group-util';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ANADIR = marker('botones.aniadir');
@@ -25,12 +24,10 @@ export class TipoFinanciacionModalComponent implements OnInit {
   textSaveOrUpdate: string;
 
   constructor(
-    private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<TipoFinanciacionModalComponent>,
     @Inject(MAT_DIALOG_DATA) tipoFinanciacion: ITipoFinanciacion
   ) {
-    this.logger.debug(TipoFinanciacionModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -46,42 +43,33 @@ export class TipoFinanciacionModalComponent implements OnInit {
       this.tipoFinanciacion = { activo: true } as ITipoFinanciacion;
       this.textSaveOrUpdate = MSG_ANADIR;
     }
-    this.logger.debug(TipoFinanciacionModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(TipoFinanciacionModalComponent.name, 'ngOnInit()', 'start');
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.tipoFinanciacion?.nombre),
       descripcion: new FormControl(this.tipoFinanciacion?.descripcion),
     });
-    this.logger.debug(TipoFinanciacionModalComponent.name, 'ngOnInit()', 'end');
   }
 
   closeModal(tipoFinanciacion?: ITipoFinanciacion): void {
-    this.logger.debug(TipoFinanciacionModalComponent.name, `${this.closeModal.name}(tipoFinanciacion: ${tipoFinanciacion})`, 'start');
     this.matDialogRef.close(tipoFinanciacion);
-    this.logger.debug(TipoFinanciacionModalComponent.name, `${this.closeModal.name}(tipoFinanciacion: ${tipoFinanciacion})`, 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(TipoFinanciacionModalComponent.name, `${this.saveOrUpdate.name}()`, 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.tipoFinanciacion);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(TipoFinanciacionModalComponent.name, `${this.saveOrUpdate.name}()`, 'end');
   }
 
   /**
    * Método para actualizar la entidad con los datos de un formGroup
    */
   private loadDatosForm(): void {
-    this.logger.debug(TipoFinanciacionModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
     this.tipoFinanciacion.nombre = this.formGroup.get('nombre').value;
     this.tipoFinanciacion.descripcion = this.formGroup.get('descripcion').value;
-    this.logger.debug(TipoFinanciacionModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 }

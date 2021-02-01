@@ -9,7 +9,7 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 
 export interface AreaTematicaSolicitudData {
@@ -22,7 +22,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   areasTematicas$ = new BehaviorSubject<AreaTematicaSolicitudData[]>([]);
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private solicitud: ISolicitud,
     private solicitudService: SolicitudService,
     private solicitudProyectoDatosService: SolicitudProyectoDatosService,
@@ -30,14 +30,11 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     private actionService: SolicitudActionService
   ) {
     super(solicitud?.id, true);
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, 'constructor()', 'start');
     this.setComplete(true);
     this.solicitudProyectoDatos = {} as ISolicitudProyectoDatos;
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, 'constructor()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, 'buildFormGroup()', 'start');
     const form = new FormGroup({
       titulo: new FormControl('', [Validators.required, Validators.maxLength(250)]),
       acronimo: new FormControl('', [Validators.maxLength(50)]),
@@ -51,13 +48,10 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       resultadosPrevistos: new FormControl('', [Validators.maxLength(2000)]),
       envioEtica: new FormControl('', [])
     });
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, 'buildFormGroup()', 'start');
     return form;
   }
 
   protected buildPatch(proyectoDatos: ISolicitudProyectoDatos): { [key: string]: any; } {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `buildPatch(convocatoria: ${proyectoDatos})`, 'start');
     const result = {
       titulo: proyectoDatos.titulo,
       acronimo: proyectoDatos.acronimo,
@@ -95,14 +89,10 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         (value) => this.actionService.enableAddSocioColaborador = value)
     );
 
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `buildPatch(convocatoria: ${proyectoDatos})`, 'end');
     return result;
   }
 
   protected initializer(key: number): Observable<ISolicitudProyectoDatos> {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `initializer(key: ${key})`, 'start');
     return this.solicitudService.findSolicitudProyectoDatos(key).pipe(
       map(solicitudProyectoDatos => {
         const newProyecto: ISolicitudProyectoDatos = {
@@ -146,29 +136,21 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         }
         return of(solicitudProyectoDatos);
       }),
-      tap(() => this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, `initializer(key: ${key})`, 'end')),
       catchError(error => {
-        this.logger.error(SolicitudProyectoFichaGeneralFragment.name, `initializer(key: ${key})`, error);
+        this.logger.error(error);
         return EMPTY;
       })
     );
   }
 
   getFirstLevelAreaTematica(areaTematica: IAreaTematica): IAreaTematica {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `getFirstLevelAreaTematica(areaTematica: ${areaTematica})`, 'start');
     if (areaTematica.padre) {
-      this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-        `getFirstLevelAreaTematica(areaTematica: ${areaTematica})`, 'end');
       return this.getFirstLevelAreaTematica(areaTematica.padre);
     }
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `getFirstLevelAreaTematica(areaTematica: ${areaTematica})`, 'end');
     return areaTematica;
   }
 
   getValue(): ISolicitudProyectoDatos {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().value;
     this.solicitudProyectoDatos.titulo = form.titulo;
     this.solicitudProyectoDatos.acronimo = form.acronimo;
@@ -185,12 +167,10 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.solicitudProyectoDatos.resultadosPrevistos = form.resultadosPrevistos;
     this.solicitudProyectoDatos.envioEtica = form.envioEtica;
     this.solicitudProyectoDatos.presupuestoPorEntidades = form.presupuestoPorEntidades;
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, `getValue()`, 'end');
     return this.solicitudProyectoDatos;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name, `saveOrUpdate()`, 'start');
     const solicitudProyectoDatos = this.getValue();
     const observable$ = this.solicitudProyectoDatos.id ? this.update(solicitudProyectoDatos) :
       this.create(solicitudProyectoDatos);
@@ -199,30 +179,18 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         this.solicitudProyectoDatos = value;
         this.refreshInitialState(true);
         return this.solicitudProyectoDatos.id;
-      }),
-      tap(() => this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-        `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(solicitudProyectoDatos: ISolicitudProyectoDatos): Observable<ISolicitudProyectoDatos> {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `create(solicitudProyectoDatos: ${solicitudProyectoDatos})`, 'start');
     solicitudProyectoDatos.solicitud = {
       id: this.getKey()
     } as ISolicitud;
-    return this.solicitudProyectoDatosService.create(solicitudProyectoDatos).pipe(
-      tap(() => this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-        `create(solicitudProyectoDatos: ${solicitudProyectoDatos})`, 'end'))
-    );
+    return this.solicitudProyectoDatosService.create(solicitudProyectoDatos);
   }
 
   private update(solicitudProyectoDatos: ISolicitudProyectoDatos): Observable<ISolicitudProyectoDatos> {
-    this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-      `update(solicitudProyectoDatos: ${solicitudProyectoDatos})`, 'start');
-    return this.solicitudProyectoDatosService.update(solicitudProyectoDatos.id, solicitudProyectoDatos).pipe(
-      tap(() => this.logger.debug(SolicitudProyectoFichaGeneralFragment.name,
-        `update(solicitudProyectoDatos: ${solicitudProyectoDatos})`, 'end'))
-    );
+    return this.solicitudProyectoDatosService.update(solicitudProyectoDatos.id, solicitudProyectoDatos);
   }
 }

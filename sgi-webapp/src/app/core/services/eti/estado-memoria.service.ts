@@ -12,7 +12,7 @@ export class EstadoMemoriaService extends SgiRestService<number, EstadoMemoria>{
 
   private static readonly MAPPING = '/estadomemorias';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(EstadoMemoriaService.name, logger,
       `${environment.serviceServers.eti}` + EstadoMemoriaService.MAPPING, http);
   }

@@ -12,7 +12,7 @@ import { ModeloEjecucionService } from './modelo-ejecucion.service';
 export class ModeloTipoDocumentoService extends SgiRestService<number, IModeloTipoDocumento> {
   private static readonly MAPPING = '/modelotipodocumentos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ModeloEjecucionService.name,
       logger,

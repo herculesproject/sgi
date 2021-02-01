@@ -8,10 +8,9 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { ProyectoActionService } from '../../proyecto.action.service';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
+import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-entidades-financiadoras.fragment';
 
 const MODAL_ENTIDAD_FINANCIADORA_TITLE = marker('csp.proyecto.entidades.financiadoras.modal.title');
@@ -43,19 +42,15 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
   @ViewChild('sortAjenas', { static: true }) sortAjenas: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoEntidadesFinanciadorasFragment;
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSourcePropias.paginator = this.paginatorPropias;
     this.dataSourcePropias.sort = this.sortPropias;
@@ -67,17 +62,13 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
     this.subscriptions.push(
       this.formPart.entidadesAjenas$.subscribe((elements) => this.dataSourceAjenas.data = elements)
     );
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(targetPropias: boolean, wrapper?: StatusWrapper<IProyectoEntidadFinanciadora>): void {
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, `openModal()`, 'start');
     const data: EntidadFinanciadoraDataModal = {
       title: MODAL_ENTIDAD_FINANCIADORA_TITLE,
       entidad: wrapper ? wrapper.value : {} as IProyectoEntidadFinanciadora,
@@ -99,22 +90,16 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
           this.formPart.updateEntidadFinanciadora(entidad, targetPropias);
         }
       }
-      this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name, `openModal()`, 'end');
-    }
-    );
+    });
   }
 
   deleteEntidadFinanciadora(targetPropias: boolean, wrapper: StatusWrapper<IProyectoEntidadFinanciadora>) {
-    this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name,
-      `deleteEntidadFinanciadora(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteEntidadFinanciadora(wrapper, targetPropias);
           }
-          this.logger.debug(ProyectoEntidadesFinanciadorasComponent.name,
-            `deleteEntidadFinanciadora(${wrapper})`, 'end');
         }
       )
     );

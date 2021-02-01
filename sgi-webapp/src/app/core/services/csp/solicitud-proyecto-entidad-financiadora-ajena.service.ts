@@ -52,7 +52,7 @@ export class SolicitudProyectoEntidadFinanciadoraAjenaService extends
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       SolicitudProyectoEntidadFinanciadoraAjenaService.name,
       logger,

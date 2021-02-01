@@ -6,9 +6,9 @@ import { ActionService } from '@core/services/action-service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
-
 import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
 import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
+
 
 const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.editar.correcto');
@@ -34,7 +34,7 @@ export class PeticionEvaluacionEditarComponent extends ActionComponent {
   textoCrear = MSG_BUTTON_SAVE;
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -47,7 +47,8 @@ export class PeticionEvaluacionEditarComponent extends ActionComponent {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

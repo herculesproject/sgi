@@ -1,18 +1,16 @@
-import { FormFragment } from '@core/services/action-service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { NGXLogger } from 'ngx-logger';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
+import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoriaRequisitoIP> {
   private requisitoIP: IConvocatoriaRequisitoIP;
 
   constructor(
     private fb: FormBuilder,
-    private logger: NGXLogger,
     key: number,
     private convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
     public readonly: boolean
@@ -23,7 +21,6 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'buildFormGroup()', 'start');
     const form = this.fb.group({
       numMaximoIP: [null, Validators.compose(
         [Validators.min(0), Validators.max(9999)])],
@@ -50,17 +47,14 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
     if (this.readonly) {
       form.disable();
     }
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'buildFormGroup()', 'end');
     return form;
   }
 
   protected initializer(key: number): Observable<IConvocatoriaRequisitoIP> {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'initializer(key: number)', 'start');
     if (this.getKey()) {
       return this.convocatoriaRequisitoIPService.getRequisitoIPConvocatoria(key).pipe(
         switchMap((requisitoIP) => {
           this.requisitoIP = requisitoIP;
-          this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'initializer(key: number)', 'end');
           return of(this.requisitoIP);
         })
       );
@@ -68,7 +62,6 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
   }
 
   buildPatch(value: IConvocatoriaRequisitoIP): { [key: string]: any } {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'buildPatch(value: IConvocatoriaRequisitoIP)', 'start');
     return {
       numMaximoIP: value ? value.numMaximoIP : null,
       nivelAcademicoRef: value ? value.nivelAcademicoRef : null,
@@ -87,7 +80,6 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
   }
 
   getValue(): IConvocatoriaRequisitoIP {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'getValue()', 'start');
     if (this.requisitoIP === null) {
       this.requisitoIP = {} as IConvocatoriaRequisitoIP;
     }
@@ -105,12 +97,10 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
     this.requisitoIP.numMaximoCompetitivosActivos = form.numMaximoCompetitivosActivos;
     this.requisitoIP.numMaximoNoCompetitivosActivos = form.numMaximoNoCompetitivosActivos;
     this.requisitoIP.otrosRequisitos = form.otrosRequisitos;
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'getValue()', 'end');
     return this.requisitoIP;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'saveOrUpdate()', 'start');
     const datosRequisitoIP = this.getValue();
     datosRequisitoIP.convocatoria = {
       id: this.getKey()
@@ -120,29 +110,20 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
     return obs.pipe(
       map((value) => {
         this.requisitoIP = value;
-        this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'saveOrUpdate()', 'end');
         return this.requisitoIP.id;
       })
     );
   }
 
   private create(requisitoIP: IConvocatoriaRequisitoIP): Observable<IConvocatoriaRequisitoIP> {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name,
-      `${this.create.name}(requisitoIP: ${requisitoIP})`, 'start');
     return this.convocatoriaRequisitoIPService.create(requisitoIP).pipe(
-      tap(result => this.requisitoIP = result),
-      tap(() => this.logger.debug(ConvocatoriaRequisitosIPFragment.name,
-        `${this.create.name}(requisitoIP: ${requisitoIP})`, 'end'))
+      tap(result => this.requisitoIP = result)
     );
   }
 
   private update(requisitoIP: IConvocatoriaRequisitoIP): Observable<IConvocatoriaRequisitoIP> {
-    this.logger.debug(ConvocatoriaRequisitosIPFragment.name,
-      `${this.update.name}(requisitoIP: ${requisitoIP})`, 'start');
     return this.convocatoriaRequisitoIPService.update(Number(this.getKey()), requisitoIP).pipe(
-      tap(result => this.requisitoIP = result),
-      tap(() => this.logger.debug(ConvocatoriaRequisitosIPFragment.name,
-        `${this.update.name}(requisitoIP: ${requisitoIP})`, 'end'))
+      tap(result => this.requisitoIP = result)
     );
   }
 

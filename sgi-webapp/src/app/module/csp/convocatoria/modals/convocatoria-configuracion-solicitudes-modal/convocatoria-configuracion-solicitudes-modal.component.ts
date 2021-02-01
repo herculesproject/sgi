@@ -9,10 +9,10 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { SgiRestFindOptions, SgiRestFilterType, SgiRestFilter } from '@sgi/framework/http';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.enlace.error.cargar');
 const MSG_ANADIR = marker('botones.aniadir');
@@ -38,14 +38,13 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaConfiguracionSolicitudesModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaConfiguracionSolicitudesModalData,
     private modeloEjecucionService: ModeloEjecucionService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -54,23 +53,18 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadTipoDocumento();
     this.textSaveOrUpdate = this.data.documentoRequerido.tipoDocumento ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'ngOnInit()', 'end');
   }
 
   /**
    * Carga todos los tipos de documento
    */
   loadTipoDocumento() {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name,
-      `${this.loadTipoDocumento.name}()`, 'start');
     const id = this.data.documentoRequerido.configuracionSolicitud.convocatoria.modeloEjecucion.id;
     const idTipoFase = this.data.documentoRequerido.configuracionSolicitud.fasePresentacionSolicitudes?.tipoFase.id;
     const options = {
@@ -96,13 +90,10 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
             startWith(''),
             map(value => this.filtroTipoDocumento(value))
           );
-        this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name,
-          `${this.loadTipoDocumento.name}()`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ConvocatoriaConfiguracionSolicitudesModalComponent.name,
-          `${this.loadTipoDocumento.name}()`, error);
       }
     );
     this.subscriptions.push(subscription);
@@ -127,15 +118,12 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
   }
 
   protected getDatosForm(): ConvocatoriaConfiguracionSolicitudesModalData {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getDatosForm.name}()`, 'start');
     this.data.documentoRequerido.tipoDocumento = this.formGroup.controls.tipoDocumento.value;
     this.data.documentoRequerido.observaciones = this.formGroup.controls.observaciones.value;
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return this.data;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getFormGroup.name}()`, 'start');
     const formGroup = new FormGroup({
       tipoDocumento: new FormControl(this.data.documentoRequerido.tipoDocumento),
       observaciones: new FormControl(this.data.documentoRequerido.observaciones),
@@ -143,7 +131,6 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
     if (this.data.readonly) {
       formGroup.disable();
     }
-    this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getFormGroup.name}()`, 'end');
     return formGroup;
   }
 }

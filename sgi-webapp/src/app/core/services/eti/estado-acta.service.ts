@@ -12,7 +12,7 @@ export class EstadoActaService extends SgiRestService<number, IEstadoActa>{
 
   private static readonly MAPPING = '/estadoactas';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(EstadoActaService.name, logger,
       `${environment.serviceServers.eti}` + EstadoActaService.MAPPING, http);
   }

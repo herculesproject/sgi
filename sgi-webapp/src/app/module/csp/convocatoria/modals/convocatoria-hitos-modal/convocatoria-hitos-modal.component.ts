@@ -1,27 +1,27 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { NGXLogger } from 'ngx-logger';
-
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { FormGroupUtil } from '@core/utils/form-group-util';
-
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Observable, Subscription } from 'rxjs';
-import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map, tap } from 'rxjs/operators';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
+import { SgiRestListResult } from '@sgi/framework/http/types';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
+
+
+
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.hitos.error.cargar');
@@ -57,13 +57,12 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   suscripciones: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaHitosModalComponentData,
     private snackBarService: SnackBarService) {
 
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -86,11 +85,9 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
     this.formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
       fechaInicio: new FormControl(this.data?.hito?.fecha, [Validators.required]),
@@ -106,15 +103,14 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.suscripciones.push(suscription);
 
-    const suscriptionFecha = this.formGroup.controls.fechaInicio.valueChanges.subscribe(() => this.createValidatorDate(this.formGroup.controls.tipoHito.value));
+    const suscriptionFecha = this.formGroup.controls.fechaInicio.valueChanges.subscribe(() =>
+      this.createValidatorDate(this.formGroup.controls.tipoHito.value));
     this.suscripciones.push(suscriptionFecha);
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
     this.suscripciones.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
       (value) => this.validarFecha(new Date(value))));
-
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
   }
 
   /**
@@ -123,7 +119,6 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    * @param tipoHito convocatoria tipoHito
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
     let fechas: Date[] = [];
     if (tipoHito && typeof tipoHito !== 'string') {
       const convocatoriasHitos = this.data.hitos.filter(hito =>
@@ -139,7 +134,6 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     this.formGroup.setValidators([
       TipoHitoValidator.notInDate('fechaInicio', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
     ]);
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
   }
 
   /**
@@ -147,18 +141,15 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    * Si la fecha actual es superior - Checkbox enable
    */
   private validarFecha(date: Date) {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'validarFecha()', 'start');
     if (date <= new Date()) {
       this.formGroup.get('aviso').disable();
       this.formGroup.get('aviso').setValue(false);
     } else {
       this.formGroup.get('aviso').enable();
     }
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'validarFecha()', 'end');
   }
 
   loadTiposHito() {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'start');
     this.suscripciones.push(
       this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
@@ -168,18 +159,16 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
               startWith(''),
               map(value => this.filtroTipoHito(value))
             );
-          this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           if (this.data.idModeloEjecucion) {
             this.snackBarService.showError(MSG_ERROR_INIT);
           } else {
             this.snackBarService.showError(MSG_ERROR_TIPOS);
           }
-          this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
         })
     );
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
   }
 
   /**
@@ -208,20 +197,16 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    * @param hito hito modificado o creado.
    */
   closeModal(hito?: IConvocatoriaHito): void {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(hito);
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'closeModal()', 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.data.hito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -230,13 +215,10 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadDatosForm()', 'start');
     this.data.hito.comentario = this.formGroup.get('comentario').value;
     this.data.hito.fecha = this.formGroup.get('fechaInicio').value;
     this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
     this.data.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadDatosForm()', 'end');
   }
-
 
 }

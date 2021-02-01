@@ -15,7 +15,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class PersonaService extends SgiRestService<string, IPersona>{
   private static readonly MAPPING = '/personas/fisica/persona';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       PersonaService.name,
       logger,

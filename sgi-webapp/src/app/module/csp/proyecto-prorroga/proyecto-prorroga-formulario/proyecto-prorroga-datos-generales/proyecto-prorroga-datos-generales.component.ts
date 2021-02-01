@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { Subscription, merge } from 'rxjs';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { Subscription } from 'rxjs';
 import { ProyectoProrrogaActionService } from '../../proyecto-prorroga.action.service';
 import { ProyectoProrrogaDatosGeneralesFragment } from './proyecto-prorroga-datos-generales.fragment';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 
 @Component({
   selector: 'sgi-solicitud-proyecto-prorroga-datos-generales',
@@ -28,11 +27,9 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
     (key) => TipoProrrogaEnum[key]);
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ProyectoProrrogaActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoProrrogaDatosGeneralesFragment;
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(36%-10px)';
@@ -50,26 +47,19 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadProrrogasSelectedProyecto();
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   private loadProrrogasSelectedProyecto(): void {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, `loadProrrogasSelectedProyecto()`, 'start');
     this.periodoSeguimientosSelectedProyecto = this.formPart.selectedProyectoProrrogas;
-    this.logger.debug(ProyectoProrrogaDatosGeneralesComponent.name, `loadProrrogasSelectedProyecto()`, 'end');
   }
 
 }

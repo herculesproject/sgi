@@ -37,7 +37,7 @@ export class ProyectoEntidadGestoraService extends SgiMutableRestService<number,
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoEntidadGestoraService.name,
       logger,

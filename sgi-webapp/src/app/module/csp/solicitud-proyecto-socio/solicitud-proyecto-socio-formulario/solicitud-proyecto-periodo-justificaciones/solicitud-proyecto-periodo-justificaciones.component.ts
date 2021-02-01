@@ -1,19 +1,17 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-periodo-justificaciones.fragment';
-import { Subscription } from 'rxjs';
-import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
-import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
-import { MatDialog } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SolicitudProyectoPeriodoJustificacionesModalData, SolicitudProyectoPeriodoJustificacionesModalComponent } from '../../modals/solicitud-proyecto-periodo-justificaciones-modal/solicitud-proyecto-periodo-justificaciones-modal.component';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { SolicitudProyectoPeriodoJustificacionesModalComponent, SolicitudProyectoPeriodoJustificacionesModalData } from '../../modals/solicitud-proyecto-periodo-justificaciones-modal/solicitud-proyecto-periodo-justificaciones-modal.component';
+import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
+import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-periodo-justificaciones.fragment';
 
 const MSG_DELETE = marker('csp.solicitud-proyecto-socio.periodo-justificacion.borrar');
 
@@ -33,19 +31,15 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     private actionService: SolicitudProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.PERIODOS_JUSTIFICACION, actionService);
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as SolicitudProyectoPeriodoJustificacionesFragment;
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subcription = this.formPart.periodoJustificaciones$.subscribe(
       (proyectoEquipos) => {
@@ -64,17 +58,13 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
           return wrapper.value[property];
       }
     };
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoPeriodoJustificacion>): void {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `openModal()`, 'start');
     const periodoJustificacion: ISolicitudProyectoPeriodoJustificacion = {
       fechaFin: undefined,
       fechaInicio: undefined,
@@ -114,20 +104,17 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
             this.formPart.addPeriodoJustificacion(modalData.periodoJustificacion);
           }
         }
-        this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deletePeriodoJustificacion(wrapper: StatusWrapper<ISolicitudProyectoPeriodoJustificacion>): void {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `deletePeriodoJustificacion(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoJustificacion(wrapper);
           }
-          this.logger.debug(SolicitudProyectoPeriodoJustificacionesComponent.name, `deletePeriodoJustificacion(${wrapper})`, 'end');
         }
       )
     );

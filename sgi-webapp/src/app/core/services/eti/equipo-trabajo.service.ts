@@ -11,7 +11,7 @@ import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 export class EquipoTrabajoService extends SgiRestService<number, IEquipoTrabajo> {
   private static readonly MAPPING = '/equipotrabajos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       EquipoTrabajoService.name,
       logger,

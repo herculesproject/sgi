@@ -104,7 +104,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   private nodeLookup = new Map<string, NodeDocumento>();
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     private periodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     private periodoSeguimientoDocumentoService: ProyectoPeriodoSeguimientoDocumentoService,
@@ -113,13 +113,10 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
     public readonly
   ) {
     super(key);
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, 'constructor()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.periodoSeguimientoService.findDocumentos(this.getKey() as number).pipe(
         map(response => {
@@ -135,17 +132,16 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
           this.publishNodes(documento);
         },
         (error) => {
-          this.logger.error(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.onInitialize.name}()`, error);
+          this.logger.error(error);
         }
       );
     }
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.onInitialize.name}()`, 'end');
   }
 
   private buildTree(documentos: IProyectoPeriodoSeguimientoDocumento[]): NodeDocumento[] {
     const nodes: NodeDocumento[] = [];
     documentos.forEach((documento) => {
-      const keyTipoFase = "0";
+      const keyTipoFase = '0';
       const keyTipoDocumento = `${keyTipoFase}-${documento.tipoDocumento ? documento.tipoDocumento.id : 0}`;
       let faseNode = this.nodeLookup.get(keyTipoFase);
       if (!faseNode) {
@@ -172,7 +168,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   }
 
   public addNode(node: NodeDocumento): NodeDocumento {
-    const keyTipoFase = "0";
+    const keyTipoFase = '0';
     const keyTipoDocumento = `${keyTipoFase}-${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
     let nodeFase = this.nodeLookup.get(keyTipoFase);
     let addToRoot = false;
@@ -207,7 +203,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
     }
     node.documento.value.documentoRef = node.fichero?.documentoRef;
 
-    const keyTipoFase = "0";
+    const keyTipoFase = '0';
     const keyTipoDocumento = `${keyTipoFase}-${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
     let nodeFase = this.nodeLookup.get(keyTipoFase);
     let addToRoot = false;
@@ -281,7 +277,6 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.saveOrUpdate.name}()`, 'start');
     return merge(
       this.deleteDocumentos(),
       this.updateDocumentos(this.getUpdated(this.documentos$.value)),
@@ -292,8 +287,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
         if (this.isSaveOrUpdateComplete(this.documentos$.value)) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      })
     );
   }
 
@@ -324,9 +318,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   }
 
   private deleteDocumentos(): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.deleteDocumentos.name}()`, 'start');
     if (this.documentosEliminados.length === 0) {
-      this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.deleteDocumentos.name}()`, 'end');
       return of(void 0);
     }
     return from(this.documentosEliminados).pipe(
@@ -336,21 +328,14 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
             switchMap(() => {
               this.documentosEliminados = this.documentosEliminados.filter(deleted =>
                 deleted.id !== documento.id);
-              return this.documentoService.eliminarFichero(documento.documentoRef).pipe(
-                tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name,
-                  `${this.documentoService.eliminarFichero.name}()`, 'end'))
-              );
-            }),
-            tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name,
-              `${this.deleteDocumentos.name}()`, 'end'))
+              return this.documentoService.eliminarFichero(documento.documentoRef);
+            })
           );
       }));
   }
 
   private updateDocumentos(nodes: NodeDocumento[]): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.updateDocumentos.name}()`, 'start');
     if (nodes.length === 0) {
-      this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.updateDocumentos.name}()`, 'end');
       return of(void 0);
     }
     return from(nodes).pipe(
@@ -358,17 +343,13 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
         return this.periodoSeguimientoDocumentoService.update(node.documento.value.id, node.documento.value).pipe(
           map((updated) => {
             node.documento = new StatusWrapper<IProyectoPeriodoSeguimientoDocumento>(updated);
-          }),
-          tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name,
-            `${this.updateDocumentos.name}()`, 'end'))
+          })
         );
       }));
   }
 
   private createDocumentos(nodes: NodeDocumento[]): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.createDocumentos.name}()`, 'start');
     if (nodes.length === 0) {
-      this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.createDocumentos.name}()`, 'end');
       return of(void 0);
     }
     return from(nodes).pipe(
@@ -379,15 +360,12 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
         return this.periodoSeguimientoDocumentoService.create(node.documento.value).pipe(
           map(created => {
             node.documento = new StatusWrapper<IProyectoPeriodoSeguimientoDocumento>(created);
-          }),
-          tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name,
-            `${this.createDocumentos.name}()`, 'end'))
+          })
         );
       }));
   }
 
   private isSaveOrUpdateComplete(nodes: NodeDocumento[]): boolean {
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
     let pending = this.documentosEliminados.length > 0;
     if (pending) {
       return false;
@@ -406,7 +384,6 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
         }
       }
     });
-    this.logger.debug(ProyectoPeriodoSeguimientoDocumentosFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
     return true;
   }
 

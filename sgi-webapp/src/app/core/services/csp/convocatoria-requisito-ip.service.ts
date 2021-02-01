@@ -13,7 +13,7 @@ import { catchError, tap } from 'rxjs/operators';
 export class ConvocatoriaRequisitoIPService extends SgiRestService<number, IConvocatoriaRequisitoIP> {
   private static readonly MAPPING = '/convocatoria-requisitoips';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaRequisitoIPService.name,
       logger,
@@ -27,14 +27,13 @@ export class ConvocatoriaRequisitoIPService extends SgiRestService<number, IConv
    * @param id convocatoria
    */
   getRequisitoIPConvocatoria(id: number): Observable<IConvocatoriaRequisitoIP> {
-    this.logger.debug(ConvocatoriaRequisitoIPService.name, `getRequisitoIP(${id})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}`;
     return this.http.get<IConvocatoriaRequisitoIP>(endpointUrl)
       .pipe(
-        catchError(() => {
+        catchError((err) => {
+          this.logger.error(err);
           return of({} as IConvocatoriaRequisitoIP);
-        }),
-        tap(() => this.logger.debug(ConvocatoriaRequisitoIPService.name, `getRequisitoIP(${id})`, '-', 'end'))
+        })
       );
   }
 }

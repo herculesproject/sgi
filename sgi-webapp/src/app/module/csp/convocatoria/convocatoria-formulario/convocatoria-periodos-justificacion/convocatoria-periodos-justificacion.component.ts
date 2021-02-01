@@ -1,19 +1,18 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatSort, MatSortable } from '@angular/material/sort';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { NGXLogger } from 'ngx-logger';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-periodo-justificacion.fragment';
-import { Subscription } from 'rxjs';
+import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { StatusWrapper } from '@core/utils/status-wrapper';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaPeriodosJustificacionModalComponent, IConvocatoriaPeriodoJustificacionModalData } from '../../modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-periodo-justificacion.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.periodoJustificacion.listado.borrar');
 
@@ -34,19 +33,15 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     private dialogService: DialogService,
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
-    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaPeriodosJustificacionFragment;
-    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoJustificacion>>();
     this.dataSource.paginator = this.paginator;
@@ -66,7 +61,6 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
 
     this.subscriptions.push(this.formPart.periodosJustificacion$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnInit()', 'end');
     }));
   }
 
@@ -77,9 +71,6 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
    * @param periodoJustificacionActualizar Periodo justificacion que se carga en el modal para modificarlo.
    */
   openModalPeriodoJustificacion(periodoJustificacionActualizar?: StatusWrapper<IConvocatoriaPeriodoJustificacion>): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name,
-      `openModalPeriodoJustificacion(${periodoJustificacionActualizar})`, 'start');
-
     const data: IConvocatoriaPeriodoJustificacionModalData = {
       duracion: this.actionService.duracion,
       convocatoriaPeriodoJustificacion: periodoJustificacionActualizar
@@ -98,8 +89,6 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     dialogRef.afterClosed().subscribe(
       (periodoJustificacionModal: IConvocatoriaPeriodoJustificacion) => {
         if (!periodoJustificacionModal) {
-          this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-            `${this.openModalPeriodoJustificacion.name}(${periodoJustificacionActualizar})`, 'end');
           return;
         }
 
@@ -111,9 +100,6 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
         }
 
         this.recalcularNumPeriodos();
-
-        this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-          `openModalPeriodoJustificacion(${periodoJustificacionActualizar})`, 'end');
       }
     );
 
@@ -125,9 +111,6 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
    * @param periodoJustificacion Periodo justificacion que se quiere eliminar
    */
   deletePeriodoJustificacion(periodoJustificacion?: StatusWrapper<IConvocatoriaPeriodoJustificacion>): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-      `deletePeriodoJustificacion(${periodoJustificacion})`, 'start');
-
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
@@ -135,18 +118,13 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
             this.formPart.deletePeriodoJustificacion(periodoJustificacion);
             this.recalcularNumPeriodos();
           }
-
-          this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-            `deletePeriodoJustificacion(${periodoJustificacion})`, 'end');
         }
       )
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**

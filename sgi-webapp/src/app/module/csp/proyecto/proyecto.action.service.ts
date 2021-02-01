@@ -1,41 +1,41 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ActionService } from '@core/services/action-service';
+import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
+import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
+import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
+import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
+import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
+import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
+import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
+import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
+import { ProyectoEntidadGestoraFragment } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.fragment';
 import { ProyectoEntidadesConvocantesFragment } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.fragment';
 import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
-import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
-import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
-import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
-import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
-import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
-import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { ProyectoEntidadGestoraFragment } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.fragment';
-import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
-
-
-import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
-import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
-import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
-import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
-import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
-import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ProyectoEquipoFragment } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.fragment';
-import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
+import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
+import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
+import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
+import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
+import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
+
+
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -101,7 +101,7 @@ export class ProyectoActionService extends ActionService {
 
   constructor(
     fb: FormBuilder,
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     route: ActivatedRoute,
     private proyectoService: ProyectoService,
     empresaEconomicaService: EmpresaEconomicaService,
@@ -127,7 +127,7 @@ export class ProyectoActionService extends ActionService {
       this.enableEdit();
     }
 
-    this.fichaGeneral = new ProyectoFichaGeneralFragment(fb, logger, this.proyecto?.id,
+    this.fichaGeneral = new ProyectoFichaGeneralFragment(logger, fb, this.proyecto?.id,
       proyectoService, unidadGestionService, convocatoriaService, this);
 
     this.fichaGeneral.paquetesTrabajo$.subscribe((value) => this.paqueteTrabajoValue = Boolean(value));
@@ -135,19 +135,19 @@ export class ProyectoActionService extends ActionService {
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
     if (this.isEdit()) {
-      this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(logger, this.proyecto?.id,
+      this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(this.proyecto?.id,
         proyectoService, proyectoEntidadFinanciadoraService, empresaEconomicaService, false);
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
 
-      this.socios = new ProyectoSociosFragment(logger, this.proyecto?.id, empresaEconomicaService,
+      this.socios = new ProyectoSociosFragment(this.proyecto?.id, empresaEconomicaService,
         proyectoService, proyectoSocioService, this);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
 
-      this.hitos = new ProyectoHitosFragment(logger, this.proyecto?.id, proyectoService,
+      this.hitos = new ProyectoHitosFragment(this.proyecto?.id, proyectoService,
         proyectoHitoService, this.readonly);
       this.addFragment(this.FRAGMENT.HITOS, this.hitos);
 
-      this.plazos = new ProyectoPlazosFragment(logger, this.proyecto?.id, proyectoService, proyectoPlazoService, this.readonly);
+      this.plazos = new ProyectoPlazosFragment(this.proyecto?.id, proyectoService, proyectoPlazoService, this.readonly);
       this.addFragment(this.FRAGMENT.PLAZOS, this.plazos);
 
       this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(
@@ -155,7 +155,7 @@ export class ProyectoActionService extends ActionService {
         empresaEconomicaService);
       this.addFragment(this.FRAGMENT.ENTIDADES_CONVOCANTES, this.entidadesConvocantes);
 
-      this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(logger, this.proyecto?.id, proyectoService,
+      this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(this.proyecto?.id, proyectoService,
         proyectoPaqueteTrabajoService, this.readonly);
       this.addFragment(this.FRAGMENT.PAQUETE_TRABAJO, this.paqueteTrabajo);
 
@@ -163,7 +163,7 @@ export class ProyectoActionService extends ActionService {
         contextoProyectoService, convocatoriaService, this.proyectoConvocatoriaValue);
       this.addFragment(this.FRAGMENT.CONTEXTO_PROYECTO, this.proyectoContexto);
 
-      this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(logger, this.proyecto?.id, proyectoService,
+      this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(this.proyecto?.id, proyectoService,
         proyectoPeriodoSeguimientoService, documentoService, this.proyecto);
       this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
 
@@ -172,11 +172,11 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.proyectoEquipo);
 
       this.entidadGestora =
-        new ProyectoEntidadGestoraFragment(fb, logger, this.proyecto?.id,
+        new ProyectoEntidadGestoraFragment(fb, this.proyecto?.id,
           proyectoService, proyectoEntidadGestora, empresaEconomicaService, this);
       this.addFragment(this.FRAGMENT.ENTIDAD_GESTORA, this.entidadGestora);
 
-      this.prorrogas = new ProyectoProrrogasFragment(logger, this.proyecto?.id, proyectoService,
+      this.prorrogas = new ProyectoProrrogasFragment(this.proyecto?.id, proyectoService,
         proyectoProrrogaService, documentoService, this);
       this.addFragment(this.FRAGMENT.PRORROGAS, this.prorrogas);
     }
@@ -216,23 +216,18 @@ export class ProyectoActionService extends ActionService {
    * y es una edicion se hace la consulta y si no se recupera el valor previo de isProyectoColavorativo.
    */
   checkProyectoColavorativo(): void {
-    this.logger.debug(ProyectoActionService.name, 'checkProyectoColavorativo()', 'start');
-
     if (!this.fichaGeneral.isInitialized() && this.proyecto?.id) {
       const subscription = this.proyectoService.findById(this.proyecto.id)
         .subscribe((proyecto) => {
           this.isProyectoColaborativo = proyecto ? proyecto.colaborativo : false;
-          this.logger.debug(ProyectoActionService.name, 'checkProyectoColavorativo()', 'end');
         },
           (error) => {
+            this.logger.error(error);
             this.isProyectoColaborativo = false;
-            this.logger.error(ProyectoActionService.name, 'checkProyectoColavorativo()', error);
           }
         );
       this.subscriptions.push(subscription);
     }
-
-    this.logger.debug(ProyectoActionService.name, 'checkProyectoColavorativo()', 'end');
   }
 
 }

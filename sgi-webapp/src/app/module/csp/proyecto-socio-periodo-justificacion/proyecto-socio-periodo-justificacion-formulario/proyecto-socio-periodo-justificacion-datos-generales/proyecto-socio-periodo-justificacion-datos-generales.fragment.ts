@@ -1,19 +1,17 @@
-import { FormFragment } from '@core/services/action-service';
-import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
-import { NGXLogger } from 'ngx-logger';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
-import { tap, map } from 'rxjs/operators';
-import { IRange, RangeValidator } from '@core/validators/range-validator';
-import { DateValidator } from '@core/validators/date-validator';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
+import { FormFragment } from '@core/services/action-service';
+import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
+import { DateValidator } from '@core/validators/date-validator';
+import { IRange, RangeValidator } from '@core/validators/range-validator';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends FormFragment<IProyectoSocioPeriodoJustificacion> {
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private service: ProyectoSocioPeriodoJustificacionService,
     private proyectoSocio: IProyectoSocio,
@@ -21,12 +19,9 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
     private selectedPeriodosJustificacion: IProyectoSocioPeriodoJustificacion[]
   ) {
     super(key);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, 'constructor()', 'start');
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, 'constructor()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     const rangosExistentes = this.selectedPeriodosJustificacion.map(
       periodo => {
         const value: IRange = {
@@ -71,13 +66,10 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
         ]
       }
     );
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return form;
   }
 
   protected buildPatch(value: IProyectoSocioPeriodoJustificacion): { [key: string]: any; } {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-      `buildPatch(value: ${value})`, 'start');
     const result = {
       documentacionRecibida: value.documentacionRecibida,
       fechaFin: value.fechaFin ? new Date(value.fechaFin) : undefined,
@@ -88,22 +80,14 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
       observaciones: value.observaciones,
       numPeriodo: value.numPeriodo
     };
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-      `buildPatch(value: ${value})`, 'end');
     return result;
   }
 
   protected initializer(key: number): Observable<IProyectoSocioPeriodoJustificacion> {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-      `initializer(key: ${key})`, 'start');
-    return of(this.periodoJustificacion).pipe(
-      tap(() => this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-        `initializer(key: ${key})`, 'end'))
-    );
+    return of(this.periodoJustificacion);
   }
 
   getValue(): IProyectoSocioPeriodoJustificacion {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().controls;
     this.periodoJustificacion.documentacionRecibida = form.documentacionRecibida.value;
     this.periodoJustificacion.fechaFin = form.fechaFin.value;
@@ -113,12 +97,10 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
     this.periodoJustificacion.fechaRecepcion = this.periodoJustificacion.documentacionRecibida ? form.fechaRecepcion.value : undefined;
     this.periodoJustificacion.observaciones = form.observaciones.value;
     this.periodoJustificacion.numPeriodo = form.numPeriodo.value;
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, `getValue()`, 'end');
     return this.periodoJustificacion;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name, `saveOrUpdate()`, 'start');
     const periodo = this.getValue();
     periodo.proyectoSocio = this.proyectoSocio;
     const observable$ = this.isEdit() ? this.update(periodo) : this.create(periodo);
@@ -128,28 +110,16 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
         this.setChanges(false);
         this.refreshInitialState(true);
         return this.periodoJustificacion.id;
-      }),
-      tap(() => this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-        `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(periodoJustificacion: IProyectoSocioPeriodoJustificacion): Observable<IProyectoSocioPeriodoJustificacion> {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-      `create(periodoJustificacion: ${periodoJustificacion})`, 'start');
-    return this.service.create(periodoJustificacion).pipe(
-      tap(() => this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-        `create(periodoJustificacion: ${periodoJustificacion})`, 'end'))
-    );
+    return this.service.create(periodoJustificacion);
   }
 
   private update(periodoJustificacion: IProyectoSocioPeriodoJustificacion): Observable<IProyectoSocioPeriodoJustificacion> {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-      `update(periodoJustificacion: ${periodoJustificacion})`, 'start');
-    return this.service.update(Number(this.getKey()), periodoJustificacion).pipe(
-      tap(() => this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesFragment.name,
-        `update(periodoJustificacion: ${periodoJustificacion})`, 'end'))
-    );
+    return this.service.update(Number(this.getKey()), periodoJustificacion);
   }
 
   get isAbierto(): boolean {

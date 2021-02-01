@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
-import { ActionComponent } from '@core/component/action.component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ConvocatoriaActionService } from '../convocatoria.action.service';
-import { CONVOCATORIA_ROUTE_NAMES } from '../convocatoria-route-names';
-import { DialogService } from '@core/services/dialog.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { ActionComponent } from '@core/component/action.component';
 import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { NGXLogger } from 'ngx-logger';
+import { CONVOCATORIA_ROUTE_NAMES } from '../convocatoria-route-names';
+import { ConvocatoriaActionService } from '../convocatoria.action.service';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
 const MSG_BUTTON_REGISTRAR = marker('csp.convocatoria.registrar');
@@ -35,7 +35,7 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   disable = true;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -60,7 +60,8 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {
@@ -72,17 +73,15 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
 
 
   registrar(): void {
-    this.logger.debug(ConvocatoriaEditarComponent.name, 'registrar()', 'start');
     this.actionService.registrar().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_REGISTRAR);
-        this.logger.debug(ConvocatoriaEditarComponent.name, 'registrar()', 'end');
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS_REGISTRAR);
         this.router.navigate(['../'], { relativeTo: this.activatedRoute });
-        this.logger.debug(ConvocatoriaEditarComponent.name, 'registrar()', 'end');
       }
     );
   }
@@ -91,21 +90,18 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
    * Permite habilitar o deshabilitar el botón de registro en función de los datos de convocatoria
    */
   private isDisableRegistrar(): void {
-    this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'start');
     this.subscriptions.push(
       this.convocatoriaService.findById(this.actionService.convocatoriaId).subscribe(
         (convocatoria) => {
           // Se deshabilita el botón de registrar si la convocatoria está en estado registrada
           if (convocatoria.estadoActual === TipoEstadoConvocatoria.REGISTRADA) {
             this.disable = true;
-            this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
             return;
           }
 
           // a parte de los campos obligatoris, deben estar
           if (!convocatoria.modeloEjecucion || !convocatoria.finalidad || !convocatoria.ambitoGeografico) {
             this.disable = true;
-            this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
             return;
           }
 
@@ -117,22 +113,19 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
             // se comprueba que el campo de presentación de solicitudes esté relleno
             if (configuracionSolicitudes.tramitacionSGI && !configuracionSolicitudes.fasePresentacionSolicitudes) {
               this.disable = true;
-              this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
               return;
             }
             // El campo de tipo de baremación debe estar cumplimentado
             // El campo de tipo de formulario debe estar cumplimentado
             this.disable = !Boolean(configuracionSolicitudes.baremacionRef) ||
               !Boolean(configuracionSolicitudes.formularioSolicitud);
-            this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
             return;
           }
           this.disable = false;
-          this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.disable = true;
-          this.logger.error(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'error');
         }
       )
     );

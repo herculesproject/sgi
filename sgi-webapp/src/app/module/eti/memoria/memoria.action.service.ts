@@ -48,12 +48,12 @@ export class MemoriaActionService extends ActionService {
   private versiones: MemoriaInformesFragment;
 
   constructor(
+    private readonly logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
     service: MemoriaService,
     private peticionEvaluacionService: PeticionEvaluacionService,
     personaFisicaService: PersonaFisicaService,
-    protected readonly logger: NGXLogger,
     documentoService: DocumentoService,
     formularioService: FormularioService,
     bloqueService: BloqueService,
@@ -72,13 +72,13 @@ export class MemoriaActionService extends ActionService {
     else {
       this.loadPeticionEvaluacion(history.state.idPeticionEvaluacion);
     }
-    this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, logger, this.readonly, this.memoria?.id, service, personaFisicaService,
+    this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaFisicaService,
       peticionEvaluacionService);
     this.formularios = new MemoriaFormularioFragment(logger, this.memoria?.id, this.memoria?.comite, formularioService,
       bloqueService, apartadoService, respuestaService, service, evaluacionService);
-    this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service, documentoService);
-    this.evaluaciones = new MemoriaEvaluacionesFragment(logger, this.memoria?.id, service);
-    this.versiones = new MemoriaInformesFragment(logger, this.memoria?.id, service);
+    this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, service, documentoService);
+    this.evaluaciones = new MemoriaEvaluacionesFragment(this.memoria?.id, service);
+    this.versiones = new MemoriaInformesFragment(this.memoria?.id, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     if (this.isEdit()) {

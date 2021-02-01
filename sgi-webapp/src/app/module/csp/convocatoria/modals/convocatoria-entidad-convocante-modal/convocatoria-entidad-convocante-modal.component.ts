@@ -1,27 +1,27 @@
+import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-
-import { ProgramaService } from '@core/services/csp/programa.service';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ProgramaService } from '@core/services/csp/programa.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { map, mergeMap, startWith, switchMap, takeLast, tap } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { DialogService } from '@core/services/dialog.service';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { ConvocatoriaEntidadConvocanteData } from '../../convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
-import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
+
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_FORM_GROUP_WITHOUT_PLAN = marker('csp.convocatoria.entidades.convocantes.modal.sin.plan');
@@ -99,15 +99,14 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ConvocatoriaEntidadConvocanteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadConvocanteModalData,
     protected snackBarService: SnackBarService,
     private programaService: ProgramaService,
     private dialogService: DialogService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -131,12 +130,9 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     } else {
       this.textSaveOrUpdate = MSG_ACEPTAR;
     }
-
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.subscriptions.push(this.programaTree$.subscribe(
       (programas) => {
@@ -161,7 +157,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
       }
     );
     this.subscriptions.push(subcription);
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'ngOnInit()', 'end');
   }
 
   private filterPrograma(value: string): IPrograma[] {
@@ -175,8 +170,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   }
 
   private loadTreePrograma() {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `loadTreePrograma()`, 'start');
     const id = this.formGroup.get('plan').value?.id;
     if (id && !isNaN(id)) {
       this.checkedNode = undefined;
@@ -199,12 +192,9 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
           const current = this.programaTree$.value;
           current.push(programa);
           this.publishNodes(current);
-          this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-            `loadTreePrograma()`, 'end');
         },
         (error) => {
-          this.logger.error(ConvocatoriaEntidadConvocanteModalComponent.name,
-            `loadTreePrograma()`, error);
+          this.logger.error(error);
         },
         () => {
           this.checkedNode = this.nodeMap.get(this.formGroup.get('programa').value);
@@ -222,8 +212,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   }
 
   private getChilds(parent: NodePrograma): Observable<NodePrograma[]> {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `getChilds(parent: ${parent})`, 'start');
     return this.programaService.findAllHijosPrograma(parent.programa.value.id).pipe(
       map((result) => {
         const childs: NodePrograma[] = result.items.map(
@@ -247,33 +235,24 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
         }
         return of([]);
       }),
-      takeLast(1),
-      tap(() => this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-        `getChilds(parent: ${parent})`, 'end'))
+      takeLast(1)
     );
   }
 
   private expandNodes(node: NodePrograma) {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
     if (node && node.parent) {
       this.treeControl.expand(node.parent);
       this.expandNodes(node.parent);
     }
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
   }
 
   private publishNodes(rootNodes?: NodePrograma[]) {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `publishNodes()`, 'start');
     let nodes = rootNodes ? rootNodes : this.programaTree$.value;
     nodes = sortByName(nodes);
     this.programaTree$.next(nodes);
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `publishNodes()`, 'end');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       empresaEconomica: new FormControl(this.data.entidadConvocanteData.empresaEconomica, Validators.required),
       plan: new FormControl(this.data.entidadConvocanteData.plan, IsEntityValidator.isValid()),
@@ -282,13 +261,10 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     if (this.data.readonly) {
       formGroup.disable();
     }
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): ConvocatoriaEntidadConvocanteModalData {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `getDatosForm()`, 'start');
     const entidadConvocante = this.data.entidadConvocanteData.entidadConvocante;
     entidadConvocante.value.entidad = this.formGroup.get('empresaEconomica').value;
     const plan = this.formGroup.get('plan').value;
@@ -299,22 +275,15 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     }
     this.data.entidadConvocanteData.empresaEconomica = this.formGroup.get('empresaEconomica').value;
     this.data.entidadConvocanteData.modalidad = entidadConvocante.value.programa;
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `getDatosForm()`, 'start');
     return this.data;
   }
 
   onCheckNode(node: NodePrograma, $event: MatCheckboxChange): void {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'start');
     this.checkedNode = $event.checked ? node : undefined;
     this.formGroup.get('programa').setValue(this.checkedNode?.programa?.value?.id);
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(BaseModalComponent.name, `saveOrUpdate()`, 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       const plan = this.formGroup.get('plan').value;
       const programa = this.checkedNode;
@@ -328,20 +297,15 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(BaseModalComponent.name, `saveOrUpdate()`, 'end');
   }
 
   private saveIncompleteFormGroup(message: string): void {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-      `saveIncompleteFormGroup()`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(message).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.closeModal(this.getDatosForm());
           }
-          this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
-            `saveIncompleteFormGroup()`, 'end');
         }
       )
     );

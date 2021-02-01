@@ -102,20 +102,17 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
   private nodeLookup = new Map<string, NodeDocumento>();
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaDocumentoService: ConvocatoriaDocumentoService,
     public readonly: boolean
   ) {
     super(key);
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, 'constructor()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.convocatoriaService.findDocumentos(this.getKey() as number).pipe(
         map(response => {
@@ -131,11 +128,10 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
           this.publishNodes(documento);
         },
         (error) => {
-          this.logger.error(ConvocatoriaDocumentosFragment.name, `${this.onInitialize.name}()`, error);
+          this.logger.error(error);
         }
       );
     }
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.onInitialize.name}()`, 'end');
   }
 
   private buildTree(documentos: IConvocatoriaDocumento[]): NodeDocumento[] {
@@ -277,7 +273,6 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.saveOrUpdate.name}()`, 'start');
     return merge(
       this.deleteDocumentos(),
       this.updateDocumentos(this.getUpdated(this.documentos$.value)),
@@ -288,8 +283,7 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
         if (this.isSaveOrUpdateComplete(this.documentos$.value)) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      })
     );
   }
 
@@ -320,9 +314,7 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
   }
 
   private deleteDocumentos(): Observable<void> {
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.deleteDocumentos.name}()`, 'start');
     if (this.documentosEliminados.length === 0) {
-      this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.deleteDocumentos.name}()`, 'end');
       return of(void 0);
     }
     return from(this.documentosEliminados).pipe(
@@ -332,17 +324,13 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
             tap(() => {
               this.documentosEliminados = this.documentosEliminados.filter(deleted =>
                 deleted.id !== documento.id);
-            }),
-            tap(() => this.logger.debug(ConvocatoriaDocumentosFragment.name,
-              `${this.deleteDocumentos.name}()`, 'end'))
+            })
           );
       }));
   }
 
   private updateDocumentos(nodes: NodeDocumento[]): Observable<void> {
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.updateDocumentos.name}()`, 'start');
     if (nodes.length === 0) {
-      this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.updateDocumentos.name}()`, 'end');
       return of(void 0);
     }
     return from(nodes).pipe(
@@ -350,17 +338,13 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
         return this.convocatoriaDocumentoService.update(node.documento.value.id, node.documento.value).pipe(
           map((updated) => {
             node.documento = new StatusWrapper<IConvocatoriaDocumento>(updated);
-          }),
-          tap(() => this.logger.debug(ConvocatoriaDocumentosFragment.name,
-            `${this.updateDocumentos.name}()`, 'end'))
+          })
         );
       }));
   }
 
   private createDocumentos(nodes: NodeDocumento[]): Observable<void> {
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.createDocumentos.name}()`, 'start');
     if (nodes.length === 0) {
-      this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.createDocumentos.name}()`, 'end');
       return of(void 0);
     }
     return from(nodes).pipe(
@@ -371,15 +355,12 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
         return this.convocatoriaDocumentoService.create(node.documento.value).pipe(
           map(created => {
             node.documento = new StatusWrapper<IConvocatoriaDocumento>(created);
-          }),
-          tap(() => this.logger.debug(ConvocatoriaDocumentosFragment.name,
-            `${this.createDocumentos.name}()`, 'end'))
+          })
         );
       }));
   }
 
   private isSaveOrUpdateComplete(nodes: NodeDocumento[]): boolean {
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
     let pending = this.documentosEliminados.length > 0;
     if (pending) {
       return false;
@@ -398,7 +379,6 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
         }
       }
     });
-    this.logger.debug(ConvocatoriaDocumentosFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
     return true;
   }
 

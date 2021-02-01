@@ -1,27 +1,27 @@
-import { FormFragment } from '@core/services/action-service';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, EMPTY, BehaviorSubject, of, from, merge } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
-import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
-import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
-import { EnumValidador } from '@core/validators/enum-validador';
-import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
-import { IsYearPlus } from '@core/validators/is-year-plus';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoDestinatario } from '@core/enums/tipo-destinatario';
-import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
+import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
+import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { FormFragment } from '@core/services/action-service';
+import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
+import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { EnumValidador } from '@core/validators/enum-validador';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { IsYearPlus } from '@core/validators/is-year-plus';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface AreaTematicaData {
   padre: IAreaTematica;
@@ -37,7 +37,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     private convocatoriaService: ConvocatoriaService,
     private empresaEconomicaService: EmpresaEconomicaService,
@@ -48,17 +48,14 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   ) {
     super(key, true);
     this.setComplete(true);
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, 'constructor()', 'start');
     this.convocatoria = {
       activo: true,
       estadoActual: TipoEstadoConvocatoria.BORRADOR
     } as IConvocatoria;
     this.convocatoriaEntidadGestora = {} as IConvocatoriaEntidadGestora;
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, 'constructor()', 'start');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     const form = new FormGroup({
       codigo: new FormControl('', [
         Validators.required, Validators.maxLength(50)]),
@@ -97,13 +94,10 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       form.disable();
     }
     this.checkEstado(form, this.convocatoria);
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return form;
   }
 
   buildPatch(convocatoria: IConvocatoria): { [key: string]: any } {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `buildPatch(convocatoria: ${convocatoria})`, 'start');
     const result = {
       modeloEjecucion: convocatoria.modeloEjecucion,
       codigo: convocatoria.codigo,
@@ -121,8 +115,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       clasificacionCVN: convocatoria.clasificacionCVN,
     };
     this.checkEstado(this.getFormGroup(), convocatoria);
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `buildPatch(convocatoria: ${convocatoria})`, 'end');
     return result;
   }
 
@@ -130,8 +122,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
    * Añade validadores al formulario dependiendo del estado de la convocatoria
    */
   private checkEstado(formgroup: FormGroup, convocatoria: IConvocatoria): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `checkEstado(formgroup: ${formgroup}, convocatoria: ${convocatoria})`, 'start');
     if (convocatoria.estadoActual === TipoEstadoConvocatoria.BORRADOR) {
       formgroup.get('modeloEjecucion').setValidators(IsEntityValidator.isValid());
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
@@ -143,8 +133,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       formgroup.get('ambitoGeografico').setValidators([
         Validators.required, IsEntityValidator.isValid()]);
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `checkEstado(formgroup: ${formgroup}, convocatoria: ${convocatoria})`, 'end');
   }
 
   isEstadoRegistrada() {
@@ -152,8 +140,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   protected initializer(key: number): Observable<IConvocatoria> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `initializer(key: ${key})`, 'start');
     return this.convocatoriaService.findById(key).pipe(
       switchMap((value) => {
         this.convocatoria = value;
@@ -195,18 +181,14 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         );
       }),
       tap(() => this.loadAreasTematicas(key)),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `initializer(key: ${key})`, 'end')),
       catchError((error) => {
-        this.logger.error(ConvocatoriaDatosGeneralesFragment.name,
-          `initializer(key: ${key})`, error);
+        this.logger.error(error);
         return EMPTY;
       })
     );
   }
 
   private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadUnidadGestion()`, 'start');
     const options = {
       filters: [
         {
@@ -229,8 +211,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   private loadAreasTematicas(id: number): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `loadAreasTematicas(id: ${id})`, 'start');
     const subscription = this.convocatoriaService.findAreaTematicas(id).pipe(
       map(response => response.items),
       map(convocatoriasAreaTematicas => {
@@ -249,27 +229,18 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       })
     ).subscribe(areas => {
       this.areasTematicas$.next(areas);
-      this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `loadAreasTematicas(id: ${id})`, 'end');
     });
     this.subscriptions.push(subscription);
   }
 
   private getSecondLevelAreaTematica(areaTematica: IAreaTematica): IAreaTematica {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `getSecondLevelAreaTematica(areaTematica: ${areaTematica})`, 'start');
     if (areaTematica?.padre?.padre) {
-      this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `getSecondLevelAreaTematica(areaTematica: ${areaTematica})`, 'end');
       return this.getSecondLevelAreaTematica(areaTematica.padre);
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `getSecondLevelPrograma(areaTematica: ${areaTematica})`, 'end');
     return areaTematica;
   }
 
   private loadAreaData(data: AreaTematicaData): AreaTematicaData {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadData(data: ${data})`, 'start');
     const areaTematica = data.convocatoriaAreaTematica.value.areaTematica;
     if (areaTematica) {
       const result = this.getSecondLevelAreaTematica(areaTematica);
@@ -279,15 +250,12 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         observaciones: data.convocatoriaAreaTematica.value.observaciones,
         convocatoriaAreaTematica: data.convocatoriaAreaTematica,
       };
-      this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadData(data: ${data})`, 'end');
       return element;
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadData(data: ${data})`, 'end');
     return data;
   }
 
   getValue(): IConvocatoria {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().controls;
     this.convocatoria.unidadGestionRef = form.unidadGestion.value?.acronimo;
     if (typeof form.modeloEjecucion.value === 'string') {
@@ -327,12 +295,10 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     } else {
       this.convocatoria.clasificacionCVN = undefined;
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `getValue()`, 'end');
     return this.convocatoria;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `saveOrUpdate()`, 'start');
     const convocatoria = this.getValue();
     const observable$ = this.isEdit() ? this.update(convocatoria) :
       this.create(convocatoria);
@@ -340,39 +306,27 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       map(value => {
         this.convocatoria = value;
         return this.convocatoria.id;
-      }),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(convocatoria: IConvocatoria): Observable<IConvocatoria> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `create(convocatoria: ${convocatoria})`, 'start');
     return this.convocatoriaService.create(convocatoria).pipe(
       tap(result => this.convocatoria = result),
       switchMap((result) => this.saveOrUpdateConvocatoriaEntidadGestora(result)),
-      switchMap((result) => this.saveOrUpdateAreasTematicas(result)),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `create(convocatoria: ${convocatoria})`, 'end'))
+      switchMap((result) => this.saveOrUpdateAreasTematicas(result))
     );
   }
 
   private update(convocatoria: IConvocatoria): Observable<IConvocatoria> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `update(convocatoria: ${convocatoria})`, 'start');
     return this.convocatoriaService.update(convocatoria.id, convocatoria).pipe(
       tap(result => this.convocatoria = result),
       switchMap((result) => this.saveOrUpdateConvocatoriaEntidadGestora(result)),
-      switchMap((result) => this.saveOrUpdateAreasTematicas(result)),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `update(convocatoria: ${convocatoria})`, 'end'))
+      switchMap((result) => this.saveOrUpdateAreasTematicas(result))
     );
   }
 
   private saveOrUpdateConvocatoriaEntidadGestora(result: IConvocatoria): Observable<IConvocatoria> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'start');
     let observable$: Observable<any>;
     const entidadRef = this.getFormGroup().controls.entidadGestora.value?.personaRef;
     this.convocatoriaEntidadGestora.convocatoria = result;
@@ -385,61 +339,45 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
           this.updateConvocatoriaEntidadGestora() : this.createConvocatoriaEntidadGestora();
       }
       return observable$.pipe(
-        map(() => result),
-        tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-          `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'end'))
+        map(() => result)
       );
     }
     return of(result);
   }
 
   private createConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `createConvocatoriaEntidadGestora()`, 'start');
     this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.create(this.convocatoriaEntidadGestora).pipe(
       tap(result => {
         this.convocatoriaEntidadGestora = result;
         this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
-      }),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `createConvocatoriaEntidadGestora()`, 'end'))
+      })
     );
   }
 
   private updateConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `updateConvocatoriaEntidadGestora()`, 'start');
     this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.update(
       this.convocatoriaEntidadGestora.id, this.convocatoriaEntidadGestora).pipe(
         tap(result => {
           this.convocatoriaEntidadGestora = result;
           this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
-        }),
-        tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-          `updateConvocatoriaEntidadGestora()`, 'end'))
+        })
       );
   }
 
   private deleteConvocatoriaEntidadGestora(): Observable<void> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `deleteConvocatoriaEntidadGestora()`, 'start');
     this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.deleteById(
       this.convocatoriaEntidadGestora.id).pipe(
         tap(() => {
           this.convocatoriaEntidadGestora = {} as IConvocatoriaEntidadGestora;
           this.convocatoriaEntidadGestora.empresaEconomica = {} as IEmpresaEconomica;
-        }),
-        tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-          `deleteConvocatoriaEntidadGestora()`, 'end'))
+        })
       );
   }
 
   deleteConvocatoriaAreaTematica(data: AreaTematicaData) {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `deleteConvocatoriaAreaTematica(wrapper: ${data})`, 'start');
     const current = this.areasTematicas$.value;
     const index = current.findIndex(element =>
       element.convocatoriaAreaTematica.value === data.convocatoriaAreaTematica.value);
@@ -449,13 +387,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       this.areasTematicas$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `deleteConvocatoriaAreaTematica(wrapper: ${data})`, 'end');
   }
 
   updateConvocatoriaAreaTematica(data: AreaTematicaData) {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `updateConvocatoriaAreaTematica(wrapper: ${data})`, 'start');
     const element = this.loadAreaData(data);
     const wrapper = new StatusWrapper<AreaTematicaData>(element);
     const current = this.areasTematicas$.value;
@@ -467,13 +401,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       this.areasTematicas$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `${this.updateConvocatoriaAreaTematica.name}(wrapper: ${data})`, 'end');
   }
 
   addConvocatoriaAreaTematica(data: AreaTematicaData) {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `addConvocatoriaAreaTematica(areaTematica: ${data})`, 'start');
     const element = this.loadAreaData(data);
     const wrapper = new StatusWrapper<AreaTematicaData>(element);
     wrapper.setCreated();
@@ -482,32 +412,22 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     this.areasTematicas$.next(current);
     this.setChanges(true);
     this.setErrors(false);
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `addConvocatoriaAreaTematica(areaTematica: ${data})`, 'end');
   }
 
   saveOrUpdateAreasTematicas(result: IConvocatoria): Observable<IConvocatoria> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `saveOrUpdateAreasTematicas()`, 'start');
     return merge(
       this.deleteConvocatoriaAreaTematicas(),
       this.updateConvocatoriaAreaTematicas(),
       this.createConvocatoriaAreaTematicas()
     ).pipe(
       takeLast(1),
-      switchMap(() => of(result)),
-      tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `saveOrUpdateAreasTematicas()`, 'end'))
+      switchMap(() => of(result))
     );
   }
 
   private deleteConvocatoriaAreaTematicas(): Observable<void> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `deleteConvocatoriaAreaTematicas()`, 'start');
     const deleteEntidades = this.convocatoriaAreaTematicaEliminadas.filter((value) => value.value.id);
     if (deleteEntidades.length === 0) {
-      this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `deleteConvocatoriaAreaTematicas()`, 'end');
       return of(void 0);
     }
     return from(deleteEntidades).pipe(
@@ -518,22 +438,16 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
               this.convocatoriaAreaTematicaEliminadas =
                 this.convocatoriaAreaTematicaEliminadas.filter(deletedModelo =>
                   deletedModelo.value.id !== wrapped.value.id);
-            }),
-            tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-              `deleteConvocatoriaAreaTematicas()`, 'end'))
+            })
           );
       })
     );
   }
 
   private updateConvocatoriaAreaTematicas(): Observable<void> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `updateConvocatoriaAreaTematicas()`, 'start');
     const editedAreas = this.areasTematicas$.value.filter(
       (wrapper) => wrapper.convocatoriaAreaTematica.value.id);
     if (editedAreas.length === 0) {
-      this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `updateConvocatoriaAreaTematicas()`, 'end');
       return of(void 0);
     }
     return from(editedAreas).pipe(
@@ -549,22 +463,15 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
                 observaciones: updated.observaciones
               };
               this.areasTematicas$.value[index] = this.loadAreaData(element);
-            }),
-            tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-              `updateConvocatoriaAreaTematicas()`, 'end')
-            )
+            })
           );
       })
     );
   }
 
   private createConvocatoriaAreaTematicas(): Observable<void> {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `createConvocatoriaAreaTematicas()`, 'start');
     const createdAreas = this.areasTematicas$.value.filter((wrapper) => !wrapper.convocatoriaAreaTematica.value.id);
     if (createdAreas.length === 0) {
-      this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `createConvocatoriaAreaTematicas()`, 'end');
       return of(void 0);
     }
     createdAreas.forEach(
@@ -578,9 +485,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
               (currentEntidad) => currentEntidad === data);
             this.areasTematicas$[index] =
               new StatusWrapper<IConvocatoriaAreaTematica>(createdEntidad);
-          }),
-          tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-            `createConvocatoriaAreaTematicas()`, 'end'))
+          })
         );
       })
     );

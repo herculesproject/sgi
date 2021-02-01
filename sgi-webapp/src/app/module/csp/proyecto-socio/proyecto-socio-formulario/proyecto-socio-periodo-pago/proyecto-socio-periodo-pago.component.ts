@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
-import { MatSort } from '@angular/material/sort';
-import { ProyectoSocioPeriodoPagoFragment } from './proyecto-socio-periodo-pago.fragment';
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
-import { ProyectoSocioPeriodoPagoModalData, ProyectoSocioPeriodoPagoModalComponent } from '../../modals/proyecto-socio-periodo-pago-modal/proyecto-socio-periodo-pago-modal.component';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
+import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { ProyectoSocioPeriodoPagoModalComponent, ProyectoSocioPeriodoPagoModalData } from '../../modals/proyecto-socio-periodo-pago-modal/proyecto-socio-periodo-pago-modal.component';
+import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
+import { ProyectoSocioPeriodoPagoFragment } from './proyecto-socio-periodo-pago.fragment';
 
 const MSG_DELETE = marker('csp.proyecto-socio.periodo-pago.borrar');
 
@@ -32,19 +31,15 @@ export class ProyectoSocioPeriodoPagoComponent extends FragmentComponent impleme
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     actionService: ProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.PERIODO_PAGO, actionService);
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as ProyectoSocioPeriodoPagoFragment;
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subcription = this.formPart.periodoPagos$.subscribe(
       (proyectoEquipos) => {
@@ -54,17 +49,13 @@ export class ProyectoSocioPeriodoPagoComponent extends FragmentComponent impleme
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (wrapper, property) => wrapper.value[property];
     this.subscriptions.push(subcription);
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(wrapper?: StatusWrapper<IProyectoSocioPeriodoPago>): void {
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `openModal()`, 'start');
     const proyectoSocioPeriodoPago: IProyectoSocioPeriodoPago = {
       id: undefined,
       importe: undefined,
@@ -100,20 +91,17 @@ export class ProyectoSocioPeriodoPagoComponent extends FragmentComponent impleme
             this.formPart.addPeriodoPago(modalData.proyectoSocioPeriodoPago);
           }
         }
-        this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deleteProyectoEquipo(wrapper: StatusWrapper<IProyectoSocioPeriodoPago>): void {
-    this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `deleteProyectoEquipo(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoPago(wrapper);
           }
-          this.logger.debug(ProyectoSocioPeriodoPagoComponent.name, `deleteProyectoEquipo(${wrapper})`, 'end');
         }
       )
     );

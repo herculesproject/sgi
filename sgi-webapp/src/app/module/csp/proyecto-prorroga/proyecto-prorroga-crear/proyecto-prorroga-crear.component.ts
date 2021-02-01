@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { ProyectoProrrogaActionService } from '../proyecto-prorroga.action.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
-import { PROYECTO_PRORROGA_ROUTE_NAMES } from '../proyecto-prorroga-route-names';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { NGXLogger } from 'ngx-logger';
+import { PROYECTO_PRORROGA_ROUTE_NAMES } from '../proyecto-prorroga-route-names';
+import { ProyectoProrrogaActionService } from '../proyecto-prorroga.action.service';
 
 const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('csp.proyecto-prorroga.crear.correcto');
@@ -27,7 +27,7 @@ export class ProyectoProrrogaCrearComponent extends ActionComponent {
   private urlFrom: string;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -41,7 +41,8 @@ export class ProyectoProrrogaCrearComponent extends ActionComponent {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

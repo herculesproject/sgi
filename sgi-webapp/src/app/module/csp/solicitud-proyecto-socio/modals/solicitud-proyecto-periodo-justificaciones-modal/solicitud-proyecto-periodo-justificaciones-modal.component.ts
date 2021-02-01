@@ -1,15 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
+import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { NumberValidator } from '@core/validators/number-validator';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { RangeValidator, IRange } from '@core/validators/range-validator';
+import { IRange, RangeValidator } from '@core/validators/range-validator';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
@@ -30,13 +29,11 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudProyectoPeriodoJustificacionesModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoPeriodoJustificacionesModalData,
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -46,18 +43,14 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, 'ngOnInit()', 'end');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, `getFormGroup()`, 'start');
     const solicitudProyectoSocio = this.data.periodoJustificacion.solicitudProyectoSocio;
     const duracion = solicitudProyectoSocio?.solicitudProyectoDatos?.duracion;
     const rangosPeriodosExistentes = this.data.selectedPeriodoJustificaciones?.map(
@@ -102,18 +95,15 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
         ]
       }
     );
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): SolicitudProyectoPeriodoJustificacionesModalData {
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, `getDatosForm()`, 'start');
     this.data.periodoJustificacion.mesInicial = this.formGroup.get('mesInicial').value;
     this.data.periodoJustificacion.mesFinal = this.formGroup.get('mesFinal').value;
     this.data.periodoJustificacion.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.periodoJustificacion.fechaFin = this.formGroup.get('fechaFin').value;
     this.data.periodoJustificacion.observaciones = this.formGroup.get('observaciones').value;
-    this.logger.debug(SolicitudProyectoPeriodoJustificacionesModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 }

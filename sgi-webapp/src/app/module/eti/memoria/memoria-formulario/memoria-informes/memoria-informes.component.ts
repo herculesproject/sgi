@@ -5,19 +5,18 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IInforme } from '@core/models/eti/informe';
+import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaInformesFragment } from './memoria-informes.fragment';
-import { IDocumento } from '@core/models/sgdoc/documento';
-import { switchMap } from 'rxjs/operators';
-import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
-import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 
 @Component({
   selector: 'sgi-memoria-informes',
@@ -42,21 +41,17 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
 
   constructor(
     protected readonly dialogService: DialogService,
-    protected readonly logger: NGXLogger,
     protected matDialog: MatDialog,
     protected memoriaService: MemoriaService,
     protected documentoService: DocumentoService,
     actionService: MemoriaActionService
   ) {
     super(actionService.FRAGMENT.VERSIONES, actionService);
-    this.logger.debug(MemoriaInformesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as MemoriaInformesFragment;
-    this.logger.debug(MemoriaInformesComponent.name, 'constructor()', 'end');
 
   }
 
   ngOnInit(): void {
-    this.logger.debug(MemoriaInformesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSourceInforme = new MatTableDataSource<StatusWrapper<IInforme>>();
     this.dataSourceInforme.paginator = this.paginator;
@@ -74,7 +69,6 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
             return wrapper.value[property];
         }
       };
-    this.logger.debug(MemoriaInformesComponent.name, 'ngOnInit()', 'end');
   }
 
 
@@ -83,9 +77,6 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
    * @param documentoRef Referencia del informe..
    */
   visualizarInforme(documentoRef: string) {
-
-    this.logger.debug(MemoriaInformesComponent.name,
-      'visualizarInforme(documentoRef: string) - start');
     const documento: IDocumento = {} as IDocumento;
     this.documentoService.getInfoFichero(documentoRef).pipe(
       switchMap((documentoInfo: IDocumento) => {
@@ -96,9 +87,6 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
       })
     ).subscribe(response => {
       triggerDownloadToUser(response, documento.nombre);
-
-      this.logger.debug(MemoriaInformesComponent.name,
-        'visualizarInforme(documentoRef: string) - end');
     });
   }
 
@@ -118,8 +106,6 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(MemoriaInformesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(MemoriaInformesComponent.name, 'ngOnDestroy()', 'end');
   }
 }

@@ -1,31 +1,31 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { map, catchError, startWith } from 'rxjs/operators';
-
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
-import { IEvaluador } from '@core/models/eti/evaluador';
-import { IComite } from '@core/models/eti/comite';
-import { IPersona } from '@core/models/sgp/persona';
-import { DialogService } from '@core/services/dialog.service';
-import { ComiteService } from '@core/services/eti/comite.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
-
-import { DateUtils } from '@core/utils/date-utils';
-import { ROUTE_NAMES } from '@core/route.names';
-
-import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { IComite } from '@core/models/eti/comite';
+import { IEvaluador } from '@core/models/eti/evaluador';
+import { IPersona } from '@core/models/sgp/persona';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ROUTE_NAMES } from '@core/route.names';
+import { DialogService } from '@core/services/dialog.service';
+import { ComiteService } from '@core/services/eti/comite.service';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateUtils } from '@core/utils/date-utils';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs/operators';
+
+
+
+
+
 
 
 const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
@@ -68,14 +68,14 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   personas$: Observable<IPersona[]> = of();
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private readonly evaluadoresService: EvaluadorService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly dialogService: DialogService
   ) {
-    super(logger, snackBarService, MSG_ERROR);
+    super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -90,7 +90,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   }
 
   ngOnInit(): void {
-    this.logger.debug(EvaluadorListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
@@ -99,27 +98,19 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     });
 
     this.getComites();
-
-    this.logger.debug(EvaluadorListadoComponent.name, 'ngOnInit()', 'end');
   }
 
 
   protected createObservable(): Observable<SgiRestListResult<IEvaluador>> {
-    this.logger.debug(EvaluadorListadoComponent.name, 'createObservable()', 'start');
     const observable$ = this.evaluadoresService.findAll(this.getFindOptions());
-    this.logger.debug(EvaluadorListadoComponent.name, 'createObservable()', 'end');
     return observable$;
   }
 
   protected initColumns(): void {
-    this.logger.debug(EvaluadorListadoComponent.name, 'initColumns()', 'start');
     this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
-    this.logger.debug(EvaluadorListadoComponent.name, 'initColumns()', 'end');
   }
 
   protected createFilters(): SgiRestFilter[] {
-    this.logger.debug(EvaluadorListadoComponent.name, 'createFilters()', 'start');
-
     const filtro: SgiRestFilter[] = [];
 
     this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
@@ -132,15 +123,12 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
     this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
 
-
-    this.logger.debug(EvaluadorListadoComponent.name, 'createFilters()', 'end');
     return filtro;
   }
 
 
 
   protected loadTable(reset?: boolean) {
-    this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'start');
     // Do the request with paginator/sort/filter values
     this.evaluadores$ = this.createObservable().pipe(
       map((response) => {
@@ -150,22 +138,19 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         if (reset) {
           this.paginator.pageIndex = 0;
         }
-        this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
         // Return the values
         return this.getDatosEvaluadores(response.items);
       }),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error(error);
         // On error reset pagination values
         this.paginator.firstPage();
         this.totalElementos = 0;
         this.snackBarService.showError(MSG_ERROR);
-        this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
         return of([]);
       })
     );
-    this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
   }
-
 
   /**
    * Devuelve el nombre de un comité.
@@ -173,9 +158,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * returns nombre comité
    */
   getComite(comite: IComite): string {
-
     return comite?.comite;
-
   }
 
   /**
@@ -219,13 +202,9 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
           evaluador.identificadorNumero = persona.identificadorNumero;
           evaluador.identificadorLetra = persona.identificadorLetra;
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR);
-          this.logger.debug(
-            EvaluadorListadoComponent.name,
-            'loadDatosUsuario()',
-            'end'
-          );
         }
       );
     this.suscripciones.push(personaServiceOneSubscription);
@@ -238,7 +217,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * returns activo o inactivo
    */
   getEstado(estado: boolean): boolean {
-
     return estado;
   }
 
@@ -246,10 +224,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * Recupera un listado de los comités que hay en el sistema.
    */
   getComites(): void {
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'getComites()',
-      'start');
-
     const comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
@@ -261,10 +235,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
           );
       });
     this.suscripciones.push(comitesSubscription);
-
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'getComites()',
-      'end');
   }
 
 
@@ -292,9 +262,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * @param event evento lanzado
    */
   borrar(evaluadorId: number, $event: Event): void {
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'borrar(evaluadorId: number, $event: Event) - start');
-
     $event.stopPropagation();
     $event.preventDefault();
 
@@ -315,8 +282,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         aceptado = false;
       });
     this.suscripciones.push(dialogServiceSubscriptionGetSubscription);
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'borrar(evaluadorId: number, $event: Event) - end');
   }
 
   /**
@@ -324,21 +289,15 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * @param persona persona seleccionado
    */
   public setUsuario(persona: IPersona) {
-    this.logger.debug(EvaluadorListadoComponent.name, `${this.setUsuario.name}()`, 'start');
     this.formGroup.controls.solicitante.setValue(persona.personaRef);
-    this.logger.debug(EvaluadorListadoComponent.name, `${this.setUsuario.name}()`, 'end');
   }
-
-
 
   /**
    * Clean filters an reload the table
    */
   onClearFilters(): void {
-    this.logger.debug(EvaluadorListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
     super.onClearFilters();
     this.buscarPersona.clear();
-    this.logger.debug(EvaluadorListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
 }

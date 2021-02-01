@@ -11,7 +11,7 @@ import { environment } from '@env';
 export class SolicitudHitoService extends SgiRestService<number, ISolicitudHito> {
   static readonly MAPPING = '/solicitudhitos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       SolicitudHitoService.name,
       logger,

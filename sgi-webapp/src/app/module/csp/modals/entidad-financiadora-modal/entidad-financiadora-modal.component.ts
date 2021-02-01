@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoFinalidad, ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -11,10 +12,8 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 
 export interface EntidadFinanciadoraDataModal {
   title: string;
@@ -38,15 +37,13 @@ export class EntidadFinanciadoraModalComponent extends
   title: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<EntidadFinanciadoraModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EntidadFinanciadoraDataModal,
     private tipoFinanciacionService: TipoFinanciacionService,
     private fuenteFinanciacionService: FuenteFinanciacionService
   ) {
-    super(logger, snackBarService, matDialogRef, data.entidad);
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data.entidad);
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -55,21 +52,16 @@ export class EntidadFinanciadoraModalComponent extends
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
     this.textSaveOrUpdate = this.data.entidad?.empresa ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'end');
   }
 
   protected getDatosForm(): IEntidadFinanciadora {
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'start');
-
     const fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
     const tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
 
@@ -78,12 +70,10 @@ export class EntidadFinanciadoraModalComponent extends
     entidad.fuenteFinanciacion = typeof fuenteFinanciacion === 'string' ? undefined : fuenteFinanciacion;
     entidad.tipoFinanciacion = typeof tipoFinanciacion === 'string' ? undefined : tipoFinanciacion;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'end');
     return entidad;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       empresaEconomica: new FormControl(
         {
@@ -101,7 +91,6 @@ export class EntidadFinanciadoraModalComponent extends
     if (this.data.readonly) {
       formGroup.disable();
     }
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
@@ -109,22 +98,18 @@ export class EntidadFinanciadoraModalComponent extends
    * Carga todas las fuentes de financiación
    */
   private loadFuentesFinanciacion(): void {
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'start');
     this.fuentesFinanciacion$ = this.fuenteFinanciacionService.findAll().pipe(
       map((fuenteFinanciones) => fuenteFinanciones.items)
     );
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'end');
   }
 
   /**
    * Carga todos los tipos de financiación
    */
   private loadTiposFinanciacion(): void {
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'start');
     this.tiposFinanciacion$ = this.tipoFinanciacionService.findAll().pipe(
       map((tipoFinanciaciones) => tipoFinanciaciones.items)
     );
-    this.logger.debug(EntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'end');
   }
 
   getNombreFuenteFinanciacion(fuenteFinanciacion: IFuenteFinanciacion): string {

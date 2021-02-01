@@ -10,15 +10,13 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateUtils } from '@core/utils/date-utils';
+import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { NumberValidator } from '@core/validators/number-validator';
+import moment from 'moment';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import moment from 'moment';
-import { BrowserStack } from 'protractor/built/driverProviders';
-import { DateUtils } from '@core/utils/date-utils';
-import { DateValidator } from '@core/validators/date-validator';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
@@ -55,14 +53,13 @@ export class ProyectoEquipoModalComponent extends
   rolProyectos$: Observable<IRolProyecto[]>;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoEquipoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoEquiposModalComponentData,
     private rolProyectoService: RolProyectoService) {
 
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ProyectoEquipoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -79,12 +76,9 @@ export class ProyectoEquipoModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ProyectoEquipoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoEquipoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadRolEquipo();
     this.textSaveOrUpdate = this.data?.equipo?.id ? MSG_ACEPTAR : MSG_ANADIR;
@@ -95,11 +89,9 @@ export class ProyectoEquipoModalComponent extends
         this.formGroup.get('fechaFin').valueChanges
       ).subscribe(() => this.checkRangesDates())
     );
-    this.logger.debug(ProyectoEquipoModalComponent.name, 'ngOnInit()', 'start');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ProyectoEquipoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup(
       {
         rolInv: new FormControl(this.data?.equipo?.rolProyecto, [Validators.required, IsEntityValidator.isValid()]),
@@ -118,24 +110,20 @@ export class ProyectoEquipoModalComponent extends
         ]
       }
     );
-    this.logger.debug(ProyectoEquipoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): ProyectoEquiposModalComponentData {
-    this.logger.debug(ProyectoEquipoModalComponent.name, `getDatosForm()`, 'start');
     this.data.equipo.fechaInicio = this.formGroup.get('fechaInicio').value;
     this.data.equipo.fechaFin = this.formGroup.get('fechaFin').value;
     this.data.equipo.horasDedicacion = this.formGroup.get('horasDedicacion').value;
     this.data.equipo.rolProyecto = this.formGroup.get('rolInv').value;
     this.data.equipo.persona = this.formGroup.get('persona').value;
-    this.logger.debug(ProyectoEquipoModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
 
   private loadRolEquipo(): void {
-    this.logger.debug(ProyectoEquipoModalComponent.name, `loadRolEquipo()`, 'start');
     const subcription = this.rolProyectoService.findAll().pipe(
       map(result => result.items)
     ).subscribe(
@@ -145,11 +133,10 @@ export class ProyectoEquipoModalComponent extends
           startWith(''),
           map(value => this.filtroRolEquipo(value))
         );
-        this.logger.debug(ProyectoEquipoModalComponent.name, `loadRolEquipo()`, 'end');
       },
       error => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ProyectoEquipoModalComponent.name, `loadRolEquipo()`, error);
       }
     );
     this.suscripciones.push(subcription);
@@ -166,7 +153,6 @@ export class ProyectoEquipoModalComponent extends
   }
 
   private checkRangesDates(): void {
-    this.logger.debug(ProyectoEquipoModalComponent.name, `checkRangesDates()`, 'start');
     const persona = this.formGroup.get('persona');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
@@ -221,7 +207,6 @@ export class ProyectoEquipoModalComponent extends
         persona.updateValueAndValidity({ onlySelf: true });
       }
     }
-    this.logger.debug(ProyectoEquipoModalComponent.name, `checkRangesDates()`, 'end');
   }
 
   private addErrorRange(formControl: AbstractControl): void {

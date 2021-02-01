@@ -6,18 +6,17 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
-
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoProrrogasFragment } from './proyecto-prorrogas.fragment';
+
 
 
 const MSG_DELETE = marker('csp.proyecto-prorroga.borrar');
@@ -55,19 +54,15 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     public actionService: ProyectoActionService,
     private dialogService: DialogService,
     private proyectoProrrogaService: ProyectoProrrogaService
   ) {
     super(actionService.FRAGMENT.PRORROGAS, actionService);
-    this.logger.debug(ProyectoProrrogasComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as ProyectoProrrogasFragment;
-    this.logger.debug(ProyectoProrrogasComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoProrrogasComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subscription = this.formPart.prorrogas$.subscribe(
       (proyectoProrrogas) => {
@@ -88,18 +83,13 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
         }
       };
     this.dataSource.sort = this.sort;
-
-    this.logger.debug(ProyectoProrrogasComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoProrrogasComponent.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoProrrogasComponent.name, `ngOnDestroy()`, 'end');
   }
 
   deleteProyectoProrroga(wrapper: StatusWrapper<IProyectoProrroga>) {
-    this.logger.debug(ProyectoProrrogasComponent.name, `deleteProyectoProrroga(${wrapper})`, 'start');
     this.proyectoProrrogaService.existsDocumentos(wrapper.value.id).subscribe(res => {
       this.subscriptions.push(
         this.dialogService.showConfirmation(this.getInfoMensajeDelete(wrapper.value, res)).subscribe(
@@ -108,7 +98,6 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
               this.formPart.deleteProrroga(wrapper);
               this.recalcularNumProrrogas();
             }
-            this.logger.debug(ProyectoProrrogasComponent.name, `deleteProyectoProrroga(${wrapper})`, 'end');
           }
         )
       );
@@ -117,23 +106,21 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
 
 
   createState(wrapper?: StatusWrapper<IProyectoProrroga>): IProyectoProrrogaState {
-    this.logger.debug(ProyectoProrrogasComponent.name, `createState(${wrapper})`, 'start');
 
     const state: IProyectoProrrogaState = {
       proyecto: this.actionService.proyecto,
       proyectoProrroga: wrapper ? wrapper.value : {} as IProyectoProrroga,
       selectedProyectoProrrogas: this.dataSource.data.map(element => element.value),
-      readonly: this.actionService.readOnly ? this.actionService.readOnly : (wrapper ? wrapper.value.id !== this.lastProyectoProrroga.id : false)
+      readonly: this.actionService.readOnly ?
+        this.actionService.readOnly : (wrapper ? wrapper.value.id !== this.lastProyectoProrroga.id : false)
     };
-
-    this.logger.debug(ProyectoProrrogasComponent.name, `createState(${wrapper})`, 'end');
 
     return state;
   }
 
   /**
-  * Recalcula los numeros de las prórrogas de todos las prórrogas de la tabla en funcion de su fecha de inicio.
-  */
+   * Recalcula los numeros de las prórrogas de todos las prórrogas de la tabla en funcion de su fecha de inicio.
+   */
   private recalcularNumProrrogas(): void {
     let numProrroga = 1;
     this.dataSource.data

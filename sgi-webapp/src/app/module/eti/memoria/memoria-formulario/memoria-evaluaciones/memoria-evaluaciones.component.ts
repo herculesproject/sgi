@@ -1,21 +1,20 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MemoriaActionService } from '../../memoria.action.service';
-import { Subscription } from 'rxjs';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DialogService } from '@core/services/dialog.service';
-import { MemoriaEvaluacionesFragment } from './memoria-evaluaciones.fragment';
+import { MatTableDataSource } from '@angular/material/table';
+import { FragmentComponent } from '@core/component/fragment.component';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { DialogService } from '@core/services/dialog.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { MemoriaActionService } from '../../memoria.action.service';
+import { MemoriaEvaluacionesFragment } from './memoria-evaluaciones.fragment';
+
 
 @Component({
   selector: 'sgi-memoria-evaluaciones',
@@ -38,27 +37,22 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
 
   constructor(
     protected readonly dialogService: DialogService,
-    protected readonly logger: NGXLogger,
     protected matDialog: MatDialog,
     protected memoriaService: MemoriaService,
     actionService: MemoriaActionService) {
 
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as MemoriaEvaluacionesFragment;
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnInit()', 'start');
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
     this.subscriptions.push(this.formPart.evaluaciones$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnInit()', 'end');
 
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IEvaluacion>, property: string) => {
@@ -97,9 +91,7 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnDestroy()', 'end');
   }
 
 }

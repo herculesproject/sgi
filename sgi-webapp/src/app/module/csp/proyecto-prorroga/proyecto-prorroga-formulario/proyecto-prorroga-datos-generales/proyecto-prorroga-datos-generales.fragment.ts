@@ -1,18 +1,15 @@
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
-import { tap, map } from 'rxjs/operators';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { DateValidator } from '@core/validators/date-validator';
-import { NumberValidator } from '@core/validators/number-validator';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyectoProrroga> {
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private service: ProyectoProrrogaService,
     private proyecto: IProyecto,
@@ -21,20 +18,17 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     private readonly: boolean
   ) {
     super(key);
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, 'constructor()', 'start');
     if (this.proyectoProrroga) {
       this.proyectoProrroga.proyecto = this.proyecto;
     } else {
       this.proyectoProrroga = {
         id: key,
         proyecto: this.proyecto as IProyecto
-      } as IProyectoProrroga
+      } as IProyectoProrroga;
     }
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, 'constructor()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     const form = new FormGroup(
       {
         numProrroga: new FormControl({
@@ -67,13 +61,10 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
       form.disable();
     }
 
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return form;
   }
 
   protected buildPatch(proyectoProrroga: IProyectoProrroga): { [key: string]: any; } {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-      `buildPatch(value: ${proyectoProrroga})`, 'start');
     const result = {
       numProrroga: proyectoProrroga.numProrroga,
       fechaConcesion: proyectoProrroga.fechaConcesion,
@@ -84,24 +75,17 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     };
 
     this.addValidations(proyectoProrroga.tipoProrroga);
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-      `buildPatch(value: ${proyectoProrroga})`, 'end');
     return result;
   }
 
   protected initializer(key: number): Observable<IProyectoProrroga> {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-      `initializer(key: ${key})`, 'start');
     return this.service.findById(key)
       .pipe(
-        tap((proyectoProrroga) => this.proyectoProrroga = proyectoProrroga),
-        tap(() => this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-          `initializer(key: ${key})`, 'end'))
+        tap((proyectoProrroga) => this.proyectoProrroga = proyectoProrroga)
       );
   }
 
   getValue(): IProyectoProrroga {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().controls;
     this.proyectoProrroga.numProrroga = form.numProrroga.value;
     this.proyectoProrroga.fechaConcesion = form.fechaConcesion.value;
@@ -109,12 +93,10 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     this.proyectoProrroga.tipoProrroga = form.tipoProrroga.value;
     this.proyectoProrroga.importe = form.importe.value;
     this.proyectoProrroga.observaciones = form.observaciones.value;
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, `getValue()`, 'end');
     return this.proyectoProrroga;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name, `saveOrUpdate()`, 'start');
     const proyectoProrroga = this.getValue();
 
     const observable$ = this.isEdit() ? this.update(proyectoProrroga) : this.create(proyectoProrroga);
@@ -123,32 +105,16 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
         this.proyectoProrroga = result;
         this.refreshInitialState(true);
         return this.proyectoProrroga.id;
-      }),
-      tap(() => this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-        `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(proyectoProrroga: IProyectoProrroga): Observable<IProyectoProrroga> {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-      `create(proyectoProrroga: ${proyectoProrroga})`, 'start');
-
-    return this.service.create(proyectoProrroga)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-          `create(proyectoProrroga: ${proyectoProrroga})`, 'end'))
-      );
+    return this.service.create(proyectoProrroga);
   }
 
   private update(proyectoProrroga: IProyectoProrroga): Observable<IProyectoProrroga> {
-    this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-      `update(proyectoProrroga: ${proyectoProrroga})`, 'start');
-
-    return this.service.update(proyectoProrroga.id, proyectoProrroga)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoProrrogaDatosGeneralesFragment.name,
-          `update(proyectoProrroga: ${proyectoProrroga})`, 'end'))
-      );
+    return this.service.update(proyectoProrroga.id, proyectoProrroga);
   }
 
   private addValidations(value: TipoProrrogaEnum) {

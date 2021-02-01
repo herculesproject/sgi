@@ -1,13 +1,12 @@
-import { Fragment } from '@core/services/action-service';
-import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
+import { OnDestroy } from '@angular/core';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
-import { OnDestroy } from '@angular/core';
+import { Fragment } from '@core/services/action-service';
+import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoHitosFragment extends Fragment implements OnDestroy {
   hitos$ = new BehaviorSubject<StatusWrapper<IProyectoHito>[]>([]);
@@ -15,26 +14,20 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private proyectoService: ProyectoService,
     private proyectoHitoService: ProyectoHitoService,
     public readonly: boolean
   ) {
     super(key);
-    this.logger.debug(ProyectoHitosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoHitosFragment.name, 'constructor()', 'start');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoHitosFragment.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoHitosFragment.name, 'ngOnDestroy()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoHitosFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.proyectoService.findHitosProyecto(this.getKey() as number).pipe(
         map((response) => response.items)
@@ -42,27 +35,20 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
         this.hitos$.next(hitos.map(
           hito => new StatusWrapper<IProyectoHito>(hito))
         );
-        this.logger.debug(ProyectoHitosFragment.name, 'onInitialize()', 'end');
       });
     }
   }
 
   public addHito(hito: IProyectoHito) {
-    this.logger.debug(ProyectoHitosFragment.name,
-      `addHito(addHito: ${hito})`, 'start');
     const wrapped = new StatusWrapper<IProyectoHito>(hito);
     wrapped.setCreated();
     const current = this.hitos$.value;
     current.push(wrapped);
     this.hitos$.next(current);
     this.setChanges(true);
-    this.logger.debug(ProyectoHitosFragment.name,
-      `addHito(addHito: ${hito})`, 'end');
   }
 
   public deleteHito(wrapper: StatusWrapper<IProyectoHito>) {
-    this.logger.debug(ProyectoHitosFragment.name,
-      `deleteHito(wrapper: ${wrapper})`, 'start');
     const current = this.hitos$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -75,12 +61,9 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
       this.hitos$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(ProyectoHitosFragment.name,
-      `deleteHito(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoHitosFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deleteHitos(),
       this.updateHitos(),
@@ -91,15 +74,12 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(ProyectoHitosFragment.name, `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private deleteHitos(): Observable<void> {
-    this.logger.debug(ProyectoHitosFragment.name, `deleteHitos()`, 'start');
     if (this.hitosEliminados.length === 0) {
-      this.logger.debug(ProyectoHitosFragment.name, `deleteHitos()`, 'end');
       return of(void 0);
     }
     return from(this.hitosEliminados).pipe(
@@ -109,19 +89,15 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
             tap(() => {
               this.hitosEliminados = this.hitosEliminados.filter(deletedHito =>
                 deletedHito.value.id !== wrapped.value.id);
-            }),
-            tap(() => this.logger.debug(ProyectoHitosFragment.name,
-              `deleteHitos()`, 'end'))
+            })
           );
       })
     );
   }
 
   private createHitos(): Observable<void> {
-    this.logger.debug(ProyectoHitosFragment.name, `createHitos()`, 'start');
     const createdHitos = this.hitos$.value.filter((proyectoHito) => proyectoHito.created);
     if (createdHitos.length === 0) {
-      this.logger.debug(ProyectoHitosFragment.name, `createHitos()`, 'end');
       return of(void 0);
     }
     createdHitos.forEach(
@@ -136,19 +112,15 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
           map((updatedHitos) => {
             const index = this.hitos$.value.findIndex((currenthitos) => currenthitos === wrappedHitos);
             this.hitos$.value[index] = new StatusWrapper<IProyectoHito>(updatedHitos);
-          }),
-          tap(() => this.logger.debug(ProyectoHitosFragment.name,
-            `createHitos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private updateHitos(): Observable<void> {
-    this.logger.debug(ProyectoHitosFragment.name, `updateHitos()`, 'start');
     const updateHitos = this.hitos$.value.filter((proyectoHito) => proyectoHito.edited);
     if (updateHitos.length === 0) {
-      this.logger.debug(ProyectoHitosFragment.name, `updateHitos()`, 'end');
       return of(void 0);
     }
     return from(updateHitos).pipe(
@@ -157,18 +129,14 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
           map((updatedHitos) => {
             const index = this.hitos$.value.findIndex((currenthitos) => currenthitos === wrappedHitos);
             this.hitos$.value[index] = new StatusWrapper<IProyectoHito>(updatedHitos);
-          }),
-          tap(() => this.logger.debug(ProyectoHitosFragment.name,
-            `updateHitos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ProyectoHitosFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.hitos$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ProyectoHitosFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.hitosEliminados.length > 0 || touched);
   }
 

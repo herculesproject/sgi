@@ -1,19 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
-import { FormFragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { IRolSocio } from '@core/models/csp/rol-socio';
-import { Observable, Subscription, merge } from 'rxjs';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { RolSocioService } from '@core/services/csp/rol-socio.service';
-import { map, startWith, tap } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IRolSocio } from '@core/models/csp/rol-socio';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { RolSocioService } from '@core/services/csp/rol-socio.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateUtils } from '@core/utils/date-utils';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, Subscription } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-datos-generales.fragment';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { DateUtils } from '@core/utils/date-utils';
 
 const MSG_ERROR_INIT = marker('csp.solicitud.equipo.socio.rol.error.cargar');
 
@@ -33,14 +33,13 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
   sociosSelectedProyecto: IProyectoSocio[] = [];
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected actionService: ProyectoSocioActionService,
     private snackBarService: SnackBarService,
     private rolSocioService: RolSocioService,
     private proyectoService: ProyectoService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoSocioDatosGeneralesFragment;
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(36%-10px)';
@@ -52,11 +51,9 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadRolProyectos();
     this.loadSociosSelectedProyecto();
@@ -69,13 +66,9 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
         tap(() => this.checkOverlapsPeriodosParticipacion())
       ).subscribe()
     );
-
-
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
   private loadRolProyectos(): void {
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `loadRolProyectos()`, 'start');
     const subscription = this.rolSocioService.findAll().pipe(
       map(result => result.items)
     ).subscribe(
@@ -85,11 +78,10 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
           startWith(''),
           map(value => this.filtroRolProyecto(value))
         );
-        this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `loadRolProyectos()`, 'end');
       },
       error => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ProyectoSocioDatosGeneralesComponent.name, `loadRolProyectos()`, error);
       }
     );
     this.subscriptions.push(subscription);
@@ -106,19 +98,14 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   private loadSociosSelectedProyecto(): void {
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `loadSociosSelectedProyecto()`, 'start');
     this.sociosSelectedProyecto = this.actionService.getSelectedProyectoSocios();
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `loadSociosSelectedProyecto()`, 'end');
   }
 
   private checkOverlapsPeriodosParticipacion(): void {
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `checkOverlapsPeriodosParticipacion()`, 'start');
     const empresaForm = this.formGroup.get('empresa');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
@@ -174,7 +161,5 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
         empresaForm.updateValueAndValidity({ onlySelf: true });
       }
     }
-
-    this.logger.debug(ProyectoSocioDatosGeneralesComponent.name, `checkOverlapsPeriodosParticipacion()`, 'end');
   }
 }

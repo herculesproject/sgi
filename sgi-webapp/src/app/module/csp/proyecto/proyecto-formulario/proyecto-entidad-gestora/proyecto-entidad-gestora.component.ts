@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoActionService } from '../../proyecto.action.service';
-import { ProyectoEntidadGestoraFragment } from './proyecto-entidad-gestora.fragment';
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
 import { TipoEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ProyectoActionService } from '../../proyecto.action.service';
+import { ProyectoEntidadGestoraFragment } from './proyecto-entidad-gestora.fragment';
 
 @Component({
   selector: 'sgi-proyecto-entidad-gestora',
@@ -29,11 +28,9 @@ export class ProyectoEntidadGestoraComponent extends FormFragmentComponent<IProy
     ];
 
   constructor(
-    protected logger: NGXLogger,
     actionService: ProyectoActionService
   ) {
     super(actionService.FRAGMENT.ENTIDAD_GESTORA, actionService);
-    this.logger.debug(ProyectoEntidadGestoraComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoEntidadGestoraFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -52,13 +49,9 @@ export class ProyectoEntidadGestoraComponent extends FormFragmentComponent<IProy
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ProyectoEntidadGestoraComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
-    this.logger.debug(ProyectoEntidadGestoraComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.logger.debug(ProyectoEntidadGestoraComponent.name, 'ngOnInit()', 'end');
   }
 }

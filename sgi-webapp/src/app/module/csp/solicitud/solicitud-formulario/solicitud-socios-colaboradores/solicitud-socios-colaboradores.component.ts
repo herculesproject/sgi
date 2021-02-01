@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -10,12 +9,11 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-socio/solicitud-proyecto-socio-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-socios-colaboradores.fragment';
-import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-socio/solicitud-proyecto-socio-route-names';
 
 const MSG_DELETE = marker('csp.solicitud.socios.colaboradores.borrar');
 
@@ -48,18 +46,14 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     public actionService: SolicitudActionService,
     private dialogService: DialogService,
   ) {
     super(actionService.FRAGMENT.SOCIOS_COLABORADORES, actionService);
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as SolicitudSociosColaboradoresFragment;
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subscription = this.formPart.proyectoSocios$.subscribe(
       (proyectoSocios) => {
@@ -78,24 +72,19 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
       }
     };
     this.subscriptions.push(subscription);
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `ngOnDestroy()`, 'end');
   }
 
   deleteProyectoSocio(wrapper: StatusWrapper<ISolicitudProyectoSocio>) {
-    this.logger.debug(SolicitudSociosColaboradoresComponent.name, `deleteSocioColaborador(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoSocio(wrapper);
           }
-          this.logger.debug(SolicitudSociosColaboradoresComponent.name, `deleteSocioColaborador(${wrapper})`, 'end');
         }
       )
     );

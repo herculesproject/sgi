@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
+import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { IPersona } from '@core/models/sgp/persona';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
-import { IPersona } from '@core/models/sgp/persona';
 import { Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface ISolicitudProyectoEquipoSocioBackend {
   id: number;
@@ -64,7 +64,7 @@ export class SolicitudProyectoEquipoSocioService extends
   }();
 
   constructor(
-    logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     protected http: HttpClient
   ) {
     super(
@@ -78,13 +78,10 @@ export class SolicitudProyectoEquipoSocioService extends
 
   updateList(proyectoSolictudSocioId: number, entities: ISolicitudProyectoEquipoSocio[])
     : Observable<ISolicitudProyectoEquipoSocio[]> {
-    this.logger.debug(SolicitudProyectoEquipoSocioService.name, `updateList()`,
-      '-', 'start');
     const entitiesBack = entities.map(entity => this.converter.fromTarget(entity));
     return this.http.patch<ISolicitudProyectoEquipoSocioBackend[]>(
       `${this.endpointUrl}/${proyectoSolictudSocioId}`, entitiesBack).pipe(
-        map(resultList => resultList.map(entity => this.converter.toTarget(entity))),
-        tap(() => this.logger.debug(SolicitudProyectoEquipoSocioService.name, `updateList()`, '-', 'end'))
+        map(resultList => resultList.map(entity => this.converter.toTarget(entity)))
       );
   }
 }

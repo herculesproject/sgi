@@ -1,23 +1,22 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { NGXLogger } from 'ngx-logger';
-import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
-import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroup } from '@angular/forms';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConceptoGastoCodigoEcModalComponent, IConvocatoriaConceptoGastoCodigoEcModalComponent } from '../../modals/convocatoria-concepto-gasto-codigo-ec-modal/convocatoria-concepto-gasto-codigo-ec-modal.component';
-import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
 
@@ -49,15 +48,12 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   @ViewChild('sortNoPermitidos', { static: true }) sortNoPermitidos: MatSort;
 
   constructor(
-    protected readonly logger: NGXLogger,
     protected readonly actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.CODIGOS_ECONOMICOS, actionService);
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaConceptoGastoCodigoEcFragment;
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, 'constructor()', 'end');
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -72,7 +68,6 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>>();
     this.dataSourcePermitidos.paginator = this.paginatorPermitidos;
@@ -125,8 +120,6 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, `${this.openModal.name}()`, 'start');
-
     const convocatoriaConceptoGastoCodigoEcsTabla = wrapper.value.convocatoriaConceptoGasto.permitido ? this.dataSourcePermitidos.data.map(
       wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
@@ -163,13 +156,11 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
             this.formPart.addConvocatoriaConceptoGastoCodigoEc(convocatoriaConceptoGastoCodigoEc);
           }
         }
-        this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, `${this.openModal.name}()`, 'end');
       }
     );
   }
 
   openModalCrear(permitido: boolean): void {
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, `openModalCrear()`, 'start');
     const listadoTabla = permitido ? this.dataSourcePermitidos.data.map(wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
 
@@ -218,31 +209,24 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
         if (result) {
           this.formPart.addConvocatoriaConceptoGastoCodigoEc(result);
         }
-        this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, `openModalCrear()`, 'end');
       }
     );
   }
 
   deleteConvocatoriaConceptoGastoCodigoEc(wrapper: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>) {
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name,
-      `${this.deleteConvocatoriaConceptoGastoCodigoEc.name}(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaConceptoGastoCodigoEc(wrapper);
           }
-          this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name,
-            `${this.deleteConvocatoriaConceptoGastoCodigoEc.name}(${wrapper})`, 'end');
         }
       )
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, 'ngOnDestroy()', 'end');
   }
 
 }

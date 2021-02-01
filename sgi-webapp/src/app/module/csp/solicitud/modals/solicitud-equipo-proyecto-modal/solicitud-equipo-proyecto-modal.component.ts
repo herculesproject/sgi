@@ -12,7 +12,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, range, merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 
 const MSG_ERROR_INIT = marker('csp.solicitud.equipo.proyecto.rol.error.cargar');
@@ -41,14 +41,13 @@ export class SolicitudEquipoProyectoModalComponent extends
   rolProyectos$: Observable<IRolProyecto[]>;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudEquipoProyectoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EquipoProyectoModalData,
     private rolProyectoService: RolProyectoService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -59,11 +58,9 @@ export class SolicitudEquipoProyectoModalComponent extends
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
     this.textSaveOrUpdate = this.data.solicitudProyectoEquipo?.id ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadRolProyectos();
     this.subscriptions.push(
@@ -75,7 +72,6 @@ export class SolicitudEquipoProyectoModalComponent extends
         tap(() => this.checkRangesMeses())
       ).subscribe()
     );
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, 'ngOnInit()', 'start');
   }
 
   private loadRolProyectos(): void {
@@ -90,8 +86,8 @@ export class SolicitudEquipoProyectoModalComponent extends
         );
       },
       error => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(SolicitudEquipoProyectoModalComponent.name, `loadUnidadesGestion()`, error);
       }
     );
     this.subscriptions.push(subcription);
@@ -108,7 +104,6 @@ export class SolicitudEquipoProyectoModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup(
       {
         rolProyecto: new FormControl(this.data.solicitudProyectoEquipo.rolProyecto, [
@@ -126,22 +121,18 @@ export class SolicitudEquipoProyectoModalComponent extends
         validators: [NumberValidator.isAfter('mesInicio', 'mesFin')]
       }
     );
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): EquipoProyectoModalData {
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, `getDatosForm()`, 'start');
     this.data.solicitudProyectoEquipo.rolProyecto = this.formGroup.get('rolProyecto').value;
     this.data.solicitudProyectoEquipo.persona = this.formGroup.get('persona').value;
     this.data.solicitudProyectoEquipo.mesInicio = this.formGroup.get('mesInicio').value;
     this.data.solicitudProyectoEquipo.mesFin = this.formGroup.get('mesFin').value;
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
   private checkRangesMeses(): void {
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, `checkRangesMeses()`, 'start');
     const persona = this.formGroup.get('persona');
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
@@ -187,6 +178,5 @@ export class SolicitudEquipoProyectoModalComponent extends
       mesFinForm.setErrors(null);
       mesInicioForm.setErrors(null);
     }
-    this.logger.debug(SolicitudEquipoProyectoModalComponent.name, `checkRangesMeses()`, 'end');
   }
 }

@@ -12,7 +12,7 @@ import { TipoMemoria } from '@core/models/eti/tipo-memoria';
 export class TipoMemoriaService extends SgiRestService<number, TipoMemoria> {
   private static readonly MAPPING = '/tipomemorias';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoMemoria.name,
       logger,

@@ -11,7 +11,7 @@ import { ITipoInvestigacionTutelada } from '@core/models/eti/tipo-investigacion-
 export class TipoInvestigacionTuteladaService extends SgiRestService<number, ITipoInvestigacionTutelada> {
   private static readonly MAPPING = '/tipoinvestigaciontuteladas';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoInvestigacionTuteladaService.name,
       logger,

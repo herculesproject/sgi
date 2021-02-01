@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ActionService } from '@core/services/action-service';
-import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.fragment';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
-import { NGXLogger } from 'ngx-logger';
+import { ActionService } from '@core/services/action-service';
+import { SolicitudProyectoEquipoSocioService } from '@core/services/csp/solicitud-proyecto-equipo-socio.service';
+import { SolicitudProyectoPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-periodo-justificacion.service';
+import { SolicitudProyectoPeriodoPagoService } from '@core/services/csp/solicitud-proyecto-periodo-pago.service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { SolicitudProyectoPeriodoPagoService } from '@core/services/csp/solicitud-proyecto-periodo-pago.service';
-import { SolicitudProyectoSocioPeriodoPagoFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.fragment';
-import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-periodo-justificaciones/solicitud-proyecto-periodo-justificaciones.fragment';
-import { SolicitudProyectoPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-periodo-justificacion.service';
-import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-equipo-socio/solicitud-proyecto-socio-equipo-socio.fragment';
-import { SolicitudProyectoEquipoSocioService } from '@core/services/csp/solicitud-proyecto-equipo-socio.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { NGXLogger } from 'ngx-logger';
+import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-periodo-justificaciones/solicitud-proyecto-periodo-justificaciones.fragment';
+import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.fragment';
+import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-equipo-socio/solicitud-proyecto-socio-equipo-socio.fragment';
+import { SolicitudProyectoSocioPeriodoPagoFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.fragment';
 
 @Injectable()
 export class SolicitudProyectoSocioActionService extends ActionService {
@@ -32,7 +32,7 @@ export class SolicitudProyectoSocioActionService extends ActionService {
   private selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
 
   constructor(
-    logger: NGXLogger,
+    private readonly logger: NGXLogger,
     solicitudService: SolicitudService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
     solicitudProyectoPeriodoPagoService: SolicitudProyectoPeriodoPagoService,
@@ -51,7 +51,7 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     }
 
     this.datosGenerales = new SolicitudProyectoSocioDatosGeneralesFragment(
-      logger, this.solicitudProyectoSocio?.id, solicitudProyectoSocioService, solicitudService, this);
+      this.solicitudProyectoSocio?.id, solicitudProyectoSocioService, solicitudService, this);
     this.periodosPago = new SolicitudProyectoSocioPeriodoPagoFragment(logger, this.solicitudProyectoSocio?.id,
       solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService);
     this.periodoJustificaciones = new SolicitudProyectoPeriodoJustificacionesFragment(logger, this.solicitudProyectoSocio?.id,

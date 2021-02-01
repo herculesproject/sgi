@@ -28,7 +28,7 @@ export class ConvocatoriaReunionEditarComponent extends ActionComponent {
   textoCrear = MSG_BUTTON_SAVE;
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -41,7 +41,8 @@ export class ConvocatoriaReunionEditarComponent extends ActionComponent {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

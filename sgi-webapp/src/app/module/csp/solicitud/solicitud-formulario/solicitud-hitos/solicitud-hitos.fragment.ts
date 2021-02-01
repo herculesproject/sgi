@@ -1,14 +1,13 @@
-import { ISolicitud } from '@core/models/csp/solicitud';
-import { Fragment } from '@core/services/action-service';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { NGXLogger } from 'ngx-logger';
-import { Observable, BehaviorSubject, merge, of, from, } from 'rxjs';
-import { map, tap, mergeMap, takeLast, switchMap } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { OnDestroy } from '@angular/core';
+import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
+import { Fragment } from '@core/services/action-service';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class SolicitudHitosFragment extends Fragment implements OnDestroy {
   hitos$ = new BehaviorSubject<StatusWrapper<ISolicitudHito>[]>([]);
@@ -18,19 +17,15 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
   solicitud: ISolicitud;
 
   constructor(
-    private readonly logger: NGXLogger,
     key: number,
     private service: SolicitudHitoService,
     private solicitudService: SolicitudService
   ) {
     super(key);
-    this.logger.debug(SolicitudHitosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(SolicitudHitosFragment.name, 'constructor()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(SolicitudHitosFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       const subscription = this.solicitudService.findById(this.getKey() as number).pipe(
         switchMap((solicitud) => {
@@ -41,31 +36,24 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
         this.hitos$.next(hitos.items.map(
           listaHitos => new StatusWrapper<ISolicitudHito>(listaHitos))
         );
-        this.logger.debug(SolicitudHitosFragment.name, 'onInitialize()', 'end');
       });
       this.subscriptions.push(subscription);
     }
   }
 
   public addHito(hito: ISolicitudHito) {
-    this.logger.debug(SolicitudHitosFragment.name,
-      `addHito(addHito: ${hito})`, 'start');
     const wrapped = new StatusWrapper<ISolicitudHito>(hito);
     wrapped.setCreated();
     const current = this.hitos$.value;
     current.push(wrapped);
     this.hitos$.next(current);
     this.setChanges(true);
-    this.logger.debug(SolicitudHitosFragment.name,
-      `addHito(addHito: ${hito})`, 'end');
   }
 
 
 
 
   public deleteHito(wrapper: StatusWrapper<ISolicitudHito>) {
-    this.logger.debug(SolicitudHitosFragment.name,
-      `deleteHito(wrapper: ${wrapper})`, 'start');
     const current = this.hitos$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -78,15 +66,10 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
       this.hitos$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(SolicitudHitosFragment.name,
-      `deleteHito(wrapper: ${wrapper})`, 'end');
   }
 
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(SolicitudHitosFragment.name,
-      `saveOrUpdate()`, 'start');
-
     return merge(
       this.deleteHitos(),
       this.updateHitos(),
@@ -97,17 +80,13 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(SolicitudHitosFragment.name,
-        `saveOrUpdate})`, 'end'))
+      })
     );
 
   }
 
   private deleteHitos(): Observable<void> {
-    this.logger.debug(SolicitudHitosFragment.name, `deleteHitos()`, 'start');
     if (this.hitosEliminados.length === 0) {
-      this.logger.debug(SolicitudHitosFragment.name, `deleteHitos()`, 'end');
       return of(void 0);
     }
     return from(this.hitosEliminados).pipe(
@@ -117,19 +96,15 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
             tap(() => {
               this.hitosEliminados = this.hitosEliminados.filter(deletedHito =>
                 deletedHito.value.id !== wrapped.value.id);
-            }),
-            tap(() => this.logger.debug(SolicitudHitosFragment.name,
-              `deleteHitos()`, 'end'))
+            })
           );
       })
     );
   }
 
   private updateHitos(): Observable<void> {
-    this.logger.debug(SolicitudHitosFragment.name, `deleteHitos()`, 'start');
     const updateHitos = this.hitos$.value.filter((convocatoriaHito) => convocatoriaHito.edited);
     if (updateHitos.length === 0) {
-      this.logger.debug(SolicitudHitosFragment.name, `updateHitos()`, 'end');
       return of(void 0);
     }
     return from(updateHitos).pipe(
@@ -138,19 +113,15 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
           map((updateHito) => {
             const index = this.hitos$.value.findIndex((currenthitos) => currenthitos === wrappedHitos);
             this.hitos$.value[index] = new StatusWrapper<ISolicitudHito>(updateHito);
-          }),
-          tap(() => this.logger.debug(SolicitudHitosFragment.name,
-            `updateHitos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private createHitos(): Observable<void> {
-    this.logger.debug(SolicitudHitosFragment.name, `deleteHitos()`, 'start');
     const createdHitos = this.hitos$.value.filter((convocatoriaHito) => convocatoriaHito.created);
     if (createdHitos.length === 0) {
-      this.logger.debug(SolicitudHitosFragment.name, `createHitos()`, 'end');
       return of(void 0);
     }
     createdHitos.forEach(
@@ -165,25 +136,18 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
           map((createHito) => {
             const index = this.hitos$.value.findIndex((currenthitos) => currenthitos === wrappedHitos);
             this.hitos$.value[index] = new StatusWrapper<ISolicitudHito>(createHito);
-          }),
-          tap(() => this.logger.debug(SolicitudHitosFragment.name,
-            `createHitos()`, 'end'))
+          })
         );
       })
     );
   }
 
-
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(SolicitudHitosFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.hitos$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(SolicitudHitosFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.hitosEliminados.length > 0 || touched);
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudHitosFragment.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudHitosFragment.name, `ngOnDestroy()`, 'end');
   }
 }

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ActionService } from '@core/services/action-service';
-import { NGXLogger } from 'ngx-logger';
-import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
-import { ProyectoSocioPeriodoJustificacionDatosGeneralesFragment } from './proyecto-socio-periodo-justificacion-formulario/proyecto-socio-periodo-justificacion-datos-generales/proyecto-socio-periodo-justificacion-datos-generales.fragment';
-import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
-import { ProyectoSocioPeriodoJustificacionDocumentosFragment } from './proyecto-socio-periodo-justificacion-formulario/proyecto-socio-periodo-justificacion-documentos/proyecto-socio-periodo-justificacion-documentos.fragment';
+import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
+import { ActionService } from '@core/services/action-service';
+import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { SocioPeriodoJustificacionDocumentoService } from '@core/services/csp/socio-periodo-justificacion-documento.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { NGXLogger } from 'ngx-logger';
+import { ProyectoSocioPeriodoJustificacionDatosGeneralesFragment } from './proyecto-socio-periodo-justificacion-formulario/proyecto-socio-periodo-justificacion-datos-generales/proyecto-socio-periodo-justificacion-datos-generales.fragment';
+import { ProyectoSocioPeriodoJustificacionDocumentosFragment } from './proyecto-socio-periodo-justificacion-formulario/proyecto-socio-periodo-justificacion-documentos/proyecto-socio-periodo-justificacion-documentos.fragment';
 
 @Injectable()
 export class ProyectoSocioPeriodoJustificacionActionService extends ActionService {
@@ -25,7 +25,7 @@ export class ProyectoSocioPeriodoJustificacionActionService extends ActionServic
   private documentos: ProyectoSocioPeriodoJustificacionDocumentosFragment;
 
   constructor(
-    logger: NGXLogger,
+    private readonly logger: NGXLogger,
     proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
     socioPeriodoJustificacionDocumentoService: SocioPeriodoJustificacionDocumentoService,
     documentoService: DocumentoService
@@ -40,7 +40,7 @@ export class ProyectoSocioPeriodoJustificacionActionService extends ActionServic
       this.enableEdit();
     }
 
-    this.datosGenerales = new ProyectoSocioPeriodoJustificacionDatosGeneralesFragment(logger,
+    this.datosGenerales = new ProyectoSocioPeriodoJustificacionDatosGeneralesFragment(
       this.periodoJustificacion?.id, proyectoSocioPeriodoJustificacionService, this.proyectoSocio,
       this.periodoJustificacion, this.selectedPeriodosJustificacion);
     this.documentos = new ProyectoSocioPeriodoJustificacionDocumentosFragment(logger, this.periodoJustificacion?.id,

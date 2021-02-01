@@ -1,41 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
-import { NGXLogger } from 'ngx-logger';
-import { FormGroup, FormControl } from '@angular/forms';
-import { from, Observable, of, Subscription } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { map, mergeAll, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
-
-import { ROUTE_NAMES } from '@core/route.names';
-
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
+import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
-import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
-import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
-import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
-import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { ROUTE_NAMES } from '@core/route.names';
+import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
-import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
+import { NGXLogger } from 'ngx-logger';
+import { from, Observable, of, Subscription } from 'rxjs';
+import { map, mergeAll, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
+
+
+
 
 const MSG_BUTTON_NEW = marker('footer.csp.convocatoria.crear');
 const MSG_ERROR = marker('csp.convocatoria.listado.error');
@@ -99,7 +99,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   mapModificable: Map<number, boolean> = new Map();
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
     private empresaEconomicaService: EmpresaEconomicaService,
@@ -112,8 +112,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private dialogService: DialogService,
     public authService: SgiAuthService
   ) {
-    super(logger, snackBarService, MSG_ERROR);
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'constructor()', 'start');
+    super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -124,11 +123,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
@@ -162,11 +159,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.fuenteFinanciacion();
     this.loadAreasTematica();
     this.filter = this.createFilters();
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'start');
     const observable$ = this.convocatoriaService.findAllTodos(this.getFindOptions()).pipe(
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
@@ -252,29 +247,23 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         );
       }),
     );
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'end');
 
     return observable$;
   }
 
   protected initColumns(): void {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.initColumns.name}()`, 'start');
     this.columnas = [
       'codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
       'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
       'fuenteFinanciacion', 'estadoActual', 'activo', 'acciones'
     ];
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.initColumns.name}()`, 'end');
   }
 
   protected loadTable(reset?: boolean): void {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadTable.name}(${reset})`, 'start');
     this.convocatorias$ = this.getObservableLoadTable(reset);
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadTable.name}(${reset})`, 'end');
   }
 
   protected createFilters(): SgiRestFilter[] {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createFilters.name}()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'codigo', SgiRestFilterType.LIKE, this.formGroup.controls.codigo.value);
     this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
@@ -300,23 +289,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       SgiRestFilterType.EQUALS, this.formGroup.controls.entidadFinanciadora.value?.personaRef);
     this.addFiltro(filtros, 'fuenteFinanciacion.id', SgiRestFilterType.EQUALS, this.formGroup.controls.fuenteFinanciacion.value?.id);
     this.addFiltro(filtros, 'areaTematica.id', SgiRestFilterType.EQUALS, this.formGroup.controls.areaTematica.value?.id);
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createFilters.name}()`, 'end');
     return filtros;
   }
 
   onClearFilters() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
     super.onClearFilters();
     this.formGroup.controls.activo.setValue('true');
     this.onSearch();
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
   /**
    * Cargar areas tematicas
    */
   private loadAreasTematica() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, 'start');
     this.suscripciones.push(
       this.areaTematicaService.findAllGrupo().subscribe(
         (res) => {
@@ -326,22 +311,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               startWith(''),
               map(value => this.filtroAreaTematica(value))
             );
-          this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, error);
         }
       )
     );
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, 'end');
   }
 
   /**
    * Cargar fuente financiacion
    */
   private fuenteFinanciacion() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, 'start');
     this.suscripciones.push(
       this.fuenteFinanciacionService.findAll().subscribe(
         (res) => {
@@ -351,22 +333,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               startWith(''),
               map(value => this.filtroFuenteFinanciacion(value))
             );
-          this.logger.debug(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, error);
         }
       )
     );
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, 'end');
   }
 
   /**
    * Cargar unidad gestion
    */
   private loadUnidadesGestion() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, 'start');
     this.subscriptions.push(
       // TODO Debería filtrar por el rol
       this.unidadGestionService.findAll().subscribe(
@@ -377,22 +356,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               startWith(''),
               map(value => this.filtroUnidadGestion(value))
             );
-          this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, error);
         }
       )
     );
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
   }
 
   /**
    * Cargar ambitos geograficos
    */
   private loadAmbitosGeograficos() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'start');
     this.subscriptions.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
         res => {
@@ -402,22 +378,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               startWith(''),
               map(value => this.filtroTipoAmbitoGeografico(value))
             );
-          this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, error);
         }
       )
     );
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'end');
   }
 
   /**
    * Carga modelos ejecucion
    */
   private loadModelosEjecucion() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, 'start');
     this.formGroup.get('modeloEjecucion').setValue('');
     this.formGroup.get('finalidad').setValue('');
     const options = {
@@ -437,21 +410,18 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             startWith(''),
             map(value => this.filtroModeloEjecucion(value))
           );
-        this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, error);
       }
     ));
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, 'end');
   }
 
   /**
    * Carga finalidades
    */
   private loadFinalidades() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, 'start');
     this.formGroup.get('finalidad').setValue('');
     const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
     if (modeloEjecucion) {
@@ -471,17 +441,15 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                   startWith(''),
                   map(value => this.filtroFinalidades(value))
                 );
-              this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, 'end');
             },
             (error) => {
+              this.logger.error(error);
               this.snackBarService.showError(MSG_ERROR_INIT);
-              this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, error);
             }
           )
         );
       }
     }
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, 'end');
   }
 
   /**
@@ -604,9 +572,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    * Mostrar busqueda avanzada
    */
   toggleBusquedaAvanzada() {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.toggleBusquedaAvanzada.name}()`, 'start');
     this.busquedaAvanzada = !this.busquedaAvanzada;
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.toggleBusquedaAvanzada.name}()`, 'end');
   }
 
   /**
@@ -614,7 +580,6 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    * @param convocatoria convocatoria
    */
   deactivateConvocatoria(convocatoria: IConvocatoriaListado): void {
-    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.deactivateConvocatoria.name}()`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -626,13 +591,10 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         () => {
           this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
           this.loadTable();
-          this.logger.debug(ConvocatoriaListadoComponent.name,
-            `${this.deactivateConvocatoria.name}(convocatoria: ${convocatoria})`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-          this.logger.error(ConvocatoriaListadoComponent.name,
-            `${this.deactivateConvocatoria.name}(convocatoria: ${convocatoria})`, 'error');
         }
       );
     this.suscripciones.push(subcription);
@@ -643,9 +605,6 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    * @param convocatoria convocatoria
    */
   activeConvocatoria(convocatoria: IConvocatoriaListado): void {
-    this.logger.debug(ConvocatoriaListadoComponent.name,
-      `${this.activeConvocatoria.name}(convocatoria: ${convocatoria})`, 'start');
-
     const suscription = this.dialogService.showConfirmation(MSG_REACTIVE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -658,14 +617,11 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         () => {
           this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
           this.loadTable();
-          this.logger.debug(ConvocatoriaListadoComponent.name,
-            `${this.activeConvocatoria.name}(convocatoria: ${convocatoria})`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           convocatoria.convocatoria.activo = false;
           this.snackBarService.showError(MSG_ERROR_REACTIVE);
-          this.logger.error(ConvocatoriaListadoComponent.name,
-            `${this.activeConvocatoria.name}(convocatoria: ${convocatoria})`, 'error');
         }
       );
     this.suscripciones.push(suscription);

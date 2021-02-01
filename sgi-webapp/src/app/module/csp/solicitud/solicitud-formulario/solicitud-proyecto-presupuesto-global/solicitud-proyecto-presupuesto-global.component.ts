@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,7 +10,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { DesglosePresupuestoGlobalModalComponent, SolicitudProyectoPresupuestoDataModal } from '../../modals/desglose-presupuesto-global-modal/desglose-presupuesto-global-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
@@ -45,19 +43,15 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FragmentCompone
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     private actionService: SolicitudActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, actionService);
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as SolicitudProyectoPresupuestoGlobalFragment;
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     this.actionService.existsDatosProyectos();
 
@@ -84,33 +78,25 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FragmentCompone
         this.dataSource.data = partidasGasto;
       });
     this.subscriptions.push(subcription);
-
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `ngOnDestroy()`, 'end');
   }
 
   deletePartidaGasto(wrapper: StatusWrapper<ISolicitudProyectoPresupuesto>) {
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `deletePartidaGasto(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePartidaGasto(wrapper);
           }
-          this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `deletePartidaGasto(${wrapper})`, 'end');
         }
       )
     );
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoPresupuesto>): void {
-    this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `openModal()`, 'start');
-
     const data: SolicitudProyectoPresupuestoDataModal = {
       solicitudProyectoPresupuesto: wrapper ? wrapper.value : {} as ISolicitudProyectoPresupuesto,
       convocatoriaId: this.actionService.getDatosGeneralesSolicitud().convocatoria?.id,
@@ -131,10 +117,7 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FragmentCompone
           this.formPart.updatePartidaGasto(wrapperUpdated);
         }
       }
-      this.logger.debug(SolicitudProyectoPresupuestoGlobalComponent.name, `openModal()`, 'end');
     });
   }
-
-
 
 }

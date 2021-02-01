@@ -1,23 +1,22 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { NGXLogger } from 'ngx-logger';
-import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { FormFragmentComponent } from '@core/component/fragment.component';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
-import { Subscription, Observable, of } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConceptoGastoModalComponent, IConvocatoriaConceptoGastoModalComponent } from '../../modals/convocatoria-concepto-gasto-modal/convocatoria-concepto-gasto-modal.component';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
 
@@ -48,15 +47,12 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   filteredCostesIndirectos: Observable<IConceptoGasto[]>;
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.ELEGIBILIDAD, actionService);
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaConceptoGastoFragment;
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, 'constructor()', 'end');
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -71,7 +67,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
     this.dataSourcePermitidos.paginator = this.paginatorPermitidos;
@@ -127,8 +122,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   }
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGasto>): void {
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, `openModal()`, 'start');
-
     const convocatoriaConceptoGastosTabla = wrapper.value.permitido ? this.dataSourcePermitidos.data.map(
       wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
@@ -158,13 +151,11 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
             this.formPart.addConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
           }
         }
-        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   openModalCrear(permitido: boolean): void {
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, `openModalCrear()`, 'start');
     const convocatoriaConceptoGastosTabla = permitido ? this.dataSourcePermitidos.data.map(
       wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
@@ -200,14 +191,11 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
         if (result) {
           this.formPart.addConvocatoriaConceptoGasto(result);
         }
-        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, `openModalCrear()`, 'end');
       }
     );
   }
 
   deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name,
-      `deleteConvocatoriaConceptoGasto(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
@@ -215,8 +203,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
             this.formPart.deleteConvocatoriaConceptoGasto(wrapper);
             this.actionService.deleteCodigoEconomico(wrapper.value);
           }
-          this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name,
-            `deleteConvocatoriaConceptoGasto(${wrapper})`, 'end');
         }
       )
     );
@@ -245,9 +231,7 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, 'ngOnDestroy()', 'end');
   }
 
 }

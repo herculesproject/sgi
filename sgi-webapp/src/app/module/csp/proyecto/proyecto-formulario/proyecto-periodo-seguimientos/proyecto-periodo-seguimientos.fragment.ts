@@ -1,16 +1,14 @@
-import { Fragment } from '@core/services/action-service';
-import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
+import { OnDestroy } from '@angular/core';
+import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
-import { OnDestroy } from '@angular/core';
+import { Fragment } from '@core/services/action-service';
+import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { ProyectoActionService } from '../../proyecto.action.service';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnDestroy {
   periodoSeguimientos$ = new BehaviorSubject<StatusWrapper<IProyectoPeriodoSeguimiento>[]>([]);
@@ -18,7 +16,6 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private proyectoService: ProyectoService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
@@ -26,19 +23,14 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
     private proyecto: IProyecto
   ) {
     super(key);
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, 'constructor()', 'start');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, 'ngOnDestroy()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.proyectoService.findAllProyectoPeriodoSeguimientoProyecto(this.getKey() as number).pipe(
         map((response) => response.items)
@@ -46,27 +38,20 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
         this.periodoSeguimientos$.next(periodoSeguimientos.map(
           periodoSeguimiento => new StatusWrapper<IProyectoPeriodoSeguimiento>(periodoSeguimiento))
         );
-        this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, 'onInitialize()', 'end');
       });
     }
   }
 
   public addPeriodoSeguimiento(periodoSeguimiento: IProyectoPeriodoSeguimiento) {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-      `addPeriodoSeguimiento(addPeriodoSeguimiento: ${periodoSeguimiento})`, 'start');
     const wrapped = new StatusWrapper<IProyectoPeriodoSeguimiento>(periodoSeguimiento);
     wrapped.setCreated();
     const current = this.periodoSeguimientos$.value;
     current.push(wrapped);
     this.periodoSeguimientos$.next(current);
     this.setChanges(true);
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-      `addPeriodoSeguimiento(addPeriodoSeguimiento: ${periodoSeguimiento})`, 'end');
   }
 
   public deletePeriodoSeguimiento(wrapper: StatusWrapper<IProyectoPeriodoSeguimiento>) {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-      `deletePeriodoSeguimiento(wrapper: ${wrapper})`, 'start');
     const current = this.periodoSeguimientos$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -80,12 +65,9 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
       this.setChanges(true);
       this.recalcularNumPeriodos();
     }
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-      `deletePeriodoSeguimiento(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deletePeriodoSeguimientos(),
       this.updatePeriodoSeguimientos(),
@@ -96,15 +78,12 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private deletePeriodoSeguimientos(): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `deletePeriodoSeguimientos()`, 'start');
     if (this.periodoSeguimientosEliminados.length === 0) {
-      this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `deletePeriodoSeguimientos()`, 'end');
       return of(void 0);
     }
     return from(this.periodoSeguimientosEliminados).pipe(
@@ -119,29 +98,23 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
                     map(() => {
                       return from(documentos.items).pipe(
                         mergeMap(documento => {
-                          return this.documentoService.eliminarFichero(documento.documentoRef).pipe(
-                            tap(() => this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-                              `${this.documentoService.eliminarFichero.name}()`, 'end'))
-                          );
+                          return this.documentoService.eliminarFichero(documento.documentoRef);
                         })
-                      )
+                      );
                     });
                 }),
-                takeLast(1),
-                tap(() => this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-                  `deletePeriodoSeguimientos()`, 'end'))
+                takeLast(1)
               );
           })
-        )
+        );
       })
     );
   }
 
   private createPeriodoSeguimientos(): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `createPeriodoSeguimientos()`, 'start');
-    const createdPeriodoSeguimientos = this.periodoSeguimientos$.value.filter((proyectoPeriodoSeguimiento) => proyectoPeriodoSeguimiento.created);
+    const createdPeriodoSeguimientos = this.periodoSeguimientos$.value.filter((proyectoPeriodoSeguimiento) =>
+      proyectoPeriodoSeguimiento.created);
     if (createdPeriodoSeguimientos.length === 0) {
-      this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `createPeriodoSeguimientos()`, 'end');
       return of(void 0);
     }
     createdPeriodoSeguimientos.forEach(
@@ -154,47 +127,42 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
       mergeMap((wrappedPeriodoSeguimientos) => {
         return this.proyectoPeriodoSeguimientoService.create(wrappedPeriodoSeguimientos.value).pipe(
           map((updatedPeriodoSeguimientos) => {
-            const index = this.periodoSeguimientos$.value.findIndex((currentperiodoSeguimientos) => currentperiodoSeguimientos === wrappedPeriodoSeguimientos);
+            const index = this.periodoSeguimientos$.value.findIndex((currentperiodoSeguimientos) =>
+              currentperiodoSeguimientos === wrappedPeriodoSeguimientos);
             this.periodoSeguimientos$.value[index] = new StatusWrapper<IProyectoPeriodoSeguimiento>(updatedPeriodoSeguimientos);
-          }),
-          tap(() => this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-            `createPeriodoSeguimientos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private updatePeriodoSeguimientos(): Observable<void> {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `updatePeriodoSeguimientos()`, 'start');
-    const updatePeriodoSeguimientos = this.periodoSeguimientos$.value.filter((proyectoPeriodoSeguimiento) => proyectoPeriodoSeguimiento.edited);
+    const updatePeriodoSeguimientos = this.periodoSeguimientos$.value.filter((proyectoPeriodoSeguimiento) =>
+      proyectoPeriodoSeguimiento.edited);
     if (updatePeriodoSeguimientos.length === 0) {
-      this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `updatePeriodoSeguimientos()`, 'end');
       return of(void 0);
     }
     return from(updatePeriodoSeguimientos).pipe(
       mergeMap((wrappedPeriodoSeguimientos) => {
         return this.proyectoPeriodoSeguimientoService.update(wrappedPeriodoSeguimientos.value.id, wrappedPeriodoSeguimientos.value).pipe(
           map((updatedPeriodoSeguimientos) => {
-            const index = this.periodoSeguimientos$.value.findIndex((currentperiodoSeguimientos) => currentperiodoSeguimientos === wrappedPeriodoSeguimientos);
+            const index = this.periodoSeguimientos$.value.findIndex((currentperiodoSeguimientos) =>
+              currentperiodoSeguimientos === wrappedPeriodoSeguimientos);
             this.periodoSeguimientos$.value[index] = new StatusWrapper<IProyectoPeriodoSeguimiento>(updatedPeriodoSeguimientos);
-          }),
-          tap(() => this.logger.debug(ProyectoPeriodoSeguimientosFragment.name,
-            `updatePeriodoSeguimientos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.periodoSeguimientos$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ProyectoPeriodoSeguimientosFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.periodoSeguimientosEliminados.length > 0 || touched);
   }
 
   /**
-  * Recalcula los numeros de los periodos de todos los periodos de seguimiento de la tabla en funcion de su fecha de inicio.
-  */
+   * Recalcula los numeros de los periodos de todos los periodos de seguimiento de la tabla en funcion de su fecha de inicio.
+   */
   private recalcularNumPeriodos(): void {
     let numPeriodo = 1;
     this.periodoSeguimientos$.value

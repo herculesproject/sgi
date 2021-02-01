@@ -1,19 +1,19 @@
-import { Component, AfterViewInit, ViewChild, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { Observable, of, merge } from 'rxjs';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { tap, map, catchError } from 'rxjs/operators';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+
 
 const MSG_LISTADO_ERROR = marker('sgp.buscadorEmpresaEconomica.listado.error');
 
@@ -42,10 +42,10 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
   empresasEconomicas$: Observable<IEmpresaEconomica[]> = of();
 
   constructor(
+    private readonly logger: NGXLogger,
     public dialogRef: MatDialogRef<SearchEmpresaEconomicaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SearchEmpresaEconomicaModalData,
     private empresaEconomicaService: EmpresaEconomicaService,
-    private logger: NGXLogger,
     private snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -68,14 +68,12 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, 'ngAfterViewInit()', 'start');
     merge(
       this.paginator.page,
       this.sort.sortChange
     ).pipe(
       tap(() => this.buscarEmpresasEconomicas())
     ).subscribe();
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   closeModal(empresaEconomica?: IEmpresaEconomica): void {
@@ -83,8 +81,6 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
   }
 
   buscarEmpresasEconomicas(reset?: boolean): void {
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
-      `buscarEmpresasEconomicas()`, 'start');
     const options: SgiRestFindOptions = {
       page: {
         index: reset ? 0 : this.paginator.pageIndex,
@@ -105,25 +101,21 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
           if (reset) {
             this.paginator.pageIndex = 0;
           }
-          this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
-            `buscarEmpresasEconomicas()`, 'end');
           // Return the values
           return response.items;
         }),
         catchError((error) => {
+          this.logger.error(error);
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.showError(MSG_LISTADO_ERROR);
-          this.logger.error(SearchEmpresaEconomicaModalComponent.name,
-            `buscarEmpresasEconomicas()`, error);
           return of([]);
         })
       );
   }
 
   private getFilters(): SgiRestFilter[] {
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, `buildFilters()`, 'start');
     this.filter = [];
     const filterNumeroDocumento: SgiRestFilter = {
       field: 'numeroDocumento',
@@ -140,21 +132,15 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
     };
 
     this.filter.push(filterRazonSocial);
-
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, `buildFilters()`, 'end');
     return this.filter;
   }
 
   checkSelectedEmpresa(empresa: IEmpresaEconomica) {
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
-      `checkSelectedEmpresa()`, 'start');
     if (!this.data.filter) {
       return true;
     }
     const index = this.data.filter.findIndex(x => x.personaRef === empresa.personaRef);
     const result = index < 0;
-    this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
-      `checkSelectedEmpresa()`, 'end');
     return result;
   }
 }

@@ -6,17 +6,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { EquipoProyectoModalData, SolicitudEquipoProyectoModalComponent } from '../../modals/solicitud-equipo-proyecto-modal/solicitud-equipo-proyecto-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudEquipoProyectoFragment } from './solicitud-equipo-proyecto.fragment';
-import { IPersona } from '@core/models/sgp/persona';
 
 const MSG_DELETE = marker('csp.solicitud.equipo.proyecto.borrar');
 
@@ -39,19 +38,15 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     private actionService: SolicitudActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService);
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as SolicitudEquipoProyectoFragment;
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     this.actionService.existsDatosProyectos();
     this.formPart.solicitantePersonaRef = this.actionService.getSolicitantePersonaRef();
@@ -66,17 +61,13 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
       }
     );
     this.subscriptions.push(subcription);
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `ngOnDestroy()`, 'end');
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoEquipo>): void {
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `openModal()`, 'start');
     const persona: IPersona = {
       identificadorLetra: '',
       identificadorNumero: '',
@@ -128,20 +119,17 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
             this.formPart.addProyectoEquipo(modalData.solicitudProyectoEquipo);
           }
         }
-        this.logger.debug(SolicitudEquipoProyectoComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipo>) {
-    this.logger.debug(SolicitudEquipoProyectoComponent.name, `deleteProyectoEquipo(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoEquipo(wrapper);
           }
-          this.logger.debug(SolicitudEquipoProyectoComponent.name, `deleteProyectoEquipo(${wrapper})`, 'end');
         }
       )
     );

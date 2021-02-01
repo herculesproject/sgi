@@ -14,7 +14,7 @@ import { tap } from 'rxjs/operators';
 export class ConfiguracionSolicitudService extends SgiRestService<number, IConfiguracionSolicitud>{
   private static readonly MAPPING = '/convocatoria-configuracionsolicitudes';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConfiguracionSolicitudService.name,
       logger,
@@ -28,13 +28,8 @@ export class ConfiguracionSolicitudService extends SgiRestService<number, IConfi
    * @param id convocatoria
    */
   findAllConvocatoriaDocumentoRequeridoSolicitud(id: number): Observable<SgiRestListResult<IDocumentoRequerido>> {
-    this.logger.debug(ConfiguracionSolicitudService.name, `findAllConvocatoriaDocumentoRequeridoSolicitud(${id})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/documentorequiridosolicitudes`;
-    return this.find<IDocumentoRequerido, IDocumentoRequerido>(endpointUrl)
-      .pipe(
-        tap(() =>
-          this.logger.debug(ConfiguracionSolicitudService.name, `findAllConvocatoriaDocumentoRequeridoSolicitud(${id})`, '-', 'end'))
-      );
+    return this.find<IDocumentoRequerido, IDocumentoRequerido>(endpointUrl);
   }
 
 }

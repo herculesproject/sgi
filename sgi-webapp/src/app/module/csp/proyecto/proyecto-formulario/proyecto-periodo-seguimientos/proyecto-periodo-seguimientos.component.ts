@@ -6,18 +6,17 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
-
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoPeriodoSeguimientosFragment } from './proyecto-periodo-seguimientos.fragment';
+
 
 const MSG_DELETE = marker('csp.proyecto.periodos-seguimiento-cientifico.borrar');
 const MSG_DELETE_DOCUMENTOS = marker('csp.proyecto.periodos-seguimiento-cientifico.borrar.documentos');
@@ -50,19 +49,15 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     public actionService: ProyectoActionService,
     private dialogService: DialogService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService
   ) {
     super(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO, actionService);
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as ProyectoPeriodoSeguimientosFragment;
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subscription = this.formPart.periodoSeguimientos$.subscribe(
       (proyectoPeriodoSeguimientos) => {
@@ -80,19 +75,14 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
         }
       };
     this.dataSource.sort = this.sort;
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `ngOnDestroy()`, 'end');
   }
 
   deleteProyectoPeriodoSeguimiento(wrapper: StatusWrapper<IProyectoPeriodoSeguimiento>) {
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `deleteProyectoPeriodoSeguimiento(${wrapper})`, 'start');
     this.proyectoPeriodoSeguimientoService.existsDocumentos(wrapper.value.id).subscribe(res => {
-      let msg = null;
       if (res) {
         this.subscriptions.push(
           this.dialogService.showConfirmation(MSG_DELETE_DOCUMENTOS).subscribe(
@@ -100,7 +90,6 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
               if (aceptado) {
                 this.formPart.deletePeriodoSeguimiento(wrapper);
               }
-              this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `deleteProyectoPeriodoSeguimiento(${wrapper})`, 'end');
             }
           )
         );
@@ -111,7 +100,6 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
               if (aceptado) {
                 this.formPart.deletePeriodoSeguimiento(wrapper);
               }
-              this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `deleteProyectoPeriodoSeguimiento(${wrapper})`, 'end');
             }
           )
         );
@@ -123,17 +111,12 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
 
 
   createState(wrapper?: StatusWrapper<IProyectoPeriodoSeguimiento>): IProyectoPeriodoSeguimientoState {
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `createState(${wrapper})`, 'start');
-
     const state: IProyectoPeriodoSeguimientoState = {
       proyecto: this.actionService.proyecto as IProyecto,
       proyectoPeriodoSeguimiento: wrapper ? wrapper.value : {} as IProyectoPeriodoSeguimiento,
       selectedProyectoPeriodoSeguimientos: this.dataSource.data.map(element => element.value),
       readonly: this.formPart.readOnly
     };
-
-    this.logger.debug(ProyectoPeriodoSeguimientosComponent.name, `createState(${wrapper})`, 'end');
-
     return state;
   }
 

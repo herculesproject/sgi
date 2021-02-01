@@ -1,27 +1,27 @@
-import { Component, OnInit, Inject, ViewChild, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { NGXLogger } from 'ngx-logger';
-
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { FormGroupUtil } from '@core/utils/form-group-util';
-
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Observable, Subscription } from 'rxjs';
-import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map, tap } from 'rxjs/operators';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { ITipoHito } from '@core/models/csp/tipos-configuracion';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
-import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
+import { SgiRestListResult } from '@sgi/framework/http/types';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
+
+
+
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.hitos.error.cargar');
@@ -56,13 +56,12 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
   private suscripciones: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<SolicitiudHitosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudHitosModalComponentData,
     private snackBarService: SnackBarService) {
 
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -85,11 +84,9 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'ngOnInit()', 'start');
     this.formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
       fechaInicio: new FormControl(this.data?.hito?.fecha, [Validators.required]),
@@ -102,15 +99,14 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
     const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.suscripciones.push(suscription);
 
-    const suscriptionFecha = this.formGroup.controls.fechaInicio.valueChanges.subscribe(() => this.createValidatorDate(this.formGroup.controls.tipoHito.value));
+    const suscriptionFecha = this.formGroup.controls.fechaInicio.valueChanges.subscribe(() =>
+      this.createValidatorDate(this.formGroup.controls.tipoHito.value));
     this.suscripciones.push(suscriptionFecha);
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
     this.suscripciones.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
       (value) => this.validarFecha(new Date(value))));
-
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'ngOnInit()', 'start');
   }
 
   /**
@@ -119,7 +115,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
    * @param tipoHito solicitud tipoHito
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
-    this.logger.debug(SolicitiudHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
     let fechas: Date[] = [];
     if (tipoHito && typeof tipoHito !== 'string') {
       const convocatoriasHitos = this.data.hitos.filter(hito =>
@@ -135,7 +130,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
     this.formGroup.setValidators([
       TipoHitoValidator.notInDate('fechaInicio', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
     ]);
-    this.logger.debug(SolicitiudHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
   }
 
   /**
@@ -143,19 +137,16 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
    * Si la fecha actual es superior - Checkbox enable
    */
   private validarFecha(date: Date) {
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'validarFecha()', 'start');
     if (date <= new Date()) {
       this.formGroup.get('aviso').disable();
       this.formGroup.get('aviso').setValue(false);
     } else {
       this.formGroup.get('aviso').enable();
     }
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'validarFecha()', 'end');
   }
 
 
   loadTiposHito() {
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'loadTiposHito()', 'start');
     this.suscripciones.push(
       this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
@@ -165,18 +156,16 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
               startWith(''),
               map(value => this.filtroTipoHito(value))
             );
-          this.logger.debug(SolicitiudHitosModalComponent.name, 'loadTiposHito()', 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           if (this.data.idModeloEjecucion) {
             this.snackBarService.showError(MSG_ERROR_INIT);
           } else {
             this.snackBarService.showError(MSG_ERROR_TIPOS);
           }
-          this.logger.debug(SolicitiudHitosModalComponent.name, 'loadTiposHito()', 'end');
         })
     );
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'loadTiposHito()', 'end');
   }
 
   /**
@@ -205,20 +194,16 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
    * @param hito hito modificado o creado.
    */
   closeModal(hito?: ISolicitudHito): void {
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(hito);
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'closeModal()', 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.data.hito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -227,12 +212,10 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'loadDatosForm()', 'start');
     this.data.hito.comentario = this.formGroup.get('comentario').value;
     this.data.hito.fecha = this.formGroup.get('fechaInicio').value;
     this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
     this.data.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
-    this.logger.debug(SolicitiudHitosModalComponent.name, 'loadDatosForm()', 'end');
   }
 
 

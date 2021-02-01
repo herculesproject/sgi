@@ -5,7 +5,6 @@ import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ import { tap } from 'rxjs/operators';
 export class TipoHitoService extends SgiRestService<number, ITipoHito> {
   private static readonly MAPPING = '/tipohitos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoHitoService.name,
       logger,
@@ -27,10 +26,7 @@ export class TipoHitoService extends SgiRestService<number, ITipoHito> {
    * @param options opciones de búsqueda.
    */
   findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<ITipoHito>> {
-    this.logger.debug(TipoHitoService.name, `${this.findTodos.name}(`, '-', 'START');
-    return this.find<ITipoHito, ITipoHito>(`${this.endpointUrl}/todos`, options).pipe(
-      tap(() => this.logger.debug(TipoHitoService.name, `${this.findTodos.name}()`, '-', 'END'))
-    );
+    return this.find<ITipoHito, ITipoHito>(`${this.endpointUrl}/todos`, options);
   }
 
   /**
@@ -38,10 +34,7 @@ export class TipoHitoService extends SgiRestService<number, ITipoHito> {
    * @param options opciones de búsqueda.
    */
   desactivar(id: number): Observable<void> {
-    this.logger.debug(TipoHitoService.name, `${this.desactivar.name}(`, '-', 'start');
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
-      tap(() => this.logger.debug(TipoHitoService.name, `${this.desactivar.name}()`, '-', 'end'))
-    );
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined);
   }
 
   /**
@@ -49,10 +42,7 @@ export class TipoHitoService extends SgiRestService<number, ITipoHito> {
    * @param options opciones de búsqueda.
    */
   reactivar(id: number): Observable<void> {
-    this.logger.debug(TipoHitoService.name, `${this.reactivar.name}(`, '-', 'start');
-    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
-      tap(() => this.logger.debug(TipoHitoService.name, `${this.reactivar.name}()`, '-', 'end'))
-    );
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined);
   }
 
 

@@ -1,14 +1,13 @@
-import { Fragment } from '@core/services/action-service';
-import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
+import { OnDestroy } from '@angular/core';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
-import { OnDestroy } from '@angular/core';
+import { Fragment } from '@core/services/action-service';
+import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 
 export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
@@ -17,7 +16,6 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private proyectoService: ProyectoService,
     private proyectoProrrogaService: ProyectoProrrogaService,
@@ -25,19 +23,14 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
     public actionService: ProyectoActionService
   ) {
     super(key);
-    this.logger.debug(ProyectoProrrogasFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoProrrogasFragment.name, 'constructor()', 'start');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoProrrogasFragment.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoProrrogasFragment.name, 'ngOnDestroy()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoProrrogasFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.proyectoService.findAllProyectoProrrogaProyecto(this.getKey() as number).pipe(
         map((response) => response.items)
@@ -45,27 +38,20 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
         this.prorrogas$.next(prorrogas.map(
           periodoSeguimiento => new StatusWrapper<IProyectoProrroga>(periodoSeguimiento))
         );
-        this.logger.debug(ProyectoProrrogasFragment.name, 'onInitialize()', 'end');
       });
     }
   }
 
   public addProrroga(periodoSeguimiento: IProyectoProrroga) {
-    this.logger.debug(ProyectoProrrogasFragment.name,
-      `addProrroga(addProrroga: ${periodoSeguimiento})`, 'start');
     const wrapped = new StatusWrapper<IProyectoProrroga>(periodoSeguimiento);
     wrapped.setCreated();
     const current = this.prorrogas$.value;
     current.push(wrapped);
     this.prorrogas$.next(current);
     this.setChanges(true);
-    this.logger.debug(ProyectoProrrogasFragment.name,
-      `addProrroga(addProrroga: ${periodoSeguimiento})`, 'end');
   }
 
   public deleteProrroga(wrapper: StatusWrapper<IProyectoProrroga>) {
-    this.logger.debug(ProyectoProrrogasFragment.name,
-      `deleteProrroga(wrapper: ${wrapper})`, 'start');
     const current = this.prorrogas$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -78,12 +64,9 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
       this.prorrogas$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(ProyectoProrrogasFragment.name,
-      `deleteProrroga(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoProrrogasFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deleteProrrogas(),
       this.updateProrrogas(),
@@ -94,15 +77,12 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(ProyectoProrrogasFragment.name, `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private deleteProrrogas(): Observable<void> {
-    this.logger.debug(ProyectoProrrogasFragment.name, `deleteProrrogas()`, 'start');
     if (this.prorrogasEliminados.length === 0) {
-      this.logger.debug(ProyectoProrrogasFragment.name, `deleteProrrogas()`, 'end');
       return of(void 0);
     }
     return from(this.prorrogasEliminados).pipe(
@@ -117,29 +97,22 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
                     map(() => {
                       return from(documentos.items).pipe(
                         mergeMap(documento => {
-                          return this.documentoService.eliminarFichero(documento.documentoRef).pipe(
-                            tap(() => this.logger.debug(ProyectoProrrogasFragment.name,
-                              `${this.documentoService.eliminarFichero.name}()`, 'end'))
-                          );
+                          return this.documentoService.eliminarFichero(documento.documentoRef);
                         })
-                      )
+                      );
                     });
                 }),
-                takeLast(1),
-                tap(() => this.logger.debug(ProyectoProrrogasFragment.name,
-                  `deleteProrrogas()`, 'end'))
+                takeLast(1)
               );
           })
-        )
+        );
       })
     );
   }
 
   private createProrrogas(): Observable<void> {
-    this.logger.debug(ProyectoProrrogasFragment.name, `createProrrogas()`, 'start');
     const createdProrrogas = this.prorrogas$.value.filter((proyectoProrroga) => proyectoProrroga.created);
     if (createdProrrogas.length === 0) {
-      this.logger.debug(ProyectoProrrogasFragment.name, `createProrrogas()`, 'end');
       return of(void 0);
     }
     createdProrrogas.forEach(
@@ -154,19 +127,15 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
           map((updatedProrrogas) => {
             const index = this.prorrogas$.value.findIndex((currentprorrogas) => currentprorrogas === wrappedProrrogas);
             this.prorrogas$.value[index] = new StatusWrapper<IProyectoProrroga>(updatedProrrogas);
-          }),
-          tap(() => this.logger.debug(ProyectoProrrogasFragment.name,
-            `createProrrogas()`, 'end'))
+          })
         );
       })
     );
   }
 
   private updateProrrogas(): Observable<void> {
-    this.logger.debug(ProyectoProrrogasFragment.name, `updateProrrogas()`, 'start');
     const updateProrrogas = this.prorrogas$.value.filter((proyectoProrroga) => proyectoProrroga.edited);
     if (updateProrrogas.length === 0) {
-      this.logger.debug(ProyectoProrrogasFragment.name, `updateProrrogas()`, 'end');
       return of(void 0);
     }
     return from(updateProrrogas).pipe(
@@ -175,18 +144,14 @@ export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
           map((updatedProrrogas) => {
             const index = this.prorrogas$.value.findIndex((currentprorrogas) => currentprorrogas === wrappedProrrogas);
             this.prorrogas$.value[index] = new StatusWrapper<IProyectoProrroga>(updatedProrrogas);
-          }),
-          tap(() => this.logger.debug(ProyectoProrrogasFragment.name,
-            `updateProrrogas()`, 'end'))
+          })
         );
       })
     );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ProyectoProrrogasFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.prorrogas$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ProyectoProrrogasFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.prorrogasEliminados.length > 0 || touched);
   }
 

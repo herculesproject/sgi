@@ -1,25 +1,25 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { NGXLogger } from 'ngx-logger';
-
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Observable, Subscription } from 'rxjs';
-import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map, tap } from 'rxjs/operators';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { ITipoHito } from '@core/models/csp/tipos-configuracion';
-import { IProyectoHito } from '@core/models/csp/proyecto-hito';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
+import { IProyectoHito } from '@core/models/csp/proyecto-hito';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
+import { SgiRestListResult } from '@sgi/framework/http/types';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
+
+
 
 const MSG_ERROR_INIT = marker('csp.proyecto.hitos.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.proyecto.tipo.hitos.error.cargar');
@@ -27,7 +27,7 @@ const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ProyectoHitosModalComponentData {
-  hitos: IProyectoHito[],
+  hitos: IProyectoHito[];
   hito: IProyectoHito;
   idModeloEjecucion: number;
   readonly: boolean;
@@ -55,13 +55,12 @@ export class ProyectoHitosModalComponent implements OnInit {
   private suscripciones: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ProyectoHitosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoHitosModalComponentData,
     private snackBarService: SnackBarService) {
 
-    this.logger.debug(ProyectoHitosModalComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -84,11 +83,9 @@ export class ProyectoHitosModalComponent implements OnInit {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ProyectoHitosModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoHitosModalComponent.name, 'ngOnInit()', 'start');
     this.formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
       fecha: new FormControl(this.data?.hito?.fecha, [Validators.required]),
@@ -102,7 +99,8 @@ export class ProyectoHitosModalComponent implements OnInit {
     const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
     this.suscripciones.push(suscription);
 
-    const suscriptionFecha = this.formGroup.controls.fecha.valueChanges.subscribe(() => this.createValidatorDate(this.formGroup.controls.tipoHito.value));
+    const suscriptionFecha = this.formGroup.controls.fecha.valueChanges.subscribe(() =>
+      this.createValidatorDate(this.formGroup.controls.tipoHito.value));
     this.suscripciones.push(suscriptionFecha);
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
@@ -110,7 +108,6 @@ export class ProyectoHitosModalComponent implements OnInit {
     this.suscripciones.push(this.formGroup.get('fecha').valueChanges.subscribe(() => this.validarFecha())
     );
     this.validarFecha();
-    this.logger.debug(ProyectoHitosModalComponent.name, 'ngOnInit()', 'start');
   }
 
   /**
@@ -118,14 +115,12 @@ export class ProyectoHitosModalComponent implements OnInit {
    * Si la fecha actual es superior - Checkbox enable
    */
   private validarFecha() {
-    this.logger.debug(ProyectoHitosModalComponent.name, 'validarFecha()', 'start');
     if (new Date(this.formGroup.get('fecha').value) <= new Date()) {
       this.formGroup.get('aviso').disable();
       this.formGroup.get('aviso').setValue(false);
     } else {
       this.formGroup.get('aviso').enable();
     }
-    this.logger.debug(ProyectoHitosModalComponent.name, 'validarFecha()', 'end');
   }
 
   /**
@@ -134,12 +129,11 @@ export class ProyectoHitosModalComponent implements OnInit {
    * @param tipoHito proyecto tipoHito
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
-    this.logger.debug(ProyectoHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
     let fechas: Date[] = [];
     if (tipoHito && typeof tipoHito !== 'string') {
       const proyectoHitos = this.data.hitos.filter(hito =>
         hito.tipoHito.id === (tipoHito as ITipoHito).id &&
-        (hito.fecha != this.data.hito.fecha));
+        (hito.fecha !== this.data.hito.fecha));
       fechas = proyectoHitos.map(
         hito => {
           const fecha = DateUtils.fechaToDate(hito.fecha);
@@ -150,12 +144,10 @@ export class ProyectoHitosModalComponent implements OnInit {
     this.formGroup.setValidators([
       TipoHitoValidator.notInDate('fecha', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
     ]);
-    this.logger.debug(ProyectoHitosModalComponent.name, `createValidatorDate(tipoHito: ${tipoHito})`, 'end');
   }
 
 
   loadTiposHito() {
-    this.logger.debug(ProyectoHitosModalComponent.name, 'loadTiposHito()', 'start');
     this.suscripciones.push(
       this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
@@ -165,18 +157,16 @@ export class ProyectoHitosModalComponent implements OnInit {
               startWith(''),
               map(value => this.filtroTipoHito(value))
             );
-          this.logger.debug(ProyectoHitosModalComponent.name, 'loadTiposHito()', 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           if (this.data.idModeloEjecucion) {
             this.snackBarService.showError(MSG_ERROR_INIT);
           } else {
             this.snackBarService.showError(MSG_ERROR_TIPOS);
           }
-          this.logger.debug(ProyectoHitosModalComponent.name, 'loadTiposHito()', 'end');
         })
     );
-    this.logger.debug(ProyectoHitosModalComponent.name, 'loadTiposHito()', 'end');
   }
 
   /**
@@ -205,20 +195,16 @@ export class ProyectoHitosModalComponent implements OnInit {
    * @param hito hito modificado o creado.
    */
   closeModal(hito?: IProyectoHito): void {
-    this.logger.debug(ProyectoHitosModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(hito);
-    this.logger.debug(ProyectoHitosModalComponent.name, 'closeModal()', 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(ProyectoHitosModalComponent.name, 'saveOrUpdate()', 'start');
     if (this.formGroup.valid) {
       this.loadDatosForm();
       this.closeModal(this.data.hito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ProyectoHitosModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -227,13 +213,10 @@ export class ProyectoHitosModalComponent implements OnInit {
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(ProyectoHitosModalComponent.name, 'loadDatosForm()', 'start');
     this.data.hito.comentario = this.formGroup.get('comentario').value;
     this.data.hito.fecha = this.formGroup.get('fecha').value;
     this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
     this.data.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
-    this.logger.debug(ProyectoHitosModalComponent.name, 'loadDatosForm()', 'end');
   }
-
 
 }

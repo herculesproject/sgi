@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 export class RolSocioService extends SgiRestService<number, IRolSocio>  {
   private static readonly MAPPING = '/rolsocios';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       RolSocioService.name,
       logger,

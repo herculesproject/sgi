@@ -11,7 +11,7 @@ import { SgiRestService } from '@sgi/framework/http';
 export class TareaService extends SgiRestService<number, ITarea> {
   private static readonly MAPPING = '/tareas';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TareaService.name,
       logger,

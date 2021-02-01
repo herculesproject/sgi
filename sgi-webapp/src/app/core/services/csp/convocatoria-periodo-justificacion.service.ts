@@ -13,7 +13,7 @@ import { tap } from 'rxjs/operators';
 export class ConvocatoriaPeriodoJustificacionService extends SgiRestService<number, IConvocatoriaPeriodoJustificacion> {
   private static readonly MAPPING = '/convocatoriaperiodojustificaciones';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaPeriodoJustificacionService.name,
       logger,
@@ -32,10 +32,7 @@ export class ConvocatoriaPeriodoJustificacionService extends SgiRestService<numb
    */
   updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId: number, periodosJustificacion: IConvocatoriaPeriodoJustificacion[]):
     Observable<IConvocatoriaPeriodoJustificacion[]> {
-    this.logger.debug(ConvocatoriaPeriodoJustificacionService.name, `${this.updateConvocatoriaPeriodoJustificacionesConvocatoria.name}(${convocatoriaId}`, '-', 'start');
-    return this.http.patch<IConvocatoriaPeriodoJustificacion[]>(`${this.endpointUrl}/${convocatoriaId}`, periodosJustificacion).pipe(
-      tap(() => this.logger.debug(ConvocatoriaPeriodoJustificacionService.name, `${this.updateConvocatoriaPeriodoJustificacionesConvocatoria.name}(${convocatoriaId}`, '-', 'end'))
-    );
+    return this.http.patch<IConvocatoriaPeriodoJustificacion[]>(`${this.endpointUrl}/${convocatoriaId}`, periodosJustificacion);
   }
 
 }

@@ -1,18 +1,18 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { DateValidator } from '@core/validators/date-validator';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, EMPTY, of, Subject } from 'rxjs';
-import { map, tap, switchMap, catchError } from 'rxjs/operators';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { DateValidator } from '@core/validators/date-validator';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 
 export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
@@ -29,8 +29,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   proyectoConvocatoria$: Subject<IProyecto> = new Subject<IProyecto>();
 
   constructor(
-    private fb: FormBuilder,
     private readonly logger: NGXLogger,
+    private fb: FormBuilder,
     key: number,
     private service: ProyectoService,
     private unidadGestionService: UnidadGestionService,
@@ -38,13 +38,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private actionService: ProyectoActionService
   ) {
     super(key);
-    this.logger.debug(ProyectoFichaGeneralFragment.name, 'constructor()', 'start');
     this.proyecto = { activo: true } as IProyecto;
-    this.logger.debug(ProyectoFichaGeneralFragment.name, 'constructor()', 'end');
   }
 
   protected initializer(key: number): Observable<IProyecto> {
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `initializer(key: ${key})`, 'start');
     return this.service.findById(key).pipe(
       tap(proyecto => {
         this.proyecto = proyecto;
@@ -57,19 +54,17 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         return this.proyecto.convocatoria ? this.loadConvocatoria(this.proyecto.convocatoria.id) : of(EMPTY);
       }),
       map(() => {
-        this.logger.debug(ProyectoFichaGeneralFragment.name, `initializer(key: ${key})`, 'end');
         this.proyectoConvocatoria$.next(this.proyecto);
         return this.proyecto;
       }),
-      catchError(() => {
-        this.logger.error(ProyectoFichaGeneralFragment.name, `initializer(key: ${key})`, 'error');
+      catchError((error) => {
+        this.logger.error(error);
         return EMPTY;
       })
     );
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `${this.buildFormGroup.name}()`, 'start');
     const form = new FormGroup({
       estado: new FormControl({
         value: '',
@@ -121,15 +116,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         (convocatoria) => this.onConvocatoriaChange(convocatoria)
       )
     );
-
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `${this.buildFormGroup.name}()`, 'end');
-
     return form;
   }
 
   buildPatch(proyecto: IProyecto): { [key: string]: any } {
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `${this.buildPatch.name}(proyecto: ${proyecto})`, 'start');
     const result = {
       estado: proyecto.estado?.estado,
       titulo: proyecto.titulo,
@@ -174,14 +164,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.paquetesTrabajo$.next(value);
       })
     );
-
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `${this.buildPatch.name}(proyecto: ${proyecto})`, 'end');
     return result;
   }
 
   getValue(): IProyecto {
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `${this.getValue.name}()`, 'start');
     const form = this.getFormGroup().controls;
     this.proyecto.titulo = form.titulo.value;
     this.proyecto.acronimo = form.acronimo.value;
@@ -235,8 +221,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.observaciones = form.observaciones.value;
 
     this.proyecto.coordinadorExterno = form.coordinadorExterno.value;
-
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `${this.getValue.name}()`, 'end');
     return this.proyecto;
   }
 
@@ -246,8 +230,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * @param convocatoria una convocatoria
    */
   private onConvocatoriaChange(convocatoria: IConvocatoria): void {
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `setConvocatoria(${convocatoria})`, 'start');
-
     if (convocatoria) {
       this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
 
@@ -264,16 +246,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.getFormGroup().controls.unidadGestion.enable();
       this.getFormGroup().controls.convocatoriaExterna.enable();
     }
-
-    this.logger.debug(ProyectoFichaGeneralFragment.name, `setConvocatoria(${convocatoria})`, 'end');
   }
 
   /**
-  * Añade validadores al formulario dependiendo del estado del proyecto
-  */
+   * Añade validadores al formulario dependiendo del estado del proyecto
+   */
   private checkEstado(formgroup: FormGroup, proyecto: IProyecto): void {
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `checkEstado(formgroup: ${formgroup}, proyecto: ${proyecto})`, 'start');
     if (proyecto.estado.estado === TipoEstadoProyecto.ABIERTO) {
       formgroup.get('finalidad').setValidators([
         Validators.required, IsEntityValidator.isValid()]);
@@ -311,8 +289,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.abiertoRequired = false;
       this.comentarioEstadoCancelado = false;
     }
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `checkEstado(formgroup: ${formgroup}, proyecto: ${proyecto})`, 'end');
   }
 
   get requiredAbierto() {
@@ -320,36 +296,26 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ProyectoFichaGeneralFragment.name, 'saveOrUpdate()', 'start');
     const fichaGeneral = this.getValue();
     const obs = fichaGeneral.id ? this.update(fichaGeneral) :
       this.create(fichaGeneral);
     return obs.pipe(
       map((value) => {
         this.proyecto = value;
-        this.logger.debug(ProyectoFichaGeneralFragment.name, 'saveOrUpdate()', 'end');
         return this.proyecto.id;
       })
     );
   }
 
   private create(proyecto: IProyecto): Observable<IProyecto> {
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `${this.create.name}(proyecto: ${proyecto})`, 'start');
     return this.service.create(proyecto).pipe(
-      tap(result => this.proyecto = result),
-      tap(() => this.logger.debug(ProyectoFichaGeneralFragment.name,
-        `${this.create.name}(proyecto: ${proyecto})`, 'end'))
+      tap(result => this.proyecto = result)
     );
   }
 
   private update(proyecto: IProyecto): Observable<IProyecto> {
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `${this.update.name}(proyecto: ${proyecto})`, 'start');
     return this.service.update(Number(this.getKey()), proyecto).pipe(
-      tap(result => this.proyecto = result),
-      tap(() => this.logger.debug(ProyectoFichaGeneralFragment.name,
-        `${this.update.name}(proyecto: ${proyecto})`, 'end'))
+      tap(result => this.proyecto = result)
     );
   }
 
@@ -360,8 +326,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * @returns observable para recuperar los datos
    */
   private loadUnidadGestion(acronimo: string): Observable<SgiRestListResult<IUnidadGestion>> {
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `loadUnidadGestion(acronimo: ${acronimo})`, 'start');
     const options = {
       filters: [
         {
@@ -378,8 +342,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           this.proyecto.unidadGestion = result.items[0];
           this.getFormGroup().controls.unidadGestion.setValue(this.proyecto.unidadGestion);
         }
-        this.logger.debug(ProyectoFichaGeneralFragment.name,
-          `loadUnidadGestion(acronimo: ${acronimo})`, 'end');
       })
     );
 
@@ -392,15 +354,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * @returns observable para recuperar los datos
    */
   private loadConvocatoria(convocatoriaId: number): Observable<IConvocatoria> {
-    this.logger.debug(ProyectoFichaGeneralFragment.name,
-      `loadConvocatoria(convocatoriaId: ${convocatoriaId})`, 'start');
-
     return this.convocatoriaService.findById(convocatoriaId).pipe(
       tap(convocatoria => {
         this.proyecto.convocatoria = convocatoria;
         this.selectedConvocatoria = this.proyecto.convocatoria;
-        this.logger.debug(ProyectoFichaGeneralFragment.name,
-          `loadConvocatoria(convocatoriaId: ${convocatoriaId})`, 'end');
       })
     );
   }

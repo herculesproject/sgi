@@ -1,19 +1,17 @@
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
-import { tap, map } from 'rxjs/operators';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { DateValidator } from '@core/validators/date-validator';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragment<IProyectoPeriodoSeguimiento> {
   proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento;
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private service: ProyectoPeriodoSeguimientoService,
     private proyecto: IProyecto,
@@ -21,15 +19,12 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
     private readonly
   ) {
     super(key);
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, 'constructor()', 'start');
     this.proyectoPeriodoSeguimiento = {
       proyecto: this.proyecto
     } as IProyectoPeriodoSeguimiento;
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, 'constructor()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     const form = new FormGroup(
       {
         numPeriodo: new FormControl({
@@ -70,13 +65,10 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
       form.disable();
     }
 
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return form;
   }
 
   protected buildPatch(proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento): { [key: string]: any; } {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-      `buildPatch(value: ${proyectoPeriodoSeguimiento})`, 'start');
     const result = {
       numPeriodo: proyectoPeriodoSeguimiento.numPeriodo,
       fechaInicio: proyectoPeriodoSeguimiento.fechaInicio,
@@ -85,24 +77,17 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
       fechaFinPresentacion: proyectoPeriodoSeguimiento.fechaFinPresentacion,
       observaciones: proyectoPeriodoSeguimiento.observaciones
     };
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-      `buildPatch(value: ${proyectoPeriodoSeguimiento})`, 'end');
     return result;
   }
 
   protected initializer(key: number): Observable<IProyectoPeriodoSeguimiento> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-      `initializer(key: ${key})`, 'start');
     return this.service.findById(key)
       .pipe(
-        tap((proyectoPeriodoSeguimiento) => this.proyectoPeriodoSeguimiento = proyectoPeriodoSeguimiento),
-        tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-          `initializer(key: ${key})`, 'end'))
+        tap((proyectoPeriodoSeguimiento) => this.proyectoPeriodoSeguimiento = proyectoPeriodoSeguimiento)
       );
   }
 
   getValue(): IProyectoPeriodoSeguimiento {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().controls;
     this.proyectoPeriodoSeguimiento.numPeriodo = form.numPeriodo.value;
     this.proyectoPeriodoSeguimiento.fechaInicio = form.fechaInicio.value;
@@ -110,12 +95,10 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
     this.proyectoPeriodoSeguimiento.fechaInicioPresentacion = form.fechaInicioPresentacion.value;
     this.proyectoPeriodoSeguimiento.fechaFinPresentacion = form.fechaFinPresentacion.value;
     this.proyectoPeriodoSeguimiento.observaciones = form.observaciones.value;
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, `getValue()`, 'end');
     return this.proyectoPeriodoSeguimiento;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name, `saveOrUpdate()`, 'start');
     const proyectoPeriodoSeguimiento = this.getValue();
 
     const observable$ = this.isEdit() ? this.update(proyectoPeriodoSeguimiento) : this.create(proyectoPeriodoSeguimiento);
@@ -123,32 +106,16 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
       map(result => {
         this.proyectoPeriodoSeguimiento = result;
         return this.proyectoPeriodoSeguimiento.id;
-      }),
-      tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-        `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento): Observable<IProyectoPeriodoSeguimiento> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-      `create(proyectoPeriodoSeguimiento: ${proyectoPeriodoSeguimiento})`, 'start');
-
-    return this.service.create(proyectoPeriodoSeguimiento)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-          `create(proyectoPeriodoSeguimiento: ${proyectoPeriodoSeguimiento})`, 'end'))
-      );
+    return this.service.create(proyectoPeriodoSeguimiento);
   }
 
   private update(proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento): Observable<IProyectoPeriodoSeguimiento> {
-    this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-      `update(proyectoPeriodoSeguimiento: ${proyectoPeriodoSeguimiento})`, 'start');
-
-    return this.service.update(proyectoPeriodoSeguimiento.id, proyectoPeriodoSeguimiento)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoPeriodoSeguimientoDatosGeneralesFragment.name,
-          `update(proyectoPeriodoSeguimiento: ${proyectoPeriodoSeguimiento})`, 'end'))
-      );
+    return this.service.update(proyectoPeriodoSeguimiento.id, proyectoPeriodoSeguimiento);
   }
 
   /**

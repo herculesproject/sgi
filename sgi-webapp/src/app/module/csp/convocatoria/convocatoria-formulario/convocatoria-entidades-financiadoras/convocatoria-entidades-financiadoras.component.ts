@@ -10,14 +10,13 @@ import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-entidades-financiadoras.fragment';
+
 
 const MODAL_ENTIDAD_FINANCIADORA_TITLE = marker('csp.convocatoria.entidades-financiadoras.modal.titulo');
 const MSG_DELETE = marker('csp.convocatoria.entidad.financiadora.listado.borrar');
@@ -42,29 +41,23 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   selectedEmpresas: IEmpresaEconomica[];
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private empresaEconomicaService: EmpresaEconomicaService,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaEntidadesFinanciadorasFragment;
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.getDataSource();
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnInit()', 'end');
   }
 
   private getDataSource(): void {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `getDataSource()`, 'start');
     this.dataSource.data = [];
     this.selectedEmpresas = [];
     this.subscriptions.push(
@@ -87,19 +80,15 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
         })
       ).subscribe(elements => {
         this.dataSource.data = elements;
-        this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `getDataSource()`, 'end');
       })
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaEntidadFinanciadora>): void {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `openModal()`, 'start');
     const data: EntidadFinanciadoraDataModal = {
       title: MODAL_ENTIDAD_FINANCIADORA_TITLE,
       entidad: wrapper ? wrapper.value : {} as IConvocatoriaEntidadFinanciadora,
@@ -119,14 +108,11 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
           this.formPart.updateConvocatoriaEntidadFinanciadora(entidad);
         }
       }
-      this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `openModal()`, 'end');
     }
     );
   }
 
   deleteConvocatoriaEntidadFinanciadora(wrapper: StatusWrapper<IConvocatoriaEntidadFinanciadora>) {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name,
-      `deleteConvocatoriaEntidadFinanciadora(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
@@ -137,8 +123,6 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
             this.formPart.deleteConvocatoriaEntidadFinanciadora(entidad);
             this.getDataSource();
           }
-          this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name,
-            `deleteConvocatoriaEntidadFinanciadora(${wrapper})`, 'end');
         }
       )
     );

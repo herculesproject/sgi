@@ -1,19 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
+import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { merge, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const MSG_ERROR_INIT = marker('csp.solicitud.equipo.socio.equipo.socio.rol.error.cargar');
 const MSG_ANADIR = marker('botones.aniadir');
@@ -36,14 +36,13 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudProyectoSocioEquipoSocioModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoEquipoSocioModalData,
     private rolProyectoService: RolProyectoService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -53,11 +52,9 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadRolProyectos();
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
@@ -70,11 +67,9 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
         () => this.checkRangesMeses()
       )
     );
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, 'ngOnInit()', 'start');
   }
 
   private loadRolProyectos(): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `loadUnidadesGestion()`, 'start');
     const subcription = this.rolProyectoService.findAll().pipe(
       map(result => result.items)
     ).subscribe(
@@ -84,11 +79,10 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
           startWith(''),
           map(value => this.filtroRolProyecto(value))
         );
-        this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `loadUnidadesGestion()`, 'end');
       },
       error => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(SolicitudProyectoSocioEquipoSocioModalComponent.name, `loadUnidadesGestion()`, error);
       }
     );
     this.subscriptions.push(subcription);
@@ -105,17 +99,14 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
   }
 
   protected getDatosForm(): SolicitudProyectoEquipoSocioModalData {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `getDatosForm()`, 'start');
     this.data.solicitudProyectoEquipoSocio.rolProyecto = this.formGroup.get('rolProyecto').value;
     this.data.solicitudProyectoEquipoSocio.persona = this.formGroup.get('persona').value;
     this.data.solicitudProyectoEquipoSocio.mesInicio = this.formGroup.get('mesInicio').value;
     this.data.solicitudProyectoEquipoSocio.mesFin = this.formGroup.get('mesFin').value;
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup(
       {
         rolProyecto: new FormControl(this.data.solicitudProyectoEquipoSocio.rolProyecto, [
@@ -139,12 +130,10 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
         validators: [NumberValidator.isAfter('mesInicio', 'mesFin')]
       }
     );
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   private checkRangesMeses(): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `checkRangesMeses()`, 'start');
     const persona = this.formGroup.get('persona');
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
@@ -208,7 +197,6 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
         }
       }
     }
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioModalComponent.name, `checkRangesMeses()`, 'end');
   }
 
   private addErrorRange(formControl: AbstractControl) {

@@ -11,7 +11,7 @@ import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
 export class FormacionEspecificaService extends SgiRestService<number, FormacionEspecifica> {
   private static readonly MAPPING = '/formacionespecificas';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       FormacionEspecificaService.name,
       logger,

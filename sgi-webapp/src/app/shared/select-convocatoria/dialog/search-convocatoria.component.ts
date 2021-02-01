@@ -1,22 +1,22 @@
-import { Component, AfterViewInit, ViewChild, Inject } from '@angular/core';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SgiRestFilter, SgiRestSortDirection, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Observable, of, merge, from } from 'rxjs';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { map, tap, catchError, switchMap, mergeAll } from 'rxjs/operators';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { from, merge, Observable, of } from 'rxjs';
+import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 
 const MSG_LISTADO_ERROR = marker('csp.buscadorConvocatoria.listado.error');
 
@@ -51,11 +51,11 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
   convocatorias$: Observable<IConvocatoriaListado[]> = of();
 
   constructor(
+    private readonly logger: NGXLogger,
     public dialogRef: MatDialogRef<SearchConvocatoriaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoria,
     private readonly convocatoriaService: ConvocatoriaService,
     private empresaEconomicaService: EmpresaEconomicaService,
-    private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -71,8 +71,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.logger.debug(SearchConvocatoriaModalComponent.name, 'ngAfterViewInit()', 'start');
-
     merge(
       this.paginator.page,
       this.sort.sortChange
@@ -81,8 +79,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
         this.buscarConvocatorias();
       })
     ).subscribe();
-
-    this.logger.debug(SearchConvocatoriaModalComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   onNoClick(): void {
@@ -90,8 +86,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
   }
 
   buscarConvocatorias(reset?: boolean) {
-    this.logger.debug(SearchConvocatoriaModalComponent.name, 'buscarConvocatorias()', 'start');
-
     this.convocatorias$ = this.convocatoriaService
       .findAllRestringidos(
         {
@@ -185,23 +179,20 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
             })
           );
         }),
-        catchError(() => {
+        catchError((error) => {
+          this.logger.error(error);
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.showError(MSG_LISTADO_ERROR);
-          this.logger.error(SearchConvocatoriaModalComponent.name, 'buscarConvocatorias()', 'error');
           return of([]);
         })
       );
   }
 
   private buildFilters(convocatoria: IConvocatoria): SgiRestFilter[] {
-    this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'start');
-
     this.filter = [];
     if (convocatoria.titulo) {
-      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'titulo');
       const filterTitulo: SgiRestFilter = {
         field: 'titulo',
         type: SgiRestFilterType.LIKE,
@@ -212,7 +203,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     }
 
     if (convocatoria.codigo) {
-      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'codigo');
       const filterCodigo: SgiRestFilter = {
         field: 'codigo',
         type: SgiRestFilterType.LIKE,
@@ -223,7 +213,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     }
 
     if (convocatoria.anio) {
-      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'anio');
       const filterAnio: SgiRestFilter = {
         field: 'anio',
         type: SgiRestFilterType.EQUALS,
@@ -234,7 +223,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     }
 
     if (convocatoria.abiertoPlazoPresentacionSolicitud) {
-      this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'abiertoPlazoPresentacionSolicitud');
       const filterPlazoAbierto: SgiRestFilter = {
         field: 'abiertoPlazoPresentacionSolicitud',
         type: SgiRestFilterType.EQUALS,
@@ -244,7 +232,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       this.filter.push(filterPlazoAbierto);
     }
 
-    this.logger.debug(SearchConvocatoriaModalComponent.name, 'buildFilters()', 'end');
     return this.filter;
   }
 

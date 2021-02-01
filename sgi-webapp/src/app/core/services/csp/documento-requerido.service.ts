@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 export class DocumentoRequeridoService extends SgiRestService<number, IDocumentoRequerido> {
   private static readonly MAPPING = '/documentorequiridosolicitudes';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       DocumentoRequeridoService.name,
       logger,

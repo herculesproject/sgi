@@ -44,14 +44,13 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     (key) => TipoEstadoProyecto[key]);
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly proyectoService: ProyectoService,
     private readonly dialogService: DialogService,
     public authService: SgiAuthService,
   ) {
-    super(logger, snackBarService, MSG_ERROR);
-    this.logger.debug(ProyectoListadoComponent.name, 'constructor()', 'start');
+    super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -62,11 +61,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ProyectoListadoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.formGroup = new FormGroup({
       titulo: new FormControl(''),
@@ -74,39 +71,29 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       estado: new FormControl('')
     });
     this.filter = this.createFilters();
-    this.logger.debug(ProyectoListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   onClearFilters() {
-    this.logger.debug(ProyectoListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
     this.formGroup.controls.estado.setValue('');
     this.formGroup.controls.titulo.setValue('');
     this.formGroup.controls.acronimo.setValue('');
     this.onSearch();
-    this.logger.debug(ProyectoListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<IProyecto>> {
-    this.logger.debug(ProyectoListadoComponent.name, `${this.createObservable.name}()`, 'start');
     const observable$ = this.proyectoService.findAll(this.getFindOptions());
-    this.logger.debug(ProyectoListadoComponent.name, `${this.createObservable.name}()`, 'end');
     return observable$;
   }
 
   protected initColumns(): void {
-    this.logger.debug(ProyectoListadoComponent.name, `${this.initColumns.name}()`, 'start');
     this.columnas = ['acronimo', 'titulo', 'fechaInicio', 'fechaFin', 'estado', 'activo', 'acciones'];
-    this.logger.debug(ProyectoListadoComponent.name, `${this.initColumns.name}()`, 'end');
   }
 
   protected loadTable(reset?: boolean): void {
-    this.logger.debug(ProyectoListadoComponent.name, `${this.loadTable.name}(${reset})`, 'start');
     this.proyecto$ = this.getObservableLoadTable(reset);
-    this.logger.debug(ProyectoListadoComponent.name, `${this.loadTable.name}(${reset})`, 'end');
   }
 
   protected createFilters(): SgiRestFilter[] {
-    this.logger.debug(ProyectoListadoComponent.name, `${this.createFilters.name}()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'acronimo', SgiRestFilterType.LIKE, this.formGroup.controls.acronimo.value);
     this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
@@ -116,7 +103,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .filter(key => TipoEstadoProyecto[key] === this.formGroup.controls.estado.value)[0];
     this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, estado);
 
-    this.logger.debug(ProyectoListadoComponent.name, `${this.createFilters.name}()`, 'end');
     return filtros;
   }
 
@@ -125,7 +111,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    * @param proyecto proyecto
    */
   deactivateProyecto(proyecto: IProyecto): void {
-    this.logger.debug(ProyectoListadoComponent.name, `${this.deactivateProyecto.name}()`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -137,13 +122,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         () => {
           this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
           this.loadTable();
-          this.logger.debug(ProyectoListadoComponent.name,
-            `${this.deactivateProyecto.name}(proyecto: ${proyecto})`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-          this.logger.error(ProyectoListadoComponent.name,
-            `${this.deactivateProyecto.name}(proyecto: ${proyecto})`, 'error');
         }
       );
     this.suscripciones.push(subcription);
@@ -154,9 +136,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    * @param proyecto proyecto
    */
   activateProyecto(proyecto: IProyecto): void {
-    this.logger.debug(ProyectoListadoComponent.name,
-      `${this.activateProyecto.name}(proyecto: ${proyecto})`, 'start');
-
     const suscription = this.dialogService.showConfirmation(MSG_REACTIVE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -169,14 +148,11 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         () => {
           this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
           this.loadTable();
-          this.logger.debug(ProyectoListadoComponent.name,
-            `${this.activateProyecto.name}(proyecto: ${proyecto})`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           proyecto.activo = false;
           this.snackBarService.showError(MSG_ERROR_REACTIVE);
-          this.logger.error(ProyectoListadoComponent.name,
-            `${this.activateProyecto.name}(proyecto: ${proyecto})`, 'error');
         }
       );
     this.suscripciones.push(suscription);

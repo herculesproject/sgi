@@ -15,7 +15,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 
 export interface ProyectoContextoModalData {
   root: IAreaTematica;
@@ -76,14 +76,13 @@ export class ProyectoContextoModalComponent extends
   hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoContextoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoContextoModalData,
     private areaTematicaService: AreaTematicaService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ProyectoContextoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -94,33 +93,27 @@ export class ProyectoContextoModalComponent extends
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
     this.textSaveOrUpdate = this.data?.areaTematica ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ProyectoContextoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoContextoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadAreasTematicas();
     this.loadTreeAreaTematica();
     const subscription = this.formGroup.get('padre').valueChanges.subscribe(() => this.loadTreeAreaTematica());
     this.subscriptions.push(subscription);
-    this.logger.debug(ProyectoContextoModalComponent.name, 'ngOnInit()', 'start');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ProyectoContextoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       padre: new FormControl({
         value: this.data?.root,
         disabled: Boolean(this.data?.root?.nombre),
       }, [Validators.required, IsEntityValidator.isValid()]),
     });
-    this.logger.debug(ProyectoContextoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): ProyectoContextoModalData {
-    this.logger.debug(ProyectoContextoModalComponent.name, `getDatosForm()`, 'start');
     const padre = this.formGroup.get('padre').value;
     const areaTematica = this.checkedNode?.areaTematica?.value;
     if (areaTematica) {
@@ -130,22 +123,16 @@ export class ProyectoContextoModalComponent extends
     }
 
     this.data.root = padre;
-    this.logger.debug(ProyectoContextoModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
   private loadAreasTematicas(): void {
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `loadAreasTematicas()`, 'start');
     this.dataSource.data = null;
     this.areasTematicas$ = this.areaTematicaService.findAllGrupo().pipe(
       map(res => res.items),
-      tap(() => this.logger.debug(ProyectoContextoModalComponent.name,
-        `loadAreasTematicas()`, 'end')),
       catchError(error => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_AREA_TEMATICA);
-        this.logger.error(ProyectoContextoModalComponent.name,
-          `loadAreasTematicas()`, error);
         return of([]);
       })
     );
@@ -153,8 +140,6 @@ export class ProyectoContextoModalComponent extends
 
 
   private loadTreeAreaTematica(): void {
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `loadTreeAreaTematica()`, 'start');
     this.nodeMap.clear();
     this.dataSource.data = [];
     const padre = this.formGroup.get('padre').value;
@@ -178,12 +163,9 @@ export class ProyectoContextoModalComponent extends
           if (this.checkedNode) {
             this.expandNodes(this.checkedNode);
           }
-          this.logger.debug(ProyectoContextoModalComponent.name,
-            `loadTreeAreaTematica()`, 'end');
         },
         (error) => {
-          this.logger.error(ProyectoContextoModalComponent.name,
-            `loadTreeAreaTematica()`, error);
+          this.logger.error(error);
         }
       );
       this.subscriptions.push(susbcription);
@@ -195,19 +177,13 @@ export class ProyectoContextoModalComponent extends
   }
 
   private expandNodes(node: NodeAreaTematica) {
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
     if (node && node.parent) {
       this.treeControl.expand(node.parent);
       this.expandNodes(node.parent);
     }
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
   }
 
   private getChilds(parent: NodeAreaTematica): Observable<NodeAreaTematica[]> {
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `getChilds(parent: ${parent})`, 'start');
     return this.areaTematicaService.findAllHijosArea(parent.areaTematica.value.id).pipe(
       map((result) => {
         const childs: NodeAreaTematica[] = result.items.map(
@@ -233,26 +209,18 @@ export class ProyectoContextoModalComponent extends
           return of([]);
         }
       }),
-      takeLast(1),
-      tap(() => this.logger.debug(ProyectoContextoModalComponent.name,
-        `getChilds(parent: ${parent})`, 'end'))
+      takeLast(1)
     );
   }
 
   private publishNodes(rootNodes?: NodeAreaTematica[]) {
-    this.logger.debug(ProyectoContextoModalComponent.name, `publishNodes()`, 'start');
     let nodes = rootNodes ? rootNodes : this.dataSource.data;
     nodes = sortByName(nodes);
     this.dataSource.data = nodes;
-    this.logger.debug(ProyectoContextoModalComponent.name, `publishNodes()`, 'end');
   }
 
   onCheckNode(node: NodeAreaTematica, $event: MatCheckboxChange): void {
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'start');
     this.checkedNode = $event.checked ? node : undefined;
-    this.logger.debug(ProyectoContextoModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'end');
   }
 }
 

@@ -90,7 +90,7 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private solicitudId: number,
     private convocatoriaId: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
@@ -98,19 +98,14 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
     private solicitudDocumentoService: SolicitudDocumentoService
   ) {
     super(solicitudId);
-    this.logger.debug(SolicitudDocumentosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(SolicitudDocumentosFragment.name, 'constructor()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudDocumentosFragment.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subcription => subcription.unsubscribe());
-    this.logger.debug(SolicitudDocumentosFragment.name, 'ngOnDestroy()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(SolicitudDocumentosFragment.name, `onInitialize()`, 'start');
     const id = this.convocatoriaId;
     const subscription = this.configuracionSolicitudService.findAllConvocatoriaDocumentoRequeridoSolicitud(id).pipe(
       map((result) => result.items),
@@ -125,10 +120,9 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
     ).subscribe(
       (nodes) => {
         this.publishNodes(nodes);
-        this.logger.debug(SolicitudDocumentosFragment.name, `onInitialize()`, 'end');
       },
       (error) => {
-        this.logger.error(SolicitudDocumentosFragment.name, `onInitialize()`, error);
+        this.logger.error(error);
       }
     );
     this.subscriptions.push(subscription);
@@ -143,7 +137,6 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
   }
 
   private buildTree(documentos: ISolicitudDocumento[]): NodeDocumentoSolicitud[] {
-    this.logger.debug(SolicitudDocumentosFragment.name, `buildTree(documentos: ${documentos})`, 'start');
     const nodes: NodeDocumentoSolicitud[] = [];
     documentos.forEach((documento: ISolicitudDocumento) => {
       const keyTipoDocumento = `${documento.tipoDocumento ? documento.tipoDocumento?.id : 0}`;
@@ -155,20 +148,16 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         new StatusWrapper<ISolicitudDocumento>(documento));
       tipoDocNode.addChild(docNode);
     });
-    this.logger.debug(SolicitudDocumentosFragment.name, `buildTree(documentos: ${documentos})`, 'end');
     return nodes;
   }
 
   publishNodes(rootNodes?: NodeDocumentoSolicitud[]) {
-    this.logger.debug(SolicitudDocumentosFragment.name, `publishNodes(rootNodes?: ${rootNodes})`, 'start');
     let nodes = rootNodes ? rootNodes : this.documentos$.value;
     nodes = sortByTitle(nodes);
     this.documentos$.next(nodes);
-    this.logger.debug(SolicitudDocumentosFragment.name, `publishNodes(rootNodes?: ${rootNodes})`, 'end');
   }
 
   public addNode(node: NodeDocumentoSolicitud): NodeDocumentoSolicitud {
-    this.logger.debug(SolicitudDocumentosFragment.name, `addNode(node: ${node})`, 'start');
     const keyTipoDocumento = `${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
     let nodeTipoDoc = this.nodeLookup.get(keyTipoDocumento);
     let addToRoot = false;
@@ -188,12 +177,10 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
     }
     this.publishNodes(current);
     this.setChanges(true);
-    this.logger.debug(SolicitudDocumentosFragment.name, `addNode(node: ${node})`, 'end');
     return nodeDocumento;
   }
 
   public updateNode(node: NodeDocumentoSolicitud) {
-    this.logger.debug(SolicitudDocumentosFragment.name, `updateNode(node: ${node})`, 'start');
     if (!node.documento.created) {
       node.documento.setEdited();
     }
@@ -216,11 +203,9 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
     const current = this.documentos$.value;
     this.publishNodes(current);
     this.setChanges(true);
-    this.logger.debug(SolicitudDocumentosFragment.name, `updateNode(node: ${node})`, 'end');
   }
 
   deleteNode(node: NodeDocumentoSolicitud) {
-    this.logger.debug(SolicitudDocumentosFragment.name, `deleteNode(node: ${node})`, 'start');
     if (!node.documento.created) {
       this.documentosEliminados.push(node.documento.value);
     }
@@ -231,11 +216,9 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
     }
     this.publishNodes(current);
     this.setChanges(true);
-    this.logger.debug(SolicitudDocumentosFragment.name, `deleteNode(node: ${node})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(SolicitudDocumentosFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deleteDocumentos(),
       this.updateDocumentos(this.getUpdated(this.documentos$.value)),
@@ -246,15 +229,12 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         if (this.isSaveOrUpdateComplete(this.documentos$.value)) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(SolicitudDocumentosFragment.name, `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private deleteDocumentos(): Observable<void> {
-    this.logger.debug(SolicitudDocumentosFragment.name, `deleteDocumentos()`, 'start');
     if (this.documentosEliminados.length === 0) {
-      this.logger.debug(SolicitudDocumentosFragment.name, `deleteDocumentos()`, 'end');
       return of(void 0);
     }
     return from(this.documentosEliminados).pipe(
@@ -264,17 +244,14 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
             tap(() => {
               this.documentosEliminados = this.documentosEliminados.filter(deleted =>
                 deleted.id !== documento.id);
-            }),
-            tap(() => this.logger.debug(SolicitudDocumentosFragment.name, `deleteDocumentos()`, 'end'))
+            })
           );
       })
     );
   }
 
   private updateDocumentos(nodes: NodeDocumentoSolicitud[]): Observable<void> {
-    this.logger.debug(SolicitudDocumentosFragment.name, `updateDocumentos()`, 'start');
     if (nodes.length === 0) {
-      this.logger.debug(SolicitudDocumentosFragment.name, `updateDocumentos()`, 'end');
       return of(void 0);
     }
     return from(nodes).pipe(
@@ -282,15 +259,13 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         return this.solicitudDocumentoService.update(node.documento.value.id, node.documento.value).pipe(
           map((updated) => {
             node.documento = new StatusWrapper<ISolicitudDocumento>(updated);
-          }),
-          tap(() => this.logger.debug(SolicitudDocumentosFragment.name, `updateDocumentos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private getUpdated(nodes: NodeDocumentoSolicitud[]): NodeDocumentoSolicitud[] {
-    this.logger.debug(SolicitudDocumentosFragment.name, `getUpdated(documentos: ${nodes})`, 'start');
     const updated: NodeDocumentoSolicitud[] = [];
     nodes.forEach((node) => {
       if (node.documento && node.documento.edited) {
@@ -300,14 +275,11 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         updated.push(...this.getUpdated(node.childs));
       }
     });
-    this.logger.debug(SolicitudDocumentosFragment.name, `getUpdated(documentos: ${nodes})`, 'end');
     return updated;
   }
 
   private createDocumentos(nodes: NodeDocumentoSolicitud[]): Observable<void> {
-    this.logger.debug(SolicitudDocumentosFragment.name, `createDocumentos()`, 'start');
     if (nodes.length === 0) {
-      this.logger.debug(SolicitudDocumentosFragment.name, `createDocumentos()`, 'end');
       return of(void 0);
     }
     return from(nodes).pipe(
@@ -318,15 +290,13 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         return this.solicitudDocumentoService.create(node.documento.value).pipe(
           map(created => {
             node.documento = new StatusWrapper<ISolicitudDocumento>(created);
-          }),
-          tap(() => this.logger.debug(SolicitudDocumentosFragment.name, `createDocumentos()`, 'end'))
+          })
         );
       })
     );
   }
 
   private getCreated(nodes: NodeDocumentoSolicitud[]): NodeDocumentoSolicitud[] {
-    this.logger.debug(SolicitudDocumentosFragment.name, `getCreated(programas: ${nodes})`, 'start');
     const updated: NodeDocumentoSolicitud[] = [];
     nodes.forEach((node) => {
       if (node.documento && node.documento.created) {
@@ -336,12 +306,10 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         updated.push(...this.getCreated(node.childs));
       }
     });
-    this.logger.debug(SolicitudDocumentosFragment.name, `getCreated(programas: ${nodes})`, 'end');
     return updated;
   }
 
   private isSaveOrUpdateComplete(nodes: NodeDocumentoSolicitud[]): boolean {
-    this.logger.debug(SolicitudDocumentosFragment.name, `isSaveOrUpdateComplete(node: ${nodes})`, 'start');
     let pending = this.documentosEliminados.length > 0;
     if (pending) {
       return false;
@@ -360,7 +328,6 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
         }
       }
     });
-    this.logger.debug(SolicitudDocumentosFragment.name, `isSaveOrUpdateComplete(node: ${nodes})`, 'end');
     return true;
   }
 }

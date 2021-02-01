@@ -12,7 +12,6 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
 import { RangeValidator } from '@core/validators/range-validator';
-import { NGXLogger } from 'ngx-logger';
 
 export interface IConvocatoriaSeguimientoCientificoModalData {
   duracion: number;
@@ -38,13 +37,11 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaSeguimientoCientificoModalData,
     public matDialogRef: MatDialogRef<ConvocatoriaSeguimientoCientificoModalComponent>
   ) {
-    super(logger, snackBarService, matDialogRef, data.convocatoriaSeguimientoCientifico);
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data.convocatoriaSeguimientoCientifico);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -62,20 +59,14 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
     this.textSaveOrUpdate = this.data?.convocatoriaSeguimientoCientifico?.mesInicial ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getFormGroup.name}()`, 'start');
-
     const rangosPeriodosExistentes = this.data.convocatoriaSeguimientoCientificoList
       .filter(seguimientoCientifico => seguimientoCientifico.value?.mesInicial !== this.data.convocatoriaSeguimientoCientifico?.mesInicial)
       .map(seguimientoCientifico => {
@@ -118,13 +109,10 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
         formGroup.get('hastaMes').validator
       ]);
     }
-
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getFormGroup.name}()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): IConvocatoriaSeguimientoCientifico {
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getDatosForm.name}()`, 'start');
     const convocatoriaSeguimientoCientifico = this.data.convocatoriaSeguimientoCientifico;
     convocatoriaSeguimientoCientifico.numPeriodo = this.formGroup.get('numPeriodo').value;
     convocatoriaSeguimientoCientifico.mesInicial = this.formGroup.get('desdeMes').value;
@@ -132,7 +120,6 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     convocatoriaSeguimientoCientifico.fechaInicioPresentacion = this.formGroup.get('fechaInicio').value;
     convocatoriaSeguimientoCientifico.fechaFinPresentacion = this.formGroup.get('fechaFin').value;
     convocatoriaSeguimientoCientifico.observaciones = this.formGroup.get('observaciones').value;
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return convocatoriaSeguimientoCientifico;
   }
 
@@ -168,6 +155,5 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
 
     };
   }
-
 
 }

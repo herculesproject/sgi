@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 export class ModeloTipoEnlaceService extends SgiRestService<number, IModeloTipoEnlace> {
   private static readonly MAPPING = '/modelotipoenlaces';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ModeloTipoEnlaceService.name,
       logger,

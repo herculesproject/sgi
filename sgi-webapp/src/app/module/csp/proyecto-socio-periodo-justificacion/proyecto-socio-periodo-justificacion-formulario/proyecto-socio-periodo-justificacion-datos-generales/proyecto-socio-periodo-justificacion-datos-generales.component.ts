@@ -1,12 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
-import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { ProyectoSocioPeriodoJustificacionDatosGeneralesFragment } from './proyecto-socio-periodo-justificacion-datos-generales.fragment';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Subscription } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
 import { ProyectoSocioPeriodoJustificacionActionService } from '../../proyecto-socio-periodo-justificacion.action.service';
+import { ProyectoSocioPeriodoJustificacionDatosGeneralesFragment } from './proyecto-socio-periodo-justificacion-datos-generales.fragment';
 
 @Component({
   selector: 'sgi-proyecto-socio-periodo-justificacion-datos-generales',
@@ -26,11 +25,9 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesComponent extends
   defaultFechaFinPresentacion = [23, 59, 59];
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ProyectoSocioPeriodoJustificacionActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoSocioPeriodoJustificacionDatosGeneralesFragment;
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(36%-10px)';
@@ -42,13 +39,10 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
 }

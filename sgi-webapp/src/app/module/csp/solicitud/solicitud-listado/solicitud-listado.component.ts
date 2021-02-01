@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { ISolicitud } from '@core/models/csp/solicitud';
-import { ROUTE_NAMES } from '@core/route.names';
-import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Observable, of } from 'rxjs';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { SgiRestListResult, SgiRestFilterType, SgiRestFilter } from '@sgi/framework/http';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { switchMap, map, startWith, catchError } from 'rxjs/operators';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
-import { DialogService } from '@core/services/dialog.service';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
+import { ISolicitud } from '@core/models/csp/solicitud';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ROUTE_NAMES } from '@core/route.names';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { DialogService } from '@core/services/dialog.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_BUTTON_NEW = marker('footer.csp.solicitud.crear');
 const MSG_ERROR = marker('csp.solicitud.listado.error');
@@ -54,7 +54,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   planInvestigaciones$: Observable<IPrograma[]>;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private dialogService: DialogService,
     protected snackBarService: SnackBarService,
     private solicitudService: SolicitudService,
@@ -62,8 +62,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private fuenteFinanciacionService: FuenteFinanciacionService,
     private programaService: ProgramaService
   ) {
-    super(logger, snackBarService, MSG_ERROR);
-    this.logger.debug(SolicitudListadoComponent.name, 'constructor()', 'start');
+    super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -74,11 +73,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.logger.debug(SolicitudListadoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
 
     this.formGroup = new FormGroup({
@@ -103,11 +100,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.loadTiposEstadoSolicitud();
     this.getFuentesFinanciacion();
     this.getPlanesInvestigacion();
-    this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<ISolicitud>> {
-    this.logger.debug(SolicitudListadoComponent.name, `createObservable()`, 'start');
     const observable$ = this.solicitudService.findAllTodos(this.getFindOptions()).pipe(
       switchMap((response) => {
         if (response.total === 0) {
@@ -135,12 +130,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     );
 
-    this.logger.debug(SolicitudListadoComponent.name, `createObservable()`, 'end');
     return observable$;
   }
 
   protected initColumns(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `initColumns()`, 'start');
     this.columnas = [
       'referencia',
       'convocatoria.titulo',
@@ -151,17 +144,13 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       'activo',
       'acciones'
     ];
-    this.logger.debug(SolicitudListadoComponent.name, `initColumns()`, 'end');
   }
 
   protected loadTable(reset?: boolean): void {
-    this.logger.debug(SolicitudListadoComponent.name, `loadTable(${reset})`, 'start');
     this.solicitudes$ = this.getObservableLoadTable(reset);
-    this.logger.debug(SolicitudListadoComponent.name, `loadTable(${reset})`, 'end');
   }
 
   protected createFilters(): SgiRestFilter[] {
-    this.logger.debug(SolicitudListadoComponent.name, `createFilters()`, 'start');
     let filtros: SgiRestFilter[] = [];
     this.addFiltro(filtros, 'referenciaConvocatoria', SgiRestFilterType.LIKE, this.formGroup.controls.referenciaConvocatoria.value);
     this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, Object.keys(TipoEstadoSolicitud)
@@ -169,7 +158,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     if (this.busquedaAvanzada) {
       filtros = this.createFiltersAvanzados(filtros);
     }
-    this.logger.debug(SolicitudListadoComponent.name, `createFilters()`, 'end');
     return filtros;
   }
 
@@ -201,9 +189,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   }
 
   loadTiposEstadoSolicitud(): void {
-    this.logger.debug(SolicitudListadoComponent.name, 'loadTiposEstadoSolicitud()', 'start');
     this.tiposEstadoSolicitud = Object.keys(TipoEstadoSolicitud).map(key => TipoEstadoSolicitud[key]);
-    this.logger.debug(SolicitudListadoComponent.name, 'loadTiposEstadoSolicitud()', 'end');
   }
 
   /**
@@ -211,7 +197,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
    * @param solicitud una solicitud
    */
   activateSolicitud(solicitud: ISolicitud): void {
-    this.logger.debug(SolicitudListadoComponent.name, `activateSolicitud(solicitud: ${solicitud})`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_REACTIVATE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -224,13 +209,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVATE);
         this.loadTable();
-        this.logger.debug(SolicitudListadoComponent.name,
-          `activateSolicitud(solicitud: ${solicitud})`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_REACTIVATE);
-        this.logger.error(SolicitudListadoComponent.name,
-          `activateSolicitud(solicitud: ${solicitud})`, error);
       }
     );
     this.suscripciones.push(subcription);
@@ -241,7 +223,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
    * @param solicitud una solicitud
    */
   deactivateSolicitud(solicitud: ISolicitud): void {
-    this.logger.debug(SolicitudListadoComponent.name, `deactivateSolicitud(solicitud: ${solicitud})`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -254,34 +235,26 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
         this.loadTable();
-        this.logger.debug(SolicitudListadoComponent.name,
-          `deactivateSolicitud(solicitud: ${solicitud})`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-        this.logger.error(SolicitudListadoComponent.name,
-          `deactivateSolicitud(solicitud: ${solicitud})`, error);
       }
     );
     this.suscripciones.push(subcription);
   }
 
   toggleBusquedaAvanzada(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `toggleBusquedaAvanzada()`, 'start');
     this.busquedaAvanzada = !this.busquedaAvanzada;
     this.cleanBusquedaAvanzado();
-    this.logger.debug(SolicitudListadoComponent.name, `toggleBusquedaAvanzada()`, 'end');
   }
 
   onClearFilters(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `onClearFilters()`, 'start');
     super.onClearFilters();
     this.cleanBusquedaAvanzado();
-    this.logger.debug(SolicitudListadoComponent.name, `onClearFilters()`, 'end');
   }
 
   private cleanBusquedaAvanzado(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `cleanBusquedaAvanzado()`, 'start');
     this.formGroup.controls.plazoAbierto.setValue(false);
     this.formGroup.controls.fechaInicioDesde.setValue(undefined);
     this.formGroup.controls.fechaInicioHasta.setValue(undefined);
@@ -292,11 +265,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup.controls.añoConvocatoria.setValue(undefined);
     this.formGroup.controls.entidadConvocante.setValue(undefined);
     this.formGroup.controls.entidadFinanciadora.setValue(undefined);
-    this.logger.debug(SolicitudListadoComponent.name, `cleanBusquedaAvanzado()`, 'end');
   }
 
   private getFuentesFinanciacion(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `getFuentesFinanciacion()`, 'start');
     this.suscripciones.push(
       this.fuenteFinanciacionService.findAll().subscribe(
         (res) => {
@@ -306,11 +277,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
               startWith(''),
               map(value => this.filtroFuenteFinanciacion(value))
             );
-          this.logger.debug(SolicitudListadoComponent.name, `getFuentesFinanciacion()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_FUENTE_FINANCIACION_INIT);
-          this.logger.error(SolicitudListadoComponent.name, `getFuentesFinanciacion()`, error);
         }
       )
     );
@@ -326,7 +296,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   }
 
   private getPlanesInvestigacion(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `getPlanesInvestigacion()`, 'start');
     this.suscripciones.push(
       this.programaService.findAllPlan().subscribe(
         (res) => {
@@ -336,11 +305,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
               startWith(''),
               map(value => this.filtroPlanInvestigacion(value))
             );
-          this.logger.debug(SolicitudListadoComponent.name, `getPlanesInvestigacion()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_PLAN_INVESTIGACION_INIT);
-          this.logger.error(SolicitudListadoComponent.name, `getPlanesInvestigacion()`, error);
         }
       )
     );

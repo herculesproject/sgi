@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { SgiRestService } from '@sgi/framework/http/';
-import { IDocumento } from '@core/models/sgdoc/documento';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
+import { SgiRestService } from '@sgi/framework/http/';
+import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError, map, takeLast } from 'rxjs/operators';
+import { catchError, map, takeLast } from 'rxjs/operators';
 
 export interface FileModel {
   file: File;
@@ -31,7 +31,7 @@ export function triggerDownloadToUser(file: Blob, fileName: string) {
 export class DocumentoService extends SgiRestService<string, IDocumento>{
   private static readonly MAPPING = '/documentos';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(DocumentoService.name, logger,
       `${environment.serviceServers.sgdoc}${DocumentoService.MAPPING}`, http);
   }
@@ -41,11 +41,8 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
    * @param fichero Fichero a crear.
    */
   uploadFichero(fileModel: FileModel): Observable<IDocumento> {
-    this.logger.debug(DocumentoService.name, `uploadFichero()`, '-', 'START');
-
     return this.uploadFicheroWithStatus(fileModel.file).pipe(
       map((event: HttpEvent<any>) => {
-        console.log(event);
         switch (event.type) {
           case HttpEventType.Sent:
             fileModel.status = 'uploading';
@@ -67,8 +64,6 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
   }
 
   uploadFicheroWithStatus(file: File): Observable<HttpEvent<any>> {
-    this.logger.debug(DocumentoService.name, `uploadFicheroWithStatus()`, '-', 'START');
-
     const formData = new FormData();
     formData.append('archivo', file);
 
@@ -80,11 +75,7 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
    * @param documentoRef referencia del documento.
    */
   getInfoFichero(documentoRef: string): Observable<IDocumento> {
-    this.logger.debug(DocumentoService.name, `downloadFichero(${documentoRef}: string)`, '-', 'START');
-
-    return this.http.get<IDocumento>(`${this.endpointUrl}/${documentoRef}`).pipe(
-      tap(() => this.logger.debug(DocumentoService.name, `downloadFichero(${documentoRef}: string)`, '-', 'end'))
-    );
+    return this.http.get<IDocumento>(`${this.endpointUrl}/${documentoRef}`);
 
   }
 
@@ -94,13 +85,9 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
    * @param documentoRef referencia del documento.
    */
   downloadFichero(documentoRef: string): Observable<Blob> {
-    this.logger.debug(DocumentoService.name, `downloadFichero(${documentoRef}: string)`, '-', 'START');
-
     return this.http.get(`${this.endpointUrl}/${documentoRef}/archivo`, {
       headers: new HttpHeaders().set('Accept', 'application/octet-stream'), responseType: 'blob'
-    }).pipe(
-      tap(() => this.logger.debug(DocumentoService.name, `downloadFichero(${documentoRef}: string)`, '-', 'end'))
-    );
+    });
 
   }
 
@@ -110,12 +97,6 @@ export class DocumentoService extends SgiRestService<string, IDocumento>{
    * @param documentoRef referencia del documento.
    */
   eliminarFichero(documentoRef: string): Observable<void> {
-    this.logger.debug(DocumentoService.name, `downloadFichero(${documentoRef}: string)`, '-', 'START');
-
-
-    return this.http.delete<void>(`${this.endpointUrl}/${documentoRef}`).pipe(
-      tap(() => this.logger.debug(DocumentoService.name, `downloadFichero(${documentoRef}: string)`, '-', 'end'))
-    );
-
+    return this.http.delete<void>(`${this.endpointUrl}/${documentoRef}`);
   }
 }

@@ -1,26 +1,26 @@
-import { Fragment, Group } from '@core/services/action-service';
-import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
 import { FormGroup } from '@angular/forms';
-import { IBloque } from '@core/models/eti/bloque';
-import { FormlyFormOptions } from '@ngx-formly/core';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { IApartado } from '@core/models/eti/apartado';
-import { FormularioService } from '@core/services/eti/formulario.service';
+import { IBloque } from '@core/models/eti/bloque';
+import { IComentario } from '@core/models/eti/comentario';
 import { IComite } from '@core/models/eti/comite';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IMemoria, isFormularioEditable } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { BloqueService } from '@core/services/eti/bloque.service';
-import { RespuestaService } from '@core/services/eti/respuesta.service';
-import { ApartadoService } from '@core/services/eti/apartado.service';
 import { IRespuesta } from '@core/models/eti/respuesta';
-import { IComentario } from '@core/models/eti/comentario';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
+import { Fragment, Group } from '@core/services/action-service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { FormularioService } from '@core/services/eti/formulario.service';
+import { MemoriaService } from '@core/services/eti/memoria.service';
+import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { FormlyFormOptions } from '@ngx-formly/core';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 
 export interface IBlock {
   bloque: IBloque;
@@ -64,7 +64,7 @@ export class MemoriaFormularioFragment extends Fragment {
   }
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     comite: IComite,
     private formularioService: FormularioService,
@@ -433,7 +433,8 @@ export class MemoriaFormularioFragment extends Fragment {
    * @param formlyFieldConfig The Formly field config onto load questions
    * @param questions  The questions to load
    */
-  private fillFormlyData(firstLevel: boolean, model: any, formState: any, formlyFieldConfig: SgiFormlyFieldConfig[], questions: IQuestion[]): void {
+  private fillFormlyData(firstLevel: boolean, model: any, formState: any, formlyFieldConfig: SgiFormlyFieldConfig[],
+    questions: IQuestion[]): void {
     questions.forEach(question => {
       const firstFieldConfig = question.apartado.esquema ? question.apartado.esquema[0] : {};
       const key = firstFieldConfig.key as string;

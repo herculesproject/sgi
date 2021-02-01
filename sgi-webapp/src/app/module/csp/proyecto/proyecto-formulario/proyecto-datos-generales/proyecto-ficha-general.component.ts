@@ -1,25 +1,25 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormFragmentComponent } from '@core/component/fragment.component';
-import { IProyecto, TipoHorasAnualesEnum, TipoHojaFirmaEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ProyectoActionService } from '../../proyecto.action.service';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { Subscription, Observable, of } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
-import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { FormFragmentComponent } from '@core/component/fragment.component';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
+import { ProyectoActionService } from '../../proyecto.action.service';
+import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
 
 const MSG_ERROR_INIT = marker('csp.proyecto.datosGenerales.error.cargar');
 
@@ -68,7 +68,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   requiredHoras: boolean;
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected actionService: ProyectoActionService,
     private readonly snackBarService: SnackBarService,
     private unidadGestionService: UnidadGestionService,
@@ -77,7 +77,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService
   ) {
     super(actionService.FRAGMENT.FICHA_GENERAL, actionService);
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoFichaGeneralFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -108,12 +107,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadUnidadesGestion();
     this.loadAmbitosGeograficos();
@@ -132,41 +128,35 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
     this.subscriptions.push(
       this.formGroup.controls.colaborativo.valueChanges.subscribe(_ => {
-        this.actionService.isProyectoColaborativo = this.formGroup.controls.colaborativo.value ? this.formGroup.controls.colaborativo.value : false;
+        this.actionService.isProyectoColaborativo = this.formGroup.controls.colaborativo.value ?
+          this.formGroup.controls.colaborativo.value : false;
       })
     );
 
     this.formGroup.controls.horasAnuales.disable();
-
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
-  * En caso de ser NO timesheet
-  * y SI calculo coste
-  * Error en el formulario
-  */
+   * En caso de ser NO timesheet
+   * y SI calculo coste
+   * Error en el formulario
+   */
   private validarTimesheet() {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'validarTimesheet()', 'start');
     if (this.formGroup.controls.timesheet.value === false && this.formGroup.controls.costeHora.value === true) {
       this.formGroup.controls.timesheet.setErrors({ invalid: true });
       this.formGroup.controls.timesheet.markAsTouched({ onlySelf: true });
     }
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'validarTimesheet()', 'start');
   }
 
   /**
-  * En caso de activar coste hora personal
-  * Habilitamos horas anuales
-  */
+   * En caso de activar coste hora personal
+   * Habilitamos horas anuales
+   */
   private validarCoste() {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'validarCoste()', 'start');
     if (this.formGroup.controls.costeHora.value) {
       this.formGroup.controls.horasAnuales.enable();
       this.requiredHoras = true;
@@ -187,19 +177,15 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
         this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
       }
     }
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'validarCoste()', 'start');
   }
 
   /**
    * Validacion timesheet por estado u obligatorio
    */
   validacionTimesheet() {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, 'validacionTimesheet()', 'start');
     if (this.formPart.abiertoRequired === true || this.obligatorioTimesheet === true) {
-      this.logger.debug(ProyectoFichaGeneralComponent.name, 'validacionTimesheet()', 'end');
       return true;
     } else {
-      this.logger.debug(ProyectoFichaGeneralComponent.name, 'validacionTimesheet()', 'end');
       return false;
     }
   }
@@ -208,7 +194,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    * Listado ambito geografico
    */
   private loadAmbitosGeograficos(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `loadAmbitosGeograficos()`, 'start');
     this.subscriptions.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
         res => {
@@ -218,11 +203,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
               startWith(''),
               map(value => this.filtroTipoAmbitoGeografico(value))
             );
-          this.logger.debug(ProyectoFichaGeneralComponent.name, `loadAmbitosGeograficos()`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ProyectoFichaGeneralComponent.name, `loadAmbitosGeograficos()`, 'error');
         }
       )
     );
@@ -232,7 +216,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    * Listado de modelos de ejecucion
    */
   loadModelosEjecucion(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `loadModelosEjecucion()`, 'start');
     const options = {
       filters: [
         {
@@ -255,21 +238,19 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
             startWith(''),
             map(value => this.filtroModeloEjecucion(value))
           );
-        this.logger.debug(ProyectoFichaGeneralComponent.name, `loadModelosEjecucion()`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ProyectoFichaGeneralComponent.name, `loadModelosEjecucion()`, error);
       }
     );
     this.subscriptions.push(subcription);
   }
 
   /**
-  * Listado de finalidades
-  */
+   * Listado de finalidades
+   */
   loadFinalidades(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `loadFinalidades()`, 'start');
     const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
     if (modeloEjecucion) {
       const id = modeloEjecucion.id;
@@ -296,11 +277,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
                   startWith(''),
                   map(value => this.filtroFinalidades(value))
                 );
-              this.logger.debug(ProyectoFichaGeneralComponent.name, `loadFinalidades()`, 'end');
             },
             (error) => {
+              this.logger.error(error);
               this.snackBarService.showError(MSG_ERROR_INIT);
-              this.logger.error(ProyectoFichaGeneralComponent.name, `loadFinalidades()`, error);
             }
           )
         );
@@ -322,7 +302,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    * Carga la lista de unidades de gestion seleccionables por el usuario
    */
   private loadUnidadesGestion(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `loadUnidadesGestion()`, 'start');
     this.subscriptions.push(
       this.unidadGestionService.findAllRestringidos().subscribe(
         res => {
@@ -332,11 +311,10 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
               startWith(''),
               map(value => this.filtroUnidadGestion(value))
             );
-          this.logger.debug(ProyectoFichaGeneralComponent.name, `loadUnidadesGestion()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ProyectoFichaGeneralComponent.name, `loadUnidadesGestion()`, error);
         }
       )
     );
@@ -428,20 +406,16 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   }
 
   clearFinalidad(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `clearFinalidad()`, 'end');
     this.formGroup.get('finalidad').setValue('');
     this.finalidadFiltered = [];
     this.finalidades$ = of();
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `clearFinalidad()`, 'end');
   }
 
   clearModeloEjecuccion(): void {
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `clearModeloEjecuccion()`, 'end');
     this.formGroup.get('modeloEjecucion').setValue('');
     this.modelosEjecucionFiltered = [];
     this.modelosEjecucion$ = of();
     this.clearFinalidad();
-    this.logger.debug(ProyectoFichaGeneralComponent.name, `clearModeloEjecuccion()`, 'end');
   }
 
 }

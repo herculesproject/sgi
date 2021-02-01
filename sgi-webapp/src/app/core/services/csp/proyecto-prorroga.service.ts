@@ -6,7 +6,7 @@ import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class ProyectoProrrogaService extends SgiRestService<number, IProyectoPro
   private static readonly MAPPING = '/proyectoprorrogas';
 
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoProrrogaService.name,
       logger,
@@ -31,11 +31,9 @@ export class ProyectoProrrogaService extends SgiRestService<number, IProyectoPro
    * @retrurn true/false
    */
   exists(id: number): Observable<boolean> {
-    this.logger.debug(ProyectoProrrogaService.name, `exists(id: ${id})`, '-', 'start');
     const url = `${this.endpointUrl}/${id}`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200),
-      tap(() => this.logger.debug(ProyectoProrrogaService.name, `exists(id: ${id})`, '-', 'end')),
+      map(x => x.status === 200)
     );
   }
 
@@ -45,25 +43,20 @@ export class ProyectoProrrogaService extends SgiRestService<number, IProyectoPro
    * @return la lista de ProyectoPeridoSeguimientoDocumento
    */
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoProrrogaDocumento>> {
-    this.logger.debug(ProyectoProrrogaService.name, `findDocumentos(id: ${id})`, '-', 'START');
     return this.find<IProyectoProrrogaDocumento, IProyectoProrrogaDocumento>(
-      `${this.endpointUrl}/${id}/prorrogadocumentos`, options).pipe(
-        tap(() => this.logger.debug(ProyectoProrrogaService.name, `findDocumentos(id: ${id})`, '-', 'END'))
-      );
+      `${this.endpointUrl}/${id}/prorrogadocumentos`, options);
   }
 
   /**
- * Comprueba si existe documentos asociados al proyecto prorroga
- *
- * @param id Id del proyecto prorroga
- * @retrurn true/false
- */
+   * Comprueba si existe documentos asociados al proyecto prorroga
+   *
+   * @param id Id del proyecto prorroga
+   * @retrurn true/false
+   */
   existsDocumentos(id: number): Observable<boolean> {
-    this.logger.debug(ProyectoProrrogaService.name, `existsDocumentos(id: ${id})`, '-', 'start');
     const url = `${this.endpointUrl}/${id}/prorrogadocumentos`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(response => response.status === 200),
-      tap(() => this.logger.debug(ProyectoProrrogaService.name, `existsDocumentos(id: ${id})`, '-', 'end')),
+      map(response => response.status === 200)
     );
   }
 

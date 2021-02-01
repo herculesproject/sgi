@@ -1,19 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { Observable, merge } from 'rxjs';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
+import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { map, startWith } from 'rxjs/operators';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const MSG_ERROR_INIT = marker('csp.proyecto.socio-equipo.rol-socio.error.cargar');
 const MSG_ANADIR = marker('botones.aniadir');
@@ -36,14 +36,13 @@ export class ProyectoSocioEquipoModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoSocioEquipoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoEquipoSocioModalData,
     private rolProyectoService: RolProyectoService
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -53,11 +52,9 @@ export class ProyectoSocioEquipoModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadRolProyectos();
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
@@ -68,11 +65,9 @@ export class ProyectoSocioEquipoModalComponent extends
         this.formGroup.get('fechaFin').valueChanges
       ).subscribe(() => this.checkRangesDates())
     );
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, 'ngOnInit()', 'start');
   }
 
   private loadRolProyectos(): void {
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `loadRolProyectos()`, 'start');
     const subcription = this.rolProyectoService.findAll().pipe(
       map(result => result.items)
     ).subscribe(
@@ -82,11 +77,10 @@ export class ProyectoSocioEquipoModalComponent extends
           startWith(''),
           map(value => this.filtroRolProyecto(value))
         );
-        this.logger.debug(ProyectoSocioEquipoModalComponent.name, `loadRolProyectos()`, 'end');
       },
       error => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ProyectoSocioEquipoModalComponent.name, `loadRolProyectos()`, error);
       }
     );
     this.subscriptions.push(subcription);
@@ -103,17 +97,14 @@ export class ProyectoSocioEquipoModalComponent extends
   }
 
   protected getDatosForm(): ProyectoEquipoSocioModalData {
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `getDatosForm()`, 'start');
     this.data.proyectoSocioEquipo.rolProyecto = this.formGroup.get('rolProyecto').value;
     this.data.proyectoSocioEquipo.persona = this.formGroup.get('persona').value;
     this.data.proyectoSocioEquipo.fechaFin = this.formGroup.get('fechaFin').value;
     this.data.proyectoSocioEquipo.fechaInicio = this.formGroup.get('fechaInicio').value;
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup(
       {
         rolProyecto: new FormControl(this.data.proyectoSocioEquipo.rolProyecto, [
@@ -131,12 +122,10 @@ export class ProyectoSocioEquipoModalComponent extends
         validators: [NumberValidator.isAfter('fechaInicio', 'fechaFin')]
       }
     );
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   private checkRangesDates(): void {
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `checkRangesDates()`, 'start');
     const persona = this.formGroup.get('persona');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
@@ -195,7 +184,6 @@ export class ProyectoSocioEquipoModalComponent extends
         }
       }
     }
-    this.logger.debug(ProyectoSocioEquipoModalComponent.name, `checkRangesDates()`, 'end');
   }
 
   private addErrorRange(formControl: AbstractControl): void {

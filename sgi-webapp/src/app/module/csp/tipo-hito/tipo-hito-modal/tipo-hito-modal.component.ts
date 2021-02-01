@@ -7,7 +7,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { NGXLogger } from 'ngx-logger';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ANADIR = marker('botones.aniadir');
@@ -24,12 +23,10 @@ export class TipoHitoModalComponent implements OnInit {
   textSaveOrUpdate: string;
 
   constructor(
-    private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<TipoHitoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public tipoHito: ITipoHito
   ) {
-    this.logger.debug(TipoHitoModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -45,43 +42,34 @@ export class TipoHitoModalComponent implements OnInit {
       this.tipoHito = { activo: true } as ITipoHito;
       this.textSaveOrUpdate = MSG_ANADIR;
     }
-    this.logger.debug(TipoHitoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(TipoHitoModalComponent.name, 'ngOnInit()', 'start');
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.tipoHito?.nombre),
       descripcion: new FormControl(this.tipoHito?.descripcion)
     });
-    this.logger.debug(TipoHitoModalComponent.name, 'ngOnInit()', 'end');
   }
 
   closeModal(tipoHito?: ITipoHito): void {
-    this.logger.debug(TipoHitoModalComponent.name, `${this.closeModal.name}(tipoHito: ${tipoHito})`, 'start');
     this.matDialogRef.close(tipoHito);
-    this.logger.debug(TipoHitoModalComponent.name, `${this.closeModal.name}(tipoHito: ${tipoHito})`, 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(TipoHitoModalComponent.name, `${this.saveOrUpdate.name}()`, 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.tipoHito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(TipoHitoModalComponent.name, `${this.saveOrUpdate.name}()`, 'end');
   }
 
   /**
    * Método para actualizar la entidad con los datos de un formGroup
    */
   private loadDatosForm(): void {
-    this.logger.debug(TipoHitoModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
     this.tipoHito.nombre = this.formGroup.get('nombre').value;
     this.tipoHito.descripcion = this.formGroup.get('descripcion').value;
-    this.logger.debug(TipoHitoModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 
 }

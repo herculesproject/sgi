@@ -1,18 +1,17 @@
-import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { Subscription } from 'rxjs';
-import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-equipo-socio.fragment';
-import { MatTableDataSource } from '@angular/material/table';
-import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { MatSort } from '@angular/material/sort';
-import { DialogService } from '@core/services/dialog.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
-import { NGXLogger } from 'ngx-logger';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SolicitudProyectoEquipoSocioModalData, SolicitudProyectoSocioEquipoSocioModalComponent } from '../../modals/solicitud-proyecto-socio-equipo-socio-modal/solicitud-proyecto-socio-equipo-socio-modal.component';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { SolicitudProyectoEquipoSocioModalData, SolicitudProyectoSocioEquipoSocioModalComponent } from '../../modals/solicitud-proyecto-socio-equipo-socio-modal/solicitud-proyecto-socio-equipo-socio-modal.component';
+import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
+import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-equipo-socio.fragment';
 
 const MSG_DELETE = marker('csp.solicitud.proyecto.socio.equipo.borrar');
 
@@ -32,19 +31,15 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     actionService: SolicitudProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.EQUIPO_SOCIO, actionService);
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as SolicitudProyectoSocioEquipoSocioFragment;
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     const subcription = this.formPart.proyectoEquipoSocios$.subscribe(
       (proyectoEquipos) => {
@@ -68,17 +63,13 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
           return wrapper.value[property];
       }
     };
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoEquipoSocio>): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `openModal()`, 'start');
     const solicitudProyectoEquipo: ISolicitudProyectoEquipoSocio = {
       id: undefined,
       mesFin: undefined,
@@ -119,20 +110,17 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
             this.formPart.addProyectoEquipoSocio(modalData.solicitudProyectoEquipoSocio);
           }
         }
-        this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipoSocio>): void {
-    this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `deleteProyectoEquipo(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoEquipoSocio(wrapper);
           }
-          this.logger.debug(SolicitudProyectoSocioEquipoSocioComponent.name, `deleteProyectoEquipo(${wrapper})`, 'end');
         }
       )
     );

@@ -28,7 +28,7 @@ export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent {
   private urlFrom: string;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -42,7 +42,8 @@ export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

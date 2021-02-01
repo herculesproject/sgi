@@ -12,7 +12,6 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { PaquetesTrabajoModalData, ProyectoPaquetesTrabajoModalComponent } from '../../modals/proyecto-paquetes-trabajo-modal/proyecto-paquetes-trabajo-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
@@ -40,20 +39,16 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected proyectoReunionService: ProyectoService,
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.PAQUETE_TRABAJO, actionService);
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoPaqueteTrabajoFragment;
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -76,7 +71,6 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.paquetesTrabajo$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(ProyectoPaqueteTrabajoComponent.name, 'ngOnInit()', 'end');
     }));
   }
 
@@ -85,8 +79,6 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
    * @param idProyecto Identificador de paquete proyecto a editar.
    */
   openModal(wrapper?: StatusWrapper<IProyectoPaqueteTrabajo>): void {
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name, `openModal()`, 'start');
-
     const dataModal: PaquetesTrabajoModalData = {
       paquetesTrabajo: this.dataSource.data.map(paquetes => paquetes.value),
       paqueteTrabajo: wrapper ? wrapper.value : {} as IProyectoPaqueteTrabajo,
@@ -119,31 +111,24 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
             this.formPart.addPaqueteTrabajo(paqueteTrabajo);
           }
         }
-        this.logger.debug(ProyectoPaqueteTrabajoComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
    * Eliminar proyecto paquete proyecto
    */
   deletePaqueteTrabajo(wrapper: StatusWrapper<IProyectoPaqueteTrabajo>) {
-    this.logger.debug(ProyectoPaqueteTrabajoComponent.name,
-      `deletePaqueteTrabajo(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePaqueteTrabajo(wrapper);
           }
-          this.logger.debug(ProyectoPaqueteTrabajoComponent.name,
-            `deletePaqueteTrabajo(${wrapper})`, 'end');
         }
       )
     );

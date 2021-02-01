@@ -1,16 +1,16 @@
-import { Fragment } from '@core/services/action-service';
 import { OnDestroy } from '@angular/core';
-import { Subscription, BehaviorSubject, Observable, from } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { StatusWrapper } from '@core/utils/status-wrapper';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ISocioPeriodoJustificacionDocumento } from '@core/models/csp/socio-periodo-justificacion-documento';
+import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
+import { IDocumento } from '@core/models/sgdoc/documento';
+import { Fragment } from '@core/services/action-service';
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { SocioPeriodoJustificacionDocumentoService } from '@core/services/csp/socio-periodo-justificacion-documento.service';
-import { map, takeLast, tap, mergeMap, switchMap } from 'rxjs/operators';
-import { IDocumento } from '@core/models/sgdoc/documento';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { map, takeLast } from 'rxjs/operators';
 
 const SIN_TIPO_DOCUMENTO = marker('csp.proyecto-socio-periodo-justificacion.documentos.sin-tipo-documento');
 
@@ -104,26 +104,21 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     key: number,
     private proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
     private socioPeriodoJustificacionDocumentoService: SocioPeriodoJustificacionDocumentoService,
     private documentoService: DocumentoService
   ) {
     super(key);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, 'constructor()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `ngOnDestroy()`, 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       const id = this.getKey() as number;
       this.subscriptions.push(
@@ -133,10 +128,9 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
         ).subscribe(
           (nodes) => {
             this.publishNodes(nodes);
-            this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `onInitialize()`, 'end');
           },
           (error) => {
-            this.logger.error(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `onInitialize()`, error);
+            this.logger.error(error);
           }
         )
       );
@@ -152,7 +146,6 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
   }
 
   private buildTree(documentos: ISocioPeriodoJustificacionDocumento[]): NodeDocumentoProyecto[] {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `buildTree(documentos: ${documentos})`, 'start');
     const nodes: NodeDocumentoProyecto[] = [];
     documentos.forEach((documento: ISocioPeriodoJustificacionDocumento) => {
       const keyTipoDocumento = `${documento.tipoDocumento ? documento.tipoDocumento?.id : 0}`;
@@ -164,20 +157,16 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
         new StatusWrapper<ISocioPeriodoJustificacionDocumento>(documento));
       tipoDocNode.addChild(docNode);
     });
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `buildTree(documentos: ${documentos})`, 'end');
     return nodes;
   }
 
   publishNodes(rootNodes?: NodeDocumentoProyecto[]) {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `publishNodes(rootNodes?: ${rootNodes})`, 'start');
     let nodes = rootNodes ? rootNodes : this.documentos$.value;
     nodes = sortByTitle(nodes);
     this.documentos$.next(nodes);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `publishNodes(rootNodes?: ${rootNodes})`, 'end');
   }
 
   public addNode(node: NodeDocumentoProyecto): NodeDocumentoProyecto {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `addNode(node: ${node})`, 'start');
     const keyTipoDocumento = `${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
     let nodeTipoDoc = this.nodeLookup.get(keyTipoDocumento);
     let addToRoot = false;
@@ -197,12 +186,10 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
     }
     this.publishNodes(current);
     this.setChanges(true);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `addNode(node: ${node})`, 'end');
     return nodeDocumento;
   }
 
   public updateNode(node: NodeDocumentoProyecto) {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `updateNode(node: ${node})`, 'start');
     if (!node.documento.created) {
       node.documento.setEdited();
     }
@@ -225,11 +212,9 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
     const current = this.documentos$.value;
     this.publishNodes(current);
     this.setChanges(true);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `updateNode(node: ${node})`, 'end');
   }
 
   deleteNode(node: NodeDocumentoProyecto) {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `deleteNode(node: ${node})`, 'start');
     if (!node.documento.created) {
       this.documentosEliminados.push(node.documento.value);
     }
@@ -240,11 +225,9 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
     }
     this.publishNodes(current);
     this.setChanges(true);
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `deleteNode(node: ${node})`, 'end');
   }
 
   private getDocumentos(nodes: NodeDocumentoProyecto[]): ISocioPeriodoJustificacionDocumento[] {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `getDocumentos(nodes: ${nodes})`, 'start');
     const documentos: ISocioPeriodoJustificacionDocumento[] = [];
     nodes.forEach((node) => {
       if (node.documento) {
@@ -254,22 +237,17 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
         documentos.push(...this.getDocumentos(node.childs));
       }
     });
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `getDocumentos(nodes: ${nodes})`, 'end');
     return documentos;
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `saveOrUpdate()`, 'start');
     const documentos = this.getDocumentos(this.documentos$.value);
     const id = this.getKey() as number;
     return this.socioPeriodoJustificacionDocumentoService.updateList(id, documentos).pipe(
       takeLast(1),
       map((results) => {
         this.documentos$.next(this.buildTree(results));
-      }),
-      tap(() =>
-        this.logger.debug(ProyectoSocioPeriodoJustificacionDocumentosFragment.name, `saveOrUpdate()`, 'end')
-      )
+      })
     );
   }
 }

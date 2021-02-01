@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
+import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ActionService } from '@core/services/action-service';
-import { NGXLogger } from 'ngx-logger';
-import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.fragment';
+import { ProyectoSocioEquipoService } from '@core/services/csp/proyecto-socio-equipo.service';
+import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
+import { ProyectoSocioPeriodoPagoService } from '@core/services/csp/proyecto-socio-periodo-pago.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
-import { ProyectoSocioEquipoFragment } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.fragment';
-import { ProyectoSocioEquipoService } from '@core/services/csp/proyecto-socio-equipo.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { ProyectoSocioPeriodoPagoFragment } from './proyecto-socio-formulario/proyecto-socio-periodo-pago/proyecto-socio-periodo-pago.fragment';
-import { ProyectoSocioPeriodoPagoService } from '@core/services/csp/proyecto-socio-periodo-pago.service';
+import { NGXLogger } from 'ngx-logger';
+import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.fragment';
+import { ProyectoSocioEquipoFragment } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.fragment';
 import { ProyectoSocioPeriodoJustificacionFragment } from './proyecto-socio-formulario/proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion.fragment';
-import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
+import { ProyectoSocioPeriodoPagoFragment } from './proyecto-socio-formulario/proyecto-socio-periodo-pago/proyecto-socio-periodo-pago.fragment';
 
 @Injectable()
 export class ProyectoSocioActionService extends ActionService {
@@ -34,7 +34,7 @@ export class ProyectoSocioActionService extends ActionService {
   private selectedProyectoSocios: IProyectoSocio[];
 
   constructor(
-    logger: NGXLogger,
+    private readonly logger: NGXLogger,
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     proyectoEquipoSocioService: ProyectoSocioEquipoService,
@@ -56,7 +56,7 @@ export class ProyectoSocioActionService extends ActionService {
       this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodosJustificacion);
     }
 
-    this.datosGenerales = new ProyectoSocioDatosGeneralesFragment(logger, this.proyectoSocio?.id, this.proyectoId,
+    this.datosGenerales = new ProyectoSocioDatosGeneralesFragment(this.proyectoSocio?.id, this.proyectoId,
       proyectoSocioService, empresaEconomicaService);
     this.equipo = new ProyectoSocioEquipoFragment(logger, this.proyectoSocio?.id, proyectoSocioService,
       proyectoEquipoSocioService, personaFisicaService);

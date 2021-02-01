@@ -1,36 +1,36 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { FormFragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Observable, of, Subscription } from 'rxjs';
-import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { map, startWith } from 'rxjs/operators';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
-import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
-import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { AreaTematicaData, ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
-import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
-import { MatDialog } from '@angular/material/dialog';
-import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormFragmentComponent } from '@core/component/fragment.component';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
+import { TipoDestinatario } from '@core/enums/tipo-destinatario';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
+import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
+import { AreaTematicaData, ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
 const MSG_DELETE = marker('csp.convocatoria.area.tematica.listado.borrar');
@@ -75,7 +75,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   destinatarios = Object.keys(TipoDestinatario).map<string>((key) => TipoDestinatario[key]);
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
     private snackBarService: SnackBarService,
     private modeloEjecucionService: ModeloEjecucionService,
@@ -87,7 +87,6 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaDatosGeneralesFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -118,12 +117,9 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     if (!this.formPart.readonly) {
       this.loadUnidadesGestion();
@@ -134,11 +130,9 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
         this.loadModelosEjecucion();
       }
     }
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
   private loadUnidadesGestion(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, 'start');
     this.subscriptions.push(
       this.unidadGestionService.findAllRestringidos().subscribe(
         res => {
@@ -148,18 +142,16 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
               startWith(''),
               map(value => this.filtroUnidadGestion(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, error);
         }
       )
     );
   }
 
   loadModelosEjecucion(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, 'start');
     const options = {
       filters: [
         {
@@ -182,18 +174,16 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
             startWith(''),
             map(value => this.filtroModeloEjecucion(value))
           );
-        this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, 'end');
       },
       (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, error);
       }
     );
     this.subscriptions.push(subcription);
   }
 
   loadFinalidades(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, 'start');
     const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
     if (modeloEjecucion) {
       const id = modeloEjecucion.id;
@@ -220,11 +210,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
                   startWith(''),
                   map(value => this.filtroFinalidades(value))
                 );
-              this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, 'end');
             },
             (error) => {
+              this.logger.error(error);
               this.snackBarService.showError(MSG_ERROR_INIT);
-              this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, error);
             }
           )
         );
@@ -233,24 +222,19 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   }
 
   clearModeloEjecuccion(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearModeloEjecuccion()`, 'end');
     this.formGroup.get('modeloEjecucion').setValue('');
     this.modelosEjecucionFiltered = [];
     this.modelosEjecucion$ = of();
     this.clearFinalidad();
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearModeloEjecuccion()`, 'end');
   }
 
   clearFinalidad(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearFinalidad()`, 'end');
     this.formGroup.get('finalidad').setValue('');
     this.finalidadFiltered = [];
     this.finalidades$ = of();
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearFinalidad()`, 'end');
   }
 
   private loadTipoRegimenConcurrencia(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, 'start');
     this.subscriptions.push(
       this.regimenConcurrenciaService.findAll().subscribe(
         res => {
@@ -260,18 +244,16 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
               startWith(''),
               map(value => this.filtroRegimenConcurrencia(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, error);
         }
       )
     );
   }
 
   private loadAmbitosGeograficos(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'start');
     this.subscriptions.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
         res => {
@@ -281,25 +263,22 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
               startWith(''),
               map(value => this.filtroTipoAmbitoGeografico(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'end');
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'error');
         }
       )
     );
   }
 
   private loadAreaTematicas(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAreaTematicas()`, 'start');
     const subscription = this.formPart.areasTematicas$.subscribe(
       data => this.convocatoriaAreaTematicas.data = data
     );
     this.subscriptions.push(subscription);
     this.convocatoriaAreaTematicas.paginator = this.paginator;
     this.convocatoriaAreaTematicas.sort = this.sort;
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAreaTematicas()`, 'end');
   }
 
   /**
@@ -402,7 +381,6 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   }
 
   openModal(data?: AreaTematicaData): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `openModal()`, 'start');
     const convocatoriaAreaTematica: IConvocatoriaAreaTematica = {
       areaTematica: undefined,
       convocatoria: undefined,
@@ -429,22 +407,17 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
             this.formPart.addConvocatoriaAreaTematica(result);
           }
         }
-        this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deleteAreaTematica(data: AreaTematicaData): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name,
-      `deleteAreaTematica(${data})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaAreaTematica(data);
           }
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name,
-            `deleteAreaTematica(${data})`, 'end');
         }
       )
     );

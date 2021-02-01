@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { IRespuesta } from '@core/models/eti/respuesta';
 import { environment } from '@env';
 import { SgiRestFilterType, SgiRestFindOptions, SgiRestService } from '@sgi/framework/http';
-import { IRespuesta } from '@core/models/eti/respuesta';
-import { map, tap } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class RespuestaService extends SgiRestService<number, IRespuesta>{
 
   private static readonly MAPPING = '/respuestas';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       RespuestaService.name,
       logger,
@@ -24,7 +24,6 @@ export class RespuestaService extends SgiRestService<number, IRespuesta>{
   }
 
   findByMemoriaIdAndApartadoId(memoriaId: number, apartadoId: number): Observable<IRespuesta> {
-    this.logger.debug(RespuestaService.name, `findByMemoriaIdAndApartadoId(${memoriaId}, ${apartadoId}`, '-', 'start');
     const options: SgiRestFindOptions = {
       filters: [
         {
@@ -47,8 +46,7 @@ export class RespuestaService extends SgiRestService<number, IRespuesta>{
         else {
           return;
         }
-      }),
-      tap(() => this.logger.debug(RespuestaService.name, `findByMemoriaIdAndApartadoId(${memoriaId}, ${apartadoId}`, '-', 'end'))
+      })
     );
   }
 

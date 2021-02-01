@@ -11,7 +11,7 @@ import { TipoTarea } from '@core/models/eti/tipo-tarea';
 export class TipoTareaService extends SgiRestService<number, TipoTarea> {
   private static readonly MAPPING = '/tipostarea';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoTareaService.name,
       logger,

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,7 +8,6 @@ import { IProyectoContexto, PropiedadResultados } from '@core/models/csp/proyect
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { ProyectoContextoModalComponent } from '../../modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
@@ -41,12 +40,10 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
   private subscriptions = [] as Subscription[];
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ProyectoActionService,
     private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.CONTEXTO_PROYECTO, actionService);
-    this.logger.debug(ProyectoContextoComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoContextoFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -59,30 +56,22 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(ProyectoContextoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoContextoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadAreaTematicas();
-    this.logger.debug(ProyectoContextoComponent.name, 'ngOnInit()', 'end');
   }
 
   private loadAreaTematicas(): void {
-    this.logger.debug(ProyectoContextoComponent.name, `loadAreaTematicas()`, 'start');
     this.subscriptions.push(this.formPart.areasTematicas$.subscribe(
       data => this.convocatoriaAreaTematicas.data = data
     ));
     this.convocatoriaAreaTematicas.paginator = this.paginator;
     this.convocatoriaAreaTematicas.sort = this.sort;
-    this.logger.debug(ProyectoContextoComponent.name, `loadAreaTematicas()`, 'end');
   }
 
   openModal(wrapper?: AreaTematicaProyectoData): void {
-    this.logger.debug(ProyectoContextoComponent.name, `openModal()`, 'start');
-
     const newData: AreaTematicaProyectoData = {
       root: undefined,
       areaTematica: undefined,
@@ -101,7 +90,6 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
         } else {
           this.formPart.addAreaTematica(result);
         }
-        this.logger.debug(ProyectoContextoComponent.name, `openModal()`, 'end');
       }
     );
   }

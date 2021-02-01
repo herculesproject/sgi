@@ -1,37 +1,32 @@
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
-import { tap, map, switchMap } from 'rxjs/operators';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { Observable } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoSocio> {
   proyectoSocio: IProyectoSocio;
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private proyectoId: number,
     private service: ProyectoSocioService,
     private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(key);
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, 'constructor()', 'start');
     this.proyectoSocio = {
       proyecto: {
         id: this.proyectoId
       } as IProyecto
     } as IProyectoSocio;
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, 'constructor()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     const form = new FormGroup(
       {
         empresa: new FormControl({
@@ -61,13 +56,10 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
         ]
       }
     );
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return form;
   }
 
   protected buildPatch(proyectoSocio: IProyectoSocio): { [key: string]: any; } {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-      `buildPatch(value: ${proyectoSocio})`, 'start');
     const result = {
       empresa: proyectoSocio.empresa,
       rolSocio: proyectoSocio.rolSocio,
@@ -76,14 +68,10 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
       fechaInicio: proyectoSocio.fechaInicio,
       fechaFin: proyectoSocio.fechaFin,
     };
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-      `buildPatch(value: ${proyectoSocio})`, 'end');
     return result;
   }
 
   protected initializer(key: number): Observable<IProyectoSocio> {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-      `initializer(key: ${key})`, 'start');
     return this.service.findById(key)
       .pipe(
         switchMap(proyectoSocio => {
@@ -96,14 +84,11 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
               })
             );
         }),
-        tap((proyectoSocio) => this.proyectoSocio = proyectoSocio),
-        tap(() => this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-          `initializer(key: ${key})`, 'end'))
+        tap((proyectoSocio) => this.proyectoSocio = proyectoSocio)
       );
   }
 
   getValue(): IProyectoSocio {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, `getValue()`, 'start');
     const form = this.getFormGroup().controls;
     this.proyectoSocio.empresa = form.empresa.value;
     this.proyectoSocio.rolSocio = form.rolSocio.value;
@@ -111,12 +96,10 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
     this.proyectoSocio.importeConcedido = form.importeConcedido.value;
     this.proyectoSocio.fechaInicio = form.fechaInicio.value;
     this.proyectoSocio.fechaFin = form.fechaFin.value;
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, `getValue()`, 'end');
     return this.proyectoSocio;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name, `saveOrUpdate()`, 'start');
     const proyectoSocio = this.getValue();
 
     const observable$ = this.isEdit() ? this.update(proyectoSocio) : this.create(proyectoSocio);
@@ -124,31 +107,15 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
       map(result => {
         this.proyectoSocio = result;
         return this.proyectoSocio.id;
-      }),
-      tap(() => this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-        `saveOrUpdate()`, 'end'))
+      })
     );
   }
 
   private create(proyectoSocio: IProyectoSocio): Observable<IProyectoSocio> {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-      `create(proyectoSocio: ${proyectoSocio})`, 'start');
-
-    return this.service.create(proyectoSocio)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-          `create(proyectoSocio: ${proyectoSocio})`, 'end'))
-      );
+    return this.service.create(proyectoSocio);
   }
 
   private update(proyectoSocio: IProyectoSocio): Observable<IProyectoSocio> {
-    this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-      `update(proyectoSocio: ${proyectoSocio})`, 'start');
-
-    return this.service.update(proyectoSocio.id, proyectoSocio)
-      .pipe(
-        tap(() => this.logger.debug(ProyectoSocioDatosGeneralesFragment.name,
-          `update(proyectoSocio: ${proyectoSocio})`, 'end'))
-      );
+    return this.service.update(proyectoSocio.id, proyectoSocio);
   }
 }

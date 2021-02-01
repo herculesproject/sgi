@@ -17,7 +17,8 @@ export interface IConvocatoriaEntidadGestoraBackend {
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaEntidadGestoraService extends SgiMutableRestService<number, IConvocatoriaEntidadGestoraBackend, IConvocatoriaEntidadGestora> {
+export class ConvocatoriaEntidadGestoraService extends
+  SgiMutableRestService<number, IConvocatoriaEntidadGestoraBackend, IConvocatoriaEntidadGestora> {
   private static readonly MAPPING = '/convocatoriaentidadgestoras';
 
   static readonly CONVERTER = new class extends SgiBaseConverter<IConvocatoriaEntidadGestoraBackend, IConvocatoriaEntidadGestora> {
@@ -38,7 +39,7 @@ export class ConvocatoriaEntidadGestoraService extends SgiMutableRestService<num
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaEntidadGestoraService.name,
       logger,

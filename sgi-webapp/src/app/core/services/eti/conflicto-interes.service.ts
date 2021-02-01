@@ -11,7 +11,7 @@ import { SgiRestService } from '@sgi/framework/http';
 export class ConflictoInteresService extends SgiRestService<number, IConflictoInteres> {
   private static readonly MAPPING = '/conflictosinteres';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConflictoInteresService.name,
       logger,

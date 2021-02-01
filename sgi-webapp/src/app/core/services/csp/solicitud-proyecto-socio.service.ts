@@ -2,18 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
+import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
+import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
+import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
-import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
-import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
-import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
 import { ISolicitudProyectoEquipoSocioBackend, SolicitudProyectoEquipoSocioService } from './solicitud-proyecto-equipo-socio.service';
 
 export interface ISolicitudProyectoSocioBackend {
@@ -74,7 +74,7 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
   }();
 
   constructor(
-    logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     protected http: HttpClient,
     private empresaEconomicaService: EmpresaEconomicaService
   ) {
@@ -88,7 +88,6 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
   }
 
   findById(id: number): Observable<ISolicitudProyectoSocio> {
-    this.logger.debug(SolicitudProyectoSocioService.name, `findById()`, '-', 'start');
     return super.findById(id).pipe(
       switchMap(solicitudProyectoSocio => {
         const personaRef = solicitudProyectoSocio.empresa.personaRef;
@@ -98,8 +97,7 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
             return solicitudProyectoSocio;
           })
         );
-      }),
-      tap(() => this.logger.debug(SolicitudProyectoSocioService.name, `findById()`, '-', 'end'))
+      })
     );
   }
 
@@ -108,15 +106,10 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
    *
    * @param id Id del ISolicitudProyectoSocio
    */
-  findAllSolicitudProyectoPeriodoPago(id: number, options?: SgiRestFindOptions)
-    : Observable<SgiRestListResult<ISolicitudProyectoPeriodoPago>> {
-    this.logger.debug(SolicitudProyectoSocioService.name,
-      `findAllSolicitudProyectoPeriodoPago(id: ${id})`, '-', 'start');
+  findAllSolicitudProyectoPeriodoPago(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoPeriodoPago>> {
     return this.find<ISolicitudProyectoPeriodoPago, ISolicitudProyectoPeriodoPago>(
-      `${this.endpointUrl}/${id}/solicitudproyectoperiodopago`, options).pipe(
-        tap(() => this.logger.debug(SolicitudProyectoSocioService.name,
-          `findAllSolicitudProyectoPeriodoPago(id: ${id})`, '-', 'end'))
-      );
+      `${this.endpointUrl}/${id}/solicitudproyectoperiodopago`, options);
   }
 
   /**
@@ -124,15 +117,10 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
    *
    * @param id Id del ISolicitudProyectoSocio
    */
-  findAllSolicitudProyectoPeriodoJustificacion(id: number, options?: SgiRestFindOptions)
-    : Observable<SgiRestListResult<ISolicitudProyectoPeriodoJustificacion>> {
-    this.logger.debug(SolicitudProyectoSocioService.name,
-      `findAllSolicitudProyectoPeriodoJustificacion(id: ${id})`, '-', 'start');
+  findAllSolicitudProyectoPeriodoJustificacion(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoPeriodoJustificacion>> {
     return this.find<ISolicitudProyectoPeriodoJustificacion, ISolicitudProyectoPeriodoJustificacion>(
-      `${this.endpointUrl}/${id}/solicitudproyectoperiodojustificaciones`, options).pipe(
-        tap(() => this.logger.debug(SolicitudProyectoSocioService.name,
-          `findAllSolicitudProyectoPeriodoJustificacion(id: ${id})`, '-', 'end'))
-      );
+      `${this.endpointUrl}/${id}/solicitudproyectoperiodojustificaciones`, options);
   }
 
   /**
@@ -140,15 +128,10 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
    *
    * @param id Id del ISolicitudProyectoSocio
    */
-  findAllSolicitudProyectoEquipoSocio(id: number, options?: SgiRestFindOptions)
-    : Observable<SgiRestListResult<ISolicitudProyectoEquipoSocio>> {
-    this.logger.debug(SolicitudProyectoSocioService.name,
-      `findAllSolicitudProyectoEquipoSocio(id: ${id})`, '-', 'start');
+  findAllSolicitudProyectoEquipoSocio(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoEquipoSocio>> {
     return this.find<ISolicitudProyectoEquipoSocioBackend, ISolicitudProyectoEquipoSocio>(
       `${this.endpointUrl}/${id}/solicitudproyectoequiposocio`, options,
-      SolicitudProyectoEquipoSocioService.CONVERTER).pipe(
-        tap(() => this.logger.debug(SolicitudProyectoSocioService.name,
-          `findAllSolicitudProyectoEquipoSocio(id: ${id})`, '-', 'end'))
-      );
+      SolicitudProyectoEquipoSocioService.CONVERTER);
   }
 }

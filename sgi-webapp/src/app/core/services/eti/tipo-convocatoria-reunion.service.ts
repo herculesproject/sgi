@@ -11,7 +11,7 @@ import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reun
 export class TipoConvocatoriaReunionService extends SgiRestService<number, TipoConvocatoriaReunion> {
   private static readonly MAPPING = '/tipoconvocatoriareuniones';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoConvocatoriaReunionService.name,
       logger,

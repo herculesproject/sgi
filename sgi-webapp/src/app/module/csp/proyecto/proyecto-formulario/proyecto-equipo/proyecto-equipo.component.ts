@@ -10,12 +10,11 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { ProyectoEquiposModalComponentData } from '../../modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
-import { ProyectoEquipoFragment } from './proyecto-equipo.fragment';
 import { ProyectoEquipoModalComponent } from './../../modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
+import { ProyectoEquipoFragment } from './proyecto-equipo.fragment';
 
 const MSG_DELETE = marker('csp.proyecto.equipo.listado.borrar');
 
@@ -37,20 +36,16 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected proyectoService: ProyectoService,
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService);
-    this.logger.debug(ProyectoEquipoComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoEquipoFragment;
-    this.logger.debug(ProyectoEquipoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoEquipoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -77,7 +72,6 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.equipos$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(ProyectoEquipoComponent.name, 'ngOnInit()', 'end');
     }));
   }
 
@@ -86,7 +80,6 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
    * @param idEquipo Identificador de equipo a editar.
    */
   openModal(wrapper?: StatusWrapper<IProyectoEquipo>): void {
-    this.logger.debug(ProyectoEquipoComponent.name, `openModal()`, 'start');
     const proyectoEquipo: IProyectoEquipo = {
       id: undefined,
       fechaFin: undefined,
@@ -131,35 +124,27 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
             this.formPart.addProyectoEquipo(modalData.equipo);
           }
         }
-        this.logger.debug(ProyectoEquipoComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoEquipoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoEquipoComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
    * Eliminar proyecto equipo
    */
   deleteEquipo(wrapper: StatusWrapper<IProyectoEquipo>) {
-    this.logger.debug(ProyectoEquipoComponent.name,
-      `deleteEquipo(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoEquipo(wrapper);
           }
-          this.logger.debug(ProyectoEquipoComponent.name,
-            `deleteEquipo(${wrapper})`, 'end');
         }
       )
     );
   }
-
 
 }

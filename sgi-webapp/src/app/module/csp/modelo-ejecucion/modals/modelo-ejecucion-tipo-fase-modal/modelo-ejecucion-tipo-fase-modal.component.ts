@@ -1,18 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
+import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
+import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { requiredChecked } from '@core/validators/checkbox-validator';
 import { SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { DialogService } from '@core/services/dialog.service';
-import { ITipoFase } from '@core/models/csp/tipos-configuracion';
-import { requiredChecked } from '@core/validators/checkbox-validator';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
@@ -33,16 +32,13 @@ export class ModeloEjecucionTipoFaseModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ModeloEjecucionTipoFaseModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoFaseModalData,
     private tipoFaseService: TipoFaseService,
     protected dialogService: DialogService
   ) {
-    super(logger, snackBarService, matDialogRef, data.modeloTipoFase);
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'constructor()', 'start');
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'constructor()', 'end');
+    super(snackBarService, matDialogRef, data.modeloTipoFase);
   }
 
   ngOnInit(): void {
@@ -75,19 +71,16 @@ export class ModeloEjecucionTipoFaseModalComponent extends
   }
 
   protected getDatosForm(): IModeloTipoFase {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getDatosForm()`, 'start');
     const modeloTipoFase = this.data.modeloTipoFase;
     const disponible = this.formGroup.controls.disponible as FormGroup;
     modeloTipoFase.tipoFase = this.formGroup.get('tipoFase').value;
     modeloTipoFase.convocatoria = disponible.get('convocatoria').value;
     modeloTipoFase.proyecto = disponible.get('proyecto').value;
     modeloTipoFase.solicitud = false;
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getDatosForm()`, 'end');
     return modeloTipoFase;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       tipoFase: new FormControl({
         value: this.data.modeloTipoFase?.tipoFase,
@@ -98,7 +91,6 @@ export class ModeloEjecucionTipoFaseModalComponent extends
         proyecto: new FormControl(this.data.modeloTipoFase?.proyecto)
       }, [requiredChecked(1)]),
     });
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 

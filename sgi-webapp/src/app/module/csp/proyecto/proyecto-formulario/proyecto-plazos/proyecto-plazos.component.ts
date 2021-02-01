@@ -10,7 +10,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ProyectoPlazosModalComponent, ProyectoPlazosModalComponentData } from '../../modals/proyecto-plazos-modal/proyecto-plazos-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
@@ -37,21 +36,17 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
   plazos$: BehaviorSubject<StatusWrapper<IProyectoPlazos>[]>;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.PLAZOS, actionService);
-    this.logger.debug(ProyectoPlazosComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ProyectoPlazosFragment;
     this.plazos$ = (this.fragment as ProyectoPlazosFragment).plazos$;
-    this.logger.debug(ProyectoPlazosComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoPlazosComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.dataSource = new MatTableDataSource<StatusWrapper<IProyectoPlazos>>();
     this.dataSource.paginator = this.paginator;
@@ -59,7 +54,6 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
 
     this.subscriptions.push(this.formPart.plazos$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(ProyectoPlazosComponent.name, 'ngOnInit()', 'end');
     }));
   }
 
@@ -68,8 +62,6 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
    * @param plazo Identificador de plazos fase al guardar/editar
    */
   openModalPlazos(plazo?: StatusWrapper<IProyectoPlazos>): void {
-    this.logger.debug(ProyectoPlazosComponent.name, 'openModalPeriodo()', 'start');
-
     const datosPlazosFases: ProyectoPlazosModalComponentData = {
       plazos: this.dataSource.data.map(plazos => plazos.value),
       plazo: plazo ? plazo.value : {} as IProyectoPlazos,
@@ -96,34 +88,26 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
             this.formPart.addPlazos(plazosFase);
           }
         }
-        this.logger.debug(ProyectoPlazosComponent.name, 'openModalPeriodo()', 'end');
       }
     );
-    this.logger.debug(ProyectoPlazosComponent.name, 'openModalPeriodo()', 'end');
   }
 
   /**
    * Desactivar proyecto fase
    */
   deleteFase(wrapper: StatusWrapper<IProyectoPlazos>) {
-    this.logger.debug(ProyectoPlazosComponent.name,
-      `deleteFase(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePlazo(wrapper);
           }
-          this.logger.debug(ProyectoPlazosComponent.name,
-            `deleteFase(${wrapper})`, 'end');
         }
       )
     );
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoPlazosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoPlazosComponent.name, 'ngOnDestroy()', 'end');
   }
 }

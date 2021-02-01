@@ -11,7 +11,7 @@ import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurre
 export class TipoRegimenConcurrenciaService extends SgiRestService<number, ITipoRegimenConcurrencia> {
   private static readonly MAPPING = '/tiporegimenconcurrencias';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       TipoRegimenConcurrenciaService.name,
       logger,

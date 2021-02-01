@@ -57,7 +57,7 @@ export class SolicitudProyectoPresupuestoService extends SgiMutableRestService<n
   }();
 
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       SolicitudProyectoPresupuestoService.name,
       logger,

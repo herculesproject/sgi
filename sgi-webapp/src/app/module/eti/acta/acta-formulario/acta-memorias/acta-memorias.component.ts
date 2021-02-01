@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-
-import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject } from 'rxjs';
-
+import { FragmentComponent } from '@core/component/fragment.component';
+import { MemoriaListado } from '@core/models/eti/memoria-listado';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
-import { MemoriaListado } from '@core/models/eti/memoria-listado';
-
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
+import { BehaviorSubject } from 'rxjs';
 import { ActaActionService } from '../../acta.action.service';
-import { FragmentComponent } from '@core/component/fragment.component';
 import { ActaMemoriasFragment } from './acta-memorias.fragment';
+
+
+
+
 
 
 @Component({
@@ -29,7 +28,6 @@ export class ActaMemoriasComponent extends FragmentComponent implements OnInit {
   memorias$: BehaviorSubject<MemoriaListado[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
     formService: ActaActionService
   ) {

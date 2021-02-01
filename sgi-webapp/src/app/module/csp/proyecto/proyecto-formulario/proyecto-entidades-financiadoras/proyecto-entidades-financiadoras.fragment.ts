@@ -5,7 +5,6 @@ import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
@@ -16,7 +15,6 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     private proyectoService: ProyectoService,
     private proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
@@ -24,19 +22,14 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
     public readonly: boolean
   ) {
     super(key);
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, 'constructor()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, 'ngOnDestroy()', 'end');
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       const subscription =
         merge(
@@ -78,8 +71,6 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
   }
 
   public deleteEntidadFinanciadora(wrapper: StatusWrapper<IProyectoEntidadFinanciadora>, targetPropias: boolean) {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-      `${this.deleteEntidadFinanciadora.name}(wrapper: ${wrapper})`, 'start');
     const current = targetPropias ? this.entidadesPropias$.value : this.entidadesAjenas$.value;
     const index = current.findIndex(value => value.value.id === wrapper.value.id);
     if (index >= 0) {
@@ -90,13 +81,9 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
       targetPropias ? this.entidadesPropias$.next(current) : this.entidadesAjenas$.next(current);
       this.setChanges(true);
     }
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-      `${this.deleteEntidadFinanciadora.name}(wrapper: ${wrapper})`, 'end');
   }
 
   public updateEntidadFinanciadora(wrapper: StatusWrapper<IProyectoEntidadFinanciadora>, targetPropias: boolean) {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-      `${this.updateEntidadFinanciadora.name}(wrapper: ${wrapper})`, 'start');
     const current = targetPropias ? this.entidadesPropias$.value : this.entidadesAjenas$.value;
     const index = current.findIndex(value => value.value.id === wrapper.value.id);
     if (index >= 0) {
@@ -106,13 +93,9 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
         this.entidadesAjenas$.value[index] = wrapper;
       this.setChanges(true);
     }
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-      `${this.updateEntidadFinanciadora.name}(wrapper: ${wrapper})`, 'end');
   }
 
   public addEntidadFinanciadora(entidadFinanciadora: IProyectoEntidadFinanciadora, targetPropias: boolean) {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-      `${this.addEntidadFinanciadora.name}(entidadFinanciadora: ${entidadFinanciadora})`, 'start');
     const wrapped = new StatusWrapper<IProyectoEntidadFinanciadora>(entidadFinanciadora);
     wrapped.value.ajena = !targetPropias;
     wrapped.setCreated();
@@ -127,12 +110,9 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
       this.entidadesAjenas$.next(current);
     }
     this.setChanges(true);
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-      `${this.addEntidadFinanciadora.name}(entidadFinanciadora: ${entidadFinanciadora})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.saveOrUpdate.name}()`, 'start');
     return merge(
       this.deleteProyectoEntidadFinanciadoras(),
       this.updateProyectoEntidadFinanciadoras(this.entidadesPropias$),
@@ -145,16 +125,13 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-      }),
-      tap(() => this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      })
     );
   }
 
   private deleteProyectoEntidadFinanciadoras(): Observable<void> {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.deleteProyectoEntidadFinanciadoras.name}()`, 'start');
     const deleted = this.entidadesEliminadas.filter((value) => value.value.id);
     if (deleted.length === 0) {
-      this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.deleteProyectoEntidadFinanciadoras.name}()`, 'end');
       return of(void 0);
     }
     return from(deleted).pipe(
@@ -163,19 +140,15 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
           .pipe(
             tap(() => {
               this.entidadesEliminadas = deleted.filter(entidad => entidad.value.id !== wrapped.value.id);
-            }),
-            tap(() => this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-              `${this.deleteProyectoEntidadFinanciadoras.name}()`, 'end'))
+            })
           );
       })
     );
   }
 
   private updateProyectoEntidadFinanciadoras(target$: BehaviorSubject<StatusWrapper<IProyectoEntidadFinanciadora>[]>): Observable<void> {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.updateProyectoEntidadFinanciadoras.name}()`, 'start');
     const edited = target$.value.filter((value) => value.edited);
     if (edited.length === 0) {
-      this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.updateProyectoEntidadFinanciadoras.name}()`, 'end');
       return of(void 0);
     }
     return from(edited).pipe(
@@ -184,20 +157,15 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
           map((update) => {
             const index = target$.value.findIndex((current) => current === wrapped);
             target$.value[index] = new StatusWrapper<IProyectoEntidadFinanciadora>(update);
-          }),
-          tap(() => this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-            `${this.updateProyectoEntidadFinanciadoras.name}()`, 'end')
-          )
+          })
         );
       })
     );
   }
 
   private createProyectoEntidadFinanciadoras(target$: BehaviorSubject<StatusWrapper<IProyectoEntidadFinanciadora>[]>): Observable<void> {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.createProyectoEntidadFinanciadoras.name}()`, 'start');
     const created = target$.value.filter((value) => value.created);
     if (created.length === 0) {
-      this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.createProyectoEntidadFinanciadoras.name}()`, 'end');
       return of(void 0);
     }
     created.forEach(
@@ -209,17 +177,14 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
           map((update) => {
             const index = target$.value.findIndex((current) => current === wrapped);
             target$[index] = new StatusWrapper<IProyectoEntidadFinanciadora>(update);
-          }),
-          tap(() => this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name,
-            `${this.createProyectoEntidadFinanciadoras.name}()`, 'end'))
+          })
         );
       }));
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
-    const touched = this.entidadesPropias$.value.some((wrapper) => wrapper.touched) || this.entidadesAjenas$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ProyectoEntidadesFinanciadorasFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
+    const touched = this.entidadesPropias$.value.some((wrapper) => wrapper.touched) ||
+      this.entidadesAjenas$.value.some((wrapper) => wrapper.touched);
     return (this.entidadesEliminadas.length > 0 || touched);
   }
 }

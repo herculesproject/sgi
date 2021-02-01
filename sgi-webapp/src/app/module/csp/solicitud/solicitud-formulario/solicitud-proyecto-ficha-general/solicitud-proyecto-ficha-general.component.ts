@@ -8,7 +8,6 @@ import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-dat
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { SolicitudAreaTematicaModalComponent } from '../../modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
@@ -32,12 +31,10 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
   columns = ['nombreRaizArbol', 'areaTematicaConvocatoria', 'areaTematicaSolicitud', 'acciones'];
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: SolicitudActionService,
     private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.PROYECTO_DATOS, actionService);
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as SolicitudProyectoFichaGeneralFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -56,12 +53,9 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadAreaTematicas();
 
@@ -70,29 +64,22 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
         this.actionService.isPresupuestoPorEntidades = value ? value : false;
       })
     );
-
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'ngOnInit()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, 'ngOnInit()', 'end');
   }
 
   private loadAreaTematicas(): void {
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, `loadAreaTematicas()`, 'start');
     const subscription = this.formPart.areasTematicas$.subscribe(
       data => this.convocatoriaAreaTematicas.data = data
     );
     this.subscriptions.push(subscription);
     this.convocatoriaAreaTematicas.paginator = this.paginator;
     this.convocatoriaAreaTematicas.sort = this.sort;
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, `loadAreaTematicas()`, 'end');
   }
 
   openModal(data: AreaTematicaSolicitudData): void {
-    this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, `openModal()`, 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -103,7 +90,6 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
       (result: AreaTematicaSolicitudData) => {
         this.formPart.solicitudProyectoDatos.areaTematica = result?.areaTematicaSolicitud;
         this.formPart.setChanges(true);
-        this.logger.debug(SolicitudProyectoFichaGeneralComponent.name, `openModal()`, 'end');
       }
     );
   }

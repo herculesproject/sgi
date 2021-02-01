@@ -1,28 +1,28 @@
-import { Component, OnInit, ViewChild, } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { map, startWith, switchMap } from 'rxjs/operators';
-
+import { MatSort } from '@angular/material/sort';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { IComite } from '@core/models/eti/comite';
+import { IMemoria } from '@core/models/eti/memoria';
+import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
-import { IComite } from '@core/models/eti/comite';
-import { IPersona } from '@core/models/sgp/persona';
+import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { ROUTE_NAMES } from '@core/route.names';
 import { MemoriaService } from '@core/services/eti/memoria.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
-import { IMemoria } from '@core/models/eti/memoria';
-import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const MSG_ERROR = marker('eti.memoria.listado.error');
@@ -77,14 +77,14 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly memoriaService: MemoriaService,
     protected readonly snackBarService: SnackBarService,
     protected readonly dialogService: DialogService,
   ) {
-    super(logger, snackBarService, MSG_ERROR);
+    super(snackBarService, MSG_ERROR);
 
     this.totalElementos = 0;
     this.suscripciones = [];
@@ -104,8 +104,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
   }
 
   ngOnInit(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'ngOnInit()', 'start');
-
     super.ngOnInit();
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
@@ -117,30 +115,21 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
     this.loadComites();
     this.loadEstadosMemoria();
-    this.logger.debug(MemoriaListadoInvComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'createObservable()', 'start');
     const observable$ = this.memoriaService.findAllMemoriasEvaluacionByPersonaRef(this.getFindOptions());
-    this.logger.debug(MemoriaListadoInvComponent.name, 'createObservable()', 'end');
     return observable$;
   }
 
 
 
   protected initColumns(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'initColumns()', 'start');
     this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
-    this.logger.debug(MemoriaListadoInvComponent.name, 'initColumns()', 'end');
   }
 
-
   protected createFilters(): SgiRestFilter[] {
-
-    this.logger.debug(MemoriaListadoInvComponent.name, 'buildFilters()', 'start');
     const filtro: SgiRestFilter[] = [];
-
     if (this.formGroup.controls.comite.value) {
       this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
     }
@@ -153,7 +142,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       this.addFiltro(filtro, 'numReferencia', SgiRestFilterType.EQUALS, this.formGroup.controls.numReferencia.value);
     }
 
-
     if (this.formGroup.controls.tipoEstadoMemoria.value) {
       this.addFiltro(filtro, 'estadoActual.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoMemoria.value.id);
     }
@@ -161,21 +149,12 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     if (this.personaRef) {
       this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.personaRef);
     }
-
-
-    this.logger.debug(MemoriaListadoInvComponent.name, 'buildFilters()', 'end');
-
-
     return filtro;
   }
 
   protected loadTable(reset?: boolean) {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'loadTable()', 'start');
-    // Do the request with paginator/sort/filter values
-
+    // TODO Do the request with paginator/sort/filter values
     this.memorias$ = this.getObservableLoadTable(reset);
-    this.logger.debug(MemoriaListadoInvComponent.name, 'loadTable()', 'end');
-
   }
 
   /**
@@ -184,11 +163,8 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
    * returns nombre comité
    */
   getComite(comite: IComite): string {
-
     return comite?.comite;
-
   }
-
 
   /**
    * Devuelve el nombre de un estado memoria.
@@ -196,43 +172,28 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
    * returns nombre estadoMemoria
    */
   getEstadoMemoria(tipoEstadoMemoria: TipoEstadoMemoria): string {
-
     return tipoEstadoMemoria?.nombre;
-
   }
 
   /**
    * Recupera un listado de los comités que hay en el sistema.
    */
   loadComites(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'getComites()',
-      'start');
-
     this.suscripciones.push(this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
-
         this.filteredComites = this.formGroup.controls.comite.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterComite(value))
           );
       }));
-
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'getComites()',
-      'end');
   }
 
   /**
    * Recupera un listado de los estados memoria que hay en el sistema.
    */
   loadEstadosMemoria(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'getEstadosMemoria()',
-      'start');
-
     const estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
       (response) => {
         this.estadoMemoriaListado = response.items;
@@ -245,12 +206,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       });
 
     this.suscripciones.push(estadosMemoriaSubscription);
-
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'getEstadosMemoria()',
-      'end');
   }
-
 
   /**
    * Filtro de campo autocompletable comité.
@@ -300,13 +256,9 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
     this.datosSolicitante = solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
     this.personaRef = solicitante?.personaRef;
-
   }
 
-
-
   hasPermisoEnviarSecretaria(estadoMemoriaId: number, responsable: boolean): boolean {
-
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
     // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
     // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
@@ -317,19 +269,15 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     } else {
       return false;
     }
-
   }
 
 
   hasPermisoEliminar(estadoMemoriaId: number): boolean {
-
     // Si el estado es 'En elaboración' o 'Completada'.
     return (estadoMemoriaId === 1 || estadoMemoriaId === 2);
   }
 
   enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - start');
-
     const dialogSubscription = this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
       .pipe(switchMap((aceptado) => {
         if (aceptado) {
@@ -341,14 +289,12 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
           this.loadTable();
           this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA);
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
         }
       );
     this.suscripciones.push(dialogSubscription);
-
-    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
-
   }
 
 
@@ -358,8 +304,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
    * @param idMemoria Identificador de la memoria
    */
   delete(idMemoria: number): void {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'delete(idMemoria: number) - start');
-
     this.dialogService.showConfirmation(MSG_CONFIRM_ELIMINAR)
       .pipe(switchMap((aceptado) => {
         if (aceptado) {
@@ -371,17 +315,14 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
           this.loadTable();
           this.snackBarService.showSuccess(MSG_SUCCESS_ELIMINAR);
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_ENVIAR_ELIMINAR);
         }
       );
-
-    this.logger.debug(MemoriaListadoInvComponent.name, 'delete(idMemoria: number) - end');
   }
 
-
   hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria, responsable: boolean): boolean {
-
     // Si el estado es 'Completada', es de tipo CEEA y requiere retrospectiva se muestra el botón de enviar.
     // Si la retrospectiva ya está 'En secretaría' no se muestra el botón.
     if (memoria.estadoActual.id === 2 && memoria.comite.comite === 'CEEA' && memoria.requiereRetrospectiva
@@ -390,12 +331,9 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     } else {
       return false;
     }
-
   }
 
   enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - start');
-
     this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA)
       .pipe(switchMap((aceptado) => {
         if (aceptado) {
@@ -407,22 +345,19 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
           this.loadTable();
           this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA);
         },
-        () => {
+        (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
         }
       );
-
-    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - end');
   }
 
   /**
    * Clean filters an reload the table
    */
   onClearFilters(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name, `${this.onClearFilters.name}()`, 'start');
     super.onClearFilters();
     this.setUsuario({} as IPersona);
-    this.logger.debug(MemoriaListadoInvComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
 }

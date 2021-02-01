@@ -63,7 +63,7 @@ export class EmpresaEconomicaService extends SgiMutableRestService<string, IEmpr
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(EmpresaEconomicaService.name, logger,
       `${environment.serviceServers.sgp}${EmpresaEconomicaService.MAPPING}`, http, EmpresaEconomicaService.CONVERTER);
   }

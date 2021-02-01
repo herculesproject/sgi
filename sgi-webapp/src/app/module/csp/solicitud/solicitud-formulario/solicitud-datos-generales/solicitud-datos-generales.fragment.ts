@@ -1,27 +1,27 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Observable, of, BehaviorSubject, from, EMPTY } from 'rxjs';
-import { map, tap, switchMap, mergeMap, catchError, takeLast } from 'rxjs/operators';
-import { IPrograma } from '@core/models/csp/programa';
-import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
-import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
-import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 
 export interface SolicitudModalidadEntidadConvocanteListado {
@@ -57,14 +57,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   ) {
     super(key, true);
     this.setComplete(true);
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'constructor()', 'start');
     this.solicitud = { activo: true } as ISolicitud;
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'constructor()', 'end');
   }
 
   protected initializer(key: number): Observable<ISolicitud> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `initializer(key: ${key})`, 'start');
-
     return this.service.findById(key).pipe(
       tap(solicitud => {
         this.solicitud = solicitud;
@@ -80,8 +76,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
           this.loadEntidadesConvocantesModalidad(this.solicitud.id, this.solicitud.convocatoria.id) : of([]);
       }),
       map(() => {
-        this.logger.debug(SolicitudDatosGeneralesFragment.name, `initializer(key: ${key})`, 'end');
-
         if (this.solicitud && this.solicitud.estado) {
           const estadosComentarioVisble = [
             TipoEstadoSolicitud.EXCLUIDA_PROVISIONAL,
@@ -100,15 +94,14 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
         return this.solicitud;
       }),
-      catchError(() => {
-        this.logger.error(SolicitudDatosGeneralesFragment.name, `initializer(key: ${key})`, 'error');
+      catchError((error) => {
+        this.logger.error(error);
         return EMPTY;
       })
     );
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `${this.buildFormGroup.name}()`, 'start');
     const form = new FormGroup({
       estado: new FormControl({ value: TipoEstadoSolicitud.BORRADOR, disabled: true }),
       solicitante: new FormControl('', Validators.required),
@@ -141,14 +134,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       )
     );
 
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `${this.buildFormGroup.name}()`, 'end');
-
     return form;
   }
 
   buildPatch(solicitud: ISolicitud): { [key: string]: any } {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `${this.buildPatch.name}(solicitud: ${solicitud})`, 'start');
     const result = {
       estado: solicitud.estado?.estado,
       comentariosEstado: solicitud.estado?.comentario,
@@ -165,13 +154,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     // Validaciones con los datos iniciales del formulario
     this.setConditionalValidators(this.getFormGroup(), solicitud);
 
-    this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `${this.buildPatch.name}(solicitud: ${solicitud})`, 'end');
     return result;
   }
 
   getValue(): ISolicitud {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `${this.getValue.name}()`, 'start');
     const form = this.getFormGroup().controls;
 
     this.solicitud.solicitante = form.solicitante.value;
@@ -182,7 +168,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     this.solicitud.codigoExterno = form.codigoExterno.value;
     this.solicitud.observaciones = form.observaciones.value;
 
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `${this.getValue.name}()`, 'end');
     return this.solicitud;
   }
 
@@ -211,8 +196,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param solicitudModalidad ISolicitudModalidad
    */
   public addSolicitudModalidad(solicitudModalidad: ISolicitudModalidad): void {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'addSolicitudModalidad()', 'start');
-
     const current = this.entidadesConvocantesModalidad$.value;
     const index = current.findIndex(value => value.entidadConvocante.entidad.personaRef === solicitudModalidad.entidad.personaRef);
     if (index >= 0) {
@@ -221,8 +204,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       wrapper.setCreated();
       this.setChanges(true);
     }
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'addSolicitudModalidad()', 'end');
   }
 
   /**
@@ -231,8 +212,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param solicitudModalidad ISolicitudModalidad
    */
   public updateSolicitudModalidad(solicitudModalidad: ISolicitudModalidad): void {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'updateSolicitudModalidad()', 'start');
-
     const current = this.entidadesConvocantesModalidad$.value;
     const index = current.findIndex(value => value.modalidad && value.modalidad.value === solicitudModalidad);
     if (index >= 0) {
@@ -240,8 +219,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       current[index].modalidad.setEdited();
       this.setChanges(true);
     }
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'updateSolicitudModalidad()', 'end');
   }
 
   /**
@@ -250,8 +227,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param wrapper ISolicitudModalidad
    */
   public deleteSolicitudModalidad(wrapper: StatusWrapper<ISolicitudModalidad>): void {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'deleteSolicitudModalidad()', 'start');
-
     const current = this.entidadesConvocantesModalidad$.value;
     const index = current.findIndex(value => value.modalidad && value.modalidad.value === wrapper.value);
     if (index >= 0) {
@@ -263,8 +238,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         this.setChanges(true);
       }
     }
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, 'deleteSolicitudModalidad()', 'end');
   }
 
   /**
@@ -273,8 +246,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param solicitudId id de la solicitud
    */
   private createSolicitudModalidades(solicitudId: number): Observable<void> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `createSolicitudModalidades(solicitudId: ${solicitudId})`, 'start');
-
     const createdSolicitudModalidades = this.entidadesConvocantesModalidad$.value
       .filter((entidadConvocanteModalidad) => !!entidadConvocanteModalidad.modalidad && entidadConvocanteModalidad.modalidad.created)
       .map(entidadConvocanteModalidad => {
@@ -283,7 +254,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       });
 
     if (createdSolicitudModalidades.length === 0) {
-      this.logger.debug(SolicitudDatosGeneralesFragment.name, `createSolicitudModalidades(solicitudId: ${solicitudId})`, 'end');
       return of(void 0);
     }
 
@@ -298,9 +268,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
               this.entidadesConvocantesModalidad$.value[index].modalidad =
                 new StatusWrapper<ISolicitudModalidad>(createdSolicitudModalidad);
-            }),
-            tap(() => this.logger.debug(SolicitudDatosGeneralesFragment.name,
-              `createSolicitudModalidades(solicitudId: ${solicitudId})`, 'end'))
+            })
           );
       }));
   }
@@ -311,14 +279,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param solicitudId id de la solicitud
    */
   private deleteSolicitudModalidades(solicitudId: number): Observable<void> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `deleteSolicitudModalidades(solicitudId: ${solicitudId})`, 'start');
-
     const deletedSolicitudModalidades = this.entidadesConvocantesModalidad$.value
       .filter(entidadConvocanteModalidad => !!entidadConvocanteModalidad.modalidad && entidadConvocanteModalidad.modalidad.deleted)
       .map(entidadConvocanteModalidad => entidadConvocanteModalidad.modalidad);
 
     if (deletedSolicitudModalidades.length === 0) {
-      this.logger.debug(SolicitudDatosGeneralesFragment.name, `deleteSolicitudModalidades(solicitudId: ${solicitudId})`, 'end');
       return of(void 0);
     }
 
@@ -332,9 +297,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
                   currentEntidadConvocanteModalidad.modalidad === wrappedSolicitudModalidad);
 
               this.entidadesConvocantesModalidad$.value[index].modalidad = undefined;
-            }),
-            tap(() => this.logger.debug(SolicitudDatosGeneralesFragment.name,
-              `deleteSolicitudModalidades(solicitudId: ${solicitudId})`, 'end'))
+            })
           );
       }));
   }
@@ -345,14 +308,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param solicitudId id de la solicitud
    */
   private updateSolicitudModalidades(solicitudId: number): Observable<void> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `updateSolicitudModalidades(solicitudId: ${solicitudId})`, 'start');
-
     const updatedSolicitudModalidades = this.entidadesConvocantesModalidad$.value
       .filter(entidadConvocanteModalidad => !!entidadConvocanteModalidad.modalidad && entidadConvocanteModalidad.modalidad.edited)
       .map(entidadConvocanteModalidad => entidadConvocanteModalidad.modalidad);
 
     if (updatedSolicitudModalidades.length === 0) {
-      this.logger.debug(SolicitudDatosGeneralesFragment.name, `updateSolicitudModalidades(solicitudId: ${solicitudId})`, 'end');
       return of(void 0);
     }
 
@@ -367,9 +327,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
               this.entidadesConvocantesModalidad$.value[index].modalidad =
                 new StatusWrapper<ISolicitudModalidad>(updatedSolicitudModalidad);
-            }),
-            tap(() => this.logger.debug(SolicitudDatosGeneralesFragment.name,
-              `updateSolicitudModalidades(solicitudId: ${solicitudId})`, 'end'))
+            })
           );
       }));
   }
@@ -380,8 +338,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @param convocatoria una convocatoria
    */
   private onConvocatoriaChange(convocatoria: IConvocatoria): void {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `setConvocatoria(${convocatoria})`, 'start');
-
     if (convocatoria) {
       this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
 
@@ -411,8 +367,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.getFormGroup().controls.unidadGestion.enable();
       this.getFormGroup().controls.tipoFormulario.enable();
     }
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `setConvocatoria(${convocatoria})`, 'end');
   }
 
   /**
@@ -422,14 +376,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @returns observable para recuperar los datos
    */
   private loadSolicitante(solicitanteRef: string): Observable<IPersona> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `loadSolicitante(solicitanteRef: ${solicitanteRef})`, 'start');
-
     return this.personaFisicaService.getInformacionBasica(solicitanteRef).pipe(
       tap(solicitante => {
         this.solicitud.solicitante = solicitante;
-        this.logger.debug(SolicitudDatosGeneralesFragment.name,
-          `loadSolicitante(solicitanteRef: ${solicitanteRef})`, 'end');
       })
     );
 
@@ -442,8 +391,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @returns observable para recuperar los datos
    */
   private loadUnidadGestion(acronimo: string): Observable<SgiRestListResult<IUnidadGestion>> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `loadUnidadGestion(acronimo: ${acronimo})`, 'start');
     const options = {
       filters: [
         {
@@ -459,8 +406,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         if (result.items.length > 0) {
           this.solicitud.unidadGestion = result.items[0];
         }
-        this.logger.debug(SolicitudDatosGeneralesFragment.name,
-          `loadUnidadGestion(acronimo: ${acronimo})`, 'end');
       })
     );
 
@@ -477,8 +422,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    */
   private loadEntidadesConvocantesModalidad(solicitudId: number, convocatoriaId: number):
     Observable<SolicitudModalidadEntidadConvocanteListado[]> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `loadEntidadesConvocantesModalidad(solicitudId: ${solicitudId}, convocatoriaId: ${convocatoriaId})`, 'start');
 
     return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(convocatoriaId).pipe(
       map(resultEntidadConvocantes => {
@@ -534,10 +477,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
             return of(entidadesConvocantesModalidad);
           })
         );
-      }),
-      tap(() => {
-        this.logger.debug(SolicitudDatosGeneralesFragment.name,
-          `loadEntidadesConvocantesModalidad(solicitudId: ${solicitudId}, convocatoriaId: ${convocatoriaId})`, 'end');
       })
     );
   }
@@ -549,15 +488,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @returns observable para recuperar los datos
    */
   private getSolicitudModalidades(solicitudId: number): Observable<ISolicitudModalidad[]> {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `getSolicitudModalidades(solicitudId: ${solicitudId})`, 'start');
-
     return this.service.findAllSolicitudModalidades(solicitudId).pipe(
       switchMap(res => {
         return of(res.items);
-      }),
-      tap(() => {
-        this.logger.debug(SolicitudDatosGeneralesFragment.name,
-          `getSolicitudModalidades(solicitudId: ${solicitudId})`, 'end');
       })
     );
   }
@@ -569,15 +502,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @returns el plan
    */
   private getPlan(programa: IPrograma): IPrograma {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `getPlan(programa: ${programa})`, 'start');
     let programaRaiz = programa;
 
     while (programaRaiz.padre) {
       programaRaiz = programaRaiz.padre;
     }
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `getPlan(programa: ${programa})`, 'end');
-
     return programaRaiz;
   }
 
@@ -589,8 +518,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    *  Si no se indica la evaluacion se hace con los datos rellenos en el formulario.
    */
   private setConditionalValidators(form: FormGroup, solicitud?: ISolicitud): void {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `setConditionalValidators(form: ${form}, solicitud: ${solicitud})`, 'start');
-
     const convocatoriaControl = form.controls.convocatoria;
     const convocatoriaExternaControl = form.controls.convocatoriaExterna;
     const tipoFormularioControl = form.controls.tipoFormulario;
@@ -672,8 +599,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
     this.convocatoriaRequired = !convocatoriaExternaSolicitud;
     this.convocatoriaExternaRequired = !convocatoriaSolicitud;
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `setConditionalValidators(form: ${form}, solicitud: ${solicitud})`, 'end');
   }
 
 }

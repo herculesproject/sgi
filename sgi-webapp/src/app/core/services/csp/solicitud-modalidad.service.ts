@@ -52,7 +52,7 @@ export class SolicitudModalidadService extends SgiMutableRestService<number, ISo
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       SolicitudModalidadService.name,
       logger,

@@ -1,56 +1,56 @@
 import { Injectable, OnDestroy } from '@angular/core';
-
-import { ActionService } from '@core/services/action-service';
-import { ActivatedRoute } from '@angular/router';
-
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-
-import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.fragment';
-import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodo-justificacion.fragment';
-import { ConvocatoriaPlazosFasesFragment } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
-import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaHitosFragment } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.fragment';
-import { ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
-import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.fragment';
-import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.fragment';
-import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
-import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
-import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
-import { ConvocatoriaRequisitosIPFragment } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.fragment';
-import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { FormBuilder } from '@angular/forms';
-import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
-import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
-import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
-import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
-import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
-import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
-import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convocatoria-entidad-convocante.service';
-import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.fragment';
-import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
-import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
-import { ConvocatoriaDocumentosFragment } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.fragment';
-import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
-import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.fragment';
-import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
-import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { Observable, throwError, of } from 'rxjs';
-import { switchMap, tap, } from 'rxjs/operators';
-
-import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
-import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
+import { ActivatedRoute } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
-import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { ActionService } from '@core/services/action-service';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
+import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
+import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
+import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
+import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
+import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
+import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convocatoria-entidad-convocante.service';
+import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
+import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
+import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
+import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
+import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
+import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
+import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
+import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
+import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
+import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.fragment';
+import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.fragment';
+import { ConvocatoriaDocumentosFragment } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.fragment';
+import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.fragment';
+import { ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
+import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
+import { ConvocatoriaHitosFragment } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.fragment';
+import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodo-justificacion.fragment';
+import { ConvocatoriaPlazosFasesFragment } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
+import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.fragment';
+import { ConvocatoriaRequisitosIPFragment } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.fragment';
+import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.fragment';
+
+
+
+
+
 
 const MSG_REGISTRAR = marker('csp.convocatoria.registrar.msg');
 
@@ -105,7 +105,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
 
   constructor(
     fb: FormBuilder,
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     route: ActivatedRoute,
     private convocatoriaService: ConvocatoriaService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
@@ -130,7 +130,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   ) {
     super();
     this.dialogService = dialogService;
-    this.logger = logger;
     if (route.snapshot.data.convocatoriaId) {
       this.convocatoriaId = route.snapshot.data.convocatoriaId;
       this.enableEdit();
@@ -142,30 +141,30 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       logger, this.convocatoriaId, convocatoriaService, empresaEconomicaService,
       convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService,
       this.readonly);
-    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger,
+    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
       this.convocatoriaId, convocatoriaService, convocatoriaPeriodoJustificacionService, this.readonly);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.convocatoriaId, convocatoriaService, convocatoriaEntidadConvocanteService,
       empresaEconomicaService, this.readonly);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
-      logger, this.convocatoriaId, convocatoriaService, convocatoriaFaseService, this.readonly);
-    this.hitos = new ConvocatoriaHitosFragment(logger, this.convocatoriaId, convocatoriaService,
+      this.convocatoriaId, convocatoriaService, convocatoriaFaseService, this.readonly);
+    this.hitos = new ConvocatoriaHitosFragment(this.convocatoriaId, convocatoriaService,
       convocatoriaHitoService, this.readonly);
     this.documentos = new ConvocatoriaDocumentosFragment(logger, this.convocatoriaId, convocatoriaService,
       convocatoriaDocumentoService, this.readonly);
-    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoriaId,
+    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(this.convocatoriaId,
       convocatoriaService, convocatoriaSeguimientoCientificoService, this.readonly);
     this.entidadesFinanciadoras = new ConvocatoriaEntidadesFinanciadorasFragment(
-      logger, this.convocatoriaId, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly);
-    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoriaId, convocatoriaService,
+      this.convocatoriaId, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly);
+    this.enlaces = new ConvocatoriaEnlaceFragment(this.convocatoriaId, convocatoriaService,
       convocatoriaEnlaceService, this.readonly);
-    this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, logger, this.convocatoriaId,
+    this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, this.convocatoriaId,
       convocatoriaRequisitoIPService, this.readonly);
-    this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, logger, this.convocatoriaId, convocatoriaService,
+    this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, this.convocatoriaId, convocatoriaService,
       convocatoriaConceptoGastoService, this.readonly);
-    this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, logger, this.convocatoriaId,
+    this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, this.convocatoriaId,
       convocatoriaRequisitoEquipoService, this.readonly);
-    this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(logger, this.convocatoriaId,
+    this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(this.convocatoriaId,
       convocatoriaService, convocatoriaConceptoGastoCodigoEcService, this.elegibilidad, this.readonly);
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
       logger, this.convocatoriaId, configuracionSolicitudService, documentoRequeridoService, this, this.plazosFases,
@@ -327,10 +326,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ConvocatoriaActionService.name, 'saveOrUpdate()', 'start');
     this.performChecks(true);
     if (this.hasErrors()) {
-      this.logger.error(ConvocatoriaActionService.name, 'saveOrUpdate()', 'error');
       return throwError('Errores');
     }
     if (this.isEdit()) {
@@ -347,9 +344,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
           this.elegibilidad.refreshInitialState(true);
 
           return super.saveOrUpdate();
-        }),
-        tap(() => this.logger.debug(ConvocatoriaActionService.name,
-          'saveOrUpdate()', 'end'))
+        })
       );
     } else {
       return this.datosGenerales.saveOrUpdate().pipe(
@@ -368,9 +363,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
           this.elegibilidad.refreshInitialState(true);
 
           return super.saveOrUpdate();
-        }),
-        tap(() => this.logger.debug(ConvocatoriaActionService.name,
-          'saveOrUpdate()', 'end'))
+        })
       );
     }
   }
@@ -388,17 +381,11 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
    * Acción de registro de una convocatoria
    */
   registrar(): Observable<void> {
-    this.logger.debug(ConvocatoriaActionService.name,
-      `registrar()`, 'start');
     return this.dialogService.showConfirmation(MSG_REGISTRAR)
       .pipe(switchMap((accept) => {
         if (accept) {
-          this.logger.debug(ConvocatoriaActionService.name,
-            `registrar()`, 'end');
           return this.convocatoriaService.registrar(this.convocatoriaId);
         } else {
-          this.logger.debug(ConvocatoriaActionService.name,
-            `registrar()`, 'end');
           return of(void 0);
         }
       }));

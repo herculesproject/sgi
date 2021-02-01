@@ -2,19 +2,19 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { NumberValidator } from '@core/validators/number-validator';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
-import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
-import { NumberValidator } from '@core/validators/number-validator';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.concepto-gasto.error.cargar');
@@ -44,13 +44,12 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   textSaveOrUpdate: string;
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     private snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoModalComponent>,
     private conceptoGastoService: ConceptoGastoService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoModalComponent
   ) {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
@@ -59,19 +58,15 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnInit()', 'start');
     this.initFormGroup();
     this.loadConceptoGastos();
     this.textSaveOrUpdate = this.data.convocatoriaConceptoGasto.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnInit()', 'end');
   }
 
   initFormGroup() {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'initFormGroup()', 'start');
     this.formGroup = new FormGroup({
       conceptoGasto: new FormControl(this.data.convocatoriaConceptoGasto?.conceptoGasto, [IsEntityValidator.isValid()]),
       importeMaximo: new FormControl(this.data.convocatoriaConceptoGasto?.importeMaximo, [Validators.compose(
@@ -83,11 +78,9 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
     if (this.data.readonly) {
       this.formGroup.disable();
     }
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'initFormGroup()', 'start');
   }
 
   loadConceptoGastos() {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', 'start');
     this.subscriptions.push(
       this.conceptoGastoService.findAll().subscribe(
         (res: SgiRestListResult<IConceptoGasto>) => {
@@ -97,11 +90,10 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
               startWith(''),
               map(value => this.filtroConceptoGasto(value))
             );
-          this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', error);
         }
       )
     );
@@ -117,9 +109,7 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   }
 
   closeModal(convocatoriaConceptoGasto?: IConvocatoriaConceptoGasto): void {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(convocatoriaConceptoGasto);
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'closeModal()', 'end');
   }
 
   isRepetido(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto): boolean {
@@ -137,17 +127,14 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   }
 
   private loadDatosForm(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'getDatosForm()', 'start');
     const convocatoriaConceptoGasto = this.getDatosForm();
     this.data.convocatoriaConceptoGasto.conceptoGasto = convocatoriaConceptoGasto.conceptoGasto;
     this.data.convocatoriaConceptoGasto.importeMaximo = convocatoriaConceptoGasto.importeMaximo;
     this.data.convocatoriaConceptoGasto.numMeses = convocatoriaConceptoGasto.numMeses;
     this.data.convocatoriaConceptoGasto.observaciones = convocatoriaConceptoGasto.observaciones;
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'getDatosForm()', 'end');
   }
 
   private getDatosForm(): IConvocatoriaConceptoGasto {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'getDatosForm()', 'start');
     return {
       id: this.data.convocatoriaConceptoGasto.id,
       conceptoGasto: this.formGroup.controls.conceptoGasto.value,
@@ -158,11 +145,9 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       if (this.isRepetido(this.getDatosForm())) {
         this.snackBarService.showError(MSG_ERROR_CONCEPTO_GASTO_REPETIDO);
-        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'saveOrUpdate() - end');
         return;
       }
       this.loadDatosForm();
@@ -170,13 +155,10 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
 }

@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { SolicitudHitosFragment } from './solicitud-hitos.fragment';
+import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
-import { MatTableDataSource } from '@angular/material/table';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { NGXLogger } from 'ngx-logger';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogService } from '@core/services/dialog.service';
-import { Subscription } from 'rxjs';
-import { SolicitudActionService } from '../../solicitud.action.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SolicitudHitosModalComponentData, SolicitiudHitosModalComponent } from '../../modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Subscription } from 'rxjs';
+import { SolicitiudHitosModalComponent, SolicitudHitosModalComponentData } from '../../modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
+import { SolicitudActionService } from '../../solicitud.action.service';
+import { SolicitudHitosFragment } from './solicitud-hitos.fragment';
 
 
 const MSG_DELETE = marker('csp.solicitud.hito.listado.borrar');
@@ -40,7 +39,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected convocatoriaReunionService: ConvocatoriaService,
     private actionService: SolicitudActionService,
     private matDialog: MatDialog,
@@ -52,7 +50,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudHitosComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
 
     this.dataSource.paginator = this.paginator;
@@ -74,10 +71,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
 
     this.subscriptions.push(this.formPart.hitos$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.logger.debug(SolicitudHitosComponent.name, 'ngOnInit()', 'end');
     }));
-    this.logger.debug(SolicitudHitosComponent.name, `ngOnInit()`, 'end');
-
   }
 
 
@@ -86,8 +80,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
    * @param idHito Identificador de hito a editar.
    */
   openModal(wrapper?: StatusWrapper<ISolicitudHito>): void {
-    this.logger.debug(SolicitudHitosComponent.name, `openModal()`, 'start');
-
     const data: SolicitudHitosModalComponentData = {
       hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as ISolicitudHito,
@@ -112,7 +104,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
             this.formPart.addHito(convocatoriaHito);
           }
         }
-        this.logger.debug(SolicitudHitosComponent.name, `openModal()`, 'end');
       }
     );
 
@@ -122,29 +113,20 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
    * Desactivar solicitud hito
    */
   deleteHito(wrapper: StatusWrapper<ISolicitudHito>) {
-    this.logger.debug(SolicitudHitosComponent.name,
-      `deleteHito(${wrapper})`, 'start');
-
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteHito(wrapper);
           }
-          this.logger.debug(SolicitudHitosComponent.name,
-            `deleteHito(${wrapper})`, 'end');
         }
       )
     );
 
   }
 
-
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudHitosComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudHitosComponent.name, 'ngOnDestroy()', 'end');
-
   }
 
 }

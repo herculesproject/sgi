@@ -13,13 +13,12 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { from, Subscription } from 'rxjs';
 import { map, mergeAll, switchMap, takeLast } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
-
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-proyecto-entidades-financiadoras.fragment';
+
 
 const MODAL_ENTIDAD_FINANCIADORA_TITLE = marker('csp.solicitud.entidades-financiadoras.modal.titulo');
 const MSG_DELETE = marker('csp.solicitud.entidades-financiadoras.borrar');
@@ -66,7 +65,6 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
   @ViewChild('sortEntidadesFinanciadorasAjenas', { static: true }) sortEntidadesFinanciadorasAjena: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     private actionService: SolicitudActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
@@ -74,13 +72,10 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `ngOnInit()`, 'start');
     this.formPart = this.fragment as SolicitudProyectoEntidadesFinanciadorasFragment;
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
 
     this.actionService.existsDatosProyectos();
@@ -169,18 +164,13 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
         this.dataSourceEntidadesFinanciadorasAjenas.data = entidadesFinanciadoras;
       });
     this.subscriptions.push(subscriptionEntidadesFinanciadorasAjenas);
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `ngOnInit()`, 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `ngOnDestroy()`, 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `ngOnDestroy()`, 'end');
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>): void {
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `openModal()`, 'start');
-
     const data: EntidadFinanciadoraDataModal = {
       title: MODAL_ENTIDAD_FINANCIADORA_TITLE,
       entidad: wrapper ? wrapper.value : {} as ISolicitudProyectoEntidadFinanciadoraAjena,
@@ -202,19 +192,16 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           this.formPart.updateSolicitudProyectoEntidadFinanciadora(entidad);
         }
       }
-      this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `openModal()`, 'end');
     });
   }
 
   deleteEntidadFinanciadora(wrapper: StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>) {
-    this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `deleteEntidadFinanciadora(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteSolicitudProyectoEntidadFinanciadora(wrapper);
           }
-          this.logger.debug(SolicitudProyectoEntidadesFinanciadorasComponent.name, `deleteEntidadFinanciadora(${wrapper})`, 'end');
         }
       )
     );

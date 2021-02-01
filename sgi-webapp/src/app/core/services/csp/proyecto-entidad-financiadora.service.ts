@@ -51,7 +51,7 @@ export class ProyectoEntidadFinanciadoraService extends SgiMutableRestService<nu
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoEntidadFinanciadoraService.name,
       logger,

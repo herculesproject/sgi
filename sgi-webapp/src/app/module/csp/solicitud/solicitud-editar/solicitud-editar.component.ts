@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionComponent } from '@core/component/action.component';
-import { SOLICITUD_ROUTE_NAMES } from '../solicitud-route-names';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { DialogService } from '@core/services/dialog.service';
-import { SolicitudActionService } from '../solicitud.action.service';
+import { ActionComponent } from '@core/component/action.component';
 import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { NGXLogger } from 'ngx-logger';
+import { SOLICITUD_ROUTE_NAMES } from '../solicitud-route-names';
+import { SolicitudActionService } from '../solicitud.action.service';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
 const MSG_BUTTON_REGISTRAR = marker('csp.solicitud.registrar');
@@ -32,7 +32,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   private from: string;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -55,16 +55,15 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
    * Comprueba que el tipo de la solcitud sea 'Estándar'
    */
   isTipoEstandar(): void {
-    this.logger.debug(SolicitudEditarComponent.name, 'isTipoEstandar()', 'start');
     const formularioSolicitud = this.actionService.getDatosGeneralesSolicitud().formularioSolicitud;
     this.tipoEstandar = formularioSolicitud === TipoFormularioSolicitud.ESTANDAR;
-    this.logger.debug(SolicitudEditarComponent.name, 'isTipoEstandar()', 'end');
   }
 
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

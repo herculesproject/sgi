@@ -13,7 +13,7 @@ export class AsistenteService extends SgiRestService<number, IAsistente>{
 
   private static readonly MAPPING = '/asistentes';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(AsistenteService.name, logger, `${environment.serviceServers.eti}${AsistenteService.MAPPING}`, http);
   }
 

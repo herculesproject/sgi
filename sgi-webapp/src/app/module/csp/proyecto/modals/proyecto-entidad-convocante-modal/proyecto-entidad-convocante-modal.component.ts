@@ -102,7 +102,7 @@ export class ProyectoEntidadConvocanteModalComponent extends
   hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ProyectoEntidadConvocanteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoEntidadConvocanteModalData,
     protected snackBarService: SnackBarService,
@@ -110,8 +110,7 @@ export class ProyectoEntidadConvocanteModalComponent extends
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
 
     this.setupLayout();
 
@@ -121,8 +120,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
     } else {
       this.create = false;
     }
-
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, 'constructor()', 'end');
   }
 
   private setupLayout(): void {
@@ -138,7 +135,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
   }
 
   ngOnInit() {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.setupI18N();
     const subcription = this.programaService.findAllPlan().subscribe(
@@ -159,7 +155,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
       }
     );
     this.subscriptions.push(subcription);
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, 'ngOnInit()', 'end');
   }
 
   private setupI18N(): void {
@@ -189,8 +184,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
   }
 
   private loadTreePrograma() {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `loadTreePrograma()`, 'start');
     if (this.data.proyectoEntidadConvocante.programaConvocatoria) {
       const node = new NodePrograma(this.data.proyectoEntidadConvocante.programaConvocatoria);
       this.nodeMap.set(node.programa.id, node);
@@ -200,8 +193,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
           if (this.checkedNode) {
             this.expandNodes(this.checkedNode);
           }
-          this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-            `loadTreePrograma()`, 'end');
         })
       ).subscribe((nodePrograma) => {
         this.dataSource.data = [nodePrograma];
@@ -230,12 +221,9 @@ export class ProyectoEntidadConvocanteModalComponent extends
             const current = this.dataSource.data;
             current.push(programa);
             this.publishNodes(current);
-            this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-              `loadTreePrograma()`, 'end');
           },
           (error) => {
-            this.logger.error(ProyectoEntidadConvocanteModalComponent.name,
-              `loadTreePrograma()`, error);
+            this.logger.error(error);
           },
           () => {
             this.checkedNode = this.nodeMap.get(this.formGroup.get('programa').value);
@@ -254,8 +242,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
   }
 
   private getChilds(parent: NodePrograma): Observable<NodePrograma[]> {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getChilds(parent: ${parent})`, 'start');
     return this.programaService.findAllHijosPrograma(parent.programa.id).pipe(
       map((result) => {
         const childs: NodePrograma[] = result.items.map(
@@ -279,33 +265,24 @@ export class ProyectoEntidadConvocanteModalComponent extends
         }
         return of([]);
       }),
-      takeLast(1),
-      tap(() => this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-        `getChilds(parent: ${parent})`, 'end'))
+      takeLast(1)
     );
   }
 
   private expandNodes(node: NodePrograma) {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
     if (node && node.parent) {
       this.treeControl.expand(node.parent);
       this.expandNodes(node.parent);
     }
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `expandNodes(node: ${node})`, 'start');
   }
 
   private publishNodes(rootNodes?: NodePrograma[]) {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, `publishNodes()`, 'start');
     let nodes = rootNodes ? rootNodes : this.dataSource.data;
     nodes = sortByName(nodes);
     this.updateProgramas(nodes);
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, `publishNodes()`, 'end');
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       entidad: new FormControl({ value: this.data.proyectoEntidadConvocante.entidad, disabled: !this.create }, Validators.required),
       plan: new FormControl(
@@ -315,13 +292,10 @@ export class ProyectoEntidadConvocanteModalComponent extends
         }, IsEntityValidator.isValid()),
       programa: new FormControl(this.data.proyectoEntidadConvocante.programa?.id)
     });
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): ProyectoEntidadConvocanteModalData {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getDatosForm()`, 'start');
     this.data.proyectoEntidadConvocante.entidad = this.formGroup.get('entidad').value;
     if (this.checkedNode) {
       // Se ha seleccionado modalidad
@@ -339,22 +313,15 @@ export class ProyectoEntidadConvocanteModalComponent extends
         }
       }
     }
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getDatosForm()`, 'start');
     return this.data;
   }
 
   onCheckNode(node: NodePrograma, $event: MatCheckboxChange): void {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'start');
     this.checkedNode = $event.checked ? node : undefined;
     this.formGroup.get('programa').setValue(this.checkedNode?.programa?.id);
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `onCheckNode(node: ${node}, $event: ${$event})`, 'end');
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(BaseModalComponent.name, `saveOrUpdate()`, 'start');
     if (this.formGroup.valid) {
       const plan = this.formGroup.get('plan').value;
       const programa = this.checkedNode;
@@ -368,53 +335,34 @@ export class ProyectoEntidadConvocanteModalComponent extends
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(BaseModalComponent.name, `saveOrUpdate()`, 'end');
   }
 
   private saveIncompleteFormGroup(message: string, params?: {}): void {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `saveIncompleteFormGroup()`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(message, params).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.closeModal(this.getDatosForm());
           }
-          this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-            `saveIncompleteFormGroup()`, 'end');
         }
       )
     );
   }
 
   private getPlan(value: IProyectoEntidadConvocante): IPrograma {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getPlan(value: ${value})`, 'start');
     if (value.programa != null) {
-      this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-        `getPlan(value: ${value})`, 'end');
       return this.getTopLevel(value.programa);
     }
     if (value.programaConvocatoria != null) {
-      this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-        `getPlan(value: ${value})`, 'end');
       return this.getTopLevel(value.programaConvocatoria);
     }
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getPlan(value: ${value})`, 'end');
     return null;
   }
 
   private getTopLevel(programa: IPrograma): IPrograma {
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getTopLevel(programa: ${programa})`, 'start');
     if (programa.padre == null) {
-      this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-        `getTopLevel(programa: ${programa})`, 'end');
       return programa;
     }
-    this.logger.debug(ProyectoEntidadConvocanteModalComponent.name,
-      `getTopLevel(programa: ${programa})`, 'end');
     return this.getTopLevel(programa.padre);
   }
 }

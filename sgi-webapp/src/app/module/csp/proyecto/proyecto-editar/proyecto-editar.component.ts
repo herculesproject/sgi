@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionComponent } from '@core/component/action.component';
-import { PROYECTO_ROUTE_NAMES } from '../proyecto-route-names';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActionComponent } from '@core/component/action.component';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { NGXLogger } from 'ngx-logger';
+import { PROYECTO_ROUTE_NAMES } from '../proyecto-route-names';
 import { ProyectoActionService } from '../proyecto.action.service';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
@@ -26,7 +26,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   textoCrear = MSG_BUTTON_EDIT;
 
   constructor(
-    protected logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
@@ -42,7 +42,8 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      () => {
+      (error) => {
+        this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

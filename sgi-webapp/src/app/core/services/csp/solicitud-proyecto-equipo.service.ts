@@ -51,7 +51,7 @@ export class SolicitudProyectoEquipoService extends
     }
   }();
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       SolicitudProyectoEquipoService.name,
       logger,

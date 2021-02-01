@@ -2,33 +2,33 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ActionService } from '@core/services/action-service';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
+import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
+import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
+import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
+import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
+import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
+import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { NGXLogger } from 'ngx-logger';
-import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
-import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
-import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
-import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
-import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
-import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
-import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
-import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
+import { switchMap } from 'rxjs/operators';
+import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
+import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
-import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
-import { switchMap, tap } from 'rxjs/operators';
-import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
+import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
+import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
 import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.fragment';
-import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
+import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
-import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
+import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
 
 
 @Injectable()
@@ -63,7 +63,7 @@ export class SolicitudActionService extends ActionService {
   isPresupuestoPorEntidades$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private logger: NGXLogger,
+    private readonly logger: NGXLogger,
     route: ActivatedRoute,
     private solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
@@ -94,7 +94,7 @@ export class SolicitudActionService extends ActionService {
       convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
     this.documentos = new SolicitudDocumentosFragment(logger, this.solicitud?.id, this.solicitud?.convocatoria?.id,
       configuracionSolicitudService, solicitudService, solicitudDocumentoService);
-    this.hitos = new SolicitudHitosFragment(logger, this.solicitud?.id, solicitudHitoService, solicitudService);
+    this.hitos = new SolicitudHitosFragment(this.solicitud?.id, solicitudHitoService, solicitudService);
 
     if (this.solicitud?.id) {
       solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
@@ -103,16 +103,16 @@ export class SolicitudActionService extends ActionService {
         }
       });
     }
-    this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
+    this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.solicitud?.id, solicitudService);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.solicitud, solicitudService,
       solicitudProyectoDatosService, convocatoriaService, this);
-    this.equipoProyecto = new SolicitudEquipoProyectoFragment(logger, this.solicitud?.id, solicitudService,
+    this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService);
-    this.socioColaboradores = new SolicitudSociosColaboradoresFragment(logger, this.solicitud?.id, solicitudService,
+    this.socioColaboradores = new SolicitudSociosColaboradoresFragment(this.solicitud?.id, solicitudService,
       solicitudProyectoSocioService, empresaEconomicaService);
-    this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(logger, this.solicitud?.id, solicitudService,
+    this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.solicitud?.id, solicitudService,
       solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
-    this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(logger, this.solicitud?.id, solicitudService,
+    this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(this.solicitud?.id, solicitudService,
       solicitudProyectoPresupuestoService, empresaEconomicaService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
@@ -140,8 +140,6 @@ export class SolicitudActionService extends ActionService {
   }
 
   existsDatosProyectos(): void {
-    this.logger.debug(SolicitudActionService.name, 'existsDatosProyectos()', 'start');
-
     let existsDatosProyecto$: Observable<boolean>;
     if (this.proyectoDatos.isInitialized()) {
       const existsDatosProyecto = Boolean(this.proyectoDatos.solicitudProyectoDatos.id) ||
@@ -166,15 +164,11 @@ export class SolicitudActionService extends ActionService {
       }
     );
     this.subscriptions.push(subscription);
-
-    this.logger.debug(SolicitudActionService.name, 'existsDatosProyectos()', 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(SolicitudActionService.name, 'saveOrUpdate()', 'start');
     this.performChecks(true);
     if (this.hasErrors()) {
-      this.logger.error(SolicitudActionService.name, 'saveOrUpdate()', 'error');
       return throwError('Errores');
     }
     if (this.isEdit() && this.proyectoDatos.isInitialized()) {
@@ -182,15 +176,10 @@ export class SolicitudActionService extends ActionService {
         switchMap(() => {
           this.proyectoDatos.refreshInitialState(true);
           return super.saveOrUpdate();
-        }),
-        tap(() => this.logger.debug(SolicitudActionService.name,
-          'saveOrUpdate()', 'end'))
+        })
       );
     } else {
-      return super.saveOrUpdate().pipe(
-        tap(() => this.logger.debug(SolicitudActionService.name,
-          'saveOrUpdate()', 'end'))
-      );
+      return super.saveOrUpdate();
     }
   }
 
@@ -224,36 +213,29 @@ export class SolicitudActionService extends ActionService {
    * si no esta inicializada la pestaña ProyectoDatos
    */
   checkSociosColaboradores(): void {
-    this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'start');
     const id = this.solicitud?.id;
     if (!this.proyectoDatos.isInitialized() && id) {
       const subscription = this.solicitudService.findSolicitudProyectoDatos(id).subscribe(
         (proyectoDatos) => {
           this.sociosColaboradores = proyectoDatos ? proyectoDatos.colaborativo : false;
           this.enableAddSocioColaborador = proyectoDatos ? proyectoDatos.colaborativo : false;
-          this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'end');
         },
         (error) => {
+          this.logger.error(error);
           this.sociosColaboradores = false;
           this.enableAddSocioColaborador = false;
-          this.logger.error(SolicitudActionService.name, 'checkSociosColaboradores()', error);
         }
       );
       this.subscriptions.push(subscription);
     }
-    this.logger.debug(SolicitudActionService.name, 'checkSociosColaboradores()', 'end');
   }
 
   checkPresupuestoPorEntidades(): void {
-    this.logger.debug(SolicitudActionService.name, 'checkPresupuestoPorEntidades()', 'start');
-
     const subscription = this.solicitudService.hasPresupuestoPorEntidades(this.solicitud.id).subscribe((result) => {
       this.isPresupuestoPorEntidades$.next(result);
     });
 
     this.subscriptions.push(subscription);
-
-    this.logger.debug(SolicitudActionService.name, 'checkPresupuestoPorEntidades()', 'end');
   }
 
   /**

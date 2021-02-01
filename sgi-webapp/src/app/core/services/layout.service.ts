@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Module } from '@core/module';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
 import { Navigation, NavigationService } from './navigation.service';
 
@@ -20,14 +19,12 @@ export class LayoutService {
   breadcrumData$ = new BehaviorSubject<BreadcrumbData[]>([]);
   title$ = new BehaviorSubject<string>('');
 
-  constructor(protected logger: NGXLogger, private navigationService: NavigationService) {
-    this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'start');
+  constructor(private navigationService: NavigationService) {
     this.navigationService.navigation$.subscribe((navigationStack) => {
       if (navigationStack.length > 0) {
         this.parseNavigationStack(navigationStack);
       }
     });
-    this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'end');
   }
 
   private parseNavigationStack(navigationStack: Navigation[]): void {

@@ -1,14 +1,11 @@
+import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 import { Fragment } from '@core/services/action-service';
+import { ConflictoInteresService } from '@core/services/eti/conflicto-interes.service';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFilter } from '@sgi/framework/http';
-import { BehaviorSubject, from, Observable, of, merge } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
-import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
-import { ConflictoInteresService } from '@core/services/eti/conflicto-interes.service';
-import { FormBuilder } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
 
 export class EvaluadorConflictosInteresFragment extends Fragment {
 
@@ -17,7 +14,6 @@ export class EvaluadorConflictosInteresFragment extends Fragment {
 
   constructor(
     key: number,
-    private logger: NGXLogger,
     private evaluadorService: EvaluadorService,
     private personaService: PersonaService,
     private conflictoInteresService: ConflictoInteresService) {
@@ -92,7 +88,6 @@ export class EvaluadorConflictosInteresFragment extends Fragment {
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(EvaluadorConflictosInteresFragment.name, 'saveOrUpdate()', 'start');
     return merge(
       this.deleteConflictos(),
       this.createConflictos()
@@ -103,15 +98,12 @@ export class EvaluadorConflictosInteresFragment extends Fragment {
           this.setChanges(false);
         }
       }
-      ),
-      tap(() => this.logger.debug(EvaluadorConflictosInteresFragment.name, 'saveOrUpdate()', 'end'))
+      )
     );
   }
 
   private deleteConflictos(): Observable<void> {
-    this.logger.debug(EvaluadorConflictosInteresFragment.name, 'deleteConflictos()', 'start');
     if (this.deleted.length === 0) {
-      this.logger.debug(EvaluadorConflictosInteresFragment.name, 'deleteConflictos()', 'end');
       return of(void 0);
     }
     return from(this.deleted).pipe(
@@ -125,10 +117,8 @@ export class EvaluadorConflictosInteresFragment extends Fragment {
   }
 
   private createConflictos(): Observable<void> {
-    this.logger.debug(EvaluadorConflictosInteresFragment.name, 'createConflictos()', 'start');
     const createdConflictos = this.conflictos$.value.filter((conflicto) => conflicto.created);
     if (createdConflictos.length === 0) {
-      this.logger.debug(EvaluadorConflictosInteresFragment.name, 'createConflictos()', 'end');
       return of(void 0);
     }
 

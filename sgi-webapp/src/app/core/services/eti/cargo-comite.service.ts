@@ -11,7 +11,7 @@ import { CargoComite } from '@core/models/eti/cargo-comite';
 export class CargoComiteService extends SgiRestService<number, CargoComite> {
   private static readonly MAPPING = '/cargocomites';
 
-  constructor(logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       CargoComiteService.name,
       logger,

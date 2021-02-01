@@ -9,12 +9,11 @@ import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-co
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ProyectoEntidadConvocanteModalComponent, ProyectoEntidadConvocanteModalData } from '../../modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
+import { ProyectoEntidadConvocantePlanPipe } from '../../pipes/proyecto-entidad-convocante-plan.pipe';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoEntidadesConvocantesFragment } from './proyecto-entidades-convocantes.fragment';
-import { ProyectoEntidadConvocantePlanPipe } from '../../pipes/proyecto-entidad-convocante-plan.pipe';
 
 const MSG_ENTITY_DELETE_KEY = marker('msg.entity.delete');
 const PROYECTO_ENTIDAD_CONVOCANTE_KEY = marker('csp.proyecto-entidad-convocante');
@@ -41,7 +40,6 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected logger: NGXLogger,
     protected actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
@@ -49,13 +47,10 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
     private proyectoEntidadConvocantePlanPipe: ProyectoEntidadConvocantePlanPipe
   ) {
     super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService);
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'constructor()', 'start');
     this.proyectoEntidadesConvocantesFragment = this.fragment as ProyectoEntidadesConvocantesFragment;
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.setupI18N();
     this.dataSource.paginator = this.paginator;
@@ -72,12 +67,9 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.proyectoEntidadesConvocantesFragment.proyectoEntidadConvocantes$.subscribe(
       (data) => {
-        this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `formPart.data$.next()`, 'start');
         this.dataSource.data = data;
-        this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `formPart.data$.next()`, 'end');
       })
     );
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnInit()', 'end');
   }
 
   private setupI18N(): void {
@@ -90,13 +82,10 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   openModal(value?: IProyectoEntidadConvocante): void {
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `openModal()`, 'start');
     const data: ProyectoEntidadConvocanteModalData = {
       proyectoEntidadConvocante: value,
       selectedEmpresas: this.proyectoEntidadesConvocantesFragment.
@@ -116,21 +105,16 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
           this.proyectoEntidadesConvocantesFragment.addProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
         }
       }
-      this.logger.debug(ProyectoEntidadesConvocantesComponent.name, `openModal()`, 'end');
     });
   }
 
   deleteProyectoEntidadConvocante(data: IProyectoEntidadConvocante) {
-    this.logger.debug(ProyectoEntidadesConvocantesComponent.name,
-      `deleteProyectoEntidadConvocante(${data})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_ENTITY_DELETE_KEY, this.msgParamEntity).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.proyectoEntidadesConvocantesFragment.deleteProyectoEntidadConvocante(data);
           }
-          this.logger.debug(ProyectoEntidadesConvocantesComponent.name,
-            `deleteProyectoEntidadConvocante(${data})`, 'end');
         }
       )
     );

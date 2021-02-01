@@ -1,13 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
-import { BaseModalComponent } from '@core/component/base-modal.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
+import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
@@ -28,13 +27,11 @@ export class ProyectoSocioPeriodoPagoModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoSocioPeriodoPagoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoSocioPeriodoPagoModalData,
   ) {
-    super(logger, snackBarService, matDialogRef, data);
-    this.logger.debug(ProyectoSocioPeriodoPagoModalComponent.name, 'constructor()', 'start');
+    super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -45,21 +42,17 @@ export class ProyectoSocioPeriodoPagoModalComponent extends
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
-    this.logger.debug(ProyectoSocioPeriodoPagoModalComponent.name, 'constructor()', 'end');
   }
 
   protected getDatosForm(): ProyectoSocioPeriodoPagoModalData {
-    this.logger.debug(ProyectoSocioPeriodoPagoModalComponent.name, `getDatosForm()`, 'start');
     this.data.proyectoSocioPeriodoPago.numPeriodo = this.formGroup.get('numPeriodo').value;
     this.data.proyectoSocioPeriodoPago.fechaPrevistaPago = this.formGroup.get('fechaPrevistaPago').value;
     this.data.proyectoSocioPeriodoPago.importe = this.formGroup.get('importe').value;
     this.data.proyectoSocioPeriodoPago.fechaPago = this.formGroup.get('fechaPago').value;
-    this.logger.debug(ProyectoSocioPeriodoPagoModalComponent.name, `getDatosForm()`, 'end');
     return this.data;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ProyectoSocioPeriodoPagoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup(
       {
         numPeriodo: new FormControl({
@@ -82,7 +75,6 @@ export class ProyectoSocioPeriodoPagoModalComponent extends
         fechaPago: new FormControl(this.data.proyectoSocioPeriodoPago.fechaPago, []),
       }
     );
-    this.logger.debug(ProyectoSocioPeriodoPagoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 }
