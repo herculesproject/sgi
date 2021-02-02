@@ -1,5 +1,5 @@
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { SgiAuthHttpInterceptor } from './auth-http-interceptor';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -14,7 +14,7 @@ describe(`AuthHttpInterceptor`, () => {
   let httpMock: HttpTestingController;
   let authServiceMock: jasmine.SpyObj<SgiAuthService>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'isAuthenticated', 'isProtectedRequest']);
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, LoggerTestingModule, RouterTestingModule],
