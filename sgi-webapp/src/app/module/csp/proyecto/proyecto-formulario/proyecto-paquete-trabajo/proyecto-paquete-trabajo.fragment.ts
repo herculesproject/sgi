@@ -1,17 +1,15 @@
-import { OnDestroy } from "@angular/core";
 import { IProyecto } from "@core/models/csp/proyecto";
 import { IProyectoPaqueteTrabajo } from "@core/models/csp/proyecto-paquete-trabajo";
 import { Fragment } from "@core/services/action-service";
 import { ProyectoPaqueteTrabajoService } from "@core/services/csp/proyecto-paquete-trabajo.service";
 import { ProyectoService } from "@core/services/csp/proyecto.service";
 import { StatusWrapper } from "@core/utils/status-wrapper";
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from "rxjs";
+import { BehaviorSubject, from, merge, Observable, of } from "rxjs";
 import { map, mergeMap, takeLast, tap } from "rxjs/operators";
 
-export class ProyectoPaqueteTrabajoFragment extends Fragment implements OnDestroy {
+export class ProyectoPaqueteTrabajoFragment extends Fragment {
   paquetesTrabajo$ = new BehaviorSubject<StatusWrapper<IProyectoPaqueteTrabajo>[]>([]);
   private paquetesTrabajoEliminados: StatusWrapper<IProyectoPaqueteTrabajo>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
@@ -21,10 +19,6 @@ export class ProyectoPaqueteTrabajoFragment extends Fragment implements OnDestro
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   protected onInitialize(): void {

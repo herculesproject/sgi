@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
@@ -9,7 +8,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
 export interface ConvocatoriaEntidadConvocanteData {
@@ -20,10 +19,9 @@ export interface ConvocatoriaEntidadConvocanteData {
   modalidad: IPrograma;
 }
 
-export class ConvocatoriaEntidadesConvocantesFragment extends Fragment implements OnDestroy {
+export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
   private entidadesConvocantesEliminadas: ConvocatoriaEntidadConvocanteData[] = [];
   data$ = new BehaviorSubject<ConvocatoriaEntidadConvocanteData[]>([]);
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -35,10 +33,6 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment implement
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   protected onInitialize(): void {

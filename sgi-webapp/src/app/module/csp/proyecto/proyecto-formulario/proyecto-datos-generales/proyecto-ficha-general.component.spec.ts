@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -17,7 +17,7 @@ describe('ProyectoFichaGeneralComponent', () => {
   let component: ProyectoFichaGeneralComponent;
   let fixture: ComponentFixture<ProyectoFichaGeneralComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ProyectoFichaGeneralComponent

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ describe('SolicitudModalidadEntidadConvocanteComponent', () => {
   let component: SolicitudModalidadEntidadConvocanteModalComponent;
   let fixture: ComponentFixture<SolicitudModalidadEntidadConvocanteModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SolicitudModalidadEntidadConvocanteModalComponent],
       imports: [

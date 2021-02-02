@@ -140,7 +140,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
 
       this.socios = new ProyectoSociosFragment(this.proyecto?.id, empresaEconomicaService,
-        proyectoService, proyectoSocioService, this);
+        proyectoService, proyectoSocioService);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
 
       this.hitos = new ProyectoHitosFragment(this.proyecto?.id, proyectoService,
@@ -177,8 +177,14 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.ENTIDAD_GESTORA, this.entidadGestora);
 
       this.prorrogas = new ProyectoProrrogasFragment(this.proyecto?.id, proyectoService,
-        proyectoProrrogaService, documentoService, this);
+        proyectoProrrogaService, documentoService);
       this.addFragment(this.FRAGMENT.PRORROGAS, this.prorrogas);
+
+      this.subscriptions.push(this.socios.initialized$.subscribe(value => {
+        if (value && !this.fichaGeneral.isInitialized()) {
+          this.fichaGeneral.initialize();
+        }
+      }));
     }
 
   }
@@ -208,26 +214,6 @@ export class ProyectoActionService extends ActionService {
    */
   set isProyectoColaborativo(isColaborativo: boolean) {
     this.disabledAddSocios$.next(isColaborativo);
-  }
-
-
-  /**
-   * Comprueba si es un proyecto colaborativo, si la pestaña fichaGeneral no esta inicializada
-   * y es una edicion se hace la consulta y si no se recupera el valor previo de isProyectoColavorativo.
-   */
-  checkProyectoColavorativo(): void {
-    if (!this.fichaGeneral.isInitialized() && this.proyecto?.id) {
-      const subscription = this.proyectoService.findById(this.proyecto.id)
-        .subscribe((proyecto) => {
-          this.isProyectoColaborativo = proyecto ? proyecto.colaborativo : false;
-        },
-          (error) => {
-            this.logger.error(error);
-            this.isProyectoColaborativo = false;
-          }
-        );
-      this.subscriptions.push(subscription);
-    }
   }
 
 }

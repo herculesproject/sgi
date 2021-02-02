@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProyectoSocioEquipoComponent } from './proyecto-socio-equipo.component';
 import TestUtils from '@core/utils/test-utils';
@@ -31,7 +31,7 @@ describe('ProyectoSocioEquipoComponent', () => {
     rolSocio: undefined
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ProyectoSocioEquipoComponent

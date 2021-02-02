@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { Fragment } from '@core/services/action-service';
@@ -8,10 +8,9 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
+export class ConvocatoriaHitosFragment extends Fragment {
   hitos$ = new BehaviorSubject<StatusWrapper<IConvocatoriaHito>[]>([]);
   private hitosEliminados: StatusWrapper<IConvocatoriaHito>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
@@ -21,10 +20,6 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   protected onInitialize(): void {

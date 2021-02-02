@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProyectoSocioPeriodoJustificacionCrearComponent } from './proyecto-socio-periodo-justificacion-crear.component';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
@@ -29,7 +29,7 @@ describe('ProyectoSocioPeriodoJustificacionCrearComponent', () => {
     urlProyectoSocio: ''
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ProyectoSocioPeriodoJustificacionCrearComponent,

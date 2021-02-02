@@ -1,4 +1,4 @@
-import { AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, OnDestroy, OnInit, ViewChild, Directive } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,6 +14,8 @@ import {
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnDestroy, AfterViewInit {
   columnas: string[];
   elementosPagina: number[];

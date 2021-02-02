@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ISocioPeriodoJustificacionDocumento } from '@core/models/csp/socio-periodo-justificacion-documento';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
@@ -9,7 +8,7 @@ import { SocioPeriodoJustificacionDocumentoService } from '@core/services/csp/so
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, takeLast } from 'rxjs/operators';
 
 const SIN_TIPO_DOCUMENTO = marker('csp.proyecto-socio-periodo-justificacion.documentos.sin-tipo-documento');
@@ -96,12 +95,11 @@ function sortByTitle(nodes: NodeDocumentoProyecto[]): NodeDocumentoProyecto[] {
   });
 }
 
-export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragment implements OnDestroy {
+export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragment {
   documentos$ = new BehaviorSubject<NodeDocumentoProyecto[]>([]);
   private documentosEliminados: ISocioPeriodoJustificacionDocumento[] = [];
 
   private nodeLookup = new Map<string, NodeDocumentoProyecto>();
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -112,10 +110,6 @@ export class ProyectoSocioPeriodoJustificacionDocumentosFragment extends Fragmen
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

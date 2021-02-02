@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ActionFragmentMenuGroupComponent } from './action-fragment-menu-group.component';
 import TestUtils from '@core/utils/test-utils';
@@ -11,7 +11,7 @@ describe('ActionFragmentMenuGroupComponent', () => {
   let component: ActionFragmentMenuGroupComponent;
   let fixture: ComponentFixture<ActionFragmentMenuGroupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         LoggerTestingModule,

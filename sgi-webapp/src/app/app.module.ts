@@ -15,7 +15,6 @@ import { AppComponent } from './app.component';
 import { SgiAuthModule, SGI_AUTH_CONFIG, SgiAuthMode } from '@sgi/framework/auth';
 
 import { BlockModule } from './block/block.module';
-import { SelectorModuloComponent } from './block/selector-modulo/selector-modulo.component';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
@@ -92,9 +91,6 @@ const appInitializerFn = (appConfig: ConfigService) => {
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     }
-  ],
-  entryComponents: [
-    SelectorModuloComponent
   ],
   bootstrap: [AppComponent]
 })

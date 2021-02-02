@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SolicitudProyectoSocioEquipoSocioComponent } from './solicitud-proyecto-socio-equipo-socio.component';
 import TestUtils from '@core/utils/test-utils';
@@ -36,7 +36,7 @@ describe('SolicitudProyectoSocioEquipoSocioComponent', () => {
     selectedSolicitudProyectoSocios: []
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         SolicitudProyectoSocioEquipoSocioComponent

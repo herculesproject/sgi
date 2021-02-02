@@ -1,18 +1,16 @@
-import { OnDestroy } from '@angular/core';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements OnDestroy {
+export class ProyectoEntidadesFinanciadorasFragment extends Fragment {
   entidadesPropias$ = new BehaviorSubject<StatusWrapper<IProyectoEntidadFinanciadora>[]>([]);
   entidadesAjenas$ = new BehaviorSubject<StatusWrapper<IProyectoEntidadFinanciadora>[]>([]);
   private entidadesEliminadas: StatusWrapper<IProyectoEntidadFinanciadora>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
@@ -23,10 +21,6 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment implements 
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

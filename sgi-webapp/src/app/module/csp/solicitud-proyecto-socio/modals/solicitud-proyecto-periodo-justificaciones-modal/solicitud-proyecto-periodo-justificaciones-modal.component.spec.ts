@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SolicitudProyectoPeriodoJustificacionesModalComponent, SolicitudProyectoPeriodoJustificacionesModalData } from './solicitud-proyecto-periodo-justificaciones-modal.component';
 import { SharedModule } from '@shared/shared.module';
@@ -33,7 +33,7 @@ describe('SolicitudProyectoPeriodoJustificacionesModalComponent', () => {
     selectedPeriodoJustificaciones: []
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         SolicitudProyectoPeriodoJustificacionesModalComponent

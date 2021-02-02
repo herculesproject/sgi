@@ -1,17 +1,15 @@
-import { OnDestroy } from '@angular/core';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoHitosFragment extends Fragment implements OnDestroy {
+export class ProyectoHitosFragment extends Fragment {
   hitos$ = new BehaviorSubject<StatusWrapper<IProyectoHito>[]>([]);
   private hitosEliminados: StatusWrapper<IProyectoHito>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
@@ -21,10 +19,6 @@ export class ProyectoHitosFragment extends Fragment implements OnDestroy {
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

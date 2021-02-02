@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { Fragment } from '@core/services/action-service';
@@ -6,28 +5,21 @@ import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.se
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { ProyectoActionService } from '../../proyecto.action.service';
 
-export class ProyectoProrrogasFragment extends Fragment implements OnDestroy {
+export class ProyectoProrrogasFragment extends Fragment {
   prorrogas$ = new BehaviorSubject<StatusWrapper<IProyectoProrroga>[]>([]);
   private prorrogasEliminados: StatusWrapper<IProyectoProrroga>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
     private proyectoService: ProyectoService,
     private proyectoProrrogaService: ProyectoProrrogaService,
-    private documentoService: DocumentoService,
-    public actionService: ProyectoActionService
+    private documentoService: DocumentoService
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

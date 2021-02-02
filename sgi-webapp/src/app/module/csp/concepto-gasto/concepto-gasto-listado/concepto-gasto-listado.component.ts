@@ -12,9 +12,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ConceptoGastoModalComponent } from '../concepto-gasto-modal/concepto-gasto-modal.component';
 
 const MSG_ERROR = marker('csp.gestion.concepto.gasto.listado.error');

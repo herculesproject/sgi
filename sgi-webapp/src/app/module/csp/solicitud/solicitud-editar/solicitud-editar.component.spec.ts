@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SolicitudEditarComponent } from './solicitud-editar.component';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
@@ -18,7 +18,7 @@ describe('SolicitudEditarComponent', () => {
   let component: SolicitudEditarComponent;
   let fixture: ComponentFixture<SolicitudEditarComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         SolicitudEditarComponent,

@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
@@ -10,7 +9,7 @@ import { SolicitudDocumentoService } from '@core/services/csp/solicitud-document
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 const SIN_TIPO_DOCUMENTO = marker('csp.solicitud.documentos.sinTipoDocumento.title');
@@ -82,12 +81,11 @@ function sortByTitle(nodes: NodeDocumentoSolicitud[]): NodeDocumentoSolicitud[] 
   });
 }
 
-export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
+export class SolicitudDocumentosFragment extends Fragment {
   documentos$ = new BehaviorSubject<NodeDocumentoSolicitud[]>([]);
   private documentosEliminados: ISolicitudDocumento[] = [];
 
   private nodeLookup = new Map<string, NodeDocumentoSolicitud>();
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -99,10 +97,6 @@ export class SolicitudDocumentosFragment extends Fragment implements OnDestroy {
   ) {
     super(solicitudId);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subcription => subcription.unsubscribe());
   }
 
   protected onInitialize(): void {

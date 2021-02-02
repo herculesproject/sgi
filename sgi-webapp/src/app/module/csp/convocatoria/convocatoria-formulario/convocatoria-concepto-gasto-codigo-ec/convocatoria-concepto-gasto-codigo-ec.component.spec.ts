@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConvocatoriaConceptoGastoCodigoEcComponent } from './convocatoria-concepto-gasto-codigo-ec.component';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -17,7 +17,7 @@ describe('ConvocatoriaConceptoGastoCodigoEcComponent', () => {
   let component: ConvocatoriaConceptoGastoCodigoEcComponent;
   let fixture: ComponentFixture<ConvocatoriaConceptoGastoCodigoEcComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ConvocatoriaConceptoGastoCodigoEcComponent],
       imports: [

@@ -18,12 +18,6 @@ import { ComentarioEditarModalComponent } from './comentario-editar-modal/coment
     MaterialDesignModule,
     FormsModule,
     ReactiveFormsModule
-  ],
-  exports: [
-  ],
-  entryComponents: [
-    ComentarioCrearModalComponent,
-    ComentarioEditarModalComponent
   ]
 })
 export class ComentarioModule { }

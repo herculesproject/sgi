@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
@@ -6,11 +5,10 @@ import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service'
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiRestFindOptions, SgiRestSort, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoSocioPeriodoJustificacionFragment extends Fragment implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class ProyectoSocioPeriodoJustificacionFragment extends Fragment {
   periodoJustificaciones$ = new BehaviorSubject<StatusWrapper<IProyectoSocioPeriodoJustificacion>[]>([]);
 
   constructor(
@@ -21,10 +19,6 @@ export class ProyectoSocioPeriodoJustificacionFragment extends Fragment implemen
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { Fragment } from '@core/services/action-service';
@@ -6,13 +5,12 @@ import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class SolicitudProyectoEntidadesFinanciadorasFragment extends Fragment implements OnDestroy {
+export class SolicitudProyectoEntidadesFinanciadorasFragment extends Fragment {
   entidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>[]>([]);
   private entidadesFinanciadorasEliminadas: StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>[] = [];
-  private subscriptions: Subscription[] = [];
 
   existsDatosProyecto = false;
   solicitantePersonaRef: string;
@@ -26,10 +24,6 @@ export class SolicitudProyectoEntidadesFinanciadorasFragment extends Fragment im
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

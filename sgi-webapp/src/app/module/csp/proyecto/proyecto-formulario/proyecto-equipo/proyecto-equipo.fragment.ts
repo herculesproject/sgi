@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoEquipoService } from '@core/services/csp/proyecto-equipo.service';
@@ -6,11 +5,10 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoEquipoFragment extends Fragment implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class ProyectoEquipoFragment extends Fragment {
   equipos$ = new BehaviorSubject<StatusWrapper<IProyectoEquipo>[]>([]);
 
   constructor(
@@ -22,10 +20,6 @@ export class ProyectoEquipoFragment extends Fragment implements OnDestroy {
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

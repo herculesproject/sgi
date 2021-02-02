@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoEquipoSocioService } from '@core/services/csp/solicitud-proyecto-equipo-socio.service';
@@ -6,11 +5,10 @@ import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proy
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class SolicitudProyectoSocioEquipoSocioFragment extends Fragment implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class SolicitudProyectoSocioEquipoSocioFragment extends Fragment {
   proyectoEquipoSocios$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoEquipoSocio>[]>([]);
 
   constructor(
@@ -22,10 +20,6 @@ export class SolicitudProyectoSocioEquipoSocioFragment extends Fragment implemen
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

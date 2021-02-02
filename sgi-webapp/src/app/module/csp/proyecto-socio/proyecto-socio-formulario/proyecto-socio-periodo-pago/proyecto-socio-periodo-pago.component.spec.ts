@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProyectoSocioPeriodoPagoComponent } from './proyecto-socio-periodo-pago.component';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
@@ -30,7 +30,7 @@ describe('ProyectoSocioPeriodoPagoComponent', () => {
   const proyectoId = 1;
   const selectedProyectoSocios = [];
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ProyectoSocioPeriodoPagoComponent

@@ -1,24 +1,21 @@
-import { OnDestroy } from '@angular/core';
 import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-periodo-justificacion.service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, takeLast, tap } from 'rxjs/operators';
-import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 
-export class SolicitudProyectoPeriodoJustificacionesFragment extends Fragment implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class SolicitudProyectoPeriodoJustificacionesFragment extends Fragment {
   periodoJustificaciones$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoPeriodoJustificacion>[]>([]);
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
-    private solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService,
-    private actionService: SolicitudProyectoSocioActionService
+    private solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService
   ) {
     super(key);
     this.setComplete(true);
@@ -62,11 +59,11 @@ export class SolicitudProyectoPeriodoJustificacionesFragment extends Fragment im
   }
 
   saveOrUpdate(): Observable<void> {
+    const id = this.getKey() as number;
     const values = this.periodoJustificaciones$.value.map(wrapper => {
-      wrapper.value.solicitudProyectoSocio = this.actionService.getSolicitudProyectoSocio();
+      wrapper.value.solicitudProyectoSocio = { id } as ISolicitudProyectoSocio;
       return wrapper.value;
     });
-    const id = this.getKey() as number;
     return this.solicitudProyectoPeriodoJustificacionService.updateList(id, values).pipe(
       takeLast(1),
       map((results) => {
@@ -84,10 +81,6 @@ export class SolicitudProyectoPeriodoJustificacionesFragment extends Fragment im
   private isSaveOrUpdateComplete(): boolean {
     const hasTouched = this.periodoJustificaciones$.value.some((wrapper) => wrapper.touched);
     return !hasTouched;
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private recalcularNumPeriodos(current: StatusWrapper<ISolicitudProyectoPeriodoJustificacion>[]): void {

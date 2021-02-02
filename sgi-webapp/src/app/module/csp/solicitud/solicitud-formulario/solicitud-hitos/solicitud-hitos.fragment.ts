@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { Fragment } from '@core/services/action-service';
@@ -6,13 +5,11 @@ import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service'
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class SolicitudHitosFragment extends Fragment implements OnDestroy {
+export class SolicitudHitosFragment extends Fragment {
   hitos$ = new BehaviorSubject<StatusWrapper<ISolicitudHito>[]>([]);
   private hitosEliminados: StatusWrapper<ISolicitudHito>[] = [];
-  private subscriptions: Subscription[] = [];
 
   solicitud: ISolicitud;
 
@@ -145,9 +142,5 @@ export class SolicitudHitosFragment extends Fragment implements OnDestroy {
   private isSaveOrUpdateComplete(): boolean {
     const touched: boolean = this.hitos$.value.some((wrapper) => wrapper.touched);
     return (this.hitosEliminados.length > 0 || touched);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

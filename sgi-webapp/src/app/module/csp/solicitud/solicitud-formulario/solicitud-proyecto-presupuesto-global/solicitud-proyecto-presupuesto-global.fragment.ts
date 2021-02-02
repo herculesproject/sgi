@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
@@ -7,15 +6,13 @@ import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitu
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-
-export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment implements OnDestroy {
+export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
   formGroup: FormGroup;
   partidasGastos$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoPresupuesto>[]>([]);
   private partidasGastosEliminadas: StatusWrapper<ISolicitudProyectoPresupuesto>[] = [];
-  private subscriptions: Subscription[] = [];
 
   existsDatosProyecto = false;
 
@@ -28,10 +25,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment impleme
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

@@ -32,7 +32,7 @@ export class SolicitudProyectoSocioActionService extends ActionService {
   private selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
 
   constructor(
-    private readonly logger: NGXLogger,
+    readonly logger: NGXLogger,
     solicitudService: SolicitudService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
     solicitudProyectoPeriodoPagoService: SolicitudProyectoPeriodoPagoService,
@@ -51,11 +51,11 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     }
 
     this.datosGenerales = new SolicitudProyectoSocioDatosGeneralesFragment(
-      this.solicitudProyectoSocio?.id, solicitudProyectoSocioService, solicitudService, this);
+      this.solicitudProyectoSocio?.id, this.solicitudId, solicitudProyectoSocioService, solicitudService);
     this.periodosPago = new SolicitudProyectoSocioPeriodoPagoFragment(logger, this.solicitudProyectoSocio?.id,
       solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService);
     this.periodoJustificaciones = new SolicitudProyectoPeriodoJustificacionesFragment(logger, this.solicitudProyectoSocio?.id,
-      solicitudProyectoSocioService, solicitudProyectoPeriodoJustificacionService, this);
+      solicitudProyectoSocioService, solicitudProyectoPeriodoJustificacionService);
     this.socioEquipoSocio = new SolicitudProyectoSocioEquipoSocioFragment(logger, this.solicitudProyectoSocio?.id,
       solicitudProyectoSocioService, solicitudProyectoEquipoSocioService, personaFisicaService);
 
@@ -63,10 +63,8 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     this.addFragment(this.FRAGMENT.PERIODOS_PAGOS, this.periodosPago);
     this.addFragment(this.FRAGMENT.PERIODOS_JUSTIFICACION, this.periodoJustificaciones);
     this.addFragment(this.FRAGMENT.EQUIPO_SOCIO, this.socioEquipoSocio);
-  }
 
-  getSolicitudId(): number {
-    return this.solicitudId;
+
   }
 
   getSolicitudProyectoSocio(): ISolicitudProyectoSocio {

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProyectoSocioPeriodoJustificacionDocumentosComponent } from './proyecto-socio-periodo-justificacion-documentos.component';
 import TestUtils from '@core/utils/test-utils';
@@ -28,7 +28,7 @@ describe('ProyectoSocioPeriodoJustificacionDocumentosComponent', () => {
     urlProyectoSocio: ''
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ProyectoSocioPeriodoJustificacionDocumentosComponent],
       imports: [

@@ -1,17 +1,15 @@
-import { OnDestroy } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment implements OnDestroy {
+export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
   convocatoriaEntidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<IConvocatoriaEntidadFinanciadora>[]>([]);
   convocatoriaEntidadesEliminadas: StatusWrapper<IConvocatoriaEntidadFinanciadora>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
@@ -21,10 +19,6 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment impleme
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   protected onInitialize(): void {

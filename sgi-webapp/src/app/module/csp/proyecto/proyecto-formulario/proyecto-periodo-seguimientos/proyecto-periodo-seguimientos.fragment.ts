@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
@@ -7,13 +6,12 @@ import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-p
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnDestroy {
+export class ProyectoPeriodoSeguimientosFragment extends Fragment {
   periodoSeguimientos$ = new BehaviorSubject<StatusWrapper<IProyectoPeriodoSeguimiento>[]>([]);
   private periodoSeguimientosEliminados: StatusWrapper<IProyectoPeriodoSeguimiento>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
@@ -24,10 +22,6 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment implements OnD
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Attribute, ChangeDetectorRef, DoCheck, ElementRef, Inject, Input, OnDestroy, OnInit, Optional, Self, TemplateRef } from '@angular/core';
+import { Attribute, ChangeDetectorRef, DoCheck, ElementRef, Inject, Input, OnDestroy, OnInit, Optional, Self, TemplateRef, Directive } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
@@ -15,6 +15,8 @@ import { ComponentType } from '@angular/cdk/portal';
 
 let nextUniqueId = 0;
 
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export abstract class SelectDialogComponent<D, T> implements
   OnDestroy, OnInit, DoCheck, ControlValueAccessor,
   MatFormFieldControl<T> {

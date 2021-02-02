@@ -1,4 +1,4 @@
-import { Inject, OnDestroy, OnInit } from '@angular/core';
+import { Inject, OnDestroy, OnInit, Directive } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;

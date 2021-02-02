@@ -1,18 +1,16 @@
-import { OnDestroy } from '@angular/core';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoEntidadesConvocantesFragment extends Fragment implements OnDestroy {
+export class ProyectoEntidadesConvocantesFragment extends Fragment {
   private deleted: Set<number> = new Set<number>();
   private edited: Set<number> = new Set<number>();
   proyectoEntidadConvocantes$ = new BehaviorSubject<IProyectoEntidadConvocante[]>([]);
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -22,10 +20,6 @@ export class ProyectoEntidadesConvocantesFragment extends Fragment implements On
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

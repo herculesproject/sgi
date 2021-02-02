@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConvocatoriaRequisitosIPComponent } from './convocatoria-requisitos-ip.component';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -17,7 +17,7 @@ describe('ConvocatoriaRequisitosIPComponent', () => {
   let component: ConvocatoriaRequisitosIPComponent;
   let fixture: ComponentFixture<ConvocatoriaRequisitosIPComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ConvocatoriaRequisitosIPComponent],
       imports: [

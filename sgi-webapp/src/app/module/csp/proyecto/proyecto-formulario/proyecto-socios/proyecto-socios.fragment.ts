@@ -1,38 +1,29 @@
-import { OnDestroy } from '@angular/core';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { ProyectoActionService } from '../../proyecto.action.service';
 
-export class ProyectoSociosFragment extends Fragment implements OnDestroy {
+export class ProyectoSociosFragment extends Fragment {
   proyectoSocios$ = new BehaviorSubject<StatusWrapper<IProyectoSocio>[]>([]);
   private proyectoSocioEliminados: StatusWrapper<IProyectoSocio>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     key: number,
     private empresaEconomicaService: EmpresaEconomicaService,
     private proyectoService: ProyectoService,
-    private proyectoSocioService: ProyectoSocioService,
-    private actionService: ProyectoActionService
+    private proyectoSocioService: ProyectoSocioService
   ) {
     super(key);
     this.setComplete(true);
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
   protected onInitialize(): void {
     const id = this.getKey() as number;
     if (id) {
-      this.actionService.checkProyectoColavorativo();
       const subscription = this.proyectoService.findAllProyectoSocioProyecto(id)
         .pipe(
           switchMap((proyectoSocios) =>

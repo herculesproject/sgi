@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConvocatoriaPlazosFasesComponent } from './convocatoria-plazos-fases.component';
 import TestUtils from '@core/utils/test-utils';
@@ -17,7 +17,7 @@ describe('ConvocatoriaPlazosFasesComponent', () => {
   let component: ConvocatoriaPlazosFasesComponent;
   let fixture: ComponentFixture<ConvocatoriaPlazosFasesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ConvocatoriaPlazosFasesComponent],
       imports: [

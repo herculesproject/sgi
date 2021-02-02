@@ -1,15 +1,13 @@
-import { OnDestroy } from '@angular/core';
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoSocioPeriodoPagoService } from '@core/services/csp/proyecto-socio-periodo-pago.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, takeLast, tap } from 'rxjs/operators';
 
-export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class ProyectoSocioPeriodoPagoFragment extends Fragment {
   periodoPagos$ = new BehaviorSubject<StatusWrapper<IProyectoSocioPeriodoPago>[]>([]);
 
   constructor(
@@ -20,10 +18,6 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment implements OnDest
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {

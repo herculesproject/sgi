@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import TestUtils from '@core/utils/test-utils';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ describe('DesglosePresupuestoGlobalModalComponent', () => {
   let component: DesglosePresupuestoGlobalModalComponent;
   let fixture: ComponentFixture<DesglosePresupuestoGlobalModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const mockDialogRef = {
       close: jasmine.createSpy('close'),
     };

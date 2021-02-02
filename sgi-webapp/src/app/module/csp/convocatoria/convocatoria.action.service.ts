@@ -167,7 +167,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(this.convocatoriaId,
       convocatoriaService, convocatoriaConceptoGastoCodigoEcService, this.elegibilidad, this.readonly);
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
-      logger, this.convocatoriaId, configuracionSolicitudService, documentoRequeridoService, this, this.plazosFases,
+      logger, this.convocatoriaId, configuracionSolicitudService, documentoRequeridoService,
       this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
@@ -210,6 +210,15 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
         });
       this.subscriptions.push(subscription);
     }
+
+    this.subscriptions.push(this.configuracionSolicitudes.initialized$.subscribe(value => {
+      if (value && !this.plazosFases.isInitialized()) {
+        this.plazosFases.initialize();
+      }
+    }));
+    this.subscriptions.push(this.plazosFases.plazosFase$.subscribe(fases => {
+      this.configuracionSolicitudes.setFases(fases.map(fase => fase.value));
+    }));
   }
 
   /**

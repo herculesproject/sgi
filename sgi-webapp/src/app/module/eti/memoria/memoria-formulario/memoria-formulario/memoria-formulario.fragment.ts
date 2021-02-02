@@ -49,8 +49,6 @@ interface IApartadoWithRespuestaAndComentario extends IApartado {
 
 export class MemoriaFormularioFragment extends Fragment {
 
-  private subscriptions: Subscription[] = [];
-
   public blocks$: BehaviorSubject<IBlock[]> = new BehaviorSubject<IBlock[]>([]);
   public selectedIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
   private memoria: IMemoria;

@@ -1,4 +1,3 @@
-import { OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -9,33 +8,26 @@ import { DocumentoRequeridoService } from '@core/services/csp/documento-requerid
 import { DateUtils } from '@core/utils/date-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaPlazosFasesFragment } from '../convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 
-export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<IConfiguracionSolicitud> implements OnDestroy {
+export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<IConfiguracionSolicitud> {
   configuracionSolicitud: IConfiguracionSolicitud;
   documentosRequeridos$ = new BehaviorSubject<StatusWrapper<IDocumentoRequerido>[]>([]);
   documentosRequeridosEliminados: StatusWrapper<IDocumentoRequerido>[] = [];
-  private subscriptionsFragment: Subscription[] = [];
+  private convocatoriaFases: IConvocatoriaFase[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private documentoRequeridoService: DocumentoRequeridoService,
-    private convocatoriaActionService: ConvocatoriaActionService,
-    private plazosFasesFragment: ConvocatoriaPlazosFasesFragment,
     public readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);
     this.configuracionSolicitud = {} as IConfiguracionSolicitud;
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptionsFragment.forEach(x => x.unsubscribe());
   }
 
   protected buildFormGroup(): FormGroup {
@@ -91,13 +83,14 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     );
   }
 
+  public setFases(convocatoriaFases: IConvocatoriaFase[]) {
+    this.convocatoriaFases = convocatoriaFases;
+  }
+
   getValue(): IConfiguracionSolicitud {
     const form = this.getFormGroup().value;
     if (this.configuracionSolicitud === null) {
       this.configuracionSolicitud = {} as IConfiguracionSolicitud;
-    }
-    if (!this.configuracionSolicitud.convocatoria) {
-      this.configuracionSolicitud.convocatoria = this.convocatoriaActionService.getDatosGeneralesConvocatoria();
     }
     this.configuracionSolicitud.tramitacionSGI = form.tramitacionSGI;
     this.configuracionSolicitud.fasePresentacionSolicitudes = form.fasePresentacionSolicitudes;
@@ -150,16 +143,16 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
     if (configuracion.fasePresentacionSolicitudes != null) {
       if (!configuracion.fasePresentacionSolicitudes.id) {
-        const plazosFases = this.plazosFasesFragment.plazosFase$.value.find(plazoFase =>
-          plazoFase.value.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
-        configuracion.fasePresentacionSolicitudes.id = plazosFases.value.id;
+        const plazosFases = this.convocatoriaFases.find(plazoFase =>
+          plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
+        configuracion.fasePresentacionSolicitudes.id = plazosFases.id;
       } else {
         configuracion.fasePresentacionSolicitudes =
-          this.convocatoriaActionService.getPlazosFases().find(
-            plazoFase => plazoFase.value.tipoFase.nombre === configuracion.fasePresentacionSolicitudes?.tipoFase.nombre
-              && plazoFase.value.fechaInicio === configuracion.fasePresentacionSolicitudes?.fechaInicio
-              && plazoFase.value.fechaFin === configuracion.fasePresentacionSolicitudes?.fechaFin
-              && plazoFase.value.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones)?.value;
+          this.convocatoriaFases.find(
+            plazoFase => plazoFase.tipoFase.nombre === configuracion.fasePresentacionSolicitudes?.tipoFase.nombre
+              && plazoFase.fechaInicio === configuracion.fasePresentacionSolicitudes?.fechaInicio
+              && plazoFase.fechaFin === configuracion.fasePresentacionSolicitudes?.fechaFin
+              && plazoFase.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones);
       }
     }
 
@@ -177,13 +170,13 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     if (configuracion.fasePresentacionSolicitudes !== null) {
 
       configuracion.fasePresentacionSolicitudes =
-        this.convocatoriaActionService.getPlazosFases().find(
-          plazoFase => plazoFase.value.tipoFase.nombre === configuracion.fasePresentacionSolicitudes?.tipoFase.nombre
-            && plazoFase.value.fechaInicio.toString() ===
+        this.convocatoriaFases.find(
+          plazoFase => plazoFase.tipoFase.nombre === configuracion.fasePresentacionSolicitudes?.tipoFase.nombre
+            && plazoFase.fechaInicio.toString() ===
             DateUtils.formatFechaAsISODate(DateUtils.fechaToDate(configuracion.fasePresentacionSolicitudes?.fechaInicio))
-            && plazoFase.value.fechaFin.toString() ===
+            && plazoFase.fechaFin.toString() ===
             DateUtils.formatFechaAsISODate(DateUtils.fechaToDate(configuracion.fasePresentacionSolicitudes?.fechaFin))
-            && plazoFase.value.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones)?.value;
+            && plazoFase.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones);
     }
 
     return this.configuracionSolicitudService.update(Number(this.getKey()), configuracion).pipe(

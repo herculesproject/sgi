@@ -7,16 +7,15 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 
 export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<ISolicitudProyectoSocio> {
   solicitudProyectoSocio: ISolicitudProyectoSocio;
 
   constructor(
     key: number,
+    private solicitudId: number,
     private service: SolicitudProyectoSocioService,
-    private solicitudService: SolicitudService,
-    private actionService: SolicitudProyectoSocioActionService,
+    private solicitudService: SolicitudService
   ) {
     super(key);
     this.solicitudProyectoSocio = {} as ISolicitudProyectoSocio;
@@ -95,7 +94,7 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
   }
 
   private create(solicitudProyectoSocio: ISolicitudProyectoSocio): Observable<ISolicitudProyectoSocio> {
-    return this.solicitudService.findSolicitudProyectoDatos(this.actionService.getSolicitudId()).pipe(
+    return this.solicitudService.findSolicitudProyectoDatos(this.solicitudId).pipe(
       switchMap((solicitudProyectoDatos) => {
         solicitudProyectoSocio.solicitudProyectoDatos = solicitudProyectoDatos;
         return this.service.create(solicitudProyectoSocio);

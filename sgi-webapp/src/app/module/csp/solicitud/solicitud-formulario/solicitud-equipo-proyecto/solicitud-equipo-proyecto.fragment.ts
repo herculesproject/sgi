@@ -1,17 +1,15 @@
-import { OnDestroy } from '@angular/core';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class SolicitudEquipoProyectoFragment extends Fragment implements OnDestroy {
+export class SolicitudEquipoProyectoFragment extends Fragment {
   proyectoEquipos$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoEquipo>[]>([]);
   private proyectosEquipoEliminados: StatusWrapper<ISolicitudProyectoEquipo>[] = [];
-  private subscriptions: Subscription[] = [];
 
   existsDatosProyecto = false;
   solicitantePersonaRef: string;
@@ -23,10 +21,6 @@ export class SolicitudEquipoProyectoFragment extends Fragment implements OnDestr
   ) {
     super(key);
     this.setComplete(true);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected onInitialize(): void {
