@@ -180,6 +180,9 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * El campo presentación es obligatorio
    */
   presentacionSolicitud() {
+    if (!this.formGroup.controls.tramitacionSGI.value) {
+      this.formGroup.controls.fasePresentacionSolicitudes.setErrors(null);
+    }
     return this.formGroup.controls.tramitacionSGI.value;
   }
 
