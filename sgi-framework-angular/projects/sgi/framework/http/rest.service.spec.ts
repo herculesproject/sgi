@@ -1,10 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgiRestService } from './rest.service';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { SgiRestFindOptions, SgiRestSortDirection, SgiRestFilterType } from './types';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { EMPTY } from 'rxjs';
+import { SgiRestService } from './rest.service';
+import { SgiRestFilterType, SgiRestFindOptions, SgiRestSortDirection } from './types';
 
 const fakeEndpoint = 'http://localhost:8080/fake';
 
@@ -16,8 +15,8 @@ interface DummyData {
 }
 
 class FakeService extends SgiRestService<number, DummyData> {
-  constructor(logger: NGXLogger, http: HttpClient) {
-    super(FakeService.name, logger, fakeEndpoint, http);
+  constructor(http: HttpClient) {
+    super(FakeService.name, fakeEndpoint, http);
   }
 }
 
@@ -45,9 +44,9 @@ describe('SgiRestService', () => {
   let httpMock: HttpTestingController;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerTestingModule]
+      imports: [HttpClientTestingModule]
     });
-    service = new FakeService(TestBed.inject(NGXLogger), TestBed.inject(HttpClient));
+    service = new FakeService(TestBed.inject(HttpClient));
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -126,9 +125,8 @@ describe('SgiRestService', () => {
     // given: existing entity id
     const id = 1;
     // when: delete method called with given id
-    service.deleteById(id).subscribe((res) => {
+    service.deleteById(id).subscribe(() => {
       // then: the entity is deleted and nothing returned
-      expect(res).toEqual(undefined);
     });
 
     // then: the right backend API is called
@@ -165,9 +163,8 @@ describe('SgiRestService', () => {
 
   it('deleteAll() should DELETE all entities', () => {
     // when: delete method called with given id
-    service.deleteAll().subscribe((res) => {
+    service.deleteAll().subscribe(() => {
       // then: the entity is deleted and nothing returned
-      expect(res).toEqual(undefined);
     });
 
     // then: the right backend API is called

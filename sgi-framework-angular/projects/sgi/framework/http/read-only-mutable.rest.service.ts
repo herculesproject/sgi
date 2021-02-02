@@ -1,12 +1,11 @@
-import { Observable, of, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { switchMap, catchError, map, tap } from 'rxjs/operators';
-import { NGXLogger } from 'ngx-logger';
-import {
-  SgiRestFindOptions, SgiRestPageRequest, SgiRestSort, SgiRestSortDirection,
-  SgiRestFilter, SgiRestListResult, SgiRestFilterType
-} from './types';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { SgiConverter } from '@sgi/framework/core';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import {
+  SgiRestFilter, SgiRestFilterType, SgiRestFindOptions,
+  SgiRestListResult, SgiRestPageRequest, SgiRestSort, SgiRestSortDirection
+} from './types';
 
 
 /**
@@ -25,22 +24,18 @@ export abstract class SgiReadOnlyMutableRestService<K extends number | string, S
   protected readonly endpointUrl: string;
   /** The converter for requests */
   protected readonly converter: SgiConverter<S, T>;
-  /** The logger */
-  protected readonly logger: NGXLogger;
   /** The Service Name to log */
   protected readonly serviceName: string;
 
   /**
    *
    * @param serviceName The service name to appear in log
-   * @param logger The logger to use
    * @param endpointRelativePath The endpoint relative URL path
    * @param http The HttpClient to use
    * @param converter The converter to use in transformations between rest response and returned type
    */
-  constructor(serviceName: string, logger: NGXLogger, endpointUrl: string, http: HttpClient, converter: SgiConverter<S, T>) {
+  constructor(serviceName: string, endpointUrl: string, http: HttpClient, converter: SgiConverter<S, T>) {
     this.serviceName = serviceName;
-    this.logger = logger;
     this.endpointUrl = endpointUrl;
     this.http = http;
     this.converter = converter;
@@ -53,17 +48,15 @@ export abstract class SgiReadOnlyMutableRestService<K extends number | string, S
    */
   // TODO: Manage 404 (NotFound) and return an empty element?
   public findById(id: K): Observable<T> {
-    this.logger.debug(this.serviceName, `findById(${id})`, '-', 'START');
     return this.http.get<S>(`${this.endpointUrl}/${id}`).pipe(
       // TODO: Explore the use a global HttpInterceptor with or without a custom error
       catchError((error: HttpErrorResponse) => {
         // Log the error
-        this.logger.error(this.serviceName, `findById(${id}):`, error);
+        console.error(JSON.stringify(error));
         // Pass the error to subscribers. Anyway they would decide what to do with the error.
         return throwError(error);
       }),
       map(response => {
-        this.logger.debug(this.serviceName, `findById(${id})`, '-', 'END');
         return this.converter.toTarget(response);
       })
     );
@@ -75,12 +68,7 @@ export abstract class SgiReadOnlyMutableRestService<K extends number | string, S
    * @param options The options to apply
    */
   public findAll(options?: SgiRestFindOptions): Observable<SgiRestListResult<T>> {
-    this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.find<S, T>(this.endpointUrl, options, this.converter).pipe(
-      tap(() => {
-        this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'END');
-      })
-    );
+    return this.find<S, T>(this.endpointUrl, options, this.converter);
   }
 
   /**
@@ -92,18 +80,14 @@ export abstract class SgiReadOnlyMutableRestService<K extends number | string, S
    */
   protected find<U, V>(endpointUrl: string, options?: SgiRestFindOptions, converter?: SgiConverter<U, V>):
     Observable<SgiRestListResult<V>> {
-    this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'START');
     return this.http.get<U[]>(endpointUrl, this.buildHttpClientOptions(options))
       .pipe(
         // TODO: Explore the use a global HttpInterceptor with or without a custom error
         catchError((error: HttpErrorResponse) => {
-          // Log the error
-          this.logger.error(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''}):`, error);
           // Pass the error to subscribers. Anyway they would decide what to do with the error.
           return throwError(error);
         }),
         switchMap(r => {
-          this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'END');
           return this.toSgiRestListResult<U, V>(r, converter);
         })
       );
