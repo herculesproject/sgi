@@ -4,7 +4,6 @@ import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProrrogaDocumento } from '@core/models/csp/proyecto-prorroga-documento';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -15,10 +14,9 @@ export class ProyectoProrrogaService extends SgiRestService<number, IProyectoPro
   private static readonly MAPPING = '/proyectoprorrogas';
 
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ProyectoProrrogaService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoProrrogaService.MAPPING}`,
       http
     );

@@ -17,10 +17,9 @@ export class UnidadGestionService extends SgiRestService<number, IUnidadGestion>
   private static readonly MAPPING = '/unidades';
 
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       UnidadGestionService.name,
-      logger,
       `${environment.serviceServers.usr}${UnidadGestionService.MAPPING}`,
       http
     );

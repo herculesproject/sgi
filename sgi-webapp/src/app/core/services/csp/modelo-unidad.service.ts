@@ -6,7 +6,6 @@ import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 
@@ -52,10 +51,9 @@ export class ModeloUnidadService extends
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ModeloUnidadService.name,
-      logger,
       `${environment.serviceServers.csp}${ModeloUnidadService.MAPPING}`,
       http, ModeloUnidadService.CONVERTER
     );

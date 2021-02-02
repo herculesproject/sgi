@@ -112,14 +112,13 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }();
 
   constructor(
-    protected readonly logger: NGXLogger,
+    private readonly logger: NGXLogger,
     protected http: HttpClient,
     private personaFisicaService: PersonaFisicaService,
     private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(
       SolicitudService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudService.MAPPING}`,
       http,
       SolicitudService.CONVERTER

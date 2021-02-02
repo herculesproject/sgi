@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IPersona } from '@core/models/sgp/persona';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,8 +11,8 @@ import { Observable } from 'rxjs';
 export class PersonaFisicaService extends SgiRestService<string, IPersona>{
   private static readonly MAPPING = '/personas/fisica';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(PersonaFisicaService.name, logger,
+  constructor(protected http: HttpClient) {
+    super(PersonaFisicaService.name,
       `${environment.serviceServers.sgp}${PersonaFisicaService.MAPPING}`, http);
   }
 

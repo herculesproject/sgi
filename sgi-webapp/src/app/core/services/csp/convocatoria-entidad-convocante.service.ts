@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
-import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiMutableRestService } from '@sgi/framework/http';
 
 
 export interface IConvocatoriaEntidadConvocanteBackend {
@@ -44,10 +43,9 @@ export class ConvocatoriaEntidadConvocanteService
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ConvocatoriaEntidadConvocanteService.name,
-      logger,
       `${environment.serviceServers.csp}${ConvocatoriaEntidadConvocanteService.MAPPING}`,
       http,
       ConvocatoriaEntidadConvocanteService.CONVERTER

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { ICodigoEconomico } from '@core/models/sge/codigo-economico';
 import { environment } from '@env';
 import { SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,8 +11,8 @@ import { Observable } from 'rxjs';
 export class CodigoEconomicoService extends SgiRestService<string, ICodigoEconomico>{
   private static readonly MAPPING = '/codigoeconomicos';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(CodigoEconomicoService.name, logger,
+  constructor(protected http: HttpClient) {
+    super(CodigoEconomicoService.name,
       `${environment.serviceServers.sge}${CodigoEconomicoService.MAPPING}`, http);
   }
 

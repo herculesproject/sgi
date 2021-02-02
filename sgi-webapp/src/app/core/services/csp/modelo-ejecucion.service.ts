@@ -9,7 +9,6 @@ import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { IModeloEjecucion, ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { IModeloUnidadBackend, ModeloUnidadService } from './modelo-unidad.service';
 
@@ -30,10 +29,9 @@ const tiposHito: ITipoHito[] = [
 export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecucion> {
   private static readonly MAPPING = '/modeloejecuciones';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ModeloEjecucionService.name,
-      logger,
       `${environment.serviceServers.csp}${ModeloEjecucionService.MAPPING}`,
       http
     );

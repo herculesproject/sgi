@@ -19,8 +19,8 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
 
   private static readonly MAPPING = '/memorias';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(MemoriaService.name, logger, `${environment.serviceServers.eti}${MemoriaService.MAPPING}`, http);
+  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
+    super(MemoriaService.name, `${environment.serviceServers.eti}${MemoriaService.MAPPING}`, http);
   }
 
   /**

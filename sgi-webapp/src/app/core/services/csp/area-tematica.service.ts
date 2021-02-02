@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +11,9 @@ import { tap } from 'rxjs/operators';
 export class AreaTematicaService extends SgiRestService<number, IAreaTematica> {
   private static readonly MAPPING = '/areatematicas';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       AreaTematicaService.name,
-      logger,
       `${environment.serviceServers.csp}${AreaTematicaService.MAPPING}`,
       http
     );

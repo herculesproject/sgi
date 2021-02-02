@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
-import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
+import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { IPersona } from '@core/models/sgp/persona';
+import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiMutableRestService } from '@sgi/framework/http';
 
 export interface ISolicitudProyectoEquipoBackend {
   id: number;
@@ -51,10 +50,9 @@ export class SolicitudProyectoEquipoService extends
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       SolicitudProyectoEquipoService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudProyectoEquipoService.MAPPING}`,
       http,
       SolicitudProyectoEquipoService.CONVERTER

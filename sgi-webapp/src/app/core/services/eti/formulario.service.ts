@@ -4,7 +4,6 @@ import { IBloque } from '@core/models/eti/bloque';
 import { IFormulario } from '@core/models/eti/formulario';
 import { environment } from '@env';
 import { SgiReadOnlyRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,8 +13,8 @@ export class FormularioService extends SgiReadOnlyRestService<number, IFormulari
 
   private static readonly MAPPING = '/formularios';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(FormularioService.name, logger, `${environment.serviceServers.eti}${FormularioService.MAPPING}`, http);
+  constructor(protected http: HttpClient) {
+    super(FormularioService.name, `${environment.serviceServers.eti}${FormularioService.MAPPING}`, http);
   }
 
   getBloques(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IBloque>> {

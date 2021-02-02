@@ -98,10 +98,9 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
   }();
 
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaReunionService.name,
-      logger,
       `${environment.serviceServers.eti}${ConvocatoriaReunionService.MAPPING}`,
       http, ConvocatoriaReunionService.CONVERTER
     );

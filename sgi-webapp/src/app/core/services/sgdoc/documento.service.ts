@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http/';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, takeLast } from 'rxjs/operators';
 
@@ -31,8 +30,8 @@ export function triggerDownloadToUser(file: Blob, fileName: string) {
 export class DocumentoService extends SgiRestService<string, IDocumento>{
   private static readonly MAPPING = '/documentos';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(DocumentoService.name, logger,
+  constructor(protected http: HttpClient) {
+    super(DocumentoService.name,
       `${environment.serviceServers.sgdoc}${DocumentoService.MAPPING}`, http);
   }
 

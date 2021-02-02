@@ -16,10 +16,9 @@ import { catchError } from 'rxjs/operators';
 export class PeticionEvaluacionService extends SgiRestService<number, IPeticionEvaluacion> {
   private static readonly MAPPING = '/peticionevaluaciones';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       PeticionEvaluacionService.name,
-      logger,
       `${environment.serviceServers.eti}${PeticionEvaluacionService.MAPPING}`,
       http
     );

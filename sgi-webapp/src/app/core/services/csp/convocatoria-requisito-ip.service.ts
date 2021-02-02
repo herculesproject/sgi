@@ -5,7 +5,7 @@ import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +13,9 @@ import { catchError, tap } from 'rxjs/operators';
 export class ConvocatoriaRequisitoIPService extends SgiRestService<number, IConvocatoriaRequisitoIP> {
   private static readonly MAPPING = '/convocatoria-requisitoips';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaRequisitoIPService.name,
-      logger,
       `${environment.serviceServers.csp}${ConvocatoriaRequisitoIPService.MAPPING}`,
       http
     );

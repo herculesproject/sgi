@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
-import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@env';
-import { ISolicitud } from '@core/models/csp/solicitud';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
+import { Injectable } from '@angular/core';
 import { IPrograma } from '@core/models/csp/programa';
+import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiMutableRestService } from '@sgi/framework/http';
 
 
 export interface ISolicitudModalidadBackend {
@@ -52,10 +51,9 @@ export class SolicitudModalidadService extends SgiMutableRestService<number, ISo
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       SolicitudModalidadService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudModalidadService.MAPPING}`,
       http,
       SolicitudModalidadService.CONVERTER

@@ -10,7 +10,6 @@ import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
@@ -74,13 +73,11 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
   }();
 
   constructor(
-    protected readonly logger: NGXLogger,
     protected http: HttpClient,
     private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(
       SolicitudProyectoSocioService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudProyectoSocioService.MAPPING}`,
       http,
       SolicitudProyectoSocioService.CONVERTER

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,10 +11,9 @@ import { Observable } from 'rxjs';
 export class ProyectoSocioPeriodoPagoService extends SgiRestService<number, IProyectoSocioPeriodoPago> {
   private static readonly MAPPING = '/proyectosocioperiodopagos';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ProyectoSocioPeriodoPagoService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoSocioPeriodoPagoService.MAPPING}`,
       http
     );

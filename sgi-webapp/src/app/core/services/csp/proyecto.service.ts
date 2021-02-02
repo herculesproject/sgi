@@ -248,10 +248,9 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       }
     }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoService.MAPPING}`,
       http,
       ProyectoService.CONVERTER

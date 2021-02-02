@@ -6,7 +6,6 @@ import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 
 export interface IConvocatoriaEntidadGestoraBackend {
   id: number;
@@ -39,10 +38,9 @@ export class ConvocatoriaEntidadGestoraService extends
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ConvocatoriaEntidadGestoraService.name,
-      logger,
       `${environment.serviceServers.csp}${ConvocatoriaEntidadGestoraService.MAPPING}`,
       http,
       ConvocatoriaEntidadGestoraService.CONVERTER

@@ -2,11 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 
 export interface IProyectoEntidadGestoraBackend {
   id: number;
@@ -37,10 +36,9 @@ export class ProyectoEntidadGestoraService extends SgiMutableRestService<number,
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ProyectoEntidadGestoraService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoEntidadGestoraService.MAPPING}`,
       http,
       ProyectoEntidadGestoraService.CONVERTER

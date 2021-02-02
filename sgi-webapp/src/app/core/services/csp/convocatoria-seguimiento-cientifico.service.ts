@@ -3,19 +3,16 @@ import { Injectable } from '@angular/core';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class ConvocatoriaSeguimientoCientificoService extends SgiRestService<number, IConvocatoriaSeguimientoCientifico> {
   private static readonly MAPPING = '/convocatoriaperiodoseguimientocientificos';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ConvocatoriaSeguimientoCientificoService.name,
-      logger,
       `${environment.serviceServers.csp}${ConvocatoriaSeguimientoCientificoService.MAPPING}`,
       http
     );

@@ -4,7 +4,6 @@ import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-s
 import { IProyectoPeriodoSeguimientoDocumento } from '@core/models/csp/proyecto-periodo-seguimiento-documento';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -15,10 +14,9 @@ export class ProyectoPeriodoSeguimientoService extends SgiRestService<number, IP
   private static readonly MAPPING = '/proyectoperiodoseguimientos';
 
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ProyectoPeriodoSeguimientoService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoPeriodoSeguimientoService.MAPPING}`,
       http
     );

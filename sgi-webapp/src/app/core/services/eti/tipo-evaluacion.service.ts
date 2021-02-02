@@ -4,7 +4,6 @@ import { IDictamen } from '@core/models/eti/dictamen';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { environment } from '@env';
 import { SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 
@@ -14,10 +13,9 @@ import { Observable } from 'rxjs';
 export class TipoEvaluacionService extends SgiRestService<number, TipoEvaluacion> {
   private static readonly MAPPING = '/tipoevaluaciones';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       TipoEvaluacionService.name,
-      logger,
       `${environment.serviceServers.eti}${TipoEvaluacionService.MAPPING}`,
       http
     );

@@ -7,7 +7,6 @@ import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 
 
 export interface ISolicitudProyectoPresupuestoBackend {
@@ -25,7 +24,8 @@ export interface ISolicitudProyectoPresupuestoBackend {
 @Injectable({
   providedIn: 'root'
 })
-export class SolicitudProyectoPresupuestoService extends SgiMutableRestService<number, ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto>  {
+export class SolicitudProyectoPresupuestoService extends
+  SgiMutableRestService<number, ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto>  {
   private static readonly MAPPING = '/solicitudproyectopresupuestos';
 
   static CONVERTER = new class extends SgiBaseConverter<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto> {
@@ -57,10 +57,9 @@ export class SolicitudProyectoPresupuestoService extends SgiMutableRestService<n
   }();
 
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       SolicitudProyectoPresupuestoService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudProyectoPresupuestoService.MAPPING}`,
       http,
       SolicitudProyectoPresupuestoService.CONVERTER

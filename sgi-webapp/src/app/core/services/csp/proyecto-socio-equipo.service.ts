@@ -1,15 +1,14 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { SgiMutableRestService } from '@sgi/framework/http';
 import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
-import { NGXLogger } from 'ngx-logger';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiMutableRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface IProyectoSocioEquipoBackend {
   id: number;
@@ -63,12 +62,10 @@ export class ProyectoSocioEquipoService extends
   }();
 
   constructor(
-    protected readonly logger: NGXLogger,
     protected http: HttpClient
   ) {
     super(
       ProyectoSocioEquipoService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoSocioEquipoService.MAPPING}`,
       http,
       ProyectoSocioEquipoService.CONVERTER

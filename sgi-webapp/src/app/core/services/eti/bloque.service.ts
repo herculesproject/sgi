@@ -4,7 +4,6 @@ import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
 import { environment } from '@env';
 import { SgiReadOnlyRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,10 +12,9 @@ import { Observable } from 'rxjs';
 export class BloqueService extends SgiReadOnlyRestService<number, IBloque> {
   private static readonly MAPPING = '/bloques';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       BloqueService.name,
-      logger,
       `${environment.serviceServers.eti}${BloqueService.MAPPING}`,
       http
     );

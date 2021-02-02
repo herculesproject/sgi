@@ -4,9 +4,7 @@ import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitu
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
 import { environment } from '@env';
 import { SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +12,9 @@ import { tap } from 'rxjs/operators';
 export class ConfiguracionSolicitudService extends SgiRestService<number, IConfiguracionSolicitud>{
   private static readonly MAPPING = '/convocatoria-configuracionsolicitudes';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ConfiguracionSolicitudService.name,
-      logger,
       `${environment.serviceServers.csp}${ConfiguracionSolicitudService.MAPPING}`,
       http
     );

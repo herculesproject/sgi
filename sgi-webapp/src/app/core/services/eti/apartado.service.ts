@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IApartado } from '@core/models/eti/apartado';
 import { environment } from '@env';
 import { SgiReadOnlyRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,10 +11,9 @@ import { Observable } from 'rxjs';
 export class ApartadoService extends SgiReadOnlyRestService<number, IApartado> {
   private static readonly MAPPING = '/apartados';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ApartadoService.name,
-      logger,
       `${environment.serviceServers.eti}${ApartadoService.MAPPING}`,
       http
     );

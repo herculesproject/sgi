@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IRespuesta } from '@core/models/eti/respuesta';
 import { environment } from '@env';
 import { SgiRestFilterType, SgiRestFindOptions, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -14,10 +13,9 @@ export class RespuestaService extends SgiRestService<number, IRespuesta>{
 
   private static readonly MAPPING = '/respuestas';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       RespuestaService.name,
-      logger,
       `${environment.serviceServers.eti}${RespuestaService.MAPPING}`,
       http
     );

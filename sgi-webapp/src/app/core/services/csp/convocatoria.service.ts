@@ -15,7 +15,6 @@ import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConvocatoriaEntidadConvocanteService, IConvocatoriaEntidadConvocanteBackend } from './convocatoria-entidad-convocante.service';
@@ -29,10 +28,9 @@ import { ConvocatoriaEntidadGestoraService, IConvocatoriaEntidadGestoraBackend }
 export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   private static readonly MAPPING = '/convocatorias';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ConvocatoriaService.name,
-      logger,
       `${environment.serviceServers.csp}${ConvocatoriaService.MAPPING}`,
       http
     );

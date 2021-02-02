@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
-import { SgiBaseConverter } from '@sgi/framework/core';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
-import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
+import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
+import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiMutableRestService } from '@sgi/framework/http';
 
 
 
@@ -52,10 +51,9 @@ export class SolicitudProyectoEntidadFinanciadoraAjenaService extends
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       SolicitudProyectoEntidadFinanciadoraAjenaService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudProyectoEntidadFinanciadoraAjenaService.MAPPING}`,
       http,
       SolicitudProyectoEntidadFinanciadoraAjenaService.CONVERTER

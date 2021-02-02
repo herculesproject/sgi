@@ -6,7 +6,6 @@ import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante'
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -52,8 +51,8 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(EvaluacionService.name, logger, `${environment.serviceServers.eti}${EvaluacionService.MAPPING}`, http);
+  constructor(protected http: HttpClient) {
+    super(EvaluacionService.name, `${environment.serviceServers.eti}${EvaluacionService.MAPPING}`, http);
   }
 
   /**

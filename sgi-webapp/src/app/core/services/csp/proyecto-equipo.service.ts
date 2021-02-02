@@ -7,7 +7,6 @@ import { IPersona } from '@core/models/sgp/persona';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -66,10 +65,9 @@ export class ProyectoEquipoService extends
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ProyectoEquipoService.name,
-      logger,
       `${environment.serviceServers.csp}${ProyectoEquipoService.MAPPING}`,
       http,
       ProyectoEquipoService.CONVERTER

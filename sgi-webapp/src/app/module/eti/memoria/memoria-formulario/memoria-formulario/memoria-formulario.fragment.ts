@@ -487,7 +487,7 @@ export class MemoriaFormularioFragment extends Fragment {
     try {
       return Function(...argNames, `return ${expression};`) as any;
     } catch (error) {
-      console.error(error);
+      this.logger.error(error);
     }
   }
 

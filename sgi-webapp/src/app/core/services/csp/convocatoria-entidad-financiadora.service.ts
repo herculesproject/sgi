@@ -8,7 +8,6 @@ import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiMutableRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 
 export interface IConvocatoriaEntidadFinanciadoraBackend {
   id: number;
@@ -51,10 +50,9 @@ export class ConvocatoriaEntidadFinanciadoraService extends
     }
   }();
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ConvocatoriaEntidadFinanciadoraService.name,
-      logger,
       `${environment.serviceServers.csp}${ConvocatoriaEntidadFinanciadoraService.MAPPING}`,
       http,
       ConvocatoriaEntidadFinanciadoraService.CONVERTER

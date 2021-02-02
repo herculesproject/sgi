@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { environment } from '@env';
 import { SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,10 +11,9 @@ import { Observable } from 'rxjs';
 export class DictamenService extends SgiRestService<number, IDictamen> {
   private static readonly MAPPING = '/dictamenes';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       DictamenService.name,
-      logger,
       `${environment.serviceServers.eti}${DictamenService.MAPPING}`,
       http
     );

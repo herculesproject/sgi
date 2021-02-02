@@ -5,7 +5,6 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { TipoMemoria } from '@core/models/eti/tipo-memoria';
 import { environment } from '@env';
 import { SgiReadOnlyRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,10 +14,9 @@ export class ComiteService extends SgiReadOnlyRestService<number, IComite> {
 
   private static readonly MAPPING = '/comites';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ComiteService.name,
-      logger,
       `${environment.serviceServers.eti}${ComiteService.MAPPING}`,
       http
     );

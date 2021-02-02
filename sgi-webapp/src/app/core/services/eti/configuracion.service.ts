@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IConfiguracion } from '@core/models/eti/configuracion';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,8 +12,8 @@ export class ConfiguracionService extends SgiRestService<number, IConfiguracion>
 
   private static readonly MAPPING = '/configuraciones';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
-    super(ConfiguracionService.name, logger,
+  constructor(protected http: HttpClient) {
+    super(ConfiguracionService.name,
       `${environment.serviceServers.eti}` + ConfiguracionService.MAPPING, http);
   }
 

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IPrograma } from '@core/models/csp/programa';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,10 +12,9 @@ export class ProgramaService extends SgiRestService<number, IPrograma> {
 
   private static readonly MAPPING = '/programas';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       ProgramaService.name,
-      logger,
       `${environment.serviceServers.csp}${ProgramaService.MAPPING}`,
       http
     );

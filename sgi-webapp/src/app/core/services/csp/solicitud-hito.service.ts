@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { SgiRestService } from '@sgi/framework/http';
-import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { environment } from '@env';
+import { SgiRestService } from '@sgi/framework/http';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +10,9 @@ import { environment } from '@env';
 export class SolicitudHitoService extends SgiRestService<number, ISolicitudHito> {
   static readonly MAPPING = '/solicitudhitos';
 
-  constructor(protected readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(protected http: HttpClient) {
     super(
       SolicitudHitoService.name,
-      logger,
       `${environment.serviceServers.csp}${SolicitudHitoService.MAPPING}`,
       http
     );
