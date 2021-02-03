@@ -20,7 +20,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IsYearPlus } from '@core/validators/is-year-plus';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface AreaTematicaData {
@@ -35,6 +35,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
+
+  destinatarioValue$: Subject<string> = new Subject<string>();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -93,6 +95,13 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     if (this.readonly) {
       form.disable();
     }
+
+    this.subscriptions.push(
+      form.controls.destinatarios.valueChanges.subscribe((value) => {
+        this.destinatarioValue$.next(value);
+      })
+    );
+
     this.checkEstado(form, this.convocatoria);
     return form;
   }
@@ -114,6 +123,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
     };
+
     this.checkEstado(this.getFormGroup(), convocatoria);
     return result;
   }

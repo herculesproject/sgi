@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { TipoDestinatario } from '@core/enums/tipo-destinatario';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
@@ -92,6 +93,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   private dialogService: DialogService;
   private configuracionSolicitud: IConfiguracionSolicitud;
   readonly = false;
+  private destionarioRequisitoIP = false;
+  private destionarioRequisitoEquipo = false;
 
   get modeloEjecucionId(): number {
     return this.getDatosGeneralesConvocatoria().modeloEjecucion?.id;
@@ -137,6 +140,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     if (route.snapshot.data.configuracionSolicitud) {
       this.configuracionSolicitud = route.snapshot.data.configuracionSolicitud;
     }
+
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
       logger, this.convocatoriaId, convocatoriaService, empresaEconomicaService,
       convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService,
@@ -219,6 +223,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.subscriptions.push(this.plazosFases.plazosFase$.subscribe(fases => {
       this.configuracionSolicitudes.setFases(fases.map(fase => fase.value));
     }));
+
+    this.subscriptions.push(this.datosGenerales.destinatarioValue$.subscribe((destinatario) => this.mostrarPestañaRequisito(destinatario)));
   }
 
   /**
@@ -384,6 +390,41 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
    */
   getConfiguracionSolicitudesConvocatoria(): IConfiguracionSolicitud {
     return this.configuracionSolicitudes.isInitialized() ? this.configuracionSolicitudes.getValue() : this.configuracionSolicitud;
+  }
+
+  /**
+   * Mostramos pestaña requisitos IP/Equipo dependiendo
+   * lo seleccionado en la pestaña DATOS GENERALES - DESTINATARIOS
+   */
+  private mostrarPestañaRequisito(destionario: string) {
+    this.destionarioRequisitoIP = false;
+    this.destionarioRequisitoEquipo = false;
+    if (destionario === TipoDestinatario.INDIVIDUAL) {
+      this.destionarioRequisitoIP = !this.destionarioRequisitoIP;
+      this.destionarioRequisitoEquipo = this.destionarioRequisitoEquipo;
+    }
+    if (destionario === TipoDestinatario.EQUIPO_PROYECTO || destionario === TipoDestinatario.GRUPO_INVESTIGACION) {
+      this.destionarioRequisitoIP = !this.destionarioRequisitoIP;
+      this.destionarioRequisitoEquipo = !this.destionarioRequisitoEquipo;
+    }
+  }
+
+  /**
+   * Modifica la visibilidad de la pestaña Requisito IP
+   *
+   * @param value Valor boolean
+   */
+  get disabledRequisitoIP(): boolean {
+    return this.destionarioRequisitoIP;
+  }
+
+  /**
+   * Modifica la visibilidad de la pestaña requisito EQUIPO
+   *
+   * @param value Valor boolean
+   */
+  get disabledRequisitoEquipo(): boolean {
+    return this.destionarioRequisitoEquipo;
   }
 
   /**

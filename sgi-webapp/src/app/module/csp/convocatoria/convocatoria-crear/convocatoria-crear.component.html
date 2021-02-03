@@ -37,11 +37,11 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP]"
-        [title]="'csp.convocatoria.requisitos-ip' | translate"
+        *ngIf="actionService.disabledRequisitoIP" [title]="'csp.convocatoria.requisitos-ip' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.REQUISITOS_IP)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.REQUISITOS_EQUIPO]"
-        [title]="'csp.convocatoria.requisitos.equipo' | translate"
+        *ngIf="actionService.disabledRequisitoEquipo" [title]="'csp.convocatoria.requisitos.equipo' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.REQUISITOS_EQUIPO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.ELEGIBILIDAD]"
