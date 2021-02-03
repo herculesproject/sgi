@@ -16,7 +16,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { merge, Observable, of, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
@@ -134,6 +134,14 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     );
 
     this.formGroup.controls.horasAnuales.disable();
+
+    this.subscriptions.push(
+      merge(
+        this.formGroup.controls.fechaInicio.valueChanges,
+        this.formGroup.controls.fechaFin.valueChanges,
+        this.formGroup.controls.convocatoria.valueChanges,
+      ).subscribe(() => this.formPart.checkFechas())
+    );
   }
 
   ngOnDestroy(): void {
@@ -417,5 +425,4 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.modelosEjecucion$ = of();
     this.clearFinalidad();
   }
-
 }

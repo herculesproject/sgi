@@ -93,6 +93,9 @@
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
             {{'csp.proyecto.ficha.general.fecha.inicio.error.requerido' | translate}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
+            {{'csp.proyecto.ficha-general.fecha-inicio.error.range' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -110,6 +113,9 @@
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
             {{'csp.proyecto.ficha.general.fechaFin.after' | translate}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
+            {{'csp.proyecto.ficha-general.fecha-fin.error.range' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -124,7 +130,7 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto.ficha.general.convocatoria' | translate}}</mat-label>
           <sgi-select-convocatoria placeholder="{{'csp.proyecto.ficha.general.convocatoria' | translate}}"
-            formControlName="convocatoria" [disabled]="fragment.isEdit()">
+            formControlName="convocatoria">
           </sgi-select-convocatoria>
         </mat-form-field>
       </div>

@@ -873,6 +873,8 @@
   "csp.proyecto.estado": "Estado",
   "csp.proyecto.fechaFin": "Fecha fin",
   "csp.proyecto.fechaInicio": "Fecha inicio",
+  "csp.proyecto.ficha-general.fecha-fin.error.range": "La fecha de fin del proyecto debe ser posterior o igual a la fecha de fin del periodo de seguimiento",
+  "csp.proyecto.ficha-general.fecha-inicio.error.range": "La fecha de inicio del proyecto debe ser anterior o igual a la fecha de inicio del periodo de seguimiento",
   "csp.proyecto.ficha.general.acronimo": "Acrónimo",
   "csp.proyecto.ficha.general.acronimo.maxlength": "El acrónimo supera la longitud permitida",
   "csp.proyecto.ficha.general.ambito.geografico.error.invalid": "El ámbito geográfico no es válido",

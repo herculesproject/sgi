@@ -1,5 +1,6 @@
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
@@ -9,7 +10,10 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RangeDateValidator } from '@core/validators/range-date-validator';
+import { RangeValidator } from '@core/validators/range-validator';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult, SgiRestSort, SgiRestSortDirection } from '@sgi/framework/http';
+import moment from 'moment';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -20,6 +24,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   private proyecto: IProyecto;
 
   selectedConvocatoria: IConvocatoria;
+  seguimientoCientificos: IConvocatoriaSeguimientoCientifico[] = [];
 
   abiertoRequired: boolean;
   comentarioEstadoCancelado: boolean;
@@ -29,7 +34,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   proyectoConvocatoria$: Subject<IProyecto> = new Subject<IProyecto>();
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     private fb: FormBuilder,
     key: number,
     private service: ProyectoService,
@@ -78,7 +83,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]),
       fechaFin: new FormControl('', [
         Validators.required]),
-      convocatoria: new FormControl(''),
+      convocatoria: new FormControl({
+        value: '',
+        disabled: this.isEdit()
+      }),
       convocatoriaExterna: new FormControl(null, [Validators.maxLength(200)]),
       unidadGestion: new FormControl('', [
         Validators.required, IsEntityValidator.isValid()]),
@@ -230,13 +238,28 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * @param convocatoria una convocatoria
    */
   private onConvocatoriaChange(convocatoria: IConvocatoria): void {
+    this.seguimientoCientificos = [];
     if (convocatoria) {
       this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
-
       this.subscriptions.push(
         this.unidadGestionService.findByAcronimo(convocatoria.unidadGestionRef).subscribe(unidadGestion => {
           this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
         })
+      );
+      const sort: SgiRestSort = {
+        direction: SgiRestSortDirection.ASC,
+        field: 'numPeriodo'
+      };
+      const options: SgiRestFindOptions = {
+        sort
+      };
+      this.subscriptions.push(
+        this.convocatoriaService.findSeguimientosCientificos(convocatoria.id, options).subscribe(
+          res => {
+            this.seguimientoCientificos = res.items;
+            this.checkFechas();
+          }
+        )
       );
       this.getFormGroup().controls.convocatoriaExterna.disable();
     } else if (!this.isEdit()) {
@@ -362,4 +385,47 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     );
   }
 
+  checkFechas(): void {
+    const inicioForm = this.getFormGroup().get('fechaInicio');
+    const finForm = this.getFormGroup().get('fechaFin');
+    this.deleteErrorRange(finForm);
+    if (this.seguimientoCientificos.length > 0) {
+      const fechaInicio = inicioForm.value ? new Date(inicioForm.value) : undefined;
+      const fechaFin = finForm.value ? new Date(finForm.value) : undefined;
+      if (fechaInicio && fechaFin) {
+        fechaInicio.setHours(0);
+        fechaInicio.setMinutes(0);
+        fechaInicio.setSeconds(0);
+        fechaFin.setHours(0);
+        fechaFin.setMinutes(0);
+        fechaFin.setSeconds(0);
+        const mesInicial = this.seguimientoCientificos[0].mesInicial;
+        const mesFinal = this.seguimientoCientificos[this.seguimientoCientificos.length - 1].mesFinal;
+        const inicioProyecto = moment(fechaInicio).add((mesInicial - 1), 'M').toDate();
+        const finProyecto = moment(fechaInicio).add((mesFinal - 1), 'M').toDate();
+        if (inicioProyecto >= fechaInicio && finProyecto <= fechaFin) {
+          return;
+        }
+        this.addErrorRange(finForm);
+      }
+    }
+  }
+
+  private deleteErrorRange(formControl: AbstractControl): void {
+    if (formControl.errors) {
+      delete formControl.errors.range;
+      if (Object.keys(formControl.errors).length === 0) {
+        formControl.setErrors(null);
+      }
+    }
+  }
+
+  private addErrorRange(formControl: AbstractControl): void {
+    if (formControl.errors) {
+      formControl.errors.range = true;
+    } else {
+      formControl.setErrors({ range: true });
+    }
+    formControl.markAsTouched({ onlySelf: true });
+  }
 }
