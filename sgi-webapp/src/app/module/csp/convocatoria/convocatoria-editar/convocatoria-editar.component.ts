@@ -91,38 +91,8 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
    */
   private isDisableRegistrar(): void {
     this.subscriptions.push(
-      this.convocatoriaService.findById(this.actionService.convocatoriaId).subscribe(
-        (convocatoria) => {
-          // Se deshabilita el botón de registrar si la convocatoria está en estado registrada
-          if (convocatoria.estadoActual === TipoEstadoConvocatoria.REGISTRADA) {
-            this.disable = true;
-            return;
-          }
-
-          // a parte de los campos obligatoris, deben estar
-          if (!convocatoria.modeloEjecucion || !convocatoria.finalidad || !convocatoria.ambitoGeografico) {
-            this.disable = true;
-            return;
-          }
-
-          // Se obtienen los datos de la pestaña configuración solicitud y se realiza la validación oportuna
-          // sobre los campos correspondientes para saber si se puede registrar o no la convocatoria
-          const configuracionSolicitudes = this.actionService.getConfiguracionSolicitudesConvocatoria();
-          if (configuracionSolicitudes) {
-            // Si el campo de habilitar presentación de solicitudes es afirmativo
-            // se comprueba que el campo de presentación de solicitudes esté relleno
-            if (configuracionSolicitudes.tramitacionSGI && !configuracionSolicitudes.fasePresentacionSolicitudes) {
-              this.disable = true;
-              return;
-            }
-            // El campo de tipo de baremación debe estar cumplimentado
-            // El campo de tipo de formulario debe estar cumplimentado
-            this.disable = !Boolean(configuracionSolicitudes.baremacionRef) ||
-              !Boolean(configuracionSolicitudes.formularioSolicitud);
-            return;
-          }
-          this.disable = false;
-        },
+      this.convocatoriaService.registrable(this.actionService.convocatoriaId).subscribe(
+        res => this.disable = !res,
         (error) => {
           this.logger.error(error);
           this.disable = true;

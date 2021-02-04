@@ -219,7 +219,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   exists(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200)
+      map(response => response.status === 200)
     );
   }
 
@@ -231,7 +231,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   modificable(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/modificable`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200)
+      map(response => response.status === 200)
     );
   }
 
@@ -244,7 +244,18 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   vinculaciones(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/vinculaciones`;
     return this.http.head(url, { observe: 'response' }).pipe(
-      map(x => x.status === 200)
+      map(response => response.status === 200)
+    );
+  }
+
+  getUnidadGestionRef(id: number): Observable<string> {
+    const url = `${this.endpointUrl}/${id}/unidadgestion`;
+    return this.http.get(url, { responseType: 'text' });
+  }
+
+  registrable(id: number): Observable<boolean> {
+    return this.http.head(`${this.endpointUrl}/${id}/registrable`, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
     );
   }
 }
