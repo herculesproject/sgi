@@ -50,6 +50,23 @@ public class ConvocatoriaSpecifications {
   }
 
   /**
+   * {@link Convocatoria} cuya {@link ConfiguracionSolicitud} tiene tramitación
+   * SGI
+   * 
+   * @return specification para obtener las {@link Convocatoria} cuya
+   *         {@link ConfiguracionSolicitud} tiene tramitación SGI
+   */
+  public static Specification<Convocatoria> configuracionSolicitudTramitacionSGI() {
+    return (root, query, cb) -> {
+      Subquery<Long> queryConfiguracionSolicitud = query.subquery(Long.class);
+      Root<ConfiguracionSolicitud> subqRoot = queryConfiguracionSolicitud.from(ConfiguracionSolicitud.class);
+      queryConfiguracionSolicitud.select(subqRoot.get(ConfiguracionSolicitud_.convocatoria).get(Convocatoria_.id))
+          .where(cb.equal(subqRoot.get(ConfiguracionSolicitud_.TRAMITACION_SG_I), Boolean.TRUE));
+      return root.get(Convocatoria_.id).in(queryConfiguracionSolicitud);
+    };
+  }
+
+  /**
    * {@link Convocatoria} unidadGestionRef.
    * 
    * @param acronimos lista de acronimos

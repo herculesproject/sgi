@@ -384,6 +384,29 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Convocatoria} activas paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/investigador")
+  ResponseEntity<Page<Convocatoria>> findAllInvestigador(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllInvestigador(List<QueryCriteria> query,Pageable paging) - start");
+    Page<Convocatoria> page = service.findAllInvestigador(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllInvestigador(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllInvestigador(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas
    * registradas restringidas a las del usuario.
    * 

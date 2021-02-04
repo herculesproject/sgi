@@ -139,6 +139,17 @@ public interface ConvocatoriaService {
   Page<Convocatoria> findAll(List<QueryCriteria> query, Pageable paging);
 
   /**
+   * Obtiene todas las entidades {@link Convocatoria} que puede visualizar un
+   * investigador paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link Convocatoria} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  Page<Convocatoria> findAllInvestigador(List<QueryCriteria> query, Pageable paging);
+
+  /**
    * Obtiene todas las entidades {@link Convocatoria} paginadas y filtradas.
    *
    * @param query  información del filtro.

@@ -423,6 +423,29 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
+   * Obtiene todas las entidades {@link Convocatoria} que puede visualizar un
+   * investigador paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link Convocatoria} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  @Override
+  public Page<Convocatoria> findAllInvestigador(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Specification<Convocatoria> specByQuery = getFiltroAplicado(query);
+    Specification<Convocatoria> specActivos = ConvocatoriaSpecifications.activos();
+    Specification<Convocatoria> specRegistradas = ConvocatoriaSpecifications.registradas();
+    Specification<Convocatoria> specConfiguracion = ConvocatoriaSpecifications.configuracionSolicitudTramitacionSGI();
+    Specification<Convocatoria> specs = Specification.where(specByQuery).and(specActivos).and(specRegistradas)
+        .and(specConfiguracion);
+    Page<Convocatoria> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene todas las entidades {@link Convocatoria} paginadas y filtradas.
    *
    * @param query  información del filtro.
