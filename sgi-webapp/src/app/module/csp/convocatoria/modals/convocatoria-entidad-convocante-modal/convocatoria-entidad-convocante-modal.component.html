@@ -1,9 +1,9 @@
 <div class="modal-convocatoria-entidad-convocante">
-  <header class="modal-header-material">
-    <h3 mat-dialog-title>
+  <header mat-dialog-title class="modal-header-material">
+    <h3>
       {{'csp.convocatoria.entidad.convocante.modal.titulo' | translate}}</h3>
   </header>
-  <main>
+  <mat-dialog-content>
     <form class="form-inline" [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <mat-form-field class="input-form">
@@ -69,11 +69,11 @@
         </div>
       </div>
     </form>
-  </main>
+  </mat-dialog-content>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
-    *ngIf="!data.readonly">{{textSaveOrUpdate | translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()"
-    type="button">{{'botones.cancelar' | translate}}</button>
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()" *ngIf="!data.readonly">{{textSaveOrUpdate
+    | translate}}</button>
+  <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
+    translate}}</button>
 </div>
