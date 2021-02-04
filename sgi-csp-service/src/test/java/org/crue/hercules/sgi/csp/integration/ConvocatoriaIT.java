@@ -50,6 +50,9 @@ public class ConvocatoriaIT extends BaseIT {
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String PATH_PARAMETER_VINCULACIONES = "/vinculaciones";
   private static final String PATH_PARAMETER_MODIFICABLE = "/modificable";
+  private static final String PATH_PARAMETER_REGISTRABLE = "/registrable";
+  private static final String PATH_PARAMETER_UNIDAD_GESTION = "/unidadgestion";
+  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/convocatoriadocumentos";
@@ -309,6 +312,41 @@ public class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void registrable_WhenRegistrableReturnsTrue_Returns200() throws Exception {
+
+    // given: existing Convocatoria When registrable returns true
+    Long id = 1L;
+
+    // when: check registrable
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REGISTRABLE, HttpMethod.HEAD,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Response is 200 OK
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void registrable_WhenRegistrableReturnsFalse_Returns204() throws Exception {
+
+    // given: existing Convocatoria When registrable returns false
+    Long id = 1L;
+
+    // when: check registrable
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REGISTRABLE, HttpMethod.HEAD,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Response is 204 No Content
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void existsById_Returns200() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -329,6 +367,43 @@ public class ConvocatoriaIT extends BaseIT {
         HttpMethod.HEAD, buildRequest(null, null), Convocatoria.class, id);
     // then: 204 No Content
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getUnidadGestionRef_ReturnsUnidadGestionRef() throws Exception {
+
+    // given: Convocatoria id
+    Long id = 1L;
+    // when: getUnidadGestionRef by Convocatoria id
+    final ResponseEntity<String> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_UNIDAD_GESTION, HttpMethod.GET,
+        buildRequest(null, null), String.class, id);
+
+    // then: returns UnidadGestionRef assigned to Convocatoria
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    String responseData = response.getBody();
+    Assertions.assertThat(responseData).as("getUnidadGestionRef()").isEqualTo("OPE");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getModeloEjecucion_ReturnsModeloEjecucion() throws Exception {
+
+    // given: Convocatoria id
+    Long id = 1L;
+    // when: getModeloEjecucion by Convocatoria id
+    final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, HttpMethod.GET,
+        buildRequest(null, null), ModeloEjecucion.class, id);
+
+    // then: returns ModeloEjecucion assigned to Convocatoria
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    ModeloEjecucion responseData = response.getBody();
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1L);
   }
 
   @Sql

@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
@@ -36,4 +39,21 @@ public interface CustomConvocatoriaRepository {
    *         datos vinculados.
    */
   Boolean esRegistradaConSolicitudesOProyectos(Long id);
+
+  /**
+   * Obtiene la Unidad de Gestión asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id del {@link Convocatoria}.
+   * @return unidadGestionRef asignada
+   */
+  Optional<String> getUnidadGestionRef(Long id);
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id de la {@link Convocatoria}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  Optional<ModeloEjecucion> getModeloEjecucion(Long id);
+
 }

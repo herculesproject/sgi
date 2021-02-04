@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
@@ -86,12 +87,37 @@ public interface ConvocatoriaService {
   Boolean modificable(Long id, String unidadConvocatoria);
 
   /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede pasar a estado 'Registrada'.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return true si puede ser registrada / false si no puede ser registrada
+   */
+  Boolean registrable(Long id);
+
+  /**
    * Comprueba la existencia del {@link Convocatoria} por id.
    *
    * @param id el id de la entidad {@link Convocatoria}.
    * @return true si existe y false en caso contrario.
    */
   boolean existsById(Long id);
+
+  /**
+   * Obtiene la Unidad de Gestión asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id del {@link Convocatoria}.
+   * @return unidadGestionRef asignada
+   */
+  String getUnidadGestionRef(Long id);
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id de la {@link Convocatoria}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  ModeloEjecucion getModeloEjecucion(Long id);
 
   /**
    * Obtiene una entidad {@link Convocatoria} por id.

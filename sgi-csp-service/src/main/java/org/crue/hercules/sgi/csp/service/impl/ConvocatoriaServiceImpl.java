@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -253,7 +254,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    */
   @Override
   public Boolean modificable(Long id, String unidadConvocatoria) {
-    log.debug("modificable(Long id) - start");
+    log.debug("modificable(Long id, String unidadConvocatoria) - start");
 
     // permiso para operar con convocatorias
     final String authority = "CSP-CONV-C";
@@ -277,36 +278,60 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
         }
       }
     }
-    log.debug("modificable(Long id) - end");
+    log.debug("modificable(Long id, String unidadConvocatoria) - end");
     return returnValue;
   }
 
   /**
-   * Hace las comprobaciones para determinar si el usuario tiene la autorización
-   * indicada tanto de manera independiente como dentro de la unidad organizativa
-   * indicada.
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede pasar a estado 'Registrada'.
    *
-   * @param authority Permiso a comprobar.
-   * @param unidad    unidad organizativa
-   * @return true tiene autorización / false no tiene autorización
+   * @param id Id del {@link Convocatoria}.
+   * @return true si puede ser registrada / false si no puede ser registrada
    */
-  protected Boolean checkAuthority(String authority, String unidad) {
-    log.debug("checkAuthority(String authority, String unidad) - start");
+  @Override
+  public Boolean registrable(Long id) {
+    log.debug("registrable(Long id) - start");
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
-        authentication);
+    boolean returnValue = Boolean.FALSE;
 
-    Boolean returnValue = Boolean.FALSE;
+    // id convocatoria presente
+    if (id != null) {
 
-    if (StringUtils.isBlank(unidad)) {
-      returnValue = sgiMethodSecurityExpressionRoot.hasAuthority(authority);
-    } else {
-      returnValue = (sgiMethodSecurityExpressionRoot.hasAuthority(authority)
-          || sgiMethodSecurityExpressionRoot.hasAuthority(authority + "_" + unidad));
+      Optional<Convocatoria> convocatoria = repository.findById(id);
+
+      // convocatoria existe y su estado actual es 'Borrador'
+      if (convocatoria.isPresent()
+          && convocatoria.get().getEstadoActual().equals(TipoEstadoConvocatoriaEnum.BORRADOR)) {
+
+        // Campos requeridos a nivel de convocatoria
+        if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
+            && convocatoria.get().getCodigo() != null && convocatoria.get().getAnio() != null
+            && convocatoria.get().getTitulo() != null && convocatoria.get().getFinalidad() != null
+            && convocatoria.get().getDestinatarios() != null && convocatoria.get().getAmbitoGeografico() != null) {
+
+          Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
+              .findByConvocatoriaId(convocatoria.get().getId());
+
+          // tiene configuración solicitud
+          if (configuracionSolicitud.isPresent()) {
+
+            // campos requeridos a nivel de configuración solicitud
+            if (configuracionSolicitud.get().getTramitacionSGI() != null
+                && configuracionSolicitud.get().getFormularioSolicitud() != null
+                && configuracionSolicitud.get().getBaremacionRef() != null) {
+
+              // con tramitación SGI debe tener una fase asignada
+              if (!(configuracionSolicitud.get().getFasePresentacionSolicitudes() == null
+                  && configuracionSolicitud.get().getTramitacionSGI() == Boolean.TRUE)) {
+                returnValue = Boolean.TRUE;
+              }
+            }
+          }
+        }
+      }
     }
-
-    log.debug("checkAuthority(String authority, String unidad) - end");
+    log.debug("registrable(Long id) - end");
     return returnValue;
   }
 
@@ -322,6 +347,45 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     final boolean existe = repository.existsById(id);
     log.debug("existsById(final Long id)  - end", id);
     return existe;
+  }
+
+  /**
+   * Obtiene la Unidad de Gestión asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id del {@link Convocatoria}.
+   * @return unidadGestionRef asignada
+   */
+  @Override
+  public String getUnidadGestionRef(Long id) {
+    log.debug("getUnidadGestionRef(Long id) - start");
+    Optional<String> returnValue = null;
+    if (repository.existsById(id)) {
+      returnValue = repository.getUnidadGestionRef(id);
+    } else {
+      throw (new ConvocatoriaNotFoundException(id));
+    }
+    log.debug("getUnidadGestionRef(Long id) - end");
+    return returnValue.isPresent() ? returnValue.get() : null;
+  }
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id de la {@link Convocatoria}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  @Override
+  public ModeloEjecucion getModeloEjecucion(Long id) {
+    log.debug("getModeloEjecucion(Long id) - start");
+
+    Optional<ModeloEjecucion> returnValue = null;
+    if (repository.existsById(id)) {
+      returnValue = repository.getModeloEjecucion(id);
+    } else {
+      throw (new ConvocatoriaNotFoundException(id));
+    }
+    log.debug("getModeloEjecucion(Long id) - end");
+    return returnValue.isPresent() ? returnValue.get() : null;
   }
 
   /**
@@ -435,6 +499,35 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     log.debug(
         "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - end");
+    return returnValue;
+  }
+
+  /**
+   * Hace las comprobaciones para determinar si el usuario tiene la autorización
+   * indicada tanto de manera independiente como dentro de la unidad organizativa
+   * indicada.
+   *
+   * @param authority Permiso a comprobar.
+   * @param unidad    unidad organizativa
+   * @return true tiene autorización / false no tiene autorización
+   */
+  protected Boolean checkAuthority(String authority, String unidad) {
+    log.debug("checkAuthority(String authority, String unidad) - start");
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
+        authentication);
+
+    Boolean returnValue = Boolean.FALSE;
+
+    if (StringUtils.isBlank(unidad)) {
+      returnValue = sgiMethodSecurityExpressionRoot.hasAuthority(authority);
+    } else {
+      returnValue = (sgiMethodSecurityExpressionRoot.hasAuthority(authority)
+          || sgiMethodSecurityExpressionRoot.hasAuthority(authority + "_" + unidad));
+    }
+
+    log.debug("checkAuthority(String authority, String unidad) - end");
     return returnValue;
   }
 

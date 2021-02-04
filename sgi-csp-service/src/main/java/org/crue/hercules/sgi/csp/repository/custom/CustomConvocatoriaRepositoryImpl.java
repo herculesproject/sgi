@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,6 +21,9 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFase_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito_;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -49,6 +54,7 @@ public class CustomConvocatoriaRepositoryImpl implements CustomConvocatoriaRepos
    * @param id Id del {@link Convocatoria}.
    * @return true existen datos vinculados/false no existen datos vinculados.
    */
+  @Override
   public Boolean tieneVinculaciones(Long id) {
     log.debug("tieneVinculaciones(Long id) - start");
 
@@ -108,6 +114,7 @@ public class CustomConvocatoriaRepositoryImpl implements CustomConvocatoriaRepos
    * @return true registrada y con datos vinculados/false no registrada o sin
    *         datos vinculados.
    */
+  @Override
   public Boolean esRegistradaConSolicitudesOProyectos(Long id) {
     log.debug("esRegistradaConSolicitudesOProyectos(Long id) - start");
 
@@ -121,26 +128,74 @@ public class CustomConvocatoriaRepositoryImpl implements CustomConvocatoriaRepos
         .exists(querySolicitud.select(solicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id)).where(
             cb.equal(solicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id), root.get(Convocatoria_.id))));
 
-    // TODO: Descomentar cuando esten listos los proyectos
-    // Subquery<Long> queryProyecto = query.subquery(Long.class);
-    // Root<Proyecto> proyectoRoot = queryProyecto.from(Proyecto.class);
-    // Predicate existsQueryProyecto = cb
-    // .exists(queryProyecto.select(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id))
-    // .where(cb.equal(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id),
-    // root.get(Convocatoria_.id))));
+    Subquery<Long> queryProyecto = cq.subquery(Long.class);
+    Root<Proyecto> proyectoRoot = queryProyecto.from(Proyecto.class);
+    Predicate existsQueryProyecto = cb
+        .exists(queryProyecto.select(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id)).where(
+            cb.equal(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id), root.get(Convocatoria_.id))));
 
     Predicate convocatoria = cb.equal(root.get(Convocatoria_.id), id);
     Predicate registrada = cb.equal(root.get(Convocatoria_.estadoActual), TipoEstadoConvocatoriaEnum.REGISTRADA);
     Predicate convocatoriaRegistrada = cb.and(convocatoria, registrada);
 
-    // Predicate vinculaciones = cb.or(existsQuerySolicitud, existsQueryProyecto):
-    // Predicate finalPredicate = cb.and(convocatoriaRegistrada, vinculaciones);
-    Predicate finalPredicate = cb.and(convocatoriaRegistrada, existsQuerySolicitud);
+    Predicate vinculaciones = cb.or(existsQuerySolicitud, existsQueryProyecto);
+    Predicate finalPredicate = cb.and(convocatoriaRegistrada, vinculaciones);
+    // Predicate finalPredicate = cb.and(convocatoriaRegistrada,
+    // existsQuerySolicitud);
     cq.select(root.get(Convocatoria_.id)).where(finalPredicate);
 
     Boolean returnValue = entityManager.createQuery(cq).getResultList().size() > 0;
 
     log.debug("esRegistradaConSolicitudesOProyectos(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene la Unidad de Gestión asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id del {@link Convocatoria}.
+   * @return unidadGestionRef asignada
+   */
+  @Override
+  public Optional<String> getUnidadGestionRef(Long id) {
+    log.debug("getUnidadGestionRef(Long id) - start");
+
+    Optional<String> returnValue = Optional.empty();
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<String> cq = cb.createQuery(String.class);
+    Root<Convocatoria> root = cq.from(Convocatoria.class);
+
+    Predicate finalPredicate = cb.equal(root.get(Convocatoria_.id), id);
+    cq.select(root.get(Convocatoria_.unidadGestionRef)).where(finalPredicate);
+
+    returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
+
+    log.debug("getUnidadGestionRef(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id de la {@link Convocatoria}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  public Optional<ModeloEjecucion> getModeloEjecucion(Long id) {
+    log.debug("getModeloEjecucion(Long id) - start");
+
+    Optional<ModeloEjecucion> returnValue = Optional.empty();
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<ModeloEjecucion> cq = cb.createQuery(ModeloEjecucion.class);
+    Root<Convocatoria> root = cq.from(Convocatoria.class);
+
+    Predicate finalPredicate = cb.equal(root.get(Convocatoria_.id), id);
+    cq.select(root.get(Convocatoria_.modeloEjecucion)).where(finalPredicate);
+
+    returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
+
+    log.debug("getModeloEjecucion(Long id) - end");
     return returnValue;
   }
 }

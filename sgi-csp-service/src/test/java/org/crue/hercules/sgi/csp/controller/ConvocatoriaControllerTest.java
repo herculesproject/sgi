@@ -115,6 +115,9 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String PATH_PARAMETER_VINCULACIONES = "/vinculaciones";
   private static final String PATH_PARAMETER_MODIFICABLE = "/modificable";
+  private static final String PATH_PARAMETER_REGISTRABLE = "/registrable";
+  private static final String PATH_PARAMETER_UNIDAD_GESTION = "/unidadgestion";
+  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/convocatoriadocumentos";
@@ -451,6 +454,38 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void registrable_ConvocatoriaRegistrable_Returns200() throws Exception {
+    // given: Existing id convocatoria registrable
+    Long id = 1L;
+    BDDMockito.given(service.registrable(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+
+    // when: check registrable by convocatoriaId
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REGISTRABLE, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 200 Ok
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void registrable_ConvocatoriaNoRegistrable_Returns204() throws Exception {
+    // given: Existing id convocatoria NO registrable
+    Long id = 1L;
+    BDDMockito.given(service.registrable(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
+
+    // when: check registrable by convocatoriaId
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REGISTRABLE, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 204 No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
   public void existsById_WithExistingId_Returns200() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -479,6 +514,84 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: 204 No Content
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void getUnidadGestionRef_WithExistingId_ReturnsUnidadGestionRef() throws Exception {
+    // given: existing Convocatoria id
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.setUnidadGestionRef("OPE");
+    BDDMockito.given(service.getUnidadGestionRef(ArgumentMatchers.<Long>any()))
+        .willReturn(convocatoriaExistente.getUnidadGestionRef());
+
+    // when: getUnidadGestionRef by existing Convocatoria id
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_UNIDAD_GESTION, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: response is OK
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        // and the requested Convocatoria is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.content().string(convocatoriaExistente.getUnidadGestionRef()));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void getUnidadGestionRef_WithNoExistingId_Returns404() throws Exception {
+    // given: no existing Convocatoria id
+    BDDMockito.given(service.getUnidadGestionRef(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new ConvocatoriaNotFoundException(1L);
+    });
+
+    // when: getUnidadGestionRef by non existing Convocatoria id
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_UNIDAD_GESTION, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).
+        // then: HTTP code 404 NotFound pressent
+        andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
+    // given: existing Convocatoria id
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.getModeloEjecucion().setId(99L);
+    BDDMockito.given(service.getModeloEjecucion(ArgumentMatchers.<Long>any()))
+        .willReturn(convocatoriaExistente.getModeloEjecucion());
+
+    // when: getModeloEjecucion by existing Convocatoria id
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: response is OK
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        // and the requested ModeloEjecucion is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(99L));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void getModeloEjecucion_WithNoExistingId_Returns404() throws Exception {
+    // given: no existing Convocatoria id
+    BDDMockito.given(service.getModeloEjecucion(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new ConvocatoriaNotFoundException(1L);
+    });
+
+    // when: getModeloEjecucion by non existing Convocatoria id
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).
+        // then: HTTP code 404 NotFound pressent
+        andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test

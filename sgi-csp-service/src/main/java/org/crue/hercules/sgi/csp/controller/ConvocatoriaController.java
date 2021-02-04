@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
@@ -280,6 +281,23 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede pasar a estado 'Registrada'.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return HTTP-200 si puede ser registrada / HTTP-204 si no puede ser
+   *         registrada
+   */
+  @RequestMapping(path = "/{id}/registrable", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<Convocatoria> registrable(@PathVariable Long id) {
+    log.debug("registrable(Long id) - start");
+    Boolean returnValue = service.registrable(id);
+    log.debug("registrable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
    * Comprueba la existencia del {@link Convocatoria} con el id indicado.
    * 
    * @param id Identificador de {@link Convocatoria}.
@@ -295,6 +313,36 @@ public class ConvocatoriaController {
     }
     log.debug("Convocatoria exists(Long id) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Obtiene la Unidad de Gestión asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id del {@link Convocatoria}.
+   * @return unidadGestionRef asignada
+   */
+  @GetMapping("/{id}/unidadgestion")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  String getUnidadGestionRef(@PathVariable Long id) {
+    log.debug("getUnidadGestionRef(Long id) - start");
+    String returnValue = service.getUnidadGestionRef(id);
+    log.debug("getUnidadGestionRef(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link ModeloEjecucion} asignada a la {@link Convocatoria}.
+   * 
+   * @param id Id de la {@link Convocatoria}.
+   * @return {@link ModeloEjecucion} asignado
+   */
+  @GetMapping("/{id}/modeloejecucion")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ModeloEjecucion getModeloEjecucion(@PathVariable Long id) {
+    log.debug("getModeloEjecucion(Long id) - start");
+    ModeloEjecucion returnValue = service.getModeloEjecucion(id);
+    log.debug("getModeloEjecucion(Long id) - end");
+    return returnValue;
   }
 
   /**

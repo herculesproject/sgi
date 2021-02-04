@@ -802,9 +802,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong()))
         .willReturn(Boolean.TRUE);
-    // BDDMockito.given(service.mod
-    // .willReturn(Boolean.FALSE);
-    //
 
     List<String> acronimos = new ArrayList<>();
     acronimos.add("OPE");
@@ -2722,6 +2719,335 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WhenIsRegistrable_ReturnsTRUE() throws Exception {
+    // given: existing id registrable
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns TRUE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isTrue();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutId_ReturnsFalse() throws Exception {
+    // given: no id
+    Long id = null;
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithNoExistingId_ReturnsFalse() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithEstadoRegistrada_ReturnsFalse() throws Exception {
+    // given: existing id with Estado Registrada
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutUnidadGestionRef_ReturnsFalse() throws Exception {
+    // given: existing id without UnidadGestionRef
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setUnidadGestionRef(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutModeloEjecucion_ReturnsFalse() throws Exception {
+    // given: existing id without ModeloEjecucion
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setModeloEjecucion(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutCodigo_ReturnsFalse() throws Exception {
+    // given: existing id without Codigo
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setCodigo(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutAnio_ReturnsFalse() throws Exception {
+    // given: existing id without Anio
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setAnio(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutTitulo_ReturnsFalse() throws Exception {
+    // given: existing id without Titulo
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setTitulo(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutFinalidad_ReturnsFalse() throws Exception {
+    // given: existing id without Finalidad
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setFinalidad(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutDestinatarios_ReturnsFalse() throws Exception {
+    // given: existing id without Destinatarios
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setDestinatarios(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutAmbitoGeografico_ReturnsFalse() throws Exception {
+    // given: existing id without AmbitoGeografico
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setAmbitoGeografico(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutConfiguracionSolicitud_ReturnsFalse() throws Exception {
+    // given: existing id without ConfiguracionSolicitud
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.empty());
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutTramitacionSGI_ReturnsFalse() throws Exception {
+    // given: existing id without TramitacionSGI
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    configuracionSolicitud.setTramitacionSGI(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutFormularioSolicitud_ReturnsFalse() throws Exception {
+    // given: existing id without FormularioSolicitud
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    configuracionSolicitud.setFormularioSolicitud(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutBaremacionRef_ReturnsFalse() throws Exception {
+    // given: existing id without BaremacionRef
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    configuracionSolicitud.setBaremacionRef(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  public void registrable_WithoutFasePresentacionSolicitudesWhenTramitacionSGIIsTrue_ReturnsFalse() throws Exception {
+    // given: existing id without BaremacionRef
+    Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    configuracionSolicitud.setTramitacionSGI(Boolean.TRUE);
+    configuracionSolicitud.setFasePresentacionSolicitudes(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: check registrable
+    boolean responseData = service.registrable(id);
+
+    // then: returns FALSE
+    Assertions.assertThat(responseData).isNotNull();
+    Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
   public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -2747,6 +3073,67 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     // then: returns TRUE
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData).isFalse();
+  }
+
+  @Test
+  public void getUnidadGestionRef_WithExistingId_ReturnsUnidadGestionRef() throws Exception {
+    // given: existing Convocatoria id
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.setUnidadGestionRef("OPE");
+
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.getUnidadGestionRef(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaExistente.getUnidadGestionRef()));
+
+    // when: getUnidadGestionRef by id Convocatoria
+    String unidadGestionRef = service.getUnidadGestionRef(convocatoriaExistente.getId());
+
+    // then: returns unidadGestionRef
+    Assertions.assertThat(unidadGestionRef).isEqualTo(convocatoriaExistente.getUnidadGestionRef());
+
+  }
+
+  @Test
+  public void getUnidadGestionRef_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing Convocatoria id
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: getUnidadGestionRef by id Convocatoria
+        () -> service.getUnidadGestionRef(1L))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ConvocatoriaNotFoundException.class);
+  }
+
+  @Test
+  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
+    // given: existing Convocatoria id
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.getModeloEjecucion().setId(99L);
+
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.getModeloEjecucion(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaExistente.getModeloEjecucion()));
+
+    // when: getModeloEjecucion by id Convocatoria
+    ModeloEjecucion modeloEjecucion = service.getModeloEjecucion(convocatoriaExistente.getId());
+
+    // then: returns ModeloEjecucion
+    Assertions.assertThat(modeloEjecucion).isNotNull();
+    Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(99L);
+
+  }
+
+  @Test
+  public void getModeloEjecucion_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing Convocatoria id
+    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: getModeloEjecucion by id Convocatoria
+        () -> service.getModeloEjecucion(1L))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
 
   @Test
