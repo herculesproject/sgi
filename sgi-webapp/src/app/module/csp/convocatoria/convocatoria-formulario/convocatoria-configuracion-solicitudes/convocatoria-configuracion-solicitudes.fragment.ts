@@ -47,13 +47,20 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   }
 
   protected buildPatch(configuracionSolicitud: IConfiguracionSolicitud): { [key: string]: any; } {
+
+    const fechaInicio = typeof configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio === 'string' ?
+      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio) : configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio
+
+    const fechaFin = typeof configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin === 'string' ?
+      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin) : configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin
+
     const result = {
-      tramitacionSGI: configuracionSolicitud?.tramitacionSGI,
+      tramitacionSGI: configuracionSolicitud?.tramitacionSGI ? true : false,
       fasePresentacionSolicitudes: configuracionSolicitud?.fasePresentacionSolicitudes,
       formularioSolicitud: configuracionSolicitud?.formularioSolicitud,
       tipoBaremacion: configuracionSolicitud?.baremacionRef,
-      fechaInicioFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio,
-      fechaFinFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin,
+      fechaInicioFase: fechaInicio,
+      fechaFinFase: fechaFin,
       importeMaximoSolicitud: configuracionSolicitud?.importeMaximoSolicitud,
     };
     return result;
@@ -197,7 +204,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           this.setChanges(false);
         }
       }),
-      switchMap(() => of(result))
+      map(() => result)
     );
   }
 
@@ -244,7 +251,6 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     }
     createdDocumentos.forEach(documento => {
       documento.value.configuracionSolicitud = configuracion;
-      documento.value.id = null;
     });
     return from(createdDocumentos).pipe(
       mergeMap((wrapped) => {
