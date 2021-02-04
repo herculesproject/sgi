@@ -125,14 +125,18 @@ public class CustomConvocatoriaRepositoryImpl implements CustomConvocatoriaRepos
     Subquery<Long> querySolicitud = cq.subquery(Long.class);
     Root<Solicitud> solicitudRoot = querySolicitud.from(Solicitud.class);
     Predicate existsQuerySolicitud = cb
-        .exists(querySolicitud.select(solicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id)).where(
-            cb.equal(solicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id), root.get(Convocatoria_.id))));
+        .exists(querySolicitud.select(solicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id))
+            .where(cb.and(
+                cb.equal(solicitudRoot.get(Solicitud_.convocatoria).get(Convocatoria_.id), root.get(Convocatoria_.id)),
+                cb.equal(solicitudRoot.get(Solicitud_.activo), Boolean.TRUE))));
 
     Subquery<Long> queryProyecto = cq.subquery(Long.class);
     Root<Proyecto> proyectoRoot = queryProyecto.from(Proyecto.class);
     Predicate existsQueryProyecto = cb
-        .exists(queryProyecto.select(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id)).where(
-            cb.equal(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id), root.get(Convocatoria_.id))));
+        .exists(queryProyecto.select(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id))
+            .where(cb.and(
+                cb.equal(proyectoRoot.get(Proyecto_.convocatoria).get(Convocatoria_.id), root.get(Convocatoria_.id)),
+                cb.equal(proyectoRoot.get(Proyecto_.activo), Boolean.TRUE))));
 
     Predicate convocatoria = cb.equal(root.get(Convocatoria_.id), id);
     Predicate registrada = cb.equal(root.get(Convocatoria_.estadoActual), TipoEstadoConvocatoriaEnum.REGISTRADA);
@@ -140,8 +144,6 @@ public class CustomConvocatoriaRepositoryImpl implements CustomConvocatoriaRepos
 
     Predicate vinculaciones = cb.or(existsQuerySolicitud, existsQueryProyecto);
     Predicate finalPredicate = cb.and(convocatoriaRegistrada, vinculaciones);
-    // Predicate finalPredicate = cb.and(convocatoriaRegistrada,
-    // existsQuerySolicitud);
     cq.select(root.get(Convocatoria_.id)).where(finalPredicate);
 
     Boolean returnValue = entityManager.createQuery(cq).getResultList().size() > 0;
