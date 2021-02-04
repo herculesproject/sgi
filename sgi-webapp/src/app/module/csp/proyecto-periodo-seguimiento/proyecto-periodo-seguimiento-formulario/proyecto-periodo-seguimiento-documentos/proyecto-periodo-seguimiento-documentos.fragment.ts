@@ -34,10 +34,8 @@ export class NodeDocumento {
     this.key = key;
     this.title = title;
     this._level = level;
+
     if (level === 0 && !title) {
-      this.title = marker('csp.proyecto-periodo-seguimiento.documentos.sinFase.title');
-    }
-    else if (level === 1 && !title) {
       this.title = marker('csp.proyecto-periodo-seguimiento.documentos.sinTipoDocumento.title');
     }
     this.documento = documento;
@@ -74,18 +72,6 @@ function sortByTitle(nodes: NodeDocumento[]): NodeDocumento[] {
       return 0;
     }
 
-    // Force ordering last for level 1 and key ?-0
-    if ((a.level === 1 || b.level === 1) && (a.key.endsWith('-0') || b.key.endsWith('-0'))) {
-      // A is the last
-      if (a.key.endsWith('-0')) {
-        return 1;
-      }
-      // B is the last
-      if (b.key.endsWith('-0')) {
-        return -1;
-      }
-      return 0;
-    }
 
     if (a.title < b.title) {
       return -1;
@@ -140,22 +126,16 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
 
   private buildTree(documentos: IProyectoPeriodoSeguimientoDocumento[]): NodeDocumento[] {
     const nodes: NodeDocumento[] = [];
-    documentos.forEach((documento) => {
-      const keyTipoFase = '0';
-      const keyTipoDocumento = `${keyTipoFase}-${documento.tipoDocumento ? documento.tipoDocumento.id : 0}`;
-      let faseNode = this.nodeLookup.get(keyTipoFase);
-      if (!faseNode) {
-        faseNode = new NodeDocumento(keyTipoFase, undefined, 0);
-        this.nodeLookup.set(keyTipoFase, faseNode);
-        nodes.push(faseNode);
-      }
+    documentos.forEach((documento: IProyectoPeriodoSeguimientoDocumento) => {
+      const keyTipoDocumento = `${documento.tipoDocumento ? documento.tipoDocumento?.id : 0}`;
       let tipoDocNode = this.nodeLookup.get(keyTipoDocumento);
       if (!tipoDocNode) {
-        tipoDocNode = new NodeDocumento(keyTipoDocumento, documento.tipoDocumento?.nombre, 1);
-        faseNode.addChild(tipoDocNode);
+        tipoDocNode = new NodeDocumento(keyTipoDocumento, documento.tipoDocumento?.nombre, 0);
         this.nodeLookup.set(keyTipoDocumento, tipoDocNode);
+        nodes.push(tipoDocNode);
       }
-      const docNode = new NodeDocumento(null, documento.nombre, 2, new StatusWrapper<IProyectoPeriodoSeguimientoDocumento>(documento));
+      const docNode = new NodeDocumento('', documento.nombre, 1,
+        new StatusWrapper<IProyectoPeriodoSeguimientoDocumento>(documento));
       tipoDocNode.addChild(docNode);
     });
     return nodes;
@@ -168,29 +148,22 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   }
 
   public addNode(node: NodeDocumento): NodeDocumento {
-    const keyTipoFase = '0';
-    const keyTipoDocumento = `${keyTipoFase}-${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
-    let nodeFase = this.nodeLookup.get(keyTipoFase);
+    const keyTipoDocumento = `${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
+    let nodeTipoDoc = this.nodeLookup.get(keyTipoDocumento);
     let addToRoot = false;
-    if (!nodeFase) {
-      nodeFase = new NodeDocumento(keyTipoFase, undefined, 0);
-      this.nodeLookup.set(keyTipoFase, nodeFase);
+    if (!nodeTipoDoc) {
+      nodeTipoDoc = new NodeDocumento(keyTipoDocumento, node.documento.value.tipoDocumento?.nombre, 0);
+      this.nodeLookup.set(keyTipoDocumento, nodeTipoDoc);
       addToRoot = true;
     }
-    let nodeTipoDoc = this.nodeLookup.get(keyTipoDocumento);
-    if (!nodeTipoDoc) {
-      nodeTipoDoc = new NodeDocumento(keyTipoDocumento, node.documento.value.tipoDocumento?.nombre, 1);
-      nodeFase.addChild(nodeTipoDoc);
-      this.nodeLookup.set(keyTipoDocumento, nodeTipoDoc);
-    }
-    const nodeDocumento = new NodeDocumento(keyTipoDocumento, node.title, 2, node.documento);
+    const nodeDocumento = new NodeDocumento(keyTipoDocumento, node.title, 1, node.documento);
     nodeDocumento.documento.setCreated();
     nodeDocumento.fichero = node.fichero;
     nodeDocumento.documento.value.documentoRef = node.fichero?.documentoRef;
     nodeTipoDoc.addChild(nodeDocumento);
     const current = this.documentos$.value;
     if (addToRoot) {
-      current.push(nodeFase);
+      current.push(nodeTipoDoc);
     }
     this.publishNodes(current);
     this.setChanges(true);
@@ -202,40 +175,22 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
       node.documento.setEdited();
     }
     node.documento.value.documentoRef = node.fichero?.documentoRef;
-
-    const keyTipoFase = '0';
-    const keyTipoDocumento = `${keyTipoFase}-${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
-    let nodeFase = this.nodeLookup.get(keyTipoFase);
-    let addToRoot = false;
-    let removedRootNode: NodeDocumento;
-    if (!nodeFase) {
-      nodeFase = new NodeDocumento(keyTipoFase, undefined, 0);
-      this.nodeLookup.set(keyTipoFase, nodeFase);
-      addToRoot = true;
-    }
+    const keyTipoDocumento = `${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
     let nodeTipoDoc = this.nodeLookup.get(keyTipoDocumento);
     if (!nodeTipoDoc) {
       nodeTipoDoc = new NodeDocumento(keyTipoDocumento, node.documento.value.tipoDocumento?.nombre, 1);
-      nodeFase.addChild(nodeTipoDoc);
       this.nodeLookup.set(keyTipoDocumento, nodeTipoDoc);
     }
     // Si el padre ha cambiado limpiamos la rama y establecemos el nuevo padre
     if (nodeTipoDoc !== node.parent) {
       node.parent.removeChild(node);
-      removedRootNode = this.removeEmptyParentNodes(node.parent);
       nodeTipoDoc.addChild(node);
     }
     else {
       // Ordenamos los hijos, porque puede haber cambiado el nombre
       node.parent.sortChildsByTitle();
     }
-    let current = this.documentos$.value;
-    if (removedRootNode) {
-      current = current.filter((n) => n !== removedRootNode);
-    }
-    if (addToRoot) {
-      current.push(nodeFase);
-    }
+    const current = this.documentos$.value;
     this.publishNodes(current);
     this.setChanges(true);
   }

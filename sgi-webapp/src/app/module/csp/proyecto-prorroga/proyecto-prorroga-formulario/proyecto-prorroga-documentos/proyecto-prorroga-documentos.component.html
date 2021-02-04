@@ -5,17 +5,17 @@
     <div class="arbol" fxFlex>
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="arbol-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-          <button mat-icon-button *ngIf="(node.level === 2 && viewMode === 'new')">
+          <button mat-icon-button *ngIf="(node.level === 1 && viewMode === 'new')">
             {{node.title}}
           </button>
-          <button mat-icon-button *ngIf="(node.level === 2 && viewMode !== 'new' && node !== viewingNode)"
+          <button mat-icon-button *ngIf="(node.level === 1 && viewMode !== 'new' && node !== viewingNode)"
             (click)="showNodeDetails(node)">
             {{node.title}}
             <mat-icon color="primary" class="mat-icon-rtl-mirror">
               {{ 'visibility'}}
             </mat-icon>
           </button>
-          <button mat-icon-button *ngIf="(node.level === 2 && viewMode !== 'new' && node === viewingNode)"
+          <button mat-icon-button *ngIf="(node.level === 1 && viewMode !== 'new' && node === viewingNode)"
             (click)="hideNodeDetails()">
             {{node.title}}
             <mat-icon color="primary" class="mat-icon-rtl-mirror">
