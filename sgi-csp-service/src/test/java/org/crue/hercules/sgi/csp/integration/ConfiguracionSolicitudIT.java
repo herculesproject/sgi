@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -225,8 +225,8 @@ public class ConfiguracionSolicitudIT {
         .id(convocatoriaFaseId)//
         .convocatoria(convocatoria)//
         .tipoFase(tipoFase)//
-        .fechaInicio(LocalDate.of(2020, 10, 1))//
-        .fechaFin(LocalDate.of(2020, 10, 15))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
         .observaciones("observaciones")//
         .build();
 

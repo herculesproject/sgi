@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -1138,8 +1138,8 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         .id(convocatoriaFaseId)//
         .convocatoria(convocatoria)//
         .tipoFase(tipoFase)//
-        .fechaInicio(LocalDate.of(2020, 10, 1))//
-        .fechaFin(LocalDate.of(2020, 10, 15))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
         .observaciones("observaciones")//
         .build();
 

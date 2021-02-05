@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -339,7 +338,7 @@ public class SolicitudServiceImpl implements SolicitudService {
           .collect(Collectors.toList());
       if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
         specs = specs.and(SolicitudSpecifications.byFechaInicioDesdeConfiguracionSolicitud(
-            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
       }
     }
 
@@ -351,7 +350,7 @@ public class SolicitudServiceImpl implements SolicitudService {
           .collect(Collectors.toList());
       if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
         specs = specs.and(SolicitudSpecifications.byFechaInicioHastaConfiguracionSolicitud(
-            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
       }
     }
 
@@ -364,7 +363,7 @@ public class SolicitudServiceImpl implements SolicitudService {
           .collect(Collectors.toList());
       if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
         specs = specs.and(SolicitudSpecifications.byFechaFinDesdeConfiguracionSolicitud(
-            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
       }
     }
 
@@ -376,7 +375,7 @@ public class SolicitudServiceImpl implements SolicitudService {
           .collect(Collectors.toList());
       if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
         specs = specs.and(SolicitudSpecifications.byFechaFinHastaConfiguracionSolicitud(
-            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
       }
     }
 

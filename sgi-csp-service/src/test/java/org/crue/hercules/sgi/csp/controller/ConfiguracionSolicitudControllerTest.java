@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -358,8 +358,8 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
         .id(convocatoriaFaseId)//
         .convocatoria(convocatoria)//
         .tipoFase(tipoFase)//
-        .fechaInicio(LocalDate.of(2020, 10, 1))//
-        .fechaFin(LocalDate.of(2020, 10, 15))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
         .observaciones("observaciones")//
         .build();
 

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.criteria.JoinType;
@@ -71,7 +71,7 @@ public class SolicitudSpecifications {
     };
   }
 
-  public static Specification<Solicitud> byFechaInicioDesdeConfiguracionSolicitud(LocalDate fechaInicio) {
+  public static Specification<Solicitud> byFechaInicioDesdeConfiguracionSolicitud(LocalDateTime fechaInicio) {
     return (root, query, cb) -> {
 
       Subquery<Long> queryConvocatoriaFase = query.subquery(Long.class);
@@ -83,7 +83,7 @@ public class SolicitudSpecifications {
     };
   }
 
-  public static Specification<Solicitud> byFechaInicioHastaConfiguracionSolicitud(LocalDate fechaInicio) {
+  public static Specification<Solicitud> byFechaInicioHastaConfiguracionSolicitud(LocalDateTime fechaInicio) {
     return (root, query, cb) -> {
 
       Subquery<Long> queryConvocatoriaFase = query.subquery(Long.class);
@@ -95,7 +95,7 @@ public class SolicitudSpecifications {
     };
   }
 
-  public static Specification<Solicitud> byFechaFinDesdeConfiguracionSolicitud(LocalDate fechaFin) {
+  public static Specification<Solicitud> byFechaFinDesdeConfiguracionSolicitud(LocalDateTime fechaFin) {
     return (root, query, cb) -> {
 
       Subquery<Long> queryConvocatoriaFase = query.subquery(Long.class);
@@ -107,7 +107,7 @@ public class SolicitudSpecifications {
     };
   }
 
-  public static Specification<Solicitud> byFechaFinHastaConfiguracionSolicitud(LocalDate fechaFin) {
+  public static Specification<Solicitud> byFechaFinHastaConfiguracionSolicitud(LocalDateTime fechaFin) {
     return (root, query, cb) -> {
 
       Subquery<Long> queryConvocatoriaFase = query.subquery(Long.class);

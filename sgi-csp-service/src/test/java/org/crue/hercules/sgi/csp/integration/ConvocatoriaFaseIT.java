@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -139,8 +140,8 @@ public class ConvocatoriaFaseIT extends BaseIT {
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
     convocatoriaFase.setConvocatoria(convocatoria);
-    convocatoriaFase.setFechaInicio(LocalDate.of(2020, 10, 19));
-    convocatoriaFase.setFechaFin(LocalDate.of(2020, 10, 28));
+    convocatoriaFase.setFechaInicio(LocalDateTime.of(2020, 10, 19, 17, 18, 19));
+    convocatoriaFase.setFechaFin(LocalDateTime.of(2020, 10, 28, 17, 18, 19));
     convocatoriaFase.setTipoFase(tipoFase);
     convocatoriaFase.setObservaciones("observaciones" + id);
 

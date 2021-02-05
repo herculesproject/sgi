@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
@@ -253,8 +253,8 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
         .id(convocatoriaFaseId)//
         .convocatoria(convocatoria)//
         .tipoFase(tipoFase)//
-        .fechaInicio(LocalDate.of(2020, 10, 1))//
-        .fechaFin(LocalDate.of(2020, 10, 15))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
         .observaciones("observaciones")//
         .build();
 

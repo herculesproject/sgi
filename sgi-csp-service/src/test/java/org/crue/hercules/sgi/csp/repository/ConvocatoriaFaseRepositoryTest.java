@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -39,8 +39,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 999999L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDate fechaInicioBuscada = LocalDate.of(2020, 10, 11);
-    LocalDate fechaFinBuscada = LocalDate.of(2020, 10, 20);
+    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 10, 11, 17, 18, 19);
+    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 10, 20, 17, 18, 19);
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -72,8 +72,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 988888888L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDate fechaInicioBuscada = LocalDate.of(2020, 11, 11);
-    LocalDate fechaFinBuscada = LocalDate.of(2020, 11, 20);
+    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 11, 11, 17, 18, 19);
+    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 11, 20, 17, 18, 19);
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -105,8 +105,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 87999999999L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDate fechaInicioBuscada = LocalDate.of(2020, 10, 11);
-    LocalDate fechaFinBuscada = LocalDate.of(2020, 11, 20);
+    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 10, 11, 17, 18, 19);
+    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 11, 20, 17, 18, 19);
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -138,8 +138,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 200000000L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDate fechaInicioBuscada = LocalDate.of(2020, 9, 11);
-    LocalDate fechaFinBuscada = LocalDate.of(2020, 10, 20);
+    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 9, 11, 17, 18, 19);
+    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 10, 20, 17, 18, 19);
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -173,8 +173,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = null;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDate fechaInicioBuscada = LocalDate.of(2020, 9, 11);
-    LocalDate fechaFinBuscada = LocalDate.of(2020, 11, 20);
+    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 9, 11, 17, 18, 19);
+    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 11, 20, 17, 18, 19);
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -264,8 +264,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()//
         .convocatoria(convocatoria)//
         .tipoFase(tipoFase)//
-        .fechaInicio(LocalDate.of(2020, 10, 01))//
-        .fechaFin(LocalDate.of(2020, 10, 31))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 01, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 31, 17, 18, 19))//
         .observaciones("obervaciones" + suffix)//
         .build();
     return entityManager.persistAndFlush(convocatoriaFase);

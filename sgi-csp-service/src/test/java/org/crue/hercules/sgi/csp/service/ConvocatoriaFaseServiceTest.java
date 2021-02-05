@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -715,8 +715,8 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     return ConvocatoriaFase.builder()//
         .id(id)//
         .convocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE))//
-        .fechaInicio(LocalDate.of(2020, 10, 19))//
-        .fechaFin(LocalDate.of(2020, 10, 28))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 19, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 28, 17, 18, 19))//
         .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))//
         .observaciones("observaciones" + id)//
         .build();

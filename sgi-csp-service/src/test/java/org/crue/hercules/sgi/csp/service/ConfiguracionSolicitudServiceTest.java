@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -316,8 +316,10 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
     // given: update existing ConfiguracionSolicitud
     ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
     ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    updatedConfiguracionSolicitud.getFasePresentacionSolicitudes().setFechaInicio(LocalDate.of(2020, 9, 15));
-    updatedConfiguracionSolicitud.getFasePresentacionSolicitudes().setFechaFin(LocalDate.of(2020, 9, 30));
+    updatedConfiguracionSolicitud.getFasePresentacionSolicitudes()
+        .setFechaInicio(LocalDateTime.of(2020, 9, 15, 17, 18, 19));
+    updatedConfiguracionSolicitud.getFasePresentacionSolicitudes()
+        .setFechaFin(LocalDateTime.of(2020, 9, 30, 17, 18, 19));
     updatedConfiguracionSolicitud.setTramitacionSGI(Boolean.FALSE);
     updatedConfiguracionSolicitud.setImporteMaximoSolicitud(BigDecimal.valueOf(54321));
 
@@ -746,8 +748,8 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .id(convocatoriaFaseId)//
         .convocatoria(convocatoria)//
         .tipoFase(tipoFase)//
-        .fechaInicio(LocalDate.of(2020, 10, 1))//
-        .fechaFin(LocalDate.of(2020, 10, 15))//
+        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
+        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
         .observaciones("observaciones")//
         .build();
 

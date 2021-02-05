@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -1100,8 +1101,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
     convocatoriaFase.setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
-    convocatoriaFase.setFechaInicio(LocalDate.now());
-    convocatoriaFase.setFechaFin(LocalDate.now().plusDays(1L));
+    convocatoriaFase.setFechaInicio(LocalDateTime.now());
+    convocatoriaFase.setFechaFin(LocalDateTime.now().plusDays(1L));
     convocatoriaFase.setTipoFase(
         TipoFase.builder().nombre("tipoFase" + id).descripcion("descripcionFase" + id).activo(Boolean.TRUE).build());
     convocatoriaFase.setObservaciones("observaciones" + id);
