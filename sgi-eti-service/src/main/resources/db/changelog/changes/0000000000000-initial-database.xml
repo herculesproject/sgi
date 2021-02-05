@@ -116,7 +116,7 @@
       <column name="creation_date" type="TIMESTAMP" />
       <column name="last_modified_by" type="VARCHAR(255)" />
       <column name="last_modified_date" type="TIMESTAMP" />
-      <column name="esquema" type="VARCHAR(5000)">
+      <column name="esquema" type="VARCHAR(33000)">
         <constraints nullable="false" />
       </column>
       <column name="nombre" type="VARCHAR(250)">

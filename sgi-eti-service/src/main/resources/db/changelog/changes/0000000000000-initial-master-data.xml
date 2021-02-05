@@ -693,6 +693,37 @@
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
       <column name="orden" value="5" />
     </insert>
+    <!-- FORMULARIO M30 -->
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="VALOR SOCIAL Y JUSTIFICACIÓN" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="orden" value="1" />
+    </insert>
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="orden" value="2" />
+    </insert>
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="orden" value="3" />
+    </insert>
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="ASPECTOS ÉTICOS ESPECÍFICOS" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="orden" value="4" />
+    </insert>
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="orden" value="5" />
+    </insert>
   </changeSet>
 
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-apartado">
@@ -1856,6 +1887,498 @@
         <![CDATA[ [{"key":"ap5_7","wrappers":["expansion-panel"],"templateOptions":{"label":"5.7 Aclaraciones al comité"},"fieldGroup":[{"template":"Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité"},{"key":"aclaracionesComite","type":"textarea","templateOptions":{"label":"Aclaraciones comité","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
       </column>
     </insert>
+
+
+    <!-- FORMULARIO M30-->
+    <!--I. VALOR SOCIAL Y JUSTIFICACIÓN  -->
+    <!--1.1  Valor social del proyecto -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Valor social del proyecto" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_1","wrappers":["expansion-panel"],"templateOptions":{"label":"1.1 Valor social del proyecto"},"fieldGroup":[{"wrappers":["info-div"],"template":"Para completar esta sección ir a <b>'Datos generales'</b>."},{"template":"<p>A continuación se muestra la finalidad principal del proyecto o campo en el que se espera un aumento del conocimiento o un beneficion social último que justifique su realización.</p>"}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 1.2  Justificación del uso de agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Justificación del uso de agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas" />
+      <column name="padre_id" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap1_2","wrappers":["expansion-panel"],"templateOptions":{"label":"1.2 Justificación del uso de agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas"},"fieldGroup":[{"template":"<p>Exponer brevemente (máximo diez líneas) la necesidad de utilización de agentes biológicos, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas.</p>"},{"key":"justificacion","className":"descripcion","type":"textarea","templateOptions":{"label":"Justificación","placeholder":"","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!--II. CUALIFICACIÓN EQUIPO INVESTIGADOR  -->
+    <!-- 2.1  Personal que llevará a cabo las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas. -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '2' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Personal que llevará a cabo las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap2_1","wrappers":["expansion-panel"],"templateOptions":{"label":"2.1 Personal que llevará a cabo las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas"},"fieldGroup":[{"template":"<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los agentes biológicos y/u OMGs.<br><br>Especificar por cada persona:<br><ul><li>Datos identificativos (nombre, NIF, vinculación con la UPV/EHU).</li><li>Formación específica en riesgos biológicos.</li><li>Organismo acreditador (UPV/EHU, MiriadaX, otras universidades u organismos).</li><li>Año.</li></ul></p>"},{"wrappers":["info-div"],"template":"Para completar o editar esta sección ir a <b>'Equipo investigador'</b>."}]}] ]]>
+      </column>
+    </insert>
+
+    <!--III. VALIDEZ CIENTÍFICA Y METODOLÓGICA  -->
+    <!-- 3.1 Objetivos científicos del proyecto -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Objetivos científicos del proyecto" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_1","wrappers":["expansion-panel"],"templateOptions":{"label":"3.1 Objetivos científicos del proyecto"},"fieldGroup":[{"template":"<p>Describir brevemente los principales objetivos que se pretenden alcanzar con esta experimentación con agentes biológicos, OMG, Sustancias Químicas Peligrosas, Sustancias Radiactivas y/o Nanoparticulas</p>"},{"wrappers":["info-div"],"template":"Para completar esta sección ir a <b>'Datos generales'</b>."},{"key":"objetivosCientificos","type":"textarea","templateOptions":{"label":"Descripción objetivos científicos del proyecto","placeholder":"Descripción","required":true,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.2 Objetivos científicos del proyecto -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Objetivos científicos del proyecto" />
+      <column name="padre_id" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_2","wrappers":["expansion-panel"],"templateOptions":{"label":"3.2 Diseño metodológico del proyecto"},"fieldGroup":[{"template":"<p>Si en el proyecto se van a utilizar SERES HUMANOS, describir:</p><ul><li>El <b>tipo de estudio</b> (cualitativo, cuantitativo, prospectivo, observacional, caso-control, doble ciego etc.).</li><li>La <b>muestra</b>: tamaño, justificación, características, criterios de inclusión/exclusión.</li><li>Las <b>variables</b> de estudio.</li><li>El <b>modelo de análisis de resultados</b> previstos.</li></ul><p>Si en el proyecto se van a utilizar ANIMALES DE EXPERIMENTACIÓN, describir:</p><ul><li>La <b>metodología general</b> del proyecto de investigación, teniendo en cuenta que más adelante hay un apartado específico para describir los grupos y las intervenciones <b>(Apartado 3.6.1)</b>.</li></ul><p>Si en el proyecto se van a utilizar MATERIAL/AGENTES BIOLÓGICOS, SUSTANCIAS QUÍMICAS PELIGROSAS , SUSTANCIAS RADIACTIVAS y/o NANOPARTICULAS,  describir:</p><ul><li>La <b>metodología general</b> del proyecto de investigación, teniendo en cuenta el tipo de material/agente biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas que se va a utilizar, considerando que más adelante hay un apartado específico para describir dicho material/agente biológico <b>(Apartado 3.5).</b>.</li></ul><p>Si el proyecto implica solicitar dos o más memorias a diferentes comités, describir este apartado con la combinación de dichas descripciones.</p>"},{"key":"disenoMetodologico","type":"textarea","templateOptions":{"label":"Diseño metodológico", "placeholder": "Diseño","disabled":false,"required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10","expressionModelValue":"formState.memoria.peticionEvaluacion.disMetodologico"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.3 Referencias de publicaciones científicas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Referencias de publicaciones científicas" />
+      <column name="padre_id" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key": "ap3_3", "wrappers": ["expansion-panel"], "templateOptions": {"label": "3.3 Referencias de publicaciones científicas"}, "fieldGroup": [{"template": "<p>Citar de forma completa (autor, título, publicación, fecha etc) las referencias más relevantes utilizadas para el método (máximo 10 referencias)</p>"},{"key": "referenciasPublicaciones", "type": "textarea", "templateOptions": {"placeholder": "Referencias", "label": "Referencias", "required": true, "autosize": true, "autosizeMinRows": "1", "autosizeMaxRows": "10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.4 Tipo de exposición -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Tipo de exposición" />
+      <column name="padre_id" />
+      <column name="orden" value="4" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_4","wrappers":["expansion-panel"],"templateOptions":{"label":"3.4 Tipo de exposición"},"fieldGroup":[{"wrappers":["info-div"],"template":"<p>La exposición a los agentes biológicos puede ser de dos tipos.</p><br><ul><li>Exposición por intención deliberada de utilizar o manipular un agente biológico, que constituye el propósito principal del trabajo. Actividades de este tipo serían las desarrolladas con animales deliberadamente infectados o en los laboratorios cuya actividad principal constituye el trabajar con agentes biológicos. Otras actividades encuadradas en este grupo serían, por ejemplo, las relacionadas con las industrias de biotecnología: industrias farmacéuticas (para la obtención de antibióticos, enzimas, vacunas virales); industria alimentaria (cerveza, quesos, yogur); etc.</li><li>Exposición no intencionada o incidental al propósito principal del trabajo. En este caso la actividad no implica la manipulación, ni el trabajo en contacto directo o el uso deliberado del agente biológico pero si existe un riesgo de contaminación por agentes biológicos. Este sería el caso del trabajo en contacto con seres humanos o animales o sus productos (tejidos, sangre o fluidos), así como el contacto con elementos o medios donde dicho agente vive o puede sobrevivir (materiales, agua, suelo, alimentos, residuos ...), que servirían como fuente de exposición.</li></ul><p>En esta memoria se incluye además la exposición a OMG en tareas de uso confinado.</p>"}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.4.1  Exposición no intencionada o incidental -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Exposición no intencionada o incidental" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Tipo de exposición')" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_4_1","wrappers":["title-div"],"templateOptions":{"label":"3.4.1 Exposición no intencionada o incidental"},"fieldGroup":[{"template":"<p>En esta actividad ¿se realizan tareas en las que puede haber exposición no intencionada o incidental a agentes biológicos?</p>"},{"key":"agentesBiologicosRadio","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Tipo de material biológico que se utiliza"},{"type":"multicheckbox","key":"muestrasBiologicasCheck","hideExpression":"!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'","templateOptions":{"label":"Tipo:","type":"array","required":true,"options":[{"value":"criaymanejoanimales","label":"Cría y manejo de animales"},{"value":"tejidossangrefluidosanimales","label":"Tejidos/sangre/fluidos animales"},{"value":"tejidossangrefluidoshumanos","label":"Tejidos/sangre/fluidos humanos"},{"value":"fluidos","label":"Otros"}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.4.2 Exposición deliberada -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Exposición deliberada" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Tipo de exposición')" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_4_2","wrappers":["title-div"],"templateOptions":{"label":"3.4.2 Exposición deliberada"},"fieldGroup":[{"template":"<p>En esta actividad ¿se realizan tareas en las que hay intención deliberada de utilizar agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas?</p>"},{"key":"tareasAgentesBiologicosRadio","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Tipo de agente biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas que se utiliza"},{"type":"multicheckbox","key":"exposicionNointencionada","hideExpression":"!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'","templateOptions":{"label":"Tipo:","type":"array","required":true,"options":[{"value":"microorganismos","label":"Microorganismos"},{"value":"cultivoscelulares","label":"Cultivos celulares"},{"value":"endoparasitos","label":"Endoparásitos"},{"value":"sustanciasquímicaspeligrosas","label":"Sustancias Químicas Peligrosas"},{"value":"sustanciasradiactivas","label":"Sustancias Radiactivas"},{"value":"nanoparticulas","label":"Nanopartículas"}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.4.3 Uso confinado de OMG -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Uso confinado de OMG" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Tipo de exposición')" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_4_3","wrappers":["title-div"],"templateOptions":{"label":"3.4.3 Uso confinado de OMG"},"fieldGroup":[{"template":"<p>En esta actividad ¿se realizan tareas de uso confinado de OMG?</p>"},{"key":"tareasUsoConfinado","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"wrappers":["info-div"],"template":"Adjuntar la hoja de información del transgénico de la casa comercial."},{"template":"Tipo de OMG que se utiliza"},{"type":"multicheckbox","key":"tiposOMG","hideExpression":"!model.tareasUsoConfinado || model.tareasUsoConfinado === 'no'","templateOptions":{"label":"Tipo:","type":"array","required":true,"options":[{"value":"microorganismos","label":"Microorganismos"},{"value":"animales","label":"Animales"},{"value":"plantas","label":"Plantas"}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.5 Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
+      <column name="padre_id" />
+      <column name="orden" value="5" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_5","wrappers":["expansion-panel"],"templateOptions":{"label":"3.5 Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas"},"fieldGroup":[{"wrappers":["info-div"],"template":"La clasificación del tipo de los agentes biológicos a los que esté o pueda estar expuesto el personal se hace de acuerdo con la tabla y criterios de clasificación contenidos en el <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#anii' target='_blank'>anexo II del Real Decreto 664/1997</a> y sus actualizaciones.<br><br>Si un agente no consta en la tabla se deberá estimar su riesgo de infección teniendo en cuenta las siguientes definiciones:<br><br><ul><li><b>Grupo 1:</b> aquél que resulta poco probable que cause una enfermedad en el ser humano, los animales y/o el medio ambiente.</li><li><b>Grupo 2:</b> aquél que puede causar una enfermedad en el ser humano, los animales y/o el medio ambiente y puede suponer un peligro para las personas expuestas, pero es poco probable que se propague a la colectividad y existe una profilaxis o un tratamiento eficaz.</li><li><b>Grupo 3:</b> aquél que puede causar una enfermedad grave en el ser humano, los animales y/o el medio ambiente y presenta un serio peligro para las personas expuestas, con riesgo de que se propague a la colectividad y existe una profilaxis o un tratamiento eficaz.</li><li><b>Grupo 4:</b> aquél que causa una enfermedad grave en el ser humano, los animales y/o el medio ambiente, supone un serio peligro para las personas expuestas, con muchas probabilidades de que se propague a la colectividad y sin que exista una profilaxis o un tratamiento eficaz.</li></ul>En caso de duda entre dos grupos deberá clasificarse en el grupo de <b>peligrosidad superior</b>."}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.5.4 Organismo modificado genéticamente -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Organismo modificado genéticamente" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
+      <column name="orden" value="4" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_5_4","wrappers":["title-div"],"templateOptions":{"label":"3.5.4 Organismo modificado genéticamente"},"fieldGroup":[{"key":"organismoModificadoNombre","type":"textarea","templateOptions":{"label":"Nombre","placeholder":"Nombre","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"organismoModificadoHuesped","type":"textarea","templateOptions":{"label":"Huésped","placeholder":"Huésped","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"organismoModificadoVectorUtilizado","type":"textarea","templateOptions":{"label":"Vector utilizado","placeholder":"Vector utilizado","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"organismoModificadoInsertoEspecie","type":"textarea","templateOptions":{"label":"Inserto y especie de procedencia del inserto","placeholder":"Inserto y especie de procedencia del inserto","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"organismoModificadoProteina","type":"textarea","templateOptions":{"label":"Proteína que codifica","placeholder":"Proteína que codifica","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"organismoModificadoVolumenMaximo","type":"textarea","templateOptions":{"label":"Volumen máximo de muestra que se maneja en cada vez o número de animales","placeholder":"Volumen máximo de muestra que se maneja en cada vez o número de animales","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.6 Frecuencia y periodicidad de uso -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Frecuencia y periodicidad de uso" />
+      <column name="padre_id" />
+      <column name="orden" value="6" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_6","wrappers":["expansion-panel"],"templateOptions":{"label":"3.6 Frecuencia y periodicidad de uso"},"fieldGroup":[{"template":"<p>Describir a continuación la frecuencia de uso de los agentes biológicos y/u OMG especificados, es decir, número de veces al día o a la semana que se accederá a la muestra para manipulación, cultivo etc., duración de esa manipulación, y si esa acción se repetirá de forma periódica (por ejemplo número de veces a la semana o al mes, número de meses al año etc).</p>"},{"key":"frecuenciaPeriodicidad","className":"descripcion","type":"textarea","templateOptions":{"label":"Describe","placeholder":"Describe","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 3.7 Trayectoria completa de los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Trayectoria completa de los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
+      <column name="padre_id" />
+      <column name="orden" value="7" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap3_7","wrappers":["expansion-panel"],"templateOptions":{"label":"3.7 Trayectoria completa de los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas"},"fieldGroup":[{"template":"<p>Describir a continuación el recorrido que siguen los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartícula desde su obtención hasta su eliminación:</p>"},{"key":"mododeobtención","className":"descripcion","type":"textarea","templateOptions":{"label":"Modo de obtención","placeholder":"Modo de obtención","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"transporte","className":"descripcion","type":"textarea","templateOptions":{"label":"Transporte","placeholder":"Transporte","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"recepcion","className":"descripcion","type":"textarea","templateOptions":{"label":"Recepción","placeholder":"Recepción","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"almacenamiento","className":"descripcion","type":"textarea","templateOptions":{"label":"Almacenamiento","placeholder":"Almacenamiento","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"eliminacion","className":"descripcion","type":"textarea","templateOptions":{"label":"Eliminación","placeholder":"Eliminación","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!--IV. ASPECTOS ÉTICOS ESPECÍFICOS  -->
+    <!-- 4.1 Evaluación del riesgo -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Evaluación del riesgo" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_1","wrappers":["expansion-panel"],"templateOptions":{"label":"4.1 Evaluación del riesgo"},"fieldGroup":[]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.1.1 Nivel de riesgo -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Nivel de riesgo" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Evaluación del riesgo')" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_1_1","wrappers":["title-div"],"templateOptions":{"label":"4.1.1 Nivel de riesgo"},"fieldGroup":[{"template":"<p>Señalar el nivel de riesgo global de la actividad. En caso de manejo de varios agentes de distinto nivel de riesgo considérese el de nivel superior</p>"},{"key":"nivelRiesgo","type":"radio","className":"vertical-radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"nivel_1","label":"Nivel I: Riesgo individual y poblacional escaso o nulo. Microorganismos que tienen pocas probabilidades de provocar enfermedades en el ser humano o los animales."},{"value":"nivel_2","label":"Nivel II: Riesgo individual moderado, riesgo poblacional bajo. Los agentes patógenos que pueden provocar enfermedades humanas o animales pero que tienen pocas probabilidades de entrañar un riesgo grave para el personal de laboratorio, la población, el ganado o el medio ambiente. La exposición en el laboratorio puede provocar una infección grave, pero existen medidas preventivas y terapéuticas eficaces y el riesgo de propagación es limitado."},{"value":"nivel_3","label":"Nivel III: Riesgo individual elevado, riesgo poblacional bajo. Agentes patógenos que suelen provocar enfermedades humanas o animales graves, pero que de ordinario no se propagan de un individuo a otro. Existen medidas preventivas y terapéuticas eficaces."},{"value":"nivel_4","label":"Nivel IV: Riesgo individual y poblacional elevado. Agentes patógenos que suelen provocar enfermedades graves en el ser humano o los animales y que se transmiten fácilmente de un individuo a otro, directa o indirectamente. Normalmente no existen medidas preventivas y terapéuticas eficaces."}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.1.2 Características del riesgo de los agentes biológicos y/o material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Características del riesgo de los agentes biológicos y/o material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Evaluación del riesgo')" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_1_2","wrappers":["title-div"],"templateOptions":{"label":"4.1.2 Características del riesgo de los agentes biológicos y/o material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas"},"fieldGroup":[{"template":"<p>Los agentes biológicos, material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas que se utilizan implican algún tipo de efecto potencialmente nocivo?</p>"},{"key":"agentesBiologicos","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"grupoDiana","type":"multicheckbox","hideExpression":"!model.agentesBiologicos || model.agentesBiologicos === 'no'","templateOptions":{"label":"Grupo diana:","required":true,"type":"array","options":[{"value":"serHumamno","label":"Ser humano"},{"value":"animales","label":"Animales"},{"value":"medioambiente","label":"Medio ambiente"}]}},{"template":"Tipo de efecto nocivo"},{"key":"efectoNocivo","type":"multicheckbox","hideExpression":"!model.agentesBiologicos || model.agentesBiologicos === 'no'","templateOptions":{"label":"Tipo:","required":true,"type":"array","options":[{"value":"infeccioso","label":"Infeccioso"},{"value":"toxico","label":"Tóxico"},{"value":"alergico","label":"Alérgico"},{"value":"radiactivo","label":"Radiactivo"},{"value":"otro","label":"Otro"}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.1.3 Características del riesgo de los omg -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Nivel de riesgo" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Evaluación del riesgo')" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_1_3","wrappers":["title-div"],"templateOptions":{"label":"4.1.3 Características del riesgo de los omg"},"fieldGroup":[{"template":"<p>¿Los OMG que se utilizan implican algún tipo de efecto potencialmente nocivo?</p>"},{"key":"agentesBiologicos","type":"radio","className":"vertical-radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"niguno","label":"Ninguno o insignificante."},{"value":"afectenPersonas","label":"Enfermedades que afecten a las personas, incluidos los efectos alérgicos o tóxicos."},{"value":"afectecAnimales","label":"Enfermedades que afecten a los animales o a los vegetales."},{"value":"imposibilidad","label":"Efectos deletéreos debidos a la imposibilidad de tratar una enfermedad o de realizar una profilaxis eficaz."},{"value":"diseminacion","label":"Efectos deletéreos debidos al establecimiento o a la diseminación en el medio ambiente."},{"value":"transferenciaNatural","label":"Efectos deletéreos debidos a la transferencia natural de material genético insertado a otros organismos."}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.1.4 Efectos nocivos que puedan derivarse del uso de agentes, material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Efectos nocivos que puedan derivarse del uso de agentes, material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Evaluación del riesgo')" />
+      <column name="orden" value="4" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_1_4","wrappers":["title-div"],"templateOptions":{"label":"4.1.4 Efectos nocivos que puedan derivarse del uso de agentes, material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas"},"fieldGroup":[{"template":"<p>Describir brevemente la enfermedad o efectos nocivos que puedan derivarse del uso de agentes y/o material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas</p>"},{"key":"efectosNocivos","className":"descripcion","type":"textarea","templateOptions":{"label":"Describir","placeholder":"Describir","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.1.5 Tratamiento profiláctico disponible -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Tratamiento profiláctico disponible" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Evaluación del riesgo')" />
+      <column name="orden" value="5" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_1_5","wrappers":["title-div"],"templateOptions":{"label":"4.1.5 Tratamiento profiláctico disponible"},"fieldGroup":[{"template":"<p>¿Existe vacuna eficaz o tratamiento profiláctico disponible?</p>"},{"key":"vacunaEficaz","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"especificarVacunaEficaz","type":"textarea","hideExpression":"!model.vacunaEficaz || model.vacunaEficaz === 'no'","templateOptions":{"label":"Especificar","placeholder":"Especificar","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2 Medidas técnicas de seguridad -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Medidas técnicas de seguridad" />
+      <column name="padre_id" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2","wrappers":["expansion-panel"],"templateOptions":{"label":"4.2 Medidas técnicas de seguridad"},"fieldGroup":[]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.1 Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_1","wrappers":["title-div"],"templateOptions":{"label":"4.2.1 Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas"},"fieldGroup":[{"wrappers":["info-div"],"template":"<p>La manipulación de agentes biológicos o materiales susceptibles de contenerlos requiere unas condiciones específicas del lugar de trabajo acordes con el grado de peligrosidad del agente y nivel de riesgo que garanticen la seguridad.<br>El tipo de laboratorio debe ser adecuado al nivel de riesgo. En caso de exposición a más de un agente biológico se tendrá en cuenta <b>el de mayor riesgo</b>.</p><ul><li>Nivel de contención C1: Laboratorio básico</li><li>Nivel de contención C2: Laboratorio básico con cabina de seguridad biológica u otros dispositivos apropiados de protección personal o contención física.</li><li>Nivel de contención C3: Laboratorio restringido con cabina de seguridad biológica u otros dispositivos apropiados de protección personal o contención física</li><li>Nivel de contención C4: Laboratorio estanco de contención máxima</li></ul><p>Para más información sobre medidas y niveles de contención consultar el <b><a href='https://boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#anv' target='_blank'>Anexo V del RD 664-97</a></b>.</p>"}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.1.1 Laboratorio de la Universidad -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Laboratorio de la Universidad" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_1_1","wrappers":["title-div"],"templateOptions":{"label":"4.2.1.1 Laboratorio de la Universidad"},"fieldGroup":[{"wrappers":["title-div"],"templateOptions":{"label":"4.2.1.1.1 Medidas de contención"}},{"template":"<p>El lugar de trabajo se encontrará separado de toda actividad que se desarrolle en el mismo edificio (Exigencias según la Guía del <b>R.D.664/97</b>)</p>"},{"key":"lugarTrabajo","type":"radio","templateOptions":{"label":"Elige opción","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_lugarTrabajo","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El aire introducido y extraído del lugar de trabajo se filtrará mediante la utilización de filtros de alta eficacia para partículas en elaire (HEPA) ode forma similar.(Exigencias según la Guía del <b>R.D. 664/97:No</b>)</p>"},{"key":"filtroAltaEficacia","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_filtroAltaEficacia","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Solamente se permitirá el acceso al personal designado. (Exigencias según la Guía del <b>R.D. 664/97</b>:Aconsejable.)</p>"},{"key":"accesoPersonal","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_accesoPersonal","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El lugar de trabajo deberá poder precintarse para permitir su desinfección.(Exigencias según la Guía del <b>R.D. 664/97</b>:No)</p>"},{"key":"lugarTrabajo","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_lugarTrabajo","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Procedimientos de desinfección especificados. (Exigencias según la Guía del <b>R.D. 664/97</b>:Si)</p>"},{"key":"procedimientosDesinfeccion","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},
+        {"key":"observaciones_procedimientosDesinfeccion","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El lugar de trabajo se mantendrá con una presión negativa respecto a la presión atmosférica. (Exigencias según la Guía del <b>R.D. 664/97</b>:Si)</p>"},{"key":"presionNegativa","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_presionNegativa","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Control eficiente de vectores, por ejemplo, de roedores e insectos. (Exigencias según la Guía del <b>R.D. 664/97</b>:Aconsejable)</p>"},{"key":"roedoresInsectos","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_roedoresInsectos","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Superficies impermeables al agua y de fácil limpieza.(Exigencias según la Guía del <b>R.D. 664/97</b>:Sí, para el banco de pruebas o mesa de trabajo)</p>"},{"key":"superficiesImpermeables","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_superficiesImpermeables","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Superficies resistentes a ácidos, álcalis, disolventes y desinfectantes.(Exigencias según la Guía del <b>R.D. 664/97</b>:Aconsejable)</p>"},{"key":"superficiesResistentes","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_superficiesResistentes","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Almacenamiento de seguridad para agentes biológicos.(Exigencias según la Guía del <b>R.D. 664/97</b>:Si)</p>"},{"key":"almacenamientoSeguridad","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_almacenamientoSeguridad","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Se instalará una ventanilla de observación o un dispositivo alternativo en las zonas de manera que se pueda ver a sus ocupantes.(Exigenciassegún la Guía del <b>R.D. 664/97</b>:Aconsejable)</p>"},{"key":"ventanillaObservacion","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_ventanillaObservacion","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Laboratorio con equipo propio.(Exigencias según la Guía del <b>R.D. 664/97</b>:No)</p>"},{"key":"laboratorioEquipo","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_laboratorioEquipo","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El material infectado, animales incluidos, deberá manejarse en una cabina de seguridad biológica o en un aislador u otra contenciónapropiada.(Exigencias según la <b>Guía del R.D. 664/97</b>:cuando proceda)</p>"},{"key":"materialInfectado","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_materialInfectado","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Incinerador para destrucción de animales muertos.(Exigencias según la <b>Guía del R.D. 664/97</b>:Aconsejable)</p>"},{"key":"animalesMuertos","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_animalesMuertos","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"wrappers":["title-div"],"templateOptions":{"label":"4.2.1.1.2 Equipos de seguridad"}},{"template":"<p>Se dispone de sistemas mecánicos de pipeteo</p>"},{"key":"pipeteo","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_pipeteo","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Se dispone de CSB adecuada a la clase de riesgo</p>"},{"key":"claseRiesgo","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_claseRiesgo","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Se dispone de equipos de protección individual, como guantes impermeables para la manipulación de material potencialmenteinfeccioso en el interior de las CSB y guantes, gafas y mascarilla para trabajos con material infeccioso realizados en el banco de trabajoy en los que se puedan generar aerosoles, salpicaduras o proyecciones</p>"},{"key":"equiposProteccion","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_equiposProteccion","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"wrappers":["title-div"],"templateOptions":{"label":"4.2.1.1.3 Buenas prácticas de laboratorio"}},{"template":"<p>Las puertas del laboratorio están cerradas y el acceso al laboratorio se limita, a juicio del responsable del mismo, cuando losexperimentos se hallan en marcha</p>"},{"key":"puertasLaboratorio","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_puertasLaboratorio","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},
+        {"template":"<p>Las superficies de trabajo se descontaminan al menos una vez al día, al final de la jornada de trabajo y después de cualquier derramede material biológico</p>"},{"key":"superficiesTrabajo","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_superficiesTrabajo","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Los residuos cortantes o punzantes se recogen en contenedores adecuados resistentes</p>"},{"key":"residuosCortantes","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_residuosCortantes","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Las técnicas de manipulación se efectúan de manera que se minimice la generación de aerosoles y salpicaduras</p>"},{"key":"generacionAerosoles","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_generacionAerosoles","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>La recogida y limpieza de derrames se realiza de forma segura según procedimiento escrito</p>"},{"key":"derrames","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_derrames","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>No está permitido comer, beber, fumar, maquillarse o llevar lentillas en el laboratorio</p>"},{"key":"prohibido","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_prohibido","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Estará prohibido salir del laboratorio con la ropa de trabajo y con los equipos de protección puestos</p>"},{"key":"salirLaboratorio","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_salirLaboratorio","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>La ropa de trabajo se guarda en distinto lugar que la ropa de calle</p>"},{"key":"ropaCalle","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_ropaCalle","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>La recogida, manipulación, almacenamiento y el transporte de muestras, de material contaminado o de residuos se hace encontenedores específicos y con procedimientos adecuados</p>"},{"key":"muestrasContaminadas","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_muestrasContaminadas","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>En la puerta de entrada del laboratorio está colocada la señal de peligro biológico</p>"},{"key":"señalLaboratorio","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_señalLaboratorio","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Los equipos del laboratorio se descontaminan después de finalizar el trabajo</p>"},{"key":"equiposLaboratorio","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_equiposLaboratorio","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Todo derrame o accidente que tenga como consecuencia la sobreexposición del personal a material infeccioso será comunicado al responsable de seguridad</p>"},{"key":"responsableSeguridad","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_responsableSeguridad","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Ningún material infeccioso sale del laboratorio sin descontaminar o en contenedor específico</p>"},{"key":"salirLaboratorioInfeccioso","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_salirLaboratorioInfeccioso","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Todas las técnicas que puedan producir aerosoles (centrifugación, mezclas, apertura de envases de materiales infecciosos a distintapresión, inserción de asas de siembra calientes en el cultivo, inyección violenta de fluidos, etc.) se realizan en una CSB</p>"},{"key":"realizarCSB","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_realizarCSB","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"wrappers":["title-div"],"templateOptions":{"label":"4.2.1.2 Instalaciones"}},{"template":"<p>Se dispone de vestuarios con taquillas para la ropa</p>"},{"key":"disponeVestuarios","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_disponeVestuarios","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},
+        {"template":"<p>En caso de ventanas practicables, éstas llevan protección frente a la entrada de insectos</p>"},{"key":"ventanasPracticables","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_ventanasPracticables","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>Se dispone de espacio suficiente para el almacenamiento de materiales y reactivos</p>"},{"key":"espacioAlmacenamiento","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_espacioAlmacenamiento","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El laboratorio dispone de ventilación adecuada</p>"},{"key":"ventilacion","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_ventilacion","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El laboratorio dispone de iluminación adecuada (incluida la de emergencia)</p>"},{"key":"iluminacion","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_iluminacion","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El laboratorio cuenta con un botiquín: si/no. Observaciones-El laboratorio dispone de lavamanos y lavaojos</p>"},{"key":"lavamanos","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_lavamanos","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>El laboratorio dispone de ducha de emergencia</p>"},{"key":"ducha","type":"radio","templateOptions":{"required":true,"label":"Elige opción","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"observaciones_ducha","type":"textarea","templateOptions":{"label":"Observaciones","placeholder":"Observaciones","required":false,"disabled":false,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.1.2 Otro centro o lugar ajeno a la Universidad  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Otro centro o lugar ajeno a la Universidad" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_1_2","wrappers":["title-div"],"templateOptions":{"label":"4.2.1.2 Otro centro o lugar ajeno a la Universidad"},"fieldGroup":[{"template":"<p>¿Las tareas con agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas o parte de ellas se realizan en dependencias de otro centro o lugar?</p>"},{"key":"tareasAgentesBiologicos","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"especificarAgenteBiologico","type":"textarea","hideExpression":"!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'","templateOptions":{"label":"Especificar","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"Justificar la necesidad de realizar las tareas en ese lugar","hideExpression":"!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'"},{"key":"justificarTareas","type":"textarea","hideExpression":"!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'","templateOptions":{"label":"Justificar","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"Si dispone de acreditación indicar agencia y adjuntar copia","hideExpression":"!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'"},{"key":"disponeAcreditacion","type":"textarea","hideExpression":"!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'","templateOptions":{"label":"Indicar:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"fechaAcreditacion","type":"datepicker","hideExpression":"!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'","templateOptions":{"required":true,"type":"text","label":"Fecha de acreditación:"}},{"template":"<p>Se recuerda que el informe del CBE, sólo es válido para labores desarrolladas en Instalaciones de la Universidad, por personal de la Universidad o por cualquier otro que, en aplicación de la normativa vigente, desarrolle sus labores en la misma.NOTA: La instalación deberá cumplir con los requisitos de contención para AB, OMGs, SQP, SR o nanoparticulas y, en su caso, la autorización / comunicación correspondiente.</p>"}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.2 Sustitución  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Sustitución" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_2","wrappers":["title-div"],"templateOptions":{"label":"4.2.2 Sustitución"},"fieldGroup":[{"template":"¿Podría realizarse esta actividad de investigación con un agente/material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas de riesgo inferior para la salud o el medio ambiente?"},{"wrappers":["info-div"],"template":"Cuando la naturaleza de la actividad lo permita, el investigador debe evitar, teniendo en cuenta la información técnica y científica disponible, la utilización de materiales/agentes biológicos peligrosos mediante su sustitución por otros agentes que, en función de las condiciones de utilización, no sean peligrosos,  Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas para la seguridad o salud de los trabajadores y del medio ambiente, o lo sean en menor grado<b><a href='https://boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a5' target='_blank'>(Artículo 5 RD664/1997)</a></b>."},{"key":"realizarseInvestigacion","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"especificarRealizarseInvestigacion","type":"textarea","templateOptions":{"label":"Especificar","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.3 Reducción de riesgos  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Reducción de riesgos" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_3","wrappers":["title-div"],"templateOptions":{"label":"4.2.3 Reducción de riesgos"}}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.3.1 Control de la exposición  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Control de la exposición" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_3_1","wrappers":["title-div"],"templateOptions":{"label":"4.2.3.1 Control de la exposición"},"fieldGroup":[{"template":"<p>Además de para las personas que realizan las tareas con agentes biológicos , OMG,  Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas, ¿hay riesgo de exposición para otras personas?</p>"},{"key":"riesgoExposicion","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Especificar quiénes (equipo de mantenimiento, personal de limpieza etc.)"},{"key":"especificarQuienes","type":"textarea","hideExpression":"!model.riesgoExposicion || model.riesgoExposicion === 'no'","templateOptions":{"label":"Especificar:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.3.2 Medidas de reducción de la exposición  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Medidas de reducción de la exposición" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_3_2","wrappers":["title-div"],"templateOptions":{"label":"4.2.3.2 Medidas de reducción de la exposición"},"fieldGroup":[{"template":"<p>¿Se contemplan medidas para limitar y reducir al mínimo el número de personas expuestas?</p>"},{"key":"limitarPersonasExpuestas","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"especificarLimitar","type":"textarea","templateOptions":{"label":"Especificar qué medidas o justificar en caso negativo:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.3.3 Medidas de protección  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Medidas de protección" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_3_3","wrappers":["title-div"],"templateOptions":{"label":"4.2.3.3 Medidas de protección"},"fieldGroup":[{"template":"<p>¿Se contemplan medidas seguras para la manipulación de los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas?</p>"},{"key":"medidasSeguras","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Especificar las medidas o justificar por qué no se contemplan en caso negativo:"},{"key":"especificarLimitar","type":"textarea","templateOptions":{"label":"Explica:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.3.4 Métodos de descontaminación/desinfección  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Métodos de descontaminación/desinfección" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="4" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_3_4","wrappers":["title-div"],"templateOptions":{"label":"4.2.3.4 Medidas de reducción de la exposición"},"fieldGroup":[{"template":"<p>¿Se aplican o contemplan métodos de descontaminación/desinfección del material contaminado?</p>"},{"key":"metodosDesinfeccion","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Especificar los métodos o justificar en caso negativo"},{"key":"especificarLimitar","type":"textarea","templateOptions":{"label":"Explica:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.2.3.5 Gestión de residuos  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Gestión de residuos" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Medidas técnicas de seguridad')" />
+      <column name="orden" value="5" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_2_3_5","wrappers":["title-div"],"templateOptions":{"label":"4.2.3.5 Gestión de residuos"},"fieldGroup":[{"template":"<p>¿Se contempla gestión externa de residuos biológicos?</p>"},{"key":"gestionResiduos","type":"radio","templateOptions":{"label":"Elige opción","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Especificar gestión externa o justificar en caso negativo"},{"key":"especificarLimitar","type":"textarea","templateOptions":{"label":"Explica:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"key":"residuosGenerar","type":"multicheckbox","templateOptions":{"label":"Cuáles","required":true,"type":"array","options":[{"value":"quimicos","label":"Residuos de origen químico"},{"value":"radiactivos","label":"Residuos radiactivos"},{"value":"electricos","label":"Residuos de aparatos eléctricos y electrónicos (RAEE)"},{"value":"animales","label":"Residuos de animales de experimentación (SANDACH)"},{"value":"sanitarios","label":"Residuos sanitarios"},{"value":"otros","label":"Otros. Especificar"}]}},{"key":"otrasTexto","type":"textarea","hideExpression":"!model.residuosGenerar || !model.residuosGenerar.find((c) => c === 'otros')","templateOptions":{"placeholder":"Otros. Especificar","label":"Otros. Especificar","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"<p>¿Se contempla la gestión externa de los residuos biológicos o sanitarios?</p>"},{"key":"gestionResiduosSanitarios","type":"radio","templateOptions":{"label":"Elige opción:","required":true,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Especificar la gestión externa de los residuos biológicos o sanitarios o justificar en caso negativo"},{"key":"EspecificargestionResiduosSanitarios","type":"textarea","templateOptions":{"label":"Explica","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"wrappers":["info-div"],"template":"<p>Un residuo peligroso es el que presenta una o varias de las siguientes características de peligrosidad: explosivo, cancerígeno, comburente, corrosivo, inflamable, infeccioso, irritante, tóxico, nocivo, mutagénico y/o ecotóxico. Si un residuo no presenta alguna de las anteriores características, no será considerado residuo peligroso y, por tanto, su gestión se realizará junto al resto de residuos urbanos.<br><br>Dentro de los residuos peligrosos que se producen en los talleres y laboratorios de docencia y de investigación de la UPV/EHU destacan los residuos de origen químico, residuos sanitarios, residuos radiactivos, residuos de aparatos eléctricos y electrónicos (RAEE) y residuos de animales de experimentación (SANDACH).<br><br>La gestión de los residuos sanitarios de la UPV/EHU se realiza a través de una empresa de gestión externa. El objeto del contrato con esta empresa abarca los residuos sanitarios de los Grupos II y III, incluidos en el Decreto 21/2015, de 3 de marzo, sobre gestión de los residuos sanitarios en la Comunidad Autónoma de Euskadi.<br><br>Los principales residuos sanitarios generados por la UPV/EHU son los siguientes:<br><br><ul><li>Grupo II – LER: 180103: Destacan los residuos?cortantes y punzantes, fundamentalmente agujas, lancetas, pipetas, hojas de bisturí, portaobjetos, tubos capilares y otros tubos de vidrio, etc. y cualquier otro residuo que pueda crear una vía de entrada a los agentes patógenos. Así mismo, en actividades de análisis o experimentación microbiológica, se generan otros?residuos sanitarios específicos, como placas Petri, hemocultivos, extractos líquidos, caldos, instrumental contaminado, filtros de campana de flujo laminar, vacunas con agentes vivos atenuados y sus viales, pequeños restos anatómicos que por su entidad no se incluyen en el ámbito de aplicación del Reglamento de sanidad mortuoria, etc. </li><li>Grupo III: Residuos de?medicamentos Citotóxicos y Citostáticos-LER 180108: abarca a todos los restos de medicamentos anticancerosos no aptos para su uso terapéutico y a todo aquel material sanitario de un solo uso que haya estado en contacto con el fármaco, ya sea en su preparación (viales, filtros, bolsas…) en la protección del manipulador (mascarilla, guantes, batas…) o en la administración a los pacientes (agujas, jeringas, gasas, etc.). También se incluyen en este grupo los residuos de?medicamentos desechados y/o caducados - LER 180109 no Citotóxicos o citostáticos. </li></ul></p>"}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.3 Vigilancia y protección de la salud  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Vigilancia y protección de la salud" />
+      <column name="padre_id" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_3","wrappers":["expansion-panel"],"templateOptions":{"label":"4.3 Vigilancia y protección de la salud"},"fieldGroup":[{"wrappers":["info-div"],"template":"<p>El/la investigador/a responsable con el apoyo del Servicio de Prevención está obligado a contemplar una política de vigilancia de la salud de las personas expuestas al riesgo biológico.<br>Las medidas de prevención sanitaria deberán ofrecerse antes de la exposición, durante y tras la finalización del trabajo así como cuando se haya detectado en alguna persona expuesta una infección o enfermedad que pueda deberse a la exposición a agentes biológicos <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a8' target='_blank'>(Artículo 8 RD664/1997)</a>.</p>"}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.3.1 Vacunación  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Vacunación" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Vigilancia y protección de la salud')" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_3_1","wrappers":["title-div"],"templateOptions":{"label":"4.3.1 Vacunación"},"fieldGroup":[{"template":"<p>¿Qué vacunación se ofrece al personal que manejará los agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas?</p>"},{"key":"vacunacionCheck","type":"multicheckbox","templateOptions":{"label":"Cuáles","required":true,"type":"array","options":[{"value":"tetanos","label":"Tétanos"},{"value":"hepatitis","label":"Hépatitis"},{"value":"otras","label":"Otras"}]}},{"key":"otrasTexto","type":"textarea","hideExpression":"!model.vacunacionCheck || !model.vacunacionCheck.find((c) => c === 'otras')","templateOptions":{"placeholder":"Especificar","label":"Especificar","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}},{"template":"Organismo sanitario responsable de la vacunación"},{"key":"organismoSanitario","type":"textarea","templateOptions":{"placeholder":"Especificar","label":"Organismo:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 4.3.2 Medidas especiales de protección  -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Medidas especiales de protección" />
+      <column name="padre_id" valueComputed="(select id from eti.apartado where nombre = 'Vigilancia y protección de la salud')" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap4_3_2","wrappers":["title-div"],"templateOptions":{"label":"4.3.2 Medidas especiales de protección"},"fieldGroup":[{"template":"<p>¿Se contemplan medidas especiales de protección para las personas vulnerables expuestas que lo requieran? (ej. mujeres embarazadas, enfermos crónicos etc..)</p>"},{"key":"medidasEspeciales","type":"radio","templateOptions":{"required":true,"label":"Elige opción:","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"template":"Especificar las medidas especiales de protección o justificar en caso negativo"},{"key":"especificar","type":"textarea","templateOptions":{"label":"Explica:","required":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!--V. CUMPLIMIENTO DE LA DOCUMENTACIÓN -->
+
+    <!-- 5.1 Acreditaciones -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Acreditaciones" />
+      <column name="padre_id" />
+      <column name="orden" value="1" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap5_1","wrappers":["expansion-panel"],"templateOptions":{"label":"5.1 Acreditaciones"},"fieldGroup":[{"template":"<p>Recuerde que debe aportar copia de todas las acreditaciones del equipo investigador para que queden archivadas junto con la memoria del proyecto</p>"},{"key":"documentacion_adjunta_1","type":"radio","templateOptions":{"label":"Elige opción:","required":false,"options":[{"value":"si","label":"Sí"}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 5.2 Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas" />
+      <column name="padre_id" />
+      <column name="orden" value="2" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap5_2","wrappers":["expansion-panel"],"templateOptions":{"label":"5.2 Comunicación de uso de agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas"},"fieldGroup":[{"template":"¿Se ha comunicado al Servicio de Prevención que se va a trabajar con agentes/material biológico, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas?"},{"wrappers":["info-div"],"template":"<p>La utilización de agentes biológicos del grupo 2, 3 ó 4 por primera vez en una actividad investigadora debe notificarse al Servicio de Prevención quien la trasladará a la autoridad laboral.<br><br>Se efectuará una nueva notificación siempre que se introduzcan cambios sustanciales en algún proceso de trabajo cuyas repercusiones en las condiciones de seguridad y salud invaliden la notificación anterior <b><a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a10' target='_blank'>(Artículo 10 RD664/1997)</a></b>.<br><br>Las notificaciones pueden realizarse a través de la página web del <b>Servicio de Prevención</b>.<br><br>Puede consultarse más información sobre las notificaciones en la página web de la CEID.</p>"},{"key":"documentacion_adjunta_2","type":"radio","templateOptions":{"required":false,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"fecha","type":"datepicker","templateOptions":{"disabled":true,"required":false,"type":"text","hideExpression":"!model.documentacion_adjunta_2 || model.documentacion_adjunta_2 === 'no'","label":"Fecha"}},{"key":"especificarNegativo","type":"textarea","templateOptions":{"label":"En caso negativo justificar","placeholder":"Justificar","required":false,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10","hideExpression":"!model.documentacion_adjunta_2 || model.documentacion_adjunta_2 === 'si'"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 5.3 Seguro de accidentes y responsabilidad civil -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Seguro de accidentes y responsabilidad civil" />
+      <column name="padre_id" />
+      <column name="orden" value="3" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap5_3","wrappers":["expansion-panel"],"templateOptions":{"label":"5.3 Seguro de accidentes y responsabilidad civil"},"fieldGroup":[{"template":"<p>Participar en una actividad de investigación puede suponer riesgos, y por ello, la UPV/EHU dispone de un Seguro de Responsabilidad Civil que cubre los daños derivados de esas actividades profesionales. El certificado puede descargarse de la siguiente <a href='https://www.ehu.eus/documents/2458096/2679786/seguroEHU/ce15825c-35bb-8d9b-8c86-ec240b4bd224' target='_blank'>dirección</a>, y debe adjuntarse en la aplicación, previa comprobación de que la actividad de investigación y el personal participante están amparados por dicho seguro.</p>"},{"wrappers":["info-div"],"template":"<p>El seguro de Responsabilidad Civil no cubre los daños que puedan producirse en la investigación si ésta se realiza fuera de las instalaciones de la universidad, si se realiza un uso no confinado de OMG, si el personal investigador no forma parte de la comunidad, o si la actividad investigadora no dispone del informe favorable de la universidad.</p>"},{"key":"documentacion_adjunta_3","type":"radio","disabled":"true","templateOptions":{"label":"","required":false,"options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"especificarResposabilidad","type":"textarea","templateOptions":{"label":"Especificar seguro o justificar su ausencia:","placeholder":"Especificar","required":false,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 5.4 Protocolo de actuación en caso de accidente biológico -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Protocolo de actuación en caso de accidente biológico" />
+      <column name="padre_id" />
+      <column name="orden" value="4" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap5_4","wrappers":["expansion-panel"],"templateOptions":{"label":"5.4 Protocolo de actuación en caso de accidente biológico"},"fieldGroup":[{"template":"A continuación debe redactar un Protocolo de actuación en caso de accidente biológico específico para este proyecto y aportarlo en el apartado correspondiente de 'Documentación'"},{"wrappers":["info-div"],"template":"<p>Para más información puede consultar la página de <a href='https://www.ehu.eus/es/web/prebentzio-zerbitzua/arrisku-biologikoa' target='_blank'>Riesgo Biológico</a> del Servicio de Prevención' por 'Para más información puede consultar la página de ENLACE de cada universidad</p>"},{"key":"documentacion_adjunta_4","type":"radio","templateOptions":{"required":false,"options":[{"value":"si","label":"Sí"}]}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 5.5 Documentación adicional -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Documentación adicional" />
+      <column name="padre_id" />
+      <column name="orden" value="5" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap5_5","wrappers":["expansion-panel"],"templateOptions":{"label":"5.5 Documentación adicional"},"fieldGroup":[{"template":"<p>¿Dispone de alguna otra documentación adicional para su proyecto?</p>"},{"key":"documentacion_adjunta_5","type":"radio","templateOptions":{"required":false,"label":"Elige opción:","options":[{"value":"no","label":"No"},{"value":"si","label":"Sí"}]}},{"key":"especificarDocumenAdicional","type":"textarea","templateOptions":{"label":"Especificar","placeholder":"Especificar","required":false,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
+    <!-- 5.6 Aclaraciones al comité -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id" valueComputed="(select id from eti.bloque where orden = '5' and formulario_id = (select id from eti.formulario where nombre = 'M30'))" />
+      <column name="nombre" value="Aclaraciones al comité" />
+      <column name="padre_id" />
+      <column name="orden" value="6" />
+      <column name="esquema">
+        <![CDATA[ [{"key":"ap5_6","wrappers":["expansion-panel"],"templateOptions":{"label":"5.6 Aclaraciones al comité"},"fieldGroup":[{"template":"<p>Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité.</p>"},{"key":"aclaracionesComite","type":"textarea","templateOptions":{"label":"Aclaraciones","placeholder":"Aclaraciones","required":false,"disabled":true,"autosize":true,"autosizeMinRows":"1","autosizeMaxRows":"10"}}]}] ]]>
+      </column>
+    </insert>
+
   </changeSet>
 
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-configuracion">
