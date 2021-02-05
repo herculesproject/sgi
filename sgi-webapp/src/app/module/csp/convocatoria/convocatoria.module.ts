@@ -34,6 +34,8 @@ import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convo
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
+import { NgxMatDatetimePickerModule } from '@angular-material-components/datetime-picker';
+import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { CspModalsModule } from '../modals/csp-modals.module';
 
@@ -75,6 +77,8 @@ import { CspModalsModule } from '../modals/csp-modals.module';
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
+    NgxMatDatetimePickerModule,
+    NgxMatMomentModule,
     SgiAuthModule,
     CspModalsModule
   ],

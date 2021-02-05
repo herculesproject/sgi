@@ -48,6 +48,12 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
 
   textSaveOrUpdate: string;
 
+  /** ngx-mat-datetime-picker */
+  showSeconds = true;
+  defaultTimeStart = [0, 0, 0];
+  defaultTimeEnd = [23, 59, 59];
+  /** ngx-mat-datetime-picker */
+
   constructor(
     private readonly logger: NGXLogger,
     private snackBarService: SnackBarService,

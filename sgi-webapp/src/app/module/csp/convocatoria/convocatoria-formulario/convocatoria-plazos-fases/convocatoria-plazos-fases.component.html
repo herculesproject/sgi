@@ -10,13 +10,13 @@
     <!-- Fecha inicio Column -->
     <ng-container matColumnDef="fechaInicio">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.plazos.fases.fechaInicio' | translate}} </th>
-      <td mat-cell *matCellDef="let plazoFase"> {{plazoFase.value.fechaInicio | date:'dd/MM/yyyy'}}</td>
+      <td mat-cell *matCellDef="let plazoFase"> {{plazoFase.value.fechaInicio | date:'dd/MM/yyyy, HH:mm:ss'}}</td>
     </ng-container>
 
     <!-- Fecha fin Column -->
     <ng-container matColumnDef="fechaFin">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.plazos.fases.fechaFin' | translate}} </th>
-      <td mat-cell *matCellDef="let plazoFase"> {{plazoFase.value.fechaFin | date:'dd/MM/yyyy'}}</td>
+      <td mat-cell *matCellDef="let plazoFase"> {{plazoFase.value.fechaFin | date:'dd/MM/yyyy, HH:mm:ss'}}</td>
     </ng-container>
 
     <!-- Tipo de fase Column -->
