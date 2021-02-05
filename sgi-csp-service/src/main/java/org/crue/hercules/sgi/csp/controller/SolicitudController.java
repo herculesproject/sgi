@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
@@ -556,6 +558,64 @@ public class SolicitudController {
   }
 
   /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoPresupuesto}
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectopresupuestos/entidadconvocatoria/{entidadRef}")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuestoEntidadConvocatoria(
+      @PathVariable Long id, @PathVariable String entidadRef,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug(
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitudAndEntidadRef(id,
+        entidadRef, false, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug(
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoPresupuesto}
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectopresupuestos/entidadajena/{entidadRef}")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuestoEntidadAjena(
+      @PathVariable Long id, @PathVariable String entidadRef,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug(
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitudAndEntidadRef(id,
+        entidadRef, true, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug(
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Comprueba si el {@link SolicitudProyectoDatos} de una solicitud tiene
    * presupuesto por entidades.
    * 
@@ -570,6 +630,33 @@ public class SolicitudController {
 
     log.debug("hasPresupuestoPorEntidades(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Obtiene el {@link SolicitudProyectoPresupuestoTotales} de la
+   * {@link Solicitud}.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link SolicitudProyectoPresupuestoTotales}
+   */
+  @GetMapping("/{id}/solicitudproyectopresupuestos/totales")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
+  SolicitudProyectoPresupuestoTotales getSolicitudProyectoPresupuestoTotales(@PathVariable Long id) {
+    log.debug("getSolicitudProyectoPresupuestoTotales(Long id) - start");
+    SolicitudProyectoPresupuestoTotales returnValue = solicitudProyectoPresupuestoService.getTotales(id);
+    log.debug("getSolicitudProyectoPresupuestoTotales(Long id) - end");
+    return returnValue;
+  }
+
+  @GetMapping("/{id}/solicitudproyectopresupuestos/totalesconceptogasto")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
+  public ResponseEntity<List<SolicitudProyectoPresupuestoTotalConceptoGasto>> findAllSolicitudProyectoPresupuestoTotalConceptoGastos(
+      @PathVariable Long id) {
+    log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long id) - start");
+    List<SolicitudProyectoPresupuestoTotalConceptoGasto> returnValue = solicitudProyectoPresupuestoService
+        .findAllSolicitudProyectoPresupuestoTotalConceptoGastos(id);
+    log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }

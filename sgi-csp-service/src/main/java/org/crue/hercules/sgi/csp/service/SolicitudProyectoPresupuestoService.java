@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -70,5 +72,38 @@ public interface SolicitudProyectoPresupuestoService {
    * @return lista paginada.
    */
   Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Recupera la lista paginada de {@link SolicitudProyectoPresupuesto} de una
+   * entidad en una {@link Solicitud}.
+   * 
+   * @param solicitudId Identificador de la {@link Solicitud}.
+   * @param entidadRef  Identificador de la entidad.
+   * @param ajena       es o no financiacionAjena.
+   * @param query       parámentros de búsqueda.
+   * @param paging      parámetros de paginación.
+   * @return lista paginada.
+   */
+  Page<SolicitudProyectoPresupuesto> findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, boolean ajena,
+      List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Obtiene el {@link SolicitudProyectoPresupuestoTotales} de la
+   * {@link Solicitud}.
+   * 
+   * @param solicitudId Identificador de la entidad {@link Solicitud}.
+   * @return {@link SolicitudProyectoPresupuestoTotales}.
+   */
+  SolicitudProyectoPresupuestoTotales getTotales(Long solicitudId);
+
+  /**
+   * Obtiene los {@link SolicitudProyectoPresupuestoTotalConceptoGasto} de la
+   * {@link Solicitud}.
+   * 
+   * @param solicitudId Id de la {@link Solicitud}.
+   * @return lista de {@link SolicitudProyectoPresupuestoTotalConceptoGasto}.
+   */
+  List<SolicitudProyectoPresupuestoTotalConceptoGasto> findAllSolicitudProyectoPresupuestoTotalConceptoGastos(
+      Long solicitudId);
 
 }

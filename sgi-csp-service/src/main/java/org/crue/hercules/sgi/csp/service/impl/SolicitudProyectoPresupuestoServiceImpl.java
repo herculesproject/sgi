@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
@@ -148,7 +150,7 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
   @Override
   public Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query,
       Pageable paging) {
-    log.debug("findAllBySolicitudProyectoDatos(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
 
     Specification<SolicitudProyectoPresupuesto> specByQuery = new QuerySpecification<SolicitudProyectoPresupuesto>(
         query);
@@ -157,7 +159,73 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
     Specification<SolicitudProyectoPresupuesto> specs = Specification.where(specByQuery).and(specBySolicitud);
 
     Page<SolicitudProyectoPresupuesto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllBySolicitudProyectoDatos(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Recupera la lista paginada de {@link SolicitudProyectoPresupuesto} de una
+   * entidad en una {@link Solicitud}.
+   * 
+   * @param solicitudId Identificador de la {@link Solicitud}.
+   * @param entidadRef  Identificador de la entidad.
+   * @param ajena       es o no financiacionAjena.
+   * @param query       parámentros de búsqueda.
+   * @param paging      parámetros de paginación.
+   * @return lista paginada.
+   */
+  @Override
+  public Page<SolicitudProyectoPresupuesto> findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef,
+      boolean ajena, List<QueryCriteria> query, Pageable paging) {
+    log.debug(
+        "findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, List<QueryCriteria> query, Pageable paging) - start");
+
+    Specification<SolicitudProyectoPresupuesto> specByQuery = new QuerySpecification<SolicitudProyectoPresupuesto>(
+        query);
+    Specification<SolicitudProyectoPresupuesto> specBySolicitud = SolicitudProyectoPresupuestoSpecifications
+        .bySolicitudId(solicitudId);
+    Specification<SolicitudProyectoPresupuesto> specByEntidadRef = SolicitudProyectoPresupuestoSpecifications
+        .byEntidadRef(entidadRef);
+    Specification<SolicitudProyectoPresupuesto> specByFinanciacionAjena = SolicitudProyectoPresupuestoSpecifications
+        .byFinanciacionAjena(ajena);
+    Specification<SolicitudProyectoPresupuesto> specs = Specification.where(specByQuery).and(specBySolicitud)
+        .and(specByEntidadRef).and(specByFinanciacionAjena);
+
+    Page<SolicitudProyectoPresupuesto> returnValue = repository.findAll(specs, paging);
+    log.debug(
+        "findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link SolicitudProyectoPresupuestoTotales} de la
+   * {@link Solicitud}.
+   * 
+   * @param solicitudId Identificador de la entidad {@link Solicitud}.
+   * @return {@link SolicitudProyectoPresupuestoTotales}.
+   */
+  @Override
+  public SolicitudProyectoPresupuestoTotales getTotales(Long solicitudId) {
+    log.debug("getTotales(Long solicitudId) - start");
+    final SolicitudProyectoPresupuestoTotales returnValue = repository.getTotales(solicitudId);
+    log.debug("getTotales(Long solicitudId) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link SolicitudProyectoPresupuestoTotalConceptoGasto} de la
+   * {@link Solicitud}.
+   * 
+   * @param solicitudId Id de la {@link Solicitud}.
+   * @return lista de {@link SolicitudProyectoPresupuestoTotalConceptoGasto}.
+   */
+  @Override
+  public List<SolicitudProyectoPresupuestoTotalConceptoGasto> findAllSolicitudProyectoPresupuestoTotalConceptoGastos(
+      Long solicitudId) {
+    log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - start");
+    final List<SolicitudProyectoPresupuestoTotalConceptoGasto> returnValue = repository
+        .getSolicitudProyectoPresupuestoTotalConceptoGastos(solicitudId);
+    log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - end");
     return returnValue;
   }
 

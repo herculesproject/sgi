@@ -48,8 +48,8 @@ public class ProyectoProrrogaController {
   /**
    * Instancia un nuevo ProyectoProrrogaController.
    * 
-   * @param service {@link ProyectoProrrogaService}
-   * @param service {@link ProrrogaDocumentoService}
+   * @param service                  {@link ProyectoProrrogaService}
+   * @param prorrogaDocumentoService {@link ProrrogaDocumentoService}
    */
   public ProyectoProrrogaController(ProyectoProrrogaService service,
       ProrrogaDocumentoService prorrogaDocumentoService) {
