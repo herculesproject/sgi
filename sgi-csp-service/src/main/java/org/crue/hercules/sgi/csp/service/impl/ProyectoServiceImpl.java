@@ -146,7 +146,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       this.copyEntidadesFinanciadoras(proyecto.getId(), proyecto.getConvocatoria().getId());
       this.copyEntidadesGestoras(proyecto);
       copiarEntidadesConvocatesDeConvocatoria(proyecto, proyecto.getConvocatoria());
-      this.guardarDatosEntidadesRelacionadas(proyecto.getConvocatoria());
       this.copyAreaTematica(proyecto);
       this.copyPeriodoSeguimiento(proyecto);
     }
@@ -527,16 +526,6 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Copia la informaci&oacute;n de EntidadesConvocantes de la Convocatoria en el
-   * Proyecto
-   * 
-   * @param convocatoriaProyecto la {@link Convocatoria}
-   */
-  private void guardarDatosEntidadesRelacionadas(Convocatoria convocatoriaProyecto) {
-
-  }
-
-  /**
    * Copia la entidad área temática de una convocatoria a unproyecto
    * 
    * @param proyecto la entidad {@link Proyecto}
@@ -596,13 +585,18 @@ public class ProyectoServiceImpl implements ProyectoService {
     listadoConvocatoriaSeguimiento.stream().forEach((convocatoriaSeguimiento) -> {
       log.debug("Copy ConvocatoriaPeriodoSeguimientoCientifico with id: {0}", convocatoriaSeguimiento.getId());
       ProyectoPeriodoSeguimiento entidadProyecto = new ProyectoPeriodoSeguimiento();
+      entidadProyecto.setNumPeriodo(convocatoriaSeguimiento.getNumPeriodo());
       entidadProyecto.setProyecto(proyecto);
       entidadProyecto.setFechaInicio(proyecto.getFechaInicio().plusMonths(convocatoriaSeguimiento.getMesInicial() - 1));
-      entidadProyecto.setFechaFin(proyecto.getFechaFin().plusMonths(convocatoriaSeguimiento.getMesFinal() - 1));
-      entidadProyecto.setFechaInicioPresentacion(
-          LocalDateTime.of(convocatoriaSeguimiento.getFechaInicioPresentacion(), LocalTime.of(0, 0, 0)));
-      entidadProyecto.setFechaFinPresentacion(
-          LocalDateTime.of(convocatoriaSeguimiento.getFechaFinPresentacion(), LocalTime.of(23, 59, 59)));
+      entidadProyecto.setFechaFin(proyecto.getFechaInicio().plusMonths(convocatoriaSeguimiento.getMesFinal() - 1));
+      if (convocatoriaSeguimiento.getFechaInicioPresentacion() != null) {
+        entidadProyecto.setFechaInicioPresentacion(
+            LocalDateTime.of(convocatoriaSeguimiento.getFechaInicioPresentacion(), LocalTime.of(0, 0, 0)));
+      }
+      if (convocatoriaSeguimiento.getFechaFinPresentacion() != null) {
+        entidadProyecto.setFechaFinPresentacion(
+            LocalDateTime.of(convocatoriaSeguimiento.getFechaFinPresentacion(), LocalTime.of(23, 59, 59)));
+      }
       entidadProyecto.setObservaciones(convocatoriaSeguimiento.getObservaciones());
 
       this.proyectoPeriodoSeguimientoService.create(entidadProyecto);
