@@ -10,15 +10,15 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ComentarioCrearModalComponent } from './comentario-crear-modal.component';
+import { ComentarioModalComponent } from './comentario-modal.component';
 import { IComite } from '@core/models/eti/comite';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { ActivatedRoute } from '@angular/router';
 import { FormularioService } from '@core/services/eti/formulario.service';
 
-describe('ComentarioCrearModalComponent', () => {
-  let component: ComentarioCrearModalComponent;
-  let fixture: ComponentFixture<ComentarioCrearModalComponent>;
+describe('ComentarioModalComponent', () => {
+  let component: ComentarioModalComponent;
+  let fixture: ComponentFixture<ComentarioModalComponent>;
 
   beforeEach(waitForAsync(() => {
 
@@ -35,7 +35,7 @@ describe('ComentarioCrearModalComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ComentarioCrearModalComponent],
+      declarations: [ComentarioModalComponent],
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
@@ -60,7 +60,7 @@ describe('ComentarioCrearModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComentarioCrearModalComponent);
+    fixture = TestBed.createComponent(ComentarioModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

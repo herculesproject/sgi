@@ -17,11 +17,11 @@ import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocat
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { from, Observable, of } from 'rxjs';
+import { map, mergeMap, startWith, switchMap } from 'rxjs/operators';
 import { DateUtils } from '@core/utils/date-utils';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -152,7 +152,25 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   protected loadTable(reset?: boolean) {
-    this.evaluaciones$ = this.getObservableLoadTable(reset);
+    this.evaluaciones$ = this.getObservableLoadTable(reset).pipe(
+      switchMap((evaluaciones) => {
+        return from(evaluaciones).pipe(
+          mergeMap(evaluacion => {
+            const personaRef = evaluacion.memoria?.peticionEvaluacion?.personaRef;
+            if (personaRef) {
+              return this.personaFisicaService.getInformacionBasica(personaRef).pipe(
+                map(persona => {
+                  evaluacion.persona = persona;
+                  return evaluacion;
+                })
+              );
+            }
+            return of(evaluacion);
+          }),
+          map(() => evaluaciones)
+        );
+      })
+    );
   }
 
   /**

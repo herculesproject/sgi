@@ -4,13 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ComentarioCrearModalComponent } from './comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent } from './comentario-editar-modal/comentario-editar-modal.component';
+import { ComentarioModalComponent } from './comentario-modal/comentario-modal.component';
 
 @NgModule({
   declarations: [
-    ComentarioCrearModalComponent,
-    ComentarioEditarModalComponent,
+    ComentarioModalComponent,
   ],
   imports: [
     CommonModule,

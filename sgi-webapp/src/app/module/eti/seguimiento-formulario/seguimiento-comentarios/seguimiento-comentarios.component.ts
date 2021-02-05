@@ -11,9 +11,9 @@ import { DialogService } from '@core/services/dialog.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { Observable, Subscription } from 'rxjs';
-import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { Subscription, Observable } from 'rxjs';
+
+import { ComentarioModalComponent, ComentarioModalData } from '../../comentario/comentario-modal/comentario-modal.component';
 import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 import { SeguimientoComentarioFragment } from './seguimiento-comentarios.fragment';
 
@@ -53,11 +53,26 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.comentarios$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
     }));
+
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IComentario>, property: string) => {
+        switch (property) {
+          case 'apartado.bloque':
+            return wrapper.value.apartado?.bloque.nombre;
+          case 'apartado.padre':
+            return this.getApartadoNombre(wrapper.value);
+          case 'apartado':
+            return this.getSubApartadoNombre(wrapper.value);
+          default:
+            return wrapper.value[property];
+        }
+      };
+
   }
 
   ngOnDestroy(): void {
@@ -79,13 +94,18 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
    * Abre la ventana modal para añadir un comentario
    */
   openCreateModal(): void {
+    const evaluacionData: ComentarioModalData = {
+      evaluacion: this.actionService.getEvaluacion(),
+      comentario: undefined
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: this.actionService.getEvaluacion(),
+      data: evaluacionData,
       autoFocus: false
     };
-    const dialogRef = this.matDialog.open(ComentarioCrearModalComponent, config);
+    const dialogRef = this.matDialog.open(ComentarioModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (comentario: IComentario) => {
         if (comentario) {
@@ -103,14 +123,19 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
   openEditModal(comentario: StatusWrapper<IComentario>): void {
     const wrapperRef = comentario;
 
+    const evaluacionData: ComentarioModalData = {
+      evaluacion: this.actionService.getEvaluacion(),
+      comentario: wrapperRef.value
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapperRef.value,
+      data: evaluacionData,
       autoFocus: false
     };
 
-    const dialogRef = this.matDialog.open(ComentarioEditarModalComponent, config);
+    const dialogRef = this.matDialog.open(ComentarioModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (resultado: IComentario) => {
         if (resultado) {

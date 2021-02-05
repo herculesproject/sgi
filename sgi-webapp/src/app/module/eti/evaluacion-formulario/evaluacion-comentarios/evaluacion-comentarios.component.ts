@@ -4,20 +4,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { FragmentComponent } from '@core/component/fragment.component';
 import { IComentario } from '@core/models/eti/comentario';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { DialogService } from '@core/services/dialog.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { Observable, Subscription } from 'rxjs';
-import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
-import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario.action.service';
+import { Subscription, Observable } from 'rxjs';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
 
-
+import { ComentarioModalComponent, ComentarioModalData } from '../../comentario/comentario-modal/comentario-modal.component';
+import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario.action.service';
+import { FragmentComponent } from '@core/component/fragment.component';
 
 const MSG_DELETE = marker('eti.comentario.listado.borrar.titulo');
 
@@ -50,8 +48,8 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.formPart = this.fragment as EvaluacionComentarioFragment;
     this.elementosPagina = [5, 10, 25, 100];
-    this.columnas = ['bloque', 'apartado',
-      'subApartado', 'texto', 'acciones'];
+    this.columnas = ['apartado.bloque', 'apartado.padre',
+      'apartado', 'texto', 'acciones'];
   }
 
   ngOnInit() {
@@ -65,11 +63,11 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IComentario>, property: string) => {
         switch (property) {
-          case 'bloque':
+          case 'apartado.bloque':
             return wrapper.value.apartado?.bloque.nombre;
-          case 'apartado':
+          case 'apartado.padre':
             return this.getApartadoNombre(wrapper.value);
-          case 'subApartado':
+          case 'apartado':
             return this.getSubApartadoNombre(wrapper.value);
           default:
             return wrapper.value[property];
@@ -96,13 +94,18 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
    * Abre la ventana modal para añadir un comentario
    */
   openCreateModal(): void {
+    const evaluacionData: ComentarioModalData = {
+      evaluacion: this.actionService.getEvaluacion(),
+      comentario: undefined
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: this.actionService.getEvaluacion(),
+      data: evaluacionData,
       autoFocus: false
     };
-    const dialogRef = this.matDialog.open(ComentarioCrearModalComponent, config);
+    const dialogRef = this.matDialog.open(ComentarioModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (comentario: IComentario) => {
         if (comentario) {
@@ -120,13 +123,18 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   openEditModal(comentario: StatusWrapper<IComentario>): void {
     const wrapperRef = comentario;
 
+    const evaluacionData: ComentarioModalData = {
+      evaluacion: this.actionService.getEvaluacion(),
+      comentario: wrapperRef.value
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapperRef.value,
+      data: evaluacionData,
       autoFocus: false
     };
-    const dialogRef = this.matDialog.open(ComentarioEditarModalComponent, config);
+    const dialogRef = this.matDialog.open(ComentarioModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (resultado: IComentario) => {
         if (resultado) {
