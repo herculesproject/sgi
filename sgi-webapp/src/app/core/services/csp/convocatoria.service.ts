@@ -258,4 +258,13 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       map(response => response.status === 200)
     );
   }
+
+  /**
+   * Devuelve el listado de convocatorias que puede ver un investigador
+   *
+   * @param options opciones de búsqueda.
+   */
+  findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
+    return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/investigador`, options);
+  }
 }

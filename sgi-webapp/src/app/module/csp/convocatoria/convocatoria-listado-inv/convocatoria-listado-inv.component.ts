@@ -28,8 +28,6 @@ import { from, Observable, of } from 'rxjs';
 import { map, mergeAll, startWith, switchMap } from 'rxjs/operators';
 
 
-
-
 const MSG_ERROR = marker('csp.convocatoria.listado.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.listado.error.cargar');
 
@@ -114,7 +112,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
-    const observable$ = this.convocatoriaService.findAllTodos(this.getFindOptions()).pipe(
+    const observable$ = this.convocatoriaService.findAllInvestigador(this.getFindOptions()).pipe(
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
           return {
@@ -209,10 +207,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   protected createFiltersSimple(): SgiRestFilter[] {
     const filtros = [];
-
     this.addFiltro(filtros, 'abiertoPlazoPresentacionSolicitud', SgiRestFilterType.EQUALS,
       true);
-
     return filtros;
   }
 
@@ -221,12 +217,9 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     const filtros = [];
     this.addFiltro(filtros, 'codigo', SgiRestFilterType.LIKE, this.formGroup.controls.codigo.value);
     this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
-
     this.addFiltro(filtros, 'anio', SgiRestFilterType.EQUALS, this.formGroup.controls.anio.value);
-
     this.addFiltro(filtros, 'abiertoPlazoPresentacionSolicitud', SgiRestFilterType.EQUALS,
       this.formGroup.controls.abiertoPlazoPresentacionSolicitud.value);
-
     this.addFiltro(filtros, 'finalidad.id', SgiRestFilterType.EQUALS, this.formGroup.controls.finalidad.value?.id);
     this.addFiltro(filtros, 'ambitoGeografico.id', SgiRestFilterType.EQUALS, this.formGroup.controls.ambitoGeografico.value?.id);
     this.addFiltro(filtros, 'convocatoriaEntidadConvocante.entidadRef',
