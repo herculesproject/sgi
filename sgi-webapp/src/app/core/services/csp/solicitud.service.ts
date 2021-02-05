@@ -27,6 +27,8 @@ import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend, SolicitudProyectoEnt
 import { ISolicitudProyectoEquipoBackend, SolicitudProyectoEquipoService } from './solicitud-proyecto-equipo.service';
 import { ISolicitudProyectoPresupuestoBackend, SolicitudProyectoPresupuestoService } from './solicitud-proyecto-presupuesto.service';
 import { ISolicitudProyectoSocioBackend, SolicitudProyectoSocioService } from './solicitud-proyecto-socio.service';
+import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud-proyecto-presupuesto-totales';
+import { ISolicitudProyectoPresupuestoTotalConceptoGasto } from '@core/models/csp/solicitud-proyecto-presupuesto-total-concepto-gasto';
 
 
 interface ISolicitudBackend {
@@ -329,6 +331,55 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );
+  }
+
+  /**
+   * Recupera los ISolicitudProyectoPresupuesto de la entidad de la convocatoria de la solicitud
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoPresupuesto de la entidad de la solicitud
+   */
+  findAllSolicitudProyectoPresupuestoEntidadConvocatoria(id: number, entidadRef: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudProyectoPresupuesto>> {
+    const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectopresupuestos/entidadconvocatoria/${entidadRef}`;
+    return this.find<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto>(
+      endpointUrl, options, SolicitudProyectoPresupuestoService.CONVERTER);
+  }
+
+  /**
+   * Recupera los ISolicitudProyectoPresupuesto de la entidad ajena de la solicitud
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoPresupuesto de la entidad de la solicitud
+   */
+  findAllSolicitudProyectoPresupuestoEntidadAjena(id: number, entidadRef: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudProyectoPresupuesto>> {
+    const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectopresupuestos/entidadajena/${entidadRef}`;
+    return this.find<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto>(
+      endpointUrl, options, SolicitudProyectoPresupuestoService.CONVERTER);
+  }
+
+  /**
+   * Devuelve los datos del proyecto de una solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   */
+  getSolicitudProyectoPresupuestoTotales(solicitudId: number): Observable<ISolicitudProyectoPresupuestoTotales> {
+    const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectopresupuestos/totales`;
+    return this.http.get<ISolicitudProyectoPresupuestoTotales>(endpointUrl);
+  }
+
+  /**
+   * Recupera los ISolicitudProyectoPresupuesto de la solicitud
+   *
+   * @param id Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoPresupuesto de la solicitud
+   */
+  findAllSolicitudProyectoPresupuestoTotalesConceptoGasto(id: number): Observable<SgiRestListResult<ISolicitudProyectoPresupuestoTotalConceptoGasto>> {
+    const endpointUrl = `${this.endpointUrl}/${id}/solicitudproyectopresupuestos/totalesconceptogasto`;
+    return this.find<ISolicitudProyectoPresupuestoTotalConceptoGasto, ISolicitudProyectoPresupuestoTotalConceptoGasto>(
+      endpointUrl);
   }
 
 }

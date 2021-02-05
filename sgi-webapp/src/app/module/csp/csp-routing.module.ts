@@ -27,6 +27,7 @@ const MSG_SOLICITUD_PROYECTO_SOCIO = marker('menu.principal.csp.solicitud-proyec
 const MSG_PROYECTO_SOCIO_TITLE = marker('menu.principal.csp.proyecto-socio');
 const MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE = marker('menu.principal.csp.proyecto-periodo-seguimiento')
 const MSG_PROYECTO_PRORROGA_TITLE = marker('menu.principal.csp.proyecto-prorroga')
+const MSG_SOLICITUD_PROYECTO_PRESUPUESTO = marker('menu.principal.csp.solicitud-proyecto-presupuesto');
 
 const routes: SgiRoutes = [
   {
@@ -253,6 +254,28 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_SOLICITUD_PROYECTO_SOCIO,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.SOLICITUD_PROYECTO_PRESUPUESTO,
+        loadChildren: () =>
+          import('./solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto.module').then(
+            (m) => m.SolicitudProyectoPresupuestoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SOLICITUD_PROYECTO_PRESUPUESTO,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.SOLICITUD_PROYECTO_PRESUPUESTO_AJENA,
+        loadChildren: () =>
+          import('./solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto-ajena.module').then(
+            (m) => m.SolicitudProyectoPresupuestoAjenaModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SOLICITUD_PROYECTO_PRESUPUESTO,
         }
       },
       { path: '**', component: null }

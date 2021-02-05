@@ -1,6 +1,6 @@
 <div class="modal-desglose-presupuesto-global">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.solicitud.desglose-presupuesto-global.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{'csp.modal.partida-gasto.titulo' | translate}}</h3>
   </header>
   <main>
 
@@ -11,9 +11,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.desglose-presupuesto-global.modal.concepto-gasto' | translate}}</mat-label>
+            <mat-label>{{'csp.modal.partida-gasto.concepto-gasto' | translate}}</mat-label>
             <input matInput formControlName="conceptoGasto" type="text" id="conceptoGasto"
-              placeholder="{{'csp.solicitud.desglose-presupuesto-global.modal.concepto-gasto' | translate}}"
+              placeholder="{{'csp.modal.partida-gasto.concepto-gasto' | translate}}"
               [matAutocomplete]="autoConceptoGasto" required>
             <mat-autocomplete #autoConceptoGasto="matAutocomplete" [displayWith]="getNombreConceptoGasto">
               <mat-option *ngFor="let conceptoGasto of conceptosGasto$ | async" [value]="conceptoGasto">
@@ -21,7 +21,7 @@
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.conceptoGasto.errors?.required">
-              {{'csp.solicitud.desglose-presupuesto-global.modal.concepto-gasto.error.required' | translate}}
+              {{'csp.modal.partida-gasto.concepto-gasto.error.required' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -31,14 +31,14 @@
         <div [fxFlex.sm]="fxFlexPropertiesCodigosEconomicos.sm" [fxFlex.md]="fxFlexPropertiesCodigosEconomicos.md"
           [fxFlex.gt-md]="fxFlexPropertiesCodigosEconomicos.gtMd"
           [fxFlexOrder]="fxFlexPropertiesCodigosEconomicos.order">
-          <mat-label>{{'csp.solicitud.desglose-presupuesto-global.modal.codigos-economicos-permitidos' | translate}}
+          <mat-label>{{'csp.modal.partida-gasto.codigos-economicos-permitidos' | translate}}
           </mat-label>
           <ul *ngFor="let conceptoGasto of conceptosGastosPermitidos">
             <li>
-              {{'csp.solicitud.desglose-presupuesto-global.modal.concepto-gasto-info' | translate:conceptoGasto}}
+              {{'csp.modal.partida-gasto.concepto-gasto-info' | translate:conceptoGasto}}
               <ul *ngFor="let codigoEconomico of conceptoGasto.codigosEconomicos">
                 <li>
-                  {{'csp.solicitud.desglose-presupuesto-global.modal.codigo-economico-info' |
+                  {{'csp.modal.partida-gasto.codigo-economico-info' |
                   translate:codigoEconomico}}
                 </li>
               </ul>
@@ -48,15 +48,15 @@
         <div [fxFlex.sm]="fxFlexPropertiesCodigosEconomicos.sm" [fxFlex.md]="fxFlexPropertiesCodigosEconomicos.md"
           [fxFlex.gt-md]="fxFlexPropertiesCodigosEconomicos.gtMd"
           [fxFlexOrder]="fxFlexPropertiesCodigosEconomicos.order">
-          <mat-label>{{'csp.solicitud.desglose-presupuesto-global.modal.codigos-economicos-no-permitidos' | translate}}
+          <mat-label>{{'csp.modal.partida-gasto.codigos-economicos-no-permitidos' | translate}}
           </mat-label>
           <ul *ngFor="let conceptoGasto of conceptosGastosNoPermitidos">
             <li>
-              {{'csp.solicitud.desglose-presupuesto-global.modal.concepto-gasto-info-sin-importe' |
+              {{'csp.modal.partida-gasto.concepto-gasto-info-sin-importe' |
               translate:conceptoGasto}}
               <ul *ngFor="let codigoEconomico of conceptoGasto.codigosEconomicos">
                 <li>
-                  {{'csp.solicitud.desglose-presupuesto-global.modal.codigo-economico-info' |
+                  {{'csp.modal.partida-gasto.codigo-economico-info' |
                   translate:codigoEconomico}}
                 </li>
               </ul>
@@ -70,15 +70,15 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.desglose-presupuesto-global.modal.anualidad' | translate}}
+            <mat-label>{{'csp.modal.partida-gasto.anualidad' | translate}}
             </mat-label>
             <input matInput formControlName="anualidad" type="number" id="anualidad" min="0" step="1"
-              placeholder="{{'csp.solicitud.desglose-presupuesto-global.modal.anualidad' | translate}}">
+              placeholder="{{'csp.modal.partida-gasto.anualidad' | translate}}">
             <mat-error *ngIf="formGroup.controls.anualidad.errors?.min">
-              {{'csp.solicitud.desglose-presupuesto-global.modal.anualidad.error.min' | translate}}
+              {{'csp.modal.partida-gasto.anualidad.error.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.anualidad.errors?.max">
-              {{'csp.solicitud.desglose-presupuesto-global.modal.anualidad.error.max' | translate}}
+              {{'csp.modal.partida-gasto.anualidad.error.max' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -89,19 +89,18 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.desglose-presupuesto-global.modal.importe-solicitado' | translate}}
+            <mat-label>{{'csp.modal.partida-gasto.importe-solicitado' | translate}}
             </mat-label>
             <input matInput formControlName="importeSolicitado" type="number" id="importeSolicitado" min="0" step="1"
-              placeholder="{{'csp.solicitud.desglose-presupuesto-global.modal.importe-solicitado' | translate}}"
-              required>
+              placeholder="{{'csp.modal.partida-gasto.importe-solicitado' | translate}}" required>
             <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.required">
-              {{'csp.solicitud.desglose-presupuesto-global.modal.importe-solicitado.error.required' | translate}}
+              {{'csp.modal.partida-gasto.importe-solicitado.error.required' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.min">
-              {{'csp.solicitud.desglose-presupuesto-global.modal.importe-solicitado.error.min' | translate}}
+              {{'csp.modal.partida-gasto.importe-solicitado.error.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.max">
-              {{'csp.solicitud.desglose-presupuesto-global.modal.importe-solicitado.error.max' | translate}}
+              {{'csp.modal.partida-gasto.importe-solicitado.error.max' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -110,12 +109,12 @@
       <!-- Observaciones -->
       <div>
         <mat-form-field fxFill>
-          <mat-label>{{'csp.solicitud.desglose-presupuesto-global.modal.observaciones' | translate}}</mat-label>
+          <mat-label>{{'csp.modal.partida-gasto.observaciones' | translate}}</mat-label>
           <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-            placeholder="{{'csp.solicitud.desglose-presupuesto-global.modal.observaciones' | translate}}">
+            placeholder="{{'csp.modal.partida-gasto.observaciones' | translate}}">
               </textarea>
           <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
-            {{'csp.solicitud.desglose-presupuesto-global.modal.observaciones.error.maxlength' | translate}}
+            {{'csp.modal.partida-gasto.observaciones.error.maxlength' | translate}}
           </mat-error>
         </mat-form-field>
       </div>

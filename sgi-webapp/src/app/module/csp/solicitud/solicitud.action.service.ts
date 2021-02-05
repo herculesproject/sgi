@@ -29,6 +29,7 @@ import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-for
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
+import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.fragment';
 
 
 @Injectable()
@@ -43,7 +44,8 @@ export class SolicitudActionService extends ActionService {
     EQUIPO_PROYECTO: 'equipoProyecto',
     SOCIOS_COLABORADORES: 'sociosColaboradores',
     ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras',
-    DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal'
+    DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal',
+    DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -55,6 +57,7 @@ export class SolicitudActionService extends ActionService {
   private socioColaboradores: SolicitudSociosColaboradoresFragment;
   private entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
   private desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
+  private desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
 
   solicitud: ISolicitud;
   readonly = false;
@@ -114,6 +117,8 @@ export class SolicitudActionService extends ActionService {
       solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
     this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(this.solicitud?.id, solicitudService,
       solicitudProyectoPresupuestoService, empresaEconomicaService, this.readonly);
+    this.desglosePresupuestoEntidades = new SolicitudProyectoPresupuestoEntidadesFragment(logger, this.solicitud?.id,
+      this.getDatosGeneralesSolicitud().convocatoria?.id, convocatoriaService, solicitudService, empresaEconomicaService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
@@ -124,9 +129,13 @@ export class SolicitudActionService extends ActionService {
     this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.socioColaboradores);
     this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
     this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
+    this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
 
     this.checkSociosColaboradores();
-    this.checkPresupuestoPorEntidades();
+
+    if (this.solicitud?.id) {
+      this.checkPresupuestoPorEntidades();
+    }
 
   }
 
@@ -156,11 +165,13 @@ export class SolicitudActionService extends ActionService {
         this.equipoProyecto.existsDatosProyecto = exists;
         this.entidadesFinanciadoras.existsDatosProyecto = exists;
         this.desglosePresupuestoGlobal.existsDatosProyecto = exists;
+        this.desglosePresupuestoEntidades.existsDatosProyecto = exists;
       },
       () => {
         this.equipoProyecto.existsDatosProyecto = false;
         this.entidadesFinanciadoras.existsDatosProyecto = false;
         this.desglosePresupuestoGlobal.existsDatosProyecto = false;
+        this.desglosePresupuestoEntidades.existsDatosProyecto = false;
       }
     );
     this.subscriptions.push(subscription);

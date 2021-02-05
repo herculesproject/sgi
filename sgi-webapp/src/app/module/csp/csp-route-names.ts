@@ -17,5 +17,7 @@ export const CSP_ROUTE_NAMES = {
   PROYECTO_SOCIO: 'proyecto-socio',
   PROYECTO_SEGUIMIENTO_CIENTIFICO: 'proyecto-seguimiento-cientifico',
   PROYECTO_SOCIO_PERIODO_JUSTIFICACION: 'proyecto-socio-periodo-justificacion',
-  PROYECTO_PRORROGA: 'proyecto-prorroga'
+  PROYECTO_PRORROGA: 'proyecto-prorroga',
+  SOLICITUD_PROYECTO_PRESUPUESTO: 'solicitud-proyecto-presupuesto',
+  SOLICITUD_PROYECTO_PRESUPUESTO_AJENA: 'solicitud-proyecto-presupuesto-ajena'
 };

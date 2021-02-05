@@ -5,7 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
-import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
+import { IPartidaGasto } from '@core/models/csp/partida-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
@@ -32,8 +32,8 @@ interface ConceptoGastoInfo {
 }
 
 
-export interface SolicitudProyectoPresupuestoDataModal {
-  solicitudProyectoPresupuesto: ISolicitudProyectoPresupuesto;
+export interface PartidaGastoDataModal {
+  partidaGasto: IPartidaGasto;
   convocatoriaId: number;
   readonly: boolean;
 }
@@ -42,16 +42,15 @@ const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
 
 @Component({
-  selector: 'sgi-desglose-presupuesto-global-modal',
-  templateUrl: './desglose-presupuesto-global-modal.component.html',
-  styleUrls: ['./desglose-presupuesto-global-modal.component.scss']
+  templateUrl: './partida-gasto-modal.component.html',
+  styleUrls: ['./partida-gasto-modal.component.scss']
 })
-export class DesglosePresupuestoGlobalModalComponent extends
-  BaseModalComponent<ISolicitudProyectoPresupuesto, SolicitudProyectoPresupuestoDataModal> implements OnInit {
+export class PartidaGastoModalComponent extends
+  BaseModalComponent<IPartidaGasto, PartidaGastoDataModal> implements OnInit {
 
   conceptosGasto$: Observable<IConceptoGasto[]>;
-  private conceptosGastoCodigoEcPermitidos: IConvocatoriaConceptoGastoCodigoEc[];
-  private conceptosGastoCodigoEcNoPermitidos: IConvocatoriaConceptoGastoCodigoEc[];
+  private conceptosGastoCodigoEcPermitidos = [] as IConvocatoriaConceptoGastoCodigoEc[];
+  private conceptosGastoCodigoEcNoPermitidos = [] as IConvocatoriaConceptoGastoCodigoEc[];
 
   conceptosGastosPermitidos: ConceptoGastoInfo[];
   conceptosGastosNoPermitidos: ConceptoGastoInfo[];
@@ -64,12 +63,12 @@ export class DesglosePresupuestoGlobalModalComponent extends
 
   constructor(
     protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<SolicitudProyectoPresupuestoDataModal>,
-    @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoPresupuestoDataModal,
+    public matDialogRef: MatDialogRef<PartidaGastoDataModal>,
+    @Inject(MAT_DIALOG_DATA) public data: PartidaGastoDataModal,
     private conceptoGastoService: ConceptoGastoService,
     private convocatoriaService: ConvocatoriaService
   ) {
-    super(snackBarService, matDialogRef, data.solicitudProyectoPresupuesto);
+    super(snackBarService, matDialogRef, data.partidaGasto);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -99,41 +98,48 @@ export class DesglosePresupuestoGlobalModalComponent extends
   ngOnInit(): void {
     super.ngOnInit();
     this.loadConceptosGasto();
-    this.loadConvocatoriaConceptoGastoCodigoEcPermitidos(this.data.convocatoriaId);
-    this.loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(this.data.convocatoriaId);
 
-    this.formGroup.controls.conceptoGasto.valueChanges
-      .subscribe((conceptoGasto) => {
-        this.showCodigosEconomicosInfo = true;
+    if (this.data.convocatoriaId) {
+      this.loadConvocatoriaConceptoGastoCodigoEcPermitidos(this.data.convocatoriaId);
+      this.loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(this.data.convocatoriaId);
 
-        this.conceptosGastosPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcPermitidos
-          .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
+      this.formGroup.controls.conceptoGasto.valueChanges
+        .subscribe((conceptoGasto) => {
+          this.showCodigosEconomicosInfo = true;
 
-        this.conceptosGastosNoPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcNoPermitidos
-          .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
-      });
+          this.conceptosGastosPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcPermitidos
+            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
 
-    this.textSaveOrUpdate = this.data.solicitudProyectoPresupuesto?.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
+          this.conceptosGastosNoPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcNoPermitidos
+            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
+        });
+    }
+
+    this.textSaveOrUpdate = this.data.partidaGasto?.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      conceptoGasto: new FormControl(this.data.solicitudProyectoPresupuesto.conceptoGasto,
+      conceptoGasto: new FormControl(
+        {
+          value: this.data.partidaGasto.conceptoGasto,
+          disabled: this.data.partidaGasto.conceptoGasto || this.data.readonly
+        },
         [
           Validators.required
         ]),
-      anualidad: new FormControl(this.data.solicitudProyectoPresupuesto.anualidad,
+      anualidad: new FormControl(this.data.partidaGasto.anualidad,
         [
           Validators.min(0),
           Validators.max(2_147_483_647)
         ]),
-      importeSolicitado: new FormControl(this.data.solicitudProyectoPresupuesto.importeSolicitado,
+      importeSolicitado: new FormControl(this.data.partidaGasto.importeSolicitado,
         [
           Validators.required,
           Validators.min(0),
           Validators.max(2_147_483_647)
         ]),
-      observaciones: new FormControl(this.data.solicitudProyectoPresupuesto.observaciones,
+      observaciones: new FormControl(this.data.partidaGasto.observaciones,
         [
           Validators.maxLength(2000)
         ])
@@ -145,8 +151,8 @@ export class DesglosePresupuestoGlobalModalComponent extends
     return formGroup;
   }
 
-  protected getDatosForm(): ISolicitudProyectoPresupuesto {
-    const entidad = this.data.solicitudProyectoPresupuesto;
+  protected getDatosForm(): IPartidaGasto {
+    const entidad = this.data.partidaGasto;
     entidad.conceptoGasto = this.formGroup.controls.conceptoGasto.value;
     entidad.anualidad = this.formGroup.controls.anualidad.value;
     entidad.importeSolicitado = this.formGroup.controls.importeSolicitado.value;

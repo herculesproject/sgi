@@ -11,7 +11,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
-import { DesglosePresupuestoGlobalModalComponent, SolicitudProyectoPresupuestoDataModal } from '../../modals/desglose-presupuesto-global-modal/desglose-presupuesto-global-modal.component';
+import { PartidaGastoModalComponent, PartidaGastoDataModal } from '../../../modals/partida-gasto-modal/partida-gasto-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-proyecto-presupuesto-global.fragment';
 
@@ -97,8 +97,8 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FragmentCompone
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoPresupuesto>): void {
-    const data: SolicitudProyectoPresupuestoDataModal = {
-      solicitudProyectoPresupuesto: wrapper ? wrapper.value : {} as ISolicitudProyectoPresupuesto,
+    const data: PartidaGastoDataModal = {
+      partidaGasto: wrapper ? wrapper.value : {} as ISolicitudProyectoPresupuesto,
       convocatoriaId: this.actionService.getDatosGeneralesSolicitud().convocatoria?.id,
       readonly: this.formPart.readonly
     };
@@ -107,7 +107,7 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FragmentCompone
       data
     };
 
-    const dialogRef = this.matDialog.open(DesglosePresupuestoGlobalModalComponent, config);
+    const dialogRef = this.matDialog.open(PartidaGastoModalComponent, config);
     dialogRef.afterClosed().subscribe((partidaGasto) => {
       if (partidaGasto) {
         if (!wrapper) {

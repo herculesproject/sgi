@@ -22,7 +22,7 @@ import { SolicitudEquipoProyectoModalComponent } from './modals/solicitud-equipo
 import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
-import { DesglosePresupuestoGlobalModalComponent } from './modals/desglose-presupuesto-global-modal/desglose-presupuesto-global-modal.component';
+import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,7 @@ import { DesglosePresupuestoGlobalModalComponent } from './modals/desglose-presu
     SolicitudSociosColaboradoresComponent,
     SolicitudProyectoEntidadesFinanciadorasComponent,
     SolicitudProyectoPresupuestoGlobalComponent,
-    DesglosePresupuestoGlobalModalComponent,
+    SolicitudProyectoPresupuestoEntidadesComponent,
   ],
   imports: [
     CommonModule,

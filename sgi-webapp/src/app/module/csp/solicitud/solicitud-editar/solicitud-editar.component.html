@@ -23,20 +23,25 @@
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_GLOBAL]"
         *ngIf="!(actionService.isPresupuestoPorEntidades$ | async)"
-        [title]="'csp.solicitud.menu.desglose-presupuesto-global' | translate"
+        [title]="'csp.solicitud.menu.desglose-presupuesto' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES]"
+        *ngIf="actionService.isPresupuestoPorEntidades$ | async"
+        [title]="'csp.solicitud.menu.desglose-presupuesto' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DOCUMENTOS]"
         [title]="'csp.solicitud.menu.documentos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.HITOS]" [title]="'csp.solicitud.hitos' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)"
-        *ngIf="this.actionService.showHitos$ | async">
-      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.HISTORICO_ESTADOS]"
         [title]="'csp.solicitud.menu.historicoEstados' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.HISTORICO_ESTADOS)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.HITOS]" [title]="'csp.solicitud.hitos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)"
+        *ngIf="this.actionService.showHitos$ | async">
       </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>

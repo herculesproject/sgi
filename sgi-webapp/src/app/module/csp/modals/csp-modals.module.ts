@@ -5,10 +5,12 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
 import { EntidadFinanciadoraModalComponent } from '../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
+import { PartidaGastoModalComponent } from './partida-gasto-modal/partida-gasto-modal.component';
 
 @NgModule({
   declarations: [
-    EntidadFinanciadoraModalComponent
+    EntidadFinanciadoraModalComponent,
+    PartidaGastoModalComponent
   ],
   imports: [
     SharedModule,
@@ -19,7 +21,8 @@ import { EntidadFinanciadoraModalComponent } from '../modals/entidad-financiador
     ReactiveFormsModule,
   ],
   exports: [
-    EntidadFinanciadoraModalComponent
+    EntidadFinanciadoraModalComponent,
+    PartidaGastoModalComponent
   ]
 })
 export class CspModalsModule { }

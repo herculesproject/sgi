@@ -11,14 +11,14 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogComponent } from '@block/dialog/dialog.component';
 import { HeaderComponent } from '@block/header/header.component';
-import { DesglosePresupuestoGlobalModalComponent, SolicitudProyectoPresupuestoDataModal } from './desglose-presupuesto-global-modal.component';
-import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
+import { PartidaGastoModalComponent, PartidaGastoDataModal } from './partida-gasto-modal.component';
 import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import { IPartidaGasto } from '@core/models/csp/partida-gasto';
 
 
-describe('DesglosePresupuestoGlobalModalComponent', () => {
-  let component: DesglosePresupuestoGlobalModalComponent;
-  let fixture: ComponentFixture<DesglosePresupuestoGlobalModalComponent>;
+describe('PartidaGastoModalComponent', () => {
+  let component: PartidaGastoModalComponent;
+  let fixture: ComponentFixture<PartidaGastoModalComponent>;
 
   beforeEach(waitForAsync(() => {
     const mockDialogRef = {
@@ -26,14 +26,14 @@ describe('DesglosePresupuestoGlobalModalComponent', () => {
     };
     // Mock MAT_DIALOG
     const matDialogData = {
-      solicitudProyectoPresupuesto: {
+      partidaGasto: {
         conceptoGasto: {} as IConceptoGasto
-      } as ISolicitudProyectoPresupuesto
-    } as SolicitudProyectoPresupuestoDataModal;
+      } as IPartidaGasto
+    } as PartidaGastoDataModal;
 
     TestBed.configureTestingModule({
       declarations: [
-        DesglosePresupuestoGlobalModalComponent,
+        PartidaGastoModalComponent,
         DialogComponent,
         HeaderComponent],
       imports: [
@@ -57,7 +57,7 @@ describe('DesglosePresupuestoGlobalModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DesglosePresupuestoGlobalModalComponent);
+    fixture = TestBed.createComponent(PartidaGastoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
