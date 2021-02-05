@@ -203,10 +203,10 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
     const tipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value;
 
     const fechaInicio = typeof tipoFase?.fechaInicio === 'string' ?
-      new Date(tipoFase?.fechaInicio) : tipoFase?.fechaInicio
+      new Date(tipoFase?.fechaInicio) : tipoFase?.fechaInicio;
 
     const fechaFin = typeof tipoFase?.fechaFin === 'string' ?
-      new Date(tipoFase?.fechaFin) : tipoFase?.fechaFin
+      new Date(tipoFase?.fechaFin) : tipoFase?.fechaFin;
 
     if (tipoFase) {
       this.convocatoriaFase = tipoFase;

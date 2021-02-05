@@ -33,12 +33,12 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       tramitacionSGI: new FormControl(false),
-      fasePresentacionSolicitudes: new FormControl(undefined),
-      formularioSolicitud: new FormControl(undefined),
-      tipoBaremacion: new FormControl(undefined),
+      fasePresentacionSolicitudes: new FormControl(''),
+      formularioSolicitud: new FormControl(''),
       fechaInicioFase: new FormControl({ value: '', disabled: true }),
       fechaFinFase: new FormControl({ value: '', disabled: true }),
-      importeMaximoSolicitud: new FormControl('', [Validators.maxLength(50)]),
+      tipoBaremacion: new FormControl(''),
+      importeMaximoSolicitud: new FormControl(null, [Validators.maxLength(50)]),
     });
     if (this.readonly) {
       form.disable();
@@ -49,19 +49,21 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   protected buildPatch(configuracionSolicitud: IConfiguracionSolicitud): { [key: string]: any; } {
 
     const fechaInicio = typeof configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio === 'string' ?
-      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio) : configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio
+      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio) :
+      configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio;
 
     const fechaFin = typeof configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin === 'string' ?
-      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin) : configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin
+      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin) :
+      configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin;
 
     const result = {
-      tramitacionSGI: configuracionSolicitud?.tramitacionSGI ? true : false,
-      fasePresentacionSolicitudes: configuracionSolicitud?.fasePresentacionSolicitudes,
-      formularioSolicitud: configuracionSolicitud?.formularioSolicitud,
-      tipoBaremacion: configuracionSolicitud?.baremacionRef,
+      tramitacionSGI: configuracionSolicitud ? configuracionSolicitud?.tramitacionSGI : false,
+      fasePresentacionSolicitudes: configuracionSolicitud ? configuracionSolicitud?.fasePresentacionSolicitudes : null,
       fechaInicioFase: fechaInicio,
       fechaFinFase: fechaFin,
-      importeMaximoSolicitud: configuracionSolicitud?.importeMaximoSolicitud,
+      importeMaximoSolicitud: configuracionSolicitud ? configuracionSolicitud?.importeMaximoSolicitud : null,
+      formularioSolicitud: configuracionSolicitud ? configuracionSolicitud?.formularioSolicitud : null,
+      tipoBaremacion: configuracionSolicitud ? configuracionSolicitud?.baremacionRef : null,
     };
     return result;
   }
@@ -99,11 +101,13 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     if (this.configuracionSolicitud === null) {
       this.configuracionSolicitud = {} as IConfiguracionSolicitud;
     }
-    this.configuracionSolicitud.tramitacionSGI = form.tramitacionSGI;
+    this.configuracionSolicitud.tramitacionSGI = form.tramitacionSGI ? true : false;
     this.configuracionSolicitud.fasePresentacionSolicitudes = form.fasePresentacionSolicitudes;
-    this.configuracionSolicitud.formularioSolicitud = form.formularioSolicitud;
+
     this.configuracionSolicitud.baremacionRef = form.tipoBaremacion;
+    this.configuracionSolicitud.formularioSolicitud = form.formularioSolicitud;
     this.configuracionSolicitud.importeMaximoSolicitud = form.importeMaximoSolicitud;
+
     return this.configuracionSolicitud;
   }
 
