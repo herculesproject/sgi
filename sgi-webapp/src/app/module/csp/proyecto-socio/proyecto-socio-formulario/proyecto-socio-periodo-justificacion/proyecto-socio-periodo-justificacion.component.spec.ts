@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProyectoSocioPeriodoJustificacionComponent } from './proyecto-socio-periodo-justificacion.component';
+import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,21 +17,14 @@ import { IProyectoSocioState } from '../../../proyecto/proyecto-formulario/proye
 describe('ProyectoSocioPeriodoJustificacionComponent', () => {
   let component: ProyectoSocioPeriodoJustificacionComponent;
   let fixture: ComponentFixture<ProyectoSocioPeriodoJustificacionComponent>;
+
   const state: IProyectoSocioState = {
     proyectoId: 1,
-    proyectoSocio: {
-      empresa: undefined,
-      fechaFin: undefined,
-      fechaInicio: undefined,
-      id: 1,
-      importeConcedido: undefined,
-      numInvestigadores: undefined,
-      proyecto: undefined,
-      rolSocio: undefined
-    },
+    proyectoSocio: { id: 1 } as IProyectoSocio,
     selectedProyectoSocios: [],
     urlProyecto: ''
   };
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ProyectoSocioPeriodoJustificacionComponent],
@@ -54,7 +48,8 @@ describe('ProyectoSocioPeriodoJustificacionComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(state, 'state');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
+
     fixture = TestBed.createComponent(ProyectoSocioPeriodoJustificacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

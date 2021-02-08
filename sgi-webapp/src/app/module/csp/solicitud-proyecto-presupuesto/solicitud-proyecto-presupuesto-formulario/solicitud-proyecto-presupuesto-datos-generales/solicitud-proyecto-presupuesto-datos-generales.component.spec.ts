@@ -5,6 +5,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
+import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -22,7 +26,13 @@ describe('SolicitudProyectoPresupuestoDatosGeneralesComponent', () => {
   const state: ISolicitudProyectoPresupuestoState = {
     solicitudId: 1,
     convocatoriaId: 1,
-    entidadFinanciadora: {} as IEntidadFinanciadora,
+    entidadFinanciadora: {
+      empresa: {} as IEmpresaEconomica,
+      fuenteFinanciacion: {
+        tipoAmbitoGeografico: {} as ITipoAmbitoGeografico
+      } as IFuenteFinanciacion,
+      tipoFinanciacion: {} as ITipoFinanciacion
+    } as IEntidadFinanciadora,
     isEntidadFinanciadoraConvocatoria: true
   };
 
@@ -50,10 +60,7 @@ describe('SolicitudProyectoPresupuestoDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(state.solicitudId, 'solicitudId');
-    history.pushState(state.convocatoriaId, 'convocatoriaId');
-    history.pushState(state.entidadFinanciadora, 'entidadFinanciadora');
-    history.pushState(state.isEntidadFinanciadoraConvocatoria, 'isEntidadFinanciadoraConvocatoria');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(SolicitudProyectoPresupuestoDatosGeneralesComponent);
     component = fixture.componentInstance;
@@ -61,6 +68,7 @@ describe('SolicitudProyectoPresupuestoDatosGeneralesComponent', () => {
   });
 
   it('should create', () => {
+
     expect(component).toBeTruthy();
   });
 });

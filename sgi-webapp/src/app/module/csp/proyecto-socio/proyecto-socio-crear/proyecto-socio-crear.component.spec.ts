@@ -15,11 +15,19 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { ProyectoSocioCrearComponent } from './proyecto-socio-crear.component';
 import { ProyectoSocioActionService } from '../proyecto-socio.action.service';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoSocioState } from '../../proyecto/proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
 
 describe('ProyectoSocioCrearComponent', () => {
   let component: ProyectoSocioCrearComponent;
   let fixture: ComponentFixture<ProyectoSocioCrearComponent>;
+
+  const state: IProyectoSocioState = {
+    proyectoId: 1,
+    proyectoSocio: {} as IProyectoSocio,
+    selectedProyectoSocios: [],
+    urlProyecto: ''
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -49,8 +57,7 @@ describe('ProyectoSocioCrearComponent', () => {
   }));
 
   beforeEach(() => {
-    const proyectoSocio = {} as IProyectoSocio;
-    history.pushState({ proyectoSocio }, 'proyectoSocio');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(ProyectoSocioCrearComponent);
     component = fixture.componentInstance;

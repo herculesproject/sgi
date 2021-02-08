@@ -15,10 +15,19 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { ProyectoPeriodoSeguimientoEditarComponent } from './proyecto-periodo-seguimiento-editar.component';
 import { ProyectoPeriodoSeguimientoActionService } from '../proyecto-periodo-seguimiento.action.service';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoPeriodoSeguimientoState } from '../../proyecto/proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.component';
 
 describe('ProyectoPeriodoSeguimientoEditarComponent', () => {
   let component: ProyectoPeriodoSeguimientoEditarComponent;
   let fixture: ComponentFixture<ProyectoPeriodoSeguimientoEditarComponent>;
+
+  const state: IProyectoPeriodoSeguimientoState = {
+    proyecto: {} as IProyecto,
+    proyectoPeriodoSeguimiento: {} as IProyectoPeriodoSeguimiento,
+    selectedProyectoPeriodoSeguimientos: [],
+    readonly: false
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,8 +57,7 @@ describe('ProyectoPeriodoSeguimientoEditarComponent', () => {
   }));
 
   beforeEach(() => {
-    const proyectoPeriodoSeguimiento = { id: 1 } as IProyectoPeriodoSeguimiento;
-    history.pushState({ proyectoPeriodoSeguimiento }, 'proyectoPeriodoSeguimiento');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(ProyectoPeriodoSeguimientoEditarComponent);
     component = fixture.componentInstance;

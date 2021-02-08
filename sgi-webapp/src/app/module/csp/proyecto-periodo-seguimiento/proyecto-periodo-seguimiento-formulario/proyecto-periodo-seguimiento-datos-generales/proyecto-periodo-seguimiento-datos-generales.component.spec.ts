@@ -76,10 +76,7 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
 //   }));
 
 //   beforeEach(() => {
-//     history.pushState(state.proyectoPeriodoSeguimiento, 'proyectoPeriodoSeguimiento');
-//     history.pushState(state.selectedProyectoPeriodoSeguimientos, 'selectedProyectoPeriodoSeguimientos');
-//     history.pushState(state.proyecto, 'proyecto');
-//     history.pushState(state.readonly, 'readonly');
+//     spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
 //     fixture = TestBed.createComponent(ProyectoPeriodoSeguimientoDatosGeneralesComponent);
 //     component = fixture.componentInstance;

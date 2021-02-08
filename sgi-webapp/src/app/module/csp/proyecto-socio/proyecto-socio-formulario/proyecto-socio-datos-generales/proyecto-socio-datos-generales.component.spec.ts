@@ -13,10 +13,18 @@ import { SharedModule } from '@shared/shared.module';
 import { ProyectoSocioDatosGeneralesComponent } from './proyecto-socio-datos-generales.component';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoSocioState } from '../../../proyecto/proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
 describe('ProyectoSocioDatosGeneralesComponent', () => {
   let component: ProyectoSocioDatosGeneralesComponent;
   let fixture: ComponentFixture<ProyectoSocioDatosGeneralesComponent>;
+
+  const state: IProyectoSocioState = {
+    proyectoId: 1,
+    proyectoSocio: {} as IProyectoSocio,
+    selectedProyectoSocios: [],
+    urlProyecto: ''
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -44,8 +52,7 @@ describe('ProyectoSocioDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    const proyectoSocio = {} as IProyectoSocio;
-    history.pushState({ proyectoSocio }, 'proyectoSocio');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(ProyectoSocioDatosGeneralesComponent);
     component = fixture.componentInstance;

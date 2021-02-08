@@ -20,29 +20,11 @@ describe('ProyectoProrrogaDatosGeneralesComponent', () => {
   let component: ProyectoProrrogaDatosGeneralesComponent;
   let fixture: ComponentFixture<ProyectoProrrogaDatosGeneralesComponent>;
 
-  const proyecto: IProyecto = {
-    id: 1,
-    fechaInicio: new Date(),
-    fechaFin: new Date()
-  } as IProyecto;
-
-  const proyectoProrroga: IProyectoProrroga = {
-    id: 1,
-    proyecto,
-    fechaConcesion: new Date(),
-    tipoProrroga: TipoProrrogaEnum.TIEMPO,
-    fechaFin: new Date(),
-    numProrroga: 1
-  } as IProyectoProrroga;
-
-  const selectedProyectoProrrogas: IProyectoProrroga[] = [
-    proyectoProrroga as IProyectoProrroga]
-
   const state: IProyectoProrrogaState = {
-    proyecto,
-    proyectoProrroga,
-    selectedProyectoProrrogas,
-    readonly: true
+    proyecto: { id: 1 } as IProyecto,
+    proyectoProrroga: { id: 1 } as IProyectoProrroga,
+    selectedProyectoProrrogas: [],
+    readonly: false
   };
 
   beforeEach(waitForAsync(() => {
@@ -71,10 +53,7 @@ describe('ProyectoProrrogaDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(state.proyectoProrroga, 'proyectoProrroga');
-    history.pushState(state.selectedProyectoProrrogas, 'selectedProyectoProrrogas');
-    history.pushState(state.proyecto, 'proyecto');
-    history.pushState(state.readonly, 'readonly');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(ProyectoProrrogaDatosGeneralesComponent);
     component = fixture.componentInstance;

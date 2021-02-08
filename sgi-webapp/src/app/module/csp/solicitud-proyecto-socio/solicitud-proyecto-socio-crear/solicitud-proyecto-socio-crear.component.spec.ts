@@ -15,10 +15,17 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { SolicitudProyectoSocioActionService } from '../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoSocioCrearComponent } from './solicitud-proyecto-socio-crear.component';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { ISolicitudProyectoSocioState } from '../../solicitud/solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 
 describe('SolicitudProyectoSocioCrearComponent', () => {
   let component: SolicitudProyectoSocioCrearComponent;
   let fixture: ComponentFixture<SolicitudProyectoSocioCrearComponent>;
+
+  const state: ISolicitudProyectoSocioState = {
+    solicitudId: 1,
+    solicitudProyectoSocio: {} as ISolicitudProyectoSocio,
+    selectedSolicitudProyectoSocios: []
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,17 +55,8 @@ describe('SolicitudProyectoSocioCrearComponent', () => {
   }));
 
   beforeEach(() => {
-    const solicitudProyectoSocio: ISolicitudProyectoSocio = {
-      empresa: undefined,
-      id: undefined,
-      importeSolicitado: undefined,
-      mesFin: undefined,
-      mesInicio: undefined,
-      numInvestigadores: undefined,
-      rolSocio: undefined,
-      solicitudProyectoDatos: undefined
-    };
-    history.pushState(solicitudProyectoSocio, 'solicitudProyectoSocio');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
+
     fixture = TestBed.createComponent(SolicitudProyectoSocioCrearComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

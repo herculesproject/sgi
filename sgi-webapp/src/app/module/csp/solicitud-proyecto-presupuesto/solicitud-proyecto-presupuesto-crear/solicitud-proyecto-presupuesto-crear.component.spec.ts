@@ -14,10 +14,19 @@ import { SharedModule } from '@shared/shared.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SolicitudProyectoPresupuestoCrearComponent } from './solicitud-proyecto-presupuesto-crear.component';
 import { SolicitudProyectoPresupuestoActionService } from '../solicitud-proyecto-presupuesto.action.service';
+import { ISolicitudProyectoPresupuestoState } from '../../solicitud/solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 
 describe('SolicitudProyectoPresupuestoCrearComponent', () => {
   let component: SolicitudProyectoPresupuestoCrearComponent;
   let fixture: ComponentFixture<SolicitudProyectoPresupuestoCrearComponent>;
+
+  const state: ISolicitudProyectoPresupuestoState = {
+    solicitudId: 1,
+    convocatoriaId: 1,
+    entidadFinanciadora: {} as IEntidadFinanciadora,
+    isEntidadFinanciadoraConvocatoria: true
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -47,6 +56,8 @@ describe('SolicitudProyectoPresupuestoCrearComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
+
     fixture = TestBed.createComponent(SolicitudProyectoPresupuestoCrearComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

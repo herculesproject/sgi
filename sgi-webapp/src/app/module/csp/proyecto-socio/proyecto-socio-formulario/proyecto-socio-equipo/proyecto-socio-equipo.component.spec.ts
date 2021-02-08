@@ -13,13 +13,12 @@ import { SharedModule } from '@shared/shared.module';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoSocioState } from '../../../proyecto/proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
 describe('ProyectoSocioEquipoComponent', () => {
   let component: ProyectoSocioEquipoComponent;
   let fixture: ComponentFixture<ProyectoSocioEquipoComponent>;
 
-  const proyectoId = 1;
-  const selectedProyectoSocios = [];
   const proyectoSocio: IProyectoSocio = {
     empresa: undefined,
     id: undefined,
@@ -29,6 +28,13 @@ describe('ProyectoSocioEquipoComponent', () => {
     numInvestigadores: undefined,
     proyecto: undefined,
     rolSocio: undefined
+  };
+
+  const state: IProyectoSocioState = {
+    proyectoId: 1,
+    proyectoSocio,
+    selectedProyectoSocios: [],
+    urlProyecto: ''
   };
 
   beforeEach(waitForAsync(() => {
@@ -56,9 +62,8 @@ describe('ProyectoSocioEquipoComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(proyectoId, 'proyectoId');
-    history.pushState(selectedProyectoSocios, 'selectedProyectoSocios');
-    history.pushState(proyectoSocio, 'proyectoSocio');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
+
     fixture = TestBed.createComponent(ProyectoSocioEquipoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

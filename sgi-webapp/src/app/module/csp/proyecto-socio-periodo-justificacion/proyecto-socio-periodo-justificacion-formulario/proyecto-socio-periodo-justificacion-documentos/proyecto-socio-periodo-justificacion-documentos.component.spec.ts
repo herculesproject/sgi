@@ -51,7 +51,7 @@ describe('ProyectoSocioPeriodoJustificacionDocumentosComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(state, 'state');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
     fixture = TestBed.createComponent(ProyectoSocioPeriodoJustificacionDocumentosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

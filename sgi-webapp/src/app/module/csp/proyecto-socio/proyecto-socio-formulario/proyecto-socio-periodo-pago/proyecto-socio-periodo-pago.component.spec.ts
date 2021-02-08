@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from '@shared/shared.module';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
+import { IProyectoSocioState } from '../../../proyecto/proyecto-formulario/proyecto-socios/proyecto-socios.component';
 
 describe('ProyectoSocioPeriodoPagoComponent', () => {
   let component: ProyectoSocioPeriodoPagoComponent;
@@ -27,8 +28,13 @@ describe('ProyectoSocioPeriodoPagoComponent', () => {
     proyecto: undefined,
     rolSocio: undefined
   };
-  const proyectoId = 1;
-  const selectedProyectoSocios = [];
+
+  const state: IProyectoSocioState = {
+    proyectoId: 1,
+    proyectoSocio,
+    selectedProyectoSocios: [],
+    urlProyecto: ''
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -55,9 +61,7 @@ describe('ProyectoSocioPeriodoPagoComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(proyectoSocio, 'proyectoSocio');
-    history.pushState(proyectoId, 'proyectoId');
-    history.pushState(selectedProyectoSocios, 'selectedProyectoSocios');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
     fixture = TestBed.createComponent(ProyectoSocioPeriodoPagoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

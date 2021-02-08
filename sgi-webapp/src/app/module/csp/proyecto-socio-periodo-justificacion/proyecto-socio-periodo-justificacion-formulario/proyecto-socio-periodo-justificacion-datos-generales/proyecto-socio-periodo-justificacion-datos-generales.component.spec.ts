@@ -81,7 +81,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateMod
 //   }));
 
 //   beforeEach(() => {
-//     history.pushState(state, 'state');
+//     spyOnProperty(history, 'state', 'get').and.returnValue(state);
 //     fixture = TestBed.createComponent(ProyectoSocioPeriodoJustificacionDatosGeneralesComponent);
 //     component = fixture.componentInstance;
 //     fixture.detectChanges();

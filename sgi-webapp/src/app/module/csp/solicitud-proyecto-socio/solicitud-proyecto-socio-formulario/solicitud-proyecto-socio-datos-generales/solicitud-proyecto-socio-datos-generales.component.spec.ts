@@ -18,20 +18,9 @@ describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
   let component: SolicitudProyectoSocioDatosGeneralesComponent;
   let fixture: ComponentFixture<SolicitudProyectoSocioDatosGeneralesComponent>;
 
-  const solicitudProyectoSocio: ISolicitudProyectoSocio = {
-    empresa: undefined,
-    id: undefined,
-    importeSolicitado: undefined,
-    mesFin: undefined,
-    mesInicio: undefined,
-    numInvestigadores: undefined,
-    rolSocio: undefined,
-    solicitudProyectoDatos: undefined
-  };
-
   const state: ISolicitudProyectoSocioState = {
     solicitudId: 1,
-    solicitudProyectoSocio,
+    solicitudProyectoSocio: {} as ISolicitudProyectoSocio,
     selectedSolicitudProyectoSocios: []
   };
 
@@ -60,9 +49,8 @@ describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(state.solicitudProyectoSocio, 'solicitudProyectoSocio');
-    history.pushState(state.selectedSolicitudProyectoSocios, 'selectedSolicitudProyectoSocios');
-    history.pushState(state.solicitudId, 'solicitudId');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
+
     fixture = TestBed.createComponent(SolicitudProyectoSocioDatosGeneralesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

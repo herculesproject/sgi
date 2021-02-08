@@ -14,11 +14,38 @@ import { SharedModule } from '@shared/shared.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { ProyectoProrrogaEditarComponent } from './proyecto-prorroga-editar.component';
 import { ProyectoProrrogaActionService } from '../proyecto-prorroga.action.service';
-import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoProrrogaState } from '../../proyecto/proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 
 describe('ProyectoProrrogaEditarComponent', () => {
   let component: ProyectoProrrogaEditarComponent;
   let fixture: ComponentFixture<ProyectoProrrogaEditarComponent>;
+
+  const proyecto: IProyecto = {
+    id: 1,
+    fechaInicio: new Date(),
+    fechaFin: new Date()
+  } as IProyecto;
+
+  const proyectoProrroga: IProyectoProrroga = {
+    id: 1,
+    proyecto,
+    fechaConcesion: new Date(),
+    tipoProrroga: TipoProrrogaEnum.TIEMPO,
+    fechaFin: new Date(),
+    numProrroga: 1
+  } as IProyectoProrroga;
+
+  const selectedProyectoProrrogas: IProyectoProrroga[] = [
+    proyectoProrroga as IProyectoProrroga]
+
+  const state: IProyectoProrrogaState = {
+    proyecto,
+    proyectoProrroga,
+    selectedProyectoProrrogas,
+    readonly: true
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,8 +75,7 @@ describe('ProyectoProrrogaEditarComponent', () => {
   }));
 
   beforeEach(() => {
-    const proyectoProrroga = { id: 1 } as IProyectoProrroga;
-    history.pushState({ proyectoProrroga }, 'proyectoProrroga');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(ProyectoProrrogaEditarComponent);
     component = fixture.componentInstance;

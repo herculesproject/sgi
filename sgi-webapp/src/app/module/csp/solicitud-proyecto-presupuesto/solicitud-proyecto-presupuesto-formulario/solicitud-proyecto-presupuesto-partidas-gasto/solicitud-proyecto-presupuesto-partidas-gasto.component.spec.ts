@@ -50,10 +50,7 @@ describe('SolicitudProyectoPresupuestoPartidasGastoComponent', () => {
   }));
 
   beforeEach(() => {
-    history.pushState(state.solicitudId, 'solicitudId');
-    history.pushState(state.convocatoriaId, 'convocatoriaId');
-    history.pushState(state.entidadFinanciadora, 'entidadFinanciadora');
-    history.pushState(state.isEntidadFinanciadoraConvocatoria, 'isEntidadFinanciadoraConvocatoria');
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
     fixture = TestBed.createComponent(SolicitudProyectoPresupuestoPartidasGastoComponent);
     component = fixture.componentInstance;
