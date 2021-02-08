@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -70,5 +71,15 @@ public interface TipoDocumentoService {
    * @return la entidad {@link TipoDocumento}.
    */
   TipoDocumento findById(Long id);
+
+  /**
+   * Obtener todas las entidades {@link TipoDocumento} asociados a la fase de
+   * presentación de solicitudes de la {@link Convocatoria}.
+   *
+   * @param convocatoriaId identificador de la {@link Convocatoria}.
+   * @param pageable       la información de la paginación.
+   * @return la lista de entidades {@link TipoDocumento} paginadas y/o filtradas.
+   */
+  Page<TipoDocumento> findAllTipoDocumentosFasePresentacionConvocatoria(Long convocatoriaId, Pageable pageable);
 
 }

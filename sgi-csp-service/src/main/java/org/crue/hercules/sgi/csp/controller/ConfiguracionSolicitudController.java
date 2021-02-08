@@ -7,8 +7,10 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
+import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -40,16 +42,22 @@ public class ConfiguracionSolicitudController {
   /** DocumentoRequeridoSolicitudService service */
   private final DocumentoRequeridoSolicitudService documentoRequeridoSolicitudService;
 
+  /** DocumentoRequeridoSolicitudService service */
+  private final TipoDocumentoService tipoDocumentoService;
+
   /**
    * Instancia un nuevo ConfiguracionSolicitudController.
    * 
    * @param configuracionSolicitudService      {@link ConfiguracionSolicitudService}.
    * @param documentoRequeridoSolicitudService {@link DocumentoRequeridoSolicitudService}.
+   * @param tipoDocumentoService               {@link TipoDocumentoService}.
    */
   public ConfiguracionSolicitudController(ConfiguracionSolicitudService configuracionSolicitudService,
-      DocumentoRequeridoSolicitudService documentoRequeridoSolicitudService) {
+      DocumentoRequeridoSolicitudService documentoRequeridoSolicitudService,
+      TipoDocumentoService tipoDocumentoService) {
     this.service = configuracionSolicitudService;
     this.documentoRequeridoSolicitudService = documentoRequeridoSolicitudService;
+    this.tipoDocumentoService = tipoDocumentoService;
   }
 
   /**
@@ -141,6 +149,32 @@ public class ConfiguracionSolicitudController {
 
     log.debug(
         "findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de los {@link TipoDocumento} de la
+   * {@link Convocatoria} correspondientes a la fase de presentacion.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/tipodocumentofasepresentaciones")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<Page<TipoDocumento>> findAllTipoDocumentosFasePresentacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTipoDocumentosFasePresentacion(Long id, Pageable paging) - start");
+    Page<TipoDocumento> page = tipoDocumentoService.findAllTipoDocumentosFasePresentacionConvocatoria(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTipoDocumentosFasePresentacion(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTipoDocumentosFasePresentacion(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }

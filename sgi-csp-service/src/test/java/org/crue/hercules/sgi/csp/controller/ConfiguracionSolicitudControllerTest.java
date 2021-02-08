@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
+import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,9 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   private ConfiguracionSolicitudService service;
   @MockBean
   private DocumentoRequeridoSolicitudService documentoRequeridoSolicitudService;
+
+  @MockBean
+  private TipoDocumentoService tipoDocumentoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DOCUMENTOS = "/documentorequiridosolicitudes";

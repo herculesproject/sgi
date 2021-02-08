@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoDocumentoSpecifications;
@@ -186,6 +187,29 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
     final TipoDocumento returnValue = tipoDocumentoRepository.findById(id)
         .orElseThrow(() -> new TipoDocumentoNotFoundException(id));
     log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link TipoDocumento} asociados a la fase de
+   * presentación de solicitudes de la {@link Convocatoria}.
+   *
+   * @param convocatoriaId identificador de la {@link Convocatoria}.
+   * @param pageable       la información de la paginación.
+   * @return la lista de entidades {@link TipoDocumento} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<TipoDocumento> findAllTipoDocumentosFasePresentacionConvocatoria(Long convocatoriaId, Pageable pageable) {
+    log.debug("findAllTipoDocumentosFasePresentacionConvocatoria(Long convocatoriaId, Pageable pageable) - start");
+    Specification<TipoDocumento> specActivos = TipoDocumentoSpecifications.activos();
+    Specification<TipoDocumento> specTipoDocumentosFasePresentacionConvocatoria = TipoDocumentoSpecifications
+        .tipoDocumentosFasePresentacionConvocatoria(convocatoriaId);
+
+    Specification<TipoDocumento> specs = Specification.where(specActivos)
+        .and(specTipoDocumentosFasePresentacionConvocatoria);
+
+    Page<TipoDocumento> returnValue = tipoDocumentoRepository.findAll(specs, pageable);
+    log.debug("findAllTipoDocumentosFasePresentacionConvocatoria(Long convocatoriaId, Pageable pageable) - end");
     return returnValue;
   }
 
