@@ -152,19 +152,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       activo: true
     } as IConvocatoria;
 
-    if (configuracion.fasePresentacionSolicitudes != null) {
-      if (!configuracion.fasePresentacionSolicitudes.id) {
-        const plazosFases = this.convocatoriaFases.find(plazoFase =>
-          plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
-        configuracion.fasePresentacionSolicitudes.id = plazosFases.id;
-      } else {
-        configuracion.fasePresentacionSolicitudes =
-          this.convocatoriaFases.find(
-            plazoFase => plazoFase.tipoFase.nombre === configuracion.fasePresentacionSolicitudes?.tipoFase.nombre
-              && plazoFase.fechaInicio === configuracion.fasePresentacionSolicitudes?.fechaInicio
-              && plazoFase.fechaFin === configuracion.fasePresentacionSolicitudes?.fechaFin
-              && plazoFase.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones);
-      }
+    if (!configuracion.fasePresentacionSolicitudes?.id) {
+      const fasePresentacionSolicitudes = this.convocatoriaFases.find(plazoFase =>
+        plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
+      configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
     }
 
     return this.configuracionSolicitudService.create(configuracion).pipe(
@@ -178,16 +169,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       configuracion.fasePresentacionSolicitudes = null;
     }
 
-    if (configuracion.fasePresentacionSolicitudes !== null) {
-
-      configuracion.fasePresentacionSolicitudes =
-        this.convocatoriaFases.find(
-          plazoFase => plazoFase.tipoFase.nombre === configuracion.fasePresentacionSolicitudes?.tipoFase.nombre
-            && plazoFase.fechaInicio.toString() ===
-            DateUtils.formatFechaAsISODate(DateUtils.fechaToDate(configuracion.fasePresentacionSolicitudes?.fechaInicio))
-            && plazoFase.fechaFin.toString() ===
-            DateUtils.formatFechaAsISODate(DateUtils.fechaToDate(configuracion.fasePresentacionSolicitudes?.fechaFin))
-            && plazoFase.observaciones === configuracion.fasePresentacionSolicitudes?.observaciones);
+    if (!configuracion.fasePresentacionSolicitudes?.id) {
+      const fasePresentacionSolicitudes = this.convocatoriaFases.find(plazoFase =>
+        plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
+      configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
     }
 
     return this.configuracionSolicitudService.update(Number(this.getKey()), configuracion).pipe(

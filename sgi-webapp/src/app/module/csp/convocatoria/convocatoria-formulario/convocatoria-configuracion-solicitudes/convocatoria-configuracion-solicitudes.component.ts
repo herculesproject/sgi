@@ -235,8 +235,13 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       observaciones: undefined,
       tipoDocumento: undefined,
     };
+
+    const modeloEjecucionId = documentosRequerido.configuracionSolicitud?.convocatoria?.modeloEjecucion?.id
+      ? documentosRequerido.configuracionSolicitud.convocatoria.modeloEjecucion.id : this.actionService.modeloEjecucionId;
+
     const data: ConvocatoriaConfiguracionSolicitudesModalData = {
       documentoRequerido: wrapper ? wrapper.value : documentosRequerido,
+      modeloEjecucionId: modeloEjecucionId,
       readonly: this.formPart.readonly
     };
     const config = {

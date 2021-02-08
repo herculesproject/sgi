@@ -20,6 +20,7 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 
 export interface ConvocatoriaConfiguracionSolicitudesModalData {
   documentoRequerido: IDocumentoRequerido;
+  modeloEjecucionId: number;
   readonly: boolean;
 }
 
@@ -65,7 +66,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
    * Carga todos los tipos de documento
    */
   loadTipoDocumento() {
-    const id = this.data.documentoRequerido.configuracionSolicitud.convocatoria.modeloEjecucion.id;
+    const modeloEjecucionId = this.data.modeloEjecucionId;
     const idTipoFase = this.data.documentoRequerido.configuracionSolicitud.fasePresentacionSolicitudes?.tipoFase.id;
     const options = {
       filters: [
@@ -76,7 +77,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
         } as SgiRestFilter
       ]
     } as SgiRestFindOptions;
-    const subscription = this.modeloEjecucionService.findModeloTipoDocumento(id, options).pipe(
+    const subscription = this.modeloEjecucionService.findModeloTipoDocumento(modeloEjecucionId, options).pipe(
       map((result => {
         const listado: ITipoDocumento[] = [];
         result.items.forEach(x => listado.push(x.tipoDocumento));

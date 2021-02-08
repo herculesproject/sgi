@@ -89,6 +89,7 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
 
   const data: ConvocatoriaConfiguracionSolicitudesModalData = {
     documentoRequerido,
+    modeloEjecucionId: convocatoria.modeloEjecucion.id,
     readonly: false
   };
 

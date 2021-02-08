@@ -81,6 +81,7 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
       takeLast(1),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
+          this.plazosFase$.next(this.plazosFase$.value);
           this.setChanges(false);
         }
       })
@@ -144,8 +145,16 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
     );
   }
 
+  /**
+   * Comprueba si se ejecutaron correctamente todos borrados, actualizaciones y creaciones.
+   *
+   * @returns true si no queda ningun cambio pendiente.
+   */
   private isSaveOrUpdateComplete(): boolean {
-    const touched: boolean = this.plazosFase$.value.some((wrapper) => wrapper.touched);
-    return (this.fasesEliminadas.length > 0 || touched);
+    const hasTouched = this.plazosFase$.value.some((wrapper) => wrapper.touched);
+    const hasNoDeleted = this.fasesEliminadas.length > 0;
+
+    return !hasTouched && !hasNoDeleted;
   }
+
 }
