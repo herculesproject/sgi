@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -17,7 +18,6 @@ import { ProyectoEntidadesConvocantesFragment } from './proyecto-entidades-convo
 
 const MSG_ENTITY_DELETE_KEY = marker('msg.entity.delete');
 const PROYECTO_ENTIDAD_CONVOCANTE_KEY = marker('csp.proyecto-entidad-convocante');
-const PROYECTO_ENTIDAD_CONVOCANTES_KEY = marker('csp.proyecto-entidad-convocantes');
 
 @Component({
   selector: 'sgi-proyecto-entidades-convocantes',
@@ -74,11 +74,13 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_ENTIDAD_CONVOCANTE_KEY
+      PROYECTO_ENTIDAD_CONVOCANTE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
     this.translate.get(
-      PROYECTO_ENTIDAD_CONVOCANTES_KEY
-    ).subscribe((value) => this.msgParamEntities = { entities: value });
+      PROYECTO_ENTIDAD_CONVOCANTE_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamEntities = { entity: value });
   }
 
   ngOnDestroy(): void {

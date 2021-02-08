@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BreadcrumbData, LayoutService } from '@core/services/layout.service';
+import { BreadcrumbData, LayoutService, Title } from '@core/services/layout.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export class BreadcrumbComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   data: BreadcrumbData[];
-  title: string;
+  title: Title;
   constructor(
     private layoutService: LayoutService
   ) { }

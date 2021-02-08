@@ -41,8 +41,10 @@
     "fontsource-poppins": "^3.0.3",
     "keycloak-js": "11.0.0",
     "material-icons": "^0.3.1",
+    "messageformat": "^2.3.0",
     "moment": "^2.27.0",
     "ngx-logger": "^4.1.9",
+    "ngx-translate-messageformat-compiler": "^4.9.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

@@ -7,6 +7,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { CspRootComponent } from './csp-root/csp-root.component';
 import { CSP_ROUTE_NAMES } from './csp-route-names';
 import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
+import { MSG_PARAMS } from '@core/i18n';
 
 const MSG_ROOT_TITLE = marker('csp.root.title');
 const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
@@ -23,11 +24,11 @@ const MSG_TIPO_FINANCIACION_TITLE = marker('menu.principal.csp.tipo.financiacion
 
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.principal.csp.fuenteFinanciacion');
 const MSG_AREA_TEMATICA_TITLE = marker('menu.principal.csp.area.tematica');
-const MSG_PROYECTO_TITLE = marker('menu.principal.csp.proyectos');
+const PROYECTO_KEY = marker('csp.proyecto');
 const MSG_SOLICITUD_PROYECTO_SOCIO = marker('menu.principal.csp.solicitud-proyecto-socio');
 const MSG_PROYECTO_SOCIO_TITLE = marker('menu.principal.csp.proyecto-socio');
-const MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE = marker('menu.principal.csp.proyecto-periodo-seguimiento')
-const MSG_PROYECTO_PRORROGA_TITLE = marker('menu.principal.csp.proyecto-prorroga')
+const MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE = marker('menu.principal.csp.proyecto-periodo-seguimiento');
+const MSG_PROYECTO_PRORROGA_TITLE = marker('menu.principal.csp.proyecto-prorroga');
 const MSG_SOLICITUD_PROYECTO_PRESUPUESTO = marker('menu.principal.csp.solicitud-proyecto-presupuesto');
 
 const routes: SgiRoutes = [
@@ -54,7 +55,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_CONVOCATORIA_TITLE,
+          title: MSG_CONVOCATORIA_TITLE
         }
       },
       {
@@ -76,7 +77,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_SOLICITUD_TITLE,
+          title: MSG_SOLICITUD_TITLE
         }
       },
       {
@@ -87,7 +88,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_PROYECTO_TITLE,
+          title: PROYECTO_KEY,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {
@@ -98,7 +100,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_PROYECTO_SOCIO_TITLE,
+          title: MSG_PROYECTO_SOCIO_TITLE
         }
       },
       {
@@ -109,7 +111,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE,
+          title: MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE
         }
       },
       {
@@ -120,7 +122,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_PROYECTO_PRORROGA_TITLE,
+          title: MSG_PROYECTO_PRORROGA_TITLE
         }
       },
       {
@@ -131,7 +133,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_DOCUMENTO_TITLE,
+          title: MSG_TIPO_DOCUMENTO_TITLE
         }
       },
       {
@@ -142,7 +144,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_FINALIDAD_TITLE,
+          title: MSG_TIPO_FINALIDAD_TITLE
         }
       },
       {
@@ -153,7 +155,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_MODELO_EJECUCION_TITLE,
+          title: MSG_MODELO_EJECUCION_TITLE
         }
       },
       {
@@ -164,7 +166,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_ENLACE_TITLE,
+          title: MSG_TIPO_ENLACE_TITLE
         }
 
       },
@@ -176,7 +178,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_HITO_TITLE,
+          title: MSG_TIPO_HITO_TITLE
         }
       },
       {
@@ -187,7 +189,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_CONVOCATORIA_TITLE,
+          title: MSG_CONVOCATORIA_TITLE
         }
       },
       {
@@ -199,7 +201,6 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_PLAN_INVESTIGACION_TITLE
-
         }
       },
       {
@@ -210,7 +211,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_GESTION_CONCEPTO_GASTO_TITLE,
+          title: MSG_GESTION_CONCEPTO_GASTO_TITLE
         }
       },
       {
@@ -221,7 +222,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_FINANCIACION_TITLE,
+          title: MSG_TIPO_FINANCIACION_TITLE
         }
       },
       {
@@ -232,7 +233,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_FUENTE_FINANCIACION_TITLE,
+          title: MSG_FUENTE_FINANCIACION_TITLE
         }
       },
       {
@@ -243,7 +244,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_AREA_TEMATICA_TITLE,
+          title: MSG_AREA_TEMATICA_TITLE
         }
       },
       {
@@ -254,7 +255,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_SOLICITUD_PROYECTO_SOCIO,
+          title: MSG_SOLICITUD_PROYECTO_SOCIO
         }
       },
       {
@@ -265,7 +266,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_SOLICITUD_PROYECTO_SOCIO,
+          title: MSG_SOLICITUD_PROYECTO_SOCIO
         }
       },
       {
@@ -276,7 +277,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_SOLICITUD_PROYECTO_PRESUPUESTO,
+          title: MSG_SOLICITUD_PROYECTO_PRESUPUESTO
         }
       },
       {
@@ -287,7 +288,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_SOLICITUD_PROYECTO_PRESUPUESTO,
+          title: MSG_SOLICITUD_PROYECTO_PRESUPUESTO
         }
       },
       { path: '**', component: null }

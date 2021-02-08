@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -159,14 +160,15 @@ export class ProyectoEntidadConvocanteModalComponent extends
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_ENTIDAD_CONVOCANTE_KEY
-    ).subscribe((value) => this.msgParamEntity = { entity: value });
+      PROYECTO_ENTIDAD_CONVOCANTE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_PLAN_KEY
-    ).subscribe((value) => this.msgParamPlanEntity = { entity: value });
+    ).subscribe((value) => this.msgParamPlanEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_PROGRAMA_KEY
-    ).subscribe((value) => this.msgParamProgramaEntity = { entity: value });
+    ).subscribe((value) => this.msgParamProgramaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   private updateProgramas(programa: NodePrograma[]) {
@@ -365,4 +367,9 @@ export class ProyectoEntidadConvocanteModalComponent extends
     }
     return this.getTopLevel(programa.padre);
   }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
 }

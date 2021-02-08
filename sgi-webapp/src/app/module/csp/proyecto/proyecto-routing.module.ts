@@ -23,8 +23,9 @@ import { ProyectoEntidadGestoraComponent } from './proyecto-formulario/proyecto-
 import { ProyectoEquipoComponent } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 import { ProyectoHistoricoEstadosComponent } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.component';
+import { MSG_PARAMS } from '@core/i18n';
 
-const MSG_LISTADO_TITLE = marker('csp.proyecto.listado.titulo');
+const PROYECTO_KEY = marker('csp.proyecto');
 const MSG_EDIT_TITLE = marker('csp.proyecto.editar.titulo');
 const MSG_NEW_TITLE = marker('csp.proyecto.crear.titulo');
 
@@ -34,7 +35,8 @@ const routes: SgiAuthRoutes = [
     component: ProyectoListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_LISTADO_TITLE,
+      title: PROYECTO_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
     }
   },
   {
@@ -43,7 +45,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     data: {
-      title: MSG_NEW_TITLE,
+      title: MSG_NEW_TITLE
     },
     children: [
       {

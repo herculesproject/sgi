@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '@env';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppMatPaginatorIntl } from '@material/app-mat-paginator-intl';
 import { LoggerModule } from 'ngx-logger';
@@ -22,6 +22,7 @@ import localeEs from '@angular/common/locales/es';
 import { CoreModule } from '@angular/flex-layout';
 import { HomeComponent } from './home/home.component';
 import { ConfigService } from './core/services/config.service';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 
 // Load supported locales
 registerLocaleData(localeEs);
@@ -51,6 +52,10 @@ const appInitializerFn = (appConfig: ConfigService) => {
           return new TranslateHttpLoader(http);
         },
         deps: [HttpClient]
+      },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler
       },
       defaultLanguage: 'es'
     }),
