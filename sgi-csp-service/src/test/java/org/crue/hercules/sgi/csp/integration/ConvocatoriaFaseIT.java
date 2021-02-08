@@ -116,9 +116,8 @@ public class ConvocatoriaFaseIT extends BaseIT {
     ConvocatoriaFase convocatoriaFase = response.getBody();
     Assertions.assertThat(convocatoriaFase.getId()).as("getId()").isEqualTo(idConvocatoriaFase);
     Assertions.assertThat(convocatoriaFase.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
-    Assertions.assertThat(convocatoriaFase.getFechaInicio()).as("getFechaIncio()")
-        .isEqualTo(LocalDate.of(2020, 10, 18));
-    Assertions.assertThat(convocatoriaFase.getFechaFin()).as("getFechaFin()").isEqualTo(LocalDate.of(2020, 11, 01));
+    Assertions.assertThat(convocatoriaFase.getFechaInicio()).as("getFechaInicio()").isEqualTo("2020-10-18T00:00");
+    Assertions.assertThat(convocatoriaFase.getFechaFin()).as("getFechaFin()").isEqualTo("2020-11-01T00:00");
     Assertions.assertThat(convocatoriaFase.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(1L);
 
   }
