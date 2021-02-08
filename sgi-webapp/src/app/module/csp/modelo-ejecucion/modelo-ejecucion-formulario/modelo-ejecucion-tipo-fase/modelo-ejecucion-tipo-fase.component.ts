@@ -70,8 +70,10 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
             return wrapper.value.tipoFase.nombre;
           case 'descripcion':
             return wrapper.value.tipoFase.descripcion;
-          case 'activo':
-            return wrapper.value.tipoFase.activo;
+          case 'convocatorias':
+            return wrapper.value.convocatoria;
+          case 'proyectos':
+            return wrapper.value.proyecto;
           default:
             return wrapper[property];
         }

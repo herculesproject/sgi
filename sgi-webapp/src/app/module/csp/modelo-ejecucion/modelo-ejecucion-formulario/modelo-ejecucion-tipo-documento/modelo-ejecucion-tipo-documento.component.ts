@@ -66,6 +66,19 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
       }
     );
     this.modelosTipoDocumentos.paginator = this.paginator;
+    this.modelosTipoDocumentos.sortingDataAccessor =
+      (wrapper: StatusWrapper<IModeloTipoDocumento>, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return wrapper.value.tipoDocumento.nombre;
+          case 'descripcion':
+            return wrapper.value.tipoDocumento.descripcion;
+          case 'nombreFase':
+            return wrapper.value.modeloTipoFase?.tipoFase?.nombre;
+          default:
+            return wrapper[property];
+        }
+      };
     this.modelosTipoDocumentos.sort = this.sort;
     this.subscriptions.push(subscription);
   }

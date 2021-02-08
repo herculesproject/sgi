@@ -74,8 +74,12 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
             return wrapper.value.tipoHito.nombre;
           case 'descripcion':
             return wrapper.value.tipoHito.descripcion;
-          case 'activo':
-            return wrapper.value.tipoHito.activo;
+          case 'convocatorias':
+            return wrapper.value.convocatoria;
+          case 'solicitudes':
+            return wrapper.value.solicitud;
+          case 'proyectos':
+            return wrapper.value.proyecto;
           default:
             return wrapper[property];
         }

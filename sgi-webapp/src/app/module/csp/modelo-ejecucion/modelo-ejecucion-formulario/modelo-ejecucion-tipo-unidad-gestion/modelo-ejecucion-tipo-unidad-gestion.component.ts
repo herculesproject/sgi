@@ -64,6 +64,17 @@ export class ModeloEjecucionTipoUnidadGestionComponent extends FragmentComponent
       }
     );
     this.modelosTipoUnidades.paginator = this.paginator;
+    this.modelosTipoUnidades.sortingDataAccessor =
+      (wrapper: StatusWrapper<IModeloUnidad>, property: string) => {
+        switch (property) {
+          case 'acronimo':
+            return wrapper.value.unidadGestion.acronimo;
+          case 'nombre':
+            return wrapper.value.unidadGestion.nombre;
+          default:
+            return wrapper[property];
+        }
+      };
     this.modelosTipoUnidades.sort = this.sort;
     this.subscriptions.push(subscription);
   }
