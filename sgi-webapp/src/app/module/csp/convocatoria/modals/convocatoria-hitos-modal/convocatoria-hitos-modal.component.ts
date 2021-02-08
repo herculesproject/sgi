@@ -151,7 +151,7 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
 
   loadTiposHito() {
     this.suscripciones.push(
-      this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
+      this.modeloEjecucionService.findModeloTipoHitoConvocatoria(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
           this.modeloTiposHitoFiltered = res.items;
           this.modeloTiposHito$ = this.formGroup.controls.tipoHito.valueChanges

@@ -148,7 +148,7 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
 
   loadTiposHito() {
     this.suscripciones.push(
-      this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
+      this.modeloEjecucionService.findModeloTipoHitoSolicitud(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
           this.modeloTiposHitoFiltered = res.items;
           this.modeloTiposHito$ = this.formGroup.controls.tipoHito.valueChanges

@@ -102,6 +102,33 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
   }
 
   /**
+  * Muestra los tipo de hitos de solicitudes para un modelo de ejecución concreto
+  * @param id modelo de ejecucion
+  * @param options opciones de búsqueda.
+  */
+  findModeloTipoHitoSolicitud(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
+    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos/solicitud`, options);
+  }
+
+  /**
+  * Muestra los tipo de hitos de convocatorias para un modelo de ejecución concreto
+  * @param id modelo de ejecucion
+  * @param options opciones de búsqueda.
+  */
+  findModeloTipoHitoConvocatoria(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
+    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos/convocatoria`, options);
+  }
+
+  /**
+  * Muestra los tipo de hitos de proyectos para un modelo de ejecución concreto
+  * @param id modelo de ejecucion
+  * @param options opciones de búsqueda.
+  */
+  findModeloTipoHitoProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
+    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos/proyecto`, options);
+  }
+
+  /**
    * Encuentra unidades de gestion
    */
   findModeloTipoUnidadGestion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloUnidad>> {
