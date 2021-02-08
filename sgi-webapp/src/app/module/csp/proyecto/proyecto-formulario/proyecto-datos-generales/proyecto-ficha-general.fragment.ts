@@ -10,8 +10,6 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { RangeDateValidator } from '@core/validators/range-date-validator';
-import { RangeValidator } from '@core/validators/range-validator';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult, SgiRestSort, SgiRestSortDirection } from '@sgi/framework/http';
 import moment from 'moment';
 import { NGXLogger } from 'ngx-logger';

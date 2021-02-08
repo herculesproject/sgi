@@ -65,7 +65,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     (key) => TipoPlantillaJustificacionEnum[key]);
 
   private obligatorioTimesheet: boolean;
-  requiredHoras: boolean;
+  requiredHoras = false;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -133,8 +133,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       })
     );
 
-    this.formGroup.controls.horasAnuales.disable();
-
     this.subscriptions.push(
       merge(
         this.formGroup.controls.fechaInicio.valueChanges,
@@ -166,24 +164,37 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    */
   private validarCoste() {
     if (this.formGroup.controls.costeHora.value) {
-      this.formGroup.controls.horasAnuales.enable();
       this.requiredHoras = true;
       if (this.formGroup.controls.timesheet.value === null || this.formGroup.controls.timesheet.value === false) {
         this.formGroup.controls.timesheet.setErrors({ invalid: true });
         this.formGroup.controls.timesheet.markAsTouched({ onlySelf: true });
         this.obligatorioTimesheet = true;
+        this.requiredHoras = true;
       } else {
         this.obligatorioTimesheet = false;
+
+        if (this.formGroup.controls.costeHora.value === true) {
+          this.requiredHoras = true;
+        } else {
+          this.requiredHoras = false;
+        }
         this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
       }
     } else {
-      this.formGroup.controls.horasAnuales.patchValue('');
-      this.requiredHoras = false;
-      this.formGroup.controls.horasAnuales.disable();
+      if (this.formGroup.controls.horasAnuales.value) {
+        this.formGroup.controls.horasAnuales.patchValue(null);
+        this.requiredHoras = false;
+        this.formGroup.controls.horasAnuales.setValidators(null);
+        this.formGroup.controls.horasAnuales.updateValueAndValidity({ onlySelf: true });
+      }
       if (this.formGroup.controls.timesheet.value === false) {
         this.obligatorioTimesheet = false;
+        this.requiredHoras = false;
         this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
       }
+      this.requiredHoras = false;
+      this.formGroup.controls.horasAnuales.setValidators(null);
+      this.formGroup.controls.horasAnuales.updateValueAndValidity({ onlySelf: true });
     }
   }
 
