@@ -1,7 +1,7 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { MatTree, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
@@ -49,6 +49,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  @ViewChild(MatTree, { static: true }) private matTree: MatTree<NodeDocumentoSolicitud>;
   treeControl: FlatTreeControl<NodeDocumentoSolicitud>;
   private treeFlattener: MatTreeFlattener<NodeDocumentoSolicitud, NodeDocumentoSolicitud>;
   dataSource: MatTreeFlatDataSource<NodeDocumentoSolicitud, NodeDocumentoSolicitud>;
@@ -124,13 +125,14 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     const convocatoriaId = this.actionService.getDatosGeneralesSolicitud().convocatoria?.id;
     if (convocatoriaId) {
       this.subscriptions.push(
-        this.configuracionSolicitudService.findAllConvocatoriaDocumentoRequeridoSolicitud(convocatoriaId).pipe(
-          map(documentoRequeridos => documentoRequeridos.items.map(documentoRequerido => documentoRequerido.tipoDocumento))
-        ).subscribe(
-          (tipos) => {
-            this.tiposDocumento = this.sortTipoDocumentos(tipos);
-          }
-        )
+        this.configuracionSolicitudService.findAllTipoDocumentosFasePresentacion(convocatoriaId)
+          .pipe(
+            map(tipoDocumentos => tipoDocumentos.items)
+          ).subscribe(
+            (tipos) => {
+              this.tiposDocumento = this.sortTipoDocumentos(tipos);
+            }
+          )
       );
     }
     this.switchToNone();
@@ -254,6 +256,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
 
   private addNode(node: NodeDocumentoSolicitud): void {
     const createdNode = this.formPart.addNode(node);
+    this.refreshTree(this.formPart.documentos$.value);
     this.expandParents(createdNode);
     this.switchToNone();
   }
@@ -308,9 +311,17 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
 
   switchToNew(): void {
     const wrapper = new StatusWrapper<ISolicitudDocumento>({} as ISolicitudDocumento);
-    const newNode: NodeDocumentoSolicitud = new NodeDocumentoSolicitud(null, undefined, 2, wrapper);
+    const newNode: NodeDocumentoSolicitud = new NodeDocumentoSolicitud(null, undefined, 2, false, wrapper);
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);
+  }
+
+  private refreshTree(nodes: NodeDocumentoSolicitud[]) {
+    // There is no way to update the tree without recreating it,
+    // because CDK Tree detect changes only when a root nodes changes
+    // See: https://github.com/angular/components/issues/11381
+    this.matTree.renderNodeChanges([]);
+    this.matTree.renderNodeChanges(nodes);
   }
 }
