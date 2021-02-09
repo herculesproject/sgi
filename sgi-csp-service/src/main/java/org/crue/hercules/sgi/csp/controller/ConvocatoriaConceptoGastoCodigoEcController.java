@@ -1,16 +1,20 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -108,6 +112,29 @@ public class ConvocatoriaConceptoGastoCodigoEcController {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Actualiza el listado de {@link ConvocatoriaConceptoGastoCodigoEc} de la
+   * {@link ConvocatoriaConceptoGasto} con el listado codigosEconomicos añadiendo,
+   * editando o eliminando los elementos segun proceda.
+   * 
+   * @param convocatoriaConceptoGastoId Id de la
+   *                                    {@link ConvocatoriaConceptoGasto}.
+   * @param codigosEconomicos           lista con los nuevos
+   *                                    {@link ConvocatoriaConceptoGastoCodigoEc}
+   *                                    a guardar.
+   * @return Lista actualizada con los {@link ConvocatoriaConceptoGastoCodigoEc}.
+   */
+  @PatchMapping("/{convocatoriaConceptoGastoId}")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-C')")
+  public ResponseEntity<List<ConvocatoriaConceptoGastoCodigoEc>> update(@PathVariable Long convocatoriaConceptoGastoId,
+      @Valid @RequestBody List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicos) {
+    log.debug("update(List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicos, convocatoriaConceptoGastoId) - start");
+    List<ConvocatoriaConceptoGastoCodigoEc> returnValue = service.update(convocatoriaConceptoGastoId,
+        codigosEconomicos);
+    log.debug("update(List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicos, convocatoriaConceptoGastoId) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
 }

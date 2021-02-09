@@ -29,7 +29,7 @@ public class ConvocatoriaConceptoGastoCodigoEcRepositoryTest {
   private ConvocatoriaConceptoGastoCodigoEcRepository repository;
 
   @Test
-  public void findByConvocatoriaConceptoGastoId_ReturnsListConvocatoriaConceptoGastoCodigoEc() throws Exception {
+  public void findAllByConvocatoriaConceptoGastoId_ReturnsListConvocatoriaConceptoGastoCodigoEc() throws Exception {
     // given: data ConvocatoriaConceptoGastoCodigoEc to find by
     // ConvocatoriaConceptoGasto and permitido
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc1 = generarConvocatoriaConceptoGastoCodigoEc(
@@ -38,8 +38,8 @@ public class ConvocatoriaConceptoGastoCodigoEcRepositoryTest {
     generarConvocatoriaConceptoGastoCodigoEc("-002", true);
 
     // when: find by ConvocatoriaConceptoGasto and permitido
-    List<ConvocatoriaConceptoGastoCodigoEc> dataFound = repository
-        .findByConvocatoriaConceptoGastoId(convocatoriaConceptoGastoCodigoEc1.getConvocatoriaConceptoGasto().getId());
+    List<ConvocatoriaConceptoGastoCodigoEc> dataFound = repository.findAllByConvocatoriaConceptoGastoId(
+        convocatoriaConceptoGastoCodigoEc1.getConvocatoriaConceptoGasto().getId());
 
     // then: ConvocatoriaConceptoGasto is found
     Assertions.assertThat(dataFound.get(0)).isNotNull();
@@ -49,14 +49,15 @@ public class ConvocatoriaConceptoGastoCodigoEcRepositoryTest {
   }
 
   @Test
-  public void findByConvocatoriaConceptoGastoId_ReturnsEmptyListConvocatoriaConceptoGastoCodigoEc() throws Exception {
+  public void findAllByConvocatoriaConceptoGastoId_ReturnsEmptyListConvocatoriaConceptoGastoCodigoEc()
+      throws Exception {
     // given: data ConvocatoriaConceptoGastoCodigoEc to find by
     // ConvocatoriaConceptoGasto and permitido
     generarConvocatoriaConceptoGastoCodigoEc("-001", true);
     generarConvocatoriaConceptoGastoCodigoEc("-002", true);
 
     // when: find by ConvocatoriaConceptoGasto and permitido
-    List<ConvocatoriaConceptoGastoCodigoEc> dataFound = repository.findByConvocatoriaConceptoGastoId(5L);
+    List<ConvocatoriaConceptoGastoCodigoEc> dataFound = repository.findAllByConvocatoriaConceptoGastoId(5L);
 
     // then: ConvocatoriaConceptoGastoCodigoEc is not found
     Assertions.assertThat(dataFound).size().isEqualTo(0);

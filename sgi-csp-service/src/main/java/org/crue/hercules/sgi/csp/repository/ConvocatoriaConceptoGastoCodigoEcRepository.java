@@ -18,6 +18,15 @@ public interface ConvocatoriaConceptoGastoCodigoEcRepository
    *                                    {@link ConvocatoriaConceptoGasto}
    * @return listado {@link ConvocatoriaConceptoGastoCodigoEc}
    */
-  List<ConvocatoriaConceptoGastoCodigoEc> findByConvocatoriaConceptoGastoId(Long idConvocatoriaConceptoGasto);
+  List<ConvocatoriaConceptoGastoCodigoEc> findAllByConvocatoriaConceptoGastoId(Long idConvocatoriaConceptoGasto);
+
+  /**
+   * Comprueba la existencia del {@link ConvocatoriaConceptoGastoCodigoEc} por id
+   * de {@link ConvocatoriaConceptoGasto}
+   *
+   * @param id el id de la entidad {@link ConvocatoriaConceptoGasto}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsByConvocatoriaConceptoGastoId(Long id);
 
 }

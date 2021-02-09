@@ -58,6 +58,23 @@ public class ConvocatoriaConceptoGastoCodigoEcSpecifications {
   }
 
   /**
+   * Se obtienen los {@link ConvocatoriaConceptoGastoCodigoEc} por convocatoria
+   * 
+   * @param idConvocatoriaConceptoGasto identificador de la
+   *                                    {@link ConvocatoriaConceptoGasto}
+   * @return specification para obtener los
+   *         {@link ConvocatoriaConceptoGastoCodigoEc} por convocatoria
+   */
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> byConvocatoriaConceptoGasto(
+      Long idConvocatoriaConceptoGasto) {
+    return (root, query, cb) -> {
+      return cb.equal(
+          root.get(ConvocatoriaConceptoGastoCodigoEc_.convocatoriaConceptoGasto).get(ConvocatoriaConceptoGasto_.id),
+          idConvocatoriaConceptoGasto);
+    };
+  }
+
+  /**
    * Se obtienen los {@link ConvocatoriaConceptoGastoCodigoEc} con valores para
    * las fechas de inicio y fin
    * 
@@ -85,8 +102,13 @@ public class ConvocatoriaConceptoGastoCodigoEcSpecifications {
   public static Specification<ConvocatoriaConceptoGastoCodigoEc> byRangoFechaSolapados(LocalDate fechaInicio,
       LocalDate fechaFin) {
     return (root, query, cb) -> {
-      return cb.and(cb.lessThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio), fechaFin),
-          cb.greaterThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin), fechaInicio));
+      return cb.and(
+          cb.or(cb.isNull(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio)),
+              cb.lessThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio),
+                  fechaFin != null ? fechaFin : LocalDate.of(2500, 1, 1))),
+          cb.or(cb.isNull(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin)),
+              cb.greaterThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin),
+                  fechaInicio != null ? fechaInicio : LocalDate.of(1900, 1, 1))));
     };
   }
 
@@ -113,9 +135,26 @@ public class ConvocatoriaConceptoGastoCodigoEcSpecifications {
    *         {@link ConvocatoriaConceptoGastoCodigoEc} con el codigoEconomicoRef
    *         indicado.
    */
-  public static Specification<ConvocatoriaConceptoGastoCodigoEc> bycodigoEconomicoRef(String codigoEconomicoRef) {
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> byCodigoEconomicoRef(String codigoEconomicoRef) {
     return (root, query, cb) -> {
       return cb.equal(root.get(ConvocatoriaConceptoGastoCodigoEc_.codigoEconomicoRef), codigoEconomicoRef);
+    };
+  }
+
+  /**
+   * {@link ConvocatoriaConceptoGastoCodigoEc} id diferente de
+   * {@link ConvocatoriaConceptoGastoCodigoEc} con el indicado.
+   * 
+   * @param id identificador de la {@link ConvocatoriaConceptoGastoCodigoEc}.
+   * @return specification para comprobar si el id es diferentes del
+   *         {@link ConvocatoriaConceptoGastoCodigoEc} indicado.
+   */
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> byIdNotEqual(Long id) {
+    return (root, query, cb) -> {
+      if (id == null) {
+        return cb.isTrue(cb.literal(true)); // always true = no filtering
+      }
+      return cb.equal(root.get(ConvocatoriaConceptoGastoCodigoEc_.id), id).not();
     };
   }
 }

@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.dto.ConvocatoriaConceptoGastoWithEnableAccion;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.springframework.data.domain.Page;
@@ -49,26 +48,24 @@ public interface ConvocatoriaConceptoGastoService {
   ConvocatoriaConceptoGasto findById(Long id);
 
   /**
-   * Obtiene las {@link ConvocatoriaConceptoGastoWithEnableAccion} permitidos para
-   * una {@link Convocatoria}
+   * Obtiene las {@link ConvocatoriaConceptoGasto} permitidos para una
+   * {@link Convocatoria}
    *
    * @param convocatoriaId el id de la {@link Convocatoria}.
    * @param pageable       la información de la paginación.
    * @return la lista de entidades {@link ConvocatoriaConceptoGasto} de la
    *         {@link Convocatoria} paginadas.
    */
-  Page<ConvocatoriaConceptoGastoWithEnableAccion> findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId,
-      Pageable pageable);
+  Page<ConvocatoriaConceptoGasto> findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Pageable pageable);
 
   /**
-   * Obtiene las {@link ConvocatoriaConceptoGastoWithEnableAccion} NO permitidos
-   * para una {@link Convocatoria}
+   * Obtiene las {@link ConvocatoriaConceptoGasto} NO permitidos para una
+   * {@link Convocatoria}
    *
    * @param convocatoriaId el id de la {@link Convocatoria}.
    * @param pageable       la información de la paginación.
    * @return la lista de entidades {@link ConvocatoriaConceptoGasto} de la
    *         {@link Convocatoria} paginadas.
    */
-  Page<ConvocatoriaConceptoGastoWithEnableAccion> findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId,
-      Pageable pageable);
+  Page<ConvocatoriaConceptoGasto> findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Pageable pageable);
 }

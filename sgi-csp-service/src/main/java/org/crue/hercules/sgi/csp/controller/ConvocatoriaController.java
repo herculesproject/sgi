@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.crue.hercules.sgi.csp.dto.ConvocatoriaConceptoGastoCodigoEcWithEnableAccion;
-import org.crue.hercules.sgi.csp.dto.ConvocatoriaConceptoGastoWithEnableAccion;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -827,11 +825,11 @@ public class ConvocatoriaController {
    */
   @GetMapping("/{id}/convocatoriagastos/permitidos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-V')")
-  ResponseEntity<Page<ConvocatoriaConceptoGastoWithEnableAccion>> findAllConvocatoriaGastosPermitidos(
-      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+  ResponseEntity<Page<ConvocatoriaConceptoGasto>> findAllConvocatoriaGastosPermitidos(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaGastosPermitidos(Long id, Pageable paging) - start");
-    Page<ConvocatoriaConceptoGastoWithEnableAccion> page = convocatoriaConceptoGastoService
-        .findAllByConvocatoriaAndPermitidoTrue(id, paging);
+    Page<ConvocatoriaConceptoGasto> page = convocatoriaConceptoGastoService.findAllByConvocatoriaAndPermitidoTrue(id,
+        paging);
     if (page.isEmpty()) {
       log.debug("findAllConvocatoriaGastosPermitidos(Long id, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -850,11 +848,11 @@ public class ConvocatoriaController {
    */
   @GetMapping("/{id}/convocatoriagastos/nopermitidos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-V')")
-  ResponseEntity<Page<ConvocatoriaConceptoGastoWithEnableAccion>> findAllConvocatoriaGastosNoPermitidos(
-      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+  ResponseEntity<Page<ConvocatoriaConceptoGasto>> findAllConvocatoriaGastosNoPermitidos(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaGastosNoPermitidos(Long id, Pageable paging) - start");
-    Page<ConvocatoriaConceptoGastoWithEnableAccion> page = convocatoriaConceptoGastoService
-        .findAllByConvocatoriaAndPermitidoFalse(id, paging);
+    Page<ConvocatoriaConceptoGasto> page = convocatoriaConceptoGastoService.findAllByConvocatoriaAndPermitidoFalse(id,
+        paging);
 
     if (page.isEmpty()) {
       log.debug("findAllConvocatoriaGastosNoPermitidos(Long id, Pageable paging) - end");
@@ -874,17 +872,17 @@ public class ConvocatoriaController {
   /**
    * Devuelve una lista paginada y filtrada de
    * {@link ConvocatoriaConceptoGastoCodigoEc} permitidos de la
-   * {@link Convocatoria}.
+   * {@link ConvocatoriaConceptoGasto}.
    * 
-   * @param id     Identificador de {@link Convocatoria}.
+   * @param id     Identificador de {@link ConvocatoriaConceptoGasto}.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriagastocodigoec/permitidos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-V')")
-  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion>> findAllConvocatoriaGastosCodigoEcPermitidos(
+  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEc>> findAllConvocatoriaGastosCodigoEcPermitidos(
       @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - start");
-    Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion> page = convocatoriaConceptoGastoCodigoEcService
+    Page<ConvocatoriaConceptoGastoCodigoEc> page = convocatoriaConceptoGastoCodigoEcService
         .findAllByConvocatoriaAndPermitidoTrue(id, paging);
     if (page.isEmpty()) {
       log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - end");
@@ -905,10 +903,10 @@ public class ConvocatoriaController {
    */
   @GetMapping("/{id}/convocatoriagastocodigoec/nopermitidos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-V')")
-  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion>> findAllConvocatoriaGastosCodigoEcNoPermitidos(
+  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEc>> findAllConvocatoriaGastosCodigoEcNoPermitidos(
       @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaGastosCodigoEcNoPermitidos(Long id, Pageable paging) - start");
-    Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion> page = convocatoriaConceptoGastoCodigoEcService
+    Page<ConvocatoriaConceptoGastoCodigoEc> page = convocatoriaConceptoGastoCodigoEcService
         .findAllByConvocatoriaAndPermitidoFalse(id, paging);
 
     if (page.isEmpty()) {

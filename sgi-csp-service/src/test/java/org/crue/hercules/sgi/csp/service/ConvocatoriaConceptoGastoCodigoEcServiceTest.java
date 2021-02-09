@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoCodigoEcNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
-import org.crue.hercules.sgi.csp.mapper.ConvocatoriaConceptoGastoCodigoEcMapper;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -35,8 +34,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
   private ConvocatoriaConceptoGastoCodigoEcRepository repository;
   @Mock
   private ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
-  @Mock
-  private ConvocatoriaConceptoGastoCodigoEcMapper convocatoriaConceptoGastoCodigoEcMapper;
+
   @Mock
   private ConvocatoriaService convocatoriaService;
 
@@ -45,36 +43,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaConceptoGastoCodigoEcServiceImpl(repository, convocatoriaConceptoGastoRepository,
-        convocatoriaConceptoGastoCodigoEcMapper, convocatoriaService);
-  }
-
-  @Test
-  public void create_ReturnsConvocatoriaConceptoGastoCodigoEc() {
-    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc
-    ConvocatoriaConceptoGastoCodigoEc newConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
-        null);
-
-    BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto()));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
-
-    BDDMockito.given(repository.save(newConvocatoriaConceptoGastoCodigoEc)).will((InvocationOnMock invocation) -> {
-      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCreado = invocation.getArgument(0);
-      convocatoriaConceptoGastoCreado.setId(1L);
-      return convocatoriaConceptoGastoCreado;
-    });
-
-    // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
-    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcCreado = service
-        .create(newConvocatoriaConceptoGastoCodigoEc);
-
-    // then: El ConvocatoriaConceptoGastoCodigoEc se crea correctamente
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcCreado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcCreado.getConvocatoriaConceptoGasto().getObservaciones())
-        .as("getObservaciones()")
-        .isEqualTo(newConvocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getObservaciones());
+        convocatoriaService);
   }
 
   @Test
@@ -134,25 +103,6 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
   }
 
   @Test
-  public void create_WhenModificableIsFalse_ThrowsIllegalArgumentException() {
-    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc cuando la convocatoria no
-    // es modificable
-    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
-        null);
-
-    BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto()));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
-
-    // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
-    // then: Lanza una excepcion porque la convocatoria no es modificable
-    Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGastoCodigoEc))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede crear ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-  }
-
-  @Test
   public void create_DuplicatedCodigoOverlapsDates_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaConceptoGastoCodigoEc duplicate codigo Overlaps Dates
     ConvocatoriaConceptoGastoCodigoEc newConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
@@ -183,73 +133,6 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "El código económico '%s' ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
             newConvocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef());
-  }
-
-  @Test
-  public void create_DuplicatedCodigoNotOverlapsDates_NotThrowAnyException() {
-    // given: a ConvocatoriaConceptoGastoCodigoEc with duplicate codigo that
-    // Overlaps Dates
-    ConvocatoriaConceptoGastoCodigoEc newConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
-        1L);
-    newConvocatoriaConceptoGastoCodigoEc.setId(null);
-    newConvocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("codigoEconomicoRef");
-
-    ConvocatoriaConceptoGastoCodigoEc existingConvocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
-        2L);
-    existingConvocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("codigoEconomicoRef");
-    existingConvocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now().plusDays(1));
-    existingConvocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now().plusDays(2));
-    List<ConvocatoriaConceptoGastoCodigoEc> solapadas = new ArrayList<ConvocatoriaConceptoGastoCodigoEc>();
-    solapadas.add(existingConvocatoriaConceptoGastoCodigoEc);
-
-    BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto()));
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaConceptoGastoCodigoEc>>any(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(solapadas));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
-
-    Assertions.assertThatCode(
-        // when: create ConvocatoriaConceptoGastoCodigoEc
-        () -> service.create(newConvocatoriaConceptoGastoCodigoEc))
-        // then: no exception thrown as dates don't overlap
-        .doesNotThrowAnyException();
-  }
-
-  @Test
-  public void update_ReturnsConvocatoriaConceptoGastoCodigoEc() {
-    // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc con el nombre actualizado
-    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
-        1L);
-    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcCodigoActualizado = generarMockConvocatoriaConceptoGastoCodigoEc(
-        1L);
-    convocatoriaConceptoGastoCodigoEcCodigoActualizado.setCodigoEconomicoRef("Cod actualizado");
-
-    BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaConceptoGastoCodigoEcCodigoActualizado.getConvocatoriaConceptoGasto()));
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaConceptoGastoCodigoEcCodigoActualizado));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
-    BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaConceptoGastoCodigoEc>any()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
-    // when: Actualizamos el ConvocatoriaConceptoGastoCodigoEc
-    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizado = service
-        .update(convocatoriaConceptoGastoCodigoEcCodigoActualizado);
-
-    // then: El ConvocatoriaConceptoGastoCodigoEc se actualiza correctamente.
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcActualizado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcActualizado.getId()).as("getId()")
-        .isEqualTo(convocatoriaConceptoGastoCodigoEc.getId());
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcActualizado.getCodigoEconomicoRef())
-        .as("getCodigoEconomicoRef()")
-        .isEqualTo(convocatoriaConceptoGastoCodigoEcCodigoActualizado.getCodigoEconomicoRef());
-    Assertions.assertThat(convocatoriaConceptoGastoCodigoEcActualizado.getConvocatoriaConceptoGasto())
-        .as("getConvocatoriaConceptoGasto()")
-        .isEqualTo(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto());
   }
 
   @Test
@@ -333,7 +216,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
         () -> service.update(convocatoriaConceptoGastoCodigoEcActualizado))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar ConvocatoriaConceptoGastoCodigoEc. Solo está permitido modificar las fechas de inicio y fin. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede modificar ConvocatoriaConceptoGastoCodigoEc. Solo está permitido modificar las fechas de inicio y fin. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
   }
 
   @Test
@@ -456,8 +339,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
         // when: delete by existing id
         () -> service.delete(id))
         // then: throw exception as Convocatoria is not modificable
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede eliminar ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -515,7 +397,8 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     convocatoriaConceptoGasto.setObservaciones("Obs-" + (id == null ? 1 : id));
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
     convocatoriaConceptoGasto.setImporteMaximo(400.0);
-    convocatoriaConceptoGasto.setNumMeses(4);
+    convocatoriaConceptoGasto.setMesInicial(1);
+    convocatoriaConceptoGasto.setMesFinal(4);
     convocatoriaConceptoGasto.setPermitido(true);
     convocatoriaConceptoGasto.setPorcentajeCosteIndirecto(3);
 

@@ -5,7 +5,12 @@ import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,14 +37,19 @@ public class ConvocatoriaConceptoGastoController {
 
   /** ConvocatoriaConceptoGasto service */
   private final ConvocatoriaConceptoGastoService service;
+  /** ConvocatoriaConceptoGastoCodigoEc service */
+  private final ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService;
 
   /**
    * Instancia un nuevo ConvocatoriaConceptoGastoController.
    * 
-   * @param service {@link ConvocatoriaConceptoGastoService}
+   * @param service                                  {@link ConvocatoriaConceptoGastoService}
+   * @param convocatoriaConceptoGastoCodigoEcService {@link ConvocatoriaConceptoGastoCodigoEcService}
    */
-  public ConvocatoriaConceptoGastoController(ConvocatoriaConceptoGastoService service) {
+  public ConvocatoriaConceptoGastoController(ConvocatoriaConceptoGastoService service,
+      ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService) {
     this.service = service;
+    this.convocatoriaConceptoGastoCodigoEcService = convocatoriaConceptoGastoCodigoEcService;
   }
 
   /**
@@ -106,6 +117,53 @@ public class ConvocatoriaConceptoGastoController {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * 
+   * CONVOCATORIA GASTOS CÓDIGO ECONÓMICO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaConceptoGastoCodigoEc} permitidos de la
+   * {@link ConvocatoriaConceptoGasto}.
+   * 
+   * @param id     Identificador de {@link ConvocatoriaConceptoGasto}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriagastocodigoec")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-V')")
+  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEc>> findAllConvocatoriaGastosCodigoEc(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - start");
+    Page<ConvocatoriaConceptoGastoCodigoEc> page = convocatoriaConceptoGastoCodigoEcService
+        .findAllByConvocatoriaConceptoGasto(id, paging);
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Indica si {@link ConvocatoriaConceptoGasto} tiene asignados
+   * {@link ConvocatoriaConceptoGastoCodigoEc}
+   * 
+   * @param id Identificador de {@link ConvocatoriaConceptoGasto}.
+   * @return true/false
+   */
+  @RequestMapping(path = "/{id}/convocatoriagastocodigoec", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-B')")
+  public ResponseEntity<?> existsCodigosEconomicos(@PathVariable Long id) {
+    log.debug("existsCodigosEconomicos(Long id) - start");
+    boolean returnValue = convocatoriaConceptoGastoCodigoEcService.existsByConvocatoriaConceptoGasto(id);
+
+    log.debug("existsCodigosEconomicos(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

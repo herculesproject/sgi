@@ -72,10 +72,15 @@ public class ConvocatoriaConceptoGasto extends BaseEntity {
   @Column(name = "permitido", nullable = true)
   private Boolean permitido;
 
-  /** Número de meses */
-  @Column(name = "num_meses", nullable = true)
-  @Min(0)
-  private Integer numMeses;
+  /** Mes inicial */
+  @Column(name = "mes_inicial", nullable = true)
+  @Min(1)
+  private Integer mesInicial;
+
+  /** Mes final */
+  @Column(name = "mes_final", nullable = true)
+  @Min(1)
+  private Integer mesFinal;
 
   /** Porcentaje coste indirecto */
   @Column(name = "porcentaje_coste_indirecto", nullable = true)

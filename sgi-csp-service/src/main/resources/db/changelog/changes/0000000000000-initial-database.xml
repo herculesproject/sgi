@@ -353,7 +353,8 @@
       <column name="last_modified_by" type="VARCHAR(255)" />
       <column name="last_modified_date" type="TIMESTAMP" />
       <column name="importe_maximo" type="DOUBLE" />
-      <column name="num_meses" type="INT" />
+      <column name="mes_final" type="INT" />
+      <column name="mes_inicial" type="INT" />
       <column name="observaciones" type="VARCHAR(250)" />
       <column name="permitido" type="BOOLEAN" />
       <column name="porcentaje_coste_indirecto" type="INT" />
