@@ -102,7 +102,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       this.configuracionSolicitud = {} as IConfiguracionSolicitud;
     }
     this.configuracionSolicitud.tramitacionSGI = form.tramitacionSGI ? true : false;
-    this.configuracionSolicitud.fasePresentacionSolicitudes = form.fasePresentacionSolicitudes;
+    this.configuracionSolicitud.fasePresentacionSolicitudes = form.fasePresentacionSolicitudes ? form.fasePresentacionSolicitudes : null;
 
     this.configuracionSolicitud.baremacionRef = form.tipoBaremacion;
     this.configuracionSolicitud.formularioSolicitud = form.formularioSolicitud;
@@ -152,7 +152,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       activo: true
     } as IConvocatoria;
 
-    if (!configuracion.fasePresentacionSolicitudes?.id) {
+    if (configuracion.fasePresentacionSolicitudes != null && !configuracion.fasePresentacionSolicitudes.id) {
       const fasePresentacionSolicitudes = this.convocatoriaFases.find(plazoFase =>
         plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
       configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
@@ -169,7 +169,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       configuracion.fasePresentacionSolicitudes = null;
     }
 
-    if (!configuracion.fasePresentacionSolicitudes?.id) {
+    if (configuracion.fasePresentacionSolicitudes != null && !configuracion.fasePresentacionSolicitudes.id) {
       const fasePresentacionSolicitudes = this.convocatoriaFases.find(plazoFase =>
         plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
       configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
