@@ -10,6 +10,10 @@
           [title]="'csp.proyecto.menu.contexto-proyecto' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.CONTEXTO_PROYECTO)">
         </sgi-action-fragment-menu-item>
+        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS]"
+          [title]="'csp.proyecto.menu.historico-estado' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.HISTORICO_ESTADOS)">
+        </sgi-action-fragment-menu-item>
       </sgi-action-fragment-menu-group>
       <sgi-action-fragment-menu-group [title]="'csp.proyecto.menu.entidades' | translate">
         <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.ENTIDAD_GESTORA]"

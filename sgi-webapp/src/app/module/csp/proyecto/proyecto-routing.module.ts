@@ -22,6 +22,7 @@ import { ProyectoPeriodoSeguimientosComponent } from './proyecto-formulario/proy
 import { ProyectoEntidadGestoraComponent } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.component';
 import { ProyectoEquipoComponent } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
+import { ProyectoHistoricoEstadosComponent } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.component';
 
 const MSG_LISTADO_TITLE = marker('csp.proyecto.listado.titulo');
 const MSG_EDIT_TITLE = marker('csp.proyecto.editar.titulo');
@@ -132,6 +133,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.PRORROGAS,
         component: ProyectoProrrogasComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS,
+        component: ProyectoHistoricoEstadosComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

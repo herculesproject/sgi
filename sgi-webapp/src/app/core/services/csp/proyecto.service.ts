@@ -497,4 +497,14 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     return this.find<IProyectoProrroga, IProyectoProrroga>(endpointUrl, options);
   }
 
+  /**
+   * Recupera listado de historico estado
+   * @param id proyecto
+   * @param options opciones de búsqueda.
+   */
+  findEstadoProyecto(proyectoId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEstadoProyecto>> {
+    const endpointUrl = `${this.endpointUrl}/${proyectoId}/estadoproyectos`;
+    return this.find<IEstadoProyecto, IEstadoProyecto>(endpointUrl, options);
+  }
+
 }

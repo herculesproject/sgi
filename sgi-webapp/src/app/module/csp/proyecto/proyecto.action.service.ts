@@ -28,6 +28,7 @@ import { ProyectoEntidadGestoraFragment } from './proyecto-formulario/proyecto-e
 import { ProyectoEntidadesConvocantesFragment } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.fragment';
 import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
 import { ProyectoEquipoFragment } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.fragment';
+import { ProyectoHistoricoEstadosFragment } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.fragment';
 import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
 import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
@@ -52,7 +53,8 @@ export class ProyectoActionService extends ActionService {
     SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
     ENTIDAD_GESTORA: 'entidad-gestora',
     EQUIPO_PROYECTO: 'equipo-proyecto',
-    PRORROGAS: 'prorrogas'
+    PRORROGAS: 'prorrogas',
+    HISTORICO_ESTADOS: 'historico-estados'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -69,6 +71,7 @@ export class ProyectoActionService extends ActionService {
   private entidadGestora: ProyectoEntidadGestoraFragment;
   private proyectoEquipo: ProyectoEquipoFragment;
   private prorrogas: ProyectoProrrogasFragment;
+  private historicoEstados: ProyectoHistoricoEstadosFragment;
 
   proyecto: IProyecto;
   readonly = false;
@@ -103,7 +106,7 @@ export class ProyectoActionService extends ActionService {
     fb: FormBuilder,
     private readonly logger: NGXLogger,
     route: ActivatedRoute,
-    private proyectoService: ProyectoService,
+    proyectoService: ProyectoService,
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
@@ -179,6 +182,9 @@ export class ProyectoActionService extends ActionService {
       this.prorrogas = new ProyectoProrrogasFragment(this.proyecto?.id, proyectoService,
         proyectoProrrogaService, documentoService);
       this.addFragment(this.FRAGMENT.PRORROGAS, this.prorrogas);
+
+      this.historicoEstados = new ProyectoHistoricoEstadosFragment(this.proyecto?.id, proyectoService);
+      this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstados);
 
       this.subscriptions.push(this.socios.initialized$.subscribe(value => {
         if (value && !this.fichaGeneral.isInitialized()) {

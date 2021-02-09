@@ -10,5 +10,6 @@ export const PROYECTO_ROUTE_NAMES = {
   SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
   ENTIDAD_GESTORA: 'entidad-gestora',
   EQUIPO_PROYECTO: 'equipo-proyecto',
-  PRORROGAS: 'prorrogas'
+  PRORROGAS: 'prorrogas',
+  HISTORICO_ESTADOS: 'historico-estados'
 };
