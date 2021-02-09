@@ -8,6 +8,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { ConvocatoriaDatosGeneralesFragment } from '../convocatoria-datos-generales/convocatoria-datos-generales.fragment';
 
 
 export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatoriaConceptoGasto[]> {
@@ -20,6 +21,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     key: number,
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
+    private datosGeneralesFragment: ConvocatoriaDatosGeneralesFragment,
     public readonly: boolean
   ) {
     super(key, true);
@@ -41,7 +43,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
 
     values.forEach(convocatoriaConceptoGasto => {
       if (convocatoriaConceptoGasto.porcentajeCosteIndirecto !== null) {
-        costeIndirecto = convocatoriaConceptoGasto.conceptoGasto;
+        costeIndirecto = convocatoriaConceptoGasto;
         porcentajeCosteIndirecto = convocatoriaConceptoGasto.porcentajeCosteIndirecto;
       }
     });
@@ -55,17 +57,17 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     };
   }
   protected initializer(key: string | number): Observable<IConvocatoriaConceptoGasto[]> {
+    this.datosGeneralesFragment.initialize();
     if (this.getKey()) {
-
-      this.convocatoriaService.getConvocatoriaConceptoGastosNoPermitidos(this.getKey() as number).pipe(
+      this.subscriptions.push(this.convocatoriaService.findAllConvocatoriaConceptoGastosNoPermitidos(this.getKey() as number).pipe(
         map((response) => response.items)
       ).subscribe((convocatoriaConceptoGasto) => {
         this.convocatoriaConceptoGastoNoPermitido$.next(convocatoriaConceptoGasto.map(
           convocatoriaConceptoGastos => new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGastos))
         );
-      });
+      }));
 
-      return this.convocatoriaService.getConvocatoriaConceptoGastosPermitidos(this.getKey() as number).pipe(
+      return this.convocatoriaService.findAllConvocatoriaConceptoGastosPermitidos(this.getKey() as number).pipe(
         map((response) => {
           if (response.items) {
             return response.items;
@@ -77,33 +79,6 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
 
   getValue(): IConvocatoriaConceptoGasto[] {
     throw new Error('Method not implemented');
-  }
-
-  protected onInitialize(): void {
-    if (this.getKey()) {
-      this.convocatoriaService.getConvocatoriaConceptoGastosPermitidos(this.getKey() as number).pipe(
-        map((response) => response.items)
-      ).subscribe((convocatoriaConceptoGasto) => {
-        this.convocatoriaConceptoGastoPermitido$.next(convocatoriaConceptoGasto.map(
-          convocatoriaConceptoGastos => new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGastos))
-        );
-      });
-
-      this.convocatoriaService.getConvocatoriaConceptoGastosNoPermitidos(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
-      ).subscribe((convocatoriaConceptoGasto) => {
-        this.convocatoriaConceptoGastoNoPermitido$.next(convocatoriaConceptoGasto.map(
-          convocatoriaConceptoGastos => new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGastos))
-        );
-      });
-    }
   }
 
   addConvocatoriaConceptoGasto(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) {
@@ -254,7 +229,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
   private applyCostesIndirectos() {
     if (this.getFormGroup()?.controls.costeIndirecto.value != null) {
       this.convocatoriaConceptoGastoPermitido$.value.forEach(wrapper => {
-        if (wrapper.value.conceptoGasto.id === this.getFormGroup().controls.costeIndirecto.value.id
+        if (wrapper.value.id === this.getFormGroup().controls.costeIndirecto.value.id
           && wrapper.value.porcentajeCosteIndirecto !== this.getFormGroup().controls.porcentajeCosteIndirecto.value) {
           wrapper.value.porcentajeCosteIndirecto = this.getFormGroup().controls.porcentajeCosteIndirecto.value;
           if (!wrapper.created) {
@@ -262,7 +237,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
           }
 
           this.convocatoriaConceptoGastoPermitido$.value.filter(wrap =>
-            wrap.value.conceptoGasto.id !== wrapper.value.conceptoGasto.id && wrap.value.porcentajeCosteIndirecto !== null)
+            wrap.value.id !== wrapper.value.id && wrap.value.porcentajeCosteIndirecto !== null)
             .map(
               wrapperBuscado => {
                 wrapperBuscado.value.porcentajeCosteIndirecto = null;
@@ -278,6 +253,10 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
   private isSaveOrUpdateComplete(): boolean {
     const touched: boolean = this.convocatoriaConceptoGastoPermitido$.value.some((wrapper) => wrapper.touched);
     return (this.convocatoriaConceptoGastoEliminados.length > 0 || touched);
+  }
+
+  get convocatoria(): IConvocatoria {
+    return this.datosGeneralesFragment.convocatoria;
   }
 
 }

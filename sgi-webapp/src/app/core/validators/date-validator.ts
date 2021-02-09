@@ -1,6 +1,5 @@
 import { ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { DateUtils } from '@core/utils/date-utils';
-import { Fragment } from '@core/services/action-service';
 
 export class DateValidator {
 
@@ -65,11 +64,17 @@ export class DateValidator {
     };
   }
 
-  static isBefore(fechaPosterior: string, fechaAnterior: string): ValidatorFn {
+  /**
+  * Comprueba que la segunda fecha sea anterior o igual a la primera.
+  *
+  * @param firstDateFieldName Nombre del campo contra el que se quiere hacer la validacion.
+  * @param secondDateFieldName Nombre del campo que se quiere validar.
+  */
+  static isBeforeOrEqual(firstDateFieldName: string, secondDateFieldName: string): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 
-      const fechaAnteriorControl = formGroup.controls[fechaAnterior];
-      const fechaPosteriorControl = formGroup.controls[fechaPosterior];
+      const fechaAnteriorControl = formGroup.controls[secondDateFieldName];
+      const fechaPosteriorControl = formGroup.controls[firstDateFieldName];
 
       if (fechaAnteriorControl.errors && !fechaAnteriorControl.errors.before) {
         return;
@@ -81,8 +86,40 @@ export class DateValidator {
 
       if (fechaAnteriorDate && (fechaPosteriorDate < fechaAnteriorDate)) {
         fechaAnteriorControl.setErrors({ before: true });
-      } else {
-        fechaAnteriorControl.setErrors(null);
+        fechaAnteriorControl.markAsTouched({ onlySelf: true });
+      } else if (fechaAnteriorControl.errors) {
+        delete fechaAnteriorControl.errors.before
+        fechaAnteriorControl.updateValueAndValidity({ onlySelf: true });
+      }
+    };
+  }
+
+  /**
+  * Comprueba que la segunda fecha sea anterior a la primera.
+  *
+  * @param firstDateFieldName Nombre del campo contra el que se quiere hacer la validacion.
+  * @param secondDateFieldName Nombre del campo que se quiere validar.
+  */
+  static isBefore(firstDateFieldName: string, secondDateFieldName: string): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const fechaAnteriorControl = formGroup.controls[secondDateFieldName];
+      const fechaPosteriorControl = formGroup.controls[firstDateFieldName];
+
+      if (fechaAnteriorControl.errors && !fechaAnteriorControl.errors.before) {
+        return;
+      }
+
+      const fechaAnteriorDate = DateUtils.fechaToDate(fechaAnteriorControl.value);
+      const fechaPosteriorDate = DateUtils.fechaToDate(fechaPosteriorControl.value);
+
+
+      if (fechaAnteriorDate && (fechaPosteriorDate <= fechaAnteriorDate)) {
+        fechaAnteriorControl.setErrors({ before: true });
+        fechaAnteriorControl.markAsTouched({ onlySelf: true });
+      } else if (fechaAnteriorControl.errors) {
+        delete fechaAnteriorControl.errors.before
+        fechaAnteriorControl.updateValueAndValidity({ onlySelf: true });
       }
     };
   }

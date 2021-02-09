@@ -33,7 +33,6 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
 import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.fragment';
 import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.fragment';
@@ -70,7 +69,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     REQUISITOS_IP: 'requisitos-ip',
     ELEGIBILIDAD: 'elegibilidad',
     REQUISITOS_EQUIPO: 'requisitos-equipo',
-    CODIGOS_ECONOMICOS: 'codigos-economicos',
     DOCUMENTOS: 'documentos',
     CONFIGURACION_SOLICITUDES: 'configuracion-solicitudes'
   };
@@ -86,7 +84,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   private requisitosIP: ConvocatoriaRequisitosIPFragment;
   private elegibilidad: ConvocatoriaConceptoGastoFragment;
   private requisitosEquipo: ConvocatoriaRequisitosEquipoFragment;
-  private codigosEconomicos: ConvocatoriaConceptoGastoCodigoEcFragment;
   private documentos: ConvocatoriaDocumentosFragment;
   private configuracionSolicitudes: ConvocatoriaConfiguracionSolicitudesFragment;
 
@@ -125,7 +122,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
-    convocatoriaConceptoGastoCodigoEcService: ConvocatoriaConceptoGastoCodigoEcService,
     convocatoriaDocumentoService: ConvocatoriaDocumentoService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
     documentoRequeridoService: DocumentoRequeridoService,
@@ -165,11 +161,9 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, this.convocatoriaId,
       convocatoriaRequisitoIPService, this.readonly);
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, this.convocatoriaId, convocatoriaService,
-      convocatoriaConceptoGastoService, this.readonly);
+      convocatoriaConceptoGastoService, this.datosGenerales, this.readonly);
     this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, this.convocatoriaId,
       convocatoriaRequisitoEquipoService, this.readonly);
-    this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(this.convocatoriaId,
-      convocatoriaService, convocatoriaConceptoGastoCodigoEcService, this.elegibilidad, this.readonly);
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
       logger, this.convocatoriaId, configuracionSolicitudService, documentoRequeridoService,
       this.readonly);
@@ -186,7 +180,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.addFragment(this.FRAGMENT.REQUISITOS_IP, this.requisitosIP);
     this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
     this.addFragment(this.FRAGMENT.REQUISITOS_EQUIPO, this.requisitosEquipo);
-    this.addFragment(this.FRAGMENT.CODIGOS_ECONOMICOS, this.codigosEconomicos);
     this.addFragment(this.FRAGMENT.CONFIGURACION_SOLICITUDES, this.configuracionSolicitudes);
 
     if (this.isEdit()) {
@@ -209,7 +202,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
           this.requisitosIP.readonly = this.readonly;
           this.elegibilidad.readonly = this.readonly;
           this.requisitosEquipo.readonly = this.readonly;
-          this.codigosEconomicos.readonly = this.readonly;
           this.configuracionSolicitudes.readonly = this.readonly;
         });
       this.subscriptions.push(subscription);
@@ -265,44 +257,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     return this.elegibilidad.isInitialized() ? this.elegibilidad.convocatoriaConceptoGastoNoPermitido$.value : [];
   }
 
-  /**
-   * Recupera los registros de códigos económicos permitidos en la convocatoria
-   *
-   * @returns los códigos económicos permitidos de la convocatoria.
-   */
-  private getCodigosEconomicosPermitidos(): StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>[] {
-    return this.codigosEconomicos.isInitialized() ? this.codigosEconomicos.convocatoriaConceptoGastoCodigoEcPermitido$.value : [];
-  }
 
-  /**
-   * Recupera los registros de códigos económicos no permitidos en la convocatoria
-   *
-   * @returns los códigos económicos no permitidos de la convocatoria.
-   */
-  private getCodigosEconomicosNoPermitidos(): StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>[] {
-    return this.codigosEconomicos.isInitialized() ? this.codigosEconomicos.convocatoriaConceptoGastoCodigoEcNoPermitido$.value : [];
-  }
-
-
-  /**
-   * Elimina los códigos de gasto relacionados con el concepto de gasto de la convocatoria a eliminar
-   * @param convocatoriaConceptoGasto el concepto de gasto de la convocatoria a eliminar
-   */
-  deleteCodigoEconomico(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) {
-    if (convocatoriaConceptoGasto.permitido) {
-      this.getCodigosEconomicosPermitidos().filter(codigoEconomico =>
-        codigoEconomico.value.convocatoriaConceptoGasto.conceptoGasto.id === convocatoriaConceptoGasto.conceptoGasto.id).forEach(
-          codEconomicoWrapper => {
-            this.codigosEconomicos.deleteConvocatoriaConceptoGastoCodigoEc(codEconomicoWrapper, true);
-          });
-    } else {
-      this.getCodigosEconomicosNoPermitidos().filter(codigoEconomico =>
-        codigoEconomico.value.convocatoriaConceptoGasto.conceptoGasto.id === convocatoriaConceptoGasto.conceptoGasto.id).forEach(
-          codEconomicoWrapper => {
-            this.codigosEconomicos.deleteConvocatoriaConceptoGastoCodigoEc(codEconomicoWrapper, true);
-          });
-    }
-  }
 
   /**
    * Recupera plazos y fases

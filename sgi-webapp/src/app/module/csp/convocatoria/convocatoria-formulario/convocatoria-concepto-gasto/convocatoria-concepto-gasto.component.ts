@@ -1,24 +1,25 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
-import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaConceptoGastoModalComponent, IConvocatoriaConceptoGastoModalComponent } from '../../modals/convocatoria-concepto-gasto-modal/convocatoria-concepto-gasto-modal.component';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
+import { IConvocatoriaConceptoGastoState } from '../../../convocatoria-concepto-gasto/convocatoria-concepto-gasto.state';
 
 const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
+const MSG_DELETE_CODIGO_ECONOMICO = marker('csp.convocatoria.concepto-gasto.listado.codigoEconomico.borrar');
 
 @Component({
   selector: 'sgi-convocatoria-concepto-gasto',
@@ -27,6 +28,9 @@ const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
 })
 
 export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IConvocatoriaConceptoGasto[]> implements OnInit, OnDestroy {
+  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
+  ROUTE_NAMES = ROUTE_NAMES;
+
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
@@ -34,8 +38,8 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   private subscriptions: Subscription[] = [];
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumnsPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'numMeses', 'observaciones', 'acciones'];
-  displayedColumnsNoPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'observaciones', 'acciones'];
+  displayedColumnsPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
+  displayedColumnsNoPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
 
   dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
   dataSourceNoPermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
@@ -44,12 +48,12 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   @ViewChild('sortPermitidos', { static: true }) sortPermitidos: MatSort;
   @ViewChild('sortNoPermitidos', { static: true }) sortNoPermitidos: MatSort;
 
-  filteredCostesIndirectos: Observable<IConceptoGasto[]>;
+  filteredCostesIndirectos: Observable<IConvocatoriaConceptoGasto[]>;
 
   constructor(
     protected actionService: ConvocatoriaActionService,
-    private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService
   ) {
     super(actionService.FRAGMENT.ELEGIBILIDAD, actionService);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoFragment;
@@ -91,124 +95,68 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
     this.dataSourcePermitidos.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaConceptoGasto>, property: string) => {
         switch (property) {
-          case 'conceptoGasto.nombre':
-            return wrapper.value.conceptoGasto.nombre;
-          case 'conceptoGasto.descripcion':
-            return wrapper.value.conceptoGasto.descripcion;
-          case 'importeMaximo':
-            return wrapper.value.importeMaximo;
-          case 'numMeses':
-            return wrapper.value.numMeses;
-          case 'observaciones':
-            return wrapper.value.observaciones;
           default:
-            return wrapper[property];
+            return wrapper.value[property];
         }
       };
 
     this.dataSourceNoPermitidos.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaConceptoGasto>, property: string) => {
         switch (property) {
-          case 'conceptoGasto.nombre':
-            return wrapper.value.conceptoGasto.nombre;
-          case 'conceptoGasto.descripcion':
-            return wrapper.value.conceptoGasto.descripcion;
-          case 'observaciones':
-            return wrapper.value.observaciones;
           default:
-            return wrapper[property];
+            return wrapper.value[property];
         }
       };
   }
 
-  openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGasto>): void {
-    const convocatoriaConceptoGastosTabla = wrapper.value.permitido ? this.dataSourcePermitidos.data.map(
-      wrapperPermitidos => wrapperPermitidos.value)
-      : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
+  createState(wrapper?: StatusWrapper<IConvocatoriaConceptoGasto>, permitido?: boolean): IConvocatoriaConceptoGastoState {
 
-    const data: IConvocatoriaConceptoGastoModalComponent = {
-      convocatoriaConceptoGasto: wrapper.value,
-      convocatoriaConceptoGastosTabla,
-      editModal: true,
+    if (wrapper && wrapper.value.permitido) {
+      permitido = wrapper.value.permitido;
+    }
+
+    const convocatoria = this.formPart.convocatoria;
+    convocatoria.id = this.formPart.getKey() as number;
+
+    const state: IConvocatoriaConceptoGastoState = {
+      convocatoria,
+      convocatoriaConceptoGasto: wrapper ? wrapper.value : {} as IConvocatoriaConceptoGasto,
+      selectedConvocatoriaConceptoGastos: permitido ? (this.dataSourcePermitidos ? this.dataSourcePermitidos.data.map(element => element.value) : null) : (this.dataSourceNoPermitidos ? this.dataSourceNoPermitidos.data.map(element => element.value) : null),
+      permitido,
       readonly: this.formPart.readonly
     };
 
-    const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data
-    };
-    const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoModalComponent, config);
-    dialogRef.afterClosed().subscribe(
-      (convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) => {
-        if (convocatoriaConceptoGasto) {
-          if (wrapper) {
-            if (!wrapper.created) {
-              wrapper.setEdited();
-            }
-            this.formPart.setChanges(true);
-          } else {
-            this.formPart.addConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
-          }
-        }
-      }
-    );
-  }
 
-  openModalCrear(permitido: boolean): void {
-    const convocatoriaConceptoGastosTabla = permitido ? this.dataSourcePermitidos.data.map(
-      wrapperPermitidos => wrapperPermitidos.value)
-      : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
-
-    const convocatoriaConceptoGasto: IConvocatoriaConceptoGasto = {
-      conceptoGasto: null,
-      convocatoria: null,
-      id: null,
-      importeMaximo: null,
-      numMeses: null,
-      observaciones: null,
-      permitido,
-      porcentajeCosteIndirecto: null,
-      enableAccion: true
-    };
-
-    const data: IConvocatoriaConceptoGastoModalComponent = {
-      convocatoriaConceptoGasto,
-      convocatoriaConceptoGastosTabla,
-      editModal: false,
-      readonly: false
-    };
-
-    const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data
-    };
-
-    const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoModalComponent, config);
-    dialogRef.afterClosed().subscribe(
-      (result: IConvocatoriaConceptoGasto) => {
-        if (result) {
-          this.formPart.addConvocatoriaConceptoGasto(result);
-        }
-      }
-    );
+    return state;
   }
 
   deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
-    this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-        (aceptado: boolean) => {
-          if (aceptado) {
-            this.formPart.deleteConvocatoriaConceptoGasto(wrapper);
-            this.actionService.deleteCodigoEconomico(wrapper.value);
-          }
-        }
-      )
-    );
+    this.convocatoriaConceptoGastoService.existsCodigosEconomicos(wrapper.value.id).subscribe(res => {
+      if (res) {
+        this.subscriptions.push(
+          this.dialogService.showConfirmation(MSG_DELETE_CODIGO_ECONOMICO).subscribe(
+            (aceptado: boolean) => {
+              if (aceptado) {
+                this.formPart.deleteConvocatoriaConceptoGasto(wrapper);
+              }
+            }
+          )
+        );
+      } else {
+        this.subscriptions.push(
+          this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+            (aceptado: boolean) => {
+              if (aceptado) {
+                this.formPart.deleteConvocatoriaConceptoGasto(wrapper);
+              }
+            }
+          )
+        );
+      }
+    });
   }
 
-  private filterCosteIndirecto(value: string | IConceptoGasto): IConceptoGasto[] {
+  private filterCosteIndirecto(value: string | IConvocatoriaConceptoGasto): IConvocatoriaConceptoGasto[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();
@@ -216,18 +164,22 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
       if (value === null) {
         filterValue = '';
       } else {
-        filterValue = value.nombre.toLowerCase();
+        filterValue = value.conceptoGasto.nombre.toLowerCase();
       }
     }
 
     return this.dataSourcePermitidos.data.filter
-      (wrapper => wrapper.value.conceptoGasto.nombre.toLowerCase().includes(filterValue)).map(wrapper => wrapper.value.conceptoGasto);
+      (wrapper => wrapper.value.conceptoGasto.nombre.toLowerCase().includes(filterValue)).map(wrapper => wrapper.value);
   }
 
-  getCosteIndirecto(costeIndirecto: IConceptoGasto): string {
-    if (costeIndirecto !== null) {
-      return costeIndirecto.nombre;
+  getCosteIndirecto(costeIndirecto: IConvocatoriaConceptoGasto): string {
+    const nombreCosteIndirecto = costeIndirecto?.conceptoGasto?.nombre;
+    let mesesCosteIndirecto = '';
+    if (costeIndirecto?.mesInicial) {
+      mesesCosteIndirecto = ' (' + costeIndirecto.mesInicial + (costeIndirecto.mesFinal ? (' - ' + costeIndirecto.mesFinal) : '') + ')';
     }
+
+    return nombreCosteIndirecto ? (nombreCosteIndirecto + mesesCosteIndirecto) : '';
   }
 
   ngOnDestroy(): void {

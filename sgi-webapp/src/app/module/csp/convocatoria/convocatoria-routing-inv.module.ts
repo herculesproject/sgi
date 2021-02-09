@@ -11,7 +11,6 @@ import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolv
 import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
-import { ConvocatoriaConceptoGastoCodigoEcComponent } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.component';
 import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
@@ -106,11 +105,6 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_EQUIPO,
         component: ConvocatoriaRequisitosEquipoComponent,
-        canDeactivate: [FragmentGuard]
-      },
-      {
-        path: CONVOCATORIA_ROUTE_NAMES.CODIGOS_ECONOMICOS,
-        component: ConvocatoriaConceptoGastoCodigoEcComponent,
         canDeactivate: [FragmentGuard]
       },
       {

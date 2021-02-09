@@ -9,7 +9,7 @@
     <ng-container matColumnDef="conceptoGasto.nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.concepto-gasto.nombre' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto"> {{convocatoriaConceptoGasto.value.conceptoGasto.nombre}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.conceptoGasto.nombre}}
       </td>
     </ng-container>
 
@@ -17,8 +17,8 @@
     <ng-container matColumnDef="conceptoGasto.descripcion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.concepto-gasto.descripcion' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto">
-        {{convocatoriaConceptoGasto.value.conceptoGasto.descripcion}}
+      <td mat-cell *matCellDef="let wrapper">
+        {{wrapper.value.conceptoGasto.descripcion}}
       </td>
     </ng-container>
 
@@ -26,15 +26,23 @@
     <ng-container matColumnDef="importeMaximo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.importeMaximo' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto"> {{convocatoriaConceptoGasto.value.importeMaximo}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.importeMaximo}}
       </td>
     </ng-container>
 
-    <!-- Permitido hasta mes -->
-    <ng-container matColumnDef="numMeses">
+    <!-- Mes inicial -->
+    <ng-container matColumnDef="mesInicial">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'csp.convocatoria.concepto-gasto.listado.numMeses' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto"> {{convocatoriaConceptoGasto.value.numMeses}}
+        {{'csp.convocatoria.concepto-gasto.listado.mesInicial' | translate}} </th>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.mesInicial}}
+      </td>
+    </ng-container>
+
+    <!-- Mes final -->
+    <ng-container matColumnDef="mesFinal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.concepto-gasto.listado.mesFinal' | translate}} </th>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.mesFinal}}
       </td>
     </ng-container>
 
@@ -42,30 +50,28 @@
     <ng-container matColumnDef="observaciones">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.observaciones' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto"> {{convocatoriaConceptoGasto.value.observaciones}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.observaciones}}
       </td>
     </ng-container>
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.concepto-gasto.listado.acciones' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto">
-        <ng-container *ngIf="convocatoriaConceptoGasto.value.enableAccion">
-          <button mat-button matTooltip="{{'botones.ver' | translate}}" *ngIf="formPart.readonly"
-            (click)="openModal(convocatoriaConceptoGasto)">
-            <mat-icon color="primary">visibility</mat-icon>
-          </button>
-          <button mat-button matTooltip="{{'botones.editar' | translate}}" *ngIf="!formPart.readonly"
-            (click)="openModal(convocatoriaConceptoGasto)">
-            <mat-icon color="primary">border_color</mat-icon>
-          </button>
-        </ng-container>
-        <ng-container *ngIf="convocatoriaConceptoGasto.value.enableAccion">
-          <button mat-button matTooltip="{{'botones.borrar' | translate}}" *ngIf="!formPart.readonly"
-            (click)="deleteConvocatoriaConceptoGasto(convocatoriaConceptoGasto)">
-            <mat-icon color="warn">highlight_off</mat-icon>
-          </button>
-        </ng-container>
+      <td mat-cell *matCellDef="let wrapper">
+        <button mat-button matTooltip="{{'botones.ver' | translate}}" *ngIf="formPart.readonly"
+          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
+          [state]="createState(wrapper)">
+          <mat-icon color="primary">visibility</mat-icon>
+        </button>
+        <button mat-button matTooltip="{{'botones.editar' | translate}}" *ngIf="!formPart.readonly"
+          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
+          [state]="createState(wrapper)">
+          <mat-icon color="primary">border_color</mat-icon>
+        </button>
+        <button mat-button matTooltip="{{'botones.borrar' | translate}}" *ngIf="!formPart.readonly"
+          (click)="deleteConvocatoriaConceptoGasto(wrapper)">
+          <mat-icon color="warn">highlight_off</mat-icon>
+        </button>
       </td>
     </ng-container>
 
@@ -78,7 +84,9 @@
   </mat-paginator>
 
   <div class="separation-button" *ngIf="!formPart.readonly">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalCrear(true)">
+    <button color="three" aria-label="Center Align" md-button mat-raised-button
+      [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, ROUTE_NAMES.NEW]"
+      [state]="createState(null,true)">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.convocatoria.concepto-gasto.permitido.anadir'| translate}}
     </button>
@@ -101,7 +109,8 @@
           [matAutocomplete]="autocompleteCostesIndirectos">
         <mat-autocomplete #autocompleteCostesIndirectos="matAutocomplete" [displayWith]="getCosteIndirecto">
           <mat-option *ngFor="let costeIndirecto of filteredCostesIndirectos | async" [value]="costeIndirecto">
-            {{costeIndirecto.nombre}}
+            {{costeIndirecto.conceptoGasto.nombre}} {{costeIndirecto.mesInicial ? '('+ costeIndirecto.mesInicial +
+            (costeIndirecto.mesFinal ? (' - ' + costeIndirecto.mesFinal) : '')+')' : ''}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -135,7 +144,7 @@
     <ng-container matColumnDef="conceptoGasto.nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.concepto-gasto.nombre' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto"> {{convocatoriaConceptoGasto.value.conceptoGasto.nombre}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.conceptoGasto.nombre}}
       </td>
     </ng-container>
 
@@ -143,8 +152,24 @@
     <ng-container matColumnDef="conceptoGasto.descripcion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.concepto-gasto.descripcion' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto">
-        {{convocatoriaConceptoGasto.value.conceptoGasto.descripcion}}
+      <td mat-cell *matCellDef="let wrapper">
+        {{wrapper.value.conceptoGasto.descripcion}}
+      </td>
+    </ng-container>
+
+    <!-- Mes inicial -->
+    <ng-container matColumnDef="mesInicial">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.concepto-gasto.listado.mesInicial' | translate}} </th>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.mesInicial}}
+      </td>
+    </ng-container>
+
+    <!-- Mes final -->
+    <ng-container matColumnDef="mesFinal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.concepto-gasto.listado.mesFinal' | translate}} </th>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.mesFinal}}
       </td>
     </ng-container>
 
@@ -152,30 +177,28 @@
     <ng-container matColumnDef="observaciones">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto.listado.observaciones' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto"> {{convocatoriaConceptoGasto.value.observaciones}}
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.observaciones}}
       </td>
     </ng-container>
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.concepto-gasto.listado.acciones' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoriaConceptoGasto">
-        <ng-container *ngIf="convocatoriaConceptoGasto.value.enableAccion">
-          <button mat-button matTooltip="{{'botones.ver' | translate}}" *ngIf="formPart.readonly"
-            (click)="openModal(convocatoriaConceptoGasto)">
-            <mat-icon color="primary">visibility</mat-icon>
-          </button>
-          <button mat-button matTooltip="{{'botones.editar' | translate}}" *ngIf="!formPart.readonly"
-            (click)="openModal(convocatoriaConceptoGasto)">
-            <mat-icon color="primary">border_color</mat-icon>
-          </button>
-        </ng-container>
-        <ng-container *ngIf="convocatoriaConceptoGasto.value.enableAccion">
-          <button mat-button matTooltip="{{'botones.borrar' | translate}}" *ngIf="!formPart.readonly"
-            (click)="deleteConvocatoriaConceptoGasto(convocatoriaConceptoGasto)">
-            <mat-icon color="warn">highlight_off</mat-icon>
-          </button>
-        </ng-container>
+      <td mat-cell *matCellDef="let wrapper">
+        <button mat-button matTooltip="{{'botones.ver' | translate}}" *ngIf="formPart.readonly"
+          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
+          [state]="createState(wrapper)">
+          <mat-icon color="primary">visibility</mat-icon>
+        </button>
+        <button mat-button matTooltip="{{'botones.editar' | translate}}" *ngIf="!formPart.readonly"
+          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
+          [state]="createState(wrapper)">
+          <mat-icon color="primary">border_color</mat-icon>
+        </button>
+        <button mat-button matTooltip="{{'botones.borrar' | translate}}" *ngIf="!formPart.readonly"
+          (click)="deleteConvocatoriaConceptoGasto(wrapper)">
+          <mat-icon color="warn">highlight_off</mat-icon>
+        </button>
       </td>
     </ng-container>
 
@@ -188,7 +211,9 @@
   </mat-paginator>
 
   <div class="separation-button" *ngIf="!formPart.readonly">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalCrear(false)">
+    <button color="three" aria-label="Center Align" md-button mat-raised-button
+      [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, ROUTE_NAMES.NEW]"
+      [state]="createState(null,false)">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.convocatoria.concepto-gasto.nopermitido.anadir'| translate}}
     </button>

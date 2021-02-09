@@ -10,6 +10,7 @@ import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 
 const MSG_ROOT_TITLE = marker('csp.root.title');
 const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
+const MSG_CONVOCATORIA_CONCEPTO_GASTO_TITLE = marker('menu.principal.csp.convocatoria-concepto-gasto');
 const MSG_SOLICITUD_TITLE = marker('menu.principal.csp.solicitudes');
 const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
 const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
@@ -54,6 +55,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIA_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO,
+        loadChildren: () =>
+          import('./convocatoria-concepto-gasto/convocatoria-concepto-gasto.module').then(
+            (m) => m.ConvocatoriaConceptoGastoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONVOCATORIA_CONCEPTO_GASTO_TITLE,
         }
       },
       {

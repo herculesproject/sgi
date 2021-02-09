@@ -26,10 +26,7 @@ import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convoc
 import { ConvocatoriaAreaTematicaModalComponent } from './modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
 import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
 import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
-import { ConvocatoriaConceptoGastoModalComponent } from './modals/convocatoria-concepto-gasto-modal/convocatoria-concepto-gasto-modal.component';
 import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.component';
-import { ConvocatoriaConceptoGastoCodigoEcComponent } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.component';
-import { ConvocatoriaConceptoGastoCodigoEcModalComponent } from './modals/convocatoria-concepto-gasto-codigo-ec-modal/convocatoria-concepto-gasto-codigo-ec-modal.component';
 import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
@@ -61,10 +58,7 @@ import { CspModalsModule } from '../modals/csp-modals.module';
     ConvocatoriaAreaTematicaModalComponent,
     ConvocatoriaRequisitosIPComponent,
     ConvocatoriaConceptoGastoComponent,
-    ConvocatoriaConceptoGastoModalComponent,
     ConvocatoriaRequisitosEquipoComponent,
-    ConvocatoriaConceptoGastoCodigoEcComponent,
-    ConvocatoriaConceptoGastoCodigoEcModalComponent,
     ConvocatoriaDocumentosComponent,
     ConvocatoriaConfiguracionSolicitudesComponent,
     ConvocatoriaConfiguracionSolicitudesModalComponent

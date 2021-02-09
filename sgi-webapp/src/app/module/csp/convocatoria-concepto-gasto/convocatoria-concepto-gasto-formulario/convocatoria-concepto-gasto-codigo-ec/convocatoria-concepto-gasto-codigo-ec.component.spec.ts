@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConvocatoriaConceptoGastoCodigoEcComponent } from './convocatoria-concepto-gasto-codigo-ec.component';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -9,15 +9,36 @@ import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('ConvocatoriaConceptoGastoCodigoEcComponent', () => {
   let component: ConvocatoriaConceptoGastoCodigoEcComponent;
   let fixture: ComponentFixture<ConvocatoriaConceptoGastoCodigoEcComponent>;
 
-  beforeEach(waitForAsync(() => {
+  const data = {
+    convocatoriaConceptoGasto: {
+      id: 1,
+      permitido: true
+    } as IConvocatoriaConceptoGasto,
+    convocatoriaConceptoGastosTabla:
+      [
+        {
+          id: 1,
+          permitido: true
+        },
+        {
+          id: 2,
+          permitido: true
+        }
+      ] as IConvocatoriaConceptoGasto[]
+  };
+
+
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ConvocatoriaConceptoGastoCodigoEcComponent],
       imports: [
@@ -33,7 +54,9 @@ describe('ConvocatoriaConceptoGastoCodigoEcComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        ConvocatoriaActionService,
+        { provide: MatDialogRef, useValue: data },
+        { provide: MAT_DIALOG_DATA, useValue: data },
+        ConvocatoriaConceptoGastoActionService,
         SgiAuthService
       ],
     })
@@ -41,6 +64,10 @@ describe('ConvocatoriaConceptoGastoCodigoEcComponent', () => {
   }));
 
   beforeEach(() => {
+    history.pushState(data.convocatoriaConceptoGasto, 'convocatoriaConceptoGasto');
+    history.pushState(data.convocatoriaConceptoGastosTabla, 'convocatoriaConceptoGastosTabla');
+    history.pushState(true, 'permitido');
+    history.pushState(false, 'readonly');
     fixture = TestBed.createComponent(ConvocatoriaConceptoGastoCodigoEcComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

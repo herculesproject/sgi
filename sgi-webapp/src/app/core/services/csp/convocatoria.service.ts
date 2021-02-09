@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
-import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
@@ -12,7 +12,6 @@ import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entid
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
-import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
@@ -20,6 +19,7 @@ import { map } from 'rxjs/operators';
 import { ConvocatoriaEntidadConvocanteService, IConvocatoriaEntidadConvocanteBackend } from './convocatoria-entidad-convocante.service';
 import { ConvocatoriaEntidadFinanciadoraService, IConvocatoriaEntidadFinanciadoraBackend } from './convocatoria-entidad-financiadora.service';
 import { ConvocatoriaEntidadGestoraService, IConvocatoriaEntidadGestoraBackend } from './convocatoria-entidad-gestora.service';
+import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 
 @Injectable({
   providedIn: 'root'
@@ -152,7 +152,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param id convocatoria
    * @param options opciones de búsqueda.
    */
-  getConvocatoriaConceptoGastosPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+  findAllConvocatoriaConceptoGastosPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
     const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastos/permitidos`;
     return this.find<IConvocatoriaConceptoGasto, IConvocatoriaConceptoGasto>(endpointUrl);
   }
@@ -162,10 +162,31 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param id convocatoria
    * @param options opciones de búsqueda.
    */
-  getConvocatoriaConceptoGastosNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+  findAllConvocatoriaConceptoGastosNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
     const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastos/nopermitidos`;
     return this.find<IConvocatoriaConceptoGasto, IConvocatoriaConceptoGasto>(endpointUrl);
   }
+
+  /**
+ * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
+ * @param id convocatoria
+ * @param options opciones de búsqueda.
+ */
+  findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/permitidos`;
+    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl);
+  }
+
+  /**
+   * Recupera listado de convocatoria concepto gasto códigos económicos NO permitidos.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  findAllConvocatoriaConceptoGastoCodigoEcsNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/nopermitidos`;
+    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl);
+  }
+
 
   /**
    * Reactivar convocatoria
@@ -181,26 +202,6 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    */
   desactivar(id: number): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined);
-  }
-
-  /**
-   * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
-   * @param id convocatoria
-   * @param options opciones de búsqueda.
-   */
-  getConvocatoriaConceptoGastoCodigoEcsPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
-    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/permitidos`;
-    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl);
-  }
-
-  /**
-   * Recupera listado de convocatoria concepto gasto códigos económicos NO permitidos.
-   * @param id convocatoria
-   * @param options opciones de búsqueda.
-   */
-  getConvocatoriaConceptoGastoCodigoEcsNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
-    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/nopermitidos`;
-    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl);
   }
 
   /**

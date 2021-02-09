@@ -37,7 +37,9 @@ export class NumberValidator {
   static isInteger(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.value && control.value !== parseInt(control.value, 10)) {
-        return { integer: true };
+        if (!control.errors) {
+          return { integer: true };
+        }
       }
       return null;
     };

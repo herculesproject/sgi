@@ -176,7 +176,7 @@ export class PartidaGastoModalComponent extends
    * @param convocatoriaId Id de la convocatoria
    */
   private loadConvocatoriaConceptoGastoCodigoEcPermitidos(convocatoriaId: number): void {
-    const subscription = this.convocatoriaService.getConvocatoriaConceptoGastoCodigoEcsPermitidos(convocatoriaId)
+    const subscription = this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(convocatoriaId)
       .subscribe((conceptosGastoCodigoEc) => {
         this.conceptosGastoCodigoEcPermitidos = conceptosGastoCodigoEc.items;
       });
@@ -189,7 +189,7 @@ export class PartidaGastoModalComponent extends
    * @param convocatoriaId Id de la convocatoria
    */
   private loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(convocatoriaId: number): void {
-    const subscription = this.convocatoriaService.getConvocatoriaConceptoGastoCodigoEcsNoPermitidos(convocatoriaId)
+    const subscription = this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsNoPermitidos(convocatoriaId)
       .subscribe((conceptosGastoCodigoEc) => {
         this.conceptosGastoCodigoEcNoPermitidos = conceptosGastoCodigoEc.items;
       });
@@ -210,8 +210,8 @@ export class PartidaGastoModalComponent extends
           id: codigoEconomico.convocatoriaConceptoGasto.id,
           nombre: codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.nombre,
           importeMaximo: codigoEconomico.convocatoriaConceptoGasto?.importeMaximo?.toString(),
-          mesInicio: '',
-          mesFin: '', // TODO: recuperar cuando se haga el cambio en ConvocatoriaConceptoGasto
+          mesInicio: codigoEconomico.convocatoriaConceptoGasto?.mesInicial?.toString(),
+          mesFin: codigoEconomico.convocatoriaConceptoGasto?.mesFinal?.toString(), // TODO: recuperar cuando se haga el cambio en ConvocatoriaConceptoGasto
           codigosEconomicos: []
         }
 
