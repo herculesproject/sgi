@@ -5,10 +5,12 @@
         [title]="'label.datos-generales' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS]" *ngIf="tipoEstandar"
-        [title]="'csp.solicitud.menu.proyectoDatos' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_DATOS)">
-      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-group [title]="'csp.solicitud.menu.proyectoDatos' | translate">
+        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS]" *ngIf="tipoEstandar"
+          [title]="'label.fichaGeneral' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_DATOS)">
+        </sgi-action-fragment-menu-item>
+      </sgi-action-fragment-menu-group>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.EQUIPO_PROYECTO]" *ngIf="tipoEstandar"
         [title]="'csp.solicitud.menu.equipo.proyecto' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
