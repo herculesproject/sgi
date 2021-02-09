@@ -60,27 +60,30 @@ export class LayoutService {
     const urlStack: string[] = [];
 
     // The last navigation is discarded every time
-    let endPositionsToDiscard = 1;
-    // Check reverse navigation to discard nested empty end paths or paths without a title defined
-    let p = navigationStack.length - 1;
-    while (p > 0 && (navigationStack[p].segments.length < 1 || !navigationStack[p]?.routeConfig?.data?.title)) {
-      endPositionsToDiscard++;
-      p--;
-    }
+    navigationStack = this.removeLastNoTitledRoutes(navigationStack.slice(0, navigationStack.length - 1));
 
-    const endPosition = navigationStack.length - endPositionsToDiscard;
-    for (let i = 0; i < endPosition; i++) {
+    for (let i = 0; i < navigationStack.length; i++) {
       const navigation = navigationStack[i];
       if (navigation.segments && navigation.segments.length > 0) {
         urlStack.push(...navigation.segments.map((s) => s.path));
         data.push({
           // If no title defined for navigation, find the nearest right title
-          title: this.getNearestTitle(navigationStack.slice(i, endPosition)),
+          title: this.getNearestTitle(navigationStack.slice(i)),
           path: '/' + urlStack.join('/')
         });
       }
     }
     return data;
+  }
+
+  private removeLastNoTitledRoutes(navigationStack: Navigation[]): Navigation[] {
+    let discardCounter = 0;
+    // Check reverse navigation to discard nested empty end paths or paths without a title defined
+    for (let p = navigationStack.length - 1;
+      p > 0 && (navigationStack[p].segments.length < 1 || !navigationStack[p]?.routeConfig?.data?.title);
+      discardCounter++, p--) { }
+    const endPosition = navigationStack.length - discardCounter;
+    return navigationStack.slice(0, endPosition);
   }
 
   private getNearestTitle(navigations: Navigation[]): Title {
@@ -97,17 +100,11 @@ export class LayoutService {
   }
 
   private getTitle(navigationStack: Navigation[]): Title {
+    navigationStack = this.removeLastNoTitledRoutes(navigationStack);
     if (navigationStack.length === 0) {
       return undefined;
     }
-    let endPositionsToDiscard = 0;
-    // Check reverse navigation to discard nested paths without a title defined
-    let p = navigationStack.length - 1;
-    while (p > 0 && (!navigationStack[p]?.routeConfig?.data?.title)) {
-      endPositionsToDiscard++;
-      p--;
-    }
-    const nav = navigationStack[navigationStack.length - endPositionsToDiscard - 1];
+    const nav = navigationStack[navigationStack.length - 1];
     if (nav?.routeConfig?.data?.title) {
       return this.toTitle(nav.routeConfig.data);
     }
