@@ -145,8 +145,8 @@ export interface IProyectoEntidadConvocanteBackend {
   providedIn: 'root'
 })
 export class ProyectoService extends SgiMutableRestService<number, IProyectoBackend, IProyecto> {
-  private static readonly MAPPING = '/proyectos';
-  private static readonly ENTIDAD_CONVOCANTES_MAPPING = '/entidadconvocantes';
+  private static readonly MAPPING = 'proyectos';
+  private static readonly ENTIDAD_CONVOCANTES_MAPPING = 'entidadconvocantes';
 
   private static readonly CONVERTER = new class extends SgiBaseConverter<IProyectoBackend, IProyecto> {
     toTarget(value: IProyectoBackend): IProyecto {
@@ -251,7 +251,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoService.name,
-      `${environment.serviceServers.csp}${ProyectoService.MAPPING}`,
+      `${environment.serviceServers.csp}/${ProyectoService.MAPPING}`,
       http,
       ProyectoService.CONVERTER
     );
