@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
@@ -86,6 +87,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private ProyectoSocioService proyectoSocioService;
   @MockBean
   private ProyectoEntidadGestoraService proyectoEntidadGestoraService;
+  @MockBean
+  private EstadoProyectoService estadoProyectoService;
 
   @MockBean
   private ProyectoEquipoService proyectoEquipoService;

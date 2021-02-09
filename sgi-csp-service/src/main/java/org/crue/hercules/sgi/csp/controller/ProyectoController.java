@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
+import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
@@ -85,6 +87,9 @@ public class ProyectoController {
   /** ProyectoProrrogaservice */
   private final ProyectoProrrogaService proyectoProrrogaService;
 
+  /** EstadoProyecto service */
+  private final EstadoProyectoService estadoProyectoService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -98,13 +103,15 @@ public class ProyectoController {
    * @param proyectoEntidadGestoraService      {@link ProyectoEntidadGestoraService}
    * @param proyectoEquipoService              {@link ProyectoEquipoService}.
    * @param proyectoProrrogaService            {@link ProyectoProrrogaService}.
+   * @param estadoProyectoService              {@link EstadoProyectoService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
       ProyectoEquipoService proyectoEquipoService, ProyectoSocioService proyectoSocioService,
       ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
-      ProyectoEntidadGestoraService proyectoEntidadGestoraService, ProyectoProrrogaService proyectoProrrogaService) {
+      ProyectoEntidadGestoraService proyectoEntidadGestoraService, ProyectoProrrogaService proyectoProrrogaService,
+      EstadoProyectoService estadoProyectoService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -115,6 +122,7 @@ public class ProyectoController {
     this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
     this.proyectoEquipoService = proyectoEquipoService;
     this.proyectoProrrogaService = proyectoProrrogaService;
+    this.estadoProyectoService = estadoProyectoService;
   }
 
   /**
@@ -560,6 +568,37 @@ public class ProyectoController {
 
     log.debug("findAllProyectoProrroga(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * PROYECTO ESTADO
+   * 
+   */
+
+  /**
+   * Devuelve una lista de EstadoProyecto paginada y filtrada de
+   * {@link Proyecto}.
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param paging pageable.
+   */
+
+  @GetMapping("/{id}/estadoproyectos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Page<EstadoProyecto>> findAllEstadoProyecto(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEstadoProyecto(Long id, Pageable paging) - start");
+    Page<EstadoProyecto> page = estadoProyectoService.findAllByProyecto(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllEstadoProyecto(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllEstadoProyecto(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
   }
 
 }

@@ -12,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.persistence.UniqueConstraint;
 
 import org.crue.hercules.sgi.csp.converter.TipoEstadoProyectoConverter;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
@@ -23,7 +24,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "estado_proyecto")
+@Table(name = "estado_proyecto", uniqueConstraints = { @UniqueConstraint(columnNames = { "estado",
+    "id_proyecto" }, name = "UK_ESTADOPROYECTO_ESTADO_PROYECTO") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
