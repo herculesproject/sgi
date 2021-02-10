@@ -571,7 +571,7 @@ export class Group implements IGroup {
   }
 
   patch(value: { [key: string]: any }) {
-    this.form.patchValue(value, { onlySelf: false, emitEvent: false });
+    this.form.patchValue(value, { onlySelf: false, emitEvent: true });
     this.initialState = this.form.value;
     this.editing = true;
   }
