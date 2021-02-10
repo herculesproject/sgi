@@ -134,6 +134,60 @@ public class EvaluacionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_MemoriaEnSecretariaRevMinima_ReturnsEvaluacion() {
+    // given: Una nueva Evaluacion con TipoEstadoMemoria = En secretaría revisión
+    // mínima
+    final Evaluacion evaluacionNew = generarMockEvaluacion(null, " New", 4L, 3L);
+
+    final Evaluacion evaluacion = generarMockEvaluacion(1L, " New", 4L, 3L);
+
+    BDDMockito.given(convocatoriaReunionRepository.existsById(1L)).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(memoriaRepository.existsById(evaluacion.getMemoria().getId())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(convocatoriaReunionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(evaluacionNew.getConvocatoriaReunion()));
+    BDDMockito.given(evaluacionRepository.save(evaluacionNew)).willReturn(evaluacion);
+
+    // when: Creamos la Evaluacion
+    final Evaluacion evaluacionCreado = evaluacionService.create(evaluacionNew);
+
+    // then: La Evaluacion se crea correctamente
+    Assertions.assertThat(evaluacionCreado).isNotNull();
+    Assertions.assertThat(evaluacionCreado.getId()).isEqualTo(1L);
+    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria New");
+    Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen New");
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
+  }
+
+  @Test
+  public void create_MemoriaEnSecretariaSegAnual_ReturnsEvaluacion() {
+    // given: Una nueva Evaluacion con TipoEstadoMemoria = En secretaría seguimiento
+    // anual
+    final Evaluacion evaluacionNew = generarMockEvaluacion_ConvocatoriaReuSeguimiento(null, " New", 12L, 3L);
+
+    final Evaluacion evaluacion = generarMockEvaluacion_ConvocatoriaReuSeguimiento(1L, " New", 12L, 3L);
+
+    BDDMockito.given(convocatoriaReunionRepository.existsById(1L)).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(memoriaRepository.existsById(evaluacion.getMemoria().getId())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(convocatoriaReunionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(evaluacionNew.getConvocatoriaReunion()));
+    BDDMockito.given(evaluacionRepository.save(evaluacionNew)).willReturn(evaluacion);
+
+    // when: Creamos la Evaluacion
+    final Evaluacion evaluacionCreado = evaluacionService.create(evaluacionNew);
+
+    // then: La Evaluacion se crea correctamente
+    Assertions.assertThat(evaluacionCreado).isNotNull();
+    Assertions.assertThat(evaluacionCreado.getId()).isEqualTo(1L);
+    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria New");
+    Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen New");
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
+  }
+
+  @Test
   public void create_EvaluacionWithId_ThrowsIllegalArgumentException() {
     // given: Una nueva evaluacion que ya tiene id
     Evaluacion evaluacionNew = generarMockEvaluacion(1L, " New", 1L, 1L);
@@ -179,6 +233,74 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // when: Actualizamos la evaluacion
     Evaluacion evaluacionActualizado = evaluacionService.update(evaluacion);
+
+    // then: La evaluacion se actualiza correctamente.
+    Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
+    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
+    Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
+
+  }
+
+  @Test
+  public void update_IsRevMinima_ReturnsEvaluacion() {
+    // La Evaluación es de Revisión Mínima y el dictamen es "Favorable"
+    final Evaluacion evaluacionServicioActualizado = generarMockEvaluacion(1L, " actualizado", 1L, 1L);
+    evaluacionServicioActualizado.setEsRevMinima(Boolean.TRUE);
+
+    final Evaluacion evaluacion = generarMockEvaluacion(1L, null, 1L, 1L);
+
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(evaluacion));
+    BDDMockito.given(evaluacionRepository.save(evaluacion)).willReturn(evaluacionServicioActualizado);
+
+    // when: Actualizamos la evaluacion
+    final Evaluacion evaluacionActualizado = evaluacionService.update(evaluacion);
+
+    // then: La evaluacion se actualiza correctamente.
+    Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
+    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
+    Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
+
+  }
+
+  @Test
+  public void update_MemoriaRevMin_ReturnsEvaluacion() {
+    // La Evaluación es de Revisión Mínima y el dictamen es "Favorable"
+    final Evaluacion evaluacionServicioActualizado = generarMockEvaluacion(1L, " actualizado", 4L, 1L);
+
+    // El estado de la memoria es "En secretaria revisión mínima"
+    final Evaluacion evaluacion = generarMockEvaluacion(1L, null, 4L, 1L);
+    evaluacion.getDictamen().setNombre("FAVORABLE");
+
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(evaluacion));
+    BDDMockito.given(evaluacionRepository.save(evaluacion)).willReturn(evaluacionServicioActualizado);
+
+    // when: Actualizamos la evaluacion
+    final Evaluacion evaluacionActualizado = evaluacionService.update(evaluacion);
+
+    // then: La evaluacion se actualiza correctamente.
+    Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
+    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
+    Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
+
+  }
+
+  @Test
+  public void update_MemoriaEnEval_ReturnsEvaluacion() {
+    // La Evaluación es de Revisión Mínima y el dictamen es "Favorable"
+    final Evaluacion evaluacionServicioActualizado = generarMockEvaluacion(1L, " actualizado", 5L, 1L);
+
+    // El estado de la memoria es "En evaluación"
+    final Evaluacion evaluacion = generarMockEvaluacion(1L, null, 5L, 1L);
+    evaluacion.getDictamen().setNombre("FAVORABLE");
+
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(evaluacion));
+    BDDMockito.given(evaluacionRepository.save(evaluacion)).willReturn(evaluacionServicioActualizado);
+
+    // when: Actualizamos la evaluacion
+    final Evaluacion evaluacionActualizado = evaluacionService.update(evaluacion);
 
     // then: La evaluacion se actualiza correctamente.
     Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
@@ -657,6 +779,25 @@ public class EvaluacionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteEvaluacion_ConvocatoriaReunionIsNotValid() {
+    // given: idConvocatoriaReunion = 2L
+    Long idConvocatoriaReunion = 2L;
+    final Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 2L);
+    final Optional<Evaluacion> response = Optional.of(evaluacion);
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(response);
+
+    try {
+
+      evaluacionService.deleteEvaluacion(idConvocatoriaReunion, response.get().getId());
+    } catch (
+
+    final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo("La evaluación no pertenece a esta convocatoria de reunión");
+    }
+
+  }
+
+  @Test
   public void findAllByMemoriaId_ReturnsFullEvaluacionList() {
 
     // given: Datos existentes con memoriaId = 1
@@ -732,8 +873,103 @@ public class EvaluacionServiceTest extends BaseServiceTest {
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(Long id, String sufijo, Long idTipoEstadoMemoria,
-      Long idEstadoRetrospectiva) {
+  public Evaluacion generarMockEvaluacion(final Long id, final String sufijo, final Long idTipoEstadoMemoria,
+      final Long idEstadoRetrospectiva) {
+
+    final String sufijoStr = (sufijo == null ? id.toString() : sufijo);
+
+    final Dictamen dictamen = new Dictamen();
+    dictamen.setId(id);
+    dictamen.setNombre("Dictamen" + sufijoStr);
+    dictamen.setActivo(Boolean.TRUE);
+
+    final TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("TipoActividad1");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    final PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(id);
+    peticionEvaluacion.setCodigo("Codigo1");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(LocalDate.now());
+    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setPersonaRef("user-001");
+    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    final Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    final Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
+
+    final TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L); // Nueva
+    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    final TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(idTipoEstadoMemoria); // En elaboración
+
+    final EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(idEstadoRetrospectiva); // Pendiente
+
+    final Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr,
+        "user-00" + id, tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE,
+        new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, "CodOrganoCompetente", Boolean.TRUE, null);
+
+    final TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
+
+    final ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
+    convocatoriaReunion.setId(1L); // Ordinaria
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 05, 10, 05, 10, 10));
+    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
+    convocatoriaReunion.setHoraInicio(7);
+    convocatoriaReunion.setMinutoInicio(30);
+    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setActivo(Boolean.TRUE);
+
+    final TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L); // Retrospectiva
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
+    final Evaluador evaluador1 = new Evaluador();
+    evaluador1.setId(1L);
+
+    final Evaluador evaluador2 = new Evaluador();
+    evaluador2.setId(2L);
+
+    final Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(convocatoriaReunion);
+    evaluacion.setVersion(2);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setEvaluador1(evaluador1);
+    evaluacion.setEvaluador2(evaluador2);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
+  }
+
+  public Evaluacion generarMockEvaluacion_ConvocatoriaReuSeguimiento(final Long id, final String sufijo,
+      final Long idTipoEstadoMemoria, final Long idEstadoRetrospectiva) {
 
     String sufijoStr = (sufijo == null ? id.toString() : sufijo);
 
@@ -783,7 +1019,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
         tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE,
         new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, "CodOrganoCompetente", Boolean.TRUE, null);
 
-    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(3L, "Seguimiento", Boolean.TRUE);
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
