@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -65,5 +66,15 @@ public interface ProrrogaDocumentoService {
    */
 
   Page<ProrrogaDocumento> findAllByProyectoProrroga(Long id, List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Obtener todas las entidades {@link ProrrogaDocumento} paginadas y/o
+   * filtradas.
+   * 
+   * @param id id del {@link Proyecto}
+   * @return la lista de entidades {@link ProrrogaDocumento} paginadas y/o
+   *         filtradas.
+   */
+  List<ProrrogaDocumento> findAllByProyecto(Long id);
 
 }

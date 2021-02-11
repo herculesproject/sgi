@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -50,5 +51,15 @@ public interface SocioPeriodoJustificacionDocumentoService {
    */
   Page<SocioPeriodoJustificacionDocumento> findAllByProyectoSocioPeriodoJustificacion(
       Long idProyectoSocioPeriodoJustificacion, List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene las {@link SocioPeriodoJustificacionDocumento} para una
+   * {@link Proyecto}.
+   *
+   * @param idProyecto el id de la {@link Proyecto}.
+   * @return la lista de entidades {@link SocioPeriodoJustificacionDocumento} de
+   *         la {@link Proyecto}.
+   */
+  List<SocioPeriodoJustificacionDocumento> findAllByProyecto(Long idProyecto);
 
 }

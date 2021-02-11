@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
@@ -169,22 +170,23 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
    * Obtiene las {@link ProyectoPeriodoSeguimientoDocumento} para una
    * {@link ProyectoPeriodoSeguimiento}.
    *
-   * @param solicitudId el id de la {@link ProyectoPeriodoSeguimiento}.
-   * @param query       la información del filtro.
-   * @param paging      la información de la paginación.
+   * @param proyectoPeriodoSeguimientoId el id de la
+   *                                     {@link ProyectoPeriodoSeguimiento}.
+   * @param query                        la información del filtro.
+   * @param paging                       la información de la paginación.
    * @return la lista de entidades {@link ProyectoPeriodoSeguimientoDocumento} de
    *         la {@link ProyectoPeriodoSeguimiento} paginadas.
    */
   @Override
-  public Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(Long solicitudId,
-      List<QueryCriteria> query, Pageable paging) {
+  public Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(
+      Long proyectoPeriodoSeguimientoId, List<QueryCriteria> query, Pageable paging) {
     log.debug(
         "findAllByProyectoPeriodoSeguimiento(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
 
     Specification<ProyectoPeriodoSeguimientoDocumento> specByQuery = new QuerySpecification<ProyectoPeriodoSeguimientoDocumento>(
         query);
     Specification<ProyectoPeriodoSeguimientoDocumento> specByProyectoPeriodoSeguimiento = ProyectoPeriodoSeguimientoDocumentoSpecifications
-        .byProyectoPeriodoSeguimientoId(solicitudId);
+        .byProyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoId);
     Specification<ProyectoPeriodoSeguimientoDocumento> specs = Specification.where(specByQuery)
         .and(specByProyectoPeriodoSeguimiento);
 
@@ -207,6 +209,28 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
     final boolean existe = repository.existsByProyectoPeriodoSeguimientoId(id);
     log.debug("existsByProyectoPeriodoSeguimiento(final Long id)  - end", id);
     return existe;
+  }
+
+  /**
+   * Obtiene las {@link ProyectoPeriodoSeguimientoDocumento} para una
+   * {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @return la lista de entidades {@link ProyectoPeriodoSeguimientoDocumento} de
+   *         la {@link Proyecto}.
+   */
+  @Override
+  public List<ProyectoPeriodoSeguimientoDocumento> findAllByProyecto(Long proyectoId) {
+    log.debug("findAllByProyecto(Long solicitudId) - start");
+
+    Specification<ProyectoPeriodoSeguimientoDocumento> specByProyecto = ProyectoPeriodoSeguimientoDocumentoSpecifications
+        .byProyectoId(proyectoId);
+    Specification<ProyectoPeriodoSeguimientoDocumento> specs = Specification.where(specByProyecto);
+
+    List<ProyectoPeriodoSeguimientoDocumento> returnValue = repository.findAll(specs);
+
+    log.debug("findAllByProyecto(Long solicitudId) - end");
+    return returnValue;
   }
 
 }

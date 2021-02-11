@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -66,13 +67,14 @@ public interface ProyectoPeriodoSeguimientoDocumentoService {
    * Obtiene las {@link ProyectoPeriodoSeguimientoDocumento} para una
    * {@link ProyectoPeriodoSeguimiento}.
    *
-   * @param solicitudId el id de la {@link ProyectoPeriodoSeguimiento}.
-   * @param query       la información del filtro.
-   * @param pageable    la información de la paginación.
+   * @param proyectoPeriodoSeguimientoId el id de la
+   *                                     {@link ProyectoPeriodoSeguimiento}.
+   * @param query                        la información del filtro.
+   * @param pageable                     la información de la paginación.
    * @return la lista de entidades {@link ProyectoPeriodoSeguimientoDocumento} de
    *         la {@link ProyectoPeriodoSeguimiento} paginadas.
    */
-  Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(Long solicitudId,
+  Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(Long proyectoPeriodoSeguimientoId,
       List<QueryCriteria> query, Pageable pageable);
 
   /**
@@ -83,5 +85,15 @@ public interface ProyectoPeriodoSeguimientoDocumentoService {
    * @return true si existe y false en caso contrario.
    */
   boolean existsByProyectoPeriodoSeguimiento(Long id);
+
+  /**
+   * Obtiene las {@link ProyectoPeriodoSeguimientoDocumento} para una
+   * {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @return la lista de entidades {@link ProyectoPeriodoSeguimientoDocumento} de
+   *         la {@link Proyecto}.
+   */
+  List<ProyectoPeriodoSeguimientoDocumento> findAllByProyecto(Long proyectoId);
 
 }

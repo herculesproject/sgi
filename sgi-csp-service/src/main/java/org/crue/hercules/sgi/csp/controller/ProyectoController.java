@@ -5,34 +5,44 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.dto.ProyectoDocumentos;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
+import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.service.ProyectoHitoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
+import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,7 +86,11 @@ public class ProyectoController {
   private final ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
 
   /** ConvocatoriaEntidadFinanciadora service */
+  /** ProyectoEntidadFinanciadoraService service */
   private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
+
+  /** ProyectoDocumentoService service */
+  private final ProyectoDocumentoService proyectoDocumentoService;
 
   /** ProyectoEntidadGestoraService */
   private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
@@ -90,38 +104,58 @@ public class ProyectoController {
   /** EstadoProyecto service */
   private final EstadoProyectoService estadoProyectoService;
 
+  /** ProyectoProrrogaService */
+  private final SocioPeriodoJustificacionDocumentoService socioPeriodoJustificacionDocumentoService;
+
+  /** ProyectoPeriodoSeguimientoDocumentoService */
+  private final ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService;
+
+  /** ProrrogaDocumentoService */
+  private final ProrrogaDocumentoService prorrogaDocumentoService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
-   * @param proyectoService                    {@link ProyectoService}.
-   * @param proyectoHitoService                {@link ProyectoHitoService}.
-   * @param proyectoFaseService                {@link ProyectoFaseService}.
-   * @param proyectoPaqueteTrabajoService      {@link ProyectoPaqueteTrabajoService}.
-   * @param proyectoSocioService               {@link ProyectoSocioService}.
-   * @param proyectoEntidadFinanciadoraService {@link ProyectoEntidadFinanciadoraService}.
-   * @param proyectoPeriodoSeguimientoService  {@link ProyectoPeriodoSeguimientoService}
-   * @param proyectoEntidadGestoraService      {@link ProyectoEntidadGestoraService}
-   * @param proyectoEquipoService              {@link ProyectoEquipoService}.
-   * @param proyectoProrrogaService            {@link ProyectoProrrogaService}.
-   * @param estadoProyectoService              {@link EstadoProyectoService}.
+   * @param proyectoService                            {@link ProyectoService}.
+   * @param proyectoHitoService                        {@link ProyectoHitoService}.
+   * @param proyectoFaseService                        {@link ProyectoFaseService}.
+   * @param proyectoPaqueteTrabajoService              {@link ProyectoPaqueteTrabajoService}.
+   * @param proyectoSocioService                       {@link ProyectoSocioService}.
+   * @param proyectoEntidadFinanciadoraService         {@link ProyectoEntidadFinanciadoraService}.
+   * @param proyectoPeriodoSeguimientoService          {@link ProyectoPeriodoSeguimientoService}
+   * @param proyectoEntidadGestoraService              {@link ProyectoEntidadGestoraService}
+   * @param proyectoEquipoService                      {@link ProyectoEquipoService}.
+   * @param proyectoProrrogaService                    {@link ProyectoProrrogaService}.
+   * @param estadoProyectoService                      {@link EstadoProyectoService}.
+   * @param proyectoProrrogaService                    {@link ProyectoProrrogaService}.
+   * @param proyectoPeriodoSeguimientoDocumentoService {@link ProyectoPeriodoSeguimientoDocumentoService}.
+   * @param prorrogaDocumentoService                   {@link ProrrogaDocumentoService}.
+   * @param socioPeriodoJustificacionDocumentoService  {@link SocioPeriodoJustificacionDocumentoService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
       ProyectoEquipoService proyectoEquipoService, ProyectoSocioService proyectoSocioService,
       ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService,
       ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService,
-      ProyectoEntidadGestoraService proyectoEntidadGestoraService, ProyectoProrrogaService proyectoProrrogaService,
-      EstadoProyectoService estadoProyectoService) {
+      ProyectoProrrogaService proyectoProrrogaService, ProyectoEntidadGestoraService proyectoEntidadGestoraService,
+      ProyectoDocumentoService proyectoDocumentoService,
+      SocioPeriodoJustificacionDocumentoService socioPeriodoJustificacionDocumentoService,
+      ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService,
+      ProrrogaDocumentoService prorrogaDocumentoService, EstadoProyectoService estadoProyectoService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
     this.proyectoPaqueteTrabajoService = proyectoPaqueteTrabajoService;
     this.proyectoSocioService = proyectoSocioService;
     this.proyectoEntidadFinanciadoraService = proyectoEntidadFinanciadoraService;
+    this.proyectoDocumentoService = proyectoDocumentoService;
     this.proyectoPeriodoSeguimientoService = proyectoPeriodoSeguimientoService;
     this.proyectoEntidadGestoraService = proyectoEntidadGestoraService;
     this.proyectoEquipoService = proyectoEquipoService;
     this.proyectoProrrogaService = proyectoProrrogaService;
+    this.socioPeriodoJustificacionDocumentoService = socioPeriodoJustificacionDocumentoService;
+    this.proyectoPeriodoSeguimientoDocumentoService = proyectoPeriodoSeguimientoDocumentoService;
+    this.prorrogaDocumentoService = prorrogaDocumentoService;
     this.estadoProyectoService = estadoProyectoService;
   }
 
@@ -442,6 +476,52 @@ public class ProyectoController {
 
     log.debug("findAllProyectoEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
+
+  /**
+   * 
+   * PROYECTO DOCUMENTOS
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ProyectoDocumento} del
+   * {@link Proyecto}.
+   * 
+   * @param id Identificador del {@link Proyecto}.
+   */
+  @GetMapping("/{id}/documentos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  ResponseEntity<ProyectoDocumentos> findAllDocumentos(@PathVariable Long id) {
+    log.debug("findAllDocumentos(Long id) - start");
+
+    ProyectoDocumentos proyectoDocumentos = new ProyectoDocumentos();
+
+    List<ProyectoDocumento> proyectoDocumentosProyecto = proyectoDocumentoService.findAllByProyecto(id);
+    proyectoDocumentos.setProyectoDocumentos(proyectoDocumentosProyecto);
+
+    List<SocioPeriodoJustificacionDocumento> socioPeriodoJustificacionDocumentos = socioPeriodoJustificacionDocumentoService
+        .findAllByProyecto(id);
+    proyectoDocumentos.setSocioPeriodoJustificacionDocumentos(socioPeriodoJustificacionDocumentos);
+
+    List<ProyectoPeriodoSeguimientoDocumento> proyectoPeriodoSeguimientoDocumentos = proyectoPeriodoSeguimientoDocumentoService
+        .findAllByProyecto(id);
+    proyectoDocumentos.setProyectoPeriodoSeguimientoDocumentos(proyectoPeriodoSeguimientoDocumentos);
+
+    List<ProrrogaDocumento> prorrogaDocumentos = prorrogaDocumentoService.findAllByProyecto(id);
+    proyectoDocumentos.setProrrogaDocumentos(prorrogaDocumentos);
+
+    if (CollectionUtils.isEmpty(proyectoDocumentos.getProyectoDocumentos())
+        && CollectionUtils.isEmpty(proyectoDocumentos.getSocioPeriodoJustificacionDocumentos())
+        && CollectionUtils.isEmpty(proyectoDocumentos.getProyectoPeriodoSeguimientoDocumentos())
+        && CollectionUtils.isEmpty(proyectoDocumentos.getProrrogaDocumentos())) {
+      log.debug("findAllDocumentos(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllDocumentos(Long id) - end");
+    return new ResponseEntity<>(proyectoDocumentos, HttpStatus.OK);
 
   }
 

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SocioPeriodoJustificacionDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
@@ -151,6 +152,28 @@ public class SocioPeriodoJustificacionDocumentoServiceImpl implements SocioPerio
     Page<SocioPeriodoJustificacionDocumento> returnValue = repository.findAll(specs, pageable);
     log.debug(
         "findAllByProyectoSocioPeriodoJustificacion(Long proyectoSocioId, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene las {@link SocioPeriodoJustificacionDocumento} para una
+   * {@link Proyecto}.
+   *
+   * @param idProyecto el id de la {@link Proyecto}.
+   * @return la lista de entidades {@link SocioPeriodoJustificacionDocumento} de
+   *         la {@link Proyecto} paginadas.
+   */
+  @Override
+  public List<SocioPeriodoJustificacionDocumento> findAllByProyecto(Long idProyecto) {
+    log.debug("findAllByProyecto(Long idProyecto) - start");
+
+    Specification<SocioPeriodoJustificacionDocumento> specByProyecto = SocioPeriodoJustificacionDocumentoSpecifications
+        .byProyectoSocioPeriodoJustificacionId(idProyecto);
+
+    Specification<SocioPeriodoJustificacionDocumento> specs = Specification.where(specByProyecto);
+
+    List<SocioPeriodoJustificacionDocumento> returnValue = repository.findAll(specs);
+    log.debug("findAllByProyecto(Long idProyecto) - end");
     return returnValue;
   }
 

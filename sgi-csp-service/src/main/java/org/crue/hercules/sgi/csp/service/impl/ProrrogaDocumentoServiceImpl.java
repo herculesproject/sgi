@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
@@ -178,6 +179,25 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
   }
 
   /**
+   * Obtener todas las entidades {@link ProrrogaDocumento}.
+   * 
+   * @param idProyecto id del {@link Proyecto}
+   * 
+   * @return la lista de entidades {@link ProrrogaDocumento} .
+   */
+  @Override
+  public List<ProrrogaDocumento> findAllByProyecto(Long idProyecto) {
+    log.debug("findAllByProyecto(Long idProyecto) - start");
+
+    Specification<ProrrogaDocumento> specByProyecto = ProrrogaDocumentoSpecifications.byProyectoId(idProyecto);
+    Specification<ProrrogaDocumento> specs = Specification.where(specByProyecto);
+
+    List<ProrrogaDocumento> returnValue = repository.findAll(specs);
+    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Comprueba, valida y tranforma los datos de la {@link ProrrogaDocumento} antes
    * de utilizados para crear o modificar la entidad
    *
@@ -242,4 +262,5 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
 
     log.debug("validarRequeridosProrrogaDocumento(ProrrogaDocumento datosProrrogaDocumento) - end");
   }
+
 }
