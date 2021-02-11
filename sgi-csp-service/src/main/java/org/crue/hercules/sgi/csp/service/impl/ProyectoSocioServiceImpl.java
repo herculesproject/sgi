@@ -6,7 +6,15 @@ import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -29,9 +37,20 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   private final ProyectoSocioRepository repository;
+  private final ProyectoSocioEquipoRepository equipoRepository;
+  private final ProyectoSocioPeriodoPagoRepository periodoPagoRepository;
+  private final SocioPeriodoJustificacionDocumentoRepository documentoRepository;
+  private final ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
 
-  public ProyectoSocioServiceImpl(ProyectoSocioRepository repository) {
+  public ProyectoSocioServiceImpl(ProyectoSocioRepository repository, ProyectoSocioEquipoRepository equipoRepository,
+      ProyectoSocioPeriodoPagoRepository periodoPagoRepository,
+      SocioPeriodoJustificacionDocumentoRepository documentoRepository,
+      ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository) {
     this.repository = repository;
+    this.equipoRepository = equipoRepository;
+    this.periodoPagoRepository = periodoPagoRepository;
+    this.documentoRepository = documentoRepository;
+    this.periodoJustificacionRepository = periodoJustificacionRepository;
   }
 
   /**
@@ -125,7 +144,10 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
       return proyectoSocio;
     }).orElseThrow(() -> new ProyectoSocioNotFoundException(id));
-
+    equipoRepository.deleteByProyectoSocioId(id);
+    periodoPagoRepository.deleteByProyectoSocioId(id);
+    documentoRepository.deleteByProyectoSocioPeriodoJustificacionProyectoSocioId(id);
+    periodoJustificacionRepository.deleteByProyectoSocioId(id);
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
   }
@@ -223,6 +245,25 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
         .and(specByRangoFechaSolapados).and(specByIdNotEqual);
     boolean returnValue = repository.count(specs) > 0 ? true : false;
     log.debug("isRangoFechasSolapado(ProyectoSocio proyectoSocio) - end");
+    return returnValue;
+  }
+
+  /**
+   * Indica si {@link ProyectoSocio} tiene {@link ProyectoSocioEquipo},
+   * {@link ProyectoSocioPeriodoPago}, {@link SocioPeriodoJustificacionDocumento}
+   * y/o {@link ProyectoSocioPeriodoJustificacion} relacionadas.
+   *
+   * @param id Id de la {@link Proyecto}.
+   * @return True si tiene {@link ProyectoSocioEquipo},
+   *         {@link ProyectoSocioPeriodoPago},
+   *         {@link SocioPeriodoJustificacionDocumento} y/o
+   *         {@link ProyectoSocioPeriodoJustificacion} relacionadas. En caso
+   *         contrario false
+   */
+  public Boolean vinculaciones(Long id) {
+    log.debug("vinculaciones(Long id) - start");
+    final Boolean returnValue = repository.vinculaciones(id);
+    log.debug("vinculaciones(Long id) - start");
     return returnValue;
   }
 

@@ -15,7 +15,7 @@ public interface CustomProyectoRepository {
 
   /**
    * Obtiene el {@link ModeloEjecucion} asignada al {@link Proyecto}.
-   * 
+   *
    * @param id Id de la {@link Proyecto}.
    * @return {@link ModeloEjecucion} asignado
    */
@@ -23,11 +23,10 @@ public interface CustomProyectoRepository {
 
   /**
    * Indica si en el {@link Proyecto} se permiten {@link ProyectoPaqueteTrabajo}.
-   * 
+   *
    * @param id Id de la {@link Proyecto}.
    * @return true si se permiten {@link ProyectoPaqueteTrabajo}, false si no se
    *         permiten {@link ProyectoPaqueteTrabajo}
    */
   Optional<Boolean> getPaquetesTrabajo(Long id);
-
 }

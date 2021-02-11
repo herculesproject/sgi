@@ -20,4 +20,11 @@ public interface ProyectoSocioPeriodoJustificacionRepository
    */
   List<ProyectoSocioPeriodoJustificacion> findAllByProyectoSocioId(Long proyectoSocioId);
 
+  /**
+   * Elimina todos los {@link ProyectoSocioPeriodoJustificacion} asociados a un
+   * {@link ProyectoSocio}.
+   * 
+   * @param id Identificador de {@link ProyectoSocio}.
+   */
+  void deleteByProyectoSocioId(Long id);
 }

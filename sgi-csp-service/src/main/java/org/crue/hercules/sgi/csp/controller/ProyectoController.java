@@ -577,8 +577,7 @@ public class ProyectoController {
    */
 
   /**
-   * Devuelve una lista de EstadoProyecto paginada y filtrada de
-   * {@link Proyecto}.
+   * Devuelve una lista de EstadoProyecto paginada y filtrada de {@link Proyecto}.
    * 
    * @param id     Identificador de {@link Proyecto}.
    * @param paging pageable.

@@ -13,7 +13,11 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,12 +36,21 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoSocioRepository repository;
+  @Mock
+  private ProyectoSocioEquipoRepository equipoRepository;
+  @Mock
+  private ProyectoSocioPeriodoPagoRepository periodoPagoRepository;
+  @Mock
+  private SocioPeriodoJustificacionDocumentoRepository documentoRepository;
+  @Mock
+  private ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
 
   private ProyectoSocioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ProyectoSocioServiceImpl(repository);
+    service = new ProyectoSocioServiceImpl(repository, equipoRepository, periodoPagoRepository, documentoRepository,
+        periodoJustificacionRepository);
   }
 
   @Test

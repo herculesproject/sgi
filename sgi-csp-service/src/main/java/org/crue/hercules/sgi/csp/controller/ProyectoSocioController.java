@@ -227,4 +227,24 @@ public class ProyectoSocioController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Indica si {@link ProyectoSocio} tiene {@link ProyectoSocioEquipo},
+   * {@link ProyectoSocioPeriodoPago}, {@link SocioPeriodoJustificacionDocumento}
+   * y/o {@link ProyectoSocioPeriodoJustificacion} relacionadas.
+   *
+   * @param id Id de la {@link Proyecto}.
+   * @return True si tiene {@link ProyectoSocioEquipo},
+   *         {@link ProyectoSocioPeriodoPago},
+   *         {@link SocioPeriodoJustificacionDocumento} y/o
+   *         {@link ProyectoSocioPeriodoJustificacion} relacionadas. En caso
+   *         contrario false
+   */
+  @RequestMapping(path = "/{id}/vinculaciones", method = RequestMethod.HEAD)
+  ResponseEntity<Boolean> vinculaciones(@PathVariable Long id) {
+    log.debug("vinculaciones(Long id) - start");
+    Boolean returnValue = service.vinculaciones(id);
+    log.debug("vinculaciones(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

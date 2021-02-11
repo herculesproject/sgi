@@ -11,8 +11,8 @@ import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
-  /** The entity manager. */
+  /**
+   * The entity manager.
+   */
   @PersistenceContext
   private EntityManager entityManager;
 
   /**
    * Obtiene el {@link ModeloEjecucion} asignada a la {@link Proyecto}.
-   * 
+   *
    * @param id Id de la {@link Proyecto}.
    * @return {@link ModeloEjecucion} asignado
    */
@@ -54,7 +56,7 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
   /**
    * Indica si en el {@link Proyecto} se permiten {@link ProyectoPaqueteTrabajo}.
-   * 
+   *
    * @param id Id de la {@link Proyecto}.
    * @return true si se permiten {@link ProyectoPaqueteTrabajo}, false si no se
    *         permiten {@link ProyectoPaqueteTrabajo}
@@ -78,5 +80,4 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     log.debug("getpaquetesTrabajo(Long id) - stop");
     return returnValue;
   }
-
 }

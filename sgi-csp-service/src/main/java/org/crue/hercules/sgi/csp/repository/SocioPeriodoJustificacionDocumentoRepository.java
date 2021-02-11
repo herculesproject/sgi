@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.repository;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,11 @@ public interface SocioPeriodoJustificacionDocumentoRepository
    */
   void deleteByProyectoSocioPeriodoJustificacionIdIn(List<Long> periodoJustificacionId);
 
+  /**
+   * Elimina todos los {@link SocioPeriodoJustificacionDocumento} asociados a un
+   * {@link ProyectoSocio}.
+   * 
+   * @param id Identificador de {@link ProyectoSocio}.
+   */
+  void deleteByProyectoSocioPeriodoJustificacionProyectoSocioId(Long id);
 }

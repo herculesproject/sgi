@@ -87,5 +87,4 @@ public interface ProyectoService {
    * @return el listado de entidades {@link Proyecto} paginadas y filtradas.
    */
   Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging);
-
 }
