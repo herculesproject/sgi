@@ -36,7 +36,7 @@ const appInitializerFn = (appConfig: ConfigService) => {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    HomeComponent
   ],
   imports: [
     AppRoutingModule,

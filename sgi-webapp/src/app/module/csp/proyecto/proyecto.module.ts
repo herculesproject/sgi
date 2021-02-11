@@ -32,6 +32,7 @@ import { ProyectoEquipoComponent } from './proyecto-formulario/proyecto-equipo/p
 import { ProyectoEquipoModalComponent } from './modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 import { ProyectoHistoricoEstadosComponent } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.component';
+import { ProyectoDocumentosComponent } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.component';
 
 @NgModule({
   declarations: [
@@ -57,8 +58,8 @@ import { ProyectoHistoricoEstadosComponent } from './proyecto-formulario/proyect
     ProyectoEquipoComponent,
     ProyectoEquipoModalComponent,
     ProyectoProrrogasComponent,
-    ProyectoHistoricoEstadosComponent
-  ],
+    ProyectoHistoricoEstadosComponent,
+    ProyectoDocumentosComponent],
   imports: [
     SharedModule,
     CommonModule,

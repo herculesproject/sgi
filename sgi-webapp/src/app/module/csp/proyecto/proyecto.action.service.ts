@@ -32,11 +32,12 @@ import { ProyectoHistoricoEstadosFragment } from './proyecto-formulario/proyecto
 import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
 import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
-import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
 import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
+import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
+import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.fragment';
+import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
-
-
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -54,7 +55,8 @@ export class ProyectoActionService extends ActionService {
     ENTIDAD_GESTORA: 'entidad-gestora',
     EQUIPO_PROYECTO: 'equipo-proyecto',
     PRORROGAS: 'prorrogas',
-    HISTORICO_ESTADOS: 'historico-estados'
+    HISTORICO_ESTADOS: 'historico-estados',
+    DOCUMENTOS: 'documentos'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -70,6 +72,7 @@ export class ProyectoActionService extends ActionService {
   private seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
   private entidadGestora: ProyectoEntidadGestoraFragment;
   private proyectoEquipo: ProyectoEquipoFragment;
+  private documentos: ProyectoDocumentosFragment;
   private prorrogas: ProyectoProrrogasFragment;
   private historicoEstados: ProyectoHistoricoEstadosFragment;
 
@@ -121,7 +124,9 @@ export class ProyectoActionService extends ActionService {
     proyectoEntidadGestora: ProyectoEntidadGestoraService,
     proyectoEquipoService: ProyectoEquipoService,
     personaFisicaService: PersonaFisicaService,
-    proyectoProrrogaService: ProyectoProrrogaService
+    proyectoProrrogaService: ProyectoProrrogaService,
+    proyectoDocumentoService: ProyectoDocumentoService,
+    translate: TranslateService,
   ) {
     super();
 
@@ -191,6 +196,8 @@ export class ProyectoActionService extends ActionService {
           this.fichaGeneral.initialize();
         }
       }));
+      this.documentos = new ProyectoDocumentosFragment(this.logger, this.proyecto?.id, proyectoService, proyectoDocumentoService, translate);
+      this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     }
 
   }

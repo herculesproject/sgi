@@ -22,6 +22,7 @@ import { ProyectoPeriodoSeguimientosComponent } from './proyecto-formulario/proy
 import { ProyectoEntidadGestoraComponent } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.component';
 import { ProyectoEquipoComponent } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.component';
 import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
+import { ProyectoDocumentosComponent } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.component';
 import { ProyectoHistoricoEstadosComponent } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.component';
 import { MSG_PARAMS } from '@core/i18n';
 
@@ -130,6 +131,10 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.EQUIPO_PROYECTO,
         component: ProyectoEquipoComponent,
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.DOCUMENTOS,
+        component: ProyectoDocumentosComponent,
         canDeactivate: [FragmentGuard]
       },
       {

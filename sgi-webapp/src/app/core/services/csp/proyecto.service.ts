@@ -31,6 +31,7 @@ import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService
 import { IProyectoEntidadGestoraBackend, ProyectoEntidadGestoraService } from './proyecto-entidad-gestora.service';
 import { IProyectoEquipoBackend, ProyectoEquipoService } from './proyecto-equipo.service';
 import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
+import { IDocumentosProyecto } from '@core/models/csp/documentos-proyecto';
 
 interface IProyectoBackend {
 
@@ -248,10 +249,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       }
     }();
 
-  constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
+  constructor(readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       ProyectoService.name,
-      `${environment.serviceServers.csp}/${ProyectoService.MAPPING}`,
+      `${environment.serviceServers.csp}${ProyectoService.MAPPING}`,
       http,
       ProyectoService.CONVERTER
     );
@@ -506,5 +507,19 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     const endpointUrl = `${this.endpointUrl}/${proyectoId}/estadoproyectos`;
     return this.find<IEstadoProyecto, IEstadoProyecto>(endpointUrl, options);
   }
+
+
+
+  /**
+  * Recupera todos los documentos de un proyecto
+  * @param id Identificador del proyecto.
+  * @returns .
+  */
+  findAllDocumentos(idProyecto: number):
+    Observable<IDocumentosProyecto> {
+    const endpointUrl = `${this.endpointUrl}/${idProyecto}/documentos`;
+    return this.http.get<IDocumentosProyecto>(endpointUrl);
+  }
+
 
 }

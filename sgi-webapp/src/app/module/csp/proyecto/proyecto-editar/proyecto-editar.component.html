@@ -62,6 +62,10 @@
           [fragment]="actionService.getFragment(actionService.FRAGMENT.PAQUETE_TRABAJO)">
         </sgi-action-fragment-menu-item>
       </sgi-action-fragment-menu-group>
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.DOCUMENTOS]"
+        [title]="'csp.proyecto.menu.documento' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">
+      </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>
   <mat-drawer-content class="mat-drawer-content">
