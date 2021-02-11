@@ -115,10 +115,11 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
     this.subscriptions.push(
       this.modeloEjecucionService.findModeloTipoDocumento(id).subscribe(
         (tipos) => {
-          this.tiposDocumento = tipos.items.filter(tipo => tipo.modeloTipoFase).map(tipo => tipo.tipoDocumento);
+          this.tiposDocumento = tipos.items.filter(tipo => !tipo.modeloTipoFase).map(tipo => tipo.tipoDocumento);
         }
       )
     );
+
 
     this.switchToNone();
   }

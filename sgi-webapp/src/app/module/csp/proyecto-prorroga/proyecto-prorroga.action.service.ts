@@ -8,7 +8,7 @@ import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.se
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ProyectoProrrogaDatosGeneralesFragment } from './proyecto-prorroga-formulario/proyecto-prorroga-datos-generales/proyecto-prorroga-datos-generales.fragment';
 import { ProyectoProrrogaDocumentosFragment } from './proyecto-prorroga-formulario/proyecto-prorroga-documentos/proyecto-prorroga-documentos.fragment';
@@ -60,33 +60,14 @@ export class ProyectoProrrogaActionService extends ActionService {
       return this.dialogService.showConfirmation(MSG_IMPORTE).pipe(
         switchMap(aceptado => {
           if (aceptado) {
-            return this.doSaveOrUpdate();
+            return super.saveOrUpdate();
+          } else {
+            return EMPTY;
           }
         })
       )
     } else {
-      return this.doSaveOrUpdate();
-    }
-  }
-
-  private doSaveOrUpdate(): Observable<void> {
-    this.performChecks(true);
-    if (this.hasErrors()) {
-      return throwError('Errores');
-    }
-    if (this.isEdit()) {
-      return this.datosGenerales.saveOrUpdate().pipe(
-        switchMap(() => {
-          this.datosGenerales.refreshInitialState(true);
-          return this.documentos.saveOrUpdate();
-        })
-      );
-    } else {
-      return this.datosGenerales.saveOrUpdate().pipe(
-        switchMap(() => {
-          return this.documentos.saveOrUpdate();
-        })
-      );
+      return super.saveOrUpdate();
     }
   }
 
