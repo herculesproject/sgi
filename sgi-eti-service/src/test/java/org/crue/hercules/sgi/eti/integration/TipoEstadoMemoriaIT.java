@@ -24,7 +24,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoEstadoMemoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/tipo_estado_memoria.sql" })
+@Sql(scripts = {
+// @formatter:off
+  "classpath:scripts/tipo_estado_memoria.sql"
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class TipoEstadoMemoriaIT extends BaseIT {
@@ -90,7 +94,7 @@ public class TipoEstadoMemoriaIT extends BaseIT {
 
     final ResponseEntity<TipoEstadoMemoria> response = restTemplate.exchange(
         TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        TipoEstadoMemoria.class, 12L);
+        TipoEstadoMemoria.class, 22L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -135,13 +139,13 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("10");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("21");
 
-    // Contiene de nombre='Favorable Pendiente de Modificaciones Mínimas', 'No
-    // procede evaluar', 'Fin evaluación' y
+    // Contiene de nombre='Favorable Pendiente de Modificaciones Mínimas',
+    // 'Pendiente de correcciones', 'No procede evaluar' y
     // 'Archivado'
     Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre())
-        .isEqualTo("Favorable Pendiente de Modificaciones Mínimas");
+        .isEqualTo("Favorable pendiente de modificaciones minimas");
     Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("Pendiente de correcciones");
     Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("No procede evaluar");
     Assertions.assertThat(tipoEstadoMemorias.get(3).getNombre()).isEqualTo("Fin evaluación");
@@ -188,29 +192,52 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoEstadoMemoria> tipoEstadoMemorias = response.getBody();
-    Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(10);
+    Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(21);
 
-    Assertions.assertThat(tipoEstadoMemorias.get(0).getId()).isEqualTo(7);
-    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
-    Assertions.assertThat(tipoEstadoMemorias.get(1).getId()).isEqualTo(8);
-    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("No procede evaluar");
-    Assertions.assertThat(tipoEstadoMemorias.get(2).getId()).isEqualTo(9);
-    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("Fin evaluación");
-    Assertions.assertThat(tipoEstadoMemorias.get(3).getId()).isEqualTo(6);
-    Assertions.assertThat(tipoEstadoMemorias.get(3).getNombre())
-        .isEqualTo("Favorable Pendiente de Modificaciones Mínimas");
-    Assertions.assertThat(tipoEstadoMemorias.get(4).getId()).isEqualTo(4);
-    Assertions.assertThat(tipoEstadoMemorias.get(4).getNombre()).isEqualTo("En secretaría revisión mínima");
-    Assertions.assertThat(tipoEstadoMemorias.get(5).getId()).isEqualTo(3);
-    Assertions.assertThat(tipoEstadoMemorias.get(5).getNombre()).isEqualTo("En secretaría");
-    Assertions.assertThat(tipoEstadoMemorias.get(6).getId()).isEqualTo(5);
-    Assertions.assertThat(tipoEstadoMemorias.get(6).getNombre()).isEqualTo("En evaluación");
-    Assertions.assertThat(tipoEstadoMemorias.get(7).getId()).isEqualTo(1);
-    Assertions.assertThat(tipoEstadoMemorias.get(7).getNombre()).isEqualTo("En elaboración");
-    Assertions.assertThat(tipoEstadoMemorias.get(8).getId()).isEqualTo(2);
-    Assertions.assertThat(tipoEstadoMemorias.get(8).getNombre()).isEqualTo("Completada");
-    Assertions.assertThat(tipoEstadoMemorias.get(9).getId()).isEqualTo(10);
-    Assertions.assertThat(tipoEstadoMemorias.get(9).getNombre()).isEqualTo("Archivado");
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getId()).isEqualTo(15);
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("Solicitud modificación");
+    Assertions.assertThat(tipoEstadoMemorias.get(1).getId()).isEqualTo(7);
+    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getId()).isEqualTo(8);
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("No procede evaluar");
+    Assertions.assertThat(tipoEstadoMemorias.get(3).getId()).isEqualTo(20);
+    Assertions.assertThat(tipoEstadoMemorias.get(3).getNombre()).isEqualTo("Fin evaluación seguimiento final");
+    Assertions.assertThat(tipoEstadoMemorias.get(4).getId()).isEqualTo(14);
+    Assertions.assertThat(tipoEstadoMemorias.get(4).getNombre()).isEqualTo("Fin evaluación seguimiento anual");
+    Assertions.assertThat(tipoEstadoMemorias.get(5).getId()).isEqualTo(9);
+    Assertions.assertThat(tipoEstadoMemorias.get(5).getNombre()).isEqualTo("Fin evaluación");
+    Assertions.assertThat(tipoEstadoMemorias.get(6).getId()).isEqualTo(6);
+    Assertions.assertThat(tipoEstadoMemorias.get(6).getNombre())
+        .isEqualTo("Favorable pendiente de modificaciones minimas");
+    Assertions.assertThat(tipoEstadoMemorias.get(7).getId()).isEqualTo(18);
+    Assertions.assertThat(tipoEstadoMemorias.get(7).getNombre())
+        .isEqualTo("En secretaría seguimiento final aclaraciones");
+    Assertions.assertThat(tipoEstadoMemorias.get(8).getId()).isEqualTo(17);
+    Assertions.assertThat(tipoEstadoMemorias.get(8).getNombre()).isEqualTo("En secretaría seguimiento final");
+    Assertions.assertThat(tipoEstadoMemorias.get(9).getId()).isEqualTo(12);
+    Assertions.assertThat(tipoEstadoMemorias.get(9).getNombre()).isEqualTo("En secretaría seguimiento anual");
+    Assertions.assertThat(tipoEstadoMemorias.get(10).getId()).isEqualTo(4);
+    Assertions.assertThat(tipoEstadoMemorias.get(10).getNombre()).isEqualTo("En secretaría revisión mínima");
+    Assertions.assertThat(tipoEstadoMemorias.get(11).getId()).isEqualTo(3);
+    Assertions.assertThat(tipoEstadoMemorias.get(11).getNombre()).isEqualTo("En secretaría");
+    Assertions.assertThat(tipoEstadoMemorias.get(12).getId()).isEqualTo(19);
+    Assertions.assertThat(tipoEstadoMemorias.get(12).getNombre()).isEqualTo("En evaluación seguimiento final");
+    Assertions.assertThat(tipoEstadoMemorias.get(13).getId()).isEqualTo(13);
+    Assertions.assertThat(tipoEstadoMemorias.get(13).getNombre()).isEqualTo("En evaluación seguimiento anual");
+    Assertions.assertThat(tipoEstadoMemorias.get(14).getId()).isEqualTo(5);
+    Assertions.assertThat(tipoEstadoMemorias.get(14).getNombre()).isEqualTo("En evaluación");
+    Assertions.assertThat(tipoEstadoMemorias.get(15).getId()).isEqualTo(1);
+    Assertions.assertThat(tipoEstadoMemorias.get(15).getNombre()).isEqualTo("En elaboración");
+    Assertions.assertThat(tipoEstadoMemorias.get(16).getId()).isEqualTo(21);
+    Assertions.assertThat(tipoEstadoMemorias.get(16).getNombre()).isEqualTo("En aclaración seguimiento final");
+    Assertions.assertThat(tipoEstadoMemorias.get(17).getId()).isEqualTo(16);
+    Assertions.assertThat(tipoEstadoMemorias.get(17).getNombre()).isEqualTo("Completada seguimiento final");
+    Assertions.assertThat(tipoEstadoMemorias.get(18).getId()).isEqualTo(11);
+    Assertions.assertThat(tipoEstadoMemorias.get(18).getNombre()).isEqualTo("Completada seguimiento anual");
+    Assertions.assertThat(tipoEstadoMemorias.get(19).getId()).isEqualTo(2);
+    Assertions.assertThat(tipoEstadoMemorias.get(19).getNombre()).isEqualTo("Completada");
+    Assertions.assertThat(tipoEstadoMemorias.get(20).getId()).isEqualTo(10);
+    Assertions.assertThat(tipoEstadoMemorias.get(20).getNombre()).isEqualTo("Archivado");
   }
 
   @Test
@@ -222,7 +249,7 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     // when: Ordena por nombre desc
     String sort = "nombre-";
     // when: Filtra por nombre like
-    String filter = "nombre~%en%";
+    String filter = "nombre~%completada%";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -239,15 +266,13 @@ public class TipoEstadoMemoriaIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("6");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Contiene nombre='Pendiente de correcciones', 'Favorable Pendiente de
-    // Modificaciones Mínimas',
-    // 'En secretaría revisión mínima'
-    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
-    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre())
-        .isEqualTo("Favorable Pendiente de Modificaciones Mínimas");
-    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("En secretaría revisión mínima");
+    // Contiene nombre='Completada seguimiento final', 'Completada seguimiento
+    // anual', 'Completada'
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("Completada seguimiento final");
+    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("Completada seguimiento anual");
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("Completada");
 
   }
 

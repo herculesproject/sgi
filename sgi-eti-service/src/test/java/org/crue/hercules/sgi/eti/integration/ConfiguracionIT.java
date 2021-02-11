@@ -12,15 +12,19 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
-import org.springframework.test.context.jdbc.Sql;
 
 /**
  * Test de integracion de Configuracion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/configuracion.sql" })
+@Sql(scripts = {
+// @formatter:off    
+  "classpath:scripts/configuracion.sql" 
+// @formatter:on  
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class ConfiguracionIT extends BaseIT {

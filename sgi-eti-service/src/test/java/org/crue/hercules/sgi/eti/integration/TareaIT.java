@@ -28,7 +28,20 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de Tarea.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql
+@Sql(scripts = {
+// @formatter:off
+  "classpath:scripts/formulario.sql", 
+  "classpath:scripts/tipo_actividad.sql",
+  "classpath:scripts/equipo_trabajo.sql", 
+  "classpath:scripts/tipo_memoria.sql",
+  "classpath:scripts/estado_retrospectiva.sql", 
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/formacion_especifica.sql", 
+  "classpath:scripts/tipo_tarea.sql",
+  "classpath:scripts/tipo_estado_memoria.sql", 
+  "classpath:scripts/tarea.sql" 
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class TareaIT extends BaseIT {
@@ -58,13 +71,13 @@ public class TareaIT extends BaseIT {
 
     Assertions.assertThat(tarea.getId()).as("id").isEqualTo(1L);
     Assertions.assertThat(tarea.getEquipoTrabajo()).as("equipoTrabajo").isNotNull();
-    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(100L);
+    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
-    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(200L);
+    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea1");
     Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion1");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
-    Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(300L);
+    Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo1");
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
@@ -83,13 +96,13 @@ public class TareaIT extends BaseIT {
 
     Assertions.assertThat(tarea.getId()).as("id").isEqualTo(1L);
     Assertions.assertThat(tarea.getEquipoTrabajo()).as("equipoTrabajo").isNotNull();
-    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(100L);
+    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
-    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(200L);
+    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea1");
     Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion1");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
-    Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(300L);
+    Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo1");
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
@@ -212,13 +225,13 @@ public class TareaIT extends BaseIT {
    */
   public Tarea generarMockTarea(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
-    equipoTrabajo.setId(100L);
+    equipoTrabajo.setId(1L);
 
     Memoria memoria = new Memoria();
-    memoria.setId(200L);
+    memoria.setId(1L);
 
     FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
-    formacionEspecifica.setId(300L);
+    formacionEspecifica.setId(1L);
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);

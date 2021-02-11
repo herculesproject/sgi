@@ -24,7 +24,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de Formulario.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/formulario.sql" })
+@Sql(scripts = {
+// @formatter:off  
+  "classpath:scripts/formulario.sql" 
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class FormularioIT extends BaseIT {
@@ -56,7 +60,7 @@ public class FormularioIT extends BaseIT {
 
     Assertions.assertThat(formulario.getId()).isEqualTo(1L);
     Assertions.assertThat(formulario.getNombre()).isEqualTo("M10");
-    Assertions.assertThat(formulario.getDescripcion()).isEqualTo("Descripcion");
+    Assertions.assertThat(formulario.getDescripcion()).isEqualTo("Formulario M10");
   }
 
   @Test

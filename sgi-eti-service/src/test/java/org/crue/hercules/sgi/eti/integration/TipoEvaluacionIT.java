@@ -26,7 +26,12 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoEvaluacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql
+@Sql(scripts = {
+// @formatter:off  
+  "classpath:scripts/tipo_evaluacion.sql", 
+  "classpath:scripts/dictamen.sql" 
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class TipoEvaluacionIT extends BaseIT {
@@ -236,9 +241,9 @@ public class TipoEvaluacionIT extends BaseIT {
   public void findAllDictamenByTipoEvaluacionAndRevisionMinima_WithTipoEvaluacionId_ReturnsListaDictamen()
       throws Exception {
 
-    TipoEvaluacion tipoEvaluacion = generarMockTipoEvaluacion(3L, "TipoEvaluacion3");
+    TipoEvaluacion tipoEvaluacion = generarMockTipoEvaluacion(1L, "TipoEvaluacion1");
     Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion);
-    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Desfavorable", tipoEvaluacion);
     List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
     listaDictamenes.add(dictamen1);
     listaDictamenes.add(dictamen2);
@@ -248,7 +253,7 @@ public class TipoEvaluacionIT extends BaseIT {
 
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
         new ParameterizedTypeReference<List<Dictamen>>() {
-        }, 3L, Boolean.TRUE);
+        }, 1L, Boolean.TRUE);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamenes = response.getBody();

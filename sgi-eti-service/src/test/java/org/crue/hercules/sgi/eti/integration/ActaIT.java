@@ -24,12 +24,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de Acta.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = {
+// @formatter:off
+  "classpath:scripts/formulario.sql",
+  "classpath:scripts/tipo_convocatoria_reunion.sql",
+  "classpath:scripts/tipo_estado_acta.sql",
+  "classpath:scripts/acta.sql"
+// @formatter:on
+})
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class ActaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -48,8 +60,6 @@ public class ActaIT extends BaseIT {
     return request;
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getActa_WithId_ReturnsActa() throws Exception {
     // Authorization
@@ -57,27 +67,25 @@ public class ActaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(headers, null), Acta.class, 1L);
+        HttpMethod.GET, buildRequest(headers, null), Acta.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final Acta acta = response.getBody();
 
-    Assertions.assertThat(acta.getId()).as("id").isEqualTo(1L);
+    Assertions.assertThat(acta.getId()).as("id").isEqualTo(2L);
     Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(100L);
     Assertions.assertThat(acta.getHoraInicio()).as("horaInicio").isEqualTo(10);
     Assertions.assertThat(acta.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
     Assertions.assertThat(acta.getHoraFin()).as("horaFin").isEqualTo(12);
     Assertions.assertThat(acta.getMinutoFin()).as("minutoFin").isEqualTo(0);
-    Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen123");
-    Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(123);
+    Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen124");
+    Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(124);
     Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1L);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addActa_ReturnsActa() throws Exception {
 
@@ -132,8 +140,6 @@ public class ActaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeActa_Success() throws Exception {
     // Authorization
@@ -141,7 +147,7 @@ public class ActaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-B")));
 
     // when: Delete con id existente
-    long id = 1L;
+    long id = 2L;
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.DELETE, buildRequest(headers, null), Acta.class, id);
 
@@ -149,8 +155,6 @@ public class ActaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeActa_DoNotGetActa() throws Exception {
     // Authorization
@@ -163,25 +167,23 @@ public class ActaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceActa_ReturnsActa() throws Exception {
 
-    Acta replaceActa = generarMockActa(1L, 456);
+    Acta replaceActa = generarMockActa(2L, 456);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-E")));
 
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(headers, replaceActa), Acta.class, 1L);
+        HttpMethod.PUT, buildRequest(headers, replaceActa), Acta.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final Acta acta = response.getBody();
 
-    Assertions.assertThat(acta.getId()).as("id").isEqualTo(1L);
+    Assertions.assertThat(acta.getId()).as("id").isEqualTo(2L);
     Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(100L);
     Assertions.assertThat(acta.getHoraInicio()).as("horaInicio").isEqualTo(10);
     Assertions.assertThat(acta.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
@@ -194,8 +196,6 @@ public class ActaIT extends BaseIT {
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsActaWithNumEvaluacionesSubList() throws Exception {
     // when: Obtiene la page=1 con pagesize=5
@@ -217,19 +217,16 @@ public class ActaIT extends BaseIT {
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ActaWithNumEvaluaciones> actas = response.getBody();
-    Assertions.assertThat(actas.size()).as("size").isEqualTo(3);
+    Assertions.assertThat(actas.size()).as("size").isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).as("x-page").isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).as("x-page-size").isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).as("x-total-count").isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).as("x-total-count").isEqualTo("7");
 
-    // Contiene de id=6 a 8
-    Assertions.assertThat(actas.get(0).getId()).as("0.id").isEqualTo(6);
-    Assertions.assertThat(actas.get(1).getId()).as("1.id").isEqualTo(7);
-    Assertions.assertThat(actas.get(2).getId()).as("2.id").isEqualTo(8);
+    // Contiene de id=7 a 8
+    Assertions.assertThat(actas.get(0).getId()).as("0.id").isEqualTo(7);
+    Assertions.assertThat(actas.get(1).getId()).as("1.id").isEqualTo(8);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredActaWithNumEvaluacionesList() throws Exception {
     // when: Búsqueda por acta id equals
@@ -254,8 +251,6 @@ public class ActaIT extends BaseIT {
     Assertions.assertThat(actas.get(0).getId()).as("id").isEqualTo(id);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedActaWithNumEvaluacionesList() throws Exception {
     // when: Ordenación por id desc
@@ -275,15 +270,13 @@ public class ActaIT extends BaseIT {
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ActaWithNumEvaluaciones> actas = response.getBody();
-    Assertions.assertThat(actas.size()).as("size").isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
+    Assertions.assertThat(actas.size()).as("size").isEqualTo(7);
+    for (int i = 0; i < 7; i++) {
       ActaWithNumEvaluaciones acta = actas.get(i);
       Assertions.assertThat(acta.getId()).as((8 - i) + ".id").isEqualTo(8 - i);
     }
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsActaWithNumEvaluacionesSubList() throws Exception {
     // when: Obtiene page=0 con pagesize=3
@@ -308,20 +301,17 @@ public class ActaIT extends BaseIT {
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ActaWithNumEvaluaciones> actas = response.getBody();
-    Assertions.assertThat(actas.size()).as("size").isEqualTo(3);
+    Assertions.assertThat(actas.size()).as("size").isEqualTo(2);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("x-page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("x-page-size").isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("2");
 
-    // Contiene id=3, 2, 1
+    // Contiene id=3, 2
     Assertions.assertThat(actas.get(0).getId()).as("0.id").isEqualTo(3);
     Assertions.assertThat(actas.get(1).getId()).as("1.id").isEqualTo(2);
-    Assertions.assertThat(actas.get(2).getId()).as("2.id").isEqualTo(1);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void finishActa_Success() throws Exception {
     // Authorization
@@ -329,7 +319,7 @@ public class ActaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-FIN")));
 
     // when: Finalizar acta con id existente
-    long id = 1L;
+    long id = 2L;
     final ResponseEntity<Acta> response = restTemplate.exchange(
         ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/finalizar", HttpMethod.PUT, buildRequest(headers, null),
         Acta.class, id);
@@ -338,8 +328,6 @@ public class ActaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void finishActa_DoNotGetActa() throws Exception {
     // Authorization

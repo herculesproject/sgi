@@ -24,7 +24,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de FormacionEspecifica.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/formacion_especifica.sql" })
+@Sql(scripts = {
+// @formatter:off  
+  "classpath:scripts/formacion_especifica.sql"
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class FormacionEspecificaIT extends BaseIT {

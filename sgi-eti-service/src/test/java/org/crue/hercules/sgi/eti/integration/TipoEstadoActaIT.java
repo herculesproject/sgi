@@ -24,7 +24,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoEstadoActa.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/tipo_estado_acta.sql" })
+@Sql(scripts = {
+// @formatter:off  
+  "classpath:scripts/tipo_estado_acta.sql" 
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class TipoEstadoActaIT extends BaseIT {

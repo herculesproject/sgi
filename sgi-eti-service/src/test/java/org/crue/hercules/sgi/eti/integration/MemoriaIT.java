@@ -30,12 +30,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
+import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de Memoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = {
+// @formatter:off
+  "classpath:scripts/formulario.sql", 
+  "classpath:scripts/tipo_convocatoria_reunion.sql",
+  "classpath:scripts/tipo_evaluacion.sql", 
+  "classpath:scripts/cargo_comite.sql",
+  "classpath:scripts/tipo_actividad.sql", 
+  "classpath:scripts/tipo_memoria.sql",
+  "classpath:scripts/estado_retrospectiva.sql", 
+  "classpath:scripts/tipo_documento.sql",
+  "classpath:scripts/tipo_estado_memoria.sql", 
+  "classpath:scripts/memoria.sql"
+// @formatter:on  
+})
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+@SqlMergeMode(MergeMode.MERGE)
 public class MemoriaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
@@ -86,8 +104,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getMemoria_WithId_ReturnsMemoria() throws Exception {
 
@@ -103,12 +119,10 @@ public class MemoriaIT extends BaseIT {
     final Memoria tipoMemoria = response.getBody();
 
     Assertions.assertThat(tipoMemoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(tipoMemoria.getNumReferencia()).isEqualTo("ref-5588");
+    Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria001");
+    Assertions.assertThat(tipoMemoria.getNumReferencia()).isEqualTo("ref-001");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addMemoria_ReturnsMemoria() throws Exception {
 
@@ -122,8 +136,6 @@ public class MemoriaIT extends BaseIT {
         Memoria.class);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeMemoria_Success() throws Exception {
 
@@ -142,8 +154,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeMemoria_DoNotGetMemoria() throws Exception {
 
@@ -152,14 +162,12 @@ public class MemoriaIT extends BaseIT {
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(headers, null), Memoria.class, 1L);
+        HttpMethod.DELETE, buildRequest(headers, null), Memoria.class, 20L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceMemoria_ReturnsMemoria() throws Exception {
 
@@ -180,8 +188,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(tipoMemoria.getNumReferencia()).isEqualTo(replaceMemoria.getNumReferencia());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPaging_ReturnsMemoriaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
@@ -200,15 +206,13 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
-    Assertions.assertThat(tipoMemorias.size()).isEqualTo(3);
+    Assertions.assertThat(tipoMemorias.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("16");
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredMemoriaList() throws Exception {
     // when: Búsqueda por titulo like e id equals
@@ -237,8 +241,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(tipoMemorias.get(0).getTitulo()).startsWith("Memoria");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedMemoriaList() throws Exception {
     // when: Ordenación por titulo desc
@@ -261,16 +263,14 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
-    Assertions.assertThat(tipoMemorias.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
+    Assertions.assertThat(tipoMemorias.size()).isEqualTo(16);
+    for (int i = 0; i < 16; i++) {
       MemoriaPeticionEvaluacion tipoMemoria = tipoMemorias.get(i);
-      Assertions.assertThat(tipoMemoria.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
+      Assertions.assertThat(tipoMemoria.getId()).isEqualTo(16 - i);
+      Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", 16 - i));
     }
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsMemoriaSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
@@ -300,18 +300,15 @@ public class MemoriaIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("9");
 
-    // Contiene titulo='Memoria001', 'Memoria002',
-    // 'Memoria003'
-    Assertions.assertThat(tipoMemorias.get(0).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 3));
-    Assertions.assertThat(tipoMemorias.get(1).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 2));
-    Assertions.assertThat(tipoMemorias.get(2).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 1));
+    // Contiene titulo='Memoria009' a 'Memoria007'
 
+    Assertions.assertThat(tipoMemorias.get(0).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 9));
+    Assertions.assertThat(tipoMemorias.get(1).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8));
+    Assertions.assertThat(tipoMemorias.get(2).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 7));
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllMemoriasAsignablesConvocatoriaOrdExt_Unlimited_ReturnsMemoriaSubList() throws Exception {
 
@@ -332,23 +329,22 @@ public class MemoriaIT extends BaseIT {
     final List<Memoria> memorias = response.getBody();
     Assertions.assertThat(memorias.size()).isEqualTo(4);
 
-    // Las memorias 1,3 y 5 tienen estado 3(En Secretaría) y su
+    // Las memorias 10,11 y 12 tienen estado 3(En Secretaría) y su
     // fecha de envío es menor que la fecha límite por que son asignables.
 
-    // Memoria 6 no tiene estado 3(En Secretaría) pero tiene retrospectiva de tipo 3
+    // Memoria 13 no tiene estado 3(En Secretaría) pero tiene retrospectiva de tipo
+    // 3
     // (En Secretaría) por lo que sí es asignable.
 
-    // Memoria 7 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
+    // Memoria 14 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
     // la fecha límite, por lo que no es asignable.
     List<String> titulos = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
       titulos.add(memorias.get(i).getTitulo());
     }
-    Assertions.assertThat(titulos).contains("Memoria1", "Memoria3", "Memoria5", "Memoria6");
+    Assertions.assertThat(titulos).contains("Memoria010", "Memoria011", "Memoria012", "Memoria013");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllMemoriasAsignablesConvocatoriaOrdExt_WithPaging_ReturnsMemoriaSubList() throws Exception {
 
@@ -378,8 +374,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllMemoriasAsignablesConvocatoriaSeg_WithPaging_ReturnsMemoriaSubList() throws Exception {
 
@@ -409,8 +403,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllMemoriasAsignablesConvocatoriaSeg_Unlimited_ReturnsMemoriaSubList() throws Exception {
 
@@ -433,8 +425,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllAsignablesTipoConvocatoriaOrdExt_Unlimited_ReturnsMemoriaSubList() throws Exception {
 
@@ -463,22 +453,21 @@ public class MemoriaIT extends BaseIT {
     final List<Memoria> memorias = response.getBody();
     Assertions.assertThat(memorias.size()).isEqualTo(4);
 
-    // Las memorias 1,3 y 5 tienen estado 3(En Secretaría) y su
+    // Las memorias 10,11 y 12 tienen estado 3(En Secretaría) y su
     // fecha de envío es menor que la fecha límite por que son asignables.
 
-    // Memoria 6 no tiene estado 3(En Secretaría) pero tiene retrospectiva de tipo 3
+    // Memoria 13 no tiene estado 3(En Secretaría) pero tiene retrospectiva de tipo
+    // 3
     // (En Secretaría) por lo que sí es asignable.
 
-    // Memoria 7 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
+    // Memoria 14 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
     // la fecha límite, por lo que no es asignable.
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria3");
-    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria5");
-    Assertions.assertThat(memorias.get(3).getTitulo()).isEqualTo("Memoria6");
+    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria010");
+    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria011");
+    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria012");
+    Assertions.assertThat(memorias.get(3).getTitulo()).isEqualTo("Memoria013");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAllAsignablesTipoConvocatoriaSeguimiento_Unlimited_ReturnsMemoriaSubList() throws Exception {
 
@@ -504,7 +493,7 @@ public class MemoriaIT extends BaseIT {
     final List<Memoria> memorias = response.getBody();
     Assertions.assertThat(memorias.size()).isEqualTo(3);
 
-    // Las memorias 2, 4 y 6 están en la tienen estados 12 y 17(En Secretaría
+    // Las memorias 2, 4 y 6 tienen estados 12 y 17(En Secretaría
     // seguimiento anual/final) y su fecha de envío es menor que la fecha límite por
     // que son asignables.
 
@@ -512,7 +501,7 @@ public class MemoriaIT extends BaseIT {
     for (int i = 0; i < 3; i++) {
       titulos.add(memorias.get(i).getTitulo());
     }
-    Assertions.assertThat(titulos).contains("Memoria2", "Memoria4", "Memoria6");
+    Assertions.assertThat(titulos).contains("Memoria002", "Memoria004", "Memoria006");
 
     // Memoria 8 tiene estado 17(En Secretaría seguimiento final) pero su fecha de
     // envío es menor que
@@ -520,8 +509,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionFormulario_Unlimited_ReturnsDocumentacion() throws Exception {
 
@@ -540,14 +527,12 @@ public class MemoriaIT extends BaseIT {
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
     Assertions.assertThat(documentacionMemoria.size()).isEqualTo(4);
 
-    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-001");
-    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-002");
-    Assertions.assertThat(documentacionMemoria.get(2).getDocumentoRef()).isEqualTo("doc-003");
-    Assertions.assertThat(documentacionMemoria.get(3).getDocumentoRef()).isEqualTo("doc-004");
+    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-004");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-005");
+    Assertions.assertThat(documentacionMemoria.get(2).getDocumentoRef()).isEqualTo("doc-006");
+    Assertions.assertThat(documentacionMemoria.get(3).getDocumentoRef()).isEqualTo("doc-007");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionFormulario_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
 
@@ -558,7 +543,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -566,8 +551,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionSeguimientoAnual_Unlimited_ReturnsDocumentacion() throws Exception {
 
@@ -584,14 +567,11 @@ public class MemoriaIT extends BaseIT {
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
-    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(1);
 
     Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-001");
-    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-003");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionSeguimientoAnual_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
 
@@ -602,7 +582,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -610,8 +590,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionSeguimientoFinal_Unlimited_ReturnsDocumentacion() throws Exception {
 
@@ -628,14 +606,11 @@ public class MemoriaIT extends BaseIT {
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
-    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(1);
 
     Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-002");
-    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-004");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionSeguimientoFinal_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
 
@@ -646,7 +621,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -654,8 +629,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionRetrospectiva_Unlimited_ReturnsDocumentacion() throws Exception {
 
@@ -674,12 +647,10 @@ public class MemoriaIT extends BaseIT {
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
     Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
 
-    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-001");
-    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-002");
+    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-003");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-012");
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDocumentacionRetrospectiva_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
 
@@ -690,7 +661,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 3L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -698,8 +669,6 @@ public class MemoriaIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
 
@@ -725,8 +694,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(documentacionMemoria.getAportado()).isEqualTo(replaceDocumentacionMemoria.getAportado());
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addDocumentacioSeguimientoAnual_ReturnsDcoumentacionMemoria() throws Exception {
 
@@ -740,8 +707,6 @@ public class MemoriaIT extends BaseIT {
         buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addDocumentacioRetrospectiva_ReturnsDcoumentacionMemoria() throws Exception {
 
@@ -755,8 +720,6 @@ public class MemoriaIT extends BaseIT {
         HttpMethod.POST, buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluacionesMemoria_ReturnsEvaluadorSubList() throws Exception {
 
@@ -777,14 +740,12 @@ public class MemoriaIT extends BaseIT {
     final List<Evaluacion> evaluaciones = response.getBody();
     Assertions.assertThat(evaluaciones.size()).isEqualTo(3);
 
-    // Contiene las evaluaciones con Id '1', '2' y '3'
-    Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluaciones.get(1).getId()).isEqualTo(2L);
-    Assertions.assertThat(evaluaciones.get(2).getId()).isEqualTo(3L);
+    // Contiene las evaluaciones con Id 2', '3' y '4'
+    Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(2L);
+    Assertions.assertThat(evaluaciones.get(1).getId()).isEqualTo(3L);
+    Assertions.assertThat(evaluaciones.get(2).getId()).isEqualTo(4L);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void deleteDocumentacionSeguimientoAnual_ReturnsMemoria() throws Exception {
     HttpHeaders headers = new HttpHeaders();
@@ -792,14 +753,12 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual/{idDocumentacionMemoria}",
-        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 15L, 10L);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void deleteDocumentacionSeguimientoFinal_ReturnsMemoria() throws Exception {
 
@@ -808,14 +767,12 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final/{idDocumentacionMemoria}",
-        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 16L, 11L);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluacionesMemoria_ReturnsEmptyList() throws Exception {
 
@@ -825,14 +782,12 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
-        }, 2L);
+        }, 12L);
 
     // then: La memoria no tiene evaluaciones
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void deleteDocumentacionRetrospectiva_ReturnsMemoria() throws Exception {
     HttpHeaders headers = new HttpHeaders();
@@ -840,14 +795,12 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva/{idDocumentacionMemoria}",
-        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 12L);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void deleteDocumentacionInicial_ReturnsMemoria() throws Exception {
     HttpHeaders headers = new HttpHeaders();
@@ -855,7 +808,7 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
-        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 4L);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -898,8 +851,6 @@ public class MemoriaIT extends BaseIT {
     return tipoDocumento;
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void enviarSecretaria_Success() throws Exception {
     // Authorization
@@ -907,7 +858,7 @@ public class MemoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
 
     // when: Enviar secretaria con id existente
-    long id = 1L;
+    long id = 9L;
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
         buildRequest(headers, null), Memoria.class, id);
@@ -916,8 +867,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void enviarSecretaria_DoNotGetMemoria() throws Exception {
     // Authorization
@@ -926,13 +875,11 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
-        buildRequest(headers, null), Memoria.class, 3L);
+        buildRequest(headers, null), Memoria.class, 20L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void enviarSecretariaRetrospectiva_Success() throws Exception {
     // Authorization
@@ -940,7 +887,7 @@ public class MemoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
 
     // when: Enviar secretaria con id existente
-    long id = 1L;
+    long id = 9L;
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,
         buildRequest(headers, null), Memoria.class, id);
@@ -949,8 +896,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void enviarSecretariaRetrospectiva_DoNotGetMemoria() throws Exception {
     // Authorization
@@ -959,7 +904,7 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,
-        buildRequest(headers, null), Memoria.class, 3L);
+        buildRequest(headers, null), Memoria.class, 20L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }

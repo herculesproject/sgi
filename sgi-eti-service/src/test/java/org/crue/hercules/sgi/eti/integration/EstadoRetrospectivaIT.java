@@ -25,7 +25,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de EstadoRetrospectiva.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/estado_retrospectiva.sql" })
+@Sql(scripts = {
+// @formatter:off    
+  "classpath:scripts/estado_retrospectiva.sql"
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class EstadoRetrospectivaIT extends BaseIT {

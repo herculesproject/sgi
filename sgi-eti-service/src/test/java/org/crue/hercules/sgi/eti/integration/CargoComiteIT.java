@@ -24,7 +24,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de CargoComite.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { "classpath:scripts/cargo_comite.sql" })
+@Sql(scripts = {
+// @formatter:off  
+  "classpath:scripts/cargo_comite.sql"
+// @formatter:on
+})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
 public class CargoComiteIT extends BaseIT {

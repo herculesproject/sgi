@@ -1,16 +1,6 @@
 -- ESTADO RETROSPECTIVA
-INSERT INTO ETI.ESTADO_RETROSPECTIVA
-(ID, NOMBRE, ACTIVO)
-VALUES(1, 'EstadoRetrospectiva01', true);
-INSERT INTO ETI.ESTADO_RETROSPECTIVA
-(ID, NOMBRE, ACTIVO)
-VALUES(2, 'EstadoRetrospectiva2', true);
-INSERT INTO ETI.ESTADO_RETROSPECTIVA
-(ID, NOMBRE, ACTIVO)
-VALUES(3, 'EstadoRetrospectiva03', true);
-INSERT INTO ETI.ESTADO_RETROSPECTIVA
-(ID, NOMBRE, ACTIVO)
-VALUES(4, 'EstadoRetrospectiva4', true);
-INSERT INTO ETI.ESTADO_RETROSPECTIVA
-(ID, NOMBRE, ACTIVO)
-VALUES(5, 'EstadoRetrospectiva05', true);
+INSERT INTO eti.estado_retrospectiva (id, nombre, activo) VALUES(1, 'EstadoRetrospectiva01', true);
+INSERT INTO eti.estado_retrospectiva (id, nombre, activo) VALUES(2, 'EstadoRetrospectiva2', true);
+INSERT INTO eti.estado_retrospectiva (id, nombre, activo) VALUES(3, 'EstadoRetrospectiva03', true);
+INSERT INTO eti.estado_retrospectiva (id, nombre, activo) VALUES(4, 'EstadoRetrospectiva4', true);
+INSERT INTO eti.estado_retrospectiva (id, nombre, activo) VALUES(5, 'EstadoRetrospectiva05', true);
