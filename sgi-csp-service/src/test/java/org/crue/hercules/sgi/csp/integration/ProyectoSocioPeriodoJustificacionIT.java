@@ -117,7 +117,6 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     final List<ProyectoSocioPeriodoJustificacion> responseDataFindAll = responseFindAllProyectoSocioPeriodoJustificacion
         .getBody();
     Assertions.assertThat(responseDataFindAll.size()).as("size()").isEqualTo(1);
-    Assertions.assertThat(responseDataFindAll.get(0).getId()).as("responseDataFindAll.get(0).getId()").isEqualTo(1L);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",

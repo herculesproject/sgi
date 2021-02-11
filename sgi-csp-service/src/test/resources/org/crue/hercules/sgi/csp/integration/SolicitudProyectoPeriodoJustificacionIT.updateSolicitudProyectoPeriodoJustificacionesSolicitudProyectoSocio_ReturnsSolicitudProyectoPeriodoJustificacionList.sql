@@ -66,12 +66,12 @@ VALUES (2, 1, 1, 2, 6, 8, 4, '002');
 
 -- SOLICITUD PROYECTO PERIODO JUSTIFICACION
 INSERT INTO csp.solicitud_proyecto_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (1, 1, 1, 1, 2, '2020-10-10', '2020-11-20', 'observaciones-001');
+  VALUES (100, 1, 1, 1, 2, '2020-10-10', '2020-11-20', 'observaciones-001');
 INSERT INTO csp.solicitud_proyecto_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (2, 1, 2, 10, 21, '2020-10-10', '2020-11-20', 'observaciones-002');
+  VALUES (101, 1, 2, 10, 21, '2020-10-10', '2020-11-20', 'observaciones-002');
 INSERT INTO csp.solicitud_proyecto_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (3, 1, 3, 22, 23, null, null, 'observaciones-003');
+  VALUES (102, 1, 3, 22, 23, null, null, 'observaciones-003');
 INSERT INTO csp.solicitud_proyecto_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (4, 1, 4, 26, 28, null, null, 'observaciones-4');
+  VALUES (103, 1, 4, 26, 28, null, null, 'observaciones-4');
 
 

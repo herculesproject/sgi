@@ -67,10 +67,10 @@ INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principa
 
 -- SOLICITUD PROYECTO EQUIPO SOCIO
 INSERT INTO csp.solicitud_proyecto_equipo_socio (id, persona_ref, rol_proyecto_id, solicitud_proyecto_socio_id, mes_inicio, mes_fin) 
-VALUES (1, 'user-001', 1, 1, 3, 4);
+VALUES (100, 'user-001', 1, 1, 3, 4);
 INSERT INTO csp.solicitud_proyecto_equipo_socio (id, persona_ref, rol_proyecto_id, solicitud_proyecto_socio_id, mes_inicio, mes_fin) 
-VALUES (2, 'user-003', 1, 1, 5, 6);
+VALUES (101, 'user-003', 1, 1, 5, 6);
 INSERT INTO csp.solicitud_proyecto_equipo_socio (id, persona_ref, rol_proyecto_id, solicitud_proyecto_socio_id, mes_inicio, mes_fin) 
-VALUES (3, 'user-004', 1, 1, 7, 8);
+VALUES (102, 'user-004', 1, 1, 7, 8);
 INSERT INTO csp.solicitud_proyecto_equipo_socio (id, persona_ref, rol_proyecto_id, solicitud_proyecto_socio_id, mes_inicio, mes_fin) 
-VALUES (4, 'user-005', 1, 1, 10, 12);
+VALUES (103, 'user-005', 1, 1, 10, 12);

@@ -81,7 +81,7 @@ public class SolicitudProyectoEquipoSocioIT {
 
     SolicitudProyectoEquipoSocio newsolicitudProyectoEquipoSocio = generarSolicitudProyectoEquipoSocio(null, 1L);
 
-    SolicitudProyectoEquipoSocio updateSolicitudProyectoEquipoSocio = generarSolicitudProyectoEquipoSocio(4L, 1L);
+    SolicitudProyectoEquipoSocio updateSolicitudProyectoEquipoSocio = generarSolicitudProyectoEquipoSocio(103L, 1L);
     updateSolicitudProyectoEquipoSocio.setPersonaRef("user-002");
     updateSolicitudProyectoEquipoSocio.setMesInicio(3);
     updateSolicitudProyectoEquipoSocio.setMesFin(4);

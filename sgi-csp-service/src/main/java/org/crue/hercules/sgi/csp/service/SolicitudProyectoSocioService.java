@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,5 +69,19 @@ public interface SolicitudProyectoSocioService {
    * @return lista paginada.
    */
   Page<SolicitudProyectoSocio> findAllBySolicitud(Long idSolicitud, List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Indica si {@link SolicitudProyectoSocio} tiene
+   * {@link SolicitudProyectoPeriodoJustificacion},
+   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
+   * relacionadas.
+   *
+   * @param id Id de la {@link SolicitudProyectoSocio}.
+   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
+   *         {@link SolicitudProyectoPeriodoPago} y/o
+   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   *         false
+   */
+  public Boolean vinculaciones(Long id);
 
 }

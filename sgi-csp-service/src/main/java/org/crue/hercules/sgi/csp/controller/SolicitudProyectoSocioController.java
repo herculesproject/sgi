@@ -6,10 +6,10 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoPagoService;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoSocioService;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoPagoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -237,6 +237,26 @@ public class SolicitudProyectoSocioController {
     log.debug(
         "findAllSolicitudProyectoPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Indica si {@link SolicitudProyectoSocio} tiene
+   * {@link SolicitudProyectoPeriodoJustificacion},
+   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
+   * relacionadas.
+   *
+   * @param id Id de la {@link SolicitudProyectoSocio}.
+   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
+   *         {@link SolicitudProyectoPeriodoPago} y/o
+   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   *         false
+   */
+  @RequestMapping(path = "/{id}/vinculaciones", method = RequestMethod.HEAD)
+  ResponseEntity<Boolean> vinculaciones(@PathVariable Long id) {
+    log.debug("vinculaciones(Long id) - start");
+    Boolean returnValue = service.vinculaciones(id);
+    log.debug("vinculaciones(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

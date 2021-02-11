@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -211,6 +212,25 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
     }
 
     log.debug("validateSolicitudProyectoSocio(SolicitudProyectoSocio solicitudProyectoSocio) - end");
+  }
+
+  /**
+   * Indica si {@link SolicitudProyectoSocio} tiene
+   * {@link SolicitudProyectoPeriodoJustificacion},
+   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
+   * relacionadas.
+   *
+   * @param id Id de la {@link SolicitudProyectoSocio}.
+   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
+   *         {@link SolicitudProyectoPeriodoPago} y/o
+   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   *         false
+   */
+  public Boolean vinculaciones(Long id) {
+    log.debug("vinculaciones(Long id) - start");
+    final Boolean returnValue = repository.vinculaciones(id);
+    log.debug("vinculaciones(Long id) - start");
+    return returnValue;
   }
 
 }

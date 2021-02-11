@@ -13,20 +13,20 @@
 
 INSERT INTO csp.proyecto_equipo
 (id, proyecto_id, fecha_fin, fecha_inicio, persona_ref, horas_dedicacion, rol_proyecto_id)
-VALUES(1, 1, '2020-01-15', '2020-01-01', 'ref-001', 1, 1);
+VALUES(100, 1, '2020-01-15', '2020-01-01', 'ref-001', 1, 1);
 
 INSERT INTO csp.proyecto_equipo
 (id, proyecto_id, fecha_fin, fecha_inicio, persona_ref, horas_dedicacion, rol_proyecto_id)
-VALUES(2, 1, '2020-02-15', '2020-02-01', 'ref-002', 2, 1);
+VALUES(101, 1, '2020-02-15', '2020-02-01', 'ref-002', 2, 1);
 
 INSERT INTO csp.proyecto_equipo
 (id, proyecto_id, fecha_fin, fecha_inicio, persona_ref, horas_dedicacion, rol_proyecto_id)
-VALUES(3, 2, '2020-03-15', '2020-03-01', 'ref-003', 3, 1);
+VALUES(102, 2, '2020-03-15', '2020-03-01', 'ref-003', 3, 1);
 
 INSERT INTO csp.proyecto_equipo
 (id, proyecto_id, fecha_fin, fecha_inicio, persona_ref, horas_dedicacion, rol_proyecto_id)
-VALUES(4, 1, '2020-04-15', '2020-04-01', 'ref-004', 4, 1);
+VALUES(103, 1, '2020-04-15', '2020-04-01', 'ref-004', 4, 1);
 
 INSERT INTO csp.proyecto_equipo
 (id, proyecto_id, fecha_fin, fecha_inicio, persona_ref, horas_dedicacion, rol_proyecto_id)
-VALUES(5, 1, '2020-05-15', '2020-05-01', 'ref-5', 5, 1);
+VALUES(104, 1, '2020-05-15', '2020-05-01', 'ref-5', 5, 1);

@@ -30,6 +30,7 @@ public class ProyectoEquipoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/proyectoequipos";
+  private List<ProyectoEquipo> proyectoEquipos;
 
   private HttpEntity<ProyectoEquipo> buildRequest(HttpHeaders headers, ProyectoEquipo entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -68,17 +69,17 @@ public class ProyectoEquipoIT extends BaseIT {
     Long proyectoId = 1L;
     ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, LocalDate.of(2020, 12, 16),
         LocalDate.of(2020, 12, 18), 1L);
-    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(4L, LocalDate.of(2020, 4, 2),
+    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(103L, LocalDate.of(2020, 4, 2),
         LocalDate.of(2020, 4, 15), 1L);
 
-    List<ProyectoEquipo> ProyectoEquipos = Arrays.asList(newProyectoEquipo, updatedProyectoEquipo);
+    proyectoEquipos = Arrays.asList(newProyectoEquipo, updatedProyectoEquipo);
 
     // when: updateProyectoEquiposConvocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID).buildAndExpand(proyectoId)
         .toUri();
 
     final ResponseEntity<List<ProyectoEquipo>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
-        buildRequestList(null, ProyectoEquipos), new ParameterizedTypeReference<List<ProyectoEquipo>>() {
+        buildRequestList(null, proyectoEquipos), new ParameterizedTypeReference<List<ProyectoEquipo>>() {
         });
 
     // then: Se crea el nuevo ProyectoEquipo, se actualiza
@@ -130,7 +131,7 @@ public class ProyectoEquipoIT extends BaseIT {
 
     Assertions.assertThat(responseFindAllProyectoEquipo.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ProyectoEquipo> responseDataFindAll = responseFindAllProyectoEquipo.getBody();
-    Assertions.assertThat(responseDataFindAll.size()).as("size()").isEqualTo(ProyectoEquipos.size());
+    Assertions.assertThat(responseDataFindAll.size()).as("size()").isEqualTo(proyectoEquipos.size());
     Assertions.assertThat(responseDataFindAll.get(0).getId()).as("responseDataFindAll.get(0).getId()")
         .isEqualTo(responseData.get(0).getId());
     Assertions.assertThat(responseDataFindAll.get(1).getId()).as("responseDataFindAll.get(1).getId()")
@@ -144,14 +145,14 @@ public class ProyectoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findById_ReturnsProyectoEquipo() throws Exception {
-    Long id = 1L;
+    Long id = 100L;
 
     final ResponseEntity<ProyectoEquipo> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(null, null), ProyectoEquipo.class, id);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ProyectoEquipo responseData = response.getBody();
-    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1);
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto().getId()").isEqualTo(1);
     Assertions.assertThat(responseData.getPersonaRef()).as("getPersonaRef()").isEqualTo("ref-001");
     Assertions.assertThat(responseData.getHorasDedicacion()).as("getHorasDedicacion()").isEqualTo(1);

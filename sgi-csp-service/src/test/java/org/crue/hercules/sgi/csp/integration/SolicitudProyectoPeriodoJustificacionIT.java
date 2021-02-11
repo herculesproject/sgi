@@ -67,7 +67,7 @@ public class SolicitudProyectoPeriodoJustificacionIT extends BaseIT {
     SolicitudProyectoPeriodoJustificacion newSolicitudProyectoPeriodoJustificacion = generarMockSolicitudProyectoPeriodoJustificacion(
         null, 27, 30, 1L);
     SolicitudProyectoPeriodoJustificacion updatedSolicitudProyectoPeriodoJustificacion = generarMockSolicitudProyectoPeriodoJustificacion(
-        4L, 24, 26, 1L);
+        103L, 24, 26, 1L);
 
     List<SolicitudProyectoPeriodoJustificacion> solicitudProyectoPeriodoJustificaciones = Arrays
         .asList(newSolicitudProyectoPeriodoJustificacion, updatedSolicitudProyectoPeriodoJustificacion);
