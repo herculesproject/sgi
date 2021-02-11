@@ -1074,6 +1074,8 @@
   "csp.proyecto.socio-equipo.rol-socio.error.cargar": "Error al cargar los rol de socio",
   "csp.proyecto.socios.añadir": "Añadir nuevo socio",
   "csp.proyecto.socios.borrar": "¿Desea eliminar al socio del proyecto?",
+  "csp.proyecto.socios.borrar.relaciones": "Existe información de detalle vinculada a este socio, ¿desea continuar?",
+  "csp.proyecto.socios.borrar.relaciones.error": "Error al comprobar la información existente del socio",
   "csp.proyecto.socios.crear.titulo": "Crear socio",
   "csp.proyecto.socios.editar.titulo": "Editar socio",
   "csp.proyecto.socios.error.proyectoColaborativo.deshabilitado": "Ha seleccionado en los datos generales que es un proyecto no colaborativo por lo que no existirán socios colaboradores",
