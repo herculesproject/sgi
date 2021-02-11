@@ -140,7 +140,7 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto>{
   }
 
   private update(proyectoContexto: IProyectoContexto): Observable<IProyectoContexto> {
-    return this.contextoProyectoService.update(proyectoContexto.id, proyectoContexto);
+    return this.contextoProyectoService.update(proyectoContexto.proyecto.id, proyectoContexto);
   }
 
   updateAreaTematica(data: AreaTematicaProyectoData) {
