@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.eti.converter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
@@ -85,6 +87,9 @@ public class EvaluacionConverterTest extends BaseServiceTest {
   public void evalucionIsEliminable_WithDictamen_ReturnFalse() {
     // La evaluación tiene un dictamen.
     Evaluacion evaluacion = generarMockEvaluacion(1L, "Eva1", 1L, 1L);
+    // La fecha de la convocatoria es posterior a la actual
+    LocalDateTime today = LocalDateTime.now();
+    evaluacion.getConvocatoriaReunion().setFechaEvaluacion(today.plusYears(1));
 
     evaluacionConverter.isEliminable(evaluacion);
 
@@ -100,9 +105,35 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     evaluacion.getConvocatoriaReunion().setFechaEvaluacion(today.plusYears(1));
     evaluacion.setDictamen(null);
 
+    evaluacionConverter.isEliminable(evaluacion);
+
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getFechaEvaluacion()).isAfter(LocalDateTime.now());
     Assertions.assertThat(evaluacion.getDictamen()).isNull();
     Assertions.assertThat(comentarioRepository.countByEvaluacionId(evaluacion.getId())).isEqualTo(0);
+  }
+
+  @Test
+  public void evaluacionesToEvaluacionesWithIsEliminable_ReturnEvaluacionWithIsEliminableList() {
+    ArrayList<Evaluacion> evaluaciones = new ArrayList<>();
+    evaluaciones.add(generarMockEvaluacion(1L, "Eva1", 1L, 1L));
+    evaluaciones.add(generarMockEvaluacion(2L, "Eva2", 1L, 1L));
+
+    List<EvaluacionWithIsEliminable> result = evaluacionConverter
+        .evaluacionesToEvaluacionesWithIsEliminable(evaluaciones);
+
+    Assertions.assertThat(result.size()).isEqualTo(evaluaciones.size());
+
+  }
+
+  @Test
+  public void evaluacionesToEvaluacionesWithIsEliminable_ReturnArrayList() {
+    List<Evaluacion> evaluaciones = null;
+
+    List<EvaluacionWithIsEliminable> result = evaluacionConverter
+        .evaluacionesToEvaluacionesWithIsEliminable(evaluaciones);
+
+    Assertions.assertThat(result.size()).isEqualTo(0);
+
   }
 
   /**
