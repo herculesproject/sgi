@@ -93,10 +93,9 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
 
     URI uriFindAllProyectoSocioPeriodoPago = UriComponentsBuilder
-        .fromUriString("/proyectosocios" + PATH_PARAMETER_ID + CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .fromUriString("/proyectosocios" + PATH_PARAMETER_ID + CONTROLLER_BASE_PATH)
         .buildAndExpand(solicitudProyectoSocioId).toUri();
 
     final ResponseEntity<List<ProyectoSocioPeriodoPago>> responseFindAllProyectoSocioPeriodoPago = restTemplate
@@ -107,9 +106,8 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
     Assertions.assertThat(responseFindAllProyectoSocioPeriodoPago.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ProyectoSocioPeriodoPago> responseDataFindAll = responseFindAllProyectoSocioPeriodoPago.getBody();
     Assertions.assertThat(responseDataFindAll.size()).as("size()").isEqualTo(proyectoSocioPeriodoPagos.size());
-    Assertions.assertThat(responseDataFindAll.get(0).getId()).as("responseDataFindAll.get(0).getId()")
-        .isEqualTo(responseData.get(0).getId());
-
+    Assertions.assertThat(responseDataFindAll.get(0).getFechaPrevistaPago())
+        .as("responseDataFindAll.get(0).getFechaPrevistaPago()").isEqualTo(responseData.get(0).getFechaPrevistaPago());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
