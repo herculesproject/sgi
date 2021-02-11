@@ -9,6 +9,7 @@ import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
+import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
@@ -53,7 +54,7 @@ export class ProyectoSociosComponent extends FragmentComponent implements OnInit
   constructor(
     public actionService: ProyectoActionService,
     private dialogService: DialogService,
-    private router: Router
+    private router: Router,
   ) {
     super(actionService.FRAGMENT.SOCIOS, actionService);
     this.formPart = this.fragment as ProyectoSociosFragment;

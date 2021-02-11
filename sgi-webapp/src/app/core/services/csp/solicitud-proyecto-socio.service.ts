@@ -131,4 +131,19 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
       `${this.endpointUrl}/${id}/solicitudproyectoequiposocio`, options,
       SolicitudProyectoEquipoSocioService.CONVERTER);
   }
+
+
+  /**
+   * Comprueba si un ISolicitudProyectoSocio tiene ISolicitudProyectoSocioEquipo,
+   * ISolicitudProyectoSocioPeriodoPago y/o ISolicitudProyectoSocioPeriodoJustificacion 
+   * relacionados
+   *
+   *  @param id Id deL proyecto
+   */
+  vinculaciones(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/vinculaciones`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
 }

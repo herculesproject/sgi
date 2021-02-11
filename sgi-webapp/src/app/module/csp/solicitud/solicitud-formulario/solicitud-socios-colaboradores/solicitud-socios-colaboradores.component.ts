@@ -7,15 +7,20 @@ import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-soc
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
+import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-socio/solicitud-proyecto-socio-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-socios-colaboradores.fragment';
 
 const MSG_DELETE = marker('csp.solicitud.socios.colaboradores.borrar');
+const MSG_DELETE_CASCADE = marker('csp.solicitud.socios.colaboradores.borrar.vinculaciones');
+const MSG_ERROR = marker('csp.solicitud.socios.colaboradores.borrar.vinculaciones.error');
 
 export interface ISolicitudProyectoSocioState {
   solicitudId: number;
@@ -48,6 +53,8 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
   constructor(
     public actionService: SolicitudActionService,
     private dialogService: DialogService,
+    private solicitudProyectoSocioService: SolicitudProyectoSocioService,
+    private snackBarService: SnackBarService
   ) {
     super(actionService.FRAGMENT.SOCIOS_COLABORADORES, actionService);
     this.formPart = this.fragment as SolicitudSociosColaboradoresFragment;
@@ -78,13 +85,23 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  deleteProyectoSocio(wrapper: StatusWrapper<ISolicitudProyectoSocio>) {
+  deleteProyectoSocio(wrapper: StatusWrapper<ISolicitudProyectoSocio>): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.solicitudProyectoSocioService.vinculaciones(wrapper.value.id).pipe(
+        map(res => {
+          return res ? MSG_DELETE_CASCADE : MSG_DELETE;
+        }),
+        switchMap(message => {
+          return this.dialogService.showConfirmation(message);
+        }),
+      ).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoSocio(wrapper);
           }
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
