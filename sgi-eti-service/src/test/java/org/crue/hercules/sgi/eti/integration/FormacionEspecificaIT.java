@@ -126,8 +126,8 @@ public class FormacionEspecificaIT extends BaseIT {
   public void findAll_WithPaging_ReturnsFormacionEspecificaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
+    headers.add("X-Page", "2");
+    headers.add("X-Page-Size", "3");
 
     final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(
         FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
@@ -138,15 +138,14 @@ public class FormacionEspecificaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<FormacionEspecifica> formacionEspecificas = response.getBody();
-    Assertions.assertThat(formacionEspecificas.size()).isEqualTo(3);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(formacionEspecificas.size()).isEqualTo(2);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
-    // Contiene de nombre='F: Veterinario designado' a 'H: No requiere'
-    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("F: Veterinario designado");
-    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("G: Sin especificar");
-    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("H: No requiere");
+    // Contiene de nombre= 'G: Sin especificar' a 'H: No requiere'
+    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("G: Sin especificar");
+    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("H: No requiere");
   }
 
   @Test
@@ -230,7 +229,7 @@ public class FormacionEspecificaIT extends BaseIT {
     // cuidado de los animales', 'B: Eutanasia de los animales',
     // 'A: Cuidado de los animales'
     Assertions.assertThat(formacionEspecificas.get(0).getNombre())
-        .isEqualTo("E: Responsable de la supervisión &lt;&lt;in situ&gt;&gt; del bienestar y cuidado de los animales");
+        .isEqualTo("E: Responsable de la supervisión in situ del bienestar y cuidado de los animales");
     Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("B: Eutanasia de los animales");
     Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("A: Cuidado de los animales");
 
