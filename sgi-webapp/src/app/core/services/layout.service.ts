@@ -82,7 +82,7 @@ export class LayoutService {
     for (let p = navigationStack.length - 1;
       p > 0 && (navigationStack[p].segments.length < 1 || !navigationStack[p]?.routeConfig?.data?.title);
       discardCounter++, p--) { }
-    const endPosition = navigationStack.length - discardCounter;
+    const endPosition = navigationStack.length - discardCounter - 1;
     return navigationStack.slice(0, endPosition);
   }
 
