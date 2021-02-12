@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -44,7 +43,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private solicitudService: SolicitudService
   ) {
     super(actionService.FRAGMENT.PLAZOS_FASES, actionService);
     this.formPart = this.fragment as ConvocatoriaPlazosFasesFragment;
@@ -58,7 +56,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     this.dataSource.sort = this.sort;
     this.disableAddFase = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
 
-    this.actionService.initializeConfiguracionSolicitud();
     this.subscriptions.push(this.formPart.plazosFase$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
