@@ -146,7 +146,7 @@ export interface IProyectoEntidadConvocanteBackend {
   providedIn: 'root'
 })
 export class ProyectoService extends SgiMutableRestService<number, IProyectoBackend, IProyecto> {
-  private static readonly MAPPING = 'proyectos';
+  private static readonly MAPPING = '/proyectos';
   private static readonly ENTIDAD_CONVOCANTES_MAPPING = 'entidadconvocantes';
 
   private static readonly CONVERTER = new class extends SgiBaseConverter<IProyectoBackend, IProyecto> {
