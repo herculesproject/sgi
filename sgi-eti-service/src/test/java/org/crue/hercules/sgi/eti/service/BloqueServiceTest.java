@@ -121,6 +121,30 @@ public class BloqueServiceTest extends BaseServiceTest {
     }
   }
 
+  @Test
+  public void findAllByFormularioId_ReturnsBloques() {
+
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long formularioId = 1L;
+    // given: 1 Bloque y 1 Formulario
+    List<Bloque> bloques = new ArrayList<>();
+    for (int i = 1; i <= 10; i++) {
+      bloques.add(generarMockBloque(Long.valueOf(i), "Bloque" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(bloqueRepository.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(bloques));
+
+    // when: Se buscan todos las datos
+    Page<Bloque> result = bloqueService.findByFormularioId(formularioId, Pageable.unpaged());
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(result.getContent()).isEqualTo(bloques);
+    Assertions.assertThat(result.getSize()).isEqualTo(10);
+    Assertions.assertThat(result.getSize()).isEqualTo(bloques.size());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(bloques.size());
+  }
+
   /**
    * Función que devuelve un objeto Bloque
    * 
