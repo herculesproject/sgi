@@ -236,6 +236,23 @@ public class EvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: Evaluacion empty
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    evaluaciones.isEmpty();
+
+    BDDMockito
+        .given(evaluacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
   public void findAll_WithPaging_ReturnsEvaluacionSubList() throws Exception {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
@@ -685,6 +702,25 @@ public class EvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_ReturnsNoContent() throws Exception {
+    // given: Evaluacion empty
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    evaluaciones.isEmpty();
+
+    BDDMockito
+        .given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+    ;
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
   public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPaging_ReturnsFiltratedEvaluacionSubList()
       throws Exception {
     // given: One hundred Evaluacion
@@ -761,6 +797,22 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         // then: Get a page three Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-EVC-EVAL" })
+  public void findByEvaluacionesEnSeguimientoFinal_ReturnsNoContent() throws Exception {
+    // given: evaluaciones empty
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    evaluaciones.isEmpty();
+
+    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_SEGUIMIENTO_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**
