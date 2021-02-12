@@ -95,7 +95,6 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     return ESTADO_MAP;
   }
 
-
   mapModificable: Map<number, boolean> = new Map();
 
   constructor(
@@ -127,6 +126,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   ngOnInit(): void {
     super.ngOnInit();
+
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
       titulo: new FormControl(''),
@@ -162,7 +162,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
-    const observable$ = this.convocatoriaService.findAllTodos(this.getFindOptions()).pipe(
+    const observable$ = this.convocatoriaService.findAllTodosRestringidos(this.getFindOptions()).pipe(
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
           return {
@@ -344,10 +344,15 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    */
   private loadUnidadesGestion() {
     this.subscriptions.push(
-      // TODO Debería filtrar por el rol
-      this.unidadGestionService.findAll().subscribe(
-        res => {
-          this.unidadGestionFiltered = res.items;
+      this.unidadGestionService.findAll().pipe(
+        map(res =>
+          res.items.filter(unidad =>
+            this.authService.hasAuthority(`CSP-CONV-C_${unidad.acronimo}`)
+          )
+        )
+      ).subscribe(
+        unidades => {
+          this.unidadGestionFiltered = unidades;
           this.unidadesGestion$ = this.formGroup.controls.unidadGestion.valueChanges
             .pipe(
               startWith(''),
