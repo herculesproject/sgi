@@ -183,6 +183,23 @@ public class TipoTareaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPOTAREA-VER" })
+  public void findAll_ReturnsNotFound() throws Exception {
+    // given: tipos tarea empty
+    List<TipoTarea> tiposTarea = new ArrayList<>();
+    tiposTarea.isEmpty();
+
+    BDDMockito
+        .given(tipoTareaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tiposTarea));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_TAREA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOTAREA-VER" })
   public void findAll_WithPaging_ReturnsTipoTareaSubList() throws Exception {
     // given: One hundred tipos tarea
     List<TipoTarea> tiposTarea = new ArrayList<>();
