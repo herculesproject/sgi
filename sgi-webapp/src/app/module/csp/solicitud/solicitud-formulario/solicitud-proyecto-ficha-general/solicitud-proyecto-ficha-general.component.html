@@ -26,10 +26,7 @@
         <mat-form-field class="input-form">
           <mat-label>{{'csp.solicitud.proyecto.ficha.general.acronimo' | translate}}</mat-label>
           <input matInput formControlName="acronimo" type="text" id="acronimo"
-            placeholder="{{'csp.solicitud.proyecto.ficha.general.acronimo' | translate}}" required>
-          <mat-error *ngIf="formGroup.controls.acronimo.errors?.required">
-            {{'csp.solicitud.proyecto.ficha.general.acronimo.required' | translate}}
-          </mat-error>
+            placeholder="{{'csp.solicitud.proyecto.ficha.general.acronimo' | translate}}">
           <mat-error *ngIf="formGroup.controls.acronimo.errors?.maxlength">
             {{'csp.solicitud.proyecto.ficha.general.acronimo.maxlength' | translate}}
           </mat-error>
