@@ -120,11 +120,11 @@ public class EstadoMemoriaIT extends BaseIT {
   @Test
   public void replaceEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(1L, 1L);
+    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 1L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(
         ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
-        buildRequest(null, replaceEstadoMemoria), EstadoMemoria.class, 2L);
+        buildRequest(null, replaceEstadoMemoria), EstadoMemoria.class, 3L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
