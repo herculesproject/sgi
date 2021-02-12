@@ -6,6 +6,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { DialogService } from '@core/services/dialog.service';
+import { DateUtils } from '@core/utils/date-utils';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
@@ -31,7 +32,7 @@ export class ProyectoSocioPeriodoPagoComponent extends FragmentComponent impleme
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    actionService: ProyectoSocioActionService,
+    private actionService: ProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
@@ -64,9 +65,13 @@ export class ProyectoSocioPeriodoPagoComponent extends FragmentComponent impleme
       numPeriodo: this.dataSource.data.length + 1,
       proyectoSocio: undefined
     };
+    const fechaInicioProyectoSocio = DateUtils.fechaToDate(this.actionService.getProyectoSocio()?.fechaInicio);
+    const fechaFinProyectoSocio = DateUtils.fechaToDate(this.actionService.getProyectoSocio()?.fechaFin);
     const data: ProyectoSocioPeriodoPagoModalData = {
       proyectoSocioPeriodoPago: wrapper ? wrapper.value : proyectoSocioPeriodoPago,
       selectedFechaPrevistas: this.dataSource.data.map(element => element.value.fechaPrevistaPago),
+      fechaInicioProyectoSocio,
+      fechaFinProyectoSocio,
       isEdit: Boolean(wrapper)
     };
     if (wrapper) {

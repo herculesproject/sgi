@@ -41,7 +41,9 @@ describe('ProyectoSocioPeriodoPagoModalComponent', () => {
   const newData: ProyectoSocioPeriodoPagoModalData = {
     isEdit: false,
     selectedFechaPrevistas: [],
-    proyectoSocioPeriodoPago
+    proyectoSocioPeriodoPago,
+    fechaInicioProyectoSocio: new Date(),
+    fechaFinProyectoSocio: new Date()
   };
 
   beforeEach(waitForAsync(() => {

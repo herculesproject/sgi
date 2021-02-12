@@ -7,6 +7,7 @@ import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-perio
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateValidator } from '@core/validators/date-validator';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
@@ -14,6 +15,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ProyectoSocioPeriodoPagoModalData {
   proyectoSocioPeriodoPago: IProyectoSocioPeriodoPago;
   selectedFechaPrevistas: Date[];
+  fechaInicioProyectoSocio: Date;
+  fechaFinProyectoSocio: Date;
   isEdit: boolean;
 }
 
@@ -62,7 +65,11 @@ export class ProyectoSocioPeriodoPagoModalComponent extends
           [Validators.required]
         ),
         fechaPrevistaPago: new FormControl(
-          this.data.proyectoSocioPeriodoPago.fechaPrevistaPago, [Validators.required]
+          this.data.proyectoSocioPeriodoPago.fechaPrevistaPago, [
+          Validators.required,
+          DateValidator.minDate(this.data.fechaInicioProyectoSocio),
+          DateValidator.maxDate(this.data.fechaFinProyectoSocio)
+        ]
         ),
         importe: new FormControl(
           this.data.proyectoSocioPeriodoPago.importe,

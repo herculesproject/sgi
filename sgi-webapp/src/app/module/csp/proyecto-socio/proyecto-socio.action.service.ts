@@ -34,7 +34,7 @@ export class ProyectoSocioActionService extends ActionService {
   private selectedProyectoSocios: IProyectoSocio[];
 
   constructor(
-    private readonly logger: NGXLogger,
+    logger: NGXLogger,
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     proyectoEquipoSocioService: ProyectoSocioEquipoService,
@@ -77,7 +77,7 @@ export class ProyectoSocioActionService extends ActionService {
   }
 
   getProyectoSocio(): IProyectoSocio {
-    return this.proyectoSocio;
+    return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : this.proyectoSocio;
   }
 
   getSelectedProyectoSocios(): IProyectoSocio[] {

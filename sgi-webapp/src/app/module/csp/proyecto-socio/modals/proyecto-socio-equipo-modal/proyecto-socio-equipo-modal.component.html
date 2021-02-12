@@ -62,6 +62,12 @@
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
               {{'csp.proyecto.socio-equipo.modal.fechaInicio.range' | translate}}
             </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.minDate">
+              {{'csp.proyecto.socio-equipo.modal.fecha-inicio.minDate' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.maxDate">
+              {{'csp.proyecto.socio-equipo.modal.fecha-inicio.maxDate' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -79,6 +85,12 @@
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
               {{'csp.proyecto.socio-equipo.modal.fechaFin.range' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaFin.errors?.minDate">
+              {{'csp.proyecto.socio-equipo.modal.fecha-fin.minDate' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaFin.errors?.maxDate">
+              {{'csp.proyecto.socio-equipo.modal.fecha-fin.maxDate' | translate}}
             </mat-error>
           </mat-form-field>
         </div>

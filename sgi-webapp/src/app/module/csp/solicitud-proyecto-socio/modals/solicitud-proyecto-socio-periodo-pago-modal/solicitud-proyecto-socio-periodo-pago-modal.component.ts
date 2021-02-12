@@ -7,6 +7,7 @@ import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyec
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { RangeValidator } from '@core/validators/range-validator';
 
 const MSG_ANADIR = marker('botones.aniadir');
@@ -15,6 +16,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface SolicitudProyectoSocioPeriodoPagoModalData {
   solicitudProyectoPeriodoPago: ISolicitudProyectoPeriodoPago;
   selectedMeses: number[];
+  mesInicioSolicitudProyectoSocio: number;
+  mesFinSolicitudProyectoSocio: number;
   isEdit: boolean;
 }
 
@@ -53,6 +56,9 @@ export class SolicitudProyectoSocioPeriodoPagoModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
+    const mesInicio = this.data.mesInicioSolicitudProyectoSocio;
+    const mesFinal = this.data.mesFinSolicitudProyectoSocio;
+    const duracion = this.data.solicitudProyectoPeriodoPago?.solicitudProyectoSocio?.solicitudProyectoDatos?.duracion;
     const formGroup = new FormGroup(
       {
         numPeriodo: new FormControl({
@@ -64,15 +70,18 @@ export class SolicitudProyectoSocioPeriodoPagoModalComponent extends
         mes: new FormControl(
           this.data.solicitudProyectoPeriodoPago.mes,
           [
-            Validators.min(1),
-            Validators.max(9999),
+            Validators.min(mesInicio ? mesInicio : 1),
+            Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
             Validators.required,
             RangeValidator.contains(this.data.selectedMeses)
           ]
         ),
         importe: new FormControl(
           this.data.solicitudProyectoPeriodoPago.importe,
-          [Validators.min(1), Validators.max(2_147_483_647)]
+          [
+            Validators.min(1),
+            Validators.max(GLOBAL_CONSTANTS.integerMaxValue)
+          ]
         ),
       }
     );

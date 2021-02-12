@@ -58,7 +58,7 @@ export class SolicitudProyectoSocioEquipoSocioFragment extends Fragment {
     }
   }
 
-  addProyectoEquipoSocio(element: ISolicitudProyectoEquipoSocio) {
+  addProyectoEquipoSocio(element: ISolicitudProyectoEquipoSocio): void {
     const wrapped = new StatusWrapper<ISolicitudProyectoEquipoSocio>(element);
     wrapped.setCreated();
     const current = this.proyectoEquipoSocios$.value;
@@ -67,7 +67,7 @@ export class SolicitudProyectoSocioEquipoSocioFragment extends Fragment {
     this.setChanges(true);
   }
 
-  deleteProyectoEquipoSocio(wrapper: StatusWrapper<ISolicitudProyectoEquipoSocio>) {
+  deleteProyectoEquipoSocio(wrapper: StatusWrapper<ISolicitudProyectoEquipoSocio>): void {
     const current = this.proyectoEquipoSocios$.value;
     const index = current.findIndex((value) => value === wrapper);
     if (index >= 0) {

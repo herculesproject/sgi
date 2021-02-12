@@ -9,6 +9,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { NGXLogger } from 'ngx-logger';
@@ -22,6 +23,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ProyectoEquipoSocioModalData {
   proyectoSocioEquipo: IProyectoSocioEquipo;
   selectedProyectoSocioEquipos: IProyectoSocioEquipo[];
+  fechaInicioProyectoSocio: Date;
+  fechaFinProyectoSocio: Date;
   isEdit: boolean;
 }
 
@@ -115,8 +118,14 @@ export class ProyectoSocioEquipoModalComponent extends
           value: this.data.proyectoSocioEquipo.persona,
           disabled: this.data.isEdit
         }, [Validators.required]),
-        fechaInicio: new FormControl(this.data.proyectoSocioEquipo.fechaInicio, []),
-        fechaFin: new FormControl(this.data.proyectoSocioEquipo.fechaFin, []),
+        fechaInicio: new FormControl(this.data.proyectoSocioEquipo.fechaInicio, [
+          DateValidator.minDate(this.data.fechaInicioProyectoSocio),
+          DateValidator.maxDate(this.data.fechaFinProyectoSocio)
+        ]),
+        fechaFin: new FormControl(this.data.proyectoSocioEquipo.fechaFin, [
+          DateValidator.minDate(this.data.fechaInicioProyectoSocio),
+          DateValidator.maxDate(this.data.fechaFinProyectoSocio)
+        ]),
       },
       {
         validators: [NumberValidator.isAfter('fechaInicio', 'fechaFin')]

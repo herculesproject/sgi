@@ -32,6 +32,12 @@
             <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.required">
               {{'csp.proyecto-socio.periodo-pago.modal.fechaPrevistaPago.required' | translate}}
             </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.minDate">
+              {{'csp.proyecto.socio-periodo-pago.modal.fecha-prevista-pago.minDate' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.maxDate">
+              {{'csp.proyecto.socio-periodo-pago.modal.fecha-prevista-pago.maxDate' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

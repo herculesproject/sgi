@@ -30,7 +30,9 @@ describe('SolicitudProyectoPeriodoJustificacionesModalComponent', () => {
   const newData: SolicitudProyectoPeriodoJustificacionesModalData = {
     isEdit: false,
     periodoJustificacion,
-    selectedPeriodoJustificaciones: []
+    selectedPeriodoJustificaciones: [],
+    mesFinSolicitudProyectoSocio: 2,
+    mesInicioSolicitudProyectoSocio: 1
   };
 
   beforeEach(waitForAsync(() => {

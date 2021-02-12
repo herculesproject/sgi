@@ -78,6 +78,8 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
     const data: SolicitudProyectoPeriodoJustificacionesModalData = {
       periodoJustificacion: wrapper ? wrapper.value : periodoJustificacion,
       selectedPeriodoJustificaciones: this.dataSource.data.map(element => element.value),
+      mesInicioSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesInicio,
+      mesFinSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesFin,
       isEdit: Boolean(wrapper)
     };
 

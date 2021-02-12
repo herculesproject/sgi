@@ -29,7 +29,9 @@ describe('ProyectoSocioEquipoModalComponent', () => {
   const newData: ProyectoEquipoSocioModalData = {
     isEdit: false,
     proyectoSocioEquipo,
-    selectedProyectoSocioEquipos: []
+    selectedProyectoSocioEquipos: [],
+    fechaFinProyectoSocio: new Date(),
+    fechaInicioProyectoSocio: new Date()
   };
 
   beforeEach(waitForAsync(() => {

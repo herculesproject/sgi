@@ -25,7 +25,7 @@ export class ProyectoSocioPeriodoJustificacionActionService extends ActionServic
   private documentos: ProyectoSocioPeriodoJustificacionDocumentosFragment;
 
   constructor(
-    private readonly logger: NGXLogger,
+    logger: NGXLogger,
     proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
     socioPeriodoJustificacionDocumentoService: SocioPeriodoJustificacionDocumentoService,
     documentoService: DocumentoService

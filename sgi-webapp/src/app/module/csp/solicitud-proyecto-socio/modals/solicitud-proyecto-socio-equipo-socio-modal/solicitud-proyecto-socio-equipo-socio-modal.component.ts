@@ -9,6 +9,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { NGXLogger } from 'ngx-logger';
@@ -22,6 +23,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface SolicitudProyectoEquipoSocioModalData {
   solicitudProyectoEquipoSocio: ISolicitudProyectoEquipoSocio;
   selectedProyectoEquipoSocios: ISolicitudProyectoEquipoSocio[];
+  mesInicioSolicitudProyectoSocio: number;
+  mesFinSolicitudProyectoSocio: number;
   isEdit: boolean;
 }
 
@@ -107,6 +110,9 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
+    const mesInicio = this.data.mesInicioSolicitudProyectoSocio;
+    const mesFinal = this.data.mesFinSolicitudProyectoSocio;
+    const duracion = this.data.solicitudProyectoEquipoSocio?.solicitudProyectoSocio?.solicitudProyectoDatos?.duracion;
     const formGroup = new FormGroup(
       {
         rolProyecto: new FormControl(this.data.solicitudProyectoEquipoSocio.rolProyecto, [
@@ -118,12 +124,12 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
           disabled: this.data.isEdit
         }, [Validators.required]),
         mesInicio: new FormControl(this.data.solicitudProyectoEquipoSocio.mesInicio, [
-          Validators.min(1),
-          Validators.max(9999)
+          Validators.min(mesInicio ? mesInicio : 1),
+          Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
         ]),
         mesFin: new FormControl(this.data.solicitudProyectoEquipoSocio.mesFin, [
-          Validators.min(1),
-          Validators.max(9999)
+          Validators.min(mesInicio ? mesInicio : 1),
+          Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
         ]),
       },
       {

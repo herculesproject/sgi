@@ -22,7 +22,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
   }
 
   protected buildFormGroup(): FormGroup {
-    const rangosExistentes = this.selectedPeriodosJustificacion.map(
+    const rangosExistentes = this.selectedPeriodosJustificacion?.map(
       periodo => {
         const value: IRange = {
           inicio: new Date(periodo.fechaInicio),
@@ -31,9 +31,10 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
         return value;
       }
     );
-    const proyecto = this.proyectoSocio.proyecto;
-    const fechaInicio = typeof proyecto?.fechaInicio === 'string' ? new Date(proyecto?.fechaInicio) : proyecto?.fechaInicio;
-    const fechaFin = typeof proyecto?.fechaFin === 'string' ? new Date(proyecto?.fechaFin) : proyecto?.fechaFin;
+    const fechaInicio = typeof this.proyectoSocio?.fechaInicio === 'string' ?
+      new Date(this.proyectoSocio?.fechaInicio) : this.proyectoSocio?.fechaInicio;
+    const fechaFin = typeof this.proyectoSocio?.fechaFin === 'string' ?
+      new Date(this.proyectoSocio?.fechaFin) : this.proyectoSocio?.fechaFin;
     const form = new FormGroup(
       {
         numPeriodo: new FormControl({
@@ -50,8 +51,8 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
           DateValidator.minDate(fechaInicio),
           DateValidator.maxDate(fechaFin)
         ]),
-        fechaInicioPresentacion: new FormControl(''),
-        fechaFinPresentacion: new FormControl(''),
+        fechaInicioPresentacion: new FormControl(null),
+        fechaFinPresentacion: new FormControl(null),
         observaciones: new FormControl('', [Validators.maxLength(2_000)]),
         documentacionRecibida: new FormControl(false),
         fechaRecepcion: new FormControl(''),

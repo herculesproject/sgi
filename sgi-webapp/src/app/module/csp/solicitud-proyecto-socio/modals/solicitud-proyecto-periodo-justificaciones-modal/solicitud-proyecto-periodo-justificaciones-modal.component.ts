@@ -7,6 +7,7 @@ import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicit
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { NumberValidator } from '@core/validators/number-validator';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 
@@ -16,6 +17,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface SolicitudProyectoPeriodoJustificacionesModalData {
   periodoJustificacion: ISolicitudProyectoPeriodoJustificacion;
   selectedPeriodoJustificaciones: ISolicitudProyectoPeriodoJustificacion[];
+  mesInicioSolicitudProyectoSocio: number;
+  mesFinSolicitudProyectoSocio: number;
   isEdit: boolean;
 }
 
@@ -52,7 +55,6 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const solicitudProyectoSocio = this.data.periodoJustificacion.solicitudProyectoSocio;
-    const duracion = solicitudProyectoSocio?.solicitudProyectoDatos?.duracion;
     const rangosPeriodosExistentes = this.data.selectedPeriodoJustificaciones?.map(
       periodoJustificacion => {
         const value: IRange = {
@@ -62,7 +64,9 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
         return value;
       }
     );
-
+    const mesInicio = this.data.mesInicioSolicitudProyectoSocio;
+    const mesFinal = this.data.mesFinSolicitudProyectoSocio;
+    const duracion = solicitudProyectoSocio?.solicitudProyectoDatos?.duracion;
     const formGroup = new FormGroup(
       {
         nombre: new FormControl({
@@ -75,13 +79,13 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
         }),
         mesInicial: new FormControl(this.data.periodoJustificacion.mesInicial, [
           Validators.required,
-          Validators.min(1),
-          Validators.max(isNaN(duracion) ? 9999 : duracion)
+          Validators.min(mesInicio ? mesInicio : 1),
+          Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
         ]),
         mesFinal: new FormControl(this.data.periodoJustificacion.mesFinal, [
           Validators.required,
           Validators.min(1),
-          Validators.max(isNaN(duracion) ? 9999 : duracion)
+          Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
         ]),
         fechaInicio: new FormControl(this.data.periodoJustificacion.fechaInicio, []),
         fechaFin: new FormControl(this.data.periodoJustificacion.fechaFin, []),

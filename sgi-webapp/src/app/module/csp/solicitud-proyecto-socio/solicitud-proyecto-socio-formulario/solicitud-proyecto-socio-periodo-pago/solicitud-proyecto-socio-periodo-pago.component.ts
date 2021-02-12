@@ -31,7 +31,7 @@ export class SolicitudProyectoSocioPeriodoPagoComponent extends FragmentComponen
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    actionService: SolicitudProyectoSocioActionService,
+    private actionService: SolicitudProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
@@ -66,6 +66,8 @@ export class SolicitudProyectoSocioPeriodoPagoComponent extends FragmentComponen
     const data: SolicitudProyectoSocioPeriodoPagoModalData = {
       solicitudProyectoPeriodoPago: wrapper ? wrapper.value : solicitudProyectoPeriodoPago,
       selectedMeses: this.dataSource.data.map(element => element.value.mes),
+      mesInicioSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesInicio,
+      mesFinSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesFin,
       isEdit: Boolean(wrapper)
     };
     if (wrapper) {
