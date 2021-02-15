@@ -191,6 +191,23 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoDocumento empty
+    List<TipoDocumento> tipoDocumentos = new ArrayList<>();
+
+    BDDMockito
+        .given(
+            tipoDocumentoService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tipoDocumentos));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
   public void findAll_WithPaging_ReturnsTipoDocumentoSubList() throws Exception {
     // given: One hundred TipoDocumento
     List<TipoDocumento> tipoDocumentos = new ArrayList<>();
