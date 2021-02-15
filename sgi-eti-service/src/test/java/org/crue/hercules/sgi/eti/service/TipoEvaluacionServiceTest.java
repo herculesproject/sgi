@@ -230,7 +230,59 @@ public class TipoEvaluacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllDictamenByTipoEvaluacionAndRevisionMinima_ReturnList() {
+  public void findAllDictamenByTipoEvaluacionRetrospectivaAndRevisionMinimaTrue_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(1L, "Retrospectiva");
+    Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion1);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    BDDMockito.given(dictamenRepository.findByTipoEvaluacionId(tipoEvaluacion1.getId())).willReturn(listaDictamenes);
+
+    List<Dictamen> lista = tipoEvaluacionService
+        .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
+    Assertions.assertThat(lista).isEqualTo(listaDictamenes);
+
+  }
+
+  @Test
+  public void findAllDictamenByTipoEvaluacionMemoriaAndRevisionMinimaTrue_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(2L, "Memoria");
+    Dictamen dictamen1 = generarMockDictamen(1L, "Favorable", tipoEvaluacion1);
+    Dictamen dictamen2 = generarMockDictamen(2L, "Favorable pendiente de revisión mínima", tipoEvaluacion1);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    List<Dictamen> lista = tipoEvaluacionService
+        .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
+    Assertions.assertThat(lista).isNotNull();
+
+  }
+
+  @Test
+  public void findAllDictamenByTipoEvaluacionMemoriaAndRevisionMinimaFalse_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(2L, "Memoria");
+    Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion1);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    BDDMockito.given(dictamenRepository.findByTipoEvaluacionId(tipoEvaluacion1.getId())).willReturn(listaDictamenes);
+
+    List<Dictamen> lista = tipoEvaluacionService
+        .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), false);
+    Assertions.assertThat(lista).isEqualTo(listaDictamenes);
+
+  }
+
+  @Test
+  public void findAllDictamenByTipoEvaluacionSeguimientoAnualAndRevisionMinimaTrue_ReturnList() {
 
     TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(3L, "Seguimiento anual");
     Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
@@ -244,6 +296,40 @@ public class TipoEvaluacionServiceTest extends BaseServiceTest {
     List<Dictamen> lista = tipoEvaluacionService
         .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
     Assertions.assertThat(lista).isEqualTo(listaDictamenes);
+
+  }
+
+  @Test
+  public void findAllDictamenByTipoEvaluacionSeguimientoFinalAndRevisionMinimaTrue_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(4L, "Seguimiento final");
+    Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion1);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    BDDMockito.given(dictamenRepository.findByTipoEvaluacionId(tipoEvaluacion1.getId())).willReturn(listaDictamenes);
+
+    List<Dictamen> lista = tipoEvaluacionService
+        .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
+    Assertions.assertThat(lista).isEqualTo(listaDictamenes);
+
+  }
+
+  @Test
+  public void findAllDictamenByTipoEvaluacionNotExistAndRevisionMinimaTrue_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(5L, "Tipo evaluacion5");
+    Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion1);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    List<Dictamen> lista = tipoEvaluacionService
+        .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
+    Assertions.assertThat(lista).size().isZero();
 
   }
 
