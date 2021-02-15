@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -13,6 +16,10 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ConflictoInteresRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConflictoInteresServiceImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -47,6 +54,24 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
     Assertions.assertThat(conflictoInteres.getId()).isEqualTo(1L);
 
     Assertions.assertThat(conflictoInteres.getPersonaConflictoRef()).isEqualTo("user-001");
+
+  }
+
+  @Test
+  public void findAll_Unlimited_ReturnsFullConflictoInteresList() {
+    List<ConflictoInteres> conflictoInteres = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      conflictoInteres.add(generarMockConflictoInteres(Long.valueOf(i), "user-123"));
+    }
+
+    BDDMockito.given(conflictoInteresRepository.findAll(ArgumentMatchers.<Specification<ConflictoInteres>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(conflictoInteres));
+
+    Page<ConflictoInteres> page = conflictoInteresService.findAll(null, Pageable.unpaged());
+
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getSize()).isEqualTo(conflictoInteres.size());
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(conflictoInteres.size());
 
   }
 
