@@ -2,16 +2,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { Destinatarios, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
-import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { ActionService } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
-import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
 import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
@@ -216,7 +213,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       this.configuracionSolicitudes.setFases(fases.map(fase => fase.value));
     }));
 
-    this.subscriptions.push(this.datosGenerales.destinatarioValue$.subscribe((destinatario) => this.mostrarPestañaRequisito(destinatario)));
+    this.subscriptions.push(this.datosGenerales.destinatariosValue$.subscribe((destinatarios) => this.mostrarPestañaRequisito(destinatarios)));
   }
 
   /**
@@ -351,14 +348,14 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
    * Mostramos pestaña requisitos IP/Equipo dependiendo
    * lo seleccionado en la pestaña DATOS GENERALES - DESTINATARIOS
    */
-  private mostrarPestañaRequisito(destionario: string) {
+  private mostrarPestañaRequisito(destionarios: Destinatarios) {
     this.destionarioRequisitoIP = false;
     this.destionarioRequisitoEquipo = false;
-    if (destionario === TipoDestinatario.INDIVIDUAL) {
+    if (destionarios === Destinatarios.INDIVIDUAL) {
       this.destionarioRequisitoIP = !this.destionarioRequisitoIP;
       this.destionarioRequisitoEquipo = this.destionarioRequisitoEquipo;
     }
-    if (destionario === TipoDestinatario.EQUIPO_PROYECTO || destionario === TipoDestinatario.GRUPO_INVESTIGACION) {
+    if (destionarios === Destinatarios.EQUIPO_PROYECTO || destionarios === Destinatarios.GRUPO_INVESTIGACION) {
       this.destionarioRequisitoIP = !this.destionarioRequisitoIP;
       this.destionarioRequisitoEquipo = !this.destionarioRequisitoEquipo;
     }

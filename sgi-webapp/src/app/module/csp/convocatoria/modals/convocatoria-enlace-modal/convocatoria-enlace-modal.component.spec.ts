@@ -5,8 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
@@ -26,9 +25,9 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
     clasificacionCVN: ClasificacionCVN.AYUDAS,
     codigo: '',
     colaborativos: true,
-    destinatarios: TipoDestinatario.EQUIPO_PROYECTO,
+    destinatarios: Destinatarios.EQUIPO_PROYECTO,
     duracion: 1,
-    estadoActual: '',
+    estado: Estado.BORRADOR,
     finalidad: undefined,
     id: 1,
     modeloEjecucion: undefined,

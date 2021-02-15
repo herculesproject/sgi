@@ -1,9 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
-import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -15,7 +12,6 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { EnumValidador } from '@core/validators/enum-validador';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IsYearPlus } from '@core/validators/is-year-plus';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
@@ -36,7 +32,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
-  destinatarioValue$: Subject<string> = new Subject<string>();
+  destinatariosValue$: Subject<Destinatarios> = new Subject<Destinatarios>();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -52,7 +48,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     this.setComplete(true);
     this.convocatoria = {
       activo: true,
-      estadoActual: TipoEstadoConvocatoria.BORRADOR
+      estado: Estado.BORRADOR
     } as IConvocatoria;
     this.convocatoriaEntidadGestora = {} as IConvocatoriaEntidadGestora;
   }
@@ -61,8 +57,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     const form = new FormGroup({
       codigo: new FormControl('', [
         Validators.required, Validators.maxLength(50)]),
-      estadoActual: new FormControl({
-        value: TipoEstadoConvocatoria.BORRADOR,
+      estado: new FormControl({
+        value: Estado.BORRADOR,
         disabled: true
       }),
       unidadGestion: new FormControl('', [
@@ -80,12 +76,10 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       duracion: new FormControl('', [
         Validators.min(1), Validators.max(9999)]),
       ambitoGeografico: new FormControl(''),
-      clasificacionCVN: new FormControl('',
-        EnumValidador.isValid(ClasificacionCVN)),
+      clasificacionCVN: new FormControl(null),
       regimenConcurrencia: new FormControl(''),
       colaborativos: new FormControl(null),
-      destinatarios: new FormControl(
-        '', [EnumValidador.isValid(TipoDestinatario)]),
+      destinatarios: new FormControl(null),
       entidadGestora: new FormControl(''),
       objeto: new FormControl('',
         Validators.maxLength(2000)),
@@ -98,7 +92,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
     this.subscriptions.push(
       form.controls.destinatarios.valueChanges.subscribe((value) => {
-        this.destinatarioValue$.next(value);
+        this.destinatariosValue$.next(value);
       })
     );
 
@@ -118,7 +112,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       regimenConcurrencia: convocatoria.regimenConcurrencia,
       destinatarios: convocatoria.destinatarios,
       colaborativos: convocatoria.colaborativos,
-      estadoActual: convocatoria.estadoActual,
+      estado: convocatoria.estado,
       duracion: convocatoria.duracion,
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
@@ -132,7 +126,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
    * Añade validadores al formulario dependiendo del estado de la convocatoria
    */
   private checkEstado(formgroup: FormGroup, convocatoria: IConvocatoria): void {
-    if (convocatoria.estadoActual === TipoEstadoConvocatoria.BORRADOR) {
+    if (convocatoria.estado === Estado.BORRADOR) {
       formgroup.get('modeloEjecucion').setValidators(IsEntityValidator.isValid());
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
       formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
@@ -146,7 +140,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   isEstadoRegistrada() {
-    return this.convocatoria.estadoActual === TipoEstadoConvocatoria.REGISTRADA;
+    return this.convocatoria.estado === Estado.REGISTRADA;
   }
 
   protected initializer(key: number): Observable<IConvocatoria> {
@@ -288,11 +282,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     } else {
       this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
     }
-    if (form.destinatarios.value?.length > 0) {
-      this.convocatoria.destinatarios = form.destinatarios.value;
-    } else {
-      this.convocatoria.destinatarios = undefined;
-    }
+    this.convocatoria.destinatarios = form.destinatarios.value;
     this.convocatoria.colaborativos = form.colaborativos.value;
     this.convocatoria.duracion = form.duracion.value;
     if (typeof form.ambitoGeografico.value === 'string') {
@@ -300,11 +290,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     } else {
       this.convocatoria.ambitoGeografico = form.ambitoGeografico.value;
     }
-    if (form.clasificacionCVN.value?.length > 0) {
-      this.convocatoria.clasificacionCVN = form.clasificacionCVN.value;
-    } else {
-      this.convocatoria.clasificacionCVN = undefined;
-    }
+    this.convocatoria.clasificacionCVN = form.clasificacionCVN.value;
+
     return this.convocatoria;
   }
 

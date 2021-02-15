@@ -56,8 +56,8 @@
             <mat-form-field>
               <mat-label>{{'csp.concepto.gasto.estado' | translate}}</mat-label>
               <mat-select matNativeControl formControlName="estado">
-                <mat-option *ngFor="let estado of estadoConvocatoria" [value]="estado | translate">
-                  {{ estado | translate}}
+                <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
+                  {{ estado.value | translate}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -313,10 +313,10 @@
       </ng-container>
 
       <!-- Estado actual Column -->
-      <ng-container matColumnDef="estadoActual">
+      <ng-container matColumnDef="estado">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.estado' | translate}} </th>
         <td mat-cell *matCellDef="let element">
-          {{element.convocatoria.estadoActual}}
+          {{ESTADO_MAP.get(element.convocatoria.estado) | translate}}
         </td>
       </ng-container>
 

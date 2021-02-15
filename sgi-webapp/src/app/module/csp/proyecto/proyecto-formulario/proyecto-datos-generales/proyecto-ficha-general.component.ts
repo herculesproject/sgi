@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
@@ -52,8 +52,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   private subscriptions = [] as Subscription[];
 
-  cientificaCVN = Object.keys(ClasificacionCVN).map<string>(
-    (key) => ClasificacionCVN[key]);
+  get CLASIFICACION_CVN_MAP() {
+    return CLASIFICACION_CVN_MAP;
+  }
 
   tipoHoras = Object.keys(TipoHorasAnualesEnum).map<string>(
     (key) => TipoHorasAnualesEnum[key]);

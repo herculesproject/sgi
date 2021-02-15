@@ -93,7 +93,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       finalidad: new FormControl(''),
       ambitoGeografico: new FormControl(''),
       confidencial: new FormControl(null),
-      clasificacionCVN: new FormControl(''),
+      clasificacionCVN: new FormControl(null),
       colaborativo: new FormControl(null),
       coordinadorExterno: new FormControl(null),
       uniSubcontratada: new FormControl(null),
@@ -202,11 +202,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.proyecto.ambitoGeografico = undefined;
     }
     this.proyecto.confidencial = form.confidencial.value;
-    if (form.clasificacionCVN.value) {
-      this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
-    } else {
-      this.proyecto.clasificacionCVN = undefined;
-    }
+    this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
     this.proyecto.colaborativo = form.colaborativo.value;
     this.proyecto.uniSubcontratada = form.uniSubcontratada.value;
     this.proyecto.timesheet = form.timesheet.value;

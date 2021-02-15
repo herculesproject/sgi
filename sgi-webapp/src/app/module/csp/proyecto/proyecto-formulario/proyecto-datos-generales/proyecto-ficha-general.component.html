@@ -290,9 +290,11 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.ficha.general.cvn' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="clasificacionCVN">
-            <mat-option *ngFor="let cvn of cientificaCVN" [value]="cvn | translate">
-              {{ cvn | translate}}
+          <mat-select formControlName="clasificacionCVN" placeholder="{{'csp.proyecto.ficha.general.cvn' | translate}}">
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let clasificacionCVN of CLASIFICACION_CVN_MAP | keyvalue"
+              [value]="clasificacionCVN.key">
+              {{ clasificacionCVN.value | translate}}
             </mat-option>
           </mat-select>
         </mat-form-field>

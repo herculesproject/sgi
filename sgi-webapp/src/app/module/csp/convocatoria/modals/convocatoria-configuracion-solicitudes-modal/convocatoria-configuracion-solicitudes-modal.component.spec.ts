@@ -6,10 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
 import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
 import { ITipoDocumento, ITipoFase, IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
@@ -31,9 +30,9 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
     clasificacionCVN: ClasificacionCVN.AYUDAS,
     codigo: '',
     colaborativos: true,
-    destinatarios: TipoDestinatario.EQUIPO_PROYECTO,
+    destinatarios: Destinatarios.EQUIPO_PROYECTO,
     duracion: 10,
-    estadoActual: '',
+    estado: Estado.BORRADOR,
     finalidad: undefined,
     id: 1,
     modeloEjecucion: {

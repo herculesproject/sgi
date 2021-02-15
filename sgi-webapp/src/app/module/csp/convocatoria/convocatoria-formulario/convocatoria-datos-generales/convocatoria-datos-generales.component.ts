@@ -5,9 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
+import { DESTINATARIOS_MAP, ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
@@ -71,8 +70,17 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   columns = ['padre', 'nombre', 'observaciones', 'acciones'];
 
-  clasificacionesProduccion = Object.keys(ClasificacionCVN).map<string>((key) => ClasificacionCVN[key]);
-  destinatarios = Object.keys(TipoDestinatario).map<string>((key) => TipoDestinatario[key]);
+  get DESTINATARIOS_MAP() {
+    return DESTINATARIOS_MAP;
+  }
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
+
+  get CLASIFICACION_CVN_MAP() {
+    return CLASIFICACION_CVN_MAP;
+  }
 
   constructor(
     private readonly logger: NGXLogger,

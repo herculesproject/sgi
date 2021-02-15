@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
@@ -92,8 +91,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   private areaTematicaFiltered: IAreaTematica[] = [];
   areaTematica$: Observable<IAreaTematica[]>;
 
-  estadoConvocatoria = Object.keys(TipoEstadoConvocatoria).map<string>(
-    (key) => TipoEstadoConvocatoria[key]);
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
 
   mapModificable: Map<number, boolean> = new Map();
@@ -137,7 +137,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       abiertoPlazoPresentacionSolicitud: new FormControl(''),
       finalidad: new FormControl(''),
       ambitoGeografico: new FormControl('', [IsEntityValidator.isValid()]),
-      estado: new FormControl(''),
+      estado: new FormControl(null),
       entidadConvocante: new FormControl(''),
       entidadFinanciadora: new FormControl(''),
       fuenteFinanciacion: new FormControl(''),
@@ -255,7 +255,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.columnas = [
       'codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
       'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
-      'fuenteFinanciacion', 'estadoActual', 'activo', 'acciones'
+      'fuenteFinanciacion', 'estado', 'activo', 'acciones'
     ];
   }
 
@@ -267,10 +267,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     const filtros = [];
     this.addFiltro(filtros, 'codigo', SgiRestFilterType.LIKE, this.formGroup.controls.codigo.value);
     this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
-
-    const estadoActual = Object.keys(TipoEstadoConvocatoria)
-      .filter(key => TipoEstadoConvocatoria[key] === this.formGroup.controls.estado.value)[0];
-    this.addFiltro(filtros, 'estadoActual', SgiRestFilterType.EQUALS, estadoActual);
+    this.addFiltro(filtros, 'estado', SgiRestFilterType.EQUALS, this.formGroup.controls.estado.value);
 
     if (this.formGroup.controls.activo.value !== 'todos') {
       this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
