@@ -126,7 +126,7 @@ public class FormacionEspecificaIT extends BaseIT {
   public void findAll_WithPaging_ReturnsFormacionEspecificaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "2");
+    headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
 
     final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(
@@ -138,14 +138,16 @@ public class FormacionEspecificaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<FormacionEspecifica> formacionEspecificas = response.getBody();
-    Assertions.assertThat(formacionEspecificas.size()).isEqualTo(2);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("2");
+    Assertions.assertThat(formacionEspecificas.size()).isEqualTo(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
-    // Contiene de nombre= 'G: Sin especificar' a 'H: No requiere'
-    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("G: Sin especificar");
-    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("H: No requiere");
+    // Contiene de nombre= 'A: Cuidado de los animales' a 'C: Realización de los
+    // procedimientos'
+    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("A: Cuidado de los animales");
+    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("B: Eutanasia de los animales");
+    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("C: Realización de los procedimientos");
   }
 
   @Test
