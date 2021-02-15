@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.Optional;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -160,7 +159,7 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
         "validarConfiguracionSolicitud(ConfiguracionSolicitud datosConfiguracionSolicitud, , ConfiguracionSolicitud datosOriginales) - start");
 
     // obligatorio para pasar al estado Registrada
-    if (datosConfiguracionSolicitud.getConvocatoria().getEstadoActual() == TipoEstadoConvocatoriaEnum.REGISTRADA) {
+    if (datosConfiguracionSolicitud.getConvocatoria().getEstado() == Convocatoria.Estado.REGISTRADA) {
       Assert.notNull(datosConfiguracionSolicitud.getTramitacionSGI(),
           "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
       Assert.notNull(datosConfiguracionSolicitud.getFormularioSolicitud(),

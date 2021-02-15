@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,11 +18,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.converter.ClasificacionCVNConverter;
 import org.crue.hercules.sgi.csp.converter.TipoHojaFirmaConverter;
 import org.crue.hercules.sgi.csp.converter.TipoHorasAnualesConverter;
 import org.crue.hercules.sgi.csp.converter.TipoPlantillaJustificacionConverter;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.TipoHojaFirmaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoHorasAnualesEnum;
 import org.crue.hercules.sgi.csp.enums.TipoPlantillaJustificacionEnum;
@@ -128,8 +129,8 @@ public class Proyecto extends BaseEntity {
 
   /** Clasificacion CVN */
   @Column(name = "clasificacion_cvn", length = 50, nullable = true)
-  @Convert(converter = ClasificacionCVNConverter.class)
-  private ClasificacionCVNEnum clasificacionCVN;
+  @Enumerated(EnumType.STRING)
+  private ClasificacionCVN clasificacionCVN;
 
   /** Colaborativo */
   @Column(name = "colaborativo", nullable = true)

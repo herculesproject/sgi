@@ -7,7 +7,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.AreaTematica_;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -45,7 +44,7 @@ public class ConvocatoriaSpecifications {
    */
   public static Specification<Convocatoria> registradas() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(Convocatoria_.estadoActual), TipoEstadoConvocatoriaEnum.REGISTRADA);
+      return cb.equal(root.get(Convocatoria_.estado), Convocatoria.Estado.REGISTRADA);
     };
   }
 

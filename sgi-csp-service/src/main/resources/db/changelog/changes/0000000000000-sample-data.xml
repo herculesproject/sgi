@@ -1844,12 +1844,12 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="destinatarios" value="Equipo de proyecto" />
+      <column name="destinatarios" value="EQUIPO_PROYECTO" />
       <column name="colaborativos" value="true" />
-      <column name="estado_actual" value="Registrada" />
+      <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" value="4" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria">
@@ -1863,12 +1863,12 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="destinatarios" value="Equipo de proyecto" />
+      <column name="destinatarios" value="EQUIPO_PROYECTO" />
       <column name="colaborativos" value="true" />
-      <column name="estado_actual" value="Registrada" />
+      <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="36" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria">
@@ -1882,12 +1882,12 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="destinatarios" value="Equipo de proyecto" />
+      <column name="destinatarios" value="EQUIPO_PROYECTO" />
       <column name="colaborativos" value="true" />
-      <column name="estado_actual" value="Registrada" />
+      <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="36" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria">
@@ -1901,12 +1901,12 @@ industries" />
       <column name="observaciones" value="" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="tipo_regimen_concurrencia_id" value="2" />
-      <column name="destinatarios" value="Equipo de proyecto" />
+      <column name="destinatarios" value="EQUIPO_PROYECTO" />
       <column name="colaborativos" value="false" />
-      <column name="estado_actual" value="Registrada" />
+      <column name="estado" value="REGISTRADA" />
       <column name="duracion" value="48" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria">
@@ -1922,7 +1922,7 @@ industries" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
       <column name="destinatarios" value="null" />
       <column name="colaborativos" value="null" />
-      <column name="estado_actual" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="null" />
@@ -1941,7 +1941,7 @@ industries" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
       <column name="destinatarios" value="null" />
       <column name="colaborativos" value="false" />
-      <column name="estado_actual" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="duracion" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="null" />
@@ -1960,7 +1960,7 @@ industries" />
       <column name="tipo_regimen_concurrencia_id" value="null" />
       <column name="destinatarios" value="null" />
       <column name="colaborativos" value="true" />
-      <column name="estado_actual" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="duracion" value="48" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="clasificacion_cvn" value="null" />
@@ -2634,7 +2634,7 @@ industries" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="plantilla_justificacion" value="N/A" />
       <column name="confidencial" value="false" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="false" />
       <column name="coordinador_externo" value="false" />
       <column name="uni_subcontratada" value="false" />
@@ -2669,7 +2669,7 @@ industries" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="plantilla_justificacion" value="N/A" />
       <column name="confidencial" value="false" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="false" />
       <column name="uni_subcontratada" value="false" />
@@ -2704,7 +2704,7 @@ industries" />
       <column name="tipo_ambito_geografico_id" value="5" />
       <column name="plantilla_justificacion" value="N/A" />
       <column name="confidencial" value="false" />
-      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="true" />
       <column name="uni_subcontratada" value="false" />

@@ -9,7 +9,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -347,7 +346,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
     Convocatoria convocatoria = Convocatoria.builder()//
         .id(convocatoriaId)//
         .modeloEjecucion(modeloEjecucion)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
 
         .activo(Boolean.TRUE)//
         .build();

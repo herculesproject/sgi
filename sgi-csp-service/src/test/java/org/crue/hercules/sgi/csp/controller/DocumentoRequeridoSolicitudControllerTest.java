@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.DocumentoRequeridoSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -239,7 +238,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
 
     Convocatoria convocatoria = Convocatoria.builder()//
         .id(convocatoriaId)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .activo(Boolean.TRUE)//
         .build();
 

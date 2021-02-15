@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.junit.jupiter.api.Test;
@@ -73,7 +72,7 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
   private RequisitoIP generarMockRequisitoIP(Long id) {
 
     Convocatoria convocatoria = Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-00" + id)//
         .unidadGestionRef("OPE")//
         .anio(2020)//

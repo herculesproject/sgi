@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
@@ -111,8 +109,8 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_WithConvocatoriaBorrador_ReturnsConfiguracionSolicitud() {
     // given: new ConfiguracionSolicitud convocatoria estado borrador
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder().convocatoria(
-        Convocatoria.builder().id(1L).estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build())
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .convocatoria(Convocatoria.builder().id(1L).estado(Convocatoria.Estado.BORRADOR).activo(Boolean.TRUE).build())
         .build();
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
@@ -364,11 +362,11 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithConvocatoriaBorrador_ReturnsConfiguracionSolicitud() {
     // given: update existing ConfiguracionSolicitud with convocatoria estado
     // borrador
-    ConfiguracionSolicitud originalConfiguracionSolicitud = ConfiguracionSolicitud.builder().id(1L).convocatoria(
-        Convocatoria.builder().id(1L).estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build())
+    ConfiguracionSolicitud originalConfiguracionSolicitud = ConfiguracionSolicitud.builder().id(1L)
+        .convocatoria(Convocatoria.builder().id(1L).estado(Convocatoria.Estado.BORRADOR).activo(Boolean.TRUE).build())
         .build();
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = ConfiguracionSolicitud.builder().id(1L).convocatoria(
-        Convocatoria.builder().id(1L).estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build())
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = ConfiguracionSolicitud.builder().id(1L)
+        .convocatoria(Convocatoria.builder().id(1L).estado(Convocatoria.Estado.BORRADOR).activo(Boolean.TRUE).build())
         .importeMaximoSolicitud(BigDecimal.valueOf(54321)).build();
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
@@ -828,12 +826,12 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
         .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
         .colaborativos(Boolean.TRUE)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .estado(Convocatoria.Estado.REGISTRADA)//
         .duracion(12)//
         .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
         .activo(activo)//
         .build();
 

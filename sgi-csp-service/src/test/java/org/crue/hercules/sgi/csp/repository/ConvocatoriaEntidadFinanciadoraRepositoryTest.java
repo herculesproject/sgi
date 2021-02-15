@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // ConvocatoriaId a buscar
     Convocatoria convocatoria1 = Convocatoria.builder()
     // @formatter:off
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)
+        .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("OPE")
         .anio(2020)
@@ -35,7 +34,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder()
     // @formatter:off
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)
+        .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("OPE")
         .anio(2020)
@@ -79,7 +78,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // ConvocatoriaId a buscar
     Convocatoria convocatoria1 = Convocatoria.builder()
     // @formatter:off
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)
+        .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("OPE")
         .anio(2020)
@@ -90,7 +89,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder()
     // @formatter:off
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)
+        .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("OPE")
         .anio(2020)

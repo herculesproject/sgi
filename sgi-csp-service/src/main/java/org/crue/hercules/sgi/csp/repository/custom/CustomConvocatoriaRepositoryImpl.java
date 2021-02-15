@@ -10,7 +10,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento_;
@@ -139,7 +138,7 @@ public class CustomConvocatoriaRepositoryImpl implements CustomConvocatoriaRepos
                 cb.equal(proyectoRoot.get(Proyecto_.activo), Boolean.TRUE))));
 
     Predicate convocatoria = cb.equal(root.get(Convocatoria_.id), id);
-    Predicate registrada = cb.equal(root.get(Convocatoria_.estadoActual), TipoEstadoConvocatoriaEnum.REGISTRADA);
+    Predicate registrada = cb.equal(root.get(Convocatoria_.estado), Convocatoria.Estado.REGISTRADA);
     Predicate convocatoriaRegistrada = cb.and(convocatoria, registrada);
 
     Predicate vinculaciones = cb.or(existsQuerySolicitud, existsQueryProyecto);

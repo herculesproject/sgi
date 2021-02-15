@@ -3,9 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
@@ -140,7 +138,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace con Convocatoria sin Modelo de Ejecucion
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
-    convocatoriaEnlace.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEnlace.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
@@ -327,11 +325,11 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace con Convocatoria sin Modelo de Ejecucion
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    convocatoriaEnlace.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEnlace.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
     ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
     convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.TRUE));
-    convocatoriaEnlace.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEnlace.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
@@ -549,12 +547,12 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
         .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
         .colaborativos(Boolean.TRUE)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .estado(Convocatoria.Estado.REGISTRADA)//
         .duracion(12)//
         .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
         .activo(activo)//
         .build();
 

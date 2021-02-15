@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ public class ConfiguracionSolicitudRepositoryTest {
   public void findByConvocatoriaId_ReturnsConfiguracionSolicitud() throws Exception {
     // given: data ConfiguracionSolicitud to find by Convocatoria
     Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-1")//
         .unidadGestionRef("OPE")//
         .anio(2020)//
@@ -35,7 +34,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria1).build());
 
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-2")//
         .unidadGestionRef("OPE")//
         .anio(2020)//
@@ -60,7 +59,7 @@ public class ConfiguracionSolicitudRepositoryTest {
   public void findByModeloEjecucionId_ReturnsNull() throws Exception {
     // given: data ConfiguracionSolicitud to find by Convocatoria
     Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-1")//
         .unidadGestionRef("OPE")//
         .anio(2020)//
@@ -70,7 +69,7 @@ public class ConfiguracionSolicitudRepositoryTest {
     entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria1).build());
 
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-2")//
         .unidadGestionRef("OPE")//
         .anio(2020)//

@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -87,7 +85,7 @@ public class ConvocatoriaIT extends BaseIT {
     // given: new Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setId(null);
-    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
     // when: create Convocatoria
     final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
@@ -115,8 +113,7 @@ public class ConvocatoriaIT extends BaseIT {
         .isEqualTo(convocatoria.getDestinatarios());
     Assertions.assertThat(responseData.getColaborativos()).as("getColaborativos()")
         .isEqualTo(convocatoria.getColaborativos());
-    Assertions.assertThat(responseData.getEstadoActual()).as("getEstadoActual()")
-        .isEqualTo(TipoEstadoConvocatoriaEnum.BORRADOR);
+    Assertions.assertThat(responseData.getEstado()).as("getEstado()").isEqualTo(Convocatoria.Estado.BORRADOR);
     Assertions.assertThat(responseData.getDuracion()).as("getDuracion()").isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(responseData.getAmbitoGeografico().getId()).as("getAmbitoGeografico().getId()")
         .isEqualTo(convocatoria.getAmbitoGeografico().getId());
@@ -163,8 +160,7 @@ public class ConvocatoriaIT extends BaseIT {
         .isEqualTo(convocatoria.getDestinatarios());
     Assertions.assertThat(responseData.getColaborativos()).as("getColaborativos()")
         .isEqualTo(convocatoria.getColaborativos());
-    Assertions.assertThat(responseData.getEstadoActual()).as("getEstadoActual()")
-        .isEqualTo(convocatoria.getEstadoActual());
+    Assertions.assertThat(responseData.getEstado()).as("getEstado()").isEqualTo(convocatoria.getEstado());
     Assertions.assertThat(responseData.getDuracion()).as("getDuracion()").isEqualTo(convocatoria.getDuracion());
     Assertions.assertThat(responseData.getAmbitoGeografico().getId()).as("getAmbitoGeografico().getId()")
         .isEqualTo(convocatoria.getAmbitoGeografico().getId());
@@ -189,8 +185,8 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Convocatoria convocatoriaRegistrada = response.getBody();
     Assertions.assertThat(convocatoriaRegistrada.getId()).as("getId()").isEqualTo(convocatoriaId);
-    Assertions.assertThat(convocatoriaRegistrada.getEstadoActual()).as("getEstadoActual()")
-        .isEqualTo(TipoEstadoConvocatoriaEnum.REGISTRADA);
+    Assertions.assertThat(convocatoriaRegistrada.getEstado()).as("getEstado()")
+        .isEqualTo(Convocatoria.Estado.REGISTRADA);
   }
 
   @Sql
@@ -430,14 +426,13 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseData.getRegimenConcurrencia().getId()).as("getRegimenConcurrencia().getId()")
         .isEqualTo(1L);
     Assertions.assertThat(responseData.getDestinatarios()).as("getDestinatarios()")
-        .isEqualTo(TipoDestinatarioEnum.INDIVIDUAL);
+        .isEqualTo(Convocatoria.Destinatarios.INDIVIDUAL);
     Assertions.assertThat(responseData.getColaborativos()).as("getColaborativos()").isEqualTo(Boolean.TRUE);
-    Assertions.assertThat(responseData.getEstadoActual()).as("getEstadoActual()")
-        .isEqualTo(TipoEstadoConvocatoriaEnum.REGISTRADA);
+    Assertions.assertThat(responseData.getEstado()).as("getEstado()").isEqualTo(Convocatoria.Estado.REGISTRADA);
     Assertions.assertThat(responseData.getDuracion()).as("getDuracion()").isEqualTo(12);
     Assertions.assertThat(responseData.getAmbitoGeografico().getId()).as("getAmbitoGeografico().getId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getClasificacionCVN()).as("getClasificacionCVN()")
-        .isEqualTo(ClasificacionCVNEnum.AYUDAS);
+        .isEqualTo(ClasificacionCVN.AYUDAS);
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
 
   }
@@ -1222,12 +1217,12 @@ public class ConvocatoriaIT extends BaseIT {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
         .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
         .colaborativos(Boolean.TRUE)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .estado(Convocatoria.Estado.REGISTRADA)//
         .duracion(12)//
         .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
         .activo(activo)//
         .build();
 

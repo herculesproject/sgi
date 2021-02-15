@@ -1,8 +1,9 @@
 package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,12 +20,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.converter.ClasificacionCVNConverter;
-import org.crue.hercules.sgi.csp.converter.TipoDestinatarioConverter;
-import org.crue.hercules.sgi.csp.converter.TipoEstadoConvocatoriaConverter;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +42,24 @@ public class Convocatoria extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
+  /** Destinatarios de la convocatoria */
+  public enum Destinatarios {
+    /** Individual */
+    INDIVIDUAL,
+    /** Equipo de proyecto */
+    EQUIPO_PROYECTO,
+    /** Grupo de investigación */
+    GRUPO_INVESTIGACION;
+  }
+
+  /** Estados de la convocatoria */
+  public enum Estado {
+    /** Borrador */
+    BORRADOR,
+    /** Registrada */
+    REGISTRADA;
+  }
 
   /** Id */
   @Id
@@ -106,18 +120,18 @@ public class Convocatoria extends BaseEntity {
 
   /** Destinatarios */
   @Column(name = "destinatarios", length = 50, nullable = true)
-  @Convert(converter = TipoDestinatarioConverter.class)
-  private TipoDestinatarioEnum destinatarios;
+  @Enumerated(EnumType.STRING)
+  private Destinatarios destinatarios;
 
   /** Colaborativos */
   @Column(name = "colaborativos", nullable = true)
   private Boolean colaborativos;
 
-  /** Estado Actual */
-  @Column(name = "estado_actual", length = 50, nullable = false)
-  @Convert(converter = TipoEstadoConvocatoriaConverter.class)
+  /** Estado */
+  @Column(name = "estado", length = 50, nullable = false)
+  @Enumerated(EnumType.STRING)
   @NotNull
-  private TipoEstadoConvocatoriaEnum estadoActual;
+  private Estado estado;
 
   /** Duracion */
   @Column(name = "duracion", nullable = true)
@@ -133,8 +147,8 @@ public class Convocatoria extends BaseEntity {
 
   /** Clasificacion CVN */
   @Column(name = "clasificacion_cvn", length = 50, nullable = true)
-  @Convert(converter = ClasificacionCVNConverter.class)
-  private ClasificacionCVNEnum clasificacionCVN;
+  @Enumerated(EnumType.STRING)
+  private ClasificacionCVN clasificacionCVN;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

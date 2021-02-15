@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -93,7 +92,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     Assert.isNull(convocatoria.getId(), "Id tiene que ser null para crear la Convocatoria");
 
-    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setActivo(Boolean.TRUE);
     Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, null, acronimosUnidadGestion);
     Convocatoria returnValue = repository.save(validConvocatoria);
@@ -159,13 +158,13 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     return repository.findById(id).map((data) -> {
 
-      Assert.isTrue(data.getEstadoActual().equals(TipoEstadoConvocatoriaEnum.BORRADOR),
+      Assert.isTrue(data.getEstado() == Convocatoria.Estado.BORRADOR,
           "Convocatoria deber estar en estado 'Borrador' para pasar a 'Registrada'");
 
       // Campos obligatorios en estado Registrada
       validarRequeridosConvocatoriaRegistrada(data);
 
-      data.setEstadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA);
+      data.setEstado(Convocatoria.Estado.REGISTRADA);
       Convocatoria returnValue = repository.save(data);
 
       log.debug("registrar(Long id) - end");
@@ -301,8 +300,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       Optional<Convocatoria> convocatoria = repository.findById(id);
 
       // convocatoria existe y su estado actual es 'Borrador'
-      if (convocatoria.isPresent()
-          && convocatoria.get().getEstadoActual().equals(TipoEstadoConvocatoriaEnum.BORRADOR)) {
+      if (convocatoria.isPresent() && convocatoria.get().getEstado() == Convocatoria.Estado.BORRADOR) {
 
         // Campos requeridos a nivel de convocatoria
         if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
@@ -567,7 +565,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     log.debug("validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) - start");
 
     // Campos obligatorios en estado Registrada
-    if (datosConvocatoria.getEstadoActual().equals(TipoEstadoConvocatoriaEnum.REGISTRADA)) {
+    if (datosConvocatoria.getEstado() == Convocatoria.Estado.REGISTRADA) {
       validarRequeridosConvocatoriaRegistrada(datosConvocatoria);
     } else {
       validarRequeridosConvocatoriaBorrador(datosConvocatoria);

@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryT
     // given: 2 ConvocatoriaEntidadConvocante de los que 1 coincide con el
     // ConvocatoriaId y EntidadRef buscado
     Convocatoria convocatoria1 = Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-1")//
         .unidadGestionRef("OPE")//
         .anio(2020)//
@@ -31,7 +30,7 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryT
         .build();
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-2")//
         .unidadGestionRef("OPE")//
         .anio(2020)//
@@ -69,7 +68,7 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryT
     // given: 2 ConvocatoriaEntidadConvocante que no coincide con el ConvocatoriaId
     // y EntidadRef buscado
     Convocatoria convocatoria1 = Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-1")//
         .unidadGestionRef("OPE")//
         .anio(2020)//
@@ -78,7 +77,7 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryT
         .build();
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder()//
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .estado(Convocatoria.Estado.BORRADOR)//
         .codigo("codigo-2")//
         .unidadGestionRef("OPE")//
         .anio(2020)//

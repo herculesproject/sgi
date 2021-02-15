@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadConvocanteNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
@@ -198,7 +197,7 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     // given: a ConvocatoriaEntidadConvocante when modificable returns false
     ConvocatoriaEntidadConvocante newConvocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
     newConvocatoriaEntidadConvocante.setId(null);
-    newConvocatoriaEntidadConvocante.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA);
+    newConvocatoriaEntidadConvocante.getConvocatoria().setEstado(Convocatoria.Estado.REGISTRADA);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaEntidadConvocante.getConvocatoria()));
@@ -345,7 +344,7 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante when modificable returns false
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
-    convocatoriaEntidadConvocante.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEntidadConvocante.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));

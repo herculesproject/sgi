@@ -10,9 +10,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
@@ -192,14 +190,14 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(convocatoriaExistente.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
             .value(convocatoriaExistente.getRegimenConcurrencia().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("destinatarios").value(TipoDestinatarioEnum.INDIVIDUAL.getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colaborativos").value(convocatoriaExistente.getColaborativos()))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("estadoActual").value(TipoEstadoConvocatoriaEnum.REGISTRADA.getValue()))
+            MockMvcResultMatchers.jsonPath("destinatarios").value(Convocatoria.Destinatarios.INDIVIDUAL.toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("colaborativos").value(convocatoriaExistente.getColaborativos()))
+        .andExpect(MockMvcResultMatchers.jsonPath("estado").value(Convocatoria.Estado.REGISTRADA.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("duracion").value(convocatoriaExistente.getDuracion()))
         .andExpect(MockMvcResultMatchers.jsonPath("ambitoGeografico.id")
             .value(convocatoriaExistente.getAmbitoGeografico().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("clasificacionCVN").value(ClasificacionCVNEnum.AYUDAS.getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("clasificacionCVN").value(ClasificacionCVN.AYUDAS.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(convocatoriaExistente.getActivo()));
   }
 
@@ -229,7 +227,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   public void registrar_WithEstadoBorradorAnddExistingId_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria with estado Borrador
     Convocatoria convocatoriaBorradorExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaBorradorExistente.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaBorradorExistente.setEstado(Convocatoria.Estado.BORRADOR);
     Convocatoria convocatoriaRegistrada = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
     BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(convocatoriaBorradorExistente);
@@ -260,15 +258,15 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
             MockMvcResultMatchers.jsonPath("finalidad.id").value(convocatoriaBorradorExistente.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
             .value(convocatoriaBorradorExistente.getRegimenConcurrencia().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("destinatarios").value(TipoDestinatarioEnum.INDIVIDUAL.getValue()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("destinatarios").value(Convocatoria.Destinatarios.INDIVIDUAL.toString()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("colaborativos").value(convocatoriaBorradorExistente.getColaborativos()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("estadoActual").value(TipoEstadoConvocatoriaEnum.REGISTRADA.getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("estado").value(Convocatoria.Estado.REGISTRADA.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("duracion").value(convocatoriaBorradorExistente.getDuracion()))
         .andExpect(MockMvcResultMatchers.jsonPath("ambitoGeografico.id")
             .value(convocatoriaBorradorExistente.getAmbitoGeografico().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("clasificacionCVN").value(ClasificacionCVNEnum.AYUDAS.getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("clasificacionCVN").value(ClasificacionCVN.AYUDAS.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(convocatoriaBorradorExistente.getActivo()));
   }
 
@@ -277,7 +275,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   public void registrar_WithEstadoBorradorAndNoExistingId_Returns404() throws Exception {
     // given: a Convocatoria with non existing id
     Convocatoria convocatoriaBorradorExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaBorradorExistente.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaBorradorExistente.setEstado(Convocatoria.Estado.BORRADOR);
 
     BDDMockito.willThrow(new ConvocatoriaNotFoundException(convocatoriaBorradorExistente.getId())).given(service)
         .findById(ArgumentMatchers.<Long>any());
@@ -1531,14 +1529,14 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(newConvocatoria.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
             .value(newConvocatoria.getRegimenConcurrencia().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("destinatarios").value(TipoDestinatarioEnum.INDIVIDUAL.getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colaborativos").value(newConvocatoria.getColaborativos()))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("estadoActual").value(TipoEstadoConvocatoriaEnum.REGISTRADA.getValue()))
+            MockMvcResultMatchers.jsonPath("destinatarios").value(Convocatoria.Destinatarios.INDIVIDUAL.toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("colaborativos").value(newConvocatoria.getColaborativos()))
+        .andExpect(MockMvcResultMatchers.jsonPath("estado").value(Convocatoria.Estado.REGISTRADA.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("duracion").value(newConvocatoria.getDuracion()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("ambitoGeografico.id").value(newConvocatoria.getAmbitoGeografico().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("clasificacionCVN").value(ClasificacionCVNEnum.AYUDAS.getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("clasificacionCVN").value(ClasificacionCVN.AYUDAS.toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(newConvocatoria.getActivo()));
   }
 
@@ -1817,12 +1815,12 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
         .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
         .colaborativos(Boolean.TRUE)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .estado(Convocatoria.Estado.REGISTRADA)//
         .duracion(12)//
         .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
         .activo(activo)//
         .build();
 

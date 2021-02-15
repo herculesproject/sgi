@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -171,7 +170,7 @@ public class RequisitoEquipoServiceTest extends BaseServiceTest {
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a RequisitoEquipo when modificable return false
     RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L);
-    requisitoEquipo.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    requisitoEquipo.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoEquipo.getConvocatoria()));

@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -210,7 +208,7 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaHito con Convocatoria sin Modelo de Ejecucion
     ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(null);
-    convocatoriaHito.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaHito.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaHito.getConvocatoria().setModeloEjecucion(null);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
@@ -395,11 +393,11 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaHito con Convocatoria sin Modelo de Ejecucion
     ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(1L);
-    convocatoriaHito.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaHito.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaHito.getConvocatoria().setModeloEjecucion(null);
     ConvocatoriaHito convocatoriaHitoActualizado = generarMockConvocatoriaHito(1L);
     convocatoriaHitoActualizado.setTipoHito(generarMockTipoHito(2L, Boolean.TRUE));
-    convocatoriaHito.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaHito.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaHito.getConvocatoria().setModeloEjecucion(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaHito));
@@ -641,12 +639,12 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
         .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
         .colaborativos(Boolean.TRUE)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .estado(Convocatoria.Estado.REGISTRADA)//
         .duracion(12)//
         .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
         .activo(activo)//
         .build();
 

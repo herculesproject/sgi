@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
@@ -234,7 +233,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     // given: a ConvocatoriaEntidadFinanciadora when modificable returns False
     ConvocatoriaEntidadFinanciadora newConvocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
     newConvocatoriaEntidadFinanciadora.setId(null);
-    newConvocatoriaEntidadFinanciadora.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA);
+    newConvocatoriaEntidadFinanciadora.getConvocatoria().setEstado(Convocatoria.Estado.REGISTRADA);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaEntidadFinanciadora.getConvocatoria()));
@@ -406,7 +405,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora when modificable return false
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
-    convocatoriaEntidadFinanciadora.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEntidadFinanciadora.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora));

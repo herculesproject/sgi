@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
-import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -164,7 +162,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
-    convocatoriaFase.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaFase.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
@@ -329,11 +327,11 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
-    convocatoriaFase.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaFase.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
-    convocatoriaFase.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaFase.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
     convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
@@ -656,12 +654,12 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
         .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
         .colaborativos(Boolean.TRUE)//
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .estado(Convocatoria.Estado.REGISTRADA)//
         .duracion(12)//
         .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
         .activo(activo)//
         .build();
 

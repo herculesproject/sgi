@@ -311,7 +311,7 @@
             <column name="colaborativos" type="BOOLEAN"/>
             <column name="destinatarios" type="VARCHAR(50)"/>
             <column name="duracion" type="INT"/>
-            <column name="estado_actual" type="VARCHAR(50)">
+            <column name="estado" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="objeto" type="VARCHAR(2000)"/>
