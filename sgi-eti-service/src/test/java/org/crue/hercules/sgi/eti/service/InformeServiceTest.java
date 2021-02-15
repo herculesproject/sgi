@@ -237,12 +237,49 @@ public class InformeServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void findAllByMemoriaId_ReturnsInformes() {
+
+    Long informeId = 1L;
+    // given: 10 Informes
+    List<Informe> informes = new ArrayList<>();
+    for (int i = 1; i <= 10; i++) {
+      informes.add(generarMockInforme(Long.valueOf(i), "Informe" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(informeRepository.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(informes));
+
+    // when: Se buscan todos las datos
+    Page<Informe> result = informeService.findByMemoria(informeId, Pageable.unpaged());
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(result.getContent()).isEqualTo(informes);
+    Assertions.assertThat(result.getSize()).isEqualTo(10);
+    Assertions.assertThat(result.getSize()).isEqualTo(informes.size());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(informes.size());
+  }
+
+  @Test
   public void deleteInformeMemoria() {
 
     BDDMockito.given(informeRepository.findFirstByMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
         .willReturn(generarMockInforme(1L, "DocumentoFormulario1"));
 
     BDDMockito.doNothing().when(informeRepository).delete(ArgumentMatchers.<Informe>any());
+
+    Assertions.assertThatCode(
+        // when: Delete con id existente
+        () -> informeService.deleteInformeMemoria(1L))
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+
+  }
+
+  @Test
+  public void deleteInformeMemoria_informeNull() {
+
+    BDDMockito.given(informeRepository.findFirstByMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
+        .willReturn(null);
 
     Assertions.assertThatCode(
         // when: Delete con id existente
