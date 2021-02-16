@@ -3,20 +3,31 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
+import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ROUTE_NAMES } from '@core/route.names';
+import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
+import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateUtils } from '@core/utils/date-utils';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('csp.proyecto.listado.error');
+const MSG_ERROR_INIT = marker('csp.proyecto.listado.error.cargar');
 const MSG_BUTTON_NEW = marker('footer.csp.proyecto.crear');
 const MSG_DEACTIVATE = marker('csp.proyecto.desactivar');
 const MSG_SUCCESS_DEACTIVATE = marker('csp.proyecto.desactivar.correcto');
@@ -43,12 +54,32 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   estadoProyecto = Object.keys(TipoEstadoProyecto).map<string>(
     (key) => TipoEstadoProyecto[key]);
 
+  busquedaAvanzada = false;
+
+  private subscriptions: Subscription[] = [];
+
+  private unidadGestionFiltered: IUnidadGestion[] = [];
+  unidadesGestion$: Observable<IUnidadGestion[]>;
+
+  private ambitoGeograficoFiltered: ITipoAmbitoGeografico[] = [];
+  ambitoGeografico$: Observable<ITipoAmbitoGeografico[]>;
+
+  private planInvestigacionFiltered: IPrograma[] = [];
+  planInvestigacion$: Observable<IPrograma[]>;
+
+  private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
+  fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
+
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly proyectoService: ProyectoService,
     private readonly dialogService: DialogService,
     public authService: SgiAuthService,
+    private unidadGestionService: UnidadGestionService,
+    private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private programaService: ProgramaService,
+    private fuenteFinanciacionService: FuenteFinanciacionService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -68,15 +99,33 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.formGroup = new FormGroup({
       titulo: new FormControl(''),
       acronimo: new FormControl(''),
-      estado: new FormControl('')
+      estado: new FormControl(''),
+      activo: new FormControl('true'),
+      unidadGestion: new FormControl('', [IsEntityValidator.isValid()]),
+      fechaInicioDesde: new FormControl(''),
+      fechaInicioHasta: new FormControl(''),
+      fechaFinDesde: new FormControl(''),
+      fechaFinHasta: new FormControl(''),
+      ambitoGeografico: new FormControl(''),
+      responsableProyecto: new FormControl(''),
+      miembroEquipo: new FormControl(''),
+      socioColaborador: new FormControl(''),
+      convocatoria: new FormControl(''),
+      entidadConvocante: new FormControl(''),
+      planInvestigacion: new FormControl(''),
+      entidadFinanciadora: new FormControl(''),
+      fuenteFinanciacion: new FormControl('')
     });
+    this.loadUnidadesGestion();
+    this.loadAmbitoGeografico();
+    this.loadPlanInvestigacion();
+    this.loadFuenteFinanciacion();
     this.filter = this.createFilters();
   }
 
   onClearFilters() {
-    this.formGroup.controls.estado.setValue('');
-    this.formGroup.controls.titulo.setValue('');
-    this.formGroup.controls.acronimo.setValue('');
+    super.onClearFilters();
+    this.formGroup.controls.activo.setValue('true');
     this.onSearch();
   }
 
@@ -95,13 +144,32 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   protected createFilters(): SgiRestFilter[] {
     const filtros = [];
-    this.addFiltro(filtros, 'acronimo', SgiRestFilterType.LIKE, this.formGroup.controls.acronimo.value);
     this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
     this.addFiltro(filtros, 'acronimo', SgiRestFilterType.LIKE, this.formGroup.controls.acronimo.value);
-
     const estado = Object.keys(TipoEstadoProyecto)
       .filter(key => TipoEstadoProyecto[key] === this.formGroup.controls.estado.value)[0];
     this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, estado);
+    if (this.formGroup.controls.activo.value !== 'todos') {
+      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    }
+    this.addFiltro(filtros, 'unidadGestionRef', SgiRestFilterType.EQUALS, this.formGroup.controls.unidadGestion.value?.acronimo);
+    this.addFiltro(filtros, 'fechaInicio',
+      SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaInicioDesde.value));
+    this.addFiltro(filtros, 'fechaInicio',
+      SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaInicioHasta.value));
+    this.addFiltro(filtros, 'fechaFin',
+      SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaFinDesde.value));
+    this.addFiltro(filtros, 'fechaFin',
+      SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaFinHasta.value));
+    this.addFiltro(filtros, 'ambitoGeografico.id', SgiRestFilterType.EQUALS, this.formGroup.controls.ambitoGeografico.value?.id);
+    this.addFiltro(filtros, 'responsableProyecto', SgiRestFilterType.EQUALS, this.formGroup.controls.responsableProyecto.value?.personaRef);
+    this.addFiltro(filtros, 'miembroEquipo', SgiRestFilterType.EQUALS, this.formGroup.controls.miembroEquipo.value?.personaRef);
+    this.addFiltro(filtros, 'socioColaborador', SgiRestFilterType.EQUALS, this.formGroup.controls.socioColaborador.value?.personaRef);
+    this.addFiltro(filtros, 'convocatoria.id', SgiRestFilterType.EQUALS, this.formGroup.controls.convocatoria.value?.id);
+    this.addFiltro(filtros, 'entidadConvocante', SgiRestFilterType.EQUALS, this.formGroup.controls.entidadConvocante.value?.personaRef);
+    this.addFiltro(filtros, 'planInvestigacion', SgiRestFilterType.EQUALS, this.formGroup.controls.planInvestigacion.value?.id);
+    this.addFiltro(filtros, 'entidadFinanciadora', SgiRestFilterType.EQUALS, this.formGroup.controls.entidadFinanciadora.value?.personaRef);
+    this.addFiltro(filtros, 'fuenteFinanciacion', SgiRestFilterType.EQUALS, this.formGroup.controls.fuenteFinanciacion.value?.id);
 
     return filtros;
   }
@@ -156,6 +224,178 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         }
       );
     this.suscripciones.push(suscription);
+  }
+
+  /**
+  * Mostrar busqueda avanzada
+  */
+  toggleBusquedaAvanzada(): void {
+    this.busquedaAvanzada = !this.busquedaAvanzada;
+  }
+
+  /**
+  * Devuelve el nombre de una unidad de gestión.
+  * @param unidadGestion unidad de gestión
+  * @returns nombre de una unidad de gestión
+  */
+  getUnidadGestion(unidadGestion?: IUnidadGestion): string | undefined {
+    return typeof unidadGestion === 'string' ? unidadGestion : unidadGestion?.nombre;
+  }
+
+  /**
+* Devuelve el nombre de una fuente de financiacion.
+* @param fuente de financiacion fuente de financiacion.
+* @returns nombre de una fuente de financiacion
+*/
+  getFuenteFinanciacion(fuente?: IFuenteFinanciacion): string | undefined {
+    return typeof fuente === 'string' ? fuente : fuente?.nombre;
+  }
+
+  /**
+  * Devuelve el nombre de un tipo de ámbito geográfico.
+  * @param ambito de un ámbito geográfico
+  * @returns nombre de un ámbito geográfico
+  */
+  getAmbitoGeografico(ambito?: ITipoAmbitoGeografico): string | undefined {
+    return typeof ambito === 'string' ? ambito : ambito?.nombre;
+  }
+
+  /**
+  * Devuelve el nombre de un plan de investigación.
+  * @param plan de un plan de investigación.
+  * @returns nombre de de un plan de investigación
+  */
+  getPlanInvestigacion(plan?: IFuenteFinanciacion): string | undefined {
+    return typeof plan === 'string' ? plan : plan?.nombre;
+  }
+
+  /**
+  * Filtra la lista devuelta por el servicio de Unidades de Gestión
+  *
+  * @param value del input para autocompletar
+  */
+  private filtroUnidadGestion(value: string): IUnidadGestion[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.unidadGestionFiltered.filter(unidadGestion => unidadGestion.nombre.toLowerCase().includes(filterValue));
+  }
+
+  /**
+  * Filtra la lista devuelta por el servicio de Tipos de ámbitos geográficos
+  *
+  * @param value del input para autocompletar
+  */
+  private filtroAmbitoGeografico(value: string): ITipoAmbitoGeografico[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.ambitoGeograficoFiltered.filter(ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue));
+  }
+
+  /**
+  * Filtra la lista devuelta por el servicio de Planes e Investigación
+  *
+  * @param value del input para autocompletar
+  */
+  private filtroPlanInvestigacion(value: string): IPrograma[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.planInvestigacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
+  }
+
+  /**
+  * Filtra la lista devuelta por el servicio de Fuentes de Financiación
+  *
+  * @param value del input para autocompletar
+  */
+  private filtroFuenteFinanciacion(value: string): IFuenteFinanciacion[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.fuenteFinanciacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
+  }
+
+  /**
+   * Cargar unidad gestion
+   */
+  private loadUnidadesGestion() {
+    this.subscriptions.push(
+      // TODO Debería filtrar por el rol
+      this.unidadGestionService.findAll().subscribe(
+        res => {
+          this.unidadGestionFiltered = res.items;
+          this.unidadesGestion$ = this.formGroup.controls.unidadGestion.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroUnidadGestion(value))
+            );
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR_INIT);
+        }
+      )
+    );
+  }
+
+  /**
+   * Cargar fuente financiacion
+   */
+  private loadFuenteFinanciacion() {
+    this.suscripciones.push(
+      this.fuenteFinanciacionService.findAll().subscribe(
+        (res) => {
+          this.fuenteFinanciacionFiltered = res.items;
+          this.fuenteFinanciacion$ = this.formGroup.controls.fuenteFinanciacion.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroFuenteFinanciacion(value))
+            );
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR_INIT);
+        }
+      )
+    );
+  }
+
+  /**
+  * Cargar planes de investigación
+  */
+  private loadPlanInvestigacion() {
+    this.suscripciones.push(
+      this.programaService.findAllPlan().subscribe(
+        (res) => {
+          this.planInvestigacionFiltered = res.items;
+          this.planInvestigacion$ = this.formGroup.controls.planInvestigacion.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroPlanInvestigacion(value))
+            );
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR_INIT);
+        }
+      )
+    );
+  }
+
+  /**
+  * Cargar ámbitos geográficos
+  */
+  private loadAmbitoGeografico() {
+    this.suscripciones.push(
+      this.tipoAmbitoGeograficoService.findAll().subscribe(
+        (res) => {
+          this.ambitoGeograficoFiltered = res.items;
+          this.ambitoGeografico$ = this.formGroup.controls.ambitoGeografico.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroAmbitoGeografico(value))
+            );
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR_INIT);
+        }
+      )
+    );
   }
 
 }
