@@ -20,7 +20,8 @@ describe('SolicitudProyectoSocioPeriodoPagoComponent', () => {
   const state: ISolicitudProyectoSocioState = {
     solicitudId: 1,
     solicitudProyectoSocio: {} as ISolicitudProyectoSocio,
-    selectedSolicitudProyectoSocios: []
+    selectedSolicitudProyectoSocios: [],
+    readonly: false
   };
 
   beforeEach(waitForAsync(() => {

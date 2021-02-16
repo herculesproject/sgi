@@ -24,6 +24,7 @@ export interface EquipoProyectoModalData {
   solicitudProyectoEquipo: ISolicitudProyectoEquipo;
   selectedProyectoEquipos: ISolicitudProyectoEquipo[];
   isEdit: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -122,6 +123,11 @@ export class SolicitudEquipoProyectoModalComponent extends
         ]
       }
     );
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
     return formGroup;
   }
 

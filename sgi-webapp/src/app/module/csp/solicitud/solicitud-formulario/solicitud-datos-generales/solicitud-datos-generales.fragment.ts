@@ -53,7 +53,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     private personaFisicaService: PersonaFisicaService,
     private solicitudModalidadService: SolicitudModalidadService,
     private unidadGestionService: UnidadGestionService,
-    private sgiAuthService: SgiAuthService
+    private sgiAuthService: SgiAuthService,
+    public readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -133,6 +134,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         (convocatoria) => this.onConvocatoriaChange(convocatoria)
       )
     );
+
+    if (this.readonly) {
+      form.disable();
+    }
 
     return form;
   }
@@ -551,50 +556,13 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
       tipoFormularioControl.updateValueAndValidity({ emitEvent: false });
       unidadGestionControl.updateValueAndValidity({ emitEvent: false });
-    } else {
-      // Investigador solo puede modificar en los estados Borrador, Excluida provisional, Denegada provisional
-      // Gestor o administrador solo pued modificar en los estados Borrador,  Presentada, Admitida provisional
-      // Alegada admisión, Admitida definitiva, Concedida provisional, Alegada concesión
-      if (solicitud && ((this.sgiAuthService.hasAuthorityForAnyUO('CSP-SOL-C-INV') &&
-        (solicitud.estado.estado !== TipoEstadoSolicitud.BORRADOR
-          && solicitud.estado.estado !== TipoEstadoSolicitud.EXCLUIDA_PROVISIONAL
-          && solicitud.estado.estado !== TipoEstadoSolicitud.DENEGADA_PROVISIONAL))
-        || (this.sgiAuthService.hasAuthorityForAnyUO('CSP-SOL-C') &&
-          (solicitud.estado.estado !== TipoEstadoSolicitud.BORRADOR
-            && solicitud.estado.estado !== TipoEstadoSolicitud.PRESENTADA
-            && solicitud.estado.estado !== TipoEstadoSolicitud.ADMITIDA_PROVISIONAL
-            && solicitud.estado.estado !== TipoEstadoSolicitud.ADMITIDA_DEFINITIVA
-            && solicitud.estado.estado !== TipoEstadoSolicitud.CONCECIDA_PROVISIONAL
-            && solicitud.estado.estado !== TipoEstadoSolicitud.ALEGADA_CONCESION)))) {
-
-        form.controls.estado.disable({ emitEvent: false });
-        form.controls.estado.updateValueAndValidity({ emitEvent: false });
-        form.controls.solicitante.disable({ emitEvent: false });
-        form.controls.solicitante.updateValueAndValidity({ emitEvent: false });
-        convocatoriaControl.disable({ emitEvent: false });
-        convocatoriaControl.updateValueAndValidity({ emitEvent: false });
-        convocatoriaExternaControl.disable({ emitEvent: false });
-        convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
-        tipoFormularioControl.disable({ emitEvent: false });
-        tipoFormularioControl.updateValueAndValidity({ emitEvent: false });
-        form.controls.codigoExterno.disable({ emitEvent: false });
-        form.controls.codigoExterno.updateValueAndValidity({ emitEvent: false });
-        form.controls.codigoRegistro.disable({ emitEvent: false });
-        form.controls.codigoRegistro.updateValueAndValidity({ emitEvent: false });
-        form.controls.observaciones.disable({ emitEvent: false });
-        form.controls.observaciones.updateValueAndValidity({ emitEvent: false });
-        unidadGestionControl.disable({ emitEvent: false });
-        unidadGestionControl.updateValueAndValidity({ emitEvent: false });
-
-
-      } else if (convocatoriaSolicitud) {
-        unidadGestionControl.disable({ emitEvent: false });
-        unidadGestionControl.updateValueAndValidity({ emitEvent: false });
-        convocatoriaControl.disable({ emitEvent: false });
-        convocatoriaControl.updateValueAndValidity({ emitEvent: false });
-        convocatoriaExternaControl.disable({ emitEvent: false });
-        convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
-      }
+    } else if (!this.readonly && convocatoriaSolicitud) {
+      unidadGestionControl.disable({ emitEvent: false });
+      unidadGestionControl.updateValueAndValidity({ emitEvent: false });
+      convocatoriaControl.disable({ emitEvent: false });
+      convocatoriaControl.updateValueAndValidity({ emitEvent: false });
+      convocatoriaExternaControl.disable({ emitEvent: false });
+      convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
     }
 
     this.convocatoriaRequired = !convocatoriaExternaSolicitud;

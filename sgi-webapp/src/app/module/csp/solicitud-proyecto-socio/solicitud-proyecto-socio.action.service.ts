@@ -51,13 +51,13 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     }
 
     this.datosGenerales = new SolicitudProyectoSocioDatosGeneralesFragment(
-      this.solicitudProyectoSocio?.id, this.solicitudId, solicitudProyectoSocioService, solicitudService);
+      this.solicitudProyectoSocio?.id, this.solicitudId, solicitudProyectoSocioService, solicitudService, history.state.readonly);
     this.periodosPago = new SolicitudProyectoSocioPeriodoPagoFragment(logger, this.solicitudProyectoSocio?.id,
-      solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService);
+      solicitudProyectoSocioService, solicitudProyectoPeriodoPagoService, history.state.readonly);
     this.periodoJustificaciones = new SolicitudProyectoPeriodoJustificacionesFragment(logger, this.solicitudProyectoSocio?.id,
-      solicitudProyectoSocioService, solicitudProyectoPeriodoJustificacionService);
+      solicitudProyectoSocioService, solicitudProyectoPeriodoJustificacionService, history.state.readonly);
     this.socioEquipoSocio = new SolicitudProyectoSocioEquipoSocioFragment(logger, this.solicitudProyectoSocio?.id,
-      solicitudProyectoSocioService, solicitudProyectoEquipoSocioService, personaFisicaService);
+      solicitudProyectoSocioService, solicitudProyectoEquipoSocioService, personaFisicaService, history.state.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.PERIODOS_PAGOS, this.periodosPago);

@@ -11,7 +11,8 @@ export class SolicitudHistoricoEstadosFragment extends Fragment {
 
   constructor(
     key: number,
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+    public readonly: boolean
   ) {
     super(key);
     this.setComplete(true);

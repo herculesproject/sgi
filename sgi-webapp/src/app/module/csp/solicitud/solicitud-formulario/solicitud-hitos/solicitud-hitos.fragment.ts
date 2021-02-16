@@ -16,7 +16,8 @@ export class SolicitudHitosFragment extends Fragment {
   constructor(
     key: number,
     private service: SolicitudHitoService,
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+    public readonly: boolean
   ) {
     super(key);
     this.setComplete(true);

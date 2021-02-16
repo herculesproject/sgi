@@ -68,7 +68,8 @@ export class SolicitudProyectoSocioPeriodoPagoComponent extends FragmentComponen
       selectedMeses: this.dataSource.data.map(element => element.value.mes),
       mesInicioSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesInicio,
       mesFinSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesFin,
-      isEdit: Boolean(wrapper)
+      isEdit: Boolean(wrapper),
+      readonly: this.formPart.readonly
     };
     if (wrapper) {
       const index = data.selectedMeses.findIndex((element) => element === wrapper.value.mes);

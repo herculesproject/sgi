@@ -80,7 +80,8 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
       selectedPeriodoJustificaciones: this.dataSource.data.map(element => element.value),
       mesInicioSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesInicio,
       mesFinSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesFin,
-      isEdit: Boolean(wrapper)
+      isEdit: Boolean(wrapper),
+      readonly: this.formPart.readonly
     };
 
     if (wrapper) {

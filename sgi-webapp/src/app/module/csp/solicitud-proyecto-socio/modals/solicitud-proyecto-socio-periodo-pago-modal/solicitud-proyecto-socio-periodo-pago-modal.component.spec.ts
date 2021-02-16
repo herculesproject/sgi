@@ -42,7 +42,8 @@ describe('SolicitudProyectoPeriodoPagoModalComponent', () => {
     selectedMeses: [],
     solicitudProyectoPeriodoPago,
     mesInicioSolicitudProyectoSocio: 1,
-    mesFinSolicitudProyectoSocio: 2
+    mesFinSolicitudProyectoSocio: 2,
+    readonly: false
   };
 
   beforeEach(waitForAsync(() => {

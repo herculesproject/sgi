@@ -394,4 +394,16 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
+  /**
+   * Comprueba si tiene permisos de edición de la solicitud
+   *
+   * @param id Id de la solicitud
+   */
+  modificable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/modificable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

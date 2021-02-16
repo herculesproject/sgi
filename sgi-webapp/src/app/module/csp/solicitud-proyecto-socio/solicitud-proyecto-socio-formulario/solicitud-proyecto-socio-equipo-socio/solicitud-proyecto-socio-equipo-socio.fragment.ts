@@ -16,7 +16,8 @@ export class SolicitudProyectoSocioEquipoSocioFragment extends Fragment {
     key: number,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
     private solicitudProyectoEquipoSocioService: SolicitudProyectoEquipoSocioService,
-    private personaFisicaService: PersonaFisicaService
+    private personaFisicaService: PersonaFisicaService,
+    public readonly
   ) {
     super(key);
     this.setComplete(true);

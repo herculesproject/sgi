@@ -32,7 +32,8 @@ describe('SolicitudProyectoPeriodoJustificacionesModalComponent', () => {
     periodoJustificacion,
     selectedPeriodoJustificaciones: [],
     mesFinSolicitudProyectoSocio: 2,
-    mesInicioSolicitudProyectoSocio: 1
+    mesInicioSolicitudProyectoSocio: 1,
+    readonly: false
   };
 
   beforeEach(waitForAsync(() => {

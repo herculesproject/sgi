@@ -15,6 +15,7 @@ export interface AreaTematicaSolicitudData {
   rootTree: IAreaTematica;
   areaTematicaConvocatoria: IAreaTematica;
   areaTematicaSolicitud: IAreaTematica;
+  readonly: boolean;
 }
 export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicitudProyectoDatos>{
   solicitudProyectoDatos: ISolicitudProyectoDatos;
@@ -26,7 +27,8 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     private solicitudService: SolicitudService,
     private solicitudProyectoDatosService: SolicitudProyectoDatosService,
     private convocatoriaService: ConvocatoriaService,
-    private actionService: SolicitudActionService
+    private actionService: SolicitudActionService,
+    public readonly: boolean
   ) {
     super(solicitud?.id, true);
     this.setComplete(true);
@@ -47,6 +49,11 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       resultadosPrevistos: new FormControl('', [Validators.maxLength(2000)]),
       envioEtica: new FormControl('', [])
     });
+
+    if (this.readonly) {
+      form.disable();
+    }
+
     return form;
   }
 
@@ -76,7 +83,9 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
           if (value === false) {
             coordinadorExterno.disable();
           } else {
-            coordinadorExterno.enable();
+            if (!this.readonly) {
+              coordinadorExterno.enable();
+            }
             coordinadorExterno.setValue(undefined);
           }
           this.actionService.sociosColaboradores = value;
@@ -124,6 +133,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
                   rootTree: this.getFirstLevelAreaTematica(convocatoriaAreaTematica.areaTematica),
                   areaTematicaConvocatoria: convocatoriaAreaTematica.areaTematica,
                   areaTematicaSolicitud: solicitudProyectoDatos.areaTematica,
+                  readonly: this.readonly
                 };
                 return area;
               });

@@ -26,6 +26,7 @@ export interface ISolicitudProyectoSocioState {
   solicitudId: number;
   solicitudProyectoSocio: ISolicitudProyectoSocio;
   selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
+  readonly: boolean;
 }
 
 @Component({
@@ -121,7 +122,8 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
     const state: ISolicitudProyectoSocioState = {
       solicitudId: this.fragment.getKey() as number,
       solicitudProyectoSocio: wrapper ? wrapper.value : solicitudProyectoSocio,
-      selectedSolicitudProyectoSocios: this.dataSource.data.map(element => element.value)
+      selectedSolicitudProyectoSocios: this.dataSource.data.map(element => element.value),
+      readonly: this.formPart.readonly
     };
     return state;
   }

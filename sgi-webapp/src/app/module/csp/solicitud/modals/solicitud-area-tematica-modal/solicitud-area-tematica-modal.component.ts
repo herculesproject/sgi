@@ -101,6 +101,11 @@ export class SolicitudAreaTematicaModalComponent extends
         disabled: true
       }),
     });
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
     return formGroup;
   }
 

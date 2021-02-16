@@ -19,6 +19,7 @@ export interface SolicitudProyectoSocioPeriodoPagoModalData {
   mesInicioSolicitudProyectoSocio: number;
   mesFinSolicitudProyectoSocio: number;
   isEdit: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -85,6 +86,11 @@ export class SolicitudProyectoSocioPeriodoPagoModalComponent extends
         ),
       }
     );
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
     return formGroup;
   }
 }

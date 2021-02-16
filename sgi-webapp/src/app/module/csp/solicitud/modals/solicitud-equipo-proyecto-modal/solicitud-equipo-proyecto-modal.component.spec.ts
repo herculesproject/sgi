@@ -43,7 +43,8 @@ describe('SolicitudEquipoProyectoModalComponent', () => {
   const data: EquipoProyectoModalData = {
     selectedProyectoEquipos: [],
     solicitudProyectoEquipo,
-    isEdit: true
+    isEdit: true,
+    readonly: true
   };
 
   beforeEach(waitForAsync(() => {

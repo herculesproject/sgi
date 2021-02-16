@@ -53,7 +53,8 @@
                   </mat-label>
 
                   <mat-checkbox *ngIf="node !== rootNode" class="checkbox" color="primary"
-                    [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                    [checked]="node === checkedNode" (change)="onCheckNode(node, $event)"
+                    [disabled]="this.data.readonly">
                     {{node.programa.nombre}}
                   </mat-checkbox>
                 </li>
@@ -72,7 +73,8 @@
                     </mat-label>
 
                     <mat-checkbox *ngIf="node !== rootNode" class="checkbox" color="primary"
-                      [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                      [checked]="node === checkedNode" (change)="onCheckNode(node, $event)"
+                      [disabled]="this.data.readonly">
                       {{node.programa.nombre}}
                     </mat-checkbox>
                   </div>
@@ -91,7 +93,8 @@
     </form>
   </mat-dialog-content>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" md-button mat-raised-button type="submit" (click)="saveOrUpdate()">
+    <button color="accent" md-button mat-raised-button type="submit" (click)="saveOrUpdate()"
+      *ngIf="!this.data.readonly">
       {{'botones.aceptar' | translate}}</button>
     <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
       translate}}</button>

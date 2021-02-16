@@ -68,7 +68,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <div class="separation-button">
+  <div class="separation-button" *ngIf="!formPart.readonly">
     <button color="three" mat-button mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.solicitud-proyecto-socio.periodo-justificacion.añadir' | translate}}

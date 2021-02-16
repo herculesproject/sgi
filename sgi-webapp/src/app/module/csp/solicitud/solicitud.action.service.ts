@@ -94,10 +94,10 @@ export class SolicitudActionService extends ActionService {
     }
 
     this.datosGenerales = new SolicitudDatosGeneralesFragment(logger, this.solicitud?.id, solicitudService, configuracionSolicitudService,
-      convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
+      convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService, this.readonly);
     this.documentos = new SolicitudDocumentosFragment(logger, this.solicitud?.id, this.solicitud?.convocatoria?.id,
-      configuracionSolicitudService, solicitudService, solicitudDocumentoService);
-    this.hitos = new SolicitudHitosFragment(this.solicitud?.id, solicitudHitoService, solicitudService);
+      configuracionSolicitudService, solicitudService, solicitudDocumentoService, this.readonly);
+    this.hitos = new SolicitudHitosFragment(this.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
 
     if (this.solicitud?.id) {
       solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
@@ -106,13 +106,13 @@ export class SolicitudActionService extends ActionService {
         }
       });
     }
-    this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.solicitud?.id, solicitudService);
+    this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.solicitud?.id, solicitudService, this.readonly);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.solicitud, solicitudService,
-      solicitudProyectoDatosService, convocatoriaService, this);
+      solicitudProyectoDatosService, convocatoriaService, this, this.readonly);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.solicitud?.id, solicitudService,
-      solicitudProyectoEquipoService);
+      solicitudProyectoEquipoService, this.readonly);
     this.socioColaboradores = new SolicitudSociosColaboradoresFragment(this.solicitud?.id, solicitudService,
-      solicitudProyectoSocioService, empresaEconomicaService);
+      solicitudProyectoSocioService, empresaEconomicaService, this.readonly);
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.solicitud?.id, solicitudService,
       solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
     this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(this.solicitud?.id, solicitudService,
@@ -130,6 +130,27 @@ export class SolicitudActionService extends ActionService {
     this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
     this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
     this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
+
+    if (this.isEdit()) {
+      const subscription = this.solicitudService.modificable(this.solicitud?.id).subscribe(
+        (value) => {
+          this.readonly = !value;
+          if (this.readonly) {
+            this.datosGenerales.getFormGroup()?.disable();
+          }
+          this.datosGenerales.readonly = this.readonly;
+          this.hitos.readonly = this.readonly;
+          this.historicoEstado.readonly = this.readonly;
+          this.documentos.readonly = this.readonly;
+          this.proyectoDatos.readonly = this.readonly;
+          this.equipoProyecto.readonly = this.readonly;
+          this.socioColaboradores.readonly = this.readonly;
+          this.entidadesFinanciadoras.readonly = this.readonly;
+          this.desglosePresupuestoGlobal.readonly = this.readonly;
+          this.desglosePresupuestoEntidades.readonly = this.readonly;
+        });
+      this.subscriptions.push(subscription);
+    }
 
     this.checkSociosColaboradores();
 

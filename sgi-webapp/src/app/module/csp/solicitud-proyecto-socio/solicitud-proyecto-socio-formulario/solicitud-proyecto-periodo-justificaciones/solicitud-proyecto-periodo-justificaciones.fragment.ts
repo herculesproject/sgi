@@ -15,7 +15,8 @@ export class SolicitudProyectoPeriodoJustificacionesFragment extends Fragment {
     private readonly logger: NGXLogger,
     key: number,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
-    private solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService
+    private solicitudProyectoPeriodoJustificacionService: SolicitudProyectoPeriodoJustificacionService,
+    public readonly
   ) {
     super(key);
     this.setComplete(true);

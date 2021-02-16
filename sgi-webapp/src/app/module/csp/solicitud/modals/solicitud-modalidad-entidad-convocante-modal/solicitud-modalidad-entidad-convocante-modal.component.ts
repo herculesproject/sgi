@@ -20,6 +20,7 @@ export interface SolicitudModalidadEntidadConvocanteModalData {
   plan: IPrograma;
   programa: IPrograma;
   modalidad: ISolicitudModalidad;
+  readonly: boolean;
 }
 
 class NodePrograma {
@@ -129,6 +130,11 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
       entidadConvocante: new FormControl({ value: this.data.entidad?.razonSocial, disabled: true }),
       plan: new FormControl({ value: this.data.plan?.nombre, disabled: true })
     });
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
     return formGroup;
   }
 

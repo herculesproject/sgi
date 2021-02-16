@@ -56,7 +56,8 @@ describe('SolicitudProyectoSocioEquipoSocioModalComponent', () => {
     selectedProyectoEquipoSocios: [],
     solicitudProyectoEquipoSocio,
     mesInicioSolicitudProyectoSocio: 1,
-    mesFinSolicitudProyectoSocio: 2
+    mesFinSolicitudProyectoSocio: 2,
+    readonly: false
   };
 
   beforeEach(waitForAsync(() => {

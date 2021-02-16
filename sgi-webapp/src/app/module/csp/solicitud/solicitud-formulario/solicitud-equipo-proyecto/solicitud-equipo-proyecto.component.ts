@@ -89,7 +89,8 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
     const data: EquipoProyectoModalData = {
       solicitudProyectoEquipo: wrapper ? wrapper.value : solicitudProyectoEquipo,
       selectedProyectoEquipos: this.dataSource.data.map(element => element.value),
-      isEdit: Boolean(wrapper)
+      isEdit: Boolean(wrapper),
+      readonly: this.formPart.readonly
     };
 
     if (wrapper) {

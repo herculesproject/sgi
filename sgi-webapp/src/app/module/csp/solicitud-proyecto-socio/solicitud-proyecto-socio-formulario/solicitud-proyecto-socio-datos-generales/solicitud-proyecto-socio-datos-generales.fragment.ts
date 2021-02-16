@@ -15,7 +15,8 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
     key: number,
     private solicitudId: number,
     private service: SolicitudProyectoSocioService,
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+    public readonly
   ) {
     super(key);
     this.solicitudProyectoSocio = {} as ISolicitudProyectoSocio;
@@ -52,6 +53,11 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
         ]
       }
     );
+
+    if (this.readonly) {
+      form.disable();
+    }
+
     return form;
   }
 

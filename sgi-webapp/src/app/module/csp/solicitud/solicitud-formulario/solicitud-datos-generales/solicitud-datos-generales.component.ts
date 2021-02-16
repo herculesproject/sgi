@@ -153,7 +153,8 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       entidad: entidadConvocanteModalidad.entidadConvocante.entidad,
       plan: entidadConvocanteModalidad.plan,
       programa: entidadConvocanteModalidad.entidadConvocante.programa,
-      modalidad: entidadConvocanteModalidad.modalidad?.value
+      modalidad: entidadConvocanteModalidad.modalidad?.value,
+      readonly: this.formPart.readonly
     };
 
     const config = {

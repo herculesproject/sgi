@@ -61,14 +61,18 @@
       <th mat-header-cell *matHeaderCellDef> {{'csp.solicitud.socio-colaborador.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <ng-container>
-          <button mat-button matTooltip="{{'botones.editar' | translate}}"
+          <button *ngIf="this.formPart.readonly" mat-button matTooltip="{{'botones.ver' | translate}}"
+            [routerLink]="['../../..', SOLICITUD_PROYECTO_SOCIO_ROUTE, wrapper.value.id]"
+            [state]="createState(wrapper)">
+            <mat-icon color="primary">visibility</mat-icon>
+          </button>
+          <button *ngIf="!this.formPart.readonly" mat-button matTooltip="{{'botones.editar' | translate}}"
             [routerLink]="['../../..', SOLICITUD_PROYECTO_SOCIO_ROUTE, wrapper.value.id]"
             [state]="createState(wrapper)">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
-        </ng-container>
-        <ng-container>
-          <button mat-button matTooltip="{{'botones.borrar' | translate}}" (click)="deleteProyectoSocio(wrapper)">
+          <button *ngIf="!this.formPart.readonly" mat-button matTooltip="{{'botones.borrar' | translate}}"
+            (click)="deleteProyectoSocio(wrapper)">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </ng-container>
@@ -77,7 +81,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <div class="separation-button" *ngIf="formPart.enableAddSocioColaborador">
+  <div class="separation-button" *ngIf="formPart.enableAddSocioColaborador && !this.formPart.readonly">
     <button color="three" mat-button mat-raised-button
       [routerLink]="['../../..', SOLICITUD_PROYECTO_SOCIO_ROUTE, ROUTE_NAMES.NEW]" [state]="createState()">
       <mat-icon color="accent">add_circle</mat-icon>

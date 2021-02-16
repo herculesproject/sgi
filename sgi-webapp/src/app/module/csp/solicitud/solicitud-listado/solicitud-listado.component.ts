@@ -61,6 +61,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   planInvestigaciones$: Observable<IPrograma[]>;
 
   mapCrearProyecto: Map<number, boolean> = new Map();
+  mapModificable: Map<number, boolean> = new Map();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -132,6 +133,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
               }));
               solicitud.solicitante = personas.find((persona) =>
                 solicitud.solicitante.personaRef === persona.personaRef);
+
+              this.suscripciones.push(this.solicitudService.modificable(solicitud.id).subscribe((value) => {
+                this.mapModificable.set(solicitud.id, value);
+              }));
             });
 
             return response;

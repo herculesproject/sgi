@@ -84,6 +84,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
       hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as ISolicitudHito,
       idModeloEjecucion: this.formPart.solicitud.convocatoria.modeloEjecucion.id,
+      readonly: this.formPart.readonly
     };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

@@ -27,6 +27,7 @@ export interface SolicitudProyectoEquipoSocioModalData {
   mesInicioSolicitudProyectoSocio: number;
   mesFinSolicitudProyectoSocio: number;
   isEdit: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -137,6 +138,11 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
         validators: [NumberValidator.isAfterOptional('mesInicio', 'mesFin')]
       }
     );
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
     return formGroup;
   }
 

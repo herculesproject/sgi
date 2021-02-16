@@ -96,7 +96,8 @@ export class SolicitudDocumentosFragment extends Fragment {
     private convocatoriaId: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private solicitudService: SolicitudService,
-    private solicitudDocumentoService: SolicitudDocumentoService
+    private solicitudDocumentoService: SolicitudDocumentoService,
+    public readonly: boolean
   ) {
     super(solicitudId);
     this.setComplete(true);

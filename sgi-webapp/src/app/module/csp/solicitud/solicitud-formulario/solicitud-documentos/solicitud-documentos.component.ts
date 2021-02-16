@@ -121,6 +121,11 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       comentarios: new FormControl('')
     }));
+
+    if (this.formPart.readonly) {
+      this.group?.form?.disable();
+    }
+
     this.group.initialize();
     const convocatoriaId = this.actionService.getDatosGeneralesSolicitud().convocatoria?.id;
     if (convocatoriaId) {

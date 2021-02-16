@@ -32,6 +32,7 @@ export interface SolicitudHitosModalComponentData {
   hitos: ISolicitudHito[];
   hito: ISolicitudHito;
   idModeloEjecucion: number;
+  readonly: boolean;
 }
 @Component({
   templateUrl: './solicitud-hitos-modal.component.html',
@@ -93,6 +94,10 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
       comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
       aviso: new FormControl(this.data?.hito?.generaAviso)
     });
+
+    if (this.data?.readonly) {
+      this.formGroup.disable();
+    }
 
     this.createValidatorDate(this.data?.hito?.tipoHito);
 

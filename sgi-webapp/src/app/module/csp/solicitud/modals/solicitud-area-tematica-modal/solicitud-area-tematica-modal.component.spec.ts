@@ -29,7 +29,8 @@ describe('SolcitudAreaTematicaComponent', () => {
   const newData: AreaTematicaSolicitudData = {
     areaTematicaConvocatoria,
     areaTematicaSolicitud: undefined,
-    rootTree: undefined
+    rootTree: undefined,
+    readonly: false
   };
 
   beforeEach(waitForAsync(() => {

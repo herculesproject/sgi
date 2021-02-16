@@ -54,7 +54,8 @@
   </mat-dialog-content>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()">{{textSaveOrUpdate |
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
+    *ngIf="!this.data.readonly">{{textSaveOrUpdate |
     translate}}</button>
   <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
     translate}}</button>

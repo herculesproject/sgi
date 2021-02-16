@@ -98,7 +98,8 @@
     </div>
   </form>
 
-  <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+  <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+    *ngIf="!formPart.readonly">
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <button color="primary" aria-label="Center Align" md-button mat-raised-button>

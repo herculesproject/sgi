@@ -17,7 +17,8 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
   constructor(
     key: number,
     private solicitudService: SolicitudService,
-    private solicitudProyectoEquipoService: SolicitudProyectoEquipoService
+    private solicitudProyectoEquipoService: SolicitudProyectoEquipoService,
+    public readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
