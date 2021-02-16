@@ -64,7 +64,7 @@ public class SolicitudProyectoEquipoSocioIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-SOL-C")));
 
     HttpEntity<List<SolicitudProyectoEquipoSocio>> request = new HttpEntity<>(entity, headers);
     return request;
@@ -137,12 +137,13 @@ public class SolicitudProyectoEquipoSocioIT {
 
     SolicitudProyectoEquipoSocio solicitudProyectoEquipoSocio = SolicitudProyectoEquipoSocio.builder()
         .id(solicitudProyectoEquipoSocioId)
-        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(entidadesRelacionadasId).build())
+        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(entidadesRelacionadasId)
+            .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(1L)
+                .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
+            .build())
         .rolProyecto(RolProyecto.builder().id(entidadesRelacionadasId).build())
         .personaRef("user-" + solicitudProyectoEquipoSocioId).mesInicio(1).mesFin(2).build();
 
-    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().setSolicitudProyectoDatos(new SolicitudProyectoDatos());
-    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().setSolicitud(new Solicitud());
     solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());
     solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()

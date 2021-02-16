@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,7 @@ public class SolicitudProyectoPeriodoJustificacionIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-SOL-C")));
 
     HttpEntity<SolicitudProyectoPeriodoJustificacion> request = new HttpEntity<>(entity, headers);
     return request;
@@ -48,7 +50,7 @@ public class SolicitudProyectoPeriodoJustificacionIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-SOL-C")));
 
     HttpEntity<List<SolicitudProyectoPeriodoJustificacion>> request = new HttpEntity<>(entity, headers);
     return request;
@@ -183,6 +185,13 @@ public class SolicitudProyectoPeriodoJustificacionIT extends BaseIT {
       Integer mesInicial, Integer mesFinal, Long solicitudProyectoId) {
     SolicitudProyectoSocio solicitudProyectoSocio = new SolicitudProyectoSocio();
     solicitudProyectoSocio.setId(solicitudProyectoId == null ? 1 : solicitudProyectoId);
+    SolicitudProyectoDatos solicitudProyectoDatos = new SolicitudProyectoDatos();
+    solicitudProyectoDatos.setId(1L);
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(1L);
+    solicitud.setActivo(Boolean.TRUE);
+    solicitudProyectoDatos.setSolicitud(solicitud);
+    solicitudProyectoSocio.setSolicitudProyectoDatos(solicitudProyectoDatos);
 
     SolicitudProyectoPeriodoJustificacion solicitudProyectoPeriodoJustificacion = new SolicitudProyectoPeriodoJustificacion();
     solicitudProyectoPeriodoJustificacion.setId(id);
