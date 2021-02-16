@@ -83,7 +83,7 @@ public class EstadoMemoriaIT extends BaseIT {
   @Test
   public void addEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 1L);
+    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 2L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(ESTADO_MEMORIA_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoEstadoMemoria), EstadoMemoria.class);
@@ -120,7 +120,7 @@ public class EstadoMemoriaIT extends BaseIT {
   @Test
   public void replaceEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 1L);
+    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 2L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(
         ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,

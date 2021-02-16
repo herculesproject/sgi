@@ -133,9 +133,13 @@ public class TipoEvaluacionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "4");
+    String sort = "nombre-";
 
-    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(TIPO_EVALUACION_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
+
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
         });
 
     // then: Respuesta OK, TipoEvaluaciones retorna la información de la página
@@ -147,11 +151,11 @@ public class TipoEvaluacionIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("4");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
-    // Contiene de nombre='TipoEvaluacion5' a 'TipoEvaluacion8'
-    Assertions.assertThat(tipoEvaluaciones.get(0).getNombre()).isEqualTo("TipoEvaluacion5");
-    Assertions.assertThat(tipoEvaluaciones.get(1).getNombre()).isEqualTo("TipoEvaluacion6");
-    Assertions.assertThat(tipoEvaluaciones.get(2).getNombre()).isEqualTo("TipoEvaluacion7");
-    Assertions.assertThat(tipoEvaluaciones.get(3).getNombre()).isEqualTo("TipoEvaluacion8");
+    // Contiene de nombre='TipoEvaluacion4' a 'TipoEvaluacion1'
+    Assertions.assertThat(tipoEvaluaciones.get(0).getNombre()).isEqualTo("TipoEvaluacion4");
+    Assertions.assertThat(tipoEvaluaciones.get(1).getNombre()).isEqualTo("TipoEvaluacion3");
+    Assertions.assertThat(tipoEvaluaciones.get(2).getNombre()).isEqualTo("TipoEvaluacion2");
+    Assertions.assertThat(tipoEvaluaciones.get(3).getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
   @Test
