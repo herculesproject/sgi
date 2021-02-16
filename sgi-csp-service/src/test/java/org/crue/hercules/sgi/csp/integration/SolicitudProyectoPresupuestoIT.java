@@ -6,6 +6,7 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.junit.jupiter.api.Test;
@@ -238,7 +239,7 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .entidadRef(null)
         .anualidad(2020)

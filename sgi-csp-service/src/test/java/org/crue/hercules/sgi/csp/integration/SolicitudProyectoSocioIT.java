@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
@@ -272,7 +273,8 @@ public class SolicitudProyectoSocioIT {
       Long solicitudProyectoDatosId, Long rolSocioId) {
 
     SolicitudProyectoSocio solicitudProyectoSocio = SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
+            .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
         .rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1).mesFin(5).numInvestigadores(7)
         .importeSolicitado(new BigDecimal(1000)).empresaRef("002").build();
 

@@ -32,7 +32,7 @@ public class SolicitudDocumentoIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CATEM-C", "CSP-CATEM-E", "CSP-CATEM-B", "CSP-CATEM-V")));
+        tokenBuilder.buildToken("user", "CSP-CATEM-C", "CSP-CATEM-E", "CSP-CATEM-B", "CSP-CATEM-V", "CSP-SOL-C")));
 
     HttpEntity<SolicitudDocumento> request = new HttpEntity<>(entity, headers);
     return request;
@@ -138,9 +138,10 @@ public class SolicitudDocumentoIT extends BaseIT {
       Long tipoDocumentoId) {
 
     SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentarios-" + solicitudDocumentoId)
-        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombre-" + solicitudDocumentoId)
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
+        .solicitud(Solicitud.builder().id(solicitudId).activo(Boolean.TRUE).build())
+        .comentario("comentarios-" + solicitudDocumentoId).documentoRef("documentoRef-" + solicitudDocumentoId)
+        .nombre("nombre-" + solicitudDocumentoId).tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
+        .build();
 
     solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
     solicitudDocumento.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
