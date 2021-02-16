@@ -60,4 +60,35 @@ public interface ProyectoEntidadConvocanteService {
    */
   Page<ProyectoEntidadConvocante> findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable);
 
+  /**
+   * Busca un {@link ProyectoEntidadConvocante} por su {@link Proyecto} y
+   * entidadRef.
+   * 
+   * @param proyectoId Id del {@link Proyecto}
+   * @param entidadRef Id de la Entidad Convocante
+   * @return true si existe la {@link ProyectoEntidadConvocante} y false en caso
+   *         contrario
+   */
+  boolean existsByProyectoIdAndEntidadRef(Long proyectoId, String entidadRef);
+
+  /**
+   * Actualiza la entidad {@link ProyectoEntidadConvocante}.
+   *
+   * @param proyectoEntidadConvocante la entidad {@link ProyectoEntidadConvocante}
+   *                                  a guardar.
+   * @return la entidad {@link ProyectoEntidadConvocante} persistida.
+   */
+  ProyectoEntidadConvocante update(ProyectoEntidadConvocante proyectoEntidadConvocante);
+
+  /**
+   * Devuelve un {@link ProyectoEntidadConvocante} por su {@link Proyecto} y
+   * entidadRef.
+   * 
+   * @param proyectoId Id del {@link Proyecto}
+   * @param entidadRef Id de la Entidad Convocante
+   * @return true si existe la {@link ProyectoEntidadConvocante} y false en caso
+   *         contrario
+   */
+  ProyectoEntidadConvocante findByProyectoIdAndEntidadRef(Long proyectoId, String entidadRef);
+
 }

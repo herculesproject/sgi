@@ -128,12 +128,13 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
       Specification<ProyectoEquipo> specs = Specification.where(specByProyectoId).and(specByRangoFechaSolapados)
           .and(specByRangoFechaSolapados).and(specByPersonaRef).and(specByIdNotEqual);
 
-      Assert.isTrue(
-          (repository.count(specs) == 0) && (proyectoEquipoAnterior == null || (proyectoEquipoAnterior != null
-              && proyectoEquipoAnterior.getPersonaRef().equals(proyectoEquipo.getPersonaRef())
-              && proyectoEquipoAnterior.getFechaFin() != null
-              && proyectoEquipoAnterior.getFechaFin().isBefore(proyectoEquipo.getFechaInicio()))),
-          "El proyecto equipo se solapa con otro existente");
+      if (proyectoEquipoAnterior != null
+          && proyectoEquipoAnterior.getPersonaRef().equals(proyectoEquipo.getPersonaRef())) {
+        Assert.isTrue(
+            (repository.count(specs) == 0) && proyectoEquipoAnterior.getFechaFin() != null
+                && proyectoEquipoAnterior.getFechaFin().isBefore(proyectoEquipo.getFechaInicio()),
+            "El proyecto equipo se solapa con otro existente");
+      }
 
       proyectoEquipoAnterior = proyectoEquipo;
 

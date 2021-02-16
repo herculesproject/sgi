@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,5 +100,14 @@ public interface SolicitudService {
    * @param estadoSolicitud estado de la solicitud
    */
   void isEditable(String estadoSolicitud);
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si se puede crear un
+   * {@link Proyecto} a partir de la {@link Solicitud}
+   * 
+   * @param id Id de la {@link Solicitud}.
+   * @return true si se permite la creación / false si no se permite creación
+   */
+  Boolean isPosibleCrearProyecto(Long id);
 
 }

@@ -49,12 +49,12 @@ public interface ProyectoSocioPeriodoPagoService {
    * {@link SolicitudProyectoSocio} con el listado solicitudPeriodoPagos
    * añadiendo, editando o eliminando los elementos segun proceda.
    *
-   * @param solicitudProyectoSocioId Id de la {@link SolicitudProyectoSocio}.
-   * @param solicitudPeriodoPagos    lista con los nuevos
-   *                                 {@link ProyectoSocioPeriodoPago} a guardar.
+   * @param proyectoSocioId           Id de {@link ProyectoSocio}.
+   * @param proyectoSocioPeriodoPagos lista con los nuevos
+   *                                  {@link ProyectoSocioPeriodoPago} a guardar.
    * @return la entidad {@link ProyectoSocioPeriodoPago} persistida.
    */
-  List<ProyectoSocioPeriodoPago> update(Long solicitudProyectoSocioId,
-      @Valid List<ProyectoSocioPeriodoPago> solicitudPeriodoPagos);
+  List<ProyectoSocioPeriodoPago> update(Long proyectoSocioId,
+      @Valid List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagos);
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -87,4 +88,15 @@ public interface ProyectoService {
    * @return el listado de entidades {@link Proyecto} paginadas y filtradas.
    */
   Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Guarda la entidad {@link Proyecto} a partir de los datos de la entidad
+   * {@link Solicitud}.
+   * 
+   * @param id       identificador de la entidad {@link Solicitud} a copiar datos.
+   * @param proyecto datos necesarios para crear el {@link Proyecto}
+   * @return proyecto la entidad {@link Proyecto} persistida.
+   */
+  Proyecto createProyectoBySolicitud(Long id, Proyecto proyecto);
+
 }

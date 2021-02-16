@@ -19,11 +19,21 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepos
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
@@ -80,6 +90,36 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository;
   @Mock
   private ProyectoEntidadGestoraService proyectoEntidadGestoraService;
+  @Mock
+  private SolicitudRepository solicitudRepository;
+  @Mock
+  private SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
+  @Mock
+  private SolicitudModalidadRepository solicitudModalidadRepository;
+  @Mock
+  private SolicitudProyectoEquipoRepository solicitudEquipoRepository;
+  @Mock
+  private ProyectoEquipoService proyectoEquipoService;
+  @Mock
+  private SolicitudProyectoSocioRepository solicitudSocioRepository;
+  @Mock
+  private ProyectoSocioService proyectoSocioService;
+  @Mock
+  private SolicitudProyectoEquipoSocioRepository solicitudEquipoSocioRepository;
+  @Mock
+  private ProyectoSocioEquipoService proyectoEquipoSocioService;
+  @Mock
+  private SolicitudProyectoPeriodoPagoRepository solicitudPeriodoPagoRepository;
+  @Mock
+  private ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
+  @Mock
+  private SolicitudProyectoPeriodoJustificacionRepository solicitudPeriodoJustificacionRepository;
+  @Mock
+  private ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
+  @Mock
+  private ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
+  @Mock
+  private SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
 
   private ProyectoService service;
 
@@ -89,7 +129,12 @@ public class ProyectoServiceTest extends BaseServiceTest {
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
         convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaEntidadGestoraRepository,
         proyectoEntidadGestoraService, convocatoriaAreaTematicaRepository, contextoProyectoService,
-        convocatoriaPeriodoSeguimientoCientificoRepository, proyectoPeriodoSeguimientoService);
+        convocatoriaPeriodoSeguimientoCientificoRepository, proyectoPeriodoSeguimientoService, solicitudRepository,
+        solicitudProyectoDatosRepository, solicitudModalidadRepository, solicitudEquipoRepository,
+        proyectoEquipoService, solicitudSocioRepository, proyectoSocioService, solicitudEquipoSocioRepository,
+        proyectoEquipoSocioService, solicitudPeriodoPagoRepository, proyectoSocioPeriodoPagoService,
+        solicitudPeriodoJustificacionRepository, proyectoSocioPeriodoJustificacionService,
+        convocatoriaConceptoGastoRepository, solicitudProyectoEntidadFinanciadoraAjenaRepository);
   }
 
   @Test

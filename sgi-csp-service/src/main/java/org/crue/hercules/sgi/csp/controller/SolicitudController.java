@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGa
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
@@ -657,6 +658,23 @@ public class SolicitudController {
         .findAllSolicitudProyectoPresupuestoTotalConceptoGastos(id);
     log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si se puede crear un
+   * {@link Proyecto} a partir de la {@link Solicitud}
+   * 
+   * @param id Id de la {@link Solicitud}.
+   * @return HTTP-200 Si se permite la creación / HTTP-204 Si no se permite
+   *         creación
+   */
+  @RequestMapping(path = "/{id}/crearproyecto", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  ResponseEntity<Solicitud> isPosibleCrearProyecto(@PathVariable Long id) {
+    log.debug("isPosibleCrearProyecto(Long id) - start");
+    Boolean returnValue = service.isPosibleCrearProyecto(id);
+    log.debug("isPosibleCrearProyecto(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

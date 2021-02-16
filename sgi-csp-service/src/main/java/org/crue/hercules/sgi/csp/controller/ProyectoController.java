@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
@@ -678,6 +679,28 @@ public class ProyectoController {
     log.debug("findAllEstadoProyecto(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
+  }
+
+  /**
+   * 
+   * SOLICITUD
+   * 
+   */
+
+  /**
+   * Crea nuevo {@link Proyecto} a partir de los datos de una {@link Solicitud}
+   * 
+   * @param id identificador de la {@link Solicitud}
+   * @return Nuevo {@link Proyecto} creado.
+   */
+  @PostMapping("/{id}/solicitud")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  public ResponseEntity<Proyecto> createProyectoBySolicitud(@PathVariable Long id, @RequestBody Proyecto proyecto) {
+    log.debug("createProyectoBySolicitud(@PathVariable Long id) - start");
+
+    Proyecto returnValue = service.createProyectoBySolicitud(id, proyecto);
+    log.debug("createProyectoBySolicitud(@PathVariable Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
 }

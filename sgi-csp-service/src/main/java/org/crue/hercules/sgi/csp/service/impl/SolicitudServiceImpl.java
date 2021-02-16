@@ -10,13 +10,17 @@ import java.util.stream.Collectors;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
@@ -45,12 +49,17 @@ public class SolicitudServiceImpl implements SolicitudService {
   private final SolicitudRepository repository;
   private final EstadoSolicitudRepository estadoSolicitudRepository;
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
+  private final ProyectoRepository proyectoRepository;
+  private final SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
 
   public SolicitudServiceImpl(SolicitudRepository repository, EstadoSolicitudRepository estadoSolicitudRepository,
-      ConfiguracionSolicitudRepository configuracionSolicitudRepository) {
+      ConfiguracionSolicitudRepository configuracionSolicitudRepository, ProyectoRepository proyectoRepository,
+      SolicitudProyectoDatosRepository solicitudProyectoDatosRepository) {
     this.repository = repository;
     this.estadoSolicitudRepository = estadoSolicitudRepository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
+    this.proyectoRepository = proyectoRepository;
+    this.solicitudProyectoDatosRepository = solicitudProyectoDatosRepository;
   }
 
   /**
@@ -532,6 +541,44 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug(
         "addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud, String comentario) - end");
     return returnValue;
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si se puede crear un
+   * {@link Proyecto} a partir de la {@link Solicitud}
+   * 
+   * @param id Id de la {@link Solicitud}.
+   * @return true si se permite la creación / false si no se permite creación
+   */
+  @Override
+  public Boolean isPosibleCrearProyecto(Long id) {
+    Boolean posibleCrearProyecto = true;
+
+    final Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+    // Si la solicitud no está en estado CONCEDIDA no se puede crear el proyecto a
+    // partir de la misma
+    if (!solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.CONCECIDA)) {
+      posibleCrearProyecto = false;
+    }
+
+    // Si la solicitud ya está asignada a un proyecto no se podrá crear otro
+    // proyecto para la solicitud
+    if (posibleCrearProyecto && proyectoRepository.existsBySolicitudId(solicitud.getId())) {
+      posibleCrearProyecto = false;
+    }
+
+    // Si el formulario de la solicitud no es de tipo ESTANDAR no se podrá crear el
+    // proyecto a partir de ella
+    if (posibleCrearProyecto && !solicitud.getFormularioSolicitud().equals(TipoFormularioSolicitudEnum.ESTANDAR)) {
+      posibleCrearProyecto = false;
+    }
+
+    // Si no hay datos del proyecto en la solicitud, no se podrá crear el proyecto
+    if (posibleCrearProyecto && !solicitudProyectoDatosRepository.existsBySolicitudId(solicitud.getId())) {
+      posibleCrearProyecto = false;
+    }
+
+    return posibleCrearProyecto;
   }
 
 }

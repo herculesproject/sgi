@@ -36,4 +36,12 @@ public interface ContextoProyectoService {
 
   ContextoProyecto findByProyecto(Long id);
 
+  /**
+   * Indica si existe el {@link ContextoProyecto} de un {@link Proyecto}
+   * 
+   * @param id identificador de la {@link Proyecto}
+   * @return si existe la entidad {@link ContextoProyecto}
+   */
+  public Boolean existsByProyecto(Long id);
+
 }

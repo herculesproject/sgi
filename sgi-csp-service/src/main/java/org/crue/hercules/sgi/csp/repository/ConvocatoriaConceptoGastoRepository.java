@@ -49,4 +49,13 @@ public interface ConvocatoriaConceptoGastoRepository
   Page<ConvocatoriaConceptoGasto> findAllByConvocatoriaIdAndConceptoGastoActivoTrueAndPermitidoFalse(
       Long convocatoriaId, Pageable paging);
 
+  /**
+   * Obtiene las {@link ConvocatoriaConceptoGasto} para una {@link Convocatoria}.
+   *
+   * @param convocatoriaId el id de la {@link Convocatoria}.
+   * @return la lista de entidades {@link ConvocatoriaConceptoGasto} de la
+   *         {@link Convocatoria} paginadas.
+   */
+  List<ConvocatoriaConceptoGasto> findAllByConvocatoriaIdAndConceptoGastoActivoTrue(Long convocatoriaId);
+
 }

@@ -1,6 +1,10 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -13,5 +17,14 @@ import org.springframework.stereotype.Repository;
 public interface SolicitudProyectoEntidadFinanciadoraAjenaRepository
     extends JpaRepository<SolicitudProyectoEntidadFinanciadoraAjena, Long>,
     JpaSpecificationExecutor<SolicitudProyectoEntidadFinanciadoraAjena> {
+
+  /**
+   * Obtiene las {@link SolicitudProyectoEntidadFinanciadoraAjena} asociadas a una
+   * {@link Solicitud}
+   * 
+   * @param solicitudProyectoDatosId Identificador de la {@link Solicitud}
+   * @return Listado de solicitudes modalidad
+   */
+  List<SolicitudProyectoEntidadFinanciadoraAjena> findAllBySolicitudProyectoDatosId(Long solicitudProyectoDatosId);
 
 }

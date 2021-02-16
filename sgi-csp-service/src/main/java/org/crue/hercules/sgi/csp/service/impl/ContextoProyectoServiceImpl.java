@@ -111,4 +111,16 @@ public class ContextoProyectoServiceImpl implements ContextoProyectoService {
     }
   }
 
+  /**
+   * Indica si existe el {@link ContextoProyecto} de un {@link Proyecto}
+   * 
+   * @param id identificador de la {@link Proyecto}
+   * @return si existe la entidad {@link ContextoProyecto}
+   */
+  @Override
+  public Boolean existsByProyecto(Long id) {
+    log.debug("existsByProyecto(Long id) - start");
+    return repository.existsByProyectoId(id);
+  }
+
 }

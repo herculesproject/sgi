@@ -18,6 +18,8 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,11 +50,18 @@ public class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
+  @Mock
+  private ProyectoRepository proyectoRepository;
+
+  @Mock
+  private SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
+
   private SolicitudService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudServiceImpl(repository, estadoSolicitudRepository, configuracionSolicitudRepository);
+    service = new SolicitudServiceImpl(repository, estadoSolicitudRepository, configuracionSolicitudRepository,
+        proyectoRepository, solicitudProyectoDatosRepository);
   }
 
   @Test

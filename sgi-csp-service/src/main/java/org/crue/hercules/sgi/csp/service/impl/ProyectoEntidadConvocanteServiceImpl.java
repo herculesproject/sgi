@@ -180,4 +180,91 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
     return returnValue;
   }
 
+  /**
+   * Busca un {@link ProyectoEntidadConvocante} por su {@link Proyecto} y
+   * entidadRef.
+   * 
+   * @param proyectoId Id del {@link Proyecto}
+   * @param entidadRef Id de la Entidad Convocante
+   * @return true si existe la {@link ProyectoEntidadConvocante} y false en caso
+   *         contrario
+   */
+  @Override
+  public boolean existsByProyectoIdAndEntidadRef(Long proyectoId, String entidadRef) {
+    log.debug("existsByProyectoIdAndEntidadRef(Long proyectoId, String entidadRef)");
+    return repository.existsByProyectoIdAndEntidadRef(proyectoId, entidadRef);
+  }
+
+  /**
+   * Devuelve un {@link ProyectoEntidadConvocante} por su {@link Proyecto} y
+   * entidadRef.
+   * 
+   * @param proyectoId Id del {@link Proyecto}
+   * @param entidadRef Id de la Entidad Convocante
+   * @return true si existe la {@link ProyectoEntidadConvocante} y false en caso
+   *         contrario
+   */
+  @Override
+  public ProyectoEntidadConvocante findByProyectoIdAndEntidadRef(Long proyectoId, String entidadRef) {
+    log.debug("findByProyectoIdAndEntidadRef(Long proyectoId, String entidadRef)");
+    return repository.findByProyectoIdAndEntidadRef(proyectoId, entidadRef)
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
+  }
+
+  /**
+   * Actualiza la entidad {@link ProyectoEntidadConvocante}.
+   *
+   * @param proyectoEntidadConvocanteActualizar la entidad
+   *                                            {@link ProyectoEntidadConvocante}
+   *                                            a guardar.
+   * @return la entidad {@link ProyectoEntidadConvocante} persistida.
+   */
+  @Override
+  @Transactional
+  public ProyectoEntidadConvocante update(ProyectoEntidadConvocante proyectoEntidadConvocanteActualizar) {
+    log.debug("update(ProyectoEntidadConvocante proyectoEntidadConvocanteActualizar) - start");
+    Assert.notNull(proyectoEntidadConvocanteActualizar.getProyectoId(), "Proyecto id no puede ser null");
+    Assert.notNull(proyectoEntidadConvocanteActualizar.getEntidadRef(), "EntidadRef no puede ser null");
+    Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocanteActualizar.getProyectoId())
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocanteActualizar.getProyectoId()));
+    ProyectoHelper.checkCanUpdate(proyecto);
+    Assert.isTrue(
+        repository.existsByProyectoIdAndEntidadRef(proyectoEntidadConvocanteActualizar.getProyectoId(),
+            proyectoEntidadConvocanteActualizar.getEntidadRef()),
+        "No existe una asociación activa para ese Proyecto y Entidad");
+
+    return repository.findByProyectoIdAndEntidadRef(proyectoEntidadConvocanteActualizar.getProyectoId(),
+        proyectoEntidadConvocanteActualizar.getEntidadRef()).map((data) -> {
+          // Actualizamos el programa
+          if (proyectoEntidadConvocanteActualizar.getPrograma() != null) {
+            if (proyectoEntidadConvocanteActualizar.getPrograma().getId() == null) {
+              data.setPrograma(null);
+            } else {
+              data.setPrograma(
+                  programaRepository.findById(proyectoEntidadConvocanteActualizar.getPrograma().getId()).orElseThrow(
+                      () -> new ProgramaNotFoundException(proyectoEntidadConvocanteActualizar.getPrograma().getId())));
+              Assert.isTrue(data.getPrograma().getActivo(), "El Programa debe estar Activo");
+            }
+          }
+
+          // Actualizamos el programa convocatoria
+          if (proyectoEntidadConvocanteActualizar.getProgramaConvocatoria() != null) {
+            if (proyectoEntidadConvocanteActualizar.getProgramaConvocatoria().getId() == null) {
+              data.setProgramaConvocatoria(null);
+            } else {
+              data.setProgramaConvocatoria(
+                  programaRepository.findById(proyectoEntidadConvocanteActualizar.getProgramaConvocatoria().getId())
+                      .orElseThrow(() -> new ProgramaNotFoundException(
+                          proyectoEntidadConvocanteActualizar.getProgramaConvocatoria().getId())));
+              Assert.isTrue(data.getProgramaConvocatoria().getActivo(), "El Programa debe estar Activo");
+            }
+          }
+          data.setEntidadRef(proyectoEntidadConvocanteActualizar.getEntidadRef());
+          ProyectoEntidadConvocante returnValue = repository.save(data);
+          log.debug("update(ProyectoEntidadConvocante proyectoEntidadConvocanteActualizar) - end");
+          return returnValue;
+        })
+        .orElseThrow(() -> new ProyectoEntidadConvocanteNotFoundException(proyectoEntidadConvocanteActualizar.getId()));
+  }
+
 }
