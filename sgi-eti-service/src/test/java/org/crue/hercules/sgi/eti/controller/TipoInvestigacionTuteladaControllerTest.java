@@ -207,6 +207,21 @@ public class TipoInvestigacionTuteladaControllerTest extends BaseControllerTest 
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoInvestigacionTutelada empty
+    List<TipoInvestigacionTutelada> tipoInvestigacionTutelada = new ArrayList<>();
+
+    BDDMockito.given(tipoInvestigacionTuteladaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(tipoInvestigacionTutelada));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_INVESTIGACION_TUTELADA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto TipoInvestigacionTutelada
    * 
