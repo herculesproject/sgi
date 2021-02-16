@@ -65,7 +65,6 @@ export class ProyectoActionService extends ActionService {
   private socios: ProyectoSociosFragment;
   private entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
   private paqueteTrabajo: ProyectoPaqueteTrabajoFragment;
-  private paqueteTrabajoValue: boolean;
   private proyectoConvocatoriaValue: IProyecto;
   private plazos: ProyectoPlazosFragment;
   private proyectoContexto: ProyectoContextoFragment;
@@ -78,6 +77,7 @@ export class ProyectoActionService extends ActionService {
 
   proyecto: IProyecto;
   readonly = false;
+  private paqueteTrabajoValue = false;
 
   get modeloEjecucionId(): number {
     return this.getDatosGeneralesProyecto().modeloEjecucion?.id;
@@ -139,6 +139,7 @@ export class ProyectoActionService extends ActionService {
       proyectoService, unidadGestionService, convocatoriaService, this);
 
     this.fichaGeneral.paquetesTrabajo$.subscribe((value) => this.paqueteTrabajoValue = Boolean(value));
+    this.paqueteTrabajoValue = Boolean(this.proyecto?.paquetesTrabajo);
     this.fichaGeneral.proyectoConvocatoria$.subscribe((value) => this.proyectoConvocatoriaValue = value);
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -199,7 +200,6 @@ export class ProyectoActionService extends ActionService {
       this.documentos = new ProyectoDocumentosFragment(this.logger, this.proyecto?.id, proyectoService, proyectoDocumentoService, translate);
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     }
-
   }
 
   /**
