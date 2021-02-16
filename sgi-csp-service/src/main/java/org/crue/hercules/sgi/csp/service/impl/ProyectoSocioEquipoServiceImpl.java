@@ -74,11 +74,24 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
       return new ArrayList<>();
     }
 
-    proyectoSocioEquipos.sort(Comparator.comparing(ProyectoSocioEquipo::getFechaInicio)
+    // Ordena los periodos por getFechaInicio
+    List<ProyectoSocioEquipo> proyectoSocioEquipoFechaInicioNull = proyectoSocioEquipos.stream()
+        .filter(periodo -> periodo.getFechaInicio() == null).collect(Collectors.toList());
+
+    List<ProyectoSocioEquipo> proyectoSocioEquipoConFechaInicio = proyectoSocioEquipos.stream()
+        .filter(periodo -> periodo.getFechaInicio() != null).collect(Collectors.toList());
+
+    proyectoSocioEquipoFechaInicioNull.sort(Comparator.comparing(ProyectoSocioEquipo::getPersonaRef));
+
+    proyectoSocioEquipoConFechaInicio.sort(Comparator.comparing(ProyectoSocioEquipo::getFechaInicio)
         .thenComparing(Comparator.comparing(ProyectoSocioEquipo::getPersonaRef)));
 
+    List<ProyectoSocioEquipo> proyectoSocioEquipoAll = new ArrayList<>();
+    proyectoSocioEquipoAll.addAll(proyectoSocioEquipoFechaInicioNull);
+    proyectoSocioEquipoAll.addAll(proyectoSocioEquipoConFechaInicio);
+
     ProyectoSocioEquipo proyectoSocioEquipoAnterior = null;
-    for (ProyectoSocioEquipo proyectoSocioEquipo : proyectoSocioEquipos) {
+    for (ProyectoSocioEquipo proyectoSocioEquipo : proyectoSocioEquipoAll) {
 
       // Si tiene id se valida que exista y que tenga la solicitud proyecto equipo de
       // la que se
@@ -119,7 +132,7 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
 
     }
 
-    List<ProyectoSocioEquipo> returnValue = repository.saveAll(proyectoSocioEquipos);
+    List<ProyectoSocioEquipo> returnValue = repository.saveAll(proyectoSocioEquipoAll);
     log.debug("update(Long proyectoSocioId,  List<ProyectoSocioEquipo> proyectoSocioEquipos) - end");
 
     return returnValue;

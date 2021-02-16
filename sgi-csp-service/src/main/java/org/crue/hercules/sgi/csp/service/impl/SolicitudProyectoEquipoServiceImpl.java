@@ -227,19 +227,15 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
           Specification<SolicitudProyectoEquipo> specByPersonaRef = SolicitudProyectoEquipoSpecifications
               .byPersonaRef(solicitudProyectoEquipo.getPersonaRef());
 
-          Specification<SolicitudProyectoEquipo> specByMesInicio = SolicitudProyectoEquipoSpecifications
-              .inRangoMesInicio(solicitudProyectoEquipo.getMesInicio());
-
-          Specification<SolicitudProyectoEquipo> specByMesFin = SolicitudProyectoEquipoSpecifications
-              .inRangoMesInicio(solicitudProyectoEquipo.getMesFin());
+          Specification<SolicitudProyectoEquipo> specBySolapamientoMeses = SolicitudProyectoEquipoSpecifications
+              .byRangoMesesSolapados(solicitudProyectoEquipo.getMesInicio(), solicitudProyectoEquipo.getMesFin());
 
           Specification<SolicitudProyectoEquipo> specs = Specification.where(specBySolicitud).and(specByPersonaRef)
-              .and(specByMesInicio).and(specByMesFin);
+              .and(specBySolapamientoMeses);
 
           if (solicitudProyectoEquipo.getId() != null) {
             Specification<SolicitudProyectoEquipo> specsIdNotEqual = SolicitudProyectoEquipoSpecifications
                 .byIdNotEqual(solicitudProyectoEquipo.getId());
-
             specs = specs.and(specsIdNotEqual);
           }
 

@@ -246,6 +246,8 @@ public class SolicitudProyectoEquipoSocioServiceTest {
     SolicitudProyectoEquipoSocio updatedSolicitudProyectoEquipoSocio = generarSolicitudProyectoEquipoSocio(4L, 1L);
 
     List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocioActualizar = new ArrayList<>();
+    newSolicitudProyectoEquipoSocio.setMesInicio(1);
+    newSolicitudProyectoEquipoSocio.setMesFin(2);
     solicitudProyectoEquipoSocioActualizar.add(newSolicitudProyectoEquipoSocio);
     solicitudProyectoEquipoSocioActualizar.add(updatedSolicitudProyectoEquipoSocio);
 

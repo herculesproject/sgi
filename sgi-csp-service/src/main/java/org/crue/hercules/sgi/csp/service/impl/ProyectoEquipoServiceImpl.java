@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,12 +69,25 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
     }
 
     // Ordena los periodos por mesInicial
-    proyectoEquipos.sort(Comparator.comparing(ProyectoEquipo::getFechaInicio));
+    List<ProyectoEquipo> proyectoEquipoFechaInicioNull = proyectoEquipos.stream()
+        .filter(periodo -> periodo.getFechaInicio() == null).collect(Collectors.toList());
+
+    List<ProyectoEquipo> proyectoEquipoConFechaInicio = proyectoEquipos.stream()
+        .filter(periodo -> periodo.getFechaInicio() != null).collect(Collectors.toList());
+
+    proyectoEquipoFechaInicioNull.sort(Comparator.comparing(ProyectoEquipo::getPersonaRef));
+
+    proyectoEquipoConFechaInicio.sort(Comparator.comparing(ProyectoEquipo::getFechaInicio)
+        .thenComparing(Comparator.comparing(ProyectoEquipo::getPersonaRef)));
+
+    List<ProyectoEquipo> proyectoEquipoAll = new ArrayList<>();
+    proyectoEquipoAll.addAll(proyectoEquipoFechaInicioNull);
+    proyectoEquipoAll.addAll(proyectoEquipoConFechaInicio);
 
     // Validaciones
 
     ProyectoEquipo proyectoEquipoAnterior = null;
-    for (ProyectoEquipo proyectoEquipo : proyectoEquipos) {
+    for (ProyectoEquipo proyectoEquipo : proyectoEquipoAll) {
 
       // actualizando
       if (proyectoEquipo.getId() != null) {
@@ -125,7 +139,7 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
     }
 
-    List<ProyectoEquipo> returnValue = repository.saveAll(proyectoEquipos);
+    List<ProyectoEquipo> returnValue = repository.saveAll(proyectoEquipoAll);
     log.debug("updateProyectoEquiposConvocatoria(Long proyectoId, List<ProyectoEquipo> proyectoEquipos) - end");
 
     return returnValue;

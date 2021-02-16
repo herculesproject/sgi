@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoSocioNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,11 +75,11 @@ public class SolicitudProyectoEquipoSocioServiceImpl implements SolicitudProyect
     solicitudService.isEditable(
         solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue());
 
-    List<SolicitudProyectoEquipoSocio> solicitudProyectoSocioBD = repository
+    List<SolicitudProyectoEquipoSocio> existentes = repository
         .findAllBySolicitudProyectoSocioId(solicitudProyectoSocioId);
 
     // Periodos eliminados
-    List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoEliminar = solicitudProyectoSocioBD.stream()
+    List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoEliminar = existentes.stream()
         .filter(periodo -> !solicitudProyectoEquipoSocios.stream().map(SolicitudProyectoEquipoSocio::getId)
             .anyMatch(id -> id == periodo.getId()))
         .collect(Collectors.toList());
@@ -109,17 +111,17 @@ public class SolicitudProyectoEquipoSocioServiceImpl implements SolicitudProyect
     for (SolicitudProyectoEquipoSocio solicitudProyectoEquipoSocio : solicitudProyectoEquipoAll) {
 
       // Si tiene id se valida que exista y que tenga la solicitud proyecto equipo de
-      // la que se
-      // estan actualizando los periodos
+      // la que se estan actualizando los periodos
       if (solicitudProyectoEquipoSocio.getId() != null) {
-        SolicitudProyectoEquipoSocio periodoJustificacionBD = solicitudProyectoSocioBD.stream()
+        SolicitudProyectoEquipoSocio existente = existentes.stream()
             .filter(equipoSocio -> equipoSocio.getId() == solicitudProyectoEquipoSocio.getId()).findFirst()
             .orElseThrow(() -> new SolicitudProyectoEquipoSocioNotFoundException(solicitudProyectoEquipoSocio.getId()));
 
-        Assert.isTrue(
-            periodoJustificacionBD.getSolicitudProyectoSocio().getId() == solicitudProyectoEquipoSocio
-                .getSolicitudProyectoSocio().getId(),
-            "No se puede modificar la solicitud proyecto socio del SolicitudProyectoEquipoSocio");
+        Assert
+            .isTrue(
+                existente.getSolicitudProyectoSocio().getId() == solicitudProyectoEquipoSocio
+                    .getSolicitudProyectoSocio().getId(),
+                "No se puede modificar la solicitud proyecto socio del SolicitudProyectoEquipoSocio");
       }
 
       // Setea la solicitud proyecto socio recuperada del solicitudProyectoSocioId
@@ -141,7 +143,6 @@ public class SolicitudProyectoEquipoSocioServiceImpl implements SolicitudProyect
           "El periodo se solapa con otro existente");
 
       solicitudProyectoEquipoSocioAnterior = solicitudProyectoEquipoSocio;
-
     }
 
     List<SolicitudProyectoEquipoSocio> returnValue = repository.saveAll(solicitudProyectoEquipoSocios);

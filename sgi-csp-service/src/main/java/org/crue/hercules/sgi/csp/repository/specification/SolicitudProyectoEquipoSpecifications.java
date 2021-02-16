@@ -47,11 +47,29 @@ public class SolicitudProyectoEquipoSpecifications {
    */
   public static Specification<SolicitudProyectoEquipo> inRangoMesInicio(Integer mesInicio) {
     return (root, query, cb) -> {
-
       return cb.or(
           cb.and(cb.lessThanOrEqualTo(root.get(SolicitudProyectoEquipo_.mesInicio), mesInicio),
               cb.greaterThanOrEqualTo(root.get(SolicitudProyectoEquipo_.mesFin), mesInicio)),
           cb.isNull(root.get(SolicitudProyectoEquipo_.mesInicio)));
+    };
+  }
+
+  /**
+   * {@link SolicitudProyectoEquipo} comprueba solpamientos de fechas
+   * 
+   * @param mesInicio fecha inicio de {@link SolicitudProyectoEquipo}
+   * @param mesFin    fecha fin de la {@link SolicitudProyectoEquipo}.
+   * @return specification para obtener los {@link SolicitudProyectoEquipo} con
+   *         rango de meses solapadas
+   */
+  public static Specification<SolicitudProyectoEquipo> byRangoMesesSolapados(Integer mesInicio, Integer mesFin) {
+    return (root, query, cb) -> {
+      return cb.and(
+          cb.or(cb.isNull(root.get(SolicitudProyectoEquipo_.mesInicio)),
+              cb.lessThanOrEqualTo(root.get(SolicitudProyectoEquipo_.mesInicio),
+                  mesFin != null ? mesFin : Integer.MAX_VALUE)),
+          cb.or(cb.isNull(root.get(SolicitudProyectoEquipo_.mesFin)), cb.greaterThanOrEqualTo(
+              root.get(SolicitudProyectoEquipo_.mesFin), mesInicio != null ? mesInicio : Integer.MIN_VALUE)));
     };
   }
 
