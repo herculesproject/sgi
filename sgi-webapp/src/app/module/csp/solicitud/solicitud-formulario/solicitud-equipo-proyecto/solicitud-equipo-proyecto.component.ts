@@ -67,7 +67,7 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  openModal(wrapper?: StatusWrapper<ISolicitudProyectoEquipo>): void {
+  openModal(wrapper?: StatusWrapper<ISolicitudProyectoEquipo>, position?: number): void {
     const persona: IPersona = {
       identificadorLetra: '',
       identificadorNumero: '',
@@ -93,11 +93,9 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
     };
 
     if (wrapper) {
-      data.selectedProyectoEquipos = this.dataSource.data.filter(element =>
-        element.value.persona.personaRef !== data.solicitudProyectoEquipo.persona.personaRef &&
-        element.value.mesInicio !== data.solicitudProyectoEquipo.mesInicio &&
-        element.value.mesFin !== data.solicitudProyectoEquipo.mesFin
-      ).map(element => element.value);
+      const filtered = Object.assign([], data.selectedProyectoEquipos);
+      filtered.splice(position, 1);
+      data.selectedProyectoEquipos = filtered;
     }
 
     const config = {

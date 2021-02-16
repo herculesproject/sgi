@@ -1,4 +1,4 @@
-import { ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export interface IRange {
   inicio: number | Date;

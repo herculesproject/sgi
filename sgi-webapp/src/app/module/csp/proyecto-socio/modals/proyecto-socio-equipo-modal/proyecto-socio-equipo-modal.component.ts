@@ -10,8 +10,10 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { DateUtils } from '@core/utils/date-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
+import { IRange } from '@core/validators/range-validator';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -128,79 +130,62 @@ export class ProyectoSocioEquipoModalComponent extends
         ]),
       },
       {
-        validators: [NumberValidator.isAfter('fechaInicio', 'fechaFin')]
+        validators: [NumberValidator.isAfterOptional('fechaInicio', 'fechaFin')]
       }
     );
     return formGroup;
   }
 
   private checkRangesDates(): void {
-    const persona = this.formGroup.get('persona');
+    const personaForm = this.formGroup.get('persona');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
-    // Limpiamos errores
-    persona.setErrors(null);
-    if (fechaFinForm.errors) {
-      delete fechaFinForm.errors.range;
-      if (Object.keys(fechaFinForm.errors).length === 0) {
-        fechaFinForm.setErrors(null);
+    const fechaInicio = fechaInicioForm.value ? DateUtils.fechaToDate(fechaInicioForm.value).getTime() : Number.MIN_VALUE;
+    const fechaFin = fechaFinForm.value ? DateUtils.fechaToDate(fechaFinForm.value).getTime() : Number.MAX_VALUE;
+    const ranges = this.data.selectedProyectoSocioEquipos
+      .filter(element => element.persona.personaRef === personaForm.value?.personaRef)
+      .map(value => {
+        const range: IRange = {
+          inicio: value.fechaInicio ? DateUtils.fechaToDate(value.fechaInicio).getTime() : Number.MIN_VALUE,
+          fin: value.fechaFin ? DateUtils.fechaToDate(value.fechaFin).getTime() : Number.MAX_VALUE,
+        };
+        return range;
+      });
+
+    if (ranges.some(range => (fechaInicio <= range.fin && range.inicio <= fechaFin))) {
+      if (fechaInicioForm.value) {
+        this.addError(fechaInicioForm, 'range');
       }
+      if (fechaFinForm.value) {
+        this.addError(fechaFinForm, 'range');
+      }
+      if (!fechaInicioForm.value && !fechaFinForm.value) {
+        this.addError(personaForm, 'contains');
+      } else if (personaForm.errors) {
+        this.deleteError(personaForm, 'contains');
+      }
+    } else {
+      this.deleteError(fechaInicioForm, 'range');
+      this.deleteError(fechaFinForm, 'range');
+      this.deleteError(personaForm, 'contains');
     }
-    if (fechaInicioForm.errors) {
-      delete fechaInicioForm.errors.range;
-      if (Object.keys(fechaInicioForm.errors).length === 0) {
-        fechaInicioForm.setErrors(null);
-      }
-    }
+  }
 
-    const selected = this.data.selectedProyectoSocioEquipos.filter(
-      element => element.persona.personaRef === persona.value.personaRef);
-    if (selected.length > 0) {
-      const fechaInicio: Date = fechaInicioForm.value;
-      const fechaFin: Date = fechaFinForm.value;
-
-      // Comprueba si no se indicaron fechas no haya otros registros con ellas
-      const value = selected.find(element => !element.fechaInicio && !element.fechaFin);
-      if (!fechaInicio && !fechaFin || value) {
-        persona.setErrors({ contains: true });
-        persona.markAsTouched({ onlySelf: true });
-      }
-
-      // Comprueba solapamiento de fechaFin
-      for (const element of selected) {
-        if (fechaFin && fechaFin >= element.fechaInicio && fechaFin <= element.fechaFin) {
-          this.addErrorRange(fechaFinForm);
-          break;
-        }
-      }
-
-      // Comprueba solapamiento de fechaInicio
-      for (const element of selected) {
-        if (fechaInicio && fechaInicio >= element.fechaInicio && fechaInicio <= element.fechaFin) {
-          this.addErrorRange(fechaInicioForm);
-          break;
-        }
-      }
-
-      // Comprueba que el rango introducido pueda contener alguno de los existentes
-      for (const element of selected) {
-        if (fechaInicio && fechaFinForm &&
-          fechaInicio <= element.fechaInicio && fechaFin >= element.fechaFin) {
-          this.addErrorRange(fechaFinForm);
-          this.addErrorRange(fechaInicioForm);
-          break;
-        }
+  private deleteError(formControl: AbstractControl, errorName: string): void {
+    if (formControl.errors) {
+      delete formControl.errors[errorName];
+      if (Object.keys(formControl.errors).length === 0) {
+        formControl.setErrors(null);
       }
     }
   }
 
-  private addErrorRange(formControl: AbstractControl): void {
-    if (formControl.errors) {
-      formControl.errors.range = true;
-    } else {
-      formControl.setErrors({ range: true });
+  private addError(formControl: AbstractControl, errorName: string): void {
+    if (!formControl.errors) {
+      formControl.setErrors({});
     }
+    formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
   }
 }

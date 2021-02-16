@@ -77,9 +77,10 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
 
   /**
    * Apertura de modal de equipos (edición/creación)
+   * 
    * @param idEquipo Identificador de equipo a editar.
    */
-  openModal(wrapper?: StatusWrapper<IProyectoEquipo>): void {
+  openModal(wrapper?: StatusWrapper<IProyectoEquipo>, position?: number): void {
     const proyectoEquipo: IProyectoEquipo = {
       id: undefined,
       fechaFin: undefined,
@@ -98,11 +99,9 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
     };
 
     if (wrapper) {
-      data.equipos = this.dataSource.data.filter(element =>
-        element.value.persona.personaRef !== data.equipo.persona.personaRef &&
-        element.value.fechaFin !== data.equipo.fechaFin &&
-        element.value.fechaInicio !== data.equipo.fechaInicio
-      ).map(element => element.value);
+      const filtered = Object.assign([], data.equipos);
+      filtered.splice(position, 1);
+      data.equipos = filtered;
     }
 
     const config = {

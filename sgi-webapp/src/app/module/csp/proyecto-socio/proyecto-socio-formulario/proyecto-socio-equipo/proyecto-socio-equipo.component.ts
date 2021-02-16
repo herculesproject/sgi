@@ -54,7 +54,7 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  openModal(wrapper?: StatusWrapper<IProyectoSocioEquipo>): void {
+  openModal(wrapper?: StatusWrapper<IProyectoSocioEquipo>, position?: number): void {
     const proyectoSocioEquipo: IProyectoSocioEquipo = {
       id: undefined,
       fechaFin: undefined,
@@ -74,11 +74,9 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
     };
 
     if (wrapper) {
-      data.selectedProyectoSocioEquipos = this.dataSource.data.filter(element =>
-        element.value.persona.personaRef !== data.proyectoSocioEquipo.persona.personaRef &&
-        element.value.fechaFin !== data.proyectoSocioEquipo.fechaFin &&
-        element.value.fechaInicio !== data.proyectoSocioEquipo.fechaInicio
-      ).map(element => element.value);
+      const filtered = Object.assign([], data.selectedProyectoSocioEquipos);
+      filtered.splice(position, 1);
+      data.selectedProyectoSocioEquipos = filtered;
     }
 
     const config = {

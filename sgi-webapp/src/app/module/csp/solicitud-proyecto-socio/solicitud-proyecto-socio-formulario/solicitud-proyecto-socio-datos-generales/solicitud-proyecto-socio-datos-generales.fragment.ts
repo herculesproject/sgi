@@ -47,7 +47,9 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
         ]),
       },
       {
-        validators: [NumberValidator.isAfter('mesInicio', 'mesFin')]
+        validators: [
+          NumberValidator.isAfterOptional('mesInicio', 'mesFin')
+        ]
       }
     );
     return form;

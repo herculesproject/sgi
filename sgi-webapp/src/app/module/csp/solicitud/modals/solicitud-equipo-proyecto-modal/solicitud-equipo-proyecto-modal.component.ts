@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -14,10 +14,9 @@ import { NumberValidator } from '@core/validators/number-validator';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
+import { IRange } from '@core/validators/range-validator';
 
 const MSG_ERROR_INIT = marker('csp.solicitud.equipo.proyecto.rol.error.cargar');
-const TEXT_USER_TITLE = marker('eti.buscarSolicitante.titulo');
-const TEXT_USER_BUTTON = marker('eti.buscarSolicitante.boton.buscar');
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
 
@@ -68,9 +67,9 @@ export class SolicitudEquipoProyectoModalComponent extends
         this.formGroup.get('persona').valueChanges,
         this.formGroup.get('mesInicio').valueChanges,
         this.formGroup.get('mesFin').valueChanges
-      ).pipe(
-        tap(() => this.checkRangesMeses())
-      ).subscribe()
+      ).subscribe(() => {
+        this.checkRangesMeses();
+      })
     );
   }
 
@@ -118,7 +117,9 @@ export class SolicitudEquipoProyectoModalComponent extends
         mesFin: new FormControl(this.data.solicitudProyectoEquipo.mesFin, [Validators.min(1), Validators.max(9999)]),
       },
       {
-        validators: [NumberValidator.isAfter('mesInicio', 'mesFin')]
+        validators: [
+          NumberValidator.isAfterOptional('mesInicio', 'mesFin'),
+        ]
       }
     );
     return formGroup;
@@ -133,50 +134,55 @@ export class SolicitudEquipoProyectoModalComponent extends
   }
 
   private checkRangesMeses(): void {
-    const persona = this.formGroup.get('persona');
+    const personaForm = this.formGroup.get('persona');
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
 
-    const proyectoEquipos = this.data.selectedProyectoEquipos.filter(
-      element => element.persona.personaRef === persona.value.personaRef);
-    if (proyectoEquipos.length > 0) {
-      const mesInicio = mesInicioForm.value;
-      const mesFin = mesFinForm.value;
+    const mesInicio = mesInicioForm.value ? mesInicioForm.value : Number.MIN_VALUE;
+    const mesFin = mesFinForm.value ? mesFinForm.value : Number.MAX_VALUE;
+    const ranges = this.data.selectedProyectoEquipos
+      .filter(element => element.persona.personaRef === personaForm.value?.personaRef)
+      .map(solicitudProyectoSocio => {
+        const range: IRange = {
+          inicio: solicitudProyectoSocio.mesInicio ? solicitudProyectoSocio.mesInicio : Number.MIN_VALUE,
+          fin: solicitudProyectoSocio.mesFin ? solicitudProyectoSocio.mesFin : Number.MAX_VALUE
+        };
+        return range;
+      });
 
-      // Comprueba si no se indicaron fechas no haya otros registros con ellas
-      if (!mesInicio && !mesFin ||
-        proyectoEquipos.find(proyectoEquipo => !proyectoEquipo.mesInicio && !proyectoEquipo.mesFin)) {
-        persona.setErrors({ contains: true });
-        persona.markAsTouched({ onlySelf: true });
-      } else {
-        persona.setErrors(null);
+    if (ranges.some(range => (mesInicio <= range.fin && range.inicio <= mesFin))) {
+      if (mesInicioForm.value) {
+        this.addError(mesInicioForm, 'range');
       }
-
-      // Comprueba solapamiento de mesFin
-      if (mesFin) {
-        for (const proyectoEquipo of proyectoEquipos) {
-          if (mesFin >= proyectoEquipo.mesInicio && mesFin <= proyectoEquipo.mesFin) {
-            mesFinForm.setErrors({ range: true });
-            mesFinForm.markAsTouched({ onlySelf: true });
-            break;
-          }
-        }
+      if (mesFinForm.value) {
+        this.addError(mesFinForm, 'range');
       }
-
-      // Comprueba solapamiento de mesInicio
-      if (mesInicio) {
-        for (const proyectoEquipo of proyectoEquipos) {
-          if (mesInicio >= proyectoEquipo.mesInicio && mesInicio <= proyectoEquipo.mesFin) {
-            mesInicioForm.setErrors({ range: true });
-            mesInicioForm.markAsTouched({ onlySelf: true });
-            break;
-          }
-        }
+      if (!mesInicioForm.value && !mesFinForm.value) {
+        this.addError(personaForm, 'contains');
+      } else if (personaForm.errors) {
+        this.deleteError(personaForm, 'contains');
       }
     } else {
-      persona.setErrors(null);
-      mesFinForm.setErrors(null);
-      mesInicioForm.setErrors(null);
+      this.deleteError(mesInicioForm, 'range');
+      this.deleteError(mesFinForm, 'range');
+      this.deleteError(personaForm, 'contains');
     }
+  }
+
+  private deleteError(formControl: AbstractControl, errorName: string): void {
+    if (formControl.errors) {
+      delete formControl.errors[errorName];
+      if (Object.keys(formControl.errors).length === 0) {
+        formControl.setErrors(null);
+      }
+    }
+  }
+
+  private addError(formControl: AbstractControl, errorName: string): void {
+    if (!formControl.errors) {
+      formControl.setErrors({});
+    }
+    formControl.errors[errorName] = true;
+    formControl.markAsTouched({ onlySelf: true });
   }
 }

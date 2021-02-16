@@ -12,6 +12,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
+import { IRange } from '@core/validators/range-validator';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -133,84 +134,62 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
         ]),
       },
       {
-        validators: [NumberValidator.isAfter('mesInicio', 'mesFin')]
+        validators: [NumberValidator.isAfterOptional('mesInicio', 'mesFin')]
       }
     );
     return formGroup;
   }
 
   private checkRangesMeses(): void {
-    const persona = this.formGroup.get('persona');
+    const personaForm = this.formGroup.get('persona');
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
 
-    // Limpiamos errores
-    persona.setErrors(null);
-    if (mesFinForm.errors) {
-      delete mesFinForm.errors.range;
-      if (Object.keys(mesFinForm.errors).length === 0) {
-        mesFinForm.setErrors(null);
+    const mesInicio = mesInicioForm.value ? mesInicioForm.value : Number.MIN_VALUE;
+    const mesFin = mesFinForm.value ? mesFinForm.value : Number.MAX_VALUE;
+
+    const ranges = this.data.selectedProyectoEquipoSocios.filter(
+      element => element.persona.personaRef === personaForm.value?.personaRef)
+      .map(solicitudProyectoSocio => {
+        const range: IRange = {
+          inicio: solicitudProyectoSocio.mesInicio ? solicitudProyectoSocio.mesInicio : Number.MIN_VALUE,
+          fin: solicitudProyectoSocio.mesFin ? solicitudProyectoSocio.mesFin : Number.MAX_VALUE
+        };
+        return range;
+      });
+    if (ranges.some(range => (mesInicio <= range.fin && range.inicio <= mesFin))) {
+      if (mesInicioForm.value) {
+        this.addError(mesInicioForm, 'range');
       }
+      if (mesFinForm.value) {
+        this.addError(mesFinForm, 'range');
+      }
+      if (!mesInicioForm.value && !mesFinForm.value) {
+        this.addError(personaForm, 'contains');
+      } else if (personaForm.errors) {
+        this.deleteError(personaForm, 'contains');
+      }
+    } else {
+      this.deleteError(mesInicioForm, 'range');
+      this.deleteError(mesFinForm, 'range');
+      this.deleteError(personaForm, 'contains');
     }
-    if (mesInicioForm.errors) {
-      delete mesInicioForm.errors.range;
-      if (Object.keys(mesInicioForm.errors).length === 0) {
-        mesInicioForm.setErrors(null);
-      }
-    }
+  }
 
-    const selected = this.data.selectedProyectoEquipoSocios.filter(
-      element => element.persona.personaRef === persona.value?.personaRef);
-    if (selected.length > 0) {
-      // Comprueba si no se indicaron fechas no haya otros registros con ellas
-      const mesInicio = mesInicioForm.value;
-      const mesFin = mesFinForm.value;
-      const value = selected.find(element => !element.mesInicio && !element.mesFin);
-      if (!mesInicio && !mesFin || value) {
-        persona.setErrors({ contains: true });
-        persona.markAsTouched({ onlySelf: true });
-      } else {
-        persona.setErrors(null);
-      }
-
-      if (mesFin === 0 || mesInicio === 0) {
-        persona.setErrors(null);
-      }
-
-      // Comprueba solapamiento de mesFin
-      for (const proyectoEquipo of selected) {
-        if (mesFin && mesFin >= proyectoEquipo.mesInicio && mesFin <= proyectoEquipo.mesFin) {
-          this.addErrorRange(mesFinForm);
-          break;
-        }
-      }
-
-      // Comprueba solapamiento de mesInicio
-      for (const proyectoEquipo of selected) {
-        if (mesInicio && mesInicio >= proyectoEquipo.mesInicio && mesInicio <= proyectoEquipo.mesFin) {
-          this.addErrorRange(mesInicioForm);
-          break;
-        }
-      }
-
-      // Comprueba que el rango introducido pueda contener alguno de los existentes
-      for (const proyectoEquipo of selected) {
-        if (mesInicio && mesFin &&
-          mesInicio <= proyectoEquipo.mesInicio && mesFin >= proyectoEquipo.mesFin) {
-          this.addErrorRange(mesFinForm);
-          this.addErrorRange(mesInicioForm);
-          break;
-        }
+  private deleteError(formControl: AbstractControl, errorName: string): void {
+    if (formControl.errors) {
+      delete formControl.errors[errorName];
+      if (Object.keys(formControl.errors).length === 0) {
+        formControl.setErrors(null);
       }
     }
   }
 
-  private addErrorRange(formControl: AbstractControl) {
-    if (formControl.errors) {
-      formControl.errors.range = true;
-    } else {
-      formControl.setErrors({ range: true });
+  private addError(formControl: AbstractControl, errorName: string): void {
+    if (!formControl.errors) {
+      formControl.setErrors({});
     }
+    formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
   }
 }

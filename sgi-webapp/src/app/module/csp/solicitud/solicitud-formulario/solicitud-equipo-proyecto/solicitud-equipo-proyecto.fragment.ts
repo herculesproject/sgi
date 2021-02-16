@@ -39,7 +39,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     }
   }
 
-  public deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipo>) {
+  public deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipo>): void {
     const current = this.proyectoEquipos$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -54,7 +54,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     }
   }
 
-  addProyectoEquipo(equipoProyectoData: ISolicitudProyectoEquipo) {
+  addProyectoEquipo(equipoProyectoData: ISolicitudProyectoEquipo): void {
     const wrapped = new StatusWrapper<ISolicitudProyectoEquipo>(equipoProyectoData);
     wrapped.setCreated();
     const current = this.proyectoEquipos$.value;
@@ -125,10 +125,9 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
         if (index >= 0) {
           const solicitante = createdEquipos[index].value;
           solicitante.solicitudProyectoDatos = solicitudProyectoDatos;
+          createdEquipos.splice(index, 1);
           return this.solicitudProyectoEquipoService.create(solicitante).pipe(
-            switchMap(() => this.createEquipos(solicitudProyectoDatos, createdEquipos.filter(
-              (wrapper) => wrapper.value.persona.personaRef !== this.solicitantePersonaRef))
-            )
+            switchMap(() => this.createEquipos(solicitudProyectoDatos, createdEquipos))
           );
         }
         return this.createEquipos(solicitudProyectoDatos, createdEquipos);

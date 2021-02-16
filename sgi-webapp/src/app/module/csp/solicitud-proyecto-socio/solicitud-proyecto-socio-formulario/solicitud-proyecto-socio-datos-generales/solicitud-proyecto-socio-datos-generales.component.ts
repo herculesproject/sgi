@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IRolSocio } from '@core/models/csp/rol-socio';
@@ -7,6 +8,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolSocioService } from '@core/services/csp/rol-socio.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { IRange } from '@core/validators/range-validator';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -98,51 +100,55 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
   }
 
   private checkRangesMeses(): void {
-    const empresa = this.formGroup.get('empresa');
+    const empresaForm = this.formGroup.get('empresa');
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
 
-    const proyectoSocios = this.actionService.getSelectedSolicitudProyectoSocios().filter(
-      element => element.empresa.personaRef === empresa.value.personaRef
-        && element.id !== this.formPart.solicitudProyectoSocio.id);
-    if (proyectoSocios.length > 0) {
-      const mesInicio = mesInicioForm.value;
-      const mesFin = mesFinForm.value;
-
-      // Comprueba si no se indicaron fechas no haya otros registros con ellas
-      if (!mesInicio && !mesFin ||
-        proyectoSocios.find(proyectoSocio => !proyectoSocio.mesInicio && !proyectoSocio.mesFin)) {
-        empresa.setErrors({ contains: true });
-        empresa.markAsTouched({ onlySelf: true });
-      } else {
-        empresa.setErrors(null);
+    const mesInicio = mesInicioForm.value ? mesInicioForm.value : Number.MIN_VALUE;
+    const mesFin = mesFinForm.value ? mesFinForm.value : Number.MAX_VALUE;
+    const ranges = this.actionService.getSelectedSolicitudProyectoSocios().filter(
+      element => element.empresa.personaRef === empresaForm.value?.personaRef
+        && element.id !== this.formPart.solicitudProyectoSocio.id)
+      .map(solicitudProyectoSocio => {
+        const range: IRange = {
+          inicio: solicitudProyectoSocio.mesInicio ? solicitudProyectoSocio.mesInicio : Number.MIN_VALUE,
+          fin: solicitudProyectoSocio.mesFin ? solicitudProyectoSocio.mesFin : Number.MAX_VALUE
+        };
+        return range;
+      });
+    if (ranges.some(range => (mesInicio <= range.fin && range.inicio <= mesFin))) {
+      if (mesInicioForm.value) {
+        this.addError(mesInicioForm, 'range');
       }
-
-      // Comprueba solapamiento de mesFin
-      if (mesFin) {
-        for (const proyectoSocio of proyectoSocios) {
-          if (mesFin >= proyectoSocio.mesInicio && mesFin <= proyectoSocio.mesFin) {
-            mesFinForm.setErrors({ range: true });
-            mesFinForm.markAsTouched({ onlySelf: true });
-            break;
-          }
-        }
+      if (mesFinForm.value) {
+        this.addError(mesFinForm, 'range');
       }
-
-      // Comprueba solapamiento de mesInicio
-      if (mesInicio) {
-        for (const proyectoSocio of proyectoSocios) {
-          if (mesInicio >= proyectoSocio.mesInicio && mesInicio <= proyectoSocio.mesFin) {
-            mesInicioForm.setErrors({ range: true });
-            mesInicioForm.markAsTouched({ onlySelf: true });
-            break;
-          }
-        }
+      if (!mesInicioForm.value && !mesFinForm.value) {
+        this.addError(empresaForm, 'contains');
+      } else if (empresaForm.errors) {
+        this.deleteError(empresaForm, 'contains');
       }
     } else {
-      empresa.setErrors(null);
-      mesFinForm.setErrors(null);
-      mesInicioForm.setErrors(null);
+      this.deleteError(mesInicioForm, 'range');
+      this.deleteError(mesFinForm, 'range');
+      this.deleteError(empresaForm, 'contains');
     }
+  }
+
+  private deleteError(formControl: AbstractControl, errorName: string): void {
+    if (formControl.errors) {
+      delete formControl.errors[errorName];
+      if (Object.keys(formControl.errors).length === 0) {
+        formControl.setErrors(null);
+      }
+    }
+  }
+
+  private addError(formControl: AbstractControl, errorName: string): void {
+    if (!formControl.errors) {
+      formControl.setErrors({});
+    }
+    formControl.errors[errorName] = true;
+    formControl.markAsTouched({ onlySelf: true });
   }
 }

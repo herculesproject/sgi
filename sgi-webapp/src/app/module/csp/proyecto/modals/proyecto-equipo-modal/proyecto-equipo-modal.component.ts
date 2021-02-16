@@ -13,6 +13,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { IRange } from '@core/validators/range-validator';
 import moment from 'moment';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, Subscription } from 'rxjs';
@@ -153,68 +154,55 @@ export class ProyectoEquipoModalComponent extends
   }
 
   private checkRangesDates(): void {
-    const persona = this.formGroup.get('persona');
+    const personaForm = this.formGroup.get('persona');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
-
-
-    const equipos = this.data.equipos.filter(
-      element => element.persona.personaRef === persona.value.personaRef);
     const fechaInicio = fechaInicioForm.value ? DateUtils.fechaToDate(fechaInicioForm.value).getTime() : Number.MIN_VALUE;
     const fechaFin = fechaFinForm.value ? DateUtils.fechaToDate(fechaFinForm.value).getTime() : Number.MAX_VALUE;
+    const ranges = this.data.equipos.filter(
+      element => element.persona.personaRef === personaForm.value?.personaRef)
+      .map(value => {
+        const range: IRange = {
+          inicio: value.fechaInicio ? DateUtils.fechaToDate(value.fechaInicio).getTime() : Number.MIN_VALUE,
+          fin: value.fechaFin ? DateUtils.fechaToDate(value.fechaFin).getTime() : Number.MAX_VALUE,
+        };
+        return range;
+      });
 
-
-    const ranges = equipos.map(proyectoSocio => {
-      return {
-        inicio: proyectoSocio.fechaInicio ? DateUtils.fechaToDate(proyectoSocio.fechaInicio).getTime() : Number.MIN_VALUE,
-        fin: proyectoSocio.fechaFin ? DateUtils.fechaToDate(proyectoSocio.fechaFin).getTime() : Number.MAX_VALUE
-      };
-    });
-
-    if (ranges.some(r => fechaInicio <= r.fin && r.inicio <= fechaFin)) {
+    if (ranges.some(range => (fechaInicio <= range.fin && range.inicio <= fechaFin))) {
       if (fechaInicioForm.value) {
-        fechaInicioForm.setErrors({ range: true });
-        fechaInicioForm.markAsTouched({ onlySelf: true });
+        this.addError(fechaInicioForm, 'range');
       }
-
       if (fechaFinForm.value) {
-        fechaFinForm.setErrors({ range: true });
-        fechaFinForm.markAsTouched({ onlySelf: true });
+        this.addError(fechaFinForm, 'range');
       }
-
       if (!fechaInicioForm.value && !fechaFinForm.value) {
-        persona.setErrors({ contains: true });
-        persona.markAsTouched({ onlySelf: true });
-      } else if (persona.errors) {
-        delete persona.errors.contains;
-        persona.updateValueAndValidity({ onlySelf: true });
+        this.addError(personaForm, 'contains');
+      } else if (personaForm.errors) {
+        this.deleteError(personaForm, 'contains');
       }
-
     } else {
-      if (fechaInicioForm.errors) {
-        delete fechaInicioForm.errors.range;
-        fechaInicioForm.updateValueAndValidity({ onlySelf: true });
-      }
+      this.deleteError(fechaInicioForm, 'range');
+      this.deleteError(fechaFinForm, 'range');
+      this.deleteError(personaForm, 'contains');
+    }
+  }
 
-      if (fechaFinForm.errors) {
-        delete fechaFinForm.errors.range;
-        fechaFinForm.updateValueAndValidity({ onlySelf: true });
-      }
-
-      if (persona.errors) {
-        delete persona.errors.range;
-        persona.updateValueAndValidity({ onlySelf: true });
+  private deleteError(formControl: AbstractControl, errorName: string): void {
+    if (formControl.errors) {
+      delete formControl.errors[errorName];
+      if (Object.keys(formControl.errors).length === 0) {
+        formControl.setErrors(null);
       }
     }
   }
 
-  private addErrorRange(formControl: AbstractControl): void {
-    if (formControl.errors) {
-      formControl.errors.range = true;
-    } else {
-      formControl.setErrors({ range: true });
+  private addError(formControl: AbstractControl, errorName: string): void {
+    if (!formControl.errors) {
+      formControl.setErrors({});
     }
+    formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
   }
 
