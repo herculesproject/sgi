@@ -242,11 +242,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
           field: 'unidadGestionRef',
           type: SgiRestFilterType.EQUALS,
           value: this.formGroup.controls.unidadGestion.value?.acronimo,
-        } as SgiRestFilter,
-        {
-          field: 'modeloEjecucion.activo',
-          type: SgiRestFilterType.EQUALS,
-          value: 'true',
         } as SgiRestFilter
       ]
     } as SgiRestFindOptions;

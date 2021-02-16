@@ -344,6 +344,10 @@
               mat-button matTooltip="{{'botones.reactivar' | translate}}" (click)="activateSolicitud(element)">
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>
+            <button color="primary" aria-label="Center Align" md-button mat-raised-button
+              *ngIf="mapCrearProyecto.get(element.id)" (click)="crearProyectoModal(element)">
+              {{'csp.solicitud.listado.crear.proyecto' | translate}}
+            </button>
           </ng-container>
         </td>
       </ng-container>

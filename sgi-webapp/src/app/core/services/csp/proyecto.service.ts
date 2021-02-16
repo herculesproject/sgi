@@ -522,4 +522,13 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
 
+  /**
+   * Se crea un proyecto a partir de los datos de la solicitud
+   *
+   * @param id identificador de la solicitud a copiar
+   */
+  crearProyectoBySolicitud(id: number, proyecto: IProyecto): Observable<IProyecto> {
+    return this.http.post<IProyecto>(`${this.endpointUrl}/${id}/solicitud`, proyecto);
+  }
+
 }

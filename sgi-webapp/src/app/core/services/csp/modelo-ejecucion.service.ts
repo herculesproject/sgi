@@ -140,7 +140,7 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
    * Muestra activos y no activos
    * @param options opciones de búsqueda.
    */
-  findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloEjecucion>> {
+  findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloEjecucion>> {
     return this.find<IModeloEjecucion, IModeloEjecucion>(`${this.endpointUrl}/todos`, options);
   }
 

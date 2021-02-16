@@ -71,7 +71,7 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
   }
 
   protected createObservable(): Observable<SgiRestListResult<IModeloEjecucion>> {
-    const observable$ = this.modeloEjecucionService.findTodos(this.getFindOptions());
+    const observable$ = this.modeloEjecucionService.findAllTodos(this.getFindOptions());
     return observable$;
   }
 

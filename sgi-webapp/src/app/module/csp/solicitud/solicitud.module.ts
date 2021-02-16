@@ -23,6 +23,7 @@ import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/so
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
+import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-form
     SolicitudProyectoEntidadesFinanciadorasComponent,
     SolicitudProyectoPresupuestoGlobalComponent,
     SolicitudProyectoPresupuestoEntidadesComponent,
+    SolicitudCrearProyectoModalComponent
   ],
   imports: [
     CommonModule,

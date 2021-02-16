@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
+import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 
 const MSG_BUTTON_NEW = marker('footer.csp.solicitud.crear');
 const MSG_ERROR = marker('csp.solicitud.listado.error');
@@ -31,6 +36,8 @@ const MSG_SUCCESS_REACTIVATE = marker('csp.solicitud.listado.reactivar.correcto'
 const MSG_ERROR_REACTIVATE = marker('csp.solicitud.listado.reactivar.error');
 const MSG_ERROR_FUENTE_FINANCIACION_INIT = marker('csp.solicitud.listado.fuente.financiacion.error');
 const MSG_ERROR_PLAN_INVESTIGACION_INIT = marker('csp.solicitud.listado.plan.investigacion.error');
+const MSG_SUCCESS_CREAR_PROYECTO = marker('csp.solicitud.listado.crear.proyecto.correcto');
+const MSG_ERROR_CREAR_PROYECTO = marker('csp.solicitud.listado.crear.proyecto.error');
 
 @Component({
   selector: 'sgi-solicitud-listado',
@@ -53,6 +60,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   private planInvestigacionFiltered: IPrograma[] = [];
   planInvestigaciones$: Observable<IPrograma[]>;
 
+  mapCrearProyecto: Map<number, boolean> = new Map();
+
   constructor(
     private readonly logger: NGXLogger,
     private dialogService: DialogService,
@@ -60,7 +69,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private solicitudService: SolicitudService,
     private personaFisicaService: PersonaFisicaService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
-    private programaService: ProgramaService
+    private programaService: ProgramaService,
+    private proyectoService: ProyectoService,
+    private matDialog: MatDialog,
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -110,13 +121,15 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         }
 
         const solicitudes = response.items;
-
         const personaRefsSolicitantes = solicitudes.map((solicitud) => solicitud.solicitante.personaRef);
         const solicitudesWithDatosSolicitante$ = this.personaFisicaService.findByPersonasRefs([...personaRefsSolicitantes]).pipe(
           map((result) => {
             const personas = result.items;
 
             solicitudes.forEach((solicitud) => {
+              this.suscripciones.push(this.solicitudService.isPosibleCrearProyecto(solicitud.id).subscribe((value) => {
+                this.mapCrearProyecto.set(solicitud.id, value);
+              }));
               solicitud.solicitante = personas.find((persona) =>
                 solicitud.solicitante.personaRef === persona.personaRef);
             });
@@ -321,5 +334,38 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   getPlanInvestigacion(programa?: IPrograma): string | undefined {
     return typeof programa === 'string' ? programa : programa?.nombre;
+  }
+
+  crearProyectoModal(solicitud: ISolicitud): void {
+    const proyecto = { solicitud } as IProyecto;
+    this.suscripciones.push(this.solicitudService.findSolicitudProyectoDatos(solicitud.id).pipe(
+      map(solicitudProyectoDatos => {
+        const config = {
+          width: GLOBAL_CONSTANTS.widthModalCSP,
+          maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+          data: { proyecto, solicitudProyectoDatos } as ISolicitudCrearProyectoModalData
+        };
+        const dialogRef = this.matDialog.open(SolicitudCrearProyectoModalComponent, config);
+        dialogRef.afterClosed().subscribe(
+          (result: IProyecto) => {
+            if (result) {
+              const subscription = this.proyectoService.crearProyectoBySolicitud(solicitud.id, result);
+
+              subscription.subscribe(
+                () => {
+                  this.snackBarService.showSuccess(MSG_SUCCESS_CREAR_PROYECTO);
+                  this.loadTable();
+                },
+                (error) => {
+                  this.logger.error(error);
+                  this.snackBarService.showError(MSG_ERROR_CREAR_PROYECTO);
+                }
+              );
+
+            }
+          }
+        );
+      })
+    ).subscribe());
   }
 }

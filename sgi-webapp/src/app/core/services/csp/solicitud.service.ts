@@ -382,4 +382,16 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       endpointUrl);
   }
 
+  /**
+   * Comprueba si se puede crear el proyecto a partir de la solicitud
+   *
+   * @param id Id de la solicitud
+   */
+  isPosibleCrearProyecto(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/crearproyecto`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }
