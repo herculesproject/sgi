@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -46,6 +47,7 @@ public class FormularioControllerTest extends BaseControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String FORMULARIO_CONTROLLER_BASE_PATH = "/formularios";
+  private static final String PATH_PARAMETER_BLOQUES = "/bloques";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-VER" })
@@ -213,6 +215,76 @@ public class FormularioControllerTest extends BaseControllerTest {
         // then: Get a page one hundred Formulario
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoDocumento empty
+    List<Formulario> formularios = new ArrayList<>();
+
+    BDDMockito
+        .given(formularioService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(formularios));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR", "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void getBloquesEmptyList() throws Exception {
+    // given: Existe el formulario pero no tiene bloques
+
+    Long id = 3L;
+    final String url = new StringBuilder(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_BLOQUES).toString();
+
+    BDDMockito.given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR", "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void getBloquesValid() throws Exception {
+    // given: Datos existentes con formulario
+    Long id = 3L;
+    final String url = new StringBuilder(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_BLOQUES).toString();
+
+    List<Formulario> formularios = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Formulario formulario = generarMockFormulario(Long.valueOf(i), String.valueOf(id), String.valueOf(id));
+      formularios.add(formulario);
+    }
+
+    BDDMockito.given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Formulario>>() {
+          @Override
+          public Page<Formulario> answer(InvocationOnMock invocation) throws Throwable {
+            List<Formulario> content = new ArrayList<>();
+            for (Formulario formularios : formularios) {
+              content.add(formularios);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los bloques de ese formulario
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los bloques relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
   }
 
   /**
