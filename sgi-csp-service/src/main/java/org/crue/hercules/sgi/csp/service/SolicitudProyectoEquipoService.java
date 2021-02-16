@@ -29,12 +29,9 @@ public interface SolicitudProyectoEquipoService {
    * 
    * @param solicitudProyectoEquipo {@link SolicitudProyectoEquipo} con los datos
    *                                actualizados.
-   * @param isAdministradorOrGestor Indiciador de si el usuario es administrador o
-   *                                gestor.
    * @return SolicitudProyectoEquipo {@link SolicitudProyectoEquipo} actualizado.
    */
-  SolicitudProyectoEquipo update(final SolicitudProyectoEquipo solicitudProyectoEquipo,
-      Boolean isAdministradorOrGestor);
+  SolicitudProyectoEquipo update(final SolicitudProyectoEquipo solicitudProyectoEquipo);
 
   /**
    * Comprueba la existencia del {@link SolicitudProyectoEquipo} por id.

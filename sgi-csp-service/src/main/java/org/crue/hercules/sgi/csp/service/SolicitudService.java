@@ -94,12 +94,15 @@ public interface SolicitudService {
   boolean hasConvocatoriaSgi(Long id);
 
   /**
-   * Comprueba si la solicitud a la que está asociada está en el estado correcto
-   * para el usuario que la está modificando.
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada. También se utilizará para permitir la creación,
+   * modificación o eliminación de ciertas entidades relacionadas con la propia
+   * {@link Solicitud}.
    *
-   * @param estadoSolicitud estado de la solicitud
+   * @param id Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
    */
-  void isEditable(String estadoSolicitud);
+  Boolean modificable(Long id);
 
   /**
    * Hace las comprobaciones necesarias para determinar si se puede crear un

@@ -71,9 +71,10 @@ public class SolicitudProyectoEquipoSocioServiceImpl implements SolicitudProyect
     SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
-    // comprobar si convocatoria es modificable
-    solicitudService.isEditable(
-        solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue());
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(
+        solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoEquipoSocio");
 
     List<SolicitudProyectoEquipoSocio> existentes = repository
         .findAllBySolicitudProyectoSocioId(solicitudProyectoSocioId);

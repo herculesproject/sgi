@@ -41,12 +41,15 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   @Mock
   private TipoFinanciacionRepository tipoFinanciacionRepository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudProyectoEntidadFinanciadoraAjenaService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl(repository, fuenteFinanciacionRepository,
-        tipoFinanciacionRepository);
+        tipoFinanciacionRepository, solicitudService);
   }
 
   @Test
@@ -179,6 +182,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoEntidadFinanciadoraAjena>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoEntidadFinanciadoraAjena
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizado = service
         .update(solicitudProyectoEntidadFinanciadoraAjenaPorcentajeActualizado);
@@ -214,6 +219,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoEntidadFinanciadoraAjena
     // then: Lanza una excepcion porque el SolicitudProyectoEntidadFinanciadoraAjena
     // no existe
@@ -237,6 +244,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
         // when: update SolicitudProyectoEntidadFinanciadoraAjena
@@ -263,6 +272,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
         // when: update SolicitudProyectoEntidadFinanciadoraAjena

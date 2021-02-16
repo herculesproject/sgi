@@ -35,11 +35,14 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudDocumentoRepository solicitudDocumentoRepository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudDocumentoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudDocumentoServiceImpl(solicitudDocumentoRepository);
+    service = new SolicitudDocumentoServiceImpl(solicitudDocumentoRepository, solicitudService);
   }
 
   @Test
@@ -135,6 +138,8 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
     BDDMockito.given(solicitudDocumentoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudDocumento));
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     BDDMockito.given(solicitudDocumentoRepository.save(ArgumentMatchers.<SolicitudDocumento>any()))
         .willAnswer(new Answer<SolicitudDocumento>() {
           @Override
@@ -146,7 +151,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
         });
 
     // when: update SolicitudDocumento
-    SolicitudDocumento updated = service.update(solicitudDocumento, Boolean.TRUE);
+    SolicitudDocumento updated = service.update(solicitudDocumento);
 
     // then: SolicitudDocumento is updated
     Assertions.assertThat(updated).isNotNull();
@@ -166,9 +171,11 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
 
     BDDMockito.given(solicitudDocumentoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     Assertions.assertThatThrownBy(
         // when: update non existing SolicitudDocumento
-        () -> service.update(solicitudDocumento, Boolean.TRUE))
+        () -> service.update(solicitudDocumento))
         // then: NotFoundException is thrown
         .isInstanceOf(SolicitudDocumentoNotFoundException.class);
   }
@@ -181,7 +188,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update non existing SolicitudDocumento
-        () -> service.update(solicitudDocumento, Boolean.TRUE))
+        () -> service.update(solicitudDocumento))
         // then: NotFoundException is thrown
         .isInstanceOf(IllegalArgumentException.class);
   }
@@ -194,7 +201,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update non existing SolicitudDocumento
-        () -> service.update(solicitudDocumento, Boolean.TRUE))
+        () -> service.update(solicitudDocumento))
         // then: NotFoundException is thrown
         .isInstanceOf(IllegalArgumentException.class);
   }
@@ -207,7 +214,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update non existing SolicitudDocumento
-        () -> service.update(solicitudDocumento, Boolean.TRUE))
+        () -> service.update(solicitudDocumento))
         // then: NotFoundException is thrown
         .isInstanceOf(IllegalArgumentException.class);
   }
@@ -219,7 +226,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update SolicitudDocumento
-        () -> service.update(solicitudDocumento, Boolean.TRUE))
+        () -> service.update(solicitudDocumento))
         // then: throw exception as id must be provided
         .isInstanceOf(IllegalArgumentException.class);
   }

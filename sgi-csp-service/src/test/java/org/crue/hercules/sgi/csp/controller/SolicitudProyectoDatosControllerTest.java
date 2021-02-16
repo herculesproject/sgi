@@ -93,7 +93,7 @@ public class SolicitudProyectoDatosControllerTest extends BaseControllerTest {
     SolicitudProyectoDatos updatedSolicitudProyectoDatos = generarSolicitudProyectoDatos(1L, 1L);
     updatedSolicitudProyectoDatos.setTitulo("titulo-modificado");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoDatos>any(), ArgumentMatchers.anyBoolean()))
+    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoDatos>any()))
         .willAnswer(new Answer<SolicitudProyectoDatos>() {
           @Override
           public SolicitudProyectoDatos answer(InvocationOnMock invocation) throws Throwable {
@@ -128,7 +128,7 @@ public class SolicitudProyectoDatosControllerTest extends BaseControllerTest {
 
     BDDMockito.willThrow(new SolicitudProyectoDatosNotFoundException(updatedSolicitudProyectoDatos.getId()))
         .given(service).findById(ArgumentMatchers.<Long>any());
-    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoDatos>any(), ArgumentMatchers.anyBoolean()))
+    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoDatos>any()))
         .willThrow(new SolicitudProyectoDatosNotFoundException(updatedSolicitudProyectoDatos.getId()));
 
     // when: update SolicitudProyectoDatos

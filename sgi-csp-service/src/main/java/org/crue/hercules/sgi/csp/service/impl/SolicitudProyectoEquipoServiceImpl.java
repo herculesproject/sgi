@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoDatosNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoNotFoundException;
@@ -13,6 +12,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -39,11 +39,15 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
 
   private final RolProyectoRepository rolProyectoRepository;
 
+  private final SolicitudService solicitudService;
+
   public SolicitudProyectoEquipoServiceImpl(SolicitudProyectoEquipoRepository repository,
-      SolicitudProyectoDatosRepository solicitudProyectoDatosRepository, RolProyectoRepository rolProyectoRepository) {
+      SolicitudProyectoDatosRepository solicitudProyectoDatosRepository, RolProyectoRepository rolProyectoRepository,
+      SolicitudService solicitudService) {
     this.repository = repository;
     this.solicitudProyectoDatosRepository = solicitudProyectoDatosRepository;
     this.rolProyectoRepository = rolProyectoRepository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -76,46 +80,19 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
    * @param solicitudProyectoEquipo rolSocioActualizar
    *                                {@link SolicitudProyectoEquipo} con los datos
    *                                actualizados.
-   * @param isAdministradorOrGestor Indiciador de si el usuario es administrador o
-   *                                gestor.
    * @return {@link SolicitudProyectoEquipo} actualizado.
    */
   @Override
   @Transactional
-  public SolicitudProyectoEquipo update(SolicitudProyectoEquipo solicitudProyectoEquipo,
-      Boolean isAdministradorOrGestor) {
+  public SolicitudProyectoEquipo update(SolicitudProyectoEquipo solicitudProyectoEquipo) {
     log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo) - start");
 
     validateSolicitudProyectoEquipo(solicitudProyectoEquipo);
 
-    if (isAdministradorOrGestor) {
-
-      Assert.isTrue(
-          solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    } else {
-      Assert.isTrue(
-          solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-              || solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    }
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(
+        solicitudService.modificable(solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoEquipo");
 
     return repository.findById(solicitudProyectoEquipo.getId()).map((solicitudProyectoEquipoExistente) -> {
 

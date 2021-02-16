@@ -32,12 +32,14 @@ public class SolicitudProyectoDatosServiceTest {
 
   @Mock
   private SolicitudRepository solicitudRepository;
+  @Mock
+  private SolicitudService solicitudService;
 
   private SolicitudProyectoDatosService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudProyectoDatosServiceImpl(repository, solicitudRepository);
+    service = new SolicitudProyectoDatosServiceImpl(repository, solicitudRepository, solicitudService);
   }
 
   @Test
@@ -167,10 +169,10 @@ public class SolicitudProyectoDatosServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoDatos>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoDatos
-    SolicitudProyectoDatos solicitudProyectoDatosActualizada = service.update(solicitudProyectoDatosActualizado,
-        Boolean.TRUE);
+    SolicitudProyectoDatos solicitudProyectoDatosActualizada = service.update(solicitudProyectoDatosActualizado);
 
     // then: El SolicitudProyectoDatos se actualiza correctamente.
     Assertions.assertThat(solicitudProyectoDatosActualizada).as("isNotNull()").isNotNull();
@@ -190,7 +192,7 @@ public class SolicitudProyectoDatosServiceTest {
 
     // when: Actualizamos el SolicitudProyectoDatos
     // then: Lanza una excepcion porque la solicitud asociada no existe
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos))
         .isInstanceOf(SolicitudNotFoundException.class);
   }
 
@@ -203,9 +205,11 @@ public class SolicitudProyectoDatosServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoDatos
     // then: Lanza una excepcion porque el SolicitudProyectoDatos no existe
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos))
         .isInstanceOf(SolicitudProyectoDatosNotFoundException.class);
   }
 
@@ -218,7 +222,7 @@ public class SolicitudProyectoDatosServiceTest {
 
     // when: Actualizamos el SolicitudProyectoDatos
     // then: Lanza una excepcion porque no tiene solicitud
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La solicitud no puede ser null para realizar la acción sobre SolicitudProyectoDatos");
   }
@@ -232,7 +236,7 @@ public class SolicitudProyectoDatosServiceTest {
 
     // when: Actualizamos el SolicitudProyectoDatos
     // then: Lanza una excepcion porque no tiene titulo
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El título no puede ser null para realizar la acción sobre SolicitudProyectoDatos");
   }
@@ -246,7 +250,7 @@ public class SolicitudProyectoDatosServiceTest {
 
     // when: Actualizamos el SolicitudProyectoDatos
     // then: Lanza una excepcion porque no tiene colaborativo
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Colaborativo no puede ser null para realizar la acción sobre SolicitudProyectoDatos");
   }
@@ -260,7 +264,7 @@ public class SolicitudProyectoDatosServiceTest {
 
     // when: Actualizamos el SolicitudProyectoDatos
     // then: Lanza una excepcion porque no tiene presupuesto por entidades
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoDatos))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Id no puede ser null para actualizar SolicitudProyectoDatos");
   }

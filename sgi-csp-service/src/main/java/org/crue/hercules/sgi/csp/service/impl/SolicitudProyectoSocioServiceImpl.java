@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -45,16 +46,20 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   private final SolicitudRepository solicitudRepository;
 
+  private final SolicitudService solicitudService;
+
   public SolicitudProyectoSocioServiceImpl(SolicitudProyectoSocioRepository repository,
       SolicitudRepository solicitudRepository,
       SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository,
       SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository,
-      SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository) {
+      SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository,
+      SolicitudService solicitudService) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
     this.solicitudProyectoEquipoSocioRepository = solicitudProyectoEquipoSocioRepository;
     this.solicitudProyectoPeriodoPagoRepository = solicitudProyectoPeriodoPagoRepository;
     this.solicitudProyectoPeriodoJustificacionRepository = solicitudProyectoPeriodoJustificacionRepository;
+    this.solicitudService = solicitudService;
 
   }
 
@@ -96,6 +101,11 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
     Assert.notNull(solicitudProyectoSocio.getId(), "Id no puede ser null para actualizar SolicitudProyectoSocio");
     validateSolicitudProyectoSocio(solicitudProyectoSocio);
+
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(
+        solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoSocio");
 
     return repository.findById(solicitudProyectoSocio.getId()).map((solicitudProyectoSocioExistente) -> {
 

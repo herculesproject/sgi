@@ -98,6 +98,8 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
           }).collect(Collectors.toList());
         });
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: se actualiza solicitudProyectoPeriodoPagoActualizar
     List<SolicitudProyectoPeriodoPago> periodosPagoActualizados = service.update(solicitudProyectoSocioId,
         solicitudProyectoPeriodoPagoActualizar);
@@ -164,6 +166,8 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoPagoExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPeriodoPago
     // then: Lanza una excepcion porque el SolicitudProyectoPeriodoPago no existe
     Assertions
@@ -187,6 +191,8 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoPagoExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoSocio del SolicitudProyectoPeriodoPago
     // then: Lanza una excepcion porque no se puede modificar el campo
@@ -215,6 +221,8 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoPagoExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPeriodoPago
     // then: Lanza una excepcion porque el mes es superior a la duración de
     // solicitud proyecto datos
@@ -242,6 +250,8 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoPagoExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPeriodoPago
     // then: Lanza una excepcion porque el mes es superior a la duración de
     // solicitud proyecto datos
@@ -267,6 +277,8 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoPagoExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPeriodoPago
     // then: Lanza una excepcion porque no tiene mes
@@ -357,11 +369,12 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
 
     SolicitudProyectoPeriodoPago solicitudProyectoPeriodoPago = SolicitudProyectoPeriodoPago.builder()
         .id(solicitudProyectoPeriodoPagoId)
-        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId).build()).numPeriodo(3)
-        .importe(new BigDecimal(358)).mes(3).build();
+        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
+            .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(1L)
+                .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
+            .build())
+        .numPeriodo(3).importe(new BigDecimal(358)).mes(3).build();
 
-    solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().setSolicitudProyectoDatos(new SolicitudProyectoDatos());
-    solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().setSolicitud(new Solicitud());
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()

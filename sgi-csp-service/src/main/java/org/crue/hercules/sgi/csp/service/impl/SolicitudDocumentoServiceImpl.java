@@ -1,14 +1,13 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
-
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,9 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService {
 
   private final SolicitudDocumentoRepository repository;
+  private final SolicitudService solicitudService;
 
-  public SolicitudDocumentoServiceImpl(SolicitudDocumentoRepository repository) {
+  public SolicitudDocumentoServiceImpl(SolicitudDocumentoRepository repository, SolicitudService solicitudService) {
     this.repository = repository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -65,15 +66,13 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
   /**
    * Actualiza los datos del {@link SolicitudDocumento}.
    * 
-   * @param solicitudDocumento      rolSocioActualizar {@link SolicitudDocumento}
-   *                                con los datos actualizados.
-   * @param isAdministradorOrGestor Indiciador de si el usuario es administrador o
-   *                                gestor.
+   * @param solicitudDocumento rolSocioActualizar {@link SolicitudDocumento} con
+   *                           los datos actualizados.
    * @return {@link SolicitudDocumento} actualizado.
    */
   @Override
   @Transactional
-  public SolicitudDocumento update(SolicitudDocumento solicitudDocumento, Boolean isAdministradorOrGestor) {
+  public SolicitudDocumento update(SolicitudDocumento solicitudDocumento) {
     log.debug("update(SolicitudDocumento solicitudDocumento) - start");
 
     Assert.notNull(solicitudDocumento.getId(), "Id no puede ser null para actualizar SolicitudDocumento");
@@ -85,34 +84,10 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
         "Nombre documento no puede ser null para actualizar la SolicitudDocumento");
     Assert.notNull(solicitudDocumento.getDocumentoRef(),
         "La referencia del documento no puede ser null para actualizar la SolicitudDocumento");
-    if (isAdministradorOrGestor) {
 
-      Assert.isTrue(
-          solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    } else {
-      Assert.isTrue(
-          solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-              || solicitudDocumento.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    }
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(solicitudService.modificable(solicitudDocumento.getSolicitud().getId()),
+        "No se puede modificar SolicitudDocumento");
 
     return repository.findById(solicitudDocumento.getId()).map((solicitudDocumentoExistente) -> {
 

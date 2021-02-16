@@ -2,8 +2,6 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
@@ -14,6 +12,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -39,11 +38,14 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
 
   private final TipoHitoRepository tipoHitoRepository;
 
+  private final SolicitudService solicitudService;
+
   public SolicitudHitoServiceImpl(SolicitudHitoRepository repository, SolicitudRepository solicitudRepository,
-      TipoHitoRepository tipoHitoRepository) {
+      TipoHitoRepository tipoHitoRepository, SolicitudService solicitudService) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
     this.tipoHitoRepository = tipoHitoRepository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -121,34 +123,9 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
     solicitudHito.setTipoHito(tipoHitoRepository.findById(solicitudHito.getTipoHito().getId())
         .orElseThrow(() -> new TipoHitoNotFoundException(solicitudHito.getTipoHito().getId())));
 
-    if (isAdministradorOrGestor) {
-
-      Assert.isTrue(
-          solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    } else {
-      Assert.isTrue(
-          solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-              || solicitudHito.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    }
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(solicitudService.modificable(solicitudHito.getSolicitud().getId()),
+        "No se puede modificar SolicitudHito");
 
     return repository.findById(solicitudHito.getId()).map((solicitudHitoExistente) -> {
 

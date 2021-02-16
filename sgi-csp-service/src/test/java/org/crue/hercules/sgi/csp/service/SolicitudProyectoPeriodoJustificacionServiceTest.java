@@ -106,6 +106,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
           }).collect(Collectors.toList());
         });
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: se actualiza solicitudProyectoPeriodoJustificacionActualizar
     List<SolicitudProyectoPeriodoJustificacion> periodosPagoActualizados = service.update(solicitudProyectoSocioId,
         solicitudProyectoPeriodoJustificacionActualizar);
@@ -189,6 +191,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPeriodoJustificacion
     // then: Lanza una excepcion porque el SolicitudProyectoPeriodoJustificacion no
     // existe
@@ -215,6 +219,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoSocio del
     // SolicitudProyectoPeriodoJustificacion
@@ -247,6 +253,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPeriodoJustificacion
     // then: Lanza una excepcion porque el mes es superior a la duración de
@@ -281,6 +289,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPeriodoJustificacion
     // then: Lanza una excepcion porque mes inicial es
     // posterior al mes final
@@ -311,6 +321,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPeriodoJustificacion
     // then: Lanza una excepcion porque fecha inicio superior a fecha fin
@@ -343,6 +355,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPeriodoJustificacion
     // then: Lanza una excepcion porque mes final superior a la duración
     Assertions
@@ -371,6 +385,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyectoPeriodoJustificacionExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPeriodoJustificacion
     // then: Lanza una excepcion porque fecha inicio superior a fecha fin
@@ -465,14 +481,13 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
 
     SolicitudProyectoPeriodoJustificacion solicitudProyectoPeriodoJustificacion = SolicitudProyectoPeriodoJustificacion
         .builder().id(solicitudProyectoPeriodoJustificacionId)
-        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId).build()).numPeriodo(2)
-        .mesInicial(1).mesFinal(3).fechaInicio(LocalDate.of(2020, 12, 19)).fechaFin(LocalDate.of(2021, 2, 9))
-        .observaciones("Periodo 1").build();
+        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
+            .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(1L)
+                .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
+            .build())
+        .numPeriodo(2).mesInicial(1).mesFinal(3).fechaInicio(LocalDate.of(2020, 12, 19))
+        .fechaFin(LocalDate.of(2021, 2, 9)).observaciones("Periodo 1").build();
 
-    solicitudProyectoPeriodoJustificacion.getSolicitudProyectoSocio()
-        .setSolicitudProyectoDatos(new SolicitudProyectoDatos());
-    solicitudProyectoPeriodoJustificacion.getSolicitudProyectoSocio().getSolicitudProyectoDatos()
-        .setSolicitud(new Solicitud());
     solicitudProyectoPeriodoJustificacion.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());
     solicitudProyectoPeriodoJustificacion.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()

@@ -47,12 +47,15 @@ public class SolicitudProyectoEquipoServiceTest {
   @Mock
   private RolProyectoRepository rolProyectoRepository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudProyectoEquipoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudProyectoEquipoServiceImpl(repository, solicitudProyectoDatosRepository,
-        rolProyectoRepository);
+        rolProyectoRepository, solicitudService);
   }
 
   @Test
@@ -247,9 +250,11 @@ public class SolicitudProyectoEquipoServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoEquipo>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoEquipo
     SolicitudProyectoEquipo solicitudProyectoEquipoActualizada = service
-        .update(solicitudProyectoEquipoMesFinActualizado, Boolean.TRUE);
+        .update(solicitudProyectoEquipoMesFinActualizado);
 
     // then: El SolicitudProyectoEquipo se actualiza correctamente.
     Assertions.assertThat(solicitudProyectoEquipoActualizada).as("isNotNull()").isNotNull();
@@ -268,7 +273,7 @@ public class SolicitudProyectoEquipoServiceTest {
 
     // when: Creamos el SolicitudProyectoEquipo
     // then: Lanza una excepcion porque no tiene solicitud proyecto datos
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Los datos de proyecto no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
   }
@@ -282,7 +287,7 @@ public class SolicitudProyectoEquipoServiceTest {
 
     // when: Actualizamos el SolicitudProyectoEquipo
     // then: Lanza una excepcion porque no tiene rol proyecto
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El rol de proyecto no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
   }
@@ -297,7 +302,7 @@ public class SolicitudProyectoEquipoServiceTest {
     // when: Actualizamos el SolicitudProyectoEquipo
     // then: Lanza una excepcion porque no tiene persona ref
 
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La persona ref no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
 
@@ -321,7 +326,7 @@ public class SolicitudProyectoEquipoServiceTest {
 
     // when: Actualizamos el SolicitudProyectoEquipo
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(RolProyectoNotFoundException.class);
   }
 
@@ -342,7 +347,7 @@ public class SolicitudProyectoEquipoServiceTest {
 
     // when: Actualizamos el SolicitudProyectoEquipo
     // then: Lanza una excepcion porque solicitante no se encuentra en el equipo
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El solicitante de la solicitud debe ser miembro del equipo");
   }
@@ -363,7 +368,7 @@ public class SolicitudProyectoEquipoServiceTest {
 
     // when: Actualizamos el SolicitudProyectoEquipo
     // then: Lanza una excepcion porque solicitante no se encuentra en el equipo
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo, Boolean.TRUE))
+    Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El miembro del equipo ya existe en el mismo rango de fechas");
   }
@@ -462,11 +467,11 @@ public class SolicitudProyectoEquipoServiceTest {
       Long solicitudProyectoDatosId, Long rolProyectoId) {
 
     SolicitudProyectoEquipo solicitudProyectoEquipo = SolicitudProyectoEquipo.builder().id(solicitudProyectoEquipoId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
+            .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
         .personaRef("personaRef-" + solicitudProyectoEquipoId)
         .rolProyecto(RolProyecto.builder().id(rolProyectoId).build()).mesInicio(1).mesFin(5).build();
 
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().setSolicitud(new Solicitud());
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
         .setEstado(TipoEstadoSolicitudEnum.BORRADOR);

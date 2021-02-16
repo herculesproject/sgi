@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
@@ -35,11 +36,14 @@ public class SolicitudProyectoPresupuestoServiceTest {
   @Mock
   private SolicitudProyectoPresupuestoRepository repository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudProyectoPresupuestoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudProyectoPresupuestoServiceImpl(repository);
+    service = new SolicitudProyectoPresupuestoServiceImpl(repository, solicitudService);
   }
 
   @Test
@@ -107,6 +111,8 @@ public class SolicitudProyectoPresupuestoServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoPresupuesto>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoPresupuesto
     SolicitudProyectoPresupuesto solicitudProyectoPresupuestoActualizado = service
         .update(solicitudProyectoPresupuestoActualizar);
@@ -139,6 +145,8 @@ public class SolicitudProyectoPresupuestoServiceTest {
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(1L, 1L, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPresupuesto
     // then: Lanza una excepcion porque el SolicitudProyectoPresupuesto no existe
@@ -257,7 +265,7 @@ public class SolicitudProyectoPresupuestoServiceTest {
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .entidadRef(null)
         .anualidad(1000)

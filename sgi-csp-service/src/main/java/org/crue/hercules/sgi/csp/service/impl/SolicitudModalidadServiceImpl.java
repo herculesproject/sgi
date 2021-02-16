@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudModalidadSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -39,14 +40,17 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
   private final SolicitudRepository solicitudRepository;
   private final ProgramaRepository programaRepository;
   private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
+  private final SolicitudService solicitudService;
 
   public SolicitudModalidadServiceImpl(SolicitudModalidadRepository repository, SolicitudRepository solicitudRepository,
       ProgramaRepository programaRepository,
-      ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository) {
+      ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
+      SolicitudService solicitudService) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
     this.programaRepository = programaRepository;
     this.convocatoriaEntidadConvocanteRepository = convocatoriaEntidadConvocanteRepository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -111,12 +115,17 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
     log.debug("update(SolicitudModalidad solicitudModalidad) - start");
 
     Assert.notNull(solicitudModalidad.getId(), "Id no puede ser null para actualizar SolicitudModalidad");
-
+    Assert.notNull(solicitudModalidad.getSolicitud(),
+        "La solicitud no puede ser null para actualizar la SolicitudModalidad");
     Assert.notNull(solicitudModalidad.getPrograma().getId(),
         "Id Programa no puede ser null para crear la SolicitudModalidad");
 
     solicitudModalidad.setPrograma(programaRepository.findById(solicitudModalidad.getPrograma().getId())
         .orElseThrow(() -> new ProgramaNotFoundException(solicitudModalidad.getPrograma().getId())));
+
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(solicitudService.modificable(solicitudModalidad.getSolicitud().getId()),
+        "No se puede modificar SolicitudModalidad");
 
     return repository.findById(solicitudModalidad.getId()).map((data) -> {
 

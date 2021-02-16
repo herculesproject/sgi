@@ -677,4 +677,21 @@ public class SolicitudController {
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada.
+   * 
+   * @param id Id del {@link Solicitud}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
+  ResponseEntity<Solicitud> modificable(@PathVariable Long id) {
+    log.debug("modificable(Long id) - start");
+    Boolean returnValue = service.modificable(id);
+    log.debug("modificable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

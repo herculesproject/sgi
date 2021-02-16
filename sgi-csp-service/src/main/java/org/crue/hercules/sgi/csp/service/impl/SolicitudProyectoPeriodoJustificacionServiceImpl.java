@@ -70,8 +70,10 @@ public class SolicitudProyectoPeriodoJustificacionServiceImpl implements Solicit
     SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
-    solicitudService.isEditable(
-        solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getEstado().getEstado().getValue());
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(
+        solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoPeriodoJustificacion");
 
     List<SolicitudProyectoPeriodoJustificacion> solicitudProyectoPeriodoJustificacionesBD = repository
         .findAllBySolicitudProyectoSocioId(solicitudProyectoSocioId);

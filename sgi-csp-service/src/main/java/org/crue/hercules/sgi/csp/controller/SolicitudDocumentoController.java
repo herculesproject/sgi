@@ -1,12 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 
@@ -75,13 +69,8 @@ public class SolicitudDocumentoController {
   public SolicitudDocumento update(@Valid @RequestBody SolicitudDocumento solicitudDocumento, @PathVariable Long id,
       Authentication authentication) {
     log.debug("update(SolicitudDocumento solicitudDocumento, Long id) - start");
-
-    Boolean isAdministradorOrGestor = CollectionUtils.isNotEmpty(
-        authentication.getAuthorities().stream().filter(authority -> authority.getAuthority().startsWith("CSP-SOL-C"))
-            .filter(Objects::nonNull).distinct().collect(Collectors.toList()));
-
     solicitudDocumento.setId(id);
-    SolicitudDocumento returnValue = service.update(solicitudDocumento, isAdministradorOrGestor);
+    SolicitudDocumento returnValue = service.update(solicitudDocumento);
     log.debug("update(SolicitudDocumento solicitudDocumento, Long id) - end");
     return returnValue;
   }

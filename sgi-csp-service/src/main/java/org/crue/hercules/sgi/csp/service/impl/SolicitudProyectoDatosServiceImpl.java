@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.Optional;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoDatosNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -11,6 +10,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoDatosSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +30,13 @@ public class SolicitudProyectoDatosServiceImpl implements SolicitudProyectoDatos
 
   private final SolicitudRepository solicitudRepository;
 
+  private final SolicitudService solicitudService;
+
   public SolicitudProyectoDatosServiceImpl(SolicitudProyectoDatosRepository repository,
-      SolicitudRepository solicitudRepository) {
+      SolicitudRepository solicitudRepository, SolicitudService solicitudService) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -62,16 +65,14 @@ public class SolicitudProyectoDatosServiceImpl implements SolicitudProyectoDatos
   /**
    * Actualiza los datos del {@link SolicitudProyectoDatos}.
    * 
-   * @param solicitudProyectoDatos  rolSocioActualizar
-   *                                {@link SolicitudProyectoDatos} con los datos
-   *                                actualizados.
-   * @param isAdministradorOrGestor Indiciador de si el usuario es administrador o
-   *                                gestor.
+   * @param solicitudProyectoDatos rolSocioActualizar
+   *                               {@link SolicitudProyectoDatos} con los datos
+   *                               actualizados.
    * @return {@link SolicitudProyectoDatos} actualizado.
    */
   @Override
   @Transactional
-  public SolicitudProyectoDatos update(SolicitudProyectoDatos solicitudProyectoDatos, Boolean isAdministradorOrGestor) {
+  public SolicitudProyectoDatos update(SolicitudProyectoDatos solicitudProyectoDatos) {
     log.debug("update(SolicitudProyectoDatos solicitudProyectoDatos) - start");
 
     Assert.notNull(solicitudProyectoDatos.getId(), "Id no puede ser null para actualizar SolicitudProyectoDatos");
@@ -79,34 +80,9 @@ public class SolicitudProyectoDatosServiceImpl implements SolicitudProyectoDatos
 
     // TODO validación de SolicitudProyectoPresupuesto
 
-    if (isAdministradorOrGestor) {
-
-      Assert.isTrue(
-          solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    } else {
-      Assert.isTrue(
-          solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-              .equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-              || solicitudProyectoDatos.getSolicitud().getEstado().getEstado().getValue()
-                  .equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    }
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(solicitudService.modificable(solicitudProyectoDatos.getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoDatos");
 
     return repository.findById(solicitudProyectoDatos.getId()).map((solicitudProyectoDatosExistente) -> {
 

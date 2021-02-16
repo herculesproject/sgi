@@ -99,6 +99,8 @@ public class SolicitudProyectoEquipoSocioServiceTest {
           }).collect(Collectors.toList());
         });
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: updatedSolicitudProyectoEquipoSocio
     List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocioActualizados = service
         .update(solicitudProyectoSocioId, solicitudProyectoEquipoSocioActualizar);
@@ -180,6 +182,8 @@ public class SolicitudProyectoEquipoSocioServiceTest {
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyecotEquipoSocioJustificiacionExistentes);
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoEquipoSocio
     // then: Lanza una excepcion porque se ha modificado la solicitud proyecto socio
     Assertions
@@ -201,6 +205,8 @@ public class SolicitudProyectoEquipoSocioServiceTest {
 
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newSolicitudProyectoEquipoSocio.getSolicitudProyectoSocio()));
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoEquipoSocio
     // then: Lanza una excepcion porque no tiene solicitud
@@ -224,6 +230,8 @@ public class SolicitudProyectoEquipoSocioServiceTest {
 
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newSolicitudProyectoEquipoSocio.getSolicitudProyectoSocio()));
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoEquipoSocio
     // then: Lanza una excepcion porque no tiene persona ref
@@ -256,6 +264,8 @@ public class SolicitudProyectoEquipoSocioServiceTest {
 
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(solicitudProyecotEquipoSocioJustificiacionExistentes);
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoEquipoSocio
     // then: Lanza una excepcion porque existen otros solicitudproyectosocioequipo
@@ -348,12 +358,13 @@ public class SolicitudProyectoEquipoSocioServiceTest {
 
     SolicitudProyectoEquipoSocio solicitudProyectoEquipoSocio = SolicitudProyectoEquipoSocio.builder()
         .id(solicitudProyectoEquipoSocioId)
-        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(entidadesRelacionadasId).build())
+        .solicitudProyectoSocio(SolicitudProyectoSocio.builder().id(entidadesRelacionadasId)
+            .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(1L)
+                .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
+            .build())
         .rolProyecto(RolProyecto.builder().id(entidadesRelacionadasId).build()).personaRef("user-001").mesInicio(1)
         .mesFin(3).build();
 
-    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().setSolicitudProyectoDatos(new SolicitudProyectoDatos());
-    solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().setSolicitud(new Solicitud());
     solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());
     solicitudProyectoEquipoSocio.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()

@@ -22,13 +22,11 @@ public interface SolicitudProyectoDatosService {
   /**
    * Actualiza los datos del {@link SolicitudProyectoDatos}.
    * 
-   * @param solicitudProyectoDatos  {@link SolicitudProyectoDatos} con los datos
-   *                                actualizados.
-   * @param isAdministradorOrGestor Indiciador de si el usuario es administrador o
-   *                                gestor.
+   * @param solicitudProyectoDatos {@link SolicitudProyectoDatos} con los datos
+   *                               actualizados.
    * @return SolicitudProyectoDatos {@link SolicitudProyectoDatos} actualizado.
    */
-  SolicitudProyectoDatos update(final SolicitudProyectoDatos solicitudProyectoDatos, Boolean isAdministradorOrGestor);
+  SolicitudProyectoDatos update(final SolicitudProyectoDatos solicitudProyectoDatos);
 
   /**
    * Comprueba la existencia del {@link SolicitudProyectoDatos} por id.

@@ -96,7 +96,7 @@ public class SolicitudDocumentoControllerTest extends BaseControllerTest {
     SolicitudDocumento updatedSolicitudDocumento = generarSolicitudDocumento(1L, 1L, 1L);
     updatedSolicitudDocumento.setDocumentoRef("documentoRef-modificado");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudDocumento>any(), ArgumentMatchers.anyBoolean()))
+    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudDocumento>any()))
         .willAnswer(new Answer<SolicitudDocumento>() {
           @Override
           public SolicitudDocumento answer(InvocationOnMock invocation) throws Throwable {
@@ -131,7 +131,7 @@ public class SolicitudDocumentoControllerTest extends BaseControllerTest {
 
     BDDMockito.willThrow(new SolicitudDocumentoNotFoundException(updatedSolicitudDocumento.getId())).given(service)
         .findById(ArgumentMatchers.<Long>any());
-    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudDocumento>any(), ArgumentMatchers.anyBoolean()))
+    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudDocumento>any()))
         .willThrow(new SolicitudDocumentoNotFoundException(updatedSolicitudDocumento.getId()));
 
     // when: update SolicitudDocumento

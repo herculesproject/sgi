@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoPresupuestoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -30,9 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyectoPresupuestoService {
 
   private final SolicitudProyectoPresupuestoRepository repository;
+  private final SolicitudService solicitudService;
 
-  public SolicitudProyectoPresupuestoServiceImpl(SolicitudProyectoPresupuestoRepository repository) {
+  public SolicitudProyectoPresupuestoServiceImpl(SolicitudProyectoPresupuestoRepository repository,
+      SolicitudService solicitudService) {
     this.repository = repository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -73,6 +77,11 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
 
     Assert.notNull(solicitudProyectoPresupuesto.getId(),
         "Id no puede ser null para actualizar SolicitudProyectoPresupuesto");
+
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(
+        solicitudService.modificable(solicitudProyectoPresupuesto.getSolicitudProyectoDatos().getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoPresupuesto");
 
     return repository.findById(solicitudProyectoPresupuesto.getId()).map((solicitudProyectoPresupuestoExistente) -> {
 

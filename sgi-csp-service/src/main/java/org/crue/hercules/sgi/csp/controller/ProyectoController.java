@@ -131,6 +131,7 @@ public class ProyectoController {
    * @param proyectoProrrogaService                    {@link ProyectoProrrogaService}.
    * @param proyectoPeriodoSeguimientoDocumentoService {@link ProyectoPeriodoSeguimientoDocumentoService}.
    * @param prorrogaDocumentoService                   {@link ProrrogaDocumentoService}.
+   * @param proyectoDocumentoService                   {@link ProyectoDocumentoService}.
    * @param socioPeriodoJustificacionDocumentoService  {@link SocioPeriodoJustificacionDocumentoService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,

@@ -1,8 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
@@ -10,7 +7,6 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,13 +71,8 @@ public class SolicitudProyectoEquipoController {
   public SolicitudProyectoEquipo update(@Valid @RequestBody SolicitudProyectoEquipo solicitudProyectoEquipo,
       @PathVariable Long id, Authentication authentication) {
     log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo, Long id) - start");
-
-    Boolean isAdministradorOrGestor = !CollectionUtils.isEmpty(
-        authentication.getAuthorities().stream().filter(authority -> authority.getAuthority().startsWith("CSP-SOL-C"))
-            .filter(Objects::nonNull).distinct().collect(Collectors.toList()));
-
     solicitudProyectoEquipo.setId(id);
-    SolicitudProyectoEquipo returnValue = service.update(solicitudProyectoEquipo, isAdministradorOrGestor);
+    SolicitudProyectoEquipo returnValue = service.update(solicitudProyectoEquipo);
     log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo, Long id) - end");
     return returnValue;
   }

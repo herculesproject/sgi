@@ -97,7 +97,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
     SolicitudProyectoEquipo updatedSolicitudProyectoEquipo = generarSolicitudProyectoEquipo(1L, 1L, 1L);
     updatedSolicitudProyectoEquipo.setMesFin(3);
 
-    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoEquipo>any(), ArgumentMatchers.anyBoolean()))
+    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoEquipo>any()))
         .willAnswer(new Answer<SolicitudProyectoEquipo>() {
           @Override
           public SolicitudProyectoEquipo answer(InvocationOnMock invocation) throws Throwable {
@@ -132,7 +132,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
 
     BDDMockito.willThrow(new SolicitudProyectoEquipoNotFoundException(updatedSolicitudProyectoEquipo.getId()))
         .given(service).findById(ArgumentMatchers.<Long>any());
-    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoEquipo>any(), ArgumentMatchers.anyBoolean()))
+    BDDMockito.given(service.update(ArgumentMatchers.<SolicitudProyectoEquipo>any()))
         .willThrow(new SolicitudProyectoEquipoNotFoundException(updatedSolicitudProyectoEquipo.getId()));
 
     // when: update SolicitudProyectoEquipo

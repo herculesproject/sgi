@@ -25,13 +25,11 @@ public interface SolicitudDocumentoService {
   /**
    * Actualiza los datos del {@link SolicitudDocumento}.
    * 
-   * @param solicitudDocumento      {@link SolicitudDocumento} con los datos
-   *                                actualizados.
-   * @param isAdministradorOrGestor Indiciador de si el usuario es administrador o
-   *                                gestor.
+   * @param solicitudDocumento {@link SolicitudDocumento} con los datos
+   *                           actualizados.
    * @return SolicitudDocumento {@link SolicitudDocumento} actualizado.
    */
-  SolicitudDocumento update(final SolicitudDocumento solicitudDocumento, Boolean isAdministradorOrGestor);
+  SolicitudDocumento update(final SolicitudDocumento solicitudDocumento);
 
   /**
    * Comprueba la existencia del {@link SolicitudDocumento} por id.

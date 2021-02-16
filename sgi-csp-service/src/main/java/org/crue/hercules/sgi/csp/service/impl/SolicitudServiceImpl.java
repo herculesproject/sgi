@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -144,7 +144,8 @@ public class SolicitudServiceImpl implements SolicitudService {
             || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()),
         "Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
 
-    isEditable(solicitud.getEstado().getEstado().getValue());
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(modificable(solicitud.getId()), "No se puede modificar la Solicitud");
 
     return repository.findById(solicitud.getId()).map((data) -> {
 
@@ -458,46 +459,6 @@ public class SolicitudServiceImpl implements SolicitudService {
   }
 
   /**
-   * Comprueba si la solicitud a la que está asociada está en el estado correcto
-   * para el usuario que la está modificando.
-   *
-   * @param estadoSolicitud estado de la solicitud
-   */
-  @Override
-  public void isEditable(String estadoSolicitud) {
-    log.debug("isEditable(String estadoSolicitud) - start");
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
-        authentication);
-
-    Boolean isAdministradorOrGestor = sgiMethodSecurityExpressionRoot.hasAuthority("CSP-SOL-C");
-
-    if (isAdministradorOrGestor) {
-
-      Assert.isTrue(
-          estadoSolicitud.equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-
-    } else {
-
-      Assert.isTrue(
-          estadoSolicitud.equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-              || estadoSolicitud.equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
-          "La solicitud asociada no se encuentra en un estado adecuado para ser actualizada");
-    }
-
-    log.debug("isEditable(String estadoSolicitud) - end");
-  }
-
-  /**
    * Genera el codigo de registro interno de la solicitud
    * 
    * @param solicitudId
@@ -579,6 +540,85 @@ public class SolicitudServiceImpl implements SolicitudService {
     }
 
     return posibleCrearProyecto;
+  }
+
+  /**
+   * Hace las comprobaciones para determinar si el usuario tiene la autorización
+   * indicada tanto de manera independiente como dentro de la unidad organizativa
+   * indicada.
+   *
+   * @param authority Permiso a comprobar.
+   * @param unidad    unidad organizativa
+   * @return true tiene autorización / false no tiene autorización
+   */
+  protected Boolean checkAuthority(String authority, String unidad) {
+    log.debug("checkAuthority(String authority, String unidad) - start");
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
+        authentication);
+
+    Boolean returnValue = Boolean.FALSE;
+
+    if (StringUtils.isBlank(unidad)) {
+      returnValue = sgiMethodSecurityExpressionRoot.hasAuthority(authority);
+    } else {
+      returnValue = (sgiMethodSecurityExpressionRoot.hasAuthority(authority)
+          || sgiMethodSecurityExpressionRoot.hasAuthority(authority + "_" + unidad));
+    }
+
+    log.debug("checkAuthority(String authority, String unidad) - end");
+    return returnValue;
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
+   * puede ser modificada. También se utilizará para permitir la creación,
+   * modificación o eliminación de ciertas entidades relacionadas con la propia
+   * {@link Solicitud}.
+   *
+   * @param id Id del {@link Solicitud}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  @Override
+  public Boolean modificable(Long id) {
+    log.debug("modificable(Long id) - start");
+
+    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    String unidadGestionSolicitud = solicitud.getUnidadGestionRef();
+
+    // solicitud activa para poder modificar
+    boolean returnValue = solicitud.getActivo();
+
+    // Se comprueba si el usuario tiene el permiso correspondiente
+    Boolean isAdministradorOrGestor = checkAuthority("CSP-SOL-C", unidadGestionSolicitud);
+    Boolean isInvestigador = checkAuthority("CSP-SOL-C-INV", unidadGestionSolicitud);
+
+    // Si no tiene permisos ni de administrador o gestor ni investigador no se podrá
+    // realizar la acción
+    if (returnValue && !isAdministradorOrGestor && !isInvestigador) {
+      returnValue = Boolean.FALSE;
+    }
+
+    if (returnValue && isAdministradorOrGestor) {
+      returnValue = (solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.BORRADOR)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.PRESENTADA)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION));
+    }
+
+    if (returnValue && isInvestigador) {
+      returnValue = (solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.BORRADOR)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL)
+          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL));
+    }
+
+    log.debug("modificable(Long id) - end");
+    return returnValue;
   }
 
 }

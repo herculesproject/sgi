@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
@@ -53,13 +54,16 @@ public class SolicitudProyectoSocioServiceTest {
   @Mock
   private SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudProyectoSocioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudProyectoSocioServiceImpl(repository, solicitudRepository,
         solicitudProyectoEquipoSocioRepository, solicitudProyectoPeriodoPagoRepository,
-        solicitudProyectoPeriodoJustificacionRepository);
+        solicitudProyectoPeriodoJustificacionRepository, solicitudService);
   }
 
   @Test
@@ -182,6 +186,8 @@ public class SolicitudProyectoSocioServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoSocio>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudProyectoSocio
     SolicitudProyectoSocio solicitudProyectoSocioActualizada = service.update(solicitudProyectoSocioActualizado);
 
@@ -215,6 +221,8 @@ public class SolicitudProyectoSocioServiceTest {
     BDDMockito.given(solicitudRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoSocio
     // then: Lanza una excepcion porque el SolicitudProyectoSocio no existe
@@ -387,7 +395,8 @@ public class SolicitudProyectoSocioServiceTest {
       Long solicitudProyectoDatosId, Long rolSocioId) {
 
     SolicitudProyectoSocio solicitudProyectoSocio = SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
+            .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
         .rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1).mesFin(3).numInvestigadores(2)
         .importeSolicitado(new BigDecimal("335")).empresaRef("002").build();
 

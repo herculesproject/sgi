@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadora
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEntidadFinanciadoraAjenaSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -36,14 +37,16 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
   private final SolicitudProyectoEntidadFinanciadoraAjenaRepository repository;
   private final FuenteFinanciacionRepository fuenteFinanciacionRepository;
   private final TipoFinanciacionRepository tipoFinanciacionRepository;
+  private final SolicitudService solicitudService;
 
   public SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl(
       SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository,
-      FuenteFinanciacionRepository fuenteFinanciacionRepository,
-      TipoFinanciacionRepository tipoFinanciacionRepository) {
+      FuenteFinanciacionRepository fuenteFinanciacionRepository, TipoFinanciacionRepository tipoFinanciacionRepository,
+      SolicitudService solicitudService) {
     this.repository = solicitudProyectoEntidadFinanciadoraAjenaRepository;
     this.fuenteFinanciacionRepository = fuenteFinanciacionRepository;
     this.tipoFinanciacionRepository = tipoFinanciacionRepository;
+    this.solicitudService = solicitudService;
   }
 
   /**
@@ -90,9 +93,16 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
       SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizar) {
     log.debug(
         "update(SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizar) - start");
-
+    Assert.notNull(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoDatos().getSolicitud(),
+        "La solicitud no puede ser null para actualizar la SolicitudModalidad");
     Assert.notNull(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId(),
         "SolicitudProyectoEntidadFinanciadoraAjena id no puede ser null para actualizar un SolicitudProyectoEntidadFinanciadoraAjena");
+
+    // comprobar si la solicitud es modificable
+    Assert.isTrue(
+        solicitudService.modificable(
+            solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoDatos().getSolicitud().getId()),
+        "No se puede modificar SolicitudProyectoEntidadFinanciadoraAjena");
 
     return repository.findById(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId())
         .map(solicitudProyectoEntidadFinanciadoraAjena -> {

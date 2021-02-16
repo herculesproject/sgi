@@ -50,11 +50,14 @@ public class SolicitudHitoServiceTest {
   @Mock
   private TipoHitoRepository tipoHitoRepository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudHitoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudHitoServiceImpl(repository, solicitudRepository, tipoHitoRepository);
+    service = new SolicitudHitoServiceImpl(repository, solicitudRepository, tipoHitoRepository, solicitudService);
   }
 
   @Test
@@ -204,6 +207,8 @@ public class SolicitudHitoServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudHito>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     // when: Actualizamos el SolicitudHito
     SolicitudHito solicitudHitoActualizada = service.update(solicitudComentarioActualizado, Boolean.TRUE);
 
@@ -254,6 +259,7 @@ public class SolicitudHitoServiceTest {
         .willReturn(Optional.of(solicitudHito.getTipoHito()));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudHito
     // then: Lanza una excepcion porque el SolicitudHito no existe

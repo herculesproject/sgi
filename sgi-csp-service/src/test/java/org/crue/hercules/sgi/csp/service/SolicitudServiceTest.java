@@ -241,7 +241,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void update_ReturnsSolicitud() {
     // given: Un nuevo Solicitud con las observaciones actualizadas
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -279,7 +279,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void update_WithIdNotExist_ThrowsSolicitudNotFoundException() {
     // given: Un Solicitud actualizado con un id que no existe
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -290,21 +290,6 @@ public class SolicitudServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el Solicitud no existe
     Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
         .isInstanceOf(SolicitudNotFoundException.class);
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
-  public void update_SolicitudActiveFalse_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Solicitud que no tiene creadorRef
-    Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
-    solicitud.setActivo(false);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
-
-    // when: Creamos el Solicitud
-    // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Solicitud tiene que estar activo para actualizarse");
   }
 
   @Test

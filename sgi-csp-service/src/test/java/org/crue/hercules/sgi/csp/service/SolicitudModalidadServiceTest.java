@@ -48,12 +48,15 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   @Mock
   private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
 
+  @Mock
+  private SolicitudService solicitudService;
+
   private SolicitudModalidadService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudModalidadServiceImpl(repository, solicitudRepository, programaRepository,
-        convocatoriaEntidadConvocanteRepository);
+        convocatoriaEntidadConvocanteRepository, solicitudService);
   }
 
   @Test
@@ -239,6 +242,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudModalidad>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudModalidad
     SolicitudModalidad solicitudModalidadActualizada = service.update(solicitudModalidadProgramaActualizado);
@@ -275,6 +279,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
     BDDMockito.given(programaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudModalidad
     // then: Lanza una excepcion porque el SolicitudModalidad no existe
@@ -297,6 +302,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(4L)));
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudModalidad
     // then: Lanza una excepcion
@@ -316,6 +322,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(1L)));
+    BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudModalidad
     // then: Lanza una excepcion
