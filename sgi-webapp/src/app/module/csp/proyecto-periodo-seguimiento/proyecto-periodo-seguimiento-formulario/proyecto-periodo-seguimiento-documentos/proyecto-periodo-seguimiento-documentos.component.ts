@@ -15,6 +15,7 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { Subscription } from 'rxjs';
 import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
@@ -112,10 +113,19 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
     }));
     this.group.initialize();
     const id = this.formPart.proyecto?.modeloEjecucion?.id;
+    const options = {
+      filters: [
+        {
+          field: 'tipoDocumento.activo',
+          type: SgiRestFilterType.EQUALS,
+          value: 'true',
+        } as SgiRestFilter
+      ]
+    } as SgiRestFindOptions;
     this.subscriptions.push(
-      this.modeloEjecucionService.findModeloTipoDocumento(id).subscribe(
+      this.modeloEjecucionService.findModeloTipoDocumento(id, options).subscribe(
         (tipos) => {
-          this.tiposDocumento = tipos.items.filter(tipo => tipo.modeloTipoFase).map(t => t.tipoDocumento);
+          this.tiposDocumento = tipos.items.filter(tipo => tipo.modeloTipoFase === null).map(t => t.tipoDocumento);
         }
       )
     );

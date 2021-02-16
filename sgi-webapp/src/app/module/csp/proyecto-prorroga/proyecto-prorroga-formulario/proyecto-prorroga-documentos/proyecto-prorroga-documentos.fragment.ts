@@ -172,20 +172,30 @@ export class ProyectoProrrogaDocumentosFragment extends Fragment {
     node.documento.value.documentoRef = node.fichero?.documentoRef;
     const keyTipoDocumento = `${node.documento.value.tipoDocumento ? node.documento.value.tipoDocumento.id : 0}`;
     let nodeTipoDoc = this.nodeLookup.get(keyTipoDocumento);
+    let addToRoot = false;
+    let removedRootNode: NodeDocumento;
     if (!nodeTipoDoc) {
       nodeTipoDoc = new NodeDocumento(keyTipoDocumento, node.documento.value.tipoDocumento?.nombre, 1);
       this.nodeLookup.set(keyTipoDocumento, nodeTipoDoc);
+      addToRoot = true;
     }
     // Si el padre ha cambiado limpiamos la rama y establecemos el nuevo padre
     if (nodeTipoDoc !== node.parent) {
       node.parent.removeChild(node);
+      removedRootNode = this.removeEmptyParentNodes(node.parent);
       nodeTipoDoc.addChild(node);
     }
     else {
       // Ordenamos los hijos, porque puede haber cambiado el nombre
       node.parent.sortChildsByTitle();
     }
-    const current = this.documentos$.value;
+    let current = this.documentos$.value;
+    if (removedRootNode) {
+      current = current.filter((n) => n !== removedRootNode);
+    }
+    if (addToRoot) {
+      current.push(nodeTipoDoc);
+    }
     this.publishNodes(current);
     this.setChanges(true);
   }
