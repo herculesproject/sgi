@@ -29,6 +29,7 @@ import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario
 import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
+import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
 const MSG_LISTADO_TITLE = marker('csp.convocatoria.listado.titulo');
@@ -130,7 +131,8 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     resolve: {
       convocatoriaId: ConvocatoriaResolver,
-      configuracionSolicitud: ConfiguracionSolicitudResolver
+      configuracionSolicitud: ConfiguracionSolicitudResolver,
+      modeloEjecucionId: ModeloEjecucionIdResolver
     },
     data: {
       title: MSG_EDIT_TITLE

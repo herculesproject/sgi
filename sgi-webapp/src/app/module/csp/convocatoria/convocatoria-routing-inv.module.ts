@@ -23,6 +23,7 @@ import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/conv
 import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.component';
 import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
 import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.component';
+import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 
 const MSG_CONVOCATORIAS_TITLE = marker('inv.convocatoria.listado.titulo');
 const MSG_CONVOCATORIAS_VER_TITLE = marker('inv.convocatoria.ver.titulo');
@@ -43,7 +44,8 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     resolve: {
       convocatoriaId: ConvocatoriaResolver,
-      configuracionSolicitud: ConfiguracionSolicitudResolver
+      configuracionSolicitud: ConfiguracionSolicitudResolver,
+      modeloEjecucionId: ModeloEjecucionIdResolver
     },
     data: {
       title: MSG_CONVOCATORIAS_VER_TITLE,

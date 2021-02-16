@@ -24,7 +24,7 @@ const MSG_DELETE = marker('csp.convocatoria.enlace.listado.borrar');
 export class ConvocatoriaEnlaceComponent extends FragmentComponent implements OnInit, OnDestroy {
   formPart: ConvocatoriaEnlaceFragment;
   private subscriptions: Subscription[] = [];
-  public disableAddEnlace = true;
+  disableAddEnlace = true;
 
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['url', 'descripcion', 'tipoEnlace', 'acciones'];
@@ -36,7 +36,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
   constructor(
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
   ) {
     super(actionService.FRAGMENT.ENLACES, actionService);
     this.formPart = this.fragment as ConvocatoriaEnlaceFragment;

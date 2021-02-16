@@ -8,6 +8,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
 import { ConvocatoriaResolver } from './convocatoria.resolver';
+import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
 import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
@@ -79,6 +80,7 @@ import { CspModalsModule } from '../modals/csp-modals.module';
   providers: [
     ConvocatoriaResolver,
     ConfiguracionSolicitudResolver,
+    ModeloEjecucionIdResolver
   ]
 })
 export class ConvocatoriaModule { }

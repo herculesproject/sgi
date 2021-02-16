@@ -33,7 +33,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     }
   }
 
-  public addEnlace(enlace: IConvocatoriaEnlace) {
+  public addEnlace(enlace: IConvocatoriaEnlace): void {
     const wrapped = new StatusWrapper<IConvocatoriaEnlace>(enlace);
     wrapped.setCreated();
     const current = this.enlace$.value;
@@ -42,7 +42,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     this.setChanges(true);
   }
 
-  public deleteEnlace(wrapper: StatusWrapper<IConvocatoriaEnlace>) {
+  public deleteEnlace(wrapper: StatusWrapper<IConvocatoriaEnlace>): void {
     const current = this.enlace$.value;
     const index = current.findIndex(
       (value: StatusWrapper<IConvocatoriaEnlace>) => value === wrapper

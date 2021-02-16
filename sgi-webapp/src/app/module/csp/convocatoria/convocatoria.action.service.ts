@@ -90,8 +90,13 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   private destionarioRequisitoIP = false;
   private destionarioRequisitoEquipo = false;
 
+  private modeloEjecucionIdValue: number;
+
   get modeloEjecucionId(): number {
-    return this.getDatosGeneralesConvocatoria().modeloEjecucion?.id;
+    if (this.datosGenerales.isInitialized()) {
+      return this.datosGenerales.getValue().modeloEjecucion?.id;
+    }
+    return this.modeloEjecucionIdValue;
   }
 
   get duracion(): number {
@@ -102,7 +107,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
 
   constructor(
     fb: FormBuilder,
-    private readonly logger: NGXLogger,
+    logger: NGXLogger,
     route: ActivatedRoute,
     private convocatoriaService: ConvocatoriaService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
@@ -132,6 +137,9 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     }
     if (route.snapshot.data.configuracionSolicitud) {
       this.configuracionSolicitud = route.snapshot.data.configuracionSolicitud;
+    }
+    if (route.snapshot.data.modeloEjecucionId) {
+      this.modeloEjecucionIdValue = route.snapshot.data.modeloEjecucionId;
     }
 
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(

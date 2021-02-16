@@ -66,9 +66,9 @@ export class ConvocatoriaEnlaceModalComponent extends
   /**
    * Carga todos los tipos de enlace
    */
-  loadTiposEnlaces() {
+  loadTiposEnlaces(): void {
     this.subscriptions.push(this.modeloEjecucionService.findModeloTipoEnlace(this.data.idModeloEjecucion).subscribe(
-      (res: SgiRestListResult<IModeloTipoEnlace>) => {
+      (res) => {
         this.modeloTiposEnlaceFiltered = res.items;
         this.modeloTiposEnlace$ = this.formGroup.controls.tipoEnlace.valueChanges
           .pipe(

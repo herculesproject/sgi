@@ -20,6 +20,7 @@ import { ConvocatoriaEntidadConvocanteService, IConvocatoriaEntidadConvocanteBac
 import { ConvocatoriaEntidadFinanciadoraService, IConvocatoriaEntidadFinanciadoraBackend } from './convocatoria-entidad-financiadora.service';
 import { ConvocatoriaEntidadGestoraService, IConvocatoriaEntidadGestoraBackend } from './convocatoria-entidad-gestora.service';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 
 @Injectable({
   providedIn: 'root'
@@ -168,10 +169,10 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
   /**
- * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
- * @param id convocatoria
- * @param options opciones de búsqueda.
- */
+   * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
   findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
     const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/permitidos`;
     return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl);
@@ -252,6 +253,11 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   getUnidadGestionRef(id: number): Observable<string> {
     const url = `${this.endpointUrl}/${id}/unidadgestion`;
     return this.http.get(url, { responseType: 'text' });
+  }
+
+  getModeloEjecucion(id: number): Observable<IModeloEjecucion> {
+    const url = `${this.endpointUrl}/${id}/modeloejecucion`;
+    return this.http.get<IModeloEjecucion>(url);
   }
 
   registrable(id: number): Observable<boolean> {

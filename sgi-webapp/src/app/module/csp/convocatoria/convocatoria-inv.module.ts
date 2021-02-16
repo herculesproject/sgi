@@ -8,6 +8,7 @@ import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ConvocatoriaListadoInvComponent } from './convocatoria-listado-inv/convocatoria-listado-inv.component';
 import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module';
 import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
+import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolv
   ],
   providers: [
     ConvocatoriaResolver,
-    ConfiguracionSolicitudResolver
+    ConfiguracionSolicitudResolver,
+    ModeloEjecucionIdResolver
   ]
 })
 export class ConvocatoriaInvModule { }

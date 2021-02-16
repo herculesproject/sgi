@@ -361,7 +361,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
    * @param value del input para autocompletar
    */
   private filtroRegimenConcurrencia(value: string): ITipoRegimenConcurrencia[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = value?.toString()?.toLowerCase();
     return this.tipoRegimenConcurrenciaFiltered.filter(
       regimenConcurrencia => regimenConcurrencia.nombre.toLowerCase().includes(filterValue)
     );
@@ -382,7 +382,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
    * @param value del input para autocompletar
    */
   private filtroTipoAmbitoGeografico(value: string): ITipoAmbitoGeografico[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = value?.toString()?.toLowerCase();
     return this.tipoAmbitoGeograficoFiltered.filter(
       ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue)
     );
