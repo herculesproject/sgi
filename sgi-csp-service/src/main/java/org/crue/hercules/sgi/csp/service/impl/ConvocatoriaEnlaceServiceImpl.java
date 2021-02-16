@@ -172,20 +172,18 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
 
           // La asignación al ModeloEjecucion está activa
           Assert.isTrue(
-              modeloTipoEnlace.get().getTipoEnlace().getId() == convocatoriaEnlace.getTipoEnlace().getId()
-                  || modeloTipoEnlace.get().getActivo(),
+              modeloTipoEnlace.get().getTipoEnlace().getId() == convocatoriaEnlaceActualizar.getTipoEnlace().getId()
+                  && modeloTipoEnlace.get().getActivo(),
               "ModeloTipoEnlace '" + modeloTipoEnlace.get().getTipoEnlace().getNombre()
                   + "' no está activo para el ModeloEjecucion '"
                   + modeloTipoEnlace.get().getModeloEjecucion().getNombre() + "'");
 
           // El TipoEnlace está activo
           Assert.isTrue(
-              modeloTipoEnlace.get().getTipoEnlace().getId() == convocatoriaEnlace.getTipoEnlace().getId()
-                  || modeloTipoEnlace.get().getTipoEnlace().getActivo(),
+              modeloTipoEnlace.get().getTipoEnlace().getId() == convocatoriaEnlaceActualizar.getTipoEnlace().getId()
+                  && modeloTipoEnlace.get().getTipoEnlace().getActivo(),
               "TipoEnlace '" + modeloTipoEnlace.get().getTipoEnlace().getNombre() + "' no está activo");
-
           convocatoriaEnlaceActualizar.setTipoEnlace(modeloTipoEnlace.get().getTipoEnlace());
-
         } else {
           convocatoriaEnlaceActualizar.setTipoEnlace(null);
         }

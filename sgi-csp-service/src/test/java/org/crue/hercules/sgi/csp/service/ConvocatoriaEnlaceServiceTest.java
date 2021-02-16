@@ -374,7 +374,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // de la convocatoria inactiva
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
     ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
-    convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.TRUE));
+    convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.FALSE));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
 
