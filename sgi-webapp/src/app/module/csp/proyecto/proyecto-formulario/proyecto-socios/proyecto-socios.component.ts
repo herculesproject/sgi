@@ -27,6 +27,7 @@ const MSG_ERROR = marker('csp.proyecto.socios.borrar.relaciones.error');
 
 export interface IProyectoSocioState {
   proyectoId: number;
+  coordinadorExterno: boolean;
   proyectoSocio: IProyectoSocio;
   selectedProyectoSocios: IProyectoSocio[];
   urlProyecto: string;
@@ -104,6 +105,7 @@ export class ProyectoSociosComponent extends FragmentComponent implements OnInit
   createState(wrapper?: StatusWrapper<IProyectoSocio>): IProyectoSocioState {
     const state: IProyectoSocioState = {
       proyectoId: this.fragment.getKey() as number,
+      coordinadorExterno: this.actionService.coordinadorExterno,
       proyectoSocio: wrapper ? wrapper.value : {} as IProyectoSocio,
       selectedProyectoSocios: this.dataSource.data.map(element => element.value),
       urlProyecto: this.router.url

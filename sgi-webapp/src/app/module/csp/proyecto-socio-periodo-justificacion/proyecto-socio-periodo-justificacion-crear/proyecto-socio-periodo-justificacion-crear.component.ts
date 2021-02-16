@@ -41,6 +41,7 @@ export class ProyectoSocioPeriodoJustificacionCrearComponent extends ActionCompo
     this.state = {
       proyectoSocio: history.state?.proyectoSocio,
       proyectoId: history.state?.proyectoId,
+      coordinadorExterno: history.state?.coordiandorExterno,
       selectedProyectoSocios: history.state?.selectedProyectoSocios,
       urlProyecto: history.state?.urlProyecto
     };

@@ -8,6 +8,7 @@ import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service'
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
+import { IProyectoSocioState } from '../proyecto/proyecto-formulario/proyecto-socios/proyecto-socios.component';
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.fragment';
 import { ProyectoSocioEquipoFragment } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.fragment';
 import { ProyectoSocioPeriodoJustificacionFragment } from './proyecto-socio-formulario/proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion.fragment';
@@ -32,6 +33,11 @@ export class ProyectoSocioActionService extends ActionService {
   private proyectoId: number;
   private proyectoSocio: IProyectoSocio;
   private selectedProyectoSocios: IProyectoSocio[];
+  private coordinadorExternoValue = false;
+
+  get coordinadorExterno(): boolean {
+    return this.coordinadorExternoValue;
+  }
 
   constructor(
     logger: NGXLogger,
@@ -44,10 +50,12 @@ export class ProyectoSocioActionService extends ActionService {
   ) {
     super();
 
-    this.urlProyecto = history.state.urlProyecto;
-    this.proyectoSocio = history.state.proyectoSocio;
-    this.proyectoId = history.state.proyectoId;
-    this.selectedProyectoSocios = history?.state?.selectedProyectoSocios;
+    const state: IProyectoSocioState = history.state;
+    this.urlProyecto = state?.urlProyecto;
+    this.proyectoSocio = state?.proyectoSocio;
+    this.proyectoId = state?.proyectoId;
+    this.selectedProyectoSocios = state?.selectedProyectoSocios;
+    this.coordinadorExternoValue = state?.coordinadorExterno;
 
     if (this.proyectoSocio?.id) {
       this.enableEdit();

@@ -24,6 +24,7 @@ describe('ProyectoSocioCrearComponent', () => {
 
   const state: IProyectoSocioState = {
     proyectoId: 1,
+    coordinadorExterno: false,
     proyectoSocio: {} as IProyectoSocio,
     selectedProyectoSocios: [],
     urlProyecto: ''

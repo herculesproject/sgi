@@ -32,6 +32,7 @@ describe('ProyectoSocioEquipoComponent', () => {
 
   const state: IProyectoSocioState = {
     proyectoId: 1,
+    coordinadorExterno: false,
     proyectoSocio,
     selectedProyectoSocios: [],
     urlProyecto: ''

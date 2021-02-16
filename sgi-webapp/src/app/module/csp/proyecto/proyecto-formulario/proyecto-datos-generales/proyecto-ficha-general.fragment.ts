@@ -28,7 +28,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   comentarioEstadoCancelado: boolean;
 
   paquetesTrabajo$: Subject<boolean> = new Subject<boolean>();
-
+  coordinadorExterno$: Subject<boolean> = new Subject<boolean>();
   proyectoConvocatoria$: Subject<IProyecto> = new Subject<IProyecto>();
 
   constructor(
@@ -168,6 +168,11 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.subscriptions.push(
       this.getFormGroup().get('paquetesTrabajo').valueChanges.subscribe((value) => {
         this.paquetesTrabajo$.next(value);
+      })
+    );
+    this.subscriptions.push(
+      this.getFormGroup().get('coordinadorExterno').valueChanges.subscribe((value) => {
+        this.coordinadorExterno$.next(value);
       })
     );
     return result;

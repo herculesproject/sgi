@@ -78,6 +78,11 @@ export class ProyectoActionService extends ActionService {
   proyecto: IProyecto;
   readonly = false;
   private paqueteTrabajoValue = false;
+  private coordinadorExternoValue = false;
+
+  get coordinadorExterno(): boolean {
+    return this.coordinadorExternoValue;
+  }
 
   get modeloEjecucionId(): number {
     return this.getDatosGeneralesProyecto().modeloEjecucion?.id;
@@ -138,6 +143,7 @@ export class ProyectoActionService extends ActionService {
     this.fichaGeneral = new ProyectoFichaGeneralFragment(logger, fb, this.proyecto?.id,
       proyectoService, unidadGestionService, convocatoriaService, this);
 
+    this.fichaGeneral.coordinadorExterno$.subscribe((value) => this.coordinadorExternoValue = Boolean(value));
     this.fichaGeneral.paquetesTrabajo$.subscribe((value) => this.paqueteTrabajoValue = Boolean(value));
     this.paqueteTrabajoValue = Boolean(this.proyecto?.paquetesTrabajo);
     this.fichaGeneral.proyectoConvocatoria$.subscribe((value) => this.proyectoConvocatoriaValue = value);

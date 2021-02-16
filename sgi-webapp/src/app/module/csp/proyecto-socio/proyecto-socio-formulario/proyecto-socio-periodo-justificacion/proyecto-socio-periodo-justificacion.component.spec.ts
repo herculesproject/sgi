@@ -20,6 +20,7 @@ describe('ProyectoSocioPeriodoJustificacionComponent', () => {
 
   const state: IProyectoSocioState = {
     proyectoId: 1,
+    coordinadorExterno: false,
     proyectoSocio: { id: 1 } as IProyectoSocio,
     selectedProyectoSocios: [],
     urlProyecto: ''
