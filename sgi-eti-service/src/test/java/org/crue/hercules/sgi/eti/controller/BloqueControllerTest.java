@@ -102,6 +102,22 @@ public class BloqueControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-Bloque-VER" })
+  public void findAll_ReturnsNotContent() throws Exception {
+    // given: Bloque empty
+    List<Bloque> bloques = new ArrayList<>();
+
+    BDDMockito
+        .given(bloqueService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(bloques));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(BLOQUE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-Bloque-VER" })
   public void findAll_WithPaging_ReturnsBloqueSubList() throws Exception {
     // given: One hundred Bloque
     List<Bloque> bloques = new ArrayList<>();
