@@ -101,6 +101,23 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-VER" })
+  public void findAll_ReturnsNotContent() throws Exception {
+    // given: EquipoTrabajo empty
+    List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
+
+    BDDMockito
+        .given(
+            equipoTrabajoService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(equipoTrabajos));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-VER" })
   public void findAll_WithPaging_ReturnsEquipoTrabajoSubList() throws Exception {
     // given: One hundred EquipoTrabajo
     List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
