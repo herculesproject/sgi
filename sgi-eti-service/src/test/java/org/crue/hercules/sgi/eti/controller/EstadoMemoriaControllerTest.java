@@ -202,6 +202,23 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOMEMORIA-VER" })
+  public void findAll_ReturnNotContent() throws Exception {
+    // given: EstadoMemoria empty
+    List<EstadoMemoria> memorias = new ArrayList<>();
+
+    BDDMockito
+        .given(
+            estadoMemoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADOMEMORIA-VER" })
   public void findAll_WithPaging_ReturnsEstadoMemoriaSubList() throws Exception {
     // given: One hundred EstadoMemoria
     List<EstadoMemoria> memorias = new ArrayList<>();
