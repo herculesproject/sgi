@@ -219,6 +219,24 @@ public class TipoMemoriaComiteControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoMemoriaComite empty
+    List<TipoMemoriaComite> tipoMemoriaComites = new ArrayList<>();
+
+    BDDMockito.given(
+        tipoMemoriaComiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tipoMemoriaComites));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_WithPaging_ReturnsTipoMemoriaComiteSubList() throws Exception {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
