@@ -128,10 +128,13 @@ public class FormacionEspecificaIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+    String sort = "nombre-";
 
-    final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(
-        FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<FormacionEspecifica>>() {
+    URI uri = UriComponentsBuilder.fromUriString(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
+
+    final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<FormacionEspecifica>>() {
         });
 
     // then: Respuesta OK, FormacionEspecificas retorna la información de la página
@@ -143,11 +146,10 @@ public class FormacionEspecificaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
-    // Contiene de nombre= 'A: Cuidado de los animales' a 'C: Realización de los
-    // procedimientos'
-    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("A: Cuidado de los animales");
-    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("B: Eutanasia de los animales");
-    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("C: Realización de los procedimientos");
+    // Contiene de nombre= 'H: No requiere' a 'F: Veterinario designado'
+    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("H: No requiere");
+    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("G: Sin especificar");
+    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("F: Veterinario designado");
   }
 
   @Test
