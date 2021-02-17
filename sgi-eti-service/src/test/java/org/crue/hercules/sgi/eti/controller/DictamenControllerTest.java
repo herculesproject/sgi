@@ -191,6 +191,23 @@ public class DictamenControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
+  public void findAll_ReturnsNotContent() throws Exception {
+    // given: Dictamen empty
+    List<Dictamen> dictamenes = new ArrayList<>();
+
+    BDDMockito
+        .given(dictamenService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(dictamenes));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
   public void findAll_WithPaging_ReturnsDictamenSubList() throws Exception {
     // given: One hundred Dictamen
     List<Dictamen> dictamenes = new ArrayList<>();
