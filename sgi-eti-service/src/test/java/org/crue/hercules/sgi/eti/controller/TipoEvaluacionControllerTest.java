@@ -331,6 +331,25 @@ public class TipoEvaluacionControllerTest extends BaseControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOEVALUACION-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoEvaluacion empty
+    List<TipoEvaluacion> tipoEvaluaciones = new ArrayList<>();
+
+    BDDMockito.given(
+        tipoEvaluacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tipoEvaluaciones));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void findAllDictamenByTipoEvaluacionAndRevisionMinima_WithTipoEvaluacionId_ReturnsListaDictamen()
       throws Exception {
