@@ -188,6 +188,22 @@ public class EstadoActaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOACTA-VER" })
+  public void findAll_Unlimited_ReturnsNotContent() throws Exception {
+    // given: estadosactas empty
+    List<EstadoActa> estadosActas = new ArrayList<>();
+
+    BDDMockito
+        .given(estadoActaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(estadosActas));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADOACTA-VER" })
   public void findAll_WithPaging_ReturnsEstadoActaSubList() throws Exception {
     // given: One hundred estados actas
     List<EstadoActa> estadosActas = new ArrayList<>();
