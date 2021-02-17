@@ -272,6 +272,24 @@ public class TareaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: Tareas empty
+    List<Tarea> tareas = new ArrayList<>();
+
+    BDDMockito
+        .given(tareaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tareas));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TAREA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get error No Content.
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto Tarea
    * 
