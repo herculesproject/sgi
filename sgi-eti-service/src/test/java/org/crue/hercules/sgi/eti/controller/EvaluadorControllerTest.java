@@ -355,6 +355,24 @@ public class EvaluadorControllerTest extends BaseControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-V" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: Evaluadores empty
+    List<Evaluador> evaluadores = new ArrayList<>();
+
+    BDDMockito
+        .given(evaluadorService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluadores));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-VR", "ETI-EVC-EVALR" })
   public void getEvaluaciones_Unlimited_ReturnsFullEvaluacionList() throws Exception {
     // given: Existen 100 evaluaciones
@@ -518,6 +536,26 @@ public class EvaluadorControllerTest extends BaseControllerTest {
       Evaluador evaluador = actual.get(i);
       Assertions.assertThat(evaluador.getResumen()).isEqualTo("Evaluador" + String.format("%03d", j));
     }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
+  public void findAllByComiteSinconflictoInteresesMemoria_ReturnsNoContent() throws Exception {
+    // given: Evaluadores empty
+    Long idComite = 1L;
+    Long idMemoria = 1L;
+    List<Evaluador> evaluadores = new ArrayList<>();
+
+    BDDMockito.given(evaluadorService.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluadores));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_SINCONFLICTOINTERES, idComite, idMemoria)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
