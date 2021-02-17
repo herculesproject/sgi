@@ -188,6 +188,26 @@ public class TipoMemoriaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoMemoria empty
+    List<TipoMemoria> tipoMemorias = new ArrayList<>();
+
+    BDDMockito
+        .given(
+            tipoMemoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tipoMemorias));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_MEMORIA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
   public void findAll_WithPaging_ReturnsTipoMemoriaSubList() throws Exception {
     // given: One hundred TipoMemoria
     List<TipoMemoria> tipoMemorias = new ArrayList<>();
