@@ -193,6 +193,23 @@ public class CargoComiteControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-CARGOCOMITE-VER" })
+  public void findAll_ReturnsNotContent() throws Exception {
+    // given: CargoComite empty
+    List<CargoComite> cargoComites = new ArrayList<>();
+
+    BDDMockito
+        .given(
+            cargoComiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(cargoComites));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CARGO_COMITE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CARGOCOMITE-VER" })
   public void findAll_WithPaging_ReturnsCargoComiteSubList() throws Exception {
     // given: One hundred CargoComite
     List<CargoComite> cargoComites = new ArrayList<>();
