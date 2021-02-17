@@ -196,6 +196,22 @@ public class AsistentesControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
+  public void findAll_ReturnNotContent() throws Exception {
+    // given: Asistentes empty
+    List<Asistentes> asistentes = new ArrayList<>();
+
+    BDDMockito
+        .given(asistenteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(asistentes));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
   public void findAll_WithPaging_ReturnsAsistentesSubList() throws Exception {
     // given: One hundred Asistentes
     List<Asistentes> asistentes = new ArrayList<>();
