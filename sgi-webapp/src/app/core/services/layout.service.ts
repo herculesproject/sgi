@@ -60,9 +60,16 @@ export class LayoutService {
     const urlStack: string[] = [];
 
     // The last navigation is discarded every time
-    navigationStack = this.removeLastNoTitledRoutes(navigationStack.slice(0, navigationStack.length - 1));
+    let endPositionsToDiscard = 1;
+    // Check reverse navigation to discard nested empty end paths or paths without a title defined
+    let p = navigationStack.length - 1;
+    while (p > 0 && (navigationStack[p].segments.length < 1 || !navigationStack[p]?.routeConfig?.data?.title)) {
+      endPositionsToDiscard++;
+      p--;
+    }
 
-    for (let i = 0; i < navigationStack.length; i++) {
+    const endPosition = navigationStack.length - endPositionsToDiscard;
+    for (let i = 0; i < endPosition; i++) {
       const navigation = navigationStack[i];
       if (navigation.segments && navigation.segments.length > 0) {
         urlStack.push(...navigation.segments.map((s) => s.path));
@@ -74,16 +81,6 @@ export class LayoutService {
       }
     }
     return data;
-  }
-
-  private removeLastNoTitledRoutes(navigationStack: Navigation[]): Navigation[] {
-    let discardCounter = 0;
-    // Check reverse navigation to discard nested empty end paths or paths without a title defined
-    for (let p = navigationStack.length - 1;
-      p > 0 && (navigationStack[p].segments.length < 1 || !navigationStack[p]?.routeConfig?.data?.title);
-      discardCounter++, p--) { }
-    const endPosition = navigationStack.length - discardCounter - 1;
-    return navigationStack.slice(0, endPosition);
   }
 
   private getNearestTitle(navigations: Navigation[]): Title {
@@ -100,11 +97,17 @@ export class LayoutService {
   }
 
   private getTitle(navigationStack: Navigation[]): Title {
-    navigationStack = this.removeLastNoTitledRoutes(navigationStack);
     if (navigationStack.length === 0) {
       return undefined;
     }
-    const nav = navigationStack[navigationStack.length - 1];
+    let endPositionsToDiscard = 0;
+    // Check reverse navigation to discard nested paths without a title defined
+    let p = navigationStack.length - 1;
+    while (p > 0 && (!navigationStack[p]?.routeConfig?.data?.title)) {
+      endPositionsToDiscard++;
+      p--;
+    }
+    const nav = navigationStack[navigationStack.length - endPositionsToDiscard - 1];
     if (nav?.routeConfig?.data?.title) {
       return this.toTitle(nav.routeConfig.data);
     }
