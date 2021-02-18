@@ -43,6 +43,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tipodocumentos";
+  private static final String TIPO_DOCUMENTO_INICIAL_CONTROLLER_BASE_PATH = "/iniciales";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
@@ -346,6 +347,45 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
         // then: Get a page one hundred TipoDocumento
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
+  public void findTipoDocumentacionInicial_ReturnsFullTipoDocumentoInicialList() throws Exception {
+    // given: One hundred TipoDocumento
+    List<TipoDocumento> tipoDocumentos = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(tipoDocumentoService.findTipoDocumentacionInicial(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(tipoDocumentos));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + TIPO_DOCUMENTO_INICIAL_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred TipoDocumento iniciales
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
+  public void findTipoDocumentacionInicial_ReturnsNoContent() throws Exception {
+    // given: TipoDocumento empty
+    List<TipoDocumento> tipoDocumentos = new ArrayList<>();
+
+    BDDMockito.given(tipoDocumentoService.findTipoDocumentacionInicial(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(tipoDocumentos));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + TIPO_DOCUMENTO_INICIAL_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        // then: Devuelve error No Content
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**
