@@ -168,6 +168,23 @@ public class FormacionEspecificaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllFormacionEspecifica() {
+    // given: One hundred FormacionEspecifica
+    List<FormacionEspecifica> formacionEspecificas = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      formacionEspecificas
+          .add(generarMockFormacionEspecifica(Long.valueOf(i), "FormacionEspecifica" + String.format("%03d", i)));
+    }
+    BDDMockito.doNothing().when(formacionEspecificaRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> formacionEspecificaService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullFormacionEspecificaList() {
     // given: One hundred FormacionEspecifica
     List<FormacionEspecifica> formacionEspecificas = new ArrayList<>();
