@@ -464,6 +464,24 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V", "ETI-PEV-E" })
+  public void findAll_ReturnsNoContent() throws Exception { // given: One hundred Memoria
+    // given: Memorias empty
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
+
+    BDDMockito
+        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        // then: Devuelve error No Content
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
   public void getEvaluacionesEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene evaluaciones
@@ -666,6 +684,25 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
+  public void findAllMemoriasAsignablesConvocatoria_ReturnsNoContent() throws Exception {
+    // given: idConvocatoria, Memorias empty
+    Long idConvocatoria = 1L;
+    List<Memoria> memorias = new ArrayList<>();
+
+    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables by convocatoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
   public void findAllAsignablesTipoConvocatoriaOrdExt_Unlimited_ReturnsFullMemoriaList() throws Exception {
 
@@ -693,6 +730,24 @@ public class MemoriaControllerTest extends BaseControllerTest {
         // retrospectiva en estado "En secretaría".
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
+  public void findAllAsignablesTipoConvocatoriaOrdExt_ReturnsNoContent() throws Exception {
+    // given: Memorias empty
+    List<Memoria> memorias = new ArrayList<>();
+
+    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -724,6 +779,26 @@ public class MemoriaControllerTest extends BaseControllerTest {
         // reunión.
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
+  public void findAllAsignablesTipoConvocatoriaSeguimiento_ReturnsNoContent() throws Exception {
+    // given: Memorias empty
+    List<Memoria> memorias = new ArrayList<>();
+
+    BDDMockito
+        .given(memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_SEG)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   @Test
@@ -1205,6 +1280,94 @@ public class MemoriaControllerTest extends BaseControllerTest {
       Memoria memoria = actual.get(i);
       Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
     }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV" })
+  public void findAllMemoriasEvaluacionByPersonaRef_ReturnsNoContent() throws Exception {
+    // given: Memorias empty
+    List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = new ArrayList<>();
+
+    BDDMockito.given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
+        .willReturn(new PageImpl<>(memoriasPeticionEvaluacion));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-EVC-VR", "ETI-EVC-VR-INV", "ETI-EVC-EVAL",
+      "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV" })
+  public void getDocumentacionesTipoEvaluacionValid() throws Exception {
+    // given: Datos existentes de memoria con documentacion
+    Long idMemoria = 3L;
+    Long idTipoEvaluacion = 1L;
+
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_BY_DOCUMENTACION).append("/{idTipoEvaluacion}").toString();
+
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i);
+      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
+          tipoDocumento);
+      documentacionMemorias.add(documentacionMemoria);
+    }
+
+    BDDMockito
+        .given(documentacionMemoriaService.findByMemoriaIdAndTipoEvaluacion(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<DocumentacionMemoria>>() {
+          @Override
+          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
+            List<DocumentacionMemoria> content = new ArrayList<>();
+            for (DocumentacionMemoria evaluacion : documentacionMemorias) {
+              content.add(evaluacion);
+            }
+            Page<DocumentacionMemoria> page = new PageImpl<>(content);
+            return page;
+          }
+        });
+    // when: Se buscan todos los datos
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, idMemoria, idTipoEvaluacion)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-EVC-VR", "ETI-EVC-VR-INV", "ETI-EVC-EVAL",
+      "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV" })
+  public void getDocumentacionesTipoEvaluacion_ReturnsNoContent() throws Exception {
+    // given: Documentacion empty
+    Long idMemoria = 3L;
+    Long idTipoEvaluacion = 1L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_BY_DOCUMENTACION).append("/{idTipoEvaluacion}").toString();
+
+    BDDMockito
+        .given(documentacionMemoriaService.findByMemoriaIdAndTipoEvaluacion(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, idMemoria, idTipoEvaluacion)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**
