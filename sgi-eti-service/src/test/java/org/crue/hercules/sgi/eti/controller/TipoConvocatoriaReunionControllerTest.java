@@ -193,6 +193,24 @@ public class TipoConvocatoriaReunionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
+  public void findAll_Unlimited_ReturnsNoContent() throws Exception {
+    // given: TipoConvocatoriaReunion empty
+    List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();
+
+    BDDMockito.given(tipoConvocatoriaReunionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(tipoConvocatoriaReuniones));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
   public void findAll_WithPaging_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();
