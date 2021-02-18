@@ -325,6 +325,25 @@ public class TipoComentarioControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCOMENTARIO-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: TipoComentario empty
+    List<TipoComentario> tipoComentarios = new ArrayList<>();
+
+    BDDMockito.given(
+        tipoComentarioService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tipoComentarios));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto TipoComentario
    * 
