@@ -980,6 +980,25 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findConvocatoriasSinActa_ReturnNoContent() throws Exception {
+
+    // given: ConvocatoriaReunion empty
+    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
+
+    BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa(ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
    * 
