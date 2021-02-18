@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="find-one-out-sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <script description="TransformResulObjectMediator" key="conf:scripts/transform-result-object-mediator.js" language="js"/>
+    <switch source="get-property('notFound')">
+        <case regex="true">
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="404"/>
+        </case>
+        <default/>
+    </switch>
+    <respond/>
+</sequence>

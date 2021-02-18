@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="total-count-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>total-count-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="clean-path-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>clean-path-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="transform-result-list-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>transform-result-list-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="pagination-query-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>pagination-query-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="find-all-out-sequence" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>find-all-out-sequence.xml</file>
+            <path>/_system/config/sequences</path>
+            <mediaType>application/vnd.wso2.sequence</mediaType>
+        </item>
+    </artifact>
+    <artifact name="find-all-in-sequence-template" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>find-all-in-sequence-template.xml</file>
+            <path>/_system/config/sequence-templates</path>
+            <mediaType>application/vnd.wso2.template</mediaType>
+        </item>
+    </artifact>
+    <artifact name="transform-result-object-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>transform-result-object-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="find-one-out-sequence" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>find-one-out-sequence.xml</file>
+            <path>/_system/config/sequences</path>
+            <mediaType>application/vnd.wso2.sequence</mediaType>
+        </item>
+    </artifact>
+    <artifact name="find-all-by-ids-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>find-all-by-ids-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="transform-input-object-mediator" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>transform-input-object-mediator.js</file>
+            <path>/_system/config/scripts</path>
+            <mediaType>application/javascript</mediaType>
+        </item>
+    </artifact>
+    <artifact name="save-in-sequence-template" groupId="org.crue.hercules.sgi.esb.resource" version="0.0.1-SNAPSHOT" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>save-in-sequence-template.xml</file>
+            <path>/_system/config/sequence-templates</path>
+            <mediaType>application/vnd.wso2.template</mediaType>
+        </item>
+    </artifact>
+</artifacts>
