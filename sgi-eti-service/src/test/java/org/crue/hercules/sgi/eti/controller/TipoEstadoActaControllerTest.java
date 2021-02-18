@@ -187,6 +187,25 @@ public class TipoEstadoActaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
+  public void findAll_Unlimited_ReturnsNoContent() throws Exception {
+    // given: TipoEstadoActa empty
+    List<TipoEstadoActa> tipoEstadoActas = new ArrayList<>();
+
+    BDDMockito.given(
+        tipoEstadoActaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(tipoEstadoActas));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithPaging_ReturnsTipoEstadoActaSubList() throws Exception {
     // given: One hundred TipoEstadoActa
     List<TipoEstadoActa> tipoEstadoActas = new ArrayList<>();
