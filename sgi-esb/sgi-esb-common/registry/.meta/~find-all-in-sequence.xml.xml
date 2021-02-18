@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><resource name="find-all-in-sequence.xml" isCollection="false" path="/_system/config/sequence/registry/find-all-in-sequence.xml" registryUrl="https://localhost:9443/registry" status="added">
+    <mediaType>application/vnd.wso2.sequence</mediaType>
+</resource>

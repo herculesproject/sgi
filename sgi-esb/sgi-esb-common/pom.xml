@@ -2,97 +2,44 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crue.hercules</groupId>
+  <groupId>org.crue.hercules.sgi.esb</groupId>
   <artifactId>sgi-esb</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>carbon/application</packaging>
+  <packaging>pom</packaging>
   <name>sgi-esb</name>
   <description>sgi-esb</description>
+  <modules>
+    <module>class-mediators</module>
+    <module>registry</module>
+    <module>esb-composite-application</module>
+  </modules>
+
+   <!-- ********************************************** -->
+  <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
+  <!-- ********************************************** -->
+
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>${dist.repo.rel.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <url>${dist.repo.snap.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
-    <org.crue.hercules.api_._API-SGP>capp/EnterpriseServiceBus</org.crue.hercules.api_._API-SGP>
-    <org.crue.hercules.api_._API-SGDOC>capp/EnterpriseServiceBus</org.crue.hercules.api_._API-SGDOC>
-    <org.crue.hercules.api_._API-SGE>capp/EnterpriseServiceBus</org.crue.hercules.api_._API-SGE>
-    <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
-    <org.crue.hercules.endpoint_._sgp-service>capp/EnterpriseServiceBus</org.crue.hercules.endpoint_._sgp-service>
-    <org.crue.hercules.endpoint_._sgdoc-service>capp/EnterpriseServiceBus</org.crue.hercules.endpoint_._sgdoc-service>
-    <org.crue.hercules.endpoint_._sge-service>capp/EnterpriseServiceBus</org.crue.hercules.endpoint_._sge-service>
+  <!-- Distribution Management URL's -->
+    <dist.repo.rel.url>file:///maven-repositories/releases/</dist.repo.rel.url>
+    <dist.repo.snap.url>file:///maven-repositories/snapshots/</dist.repo.snap.url>
+
+    <!-- Encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
   </properties>
-  <dependencies>
-    <dependency>
-      <groupId>org.crue.hercules.endpoint</groupId>
-      <artifactId>sgp-service</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.api</groupId>
-      <artifactId>API-SGP</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.endpoint</groupId>
-      <artifactId>sgdoc-service</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.api</groupId>
-      <artifactId>API-SGDOC</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.endpoint</groupId>
-      <artifactId>sge-service</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.api</groupId>
-      <artifactId>API-SGE</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>xml</type>
-    </dependency>
-  </dependencies>
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-      <id>wso2-nexus</id>
-      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-    </repository>
-    <repository>
-      <id>wso2-maven2-repository-1</id>
-      <url>http://dist.wso2.org/maven2</url>
-    </repository>
-    <repository>
-      <id>wso2-nexus-repository-1</id>
-      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-      <id>wso2-nexus</id>
-      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>wso2-maven2-repository-1</id>
-      <url>http://dist.wso2.org/maven2</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>wso2-nexus-repository-1</id>
-      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-    </pluginRepository>
-  </pluginRepositories>
+
+
   <build>
     <plugins>
       <plugin>
@@ -101,43 +48,8 @@
         <configuration>
           <buildcommands />
           <projectnatures>
-            <projectnature>org.wso2.developerstudio.eclipse.distribution.project.nature</projectnature>
+            <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
           </projectnatures>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.wso2.maven</groupId>
-        <artifactId>maven-car-plugin</artifactId>
-        <version>2.1.1</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>car</id>
-            <phase>package</phase>
-            <goals>
-              <goal>car</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration />
-      </plugin>
-      <plugin>
-        <groupId>org.wso2.maven</groupId>
-        <artifactId>maven-car-deploy-plugin</artifactId>
-        <version>1.1.1</version>
-        <extensions>true</extensions>
-        <configuration>
-          <carbonServers>
-            <CarbonServer>
-              <trustStorePath>${basedir}/src/main/resources/security/wso2carbon.jks</trustStorePath>
-              <trustStorePassword>wso2carbon</trustStorePassword>
-              <trustStoreType>JKS</trustStoreType>
-              <serverUrl>https://localhost:9443</serverUrl>
-              <userName>admin</userName>
-              <password>admin</password>
-              <operation>deploy</operation>
-            </CarbonServer>
-          </carbonServers>
         </configuration>
       </plugin>
     </plugins>

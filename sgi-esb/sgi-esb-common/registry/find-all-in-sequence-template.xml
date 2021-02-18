@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="find-all-in-sequence-template" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter name="endpoint"/>
+    <sequence>
+        <propertyGroup description="headers and path">
+            <property expression="$trp:X-Page" name="X-Page" scope="default" type="STRING"/>
+            <property expression="$trp:X-Page-Size" name="X-Page-Size" scope="default" type="STRING"/>
+            <property expression="$axis2:REST_URL_POSTFIX" name="path" scope="default" type="STRING"/>
+        </propertyGroup>
+        <script description="CleanPathMediator" key="conf:scripts/clean-path-mediator.js" language="js"/>
+        <class description="FilterQueryMediator" name="org.crue.hercules.sgi.esb.mediator.FilterQueryMediator"/>
+        <property description="pathCount" expression="fn:concat(get-property('cleanPath'),'/count')" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+        <property description="pathCount + filterQuery" expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('?filterQuery=', get-property('filterQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+        <header name="Accept" scope="transport" value="application/json"/>
+        <call blocking="true">
+            <endpoint key-expression="$func:endpoint"/>
+        </call>
+        <class description="SortQueryMediator" name="org.crue.hercules.sgi.esb.mediator.SortQueryMediator"/>
+        <property description="pathFindAll" expression="get-property('cleanPath')" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+        <property description="pathFindAll + filterQuery" expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('?filterQuery=', get-property('filterQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+        <property description="+ sortQuery" expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;sortQuery=', get-property('sortQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+        <script description="TotalCountMediator" key="conf:scripts/total-count-mediator.js" language="js"/>
+        <script description="PaginationQueryMediator" key="conf:scripts/pagination-query-mediator.js" language="js"/>
+        <property description="+ paginationQuery" expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;paginationQuery=', get-property('paginationQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+        <send>
+            <endpoint key-expression="$func:endpoint"/>
+        </send>
+    </sequence>
+</template>
