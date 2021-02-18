@@ -335,6 +335,25 @@ public class InformeControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: Informe empty
+    List<Informe> informes = new ArrayList<>();
+
+    BDDMockito
+        .given(informeService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(informes));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(INFORME_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto Informe
    * 
