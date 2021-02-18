@@ -17,9 +17,14 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,17 +56,34 @@ public class SolicitudServiceTest extends BaseServiceTest {
   private ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
   @Mock
-  private ProyectoRepository proyectoRepository;
+  private DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository;
+
+  @Mock
+  private SolicitudDocumentoRepository solicitudDocumentoRepository;
+
+  @Mock
+  private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
 
   @Mock
   private SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
+
+  @Mock
+  private SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
+
+  @Mock
+  private SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
+
+  @Mock
+  private ProyectoRepository proyectoRepository;
 
   private SolicitudService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudServiceImpl(repository, estadoSolicitudRepository, configuracionSolicitudRepository,
-        proyectoRepository, solicitudProyectoDatosRepository);
+        proyectoRepository, solicitudProyectoDatosRepository, documentoRequeridoSolicitudRepository,
+        solicitudDocumentoRepository, convocatoriaEntidadConvocanteRepository, solicitudProyectoEquipoRepository,
+        solicitudProyectoSocioRepository);
   }
 
   @Test

@@ -1,9 +1,11 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -24,5 +26,14 @@ public interface ConvocatoriaEntidadConvocanteRepository extends JpaRepository<C
    * @return una {@link ConvocatoriaEntidadConvocante}
    */
   Optional<ConvocatoriaEntidadConvocante> findByConvocatoriaIdAndEntidadRef(Long convocatoriaId, String entidadRef);
+
+  /**
+   * Recupera aquellas {@link ConvocatoriaEntidadConvocante} de la
+   * {@link Convocatoria} que no tengan {@link Programa} asociado.
+   * 
+   * @param idConvocatoria Id de la {@link Convocatoria}
+   * @return listado de {@link ConvocatoriaEntidadConvocante}
+   */
+  List<ConvocatoriaEntidadConvocante> findByProgramaIsNullAndConvocatoriaId(Long idConvocatoria);
 
 }

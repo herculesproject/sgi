@@ -694,4 +694,233 @@ public class SolicitudController {
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Se hace el cambio de estado de "Borrador" a "Presentada".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/presentar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud presentar(@PathVariable Long id) {
+    log.debug("presentar(Long id) - start");
+
+    Solicitud returnValue = service.presentarSolicitud(id);
+
+    log.debug("presentar(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba si se cumplen todas las condiciones para que la solicitud pueda
+   * pasar al estado de "Presentada."
+   * 
+   * @param id Id del {@link Solicitud}.
+   * @return
+   */
+  @RequestMapping(path = "/{id}/presentable", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<Solicitud> presentable(@PathVariable Long id) {
+    log.debug("presentable(Long id) - start");
+    Boolean returnValue = service.cumpleValidacionesPresentada(id);
+    log.debug("presentable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Cambio de estado de "Presentada" a "Admitida provisionalmente".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/admitir-provisionalmente")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud admitirProvisionalmente(@PathVariable Long id) {
+    log.debug("admitirProvisionalmente(Long id) - start");
+
+    Solicitud returnValue = service.admitirProvisionalmente(id);
+
+    log.debug("admitirProvisionalmente(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Admitida provisionalmente" a "Admitida definitivamente".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/admitir-definitivamente")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud admitirDefinitivamente(@PathVariable Long id) {
+    log.debug("admitirDefinitivamente(Long id) - start");
+
+    Solicitud returnValue = service.admitirDefinitivamente(id);
+
+    log.debug("admitirDefinitivamente(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Admitida definitivamente" a "Concedida provisional".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/conceder-provisionalmente")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud concederProvisionalmente(@PathVariable Long id) {
+    log.debug("concederProvisionalmente(Long id) - start");
+
+    Solicitud returnValue = service.concederProvisionalmente(id);
+
+    log.debug("concederProvisionalmente(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Concedida provisional" o "Alegada concesión" a
+   * "Concedida".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/conceder")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud conceder(@PathVariable Long id) {
+    log.debug("conceder(Long id) - start");
+
+    Solicitud returnValue = service.conceder(id);
+
+    log.debug("conceder(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Presentada" a "Excluir provisionalmente".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/exlcluir-provisionalmente")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud exlcluirProvisionalmente(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("exlcluirProvisionalmente(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.exlcluirProvisionalmente(id, comentario);
+
+    log.debug("exlcluirProvisionalmente(Long id, String comentario) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Excluida provisional" a "Alegada admisión".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/alegar-admision")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud alegarAdmision(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("alegarAdmision(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.alegarAdmision(id, comentario);
+
+    log.debug("alegarAdmision(Long id, String comentario) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Alegada admisión" a "Excluida".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/excluir")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud excluir(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("excluir(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.excluir(id, comentario);
+
+    log.debug("excluir(Long id, String comentario) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Admitida definitiva" a "Denegada provisional".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/denegar-provisionalmente")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud denegarProvisionalmente(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("denegarProvisionalmente(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.denegarProvisionalmente(id, comentario);
+
+    log.debug("denegarProvisionalmente(Long id, String comentario) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Denegada provisional" a "Alegada concesión".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/alegar-concesion")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud alegarConcesion(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("alegarConcesion(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.alegarConcesion(id, comentario);
+
+    log.debug("alegarConcesion(Long id, String comentario) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Alegada concesión" a "Denegada".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/denegar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud denegar(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("denegar(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.denegar(id, comentario);
+
+    log.debug("denegar(Long id, String comentario) - end");
+    return returnValue;
+  }
+
+  /**
+   * Cambio de estado de "Presentada", "Admitida provisional", "Excluida
+   * provisional", "Admitida definitiva", "Denegada provisional" o "Concedida
+   * provisional" a "Desistida".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  @PatchMapping("/{id}/desistir")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  Solicitud desistir(@PathVariable Long id, @RequestBody String comentario) {
+    log.debug("desistir(Long id, String comentario) - start");
+
+    Solicitud returnValue = service.desistir(id, comentario);
+
+    log.debug("desistir(Long id, String comentario) - end");
+    return returnValue;
+  }
 }

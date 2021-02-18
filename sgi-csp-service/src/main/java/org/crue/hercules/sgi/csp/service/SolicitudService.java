@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -112,5 +113,121 @@ public interface SolicitudService {
    * @return true si se permite la creación / false si no se permite creación
    */
   Boolean isPosibleCrearProyecto(Long id);
+
+  /**
+   * Se hace el cambio de estado de "Borrador" a "Presentada".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud presentarSolicitud(Long id);
+
+  /**
+   * Cambio de estado de "Presentada" a "Admitida provisionalmente".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud admitirProvisionalmente(Long id);
+
+  /**
+   * Cambio de estado de "Admitida provisionalmente" a "Admitida definitivamente".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud admitirDefinitivamente(Long id);
+
+  /**
+   * Cambio de estado de "Admitida definitivamente" a "Concedida provisional".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud concederProvisionalmente(Long id);
+
+  /**
+   * Cambio de estado de "Concedida provisional" o "Alegada concesión" a
+   * "Concedida".
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud conceder(Long id);
+
+  /**
+   * Cambio de estado de "Presentada" a "Excluir provisionalmente".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud exlcluirProvisionalmente(Long id, String comentario);
+
+  /**
+   * Comprueba si se cumplen todas las condiciones para que la solicitud pueda
+   * pasar al estado de "Presentada."
+   * 
+   * @param id Id del {@link Solicitud}.
+   * @return <code>true</code> Cumple condiciones para el cambio de estado.
+   *         <code>false</code>No cumple condiciones.
+   */
+  Boolean cumpleValidacionesPresentada(Long id);
+
+  /**
+   * Cambio de estado de "Excluida provisional" a "Alegada admisión".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud alegarAdmision(Long id, String comentario);
+
+  /**
+   * Cambio de estado de "Alegada admisión" a "Excluida".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud excluir(Long id, String comentario);
+
+  /**
+   * Cambio de estado de "Admitida definitiva" a "Denegada provisional".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud denegarProvisionalmente(Long id, String comentario);
+
+  /**
+   * Cambio de estado de "Denegada provisional" a "Alegada concesión".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud alegarConcesion(Long id, String comentario);
+
+  /**
+   * Cambio de estado de "Alegada concesión" a "Denegada".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud denegar(Long id, String comentario);
+
+  /**
+   * Cambio de estado de "Presentada", "Admitida provisional", "Excluida
+   * provisional", "Admitida definitiva", "Denegada provisional" o "Concedida
+   * provisional" a "Desistida".
+   * 
+   * @param id         Identificador de {@link Solicitud}.
+   * @param comentario Comentario de {@link EstadoSolicitud}.
+   * @return {@link Solicitud} actualizado.
+   */
+  Solicitud desistir(Long id, String comentario);
 
 }
