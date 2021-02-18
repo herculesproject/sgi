@@ -328,6 +328,25 @@ public class RespuestaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTA-VER" })
+  public void findAll_ReturnsNoContent() throws Exception {
+    // given: Respuesta empty
+    List<Respuesta> Respuestas = new ArrayList<>();
+
+    BDDMockito
+        .given(respuestaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Respuestas));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(RESPUESTA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve error No Content
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto Respuesta
    * 
