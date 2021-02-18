@@ -165,6 +165,23 @@ public class TipoActividadServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllTipoActividad() {
+    // given: One hundred TipoActividad
+    List<TipoActividad> tipoActividads = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoActividads.add(generarMockTipoActividad(Long.valueOf(i), "TipoActividad" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(tipoActividadRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> tipoActividadService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullTipoActividadList() {
     // given: One hundred TipoActividad
     List<TipoActividad> tipoActividads = new ArrayList<>();
