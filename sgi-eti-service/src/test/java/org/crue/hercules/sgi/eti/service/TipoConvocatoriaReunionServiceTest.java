@@ -177,6 +177,24 @@ public class TipoConvocatoriaReunionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllTipoConvocatoriaReunion() {
+    // given: One hundred TipoConvocatoriaReunion
+    List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoConvocatoriaReunions.add(
+          generarMockTipoConvocatoriaReunion(Long.valueOf(i), "TipoConvocatoriaReunion" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(tipoConvocatoriaReunionRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> tipoConvocatoriaReunionService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullTipoConvocatoriaReunionList() {
     // given: One hundred TipoConvocatoriaReunion
     List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = new ArrayList<>();
