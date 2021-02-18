@@ -6,7 +6,10 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -37,6 +40,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     key: number,
     private service: ProyectoService,
     private unidadGestionService: UnidadGestionService,
+    private modeloEjecucionService: ModeloEjecucionService,
+    private tipoFinalidadService: TipoFinalidadService,
+    private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private convocatoriaService: ConvocatoriaService,
     private actionService: ProyectoActionService
   ) {
@@ -238,13 +244,45 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    */
   private onConvocatoriaChange(convocatoria: IConvocatoria): void {
     this.seguimientoCientificos = [];
+
     if (convocatoria) {
       this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
-      this.subscriptions.push(
-        this.unidadGestionService.findByAcronimo(convocatoria.unidadGestionRef).subscribe(unidadGestion => {
-          this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
-        })
-      );
+
+      if (!this.proyecto.unidadGestion || !this.isEdit()) {
+        this.subscriptions.push(
+          this.unidadGestionService.findByAcronimo(convocatoria.unidadGestionRef).subscribe(unidadGestion => {
+            this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
+          })
+        );
+      }
+
+
+
+      if (convocatoria.modeloEjecucion && (!this.proyecto.modeloEjecucion || !this.isEdit())) {
+        this.subscriptions.push(
+          this.modeloEjecucionService.findById(convocatoria.modeloEjecucion.id).subscribe(modeloEjecucion => {
+            this.getFormGroup().controls.modeloEjecucion.setValue(modeloEjecucion);
+          })
+        );
+      }
+
+
+      if (convocatoria.finalidad && (!this.proyecto.finalidad || !this.isEdit())) {
+        this.subscriptions.push(
+          this.tipoFinalidadService.findById(convocatoria.finalidad.id).subscribe(tipoFinalidad => {
+            this.getFormGroup().controls.finalidad.setValue(tipoFinalidad);
+          })
+        );
+      }
+
+      if (convocatoria.ambitoGeografico && (!this.proyecto.ambitoGeografico || !this.isEdit())) {
+        this.subscriptions.push(
+          this.tipoAmbitoGeograficoService.findById(convocatoria.ambitoGeografico.id).subscribe(tipoAmbitoGeografico => {
+            this.getFormGroup().controls.ambitoGeografico.setValue(tipoAmbitoGeografico);
+          })
+        );
+      }
+
       const sort: SgiRestSort = {
         direction: SgiRestSortDirection.ASC,
         field: 'numPeriodo'

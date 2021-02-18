@@ -38,6 +38,9 @@ import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-docum
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { TranslateService } from '@ngx-translate/core';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -118,6 +121,9 @@ export class ProyectoActionService extends ActionService {
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
+    modeloEjecucionService: ModeloEjecucionService,
+    tipoFinalidadService: TipoFinalidadService,
+    tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     convocatoriaService: ConvocatoriaService,
     proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
     proyectoHitoService: ProyectoHitoService,
@@ -141,7 +147,7 @@ export class ProyectoActionService extends ActionService {
     }
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(logger, fb, this.proyecto?.id,
-      proyectoService, unidadGestionService, convocatoriaService, this);
+      proyectoService, unidadGestionService, modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, this);
 
     this.fichaGeneral.coordinadorExterno$.subscribe((value) => this.coordinadorExternoValue = Boolean(value));
     this.fichaGeneral.paquetesTrabajo$.subscribe((value) => this.paqueteTrabajoValue = Boolean(value));
