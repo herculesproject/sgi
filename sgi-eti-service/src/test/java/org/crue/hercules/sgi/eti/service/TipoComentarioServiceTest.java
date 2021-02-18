@@ -165,6 +165,22 @@ public class TipoComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllTipoComentario() {
+    // given: One hundred TipoComentario
+    List<TipoComentario> tipoComentarios = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoComentarios.add(generarMockTipoComentario(Long.valueOf(i), "TipoComentario" + String.format("%03d", i)));
+    }
+    BDDMockito.doNothing().when(tipoComentarioRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> tipoComentarioService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullTipoComentarioList() {
     // given: One hundred TipoComentario
     List<TipoComentario> tipoComentarios = new ArrayList<>();
