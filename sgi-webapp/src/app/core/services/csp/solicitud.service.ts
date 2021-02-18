@@ -406,4 +406,136 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
+
+
+  /**
+  * Realiza el cambio de estado de "Borrador" a "Presentada"
+  *
+  * @param id identificador de la solicitud.
+  */
+  presentar(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/presentar`, undefined);
+  }
+
+
+  /**
+  * Cambio de estado de "Presentada" a "Admitida provisionalmente".
+  *
+  * @param id identificador de la solicitud.
+  */
+  admitirProvisionalmente(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/admitir-provisionalmente`, undefined);
+  }
+
+  /**
+  * Cambio de estado de "Admitida provisionalmente" a "Admitida definitivamente"
+  *
+  * @param id identificador de la solicitud.
+  */
+  admitirDefinitivamente(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/admitir-definitivamente`, undefined);
+  }
+
+  /**
+  * Cambio de estado de "Admitida definitivamente" a "Concedida provisional".
+  *
+  * @param id identificador de la solicitud.
+  */
+  concederProvisionalmente(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/conceder-provisionalmente`, undefined);
+  }
+
+  /**
+   * Cambio de estado de "Concedida provisional" o "Alegada concesión" a "Concedida".
+   *
+   * @param id identificador de la solicitud.
+   */
+  conceder(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/conceder`, undefined);
+  }
+
+
+  /**
+  * Cambio de estado de "Presentada"  a "Excluir provisionalmente".
+  *
+  * @param id identificador de la solicitud.
+  * @param comentario Comentario del cambio de estado.
+  */
+  excluirProvisionalmente(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/exlcluir-provisionalmente`, comentario);
+  }
+
+  /**
+  * Cambio de estado de "Excluida provisional"  a "Alegada admisión".
+  *
+  * @param id identificador de la solicitud.
+  * @param comentario Comentario del cambio de estado.
+  */
+  alegarAdmision(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/alegar-admision`, comentario);
+  }
+
+
+
+  /**
+   * Cambio de estado de "Alegada admisión"  a "Excluida".
+   * @param id identificador de la solicitud.
+   * @param comentario Comentario del cambio de estado.
+   */
+  excluir(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/excluir`, comentario);
+  }
+
+  /**
+  * Cambio de estado de "Admitida definitiva"  a "Denegada provisional".
+  *    @param id identificador de la solicitud.
+  * @param comentario Comentario del cambio de estado.
+  */
+  denegarProvisionalmente(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/denegar-provisionalmente`, comentario);
+  }
+
+  /**
+  * Cambio de estado de "Denegada provisional"  a "Alegada concesión".
+  * @param id identificador de la solicitud.
+  * @param comentario Comentario del cambio de estado.
+  */
+  alegarConcesion(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/alegar-concesion`, comentario);
+  }
+
+  /**
+  *  Cambio de estado de "Alegada concesión"  a "Denegada".
+  * @param id identificador de la solicitud.
+  * @param comentario Comentario del cambio de estado.
+  */
+  denegar(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/denegar`, comentario);
+  }
+
+  /**
+  * Cambio de estado de "Presentada", "Admitida provisional",
+  * "Excluida provisional", "Admitida definitiva",
+  *  "Denegada provisional" o "Concedida provisional"
+  * a "Desistida".
+  * 
+  *   @param id identificador de la solicitud.
+  * @param comentario Comentario del cambio de estado.
+  */
+  desistir(id: number, comentario: string): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desistir`, comentario);
+  }
+
+  /**
+ * Comprueba si una solicitud cumple las condiciones para poder pasar al estado "Presentada".
+ *
+ * @param id Id de la solicitud
+ */
+  presentable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/presentable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

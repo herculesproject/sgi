@@ -19,7 +19,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
@@ -30,10 +30,12 @@ import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/so
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
 import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.fragment';
+import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
+
 
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
@@ -64,6 +66,10 @@ export class SolicitudActionService extends ActionService {
 
   showHitos$ = new BehaviorSubject<boolean>(false);
   isPresupuestoPorEntidades$ = new BehaviorSubject<boolean>(false);
+
+
+
+  isPresentable$: BehaviorSubject<Boolean> = new BehaviorSubject<Boolean>(false);;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -150,6 +156,15 @@ export class SolicitudActionService extends ActionService {
           this.desglosePresupuestoEntidades.readonly = this.readonly;
         });
       this.subscriptions.push(subscription);
+
+      // Si se encuentra en estado borrador se debe comprobar si cumple las validacones para  hacer el cambio a "Presentada".
+      if (this.solicitud.estado.estado === TipoEstadoSolicitud.BORRADOR) {
+        this.presentable(this.solicitud.id).subscribe(
+          (isPrentable) => {
+            this.isPresentable$.next(isPrentable);
+          }
+        );
+      }
     }
 
     this.checkSociosColaboradores();
@@ -214,6 +229,125 @@ export class SolicitudActionService extends ActionService {
       return super.saveOrUpdate();
     }
   }
+
+
+  /**
+  * Cambio de estado de "Borrador" a "Presentada ".
+  */
+  presentar(): Observable<void> {
+
+    return this.solicitudService.presentar(this.datosGenerales.getKey() as number);
+  }
+
+
+  presentable(id: number): Observable<Boolean> {
+    return this.solicitudService.presentable(id);
+
+  }
+
+  /**
+  * Cambio de estado de "Presentada" a "Admitida provisionalmente".
+  */
+  admitirProvisionalmente(): Observable<void> {
+
+    return this.solicitudService.admitirProvisionalmente(this.datosGenerales.getKey() as number);
+  }
+
+  /**
+  * Cambio de estado de "Admitida provisionalmente" a "Admitida definitivamente".
+  */
+  admitirDefinitivamente(): Observable<void> {
+
+    return this.solicitudService.admitirDefinitivamente(this.datosGenerales.getKey() as number);
+  }
+
+
+  /**
+   * Cambio de estado de "Admitida definitivamente" a "Concedida provisional".
+   */
+  concederProvisionalmente(): Observable<void> {
+
+    return this.solicitudService.concederProvisionalmente(this.datosGenerales.getKey() as number);
+  }
+
+  /**
+  * Cambio de estado de "Concedida provisional" o "Alegada concesión" a "Concedida".
+  */
+  conceder(): Observable<void> {
+
+    return this.solicitudService.conceder(this.datosGenerales.getKey() as number);
+  }
+
+  /**
+  * Cambio de estado de "Presentada"  a "Excluida provisional".
+  * @param comentario Comentario del cambio de estado.
+  */
+  excluirProvisionalmente(comentario: string): Observable<void> {
+
+    return this.solicitudService.excluirProvisionalmente(this.datosGenerales.getKey() as number, comentario);
+  }
+
+
+  /**
+  * Cambio de estado de "Excluida provisional"  a "Alegada admisión".
+  * @param comentario Comentario del cambio de estado.
+  */
+  alegarAdmision(comentario: string): Observable<void> {
+
+    return this.solicitudService.alegarAdmision(this.datosGenerales.getKey() as number, comentario);
+  }
+
+
+  /**
+  * Cambio de estado de "Alegada admisión"  a "Excluida".
+  * @param comentario Comentario del cambio de estado.
+  */
+  excluir(comentario: string): Observable<void> {
+
+    return this.solicitudService.excluir(this.datosGenerales.getKey() as number, comentario);
+  }
+
+
+  /**
+  * Cambio de estado de "Admitida definitiva"  a "Denegada provisional".
+  * @param comentario Comentario del cambio de estado.
+  */
+  denegarProvisionalmente(comentario: string): Observable<void> {
+
+    return this.solicitudService.denegarProvisionalmente(this.datosGenerales.getKey() as number, comentario);
+  }
+
+
+  /**
+  * Cambio de estado de "Denegada provisional"  a "Alegada concesión".
+  * @param comentario Comentario del cambio de estado.
+  */
+  alegarConcesion(comentario: string): Observable<void> {
+
+    return this.solicitudService.alegarConcesion(this.datosGenerales.getKey() as number, comentario);
+  }
+
+  /**
+  * Cambio de estado de "Alegada concesión"  a "Denegada".
+  * @param comentario Comentario del cambio de estado.
+  */
+  denegar(comentario: string): Observable<void> {
+
+    return this.solicitudService.denegar(this.datosGenerales.getKey() as number, comentario);
+  }
+
+  /**
+  * Cambio de estado de "Presentada", "Admitida provisional", 
+  * "Excluida provisional", "Admitida definitiva",
+  *  "Denegada provisional" o "Concedida provisional"  
+  * a "Desistida".
+  * @param comentario Comentario del cambio de estado.
+  */
+  desistir(comentario: string): Observable<void> {
+
+    return this.solicitudService.desistir(this.datosGenerales.getKey() as number, comentario);
+  }
+
 
   /**
    * Indica si se puede mostrar la pestaña SociosColaboradores

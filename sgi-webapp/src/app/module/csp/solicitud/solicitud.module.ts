@@ -24,6 +24,7 @@ import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-fo
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
 import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
+import { CambioEstadoModalComponent } from './modals/cambio-estado-modal/cambio-estado-modal.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-p
     SolicitudProyectoEntidadesFinanciadorasComponent,
     SolicitudProyectoPresupuestoGlobalComponent,
     SolicitudProyectoPresupuestoEntidadesComponent,
-    SolicitudCrearProyectoModalComponent
+    SolicitudCrearProyectoModalComponent,
+    CambioEstadoModalComponent,
   ],
   imports: [
     CommonModule,
