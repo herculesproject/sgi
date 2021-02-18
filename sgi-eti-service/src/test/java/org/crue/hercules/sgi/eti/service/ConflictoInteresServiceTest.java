@@ -76,6 +76,23 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void findAllByEvaluadorId() {
+    Long evaluadorId = 1L;
+    List<ConflictoInteres> conflictoInteres = new ArrayList<>();
+    conflictoInteres.add(generarMockConflictoInteres(1L, "ConflictoInteres"));
+
+    BDDMockito.given(conflictoInteresRepository.findAllByEvaluadorId(evaluadorId, Pageable.unpaged()))
+        .willReturn(new PageImpl<>(conflictoInteres));
+
+    Page<ConflictoInteres> page = conflictoInteresService.findAllByEvaluadorId(evaluadorId, Pageable.unpaged());
+
+    Assertions.assertThat(page.getContent().size()).isEqualTo(1);
+    Assertions.assertThat(page.getSize()).isEqualTo(conflictoInteres.size());
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(conflictoInteres.size());
+
+  }
+
+  @Test
   public void find_NotFound_ThrowsConflictoInteresNotFoundException() throws Exception {
     BDDMockito.given(conflictoInteresRepository.findById(1L)).willReturn(Optional.empty());
 
@@ -100,6 +117,16 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
     Assertions.assertThat(conflictoInteresCreado).isNotNull();
     Assertions.assertThat(conflictoInteresCreado.getId()).isEqualTo(1L);
     Assertions.assertThat(conflictoInteresCreado.getPersonaConflictoRef()).isEqualTo("user-001");
+  }
+
+  @Test
+  public void create_ReturnsConflictoInteres_ThrowsConflictoInteresNotFoundException() {
+    // given: Un nuevo ConflictoInteres
+    ConflictoInteres conflictoInteresNew = generarMockConflictoInteres(null, null);
+    conflictoInteresNew.getEvaluador().setId(1L);
+
+    Assertions.assertThatThrownBy(() -> conflictoInteresService.create(conflictoInteresNew))
+        .isInstanceOf(ConflictoInteresNotFoundException.class);
   }
 
   @Test
@@ -238,4 +265,5 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
     }
     return conflicto;
   }
+
 }
