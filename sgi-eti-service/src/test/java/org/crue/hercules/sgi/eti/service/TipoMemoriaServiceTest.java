@@ -165,6 +165,23 @@ public class TipoMemoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllTipoMemoria() {
+    // given: One hundred TipoMemoria
+    List<TipoMemoria> tipoMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoMemorias.add(generarMockTipoMemoria(Long.valueOf(i), "TipoMemoria" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(tipoMemoriaRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> tipoMemoriaService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullTipoMemoriaList() {
     // given: One hundred TipoMemoria
     List<TipoMemoria> tipoMemorias = new ArrayList<>();
