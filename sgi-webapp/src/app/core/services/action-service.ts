@@ -534,6 +534,7 @@ export class Group implements IGroup {
   private initialState: any;
   private subscriptions: Subscription[] = [];
   private editing: boolean;
+  private forcingUpdate = false;
   initialized = false;
 
   load(form: FormGroup): void {
@@ -550,9 +551,10 @@ export class Group implements IGroup {
             this.publishComplete(true);
           }
         }
-        else {
+        else if (!this.forcingUpdate) {
           this.publishChanges(true);
         }
+        this.forcingUpdate = false;
       }));
 
       this.subscriptions.push(this.form.statusChanges.subscribe((ev) => {
@@ -672,6 +674,7 @@ export class Group implements IGroup {
     if (markAllTouched) {
       this.form.markAllAsTouched();
     }
+    this.forcingUpdate = true;
     this.form.updateValueAndValidity({ onlySelf: false, emitEvent: true });
   }
 
