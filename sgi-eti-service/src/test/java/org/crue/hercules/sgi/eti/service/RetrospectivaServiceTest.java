@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -258,6 +259,23 @@ public class RetrospectivaServiceTest extends BaseServiceTest {
 
     // then: Se recupera lista de datos paginados vacía
     Assertions.assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void deleteAll_DeleteAllRetrospectiva() {
+    // given: Ten Retrospectivas
+    List<Retrospectiva> retrospectivas = new ArrayList<>();
+    for (int i = 1; i <= 10; i++) {
+      retrospectivas.add(getMockData(Long.valueOf(i)));
+    }
+
+    BDDMockito.doNothing().when(repository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> service.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
   }
 
   /**
