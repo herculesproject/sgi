@@ -173,6 +173,23 @@ public class InformeServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllInforme() {
+    // given: One hundred Informe
+    List<Informe> informes = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      informes.add(generarMockInforme(Long.valueOf(i), "DocumentoFormulario" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(informeRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> informeService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullInformeList() {
     // given: One hundred Informe
     List<Informe> informes = new ArrayList<>();
