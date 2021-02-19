@@ -171,6 +171,24 @@ public class PeticionEvaluacionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllPeticionEvaluacion() {
+    // given: One hundred PeticionEvaluacion
+    List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      peticionEvaluaciones
+          .add(generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(peticionEvaluacionRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> peticionEvaluacionService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullPeticionEvaluacionList() {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
