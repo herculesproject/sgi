@@ -163,6 +163,23 @@ public class DictamenServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllDictamen() {
+    // given: One hundred dictamenes
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(dictamenRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> dictamenService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullDictamenList() {
     // given: One hundred dictamenes
     List<Dictamen> dictamenes = new ArrayList<>();
