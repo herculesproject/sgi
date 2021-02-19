@@ -230,6 +230,23 @@ public class ComiteServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllComite() {
+    // given: One hundred Comites
+    List<Comite> comites = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      comites.add(generarMockComite(Long.valueOf(i), String.format("Comite%03d", i), Boolean.TRUE));
+    }
+
+    BDDMockito.doNothing().when(comiteRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> comiteService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_WithPaging_ReturnsPage() {
 
     // given: Cien Comite
@@ -271,5 +288,18 @@ public class ComiteServiceTest extends BaseServiceTest {
       Comite comite = page.getContent().get(i);
       Assertions.assertThat(comite.getComite()).isEqualTo("Comite" + String.format("%03d", j));
     }
+  }
+
+  /**
+   * Función que devuelve un objeto comité.
+   * 
+   * @param id     identificador del comité.
+   * @param comite comité.
+   * @param activo indicador de activo.
+   */
+  private Comite generarMockComite(Long id, String comite, Boolean activo) {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return new Comite(id, comite, formulario, activo);
+
   }
 }
