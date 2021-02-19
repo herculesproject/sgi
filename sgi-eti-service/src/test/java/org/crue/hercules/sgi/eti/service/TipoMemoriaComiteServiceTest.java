@@ -202,6 +202,28 @@ public class TipoMemoriaComiteServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void deleteAll_DeleteAllTipoMemoriaComite() {
+
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
+    TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
+
+    // given: One hundred TipoMemoriaComite
+    List<TipoMemoriaComite> tipoMemoriaComites = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoMemoriaComites.add(generarMockTipoMemoriaComite(Long.valueOf(i), comite, tipoMemoria));
+    }
+
+    BDDMockito.doNothing().when(tipoMemoriaComiteRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> tipoMemoriaComiteService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullTipoMemoriaComiteList() {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
