@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template name="save-in-sequence-template" xmlns="http://ws.apache.org/ns/synapse">
-    <parameter name="endpoint"/>
+    <parameter isMandatory="true" name="endpoint"/>
     <sequence>
         <header name="Accept" scope="transport" value="application/json"/>
         <property expression="get-property('uri.var.id')" name="id" scope="default" type="STRING"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template name="find-all-in-sequence-template" xmlns="http://ws.apache.org/ns/synapse">
-    <parameter name="endpoint"/>
+    <parameter defaultValue="" isMandatory="false" name="endpoint"/>
     <sequence>
         <propertyGroup description="headers and path">
             <property expression="$trp:X-Page" name="X-Page" scope="default" type="STRING"/>

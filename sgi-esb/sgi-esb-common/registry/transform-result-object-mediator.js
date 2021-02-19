@@ -10,8 +10,8 @@ function mediate(mc) {
   var body = mc.getPayloadJSON();
   var responseBody = null;
 
-  if (body && body.item && Object.keys(body.item).length > 0) {
-	  responseBody = body.item;
+  if (body && body.result && Object.keys(body.result).length > 0) {
+	  responseBody = body.result;
   } else {
 	  mc.setProperty("notFound", "true");
   }
