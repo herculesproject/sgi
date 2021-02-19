@@ -238,6 +238,23 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     }
   }
 
+  @Test
+  public void deleteAll_DeleteAllTipoDocumento() {
+    // given: One hundred TipoDocumento
+    List<TipoDocumento> tipoDocumentos = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
+    }
+
+    BDDMockito.doNothing().when(tipoDocumentoRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> tipoDocumentoService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
   /**
    * Función que devuelve un objeto TipoDocumento
    * 
