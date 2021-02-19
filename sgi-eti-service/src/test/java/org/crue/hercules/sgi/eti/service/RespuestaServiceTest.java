@@ -231,6 +231,23 @@ public class RespuestaServiceTest extends BaseServiceTest {
     }
   }
 
+  @Test
+  public void deleteAll_DeleteAllRespuesta() {
+    // given: One hundred Respuestas
+    List<Respuesta> respuestas = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      respuestas.add(generarMockRespuesta(Long.valueOf(i)));
+    }
+
+    BDDMockito.doNothing().when(respuestaRepository).deleteAll();
+
+    Assertions.assertThatCode(
+        // when: Delete all
+        () -> respuestaService.deleteAll())
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
   /**
    * Función que devuelve un objeto Respuesta
    * 
