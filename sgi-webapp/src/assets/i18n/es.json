@@ -980,6 +980,7 @@
   "csp.proyecto.ficha.general.observaciones": "Observaciones",
   "csp.proyecto.ficha.general.paquete.error.required": "Paquetes de trabajo es requerido",
   "csp.proyecto.ficha.general.paquete.trabajo": "Paquetes de trabajo",
+  "csp.proyecto.ficha.general.solicitud": "Solicitud",
   "csp.proyecto.ficha.general.subcontratada": "Universidad subcontrada",
   "csp.proyecto.ficha.general.timesheet": "Requiere timesheet",
   "csp.proyecto.ficha.general.timesheet.error.invalid": "El campo Timesheet tiene que tener obligatoriamente el valor 'Si' ",

@@ -3,11 +3,13 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
@@ -29,6 +31,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   abiertoRequired: boolean;
   comentarioEstadoCancelado: boolean;
+  mostrarSolicitud = false;
+  solicitudProyectoDatos: ISolicitudProyectoDatos;
 
   paquetesTrabajo$: Subject<boolean> = new Subject<boolean>();
   coordinadorExterno$: Subject<boolean> = new Subject<boolean>();
@@ -44,6 +48,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private tipoFinalidadService: TipoFinalidadService,
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private convocatoriaService: ConvocatoriaService,
+    private solicitudService: SolicitudService,
     private actionService: ProyectoActionService
   ) {
     super(key);
@@ -59,8 +64,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         return this.loadUnidadGestion(this.proyecto.unidadGestion.acronimo);
       }),
       switchMap(() => {
-
         return this.proyecto.convocatoria ? this.loadConvocatoria(this.proyecto.convocatoria.id) : of(EMPTY);
+      }),
+      switchMap(() => {
+        if (this.proyecto?.solicitud?.id) {
+          return this.loadProyectoDatos(this.proyecto?.solicitud?.id);
+        } else {
+          return of(EMPTY);
+        }
       }),
       map(() => {
         this.proyectoConvocatoria$.next(this.proyecto);
@@ -117,6 +128,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         value: '',
         disabled: true
       }),
+      solicitudProyecto: new FormControl({ value: '', disabled: true }),
     },
       {
         validators: [
@@ -235,6 +247,26 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     this.proyecto.coordinadorExterno = form.coordinadorExterno.value;
     return this.proyecto;
+  }
+
+  /**
+  * Recupera los datos proyecto de una solicitud
+  * @param idSolicitud id
+  */
+  private loadProyectoDatos(idSolicitud: number): Observable<ISolicitudProyectoDatos> {
+    if (idSolicitud) {
+      return this.solicitudService.findSolicitudProyectoDatos(idSolicitud).pipe(
+        map(solicitudProyectoDatos => {
+          if (solicitudProyectoDatos.titulo) {
+            this.getFormGroup().controls.solicitudProyecto.setValue(solicitudProyectoDatos.titulo);
+            this.mostrarSolicitud = true;
+          } else {
+            this.mostrarSolicitud = false;
+          }
+          return solicitudProyectoDatos;
+        })
+      );
+    }
   }
 
   /**

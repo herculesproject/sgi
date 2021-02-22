@@ -41,6 +41,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 
 @Injectable()
 export class ProyectoActionService extends ActionService {
@@ -137,6 +138,7 @@ export class ProyectoActionService extends ActionService {
     personaFisicaService: PersonaFisicaService,
     proyectoProrrogaService: ProyectoProrrogaService,
     proyectoDocumentoService: ProyectoDocumentoService,
+    solicitudService: SolicitudService,
     translate: TranslateService,
   ) {
     super();
@@ -147,7 +149,7 @@ export class ProyectoActionService extends ActionService {
     }
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(logger, fb, this.proyecto?.id,
-      proyectoService, unidadGestionService, modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, this);
+      proyectoService, unidadGestionService, modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, this);
 
     this.fichaGeneral.coordinadorExterno$.subscribe((value) => this.coordinadorExternoValue = Boolean(value));
     this.fichaGeneral.paquetesTrabajo$.subscribe((value) => this.paqueteTrabajoValue = Boolean(value));
