@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCienti
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
+import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
@@ -120,6 +121,8 @@ public class ProyectoServiceTest extends BaseServiceTest {
   private ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
   @Mock
   private SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
+  @Mock
+  ProgramaRepository programaRepository;
 
   private ProyectoService service;
 
@@ -134,7 +137,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
         proyectoEquipoService, solicitudSocioRepository, proyectoSocioService, solicitudEquipoSocioRepository,
         proyectoEquipoSocioService, solicitudPeriodoPagoRepository, proyectoSocioPeriodoPagoService,
         solicitudPeriodoJustificacionRepository, proyectoSocioPeriodoJustificacionService,
-        convocatoriaConceptoGastoRepository, solicitudProyectoEntidadFinanciadoraAjenaRepository);
+        convocatoriaConceptoGastoRepository, solicitudProyectoEntidadFinanciadoraAjenaRepository, programaRepository);
   }
 
   @Test

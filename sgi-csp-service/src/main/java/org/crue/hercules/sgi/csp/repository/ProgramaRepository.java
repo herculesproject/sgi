@@ -32,4 +32,14 @@ public interface ProgramaRepository extends JpaRepository<Programa, Long>, JpaSp
    */
   boolean existsByPadreIdAndActivoIsTrue(Long id);
 
+  /**
+   * Recupera lista de {@link Programa} que tengan como padre alguno de los
+   * {@link Programa} incluidos en el listado.
+   * 
+   * @param programas Listado de {@link Programa}.
+   * @return lista de {@link Programa} que tienen como padre alguno de los
+   *         programas de lista proporcionada.
+   */
+  List<Programa> findByPadreIn(List<Programa> programas);
+
 }

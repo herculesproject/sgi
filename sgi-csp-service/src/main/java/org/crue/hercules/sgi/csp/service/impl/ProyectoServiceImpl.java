@@ -1,11 +1,16 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
@@ -23,6 +28,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
@@ -52,6 +58,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCienti
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
+import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
@@ -130,6 +137,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
   private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
   private final SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
+  private final ProgramaRepository programaRepository;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -154,7 +162,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       SolicitudProyectoPeriodoJustificacionRepository solicitudPeriodoJustificacionRepository,
       ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService,
       ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository,
-      SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository) {
+      SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository,
+      ProgramaRepository programaRepository) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -184,6 +193,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoSocioPeriodoJustificacionService = proyectoSocioPeriodoJustificacionService;
     this.convocatoriaConceptoGastoRepository = convocatoriaConceptoGastoRepository;
     this.solicitudProyectoEntidadFinanciadoraAjenaRepository = solicitudProyectoEntidadFinanciadoraAjenaRepository;
+    this.programaRepository = programaRepository;
   }
 
   /**
@@ -412,7 +422,17 @@ public class ProyectoServiceImpl implements ProyectoService {
       query = new ArrayList<>();
     }
 
-    Specification<Proyecto> specByQuery = new QuerySpecification<Proyecto>(query);
+    List<QueryCriteria> queryProyecto = query.stream()
+        .filter(queryCriteria -> !queryCriteria.getKey().equals("miembroEquipo")
+            && !queryCriteria.getKey().startsWith("socioColaborador")
+            && !queryCriteria.getKey().startsWith("entidadFinanciadora")
+            && !queryCriteria.getKey().startsWith("entidadConvocante")
+            && !queryCriteria.getKey().startsWith("fuenteFinanciacion")
+            && !queryCriteria.getKey().startsWith("planInvestigacion")
+            && !queryCriteria.getKey().startsWith("responsableProyecto"))
+        .collect(Collectors.toList());
+
+    Specification<Proyecto> specByQuery = new QuerySpecification<Proyecto>(queryProyecto);
     Specification<Proyecto> specActivos = ProyectoSpecifications.activos();
     Specification<Proyecto> specs = Specification.where(specActivos).and(specByQuery);
 
@@ -422,6 +442,87 @@ public class ProyectoServiceImpl implements ProyectoService {
       Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
           .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
       specs = Specification.where(specActivos).and(specByUnidadGestionRefIn).and(specByQuery);
+    }
+
+    // Referencia MiembroEquipo
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaMiembroEquipo = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("miembroEquipo")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaMiembroEquipo)) {
+        specs = specs.and(ProyectoSpecifications.byReferenciaMiembroEquipo(referenciaMiembroEquipo.get(0).getValue()));
+      }
+    }
+
+    // Referencia ResponsableProyecto
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaResponsableProyecto = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("responsableProyecto")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaResponsableProyecto)) {
+        specs = specs.and(
+            ProyectoSpecifications.byReferenciaResponsableProyecto(referenciaResponsableProyecto.get(0).getValue()));
+      }
+    }
+
+    // Referencia SocioColaborador
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaSocioColaborador = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("socioColaborador")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaSocioColaborador)) {
+        specs = specs
+            .and(ProyectoSpecifications.byReferenciaSocioColaborador(referenciaSocioColaborador.get(0).getValue()));
+      }
+    }
+
+    // Entidad financiadora
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaEntidadFinanciadora = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("entidadFinanciadora")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaEntidadFinanciadora)) {
+        specs = specs.and(
+            ProyectoSpecifications.byReferenciaEntidadFinanciadora(referenciaEntidadFinanciadora.get(0).getValue()));
+      }
+    }
+
+    // Entidad convocante
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaEntidadConvocante = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("entidadConvocante")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaEntidadConvocante)) {
+        specs = specs
+            .and(ProyectoSpecifications.byReferenciaEntidadConvocante(referenciaEntidadConvocante.get(0).getValue()));
+      }
+    }
+
+    // Fuente financiacion
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaFuenteFinanciacion = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("fuenteFinanciacion")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaFuenteFinanciacion)) {
+        specs = specs
+            .and(ProyectoSpecifications.byReferenciaFuenteFinanciacion(referenciaFuenteFinanciacion.get(0).getValue()));
+      }
+    }
+
+    // Plan de Investigación
+    if (query.size() > queryProyecto.size()) {
+      List<QueryCriteria> referenciaPlanInvestigacion = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("planInvestigacion")).collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaPlanInvestigacion)) {
+        List<Programa> programasQuery = new ArrayList<Programa>();
+        List<Programa> programasHijos = new ArrayList<Programa>();
+        Long idProgramaRaiz = Long.parseLong(referenciaPlanInvestigacion.get(0).getValue());
+        Optional<Programa> programaRaizOpt = programaRepository.findById(idProgramaRaiz);
+        if (programaRaizOpt.isPresent()) {
+          programasQuery.add(programaRaizOpt.get());
+          programasHijos.add(programaRaizOpt.get());
+        }
+        programasHijos = programaRepository.findByPadreIn(programasHijos);
+        while (CollectionUtils.isNotEmpty(programasHijos)) {
+          programasQuery.addAll(programasHijos);
+          programasHijos = programaRepository.findByPadreIn(programasHijos);
+        }
+        specs = specs.and(ProyectoSpecifications.byReferenciaPlanInvestigacion(programasQuery));
+      }
     }
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
