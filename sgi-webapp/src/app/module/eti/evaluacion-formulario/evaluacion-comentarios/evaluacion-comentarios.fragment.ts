@@ -213,6 +213,6 @@ export class EvaluacionComentarioFragment extends Fragment {
 
   setDictamen(dictamen: IDictamen) {
     this.dictamen = dictamen;
-    this.setErrors((this.dictamen.id === 2 || this.dictamen.id === 3) && this.comentarios$.value.length === 0);
+    this.setErrors((this.dictamen?.id === 2 || this.dictamen?.id === 3) && this.comentarios$.value.length === 0);
   }
 }
