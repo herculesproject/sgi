@@ -145,7 +145,7 @@
       <column name="estado_actual_id" value="3" />
       <column name="fecha_envio_secretaria" value="2020-10-01" />
       <column name="requiere_retrospectiva" value="false" />
-      <column name="version" value="1" />
+      <column name="version" value="0" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -594,8 +594,8 @@
     <insert tableName="convocatoria_reunion">
       <column name="id" valueSequenceNext="convocatoria_reunion_seq" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="fecha_evaluacion" value="2020-12-23" />
-      <column name="fecha_limite" value="2020-12-13" />
+      <column name="fecha_evaluacion" value="2021-05-23" />
+      <column name="fecha_limite" value="2021-05-13" />
       <column name="lugar" value="Lugar 4" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 4" />
       <column name="anio" value="2020" />

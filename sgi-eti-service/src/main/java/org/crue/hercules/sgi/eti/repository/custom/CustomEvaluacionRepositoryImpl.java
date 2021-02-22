@@ -69,7 +69,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     cq.multiselect(root.alias("evaluacion"), getNumComentarios(root, cb, cq).alias("numComentarios"));
 
     cq.where(cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
-        cb.notEqual(root.get(Evaluacion_.id), idEvaluacion));
+        cb.notEqual(root.get(Evaluacion_.id), idEvaluacion), cb.isTrue(root.get(Evaluacion_.activo)));
 
     TypedQuery<EvaluacionWithNumComentario> typedQuery = entityManager.createQuery(cq);
     if (pageable != null && pageable.isPaged()) {

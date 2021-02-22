@@ -517,6 +517,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param idEvaluacion          id de la {@link Evaluacion}
    */
   @Override
+  @Transactional
   public void deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion) {
     Memoria memoria = null;
 
@@ -538,6 +539,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     // Volvemos al estado anterior de la memoria
     memoria = memoriaService.getEstadoAnteriorMemoria(memoria);
+
+    memoria.setVersion(memoria.getVersion() - 1);
 
     Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getFechaEvaluacion().isAfter(LocalDateTime.now()),
         "La fecha de la convocatoria es anterior a la actual");
