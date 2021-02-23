@@ -10,6 +10,7 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_SOCIO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES.PERIODOS_PAGOS]"
+        *ngIf="!actionService.coordinadorExterno"
         [title]="'csp.solicitud-proyecto-socio.periodos-pagos.titulo' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODOS_PAGOS)">
       </sgi-action-fragment-menu-item>

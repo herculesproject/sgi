@@ -20,6 +20,7 @@ describe('SolicitudProyectoSocioDatosGeneralesComponent', () => {
 
   const state: ISolicitudProyectoSocioState = {
     solicitudId: 1,
+    coordinadorExterno: false,
     solicitudProyectoSocio: {} as ISolicitudProyectoSocio,
     selectedSolicitudProyectoSocios: [],
     readonly: false

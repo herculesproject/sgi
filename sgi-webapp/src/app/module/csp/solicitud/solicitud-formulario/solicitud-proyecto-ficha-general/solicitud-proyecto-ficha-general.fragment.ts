@@ -7,7 +7,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 
@@ -20,6 +20,7 @@ export interface AreaTematicaSolicitudData {
 export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicitudProyectoDatos>{
   solicitudProyectoDatos: ISolicitudProyectoDatos;
   areasTematicas$ = new BehaviorSubject<AreaTematicaSolicitudData[]>([]);
+  coordinadorExterno$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -95,6 +96,12 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.subscriptions.push(
       colaborativo.valueChanges.subscribe(
         (value) => this.actionService.enableAddSocioColaborador = value)
+    );
+
+    this.subscriptions.push(
+      coordinadorExterno.valueChanges.subscribe((value) => {
+        this.coordinadorExterno$.next(value);
+      })
     );
 
     return result;

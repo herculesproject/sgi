@@ -24,6 +24,7 @@ const MSG_ERROR = marker('csp.solicitud.socios.colaboradores.borrar.vinculacione
 
 export interface ISolicitudProyectoSocioState {
   solicitudId: number;
+  coordinadorExterno: boolean;
   solicitudProyectoSocio: ISolicitudProyectoSocio;
   selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
   readonly: boolean;
@@ -121,6 +122,7 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
     };
     const state: ISolicitudProyectoSocioState = {
       solicitudId: this.fragment.getKey() as number,
+      coordinadorExterno: this.actionService.coordinadorExterno,
       solicitudProyectoSocio: wrapper ? wrapper.value : solicitudProyectoSocio,
       selectedSolicitudProyectoSocios: this.dataSource.data.map(element => element.value),
       readonly: this.formPart.readonly

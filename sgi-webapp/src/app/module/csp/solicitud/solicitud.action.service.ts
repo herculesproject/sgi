@@ -67,9 +67,12 @@ export class SolicitudActionService extends ActionService {
   showHitos$ = new BehaviorSubject<boolean>(false);
   isPresupuestoPorEntidades$ = new BehaviorSubject<boolean>(false);
 
-
-
   isPresentable$: BehaviorSubject<Boolean> = new BehaviorSubject<Boolean>(false);;
+  private coordinadorExternoValue = false;
+
+  get coordinadorExterno(): boolean {
+    return this.coordinadorExternoValue;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -106,15 +109,26 @@ export class SolicitudActionService extends ActionService {
     this.hitos = new SolicitudHitosFragment(this.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
 
     if (this.solicitud?.id) {
-      solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
-        if (hasConvocatoriaSgi) {
-          this.showHitos$.next(true);
-        }
-      });
+      this.subscriptions.push(
+        solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
+          if (hasConvocatoriaSgi) {
+            this.showHitos$.next(true);
+          }
+        })
+      );
+      this.subscriptions.push(
+        solicitudService.findSolicitudProyectoDatos(this.solicitud.id).subscribe((proyectoDatos) => {
+          if (proyectoDatos) {
+            this.proyectoDatos.coordinadorExterno$.next(Boolean(proyectoDatos.coordinadorExterno));
+          }
+        })
+      );
     }
+
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.solicitud?.id, solicitudService, this.readonly);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.solicitud, solicitudService,
       solicitudProyectoDatosService, convocatoriaService, this, this.readonly);
+    this.subscriptions.push(this.proyectoDatos.coordinadorExterno$.subscribe((value) => this.coordinadorExternoValue = Boolean(value)));
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService, this.readonly);
     this.socioColaboradores = new SolicitudSociosColaboradoresFragment(this.solicitud?.id, solicitudService,

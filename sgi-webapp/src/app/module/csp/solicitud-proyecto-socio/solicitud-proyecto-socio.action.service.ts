@@ -8,6 +8,7 @@ import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proy
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
+import { ISolicitudProyectoSocioState } from '../solicitud/solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
 import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-periodo-justificaciones/solicitud-proyecto-periodo-justificaciones.fragment';
 import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.fragment';
 import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-equipo-socio/solicitud-proyecto-socio-equipo-socio.fragment';
@@ -27,9 +28,15 @@ export class SolicitudProyectoSocioActionService extends ActionService {
   private periodoJustificaciones: SolicitudProyectoPeriodoJustificacionesFragment;
   private socioEquipoSocio: SolicitudProyectoSocioEquipoSocioFragment;
 
+  private urlProyecto: string;
   private solicitudId: number;
   private solicitudProyectoSocio: ISolicitudProyectoSocio;
   private selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
+  private coordinadorExternoValue = false;
+
+  get coordinadorExterno(): boolean {
+    return this.coordinadorExternoValue;
+  }
 
   constructor(
     readonly logger: NGXLogger,
@@ -41,11 +48,13 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     personaFisicaService: PersonaFisicaService
   ) {
     super();
-    this.solicitudProyectoSocio = {} as ISolicitudProyectoSocio;
 
-    this.solicitudProyectoSocio = history.state.solicitudProyectoSocio;
-    this.solicitudId = history.state.solicitudId;
-    this.selectedSolicitudProyectoSocios = history.state.selectedSolicitudProyectoSocios;
+    const state: ISolicitudProyectoSocioState = history.state;
+    this.solicitudProyectoSocio = state.solicitudProyectoSocio;
+    this.solicitudId = state.solicitudId;
+    this.selectedSolicitudProyectoSocios = state.selectedSolicitudProyectoSocios;
+    this.coordinadorExternoValue = state?.coordinadorExterno;
+
     if (this.solicitudProyectoSocio?.id) {
       this.enableEdit();
     }
