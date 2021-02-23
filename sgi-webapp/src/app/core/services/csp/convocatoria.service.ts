@@ -274,4 +274,17 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
     return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/investigador`, options);
   }
+
+  /**
+   * Comprueba si Convocatoria tiene convocatoriaentidadfinanciadora
+   * relacionado
+   *
+   * @param id Convocatoria
+   */
+  hasConvocatoriaEntidad(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/convocatoriaentidad`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
 }

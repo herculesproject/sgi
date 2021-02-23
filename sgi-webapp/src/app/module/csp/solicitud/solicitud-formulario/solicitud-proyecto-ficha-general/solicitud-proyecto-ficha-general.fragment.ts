@@ -58,6 +58,45 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     return form;
   }
 
+  /**
+   * Deshabilitar presupuesto global en caso
+   * de tener datos la pestaña
+   * Desglose presupuesto entidad
+   */
+  disablePresupuestoGlobalEntidad(value: boolean): void {
+    if (value) {
+      this.getFormGroup()?.controls.presupuestoPorEntidades.disable();
+    } else {
+      this.getFormGroup()?.controls.presupuestoPorEntidades.enable();
+    }
+  }
+
+  /**
+   * Deshabilitar presupuesto global en caso
+   * de tener datos la pestaña
+   * Desglose presupuesto
+   */
+  disablePresupuestoGlobal(value: boolean): void {
+    if (value) {
+      this.getFormGroup()?.controls.presupuestoPorEntidades.disable();
+    } else {
+      this.getFormGroup()?.controls.presupuestoPorEntidades.enable();
+    }
+  }
+
+  /**
+   * Deshabilitar proyecto colaborativo en caso
+   * de tener datos la pestaña
+   * Socio colaboradores
+   */
+  disableSocioColaborador(value: boolean): void {
+    if (value) {
+      this.getFormGroup()?.controls.colaborativo.disable();
+    } else {
+      this.getFormGroup()?.controls.colaborativo.enable();
+    }
+  }
+
   protected buildPatch(proyectoDatos: ISolicitudProyectoDatos): { [key: string]: any; } {
     const result = {
       titulo: proyectoDatos.titulo,
@@ -87,7 +126,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
             if (!this.readonly) {
               coordinadorExterno.enable();
             }
-            coordinadorExterno.setValue(undefined);
+            coordinadorExterno.setValue(proyectoDatos.coordinadorExterno);
           }
           this.actionService.sociosColaboradores = value;
         }
@@ -131,7 +170,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         return this.solicitudProyectoDatos;
       }),
       switchMap((solicitudProyectoDatos) => {
-        if (solicitudProyectoDatos.solicitud.convocatoria) {
+        if (solicitudProyectoDatos?.solicitud?.convocatoria) {
           const id = solicitudProyectoDatos.solicitud.convocatoria.id;
           return this.convocatoriaService.findAreaTematicas(id).pipe(
             map((results) => {
@@ -152,12 +191,60 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         }
         return of(solicitudProyectoDatos);
       }),
+      switchMap(solicitudProyectoDatos => {
+        if (solicitudProyectoDatos?.id) {
+          return this.solicitudProyectoDatosService.hasSolicitudSocio(solicitudProyectoDatos?.id).pipe(
+            map(status => {
+              this.disableSocioColaborador(status);
+              return solicitudProyectoDatos;
+            })
+          );
+        }
+        return of(solicitudProyectoDatos);
+      }),
+
+      switchMap(solicitudProyectoDatos => {
+        if (solicitudProyectoDatos?.id && !solicitudProyectoDatos?.presupuestoPorEntidades) {
+          return this.solicitudProyectoDatosService.hasSolicitudPresupuesto(solicitudProyectoDatos?.id).pipe(
+            map(status => {
+              this.disablePresupuestoGlobal(status);
+              return solicitudProyectoDatos;
+            })
+          );
+        }
+        return of(solicitudProyectoDatos);
+      }),
+
+      switchMap(solicitudProyectoDatos => {
+        if (solicitudProyectoDatos?.id && solicitudProyectoDatos?.presupuestoPorEntidades
+          && !solicitudProyectoDatos?.solicitud?.convocatoria?.id) {
+          return this.solicitudProyectoDatosService.hasSolicitudEntidadFinanciadora(solicitudProyectoDatos?.id).pipe(
+            map(status => {
+              this.disablePresupuestoGlobalEntidad(status);
+              return solicitudProyectoDatos;
+            })
+          );
+        }
+        return of(solicitudProyectoDatos);
+      }),
+      switchMap(solicitudProyectoDatos => {
+        if (solicitudProyectoDatos?.solicitud?.convocatoria?.id && solicitudProyectoDatos?.presupuestoPorEntidades) {
+          return this.convocatoriaService.hasConvocatoriaEntidad(solicitudProyectoDatos?.solicitud.id).pipe(
+            map(status => {
+              this.disablePresupuestoGlobalEntidad(!status);
+              return solicitudProyectoDatos;
+            })
+          );
+        }
+        return of(solicitudProyectoDatos);
+      }),
       catchError(error => {
         this.logger.error(error);
         return EMPTY;
       })
     );
   }
+
 
   getFirstLevelAreaTematica(areaTematica: IAreaTematica): IAreaTematica {
     if (areaTematica.padre) {
@@ -171,18 +258,14 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.solicitudProyectoDatos.titulo = form.titulo;
     this.solicitudProyectoDatos.acronimo = form.acronimo;
     this.solicitudProyectoDatos.duracion = form.duracion;
-    this.solicitudProyectoDatos.colaborativo = form.colaborativo;
-    if (this.solicitudProyectoDatos.colaborativo) {
-      this.solicitudProyectoDatos.coordinadorExterno = form.coordinadorExterno;
-    } else {
-      this.solicitudProyectoDatos.coordinadorExterno = false;
-    }
+    this.solicitudProyectoDatos.colaborativo = Boolean(form.colaborativo);
+    this.solicitudProyectoDatos.coordinadorExterno = Boolean(form.coordinadorExterno);
     this.solicitudProyectoDatos.universidadSubcontratada = form.universidadSubcontratada;
     this.solicitudProyectoDatos.objetivos = form.objetivos;
     this.solicitudProyectoDatos.intereses = form.intereses;
     this.solicitudProyectoDatos.resultadosPrevistos = form.resultadosPrevistos;
     this.solicitudProyectoDatos.envioEtica = form.envioEtica;
-    this.solicitudProyectoDatos.presupuestoPorEntidades = form.presupuestoPorEntidades;
+    this.solicitudProyectoDatos.presupuestoPorEntidades = Boolean(form.presupuestoPorEntidades);
     return this.solicitudProyectoDatos;
   }
 

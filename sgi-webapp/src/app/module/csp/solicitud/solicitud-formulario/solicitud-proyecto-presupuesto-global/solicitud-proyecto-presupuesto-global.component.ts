@@ -78,6 +78,7 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FragmentCompone
         this.dataSource.data = partidasGasto;
       });
     this.subscriptions.push(subcription);
+    this.actionService.hasDesglosePresupuesto();
   }
 
   ngOnDestroy(): void {

@@ -94,6 +94,7 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
       }
     );
     this.subscriptions.push(subscription);
+    this.actionService.hasDesglosePresupuestoEntidades();
   }
 
   ngOnDestroy(): void {

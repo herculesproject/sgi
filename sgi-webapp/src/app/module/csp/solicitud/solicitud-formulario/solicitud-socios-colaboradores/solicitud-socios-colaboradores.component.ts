@@ -81,6 +81,7 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
       }
     };
     this.subscriptions.push(subscription);
+    this.actionService.hasSocioColaborador();
   }
 
   ngOnDestroy(): void {

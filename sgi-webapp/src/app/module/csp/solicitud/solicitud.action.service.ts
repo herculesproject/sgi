@@ -189,6 +189,36 @@ export class SolicitudActionService extends ActionService {
 
   }
 
+  /**
+   * Suscripción cambios en pestaña Desglose prespuesto entidades
+   */
+  hasDesglosePresupuestoEntidades(): void {
+    this.subscriptions.push(this.desglosePresupuestoEntidades?.entidadesFinanciadoras$.subscribe((value) => {
+      const rowTableData = value.length > 0;
+      this.proyectoDatos.disablePresupuestoGlobalEntidad(rowTableData);
+    }));
+  }
+
+  /**
+   * Suscripción cambios en pestaña Desglose prespuesto
+   */
+  hasDesglosePresupuesto(): void {
+    this.subscriptions.push(this.desglosePresupuestoGlobal?.partidasGastos$.subscribe((value) => {
+      const rowTableData = value.length > 0;
+      this.proyectoDatos.disablePresupuestoGlobal(rowTableData);
+    }));
+  }
+
+  /**
+   * Suscripción cambios en pestaña Socio colaborador
+   */
+  hasSocioColaborador(): void {
+    this.subscriptions.push(this.socioColaboradores?.proyectoSocios$.subscribe((value) => {
+      const rowTableData = value.length > 0;
+      this.proyectoDatos.disableSocioColaborador(rowTableData);
+    }));
+  }
+
   getDatosGeneralesSolicitud(): ISolicitud {
     return this.datosGenerales.isInitialized() ? this.datosGenerales.solicitud : this.solicitud;
   }
@@ -232,7 +262,7 @@ export class SolicitudActionService extends ActionService {
     if (this.hasErrors()) {
       return throwError('Errores');
     }
-    if (this.isEdit() && this.proyectoDatos.isInitialized()) {
+    if (this.isEdit() && this.proyectoDatos.isInitialized() && this.proyectoDatos.hasChanges()) {
       return this.proyectoDatos.saveOrUpdate().pipe(
         switchMap(() => {
           this.proyectoDatos.refreshInitialState(true);
