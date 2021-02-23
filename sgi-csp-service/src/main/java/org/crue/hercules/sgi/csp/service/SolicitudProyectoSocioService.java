@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
@@ -83,5 +84,15 @@ public interface SolicitudProyectoSocioService {
    *         false
    */
   public Boolean vinculaciones(Long id);
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * {@link SolicitudProyectoSocio} con el fin de permitir la edición de los campo
+   * Proyecto colaborativo
+   *
+   * @param id Id del {@link SolicitudProyectoDatos}.
+   * @return true existen datos vinculados/false no existen datos vinculados.
+   */
+  Boolean hasSolicitudSocio(Long id);
 
 }

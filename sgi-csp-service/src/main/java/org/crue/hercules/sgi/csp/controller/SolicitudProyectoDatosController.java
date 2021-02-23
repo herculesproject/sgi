@@ -3,7 +3,12 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,13 +36,31 @@ public class SolicitudProyectoDatosController {
   /** SolicitudProyectoDatosService service */
   private final SolicitudProyectoDatosService service;
 
+  /** SolicitudProyectoPresupuestoService service */
+  private final SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService;
+
+  /** SolicitudProyectoPresupuestoService service */
+  private final SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService;
+
+  /** SolicitudProyectoPresupuestoService service */
+  private final SolicitudProyectoSocioService solicitudProyectoSocioService;
+
   /**
    * Instancia un nuevo SolicitudProyectoDatosController.
    * 
-   * @param solicitudProyectoDatosService {@link SolicitudProyectoDatosService}.
+   * @param solicitudProyectoDatosService                    {@link SolicitudProyectoDatosService}.
+   * @param solicitudProyectoPresupuestoService              {@link SolicitudProyectoPresupuestoService}.
+   * @param solicitudProyectoSocioService                    {@link SolicitudProyectoSocioService}.
+   * @param solicitudProyectoEntidadFinanciadoraAjenaService {@link SolicitudProyectoEntidadFinanciadoraAjenaService}.
    */
-  public SolicitudProyectoDatosController(SolicitudProyectoDatosService solicitudProyectoDatosService) {
+  public SolicitudProyectoDatosController(SolicitudProyectoDatosService solicitudProyectoDatosService,
+      SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService,
+      SolicitudProyectoSocioService solicitudProyectoSocioService,
+      SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService) {
     this.service = solicitudProyectoDatosService;
+    this.solicitudProyectoPresupuestoService = solicitudProyectoPresupuestoService;
+    this.solicitudProyectoSocioService = solicitudProyectoSocioService;
+    this.solicitudProyectoEntidadFinanciadoraAjenaService = solicitudProyectoEntidadFinanciadoraAjenaService;
   }
 
   /**
@@ -124,6 +147,54 @@ public class SolicitudProyectoDatosController {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * {@link SolicitudProyectoEntidadFinanciadoraAjena}
+   *
+   * @param id Id del {@link SolicitudProyectoEntidadFinanciadoraAjena}.
+   * @return
+   */
+  @RequestMapping(path = "/{id}/solicitudentidadfinanciadora", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<SolicitudProyectoDatos> hasSolicitudEntidadFinanciadora(@PathVariable Long id) {
+    log.debug("hasSolicitudEntidadFinanciadora(Long id) - start");
+    Boolean returnValue = solicitudProyectoEntidadFinanciadoraAjenaService.hasSolicitudEntidadFinanciadora(id);
+    log.debug("hasSolicitudEntidadFinanciadora(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * {@link SolicitudProyectoPresupuesto}
+   *
+   * @param id Id del {@link SolicitudProyectoPresupuesto}.
+   * @return
+   */
+  @RequestMapping(path = "/{id}/solicitudpresupuesto", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<SolicitudProyectoDatos> hasSolicitudPresupuesto(@PathVariable Long id) {
+    log.debug("hasSolicitudPresupuesto(Long id) - start");
+    Boolean returnValue = solicitudProyectoPresupuestoService.hasSolicitudPresupuesto(id);
+    log.debug("hasSolicitudPresupuesto(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * {@link SolicitudProyectoSocio}
+   *
+   * @param id Id del {@link SolicitudProyectoSocio}.
+   * @return
+   */
+  @RequestMapping(path = "/{id}/solicitudsocio", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<SolicitudProyectoDatos> hasSolicitudSocio(@PathVariable Long id) {
+    log.debug("hasSolicitudSocio(Long id) - start");
+    Boolean returnValue = solicitudProyectoSocioService.hasSolicitudSocio(id);
+    log.debug("hasSolicitudSocio(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

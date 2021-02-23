@@ -6,6 +6,9 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -29,6 +32,12 @@ public class SolicitudProyectoDatosControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudProyectoDatosService service;
+  @MockBean
+  private SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService;
+  @MockBean
+  private SolicitudProyectoSocioService solicitudProyectoSocioService;
+  @MockBean
+  private SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyectodatos";

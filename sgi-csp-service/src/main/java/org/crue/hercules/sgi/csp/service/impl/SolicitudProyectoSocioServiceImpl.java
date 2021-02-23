@@ -1,10 +1,12 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -240,6 +242,22 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
     log.debug("vinculaciones(Long id) - start");
     final Boolean returnValue = repository.vinculaciones(id);
     log.debug("vinculaciones(Long id) - start");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link SolicitudProyectoSocio} de la
+   * {@link SolicitudProyectoDatos}.
+   * 
+   * @param id {@link SolicitudProyectoDatos}.
+   * @return {@link SolicitudProyectoSocio}.
+   */
+  @Override
+  public Boolean hasSolicitudSocio(Long id) {
+    log.debug("hasSolicitudSocio(Long id) - start");
+    final List<SolicitudProyectoSocio> solicitudProyectoSocios = repository.findAllBySolicitudProyectoDatosId(id);
+    Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoSocios);
+    log.debug("hasSolicitudSocio(Long id) - end");
     return returnValue;
   }
 

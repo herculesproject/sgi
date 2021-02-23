@@ -2,10 +2,13 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoPresupuestoSpecifications;
@@ -235,6 +238,23 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
     final List<SolicitudProyectoPresupuestoTotalConceptoGasto> returnValue = repository
         .getSolicitudProyectoPresupuestoTotalConceptoGastos(solicitudId);
     log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link SolicitudProyectoPresupuesto} de la
+   * {@link SolicitudProyectoDatos}.
+   * 
+   * @param id {@link SolicitudProyectoDatos}.
+   * @return {@link SolicitudProyectoPresupuesto}.
+   */
+  @Override
+  public Boolean hasSolicitudPresupuesto(Long id) {
+    log.debug("hasSolicitudPresupuesto(Long id) - start");
+    final List<SolicitudProyectoPresupuesto> solicitudProyectoPresupuestos = repository
+        .findBySolicitudProyectoDatosId(id);
+    Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoPresupuestos);
+    log.debug("hasSolicitudPresupuesto(Long id) - end");
     return returnValue;
   }
 

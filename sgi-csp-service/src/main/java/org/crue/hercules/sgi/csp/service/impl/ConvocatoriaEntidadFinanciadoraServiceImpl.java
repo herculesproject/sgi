@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 /**
  * Service Implementation para la gestión de
@@ -267,6 +269,22 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
     Page<ConvocatoriaEntidadFinanciadora> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene el {@link SolicitudProyectoEntidadFinanciadoraAjena} de la
+   * {@link Convocatoria}.
+   * 
+   * @param id {@link Convocatoria}.
+   * @return {@link SolicitudProyectoEntidadFinanciadoraAjena}.
+   */
+  @Override
+  public Boolean hasConvocatoriaEntidad(Long id) {
+    log.debug("hasConvocatoriaEntidad(Long id) - start");
+    final List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadora = repository.findByConvocatoriaId(id);
+    Boolean returnValue = CollectionUtils.isNotEmpty(convocatoriaEntidadFinanciadora);
+    log.debug("hasSolicitudEntidadFinanciadora(Long id) - end");
     return returnValue;
   }
 

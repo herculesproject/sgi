@@ -918,4 +918,20 @@ public class ConvocatoriaController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Comprueba si existen datos vinculados a la {@link Convocatoria} de
+   * {@link ConvocatoriaEntidadConvocante}
+   *
+   * @param id Id del {@link ConvocatoriaEntidadConvocante}.
+   * @return
+   */
+  @RequestMapping(path = "/{id}/convocatoriaentidad", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<ConvocatoriaEntidadFinanciadora> hasConvocatoriaEntidad(@PathVariable Long id) {
+    log.debug("hasSolicitudSocio(Long id) - start");
+    Boolean returnValue = convocatoriaEntidadFinanciadoraService.hasConvocatoriaEntidad(id);
+    log.debug("hasSolicitudSocio(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

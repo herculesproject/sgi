@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 /**
  * Service Implementation para la gestión de
@@ -235,6 +237,23 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
 
     log.debug(
         "validateData(SolicitudProyectoEntidadFinanciadoraAjena updateData, SolicitudProyectoEntidadFinanciadoraAjena currentData) - end");
+  }
+
+  /**
+   * Obtiene el {@link SolicitudProyectoEntidadFinanciadoraAjena} de la
+   * {@link SolicitudProyectoDatos}.
+   * 
+   * @param id {@link SolicitudProyectoDatos}.
+   * @return {@link SolicitudProyectoEntidadFinanciadoraAjena}.
+   */
+  @Override
+  public Boolean hasSolicitudEntidadFinanciadora(Long id) {
+    log.debug("hasSolicitudEntidadFinanciadora(Long id) - start");
+    final List<SolicitudProyectoEntidadFinanciadoraAjena> solicitudProyectoEntidadFinanciadoraAjena = repository
+        .findBySolicitudProyectoDatosId(id);
+    Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoEntidadFinanciadoraAjena);
+    log.debug("hasSolicitudEntidadFinanciadora(Long id) - end");
+    return returnValue;
   }
 
 }

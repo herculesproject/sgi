@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 
 import java.util.List;
@@ -26,5 +27,15 @@ public interface SolicitudProyectoEntidadFinanciadoraAjenaRepository
    * @return Listado de solicitudes modalidad
    */
   List<SolicitudProyectoEntidadFinanciadoraAjena> findAllBySolicitudProyectoDatosId(Long solicitudProyectoDatosId);
+
+  /**
+   * Recupera todos las {@link SolicitudProyectoEntidadFinanciadoraAjena}
+   * asociados a una {@link SolicitudProyectoDatos}.
+   * 
+   * @param solicitudProyectoId Identificador de
+   *                            {@link SolicitudProyectoEntidadFinanciadoraAjena}
+   * @return listado de {@link SolicitudProyectoEntidadFinanciadoraAjena}
+   */
+  List<SolicitudProyectoEntidadFinanciadoraAjena> findBySolicitudProyectoDatosId(Long solicitudProyectoId);
 
 }

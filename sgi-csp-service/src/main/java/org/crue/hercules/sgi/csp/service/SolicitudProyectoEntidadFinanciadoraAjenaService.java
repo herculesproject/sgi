@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -67,5 +68,15 @@ public interface SolicitudProyectoEntidadFinanciadoraAjenaService {
    */
   Page<SolicitudProyectoEntidadFinanciadoraAjena> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query,
       Pageable pageable);
+
+  /**
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * {@link SolicitudProyectoEntidadFinanciadoraAjena} con el fin de permitir la
+   * edición de los campo Proyecto colaborativo
+   *
+   * @param id Id del {@link SolicitudProyectoDatos}.
+   * @return true existen datos vinculados/false no existen datos vinculados.
+   */
+  Boolean hasSolicitudEntidadFinanciadora(Long id);
 
 }

@@ -61,4 +61,14 @@ public interface ConvocatoriaEntidadFinanciadoraService {
   Page<ConvocatoriaEntidadFinanciadora> findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query,
       Pageable pageable);
 
+  /**
+   * Comprueba si existen datos vinculados a la {@link Convocatoria} de
+   * {@link ConvocatoriaEntidadFinanciadora} con el fin de permitir la edición de
+   * los campo Desglose de presupuesto
+   *
+   * @param id Id del {@link ConvocatoriaEntidadFinanciadora}.
+   * @return true existen datos vinculados/false no existen datos vinculados.
+   */
+  Boolean hasConvocatoriaEntidad(Long id);
+
 }
