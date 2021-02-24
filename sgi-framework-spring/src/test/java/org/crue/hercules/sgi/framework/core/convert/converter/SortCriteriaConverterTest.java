@@ -23,8 +23,8 @@ public class SortCriteriaConverterTest {
   public void convertAscendingSortExpression_returnsAscendingSortCriteria() throws Exception {
     // given: an equals expression
     String column = "column";
-    String operator = "+";
-    String query = column + operator;
+    String operator = "asc";
+    String query = column + "," + operator;
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
@@ -42,8 +42,8 @@ public class SortCriteriaConverterTest {
   public void convertAscendingSortExpressionNestedProperty_returnsAscendingSortCriteria() throws Exception {
     // given: an equals expression
     String column = "column.column";
-    String operator = "+";
-    String query = column + operator;
+    String operator = "asc";
+    String query = column + "," + operator;
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
@@ -61,8 +61,8 @@ public class SortCriteriaConverterTest {
   public void convertDescendingSortExpression_returnsDescendingSortCriteria() throws Exception {
     // given: an equals expression
     String column = "column";
-    String operator = "-";
-    String query = column + operator;
+    String operator = "desc";
+    String query = column + "," + operator;
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
@@ -80,8 +80,8 @@ public class SortCriteriaConverterTest {
   public void convertDescendingSortExpressionNestedProperty_returnsDescendingSortCriteria() throws Exception {
     // given: an equals expression
     String column = "column.column";
-    String operator = "-";
-    String query = column + operator;
+    String operator = "desc";
+    String query = column + "," + operator;
 
     // when: convert method invoqued with given expression
     List<SortCriteria> sortCriterias = sortCriteriaConverter.convert(query);
@@ -102,7 +102,7 @@ public class SortCriteriaConverterTest {
     String query = "";
     int elements = 3;
     for (int i = 0; i < elements; i++) {
-      query += "," + column + i + (i % 2 == 0 ? "+" : "-");
+      query += ";" + column + i + "," + (i % 2 == 0 ? "asc" : "desc");
     }
     query = query.substring(1);
 
@@ -114,7 +114,7 @@ public class SortCriteriaConverterTest {
     for (int i = 0; i < elements; i++) {
       Assertions.assertThat(sortCriterias.get(i).getKey()).isEqualTo(column + i);
       Assertions.assertThat(sortCriterias.get(i).getOperation())
-          .isEqualTo(SortOperation.fromString((i % 2 == 0 ? "+" : "-")));
+          .isEqualTo(SortOperation.fromString((i % 2 == 0 ? "asc" : "desc")));
     }
   }
 
@@ -128,7 +128,7 @@ public class SortCriteriaConverterTest {
     String query = "";
     int elements = 3;
     for (int i = 0; i < elements; i++) {
-      query += "," + column + i + (i % 2 == 0 ? "+" : "-");
+      query += ";" + column + i + "," + (i % 2 == 0 ? "asc" : "desc");
     }
     query = query.substring(1);
 
@@ -140,7 +140,7 @@ public class SortCriteriaConverterTest {
     for (int i = 0; i < elements; i++) {
       Assertions.assertThat(sortCriterias.get(i).getKey()).isEqualTo(column + i);
       Assertions.assertThat(sortCriterias.get(i).getOperation())
-          .isEqualTo(SortOperation.fromString((i % 2 == 0 ? "+" : "-")));
+          .isEqualTo(SortOperation.fromString((i % 2 == 0 ? "asc" : "desc")));
     }
   }
 
