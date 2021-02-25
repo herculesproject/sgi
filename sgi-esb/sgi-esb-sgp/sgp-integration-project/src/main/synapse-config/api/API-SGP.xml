@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sgp" name="API-SGP" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" url-mapping="/personas/fisica">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" url-mapping="/personas/fisica">
+        <inSequence>
+            <call-template target="conf:sequence-templates/save-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/bypersonarefs/{ids}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.ids')" name="ids" scope="default" type="STRING"/>
+            <script description="FindAllByIdsMediator" key="conf:scripts/find-all-by-ids-mediator.js" language="js"/>
+            <propertyGroup description="path + filterQuery">
+                <property name="REST_URL_POSTFIX" scope="axis2" type="STRING" value="/personas/fisica"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('?filterQuery=', get-property('filterQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;sortQuery=', get-property('sortQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;paginationQuery=', get-property('paginationQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+            </propertyGroup>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/personas/fisica/persona">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/persona/bypersonarefs/{ids}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.ids')" name="ids" scope="default" type="STRING"/>
+            <script description="FindAllByIdsMediator" key="conf:scripts/find-all-by-ids-mediator.js" language="js"/>
+            <propertyGroup description="path + filterQuery">
+                <property name="REST_URL_POSTFIX" scope="axis2" type="STRING" value="/personas/fisica/persona"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('?filterQuery=', get-property('filterQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;sortQuery=', get-property('sortQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;paginationQuery=', get-property('paginationQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+            </propertyGroup>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/persona/{id}">
+        <inSequence>
+            <property expression="get-property('uri.var.id')" name="id" scope="default" type="STRING"/>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/{id}">
+        <inSequence>
+            <property expression="get-property('uri.var.id')" name="id" scope="default" type="STRING"/>
+            <header name="Accept" scope="transport" value="application/json"/>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="PUT" uri-template="/personas/fisica/{id}">
+        <inSequence>
+            <call-template target="conf:sequence-templates/save-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/{id}/domicilio">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/{personaRef}/emails">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/fisica/{personaRef}/telefonos">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/personas/juridica">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" url-mapping="/personas/juridica">
+        <inSequence>
+            <call-template target="conf:sequence-templates/save-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/juridica/bypersonarefs/{ids}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.ids')" name="ids" scope="default" type="STRING"/>
+            <script description="FindAllByIdsMediator" key="conf:scripts/find-all-by-ids-mediator.js" language="js"/>
+            <propertyGroup description="path + filterQuery">
+                <property name="REST_URL_POSTFIX" scope="axis2" type="STRING" value="/personas/juridica"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('?filterQuery=', get-property('filterQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;sortQuery=', get-property('sortQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+                <property expression="fn:concat(get-property('axis2','REST_URL_POSTFIX'), fn:concat('&amp;paginationQuery=', get-property('paginationQuery')))" name="REST_URL_POSTFIX" scope="axis2" type="STRING"/>
+            </propertyGroup>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/juridica/{id}">
+        <inSequence>
+            <property expression="get-property('uri.var.id')" name="id" scope="default" type="STRING"/>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="PUT" uri-template="/personas/juridica/{id}">
+        <inSequence>
+            <call-template target="conf:sequence-templates/save-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/juridica/{id}/domicilio">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/juridica/{personaRef}/emails">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/personas/juridica/{personaRef}/telefonos">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/empresaeconomicas">
+        <inSequence>
+            <call-template target="conf:sequence-templates/find-all-in-sequence-template.xml">
+                <with-param name="endpoint" value="sgp-endpoint"/>
+            </call-template>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-all-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/empresaeconomicas/{id}">
+        <inSequence>
+            <property expression="get-property('uri.var.id')" name="id" scope="default" type="STRING"/>
+            <send>
+                <endpoint key="sgp-endpoint"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <sequence key="conf:sequences/find-one-out-sequence.xml"/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

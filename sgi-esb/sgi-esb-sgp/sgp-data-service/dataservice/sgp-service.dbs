@@ -1,0 +1,1134 @@
+<data name="sgp-service" serviceGroup="" transports="http https">
+  <description />
+
+  <!-- ****************************************************** -->
+  <!-- PERSONA FISICA -->
+  <!-- ****************************************************** -->
+
+  <!-- findAllPersonaFisicas -->
+  <resource method="GET" path="/personas/fisica" disableStreaming="true">
+    <description />
+    <call-query href="findAllPersonaFisicas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonaFisicas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, fechaNacimiento, nacionalidad, sexo, tipoPersona, vinculacion,
+        profesional_personaRef, profesional_categoriaProfesional, profesional_cuerpoProfesional, profesional_subcuerpoProfesional
+      FROM (
+        SELECT 
+          pf.id,
+          pf.fecha_nacimiento AS fechaNacimiento,
+          pf.nacionalidad AS nacionalidad,
+          pf.sexo AS sexo,
+          pf.tipo_persona AS tipoPersona,
+          pf.vinculacion AS vinculacion,
+          pf.profesional_id AS profesional_personaRef,
+          pr.categoria_profesional AS profesional_categoriaProfesional,
+          pr.cuerpo_profesional AS profesional_cuerpoProfesional,
+          pr.subcuerpo_profesional AS profesional_subcuerpoProfesional
+        FROM persona_fisica pf
+          LEFT JOIN profesional pr ON pf.profesional_id=pr.id
+      ) AS query
+      WHERE :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "personaRef": "$id",
+              "fechaNacimiento": "$fechaNacimiento",
+              "nacionalidad": "$nacionalidad",
+              "sexo": "$sexo",
+              "tipoPersona": "$tipoPersona",
+              "vinculacion": "$vinculacion",
+              "profesional": {
+                "personaRef": "$profesional_personaRef",
+                "categoriaProfesional": "$profesional_categoriaProfesional",
+                "cuerpoProfesional": "$profesional_cuerpoProfesional",
+                "subcuerpoProfesional": "$profesional_subcuerpoProfesional",
+              }
+            }
+          ]
+        }
+      }
+    </result>
+  </query>
+
+  <!-- countAllPersonaFisicas -->
+  <resource method="GET" path="/personas/fisica/count">
+    <description />
+    <call-query href="countAllPersonaFisicas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonaFisicas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) as count
+      FROM (
+        SELECT 
+          pf.id,
+          pf.fecha_nacimiento AS fechaNacimiento,
+          pf.nacionalidad AS nacionalidad,
+          pf.sexo AS sexo,
+          pf.tipo_persona AS tipoPersona,
+          pf.vinculacion AS vinculacion,
+          pf.profesional_id AS profesional_personaRef,
+          pr.categoria_profesional AS profesional_categoriaProfesional,
+          pr.cuerpo_profesional AS profesional_cuerpoProfesional,
+          pr.subcuerpo_profesional AS profesional_subcuerpoProfesional
+        FROM persona_fisica pf
+          LEFT JOIN profesional pr ON pf.profesional_id=pr.id
+      ) AS query
+      WHERE :filterQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+  <!-- createPersonaFisica -->
+  <resource method="POST" path="/personas/fisica">
+    <description />
+    <call-query href="createPersonaFisica">
+      <with-param name="id" query-param="id" />
+      <with-param name="fechaNacimiento" query-param="fechaNacimiento" />
+      <with-param name="nacionalidad" query-param="nacionalidad" />
+      <with-param name="sexo" query-param="sexo" />
+      <with-param name="tipoPersona" query-param="tipoPersona" />
+      <with-param name="vinculacion" query-param="vinculacion" />
+    </call-query>
+  </resource>
+
+  <query id="createPersonaFisica" useConfig="sgpDataSource">
+    <sql>
+      INSERT INTO persona_fisica(id, fecha_nacimiento, nacionalidad, sexo, tipo_persona, vinculacion)
+        VALUES (:id, :fechaNacimiento, :nacionalidad, :sexo, :tipoPersona, :vinculacion)
+      RETURNING
+        id,
+        fecha_nacimiento as fechaNacimiento,
+        nacionalidad,
+        sexo,
+        tipo_persona as tipoPersona,
+        vinculacion;
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" />
+    <param name="fechaNacimiento" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="nacionalidad" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="sexo" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="tipoPersona" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="vinculacion" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "fechaNacimiento": "$fechaNacimiento",
+          "nacionalidad": "$nacionalidad",
+          "sexo": "$sexo",
+          "tipoPersona": "$tipoPersona",
+          "vinculacion": "$vinculacion"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findPersonaFisicaById -->
+  <resource method="GET" path="/personas/fisica/{id}">
+    <description />
+    <call-query href="findPersonaFisicaById">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findPersonaFisicaById" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        pf.id,
+        pf.fecha_nacimiento AS fechaNacimiento,
+        pf.nacionalidad AS nacionalidad,
+        pf.sexo AS sexo,
+        pf.tipo_persona AS tipoPersona,
+        pf.vinculacion AS vinculacion,
+        pf.profesional_id AS profesional_personaRef,
+        pr.categoria_profesional AS profesional_categoriaProfesional,
+        pr.cuerpo_profesional AS profesional_cuerpoProfesional,
+        pr.subcuerpo_profesional AS profesional_subcuerpoProfesional
+      FROM persona_fisica pf
+        LEFT JOIN profesional pr ON pf.profesional_id=pr.id
+      WHERE pf.id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "fechaNacimiento": "$fechaNacimiento",
+          "nacionalidad": "$nacionalidad",
+          "sexo": "$sexo",
+          "tipoPersona": "$tipoPersona",
+          "vinculacion": "$vinculacion",
+          "profesional": {
+            "personaRef": "$profesional_personaRef",
+            "categoriaProfesional": "$profesional_categoriaProfesional",
+            "cuerpoProfesional": "$profesional_cuerpoProfesional",
+            "subcuerpoProfesional": "$profesional_subcuerpoProfesional",
+          }
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- updatePersonaFisica -->
+  <resource method="PUT" path="/personas/fisica/{id}">
+    <description />
+    <call-query href="updatePersonaFisica">
+      <with-param name="id" query-param="id" />
+      <with-param name="fechaNacimiento" query-param="fechaNacimiento" />
+      <with-param name="nacionalidad" query-param="nacionalidad" />
+      <with-param name="sexo" query-param="sexo" />
+      <with-param name="tipoPersona" query-param="tipoPersona" />
+      <with-param name="vinculacion" query-param="vinculacion" />
+    </call-query>
+  </resource>
+
+  <query id="updatePersonaFisica" useConfig="sgpDataSource">
+    <sql>
+      UPDATE persona_fisica SET
+        fecha_nacimiento=:fechaNacimiento,
+        nacionalidad=:nacionalidad,
+        sexo=:sexo,
+        tipo_persona=:tipoPersona,
+        vinculacion=:vinculacion
+      WHERE id=:id
+      RETURNING 
+        id, 
+        fecha_nacimiento as fechaNacimiento,
+        nacionalidad,
+        sexo,
+        tipo_persona as tipoPersona,
+        vinculacion
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" />
+    <param name="fechaNacimiento" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="nacionalidad" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="sexo" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="tipoPersona" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="vinculacion" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "fechaNacimiento": "$fechaNacimiento",
+          "nacionalidad": "$nacionalidad",
+          "sexo": "$sexo",
+          "tipoPersona": "$tipoPersona",
+          "vinculacion": "$vinculacion"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findPersonaFisicaDomicilio -->
+  <resource method="GET" path="/personas/fisica/{id}/domicilio">
+    <description />
+    <call-query href="findPersonaFisicaDomicilio">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findPersonaFisicaDomicilio" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, personaId, tipoVia, nombreVia, numero, poblacion, codigoPostal, provincia, pais, ampliacionDomicilio
+      FROM (
+        SELECT
+          d.id, 
+          d.persona_id AS personaId,
+          d.tipo_via AS tipoVia,
+          d.nombre_via AS nombreVia,
+          d.numero,
+          d.poblacion,
+          d.codigo_postal AS codigoPostal,
+          d.provincia,
+          d.pais,
+          d.ampliacion_domicilio AS ampliacionDomicilio
+        FROM domicilio d
+          JOIN persona_fisica pf ON pf.id=d.persona_id
+      ) AS query
+      WHERE personaId = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$personaId",
+          "tipoVia": "$tipoVia",
+          "nombreVia": "$nombreVia",
+          "numero": "$numero",
+          "poblacion": "$poblacion",
+          "codigoPostal": "$codigoPostal",
+          "provincia": "$provincia",
+          "pais": "$pais",
+          "ampliacionDomicilio": "$ampliacionDomicilio"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findAllPersonaFisicaEmails -->
+  <resource method="GET" path="/personas/fisica/{id}/emails">
+    <description />
+    <call-query href="findAllPersonaFisicaEmails">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonaFisicaEmails" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, personaId, email, tipoEmail
+      FROM (
+        SELECT
+          e.id, 
+          e.persona_id AS personaId,
+          e.email,
+          e.tipo_email AS tipoEmail
+        FROM email e
+          JOIN persona_fisica pf ON pf.id=e.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "email": "$email",
+              "tipoEmail": "$tipoEmail"
+            }
+          ]
+        }
+      }  
+    </result>
+  </query>
+
+  <!-- countAllPersonaFisicaEmails -->
+  <resource method="GET" path="/personas/fisica/{id}/emails/count">
+    <description />
+    <call-query href="countAllPersonaFisicaEmails">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonaFisicaEmails" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT
+          e.id, 
+          e.persona_id AS personaId,
+          e.email,
+          e.tipo_email AS tipoEmail
+        FROM email e
+          JOIN persona_fisica pf ON pf.id=e.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findAllPersonaFisicaTelefonos -->
+  <resource method="GET" path="/personas/fisica/{id}/telefonos">
+    <description />
+    <call-query href="findAllPersonaFisicaTelefonos">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonaFisicaTelefonos" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, personaId, telefono, tipoTelefono
+      FROM (
+        SELECT
+          t.id, 
+          t.persona_id AS personaId,
+          t.telefono,
+          t.tipo_telefono AS tipoTelefono
+        FROM telefono t
+          JOIN persona_fisica pf ON pf.id=t.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "telefono": "$telefono",
+              "tipoTelefono": "$tipoTelefono"
+            }
+          ]
+        }
+      }  
+    </result>
+  </query>
+
+  <!-- countAllPersonaFisicaTelefonos -->
+  <resource method="GET" path="/personas/fisica/{id}/telefonos/count">
+    <description />
+    <call-query href="countAllPersonaFisicaTelefonos">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonaFisicaTelefonos" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT
+          t.id, 
+          t.persona_id AS personaId,
+          t.telefono,
+          t.tipo_telefono AS tipoTelefono
+        FROM telefono t
+          JOIN persona_fisica pf ON pf.id=t.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- ****************************************************** -->
+  <!-- PERSONA FISICA PERSONA -->
+  <!-- ****************************************************** -->
+
+  <!-- findAllPersonas -->
+  <resource method="GET" path="/personas/fisica/persona" disableStreaming="true">
+    <description />
+    <call-query href="findAllPersonas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, nombre, primerApellido, segundoApellido, identificadorNumero, identificadorLetra
+      FROM (
+        SELECT 
+          p.id,
+          p.nombre,
+          p.primer_apellido AS primerApellido,
+          p.segundo_apellido AS segundoApellido,
+          p.identificador_numero AS identificadorNumero,
+          p.identificador_letra AS identificadorLetra
+        FROM persona p
+      ) AS query
+      WHERE :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "personaRef": "$id",
+              "nombre": "$nombre",
+              "primerApellido": "$primerApellido",
+              "segundoApellido": "$segundoApellido",
+              "identificadorNumero": "$identificadorNumero",
+              "identificadorLetra": "$identificadorLetra"
+            }
+          ]
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- countAllPersonas -->
+  <resource method="GET" path="/personas/fisica/persona/count">
+    <description />
+    <call-query href="countAllPersonas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT 
+          p.id,
+          p.nombre,
+          p.primer_apellido AS primerApellido,
+          p.segundo_apellido AS segundoApellido,
+          p.identificador_numero AS identificadorNumero,
+          p.identificador_letra AS identificadorLetra
+        FROM persona p
+      ) AS query
+      WHERE :filterQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findPersonaById -->
+  <resource method="GET" path="/personas/fisica/persona/{id}">
+    <description />
+    <call-query href="findPersonaById">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findPersonaById" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        p.id,
+        p.nombre,
+        p.primer_apellido AS primerApellido,
+        p.segundo_apellido AS segundoApellido,
+        p.identificador_numero AS identificadorNumero,
+        p.identificador_letra AS identificadorLetra
+      FROM persona p
+      WHERE p.id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "nombre": "$nombre",
+          "primerApellido": "$primerApellido",
+          "segundoApellido": "$segundoApellido",
+          "identificadorNumero": "$identificadorNumero",
+          "identificadorLetra": "$identificadorLetra"
+        }
+      }
+    </result>
+  </query>
+  
+
+  <!-- ****************************************************** -->
+  <!-- PERSONA JURIDICA -->
+  <!-- ****************************************************** -->
+
+  <!-- findAllPersonaJuridicas -->
+  <resource method="GET" path="/personas/juridica" disableStreaming="true">
+    <description />
+    <call-query href="findAllPersonaJuridicas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonaJuridicas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, razonSocial, identificadorNumero, identificadorLetra, tipoPersona, personaContacto
+      FROM (
+        SELECT
+          pj.id,
+          pj.razon_social AS razonSocial,
+          pj.identificador_numero AS identificadorNumero,
+          pj.identificador_letra AS identificadorLetra,
+          pj.tipo_persona AS tipoPersona,
+          pj.persona_contacto_id AS personaContacto
+        FROM persona_juridica pj
+      ) AS query
+      WHERE :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "personaRef": "$id",
+              "razonSocial": "$razonSocial",
+              "identificadorNumero": "$identificadorNumero",
+              "identificadorLetra": "$identificadorLetra",
+              "tipoPersona": "$tipoPersona",
+              "personaContacto": "$personaContacto"
+            }
+          ]
+        }
+      }
+    </result>  
+  </query>
+
+
+  <!-- countAllPersonaJuridicas -->
+  <resource method="GET" path="/personas/juridica/count">
+    <description />
+    <call-query href="countAllPersonaJuridicas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonaJuridicas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT
+          pj.id,
+          pj.razon_social AS razonSocial,
+          pj.identificador_numero AS identificadorNumero,
+          pj.identificador_letra AS identificadorLetra,
+          pj.tipo_persona AS tipoPersona,
+          pj.persona_contacto_id AS personaContacto
+        FROM persona_juridica pj
+      ) AS query
+      WHERE :filterQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- createPersonaJuridica -->
+  <resource method="POST" path="/personas/juridica">
+    <description />
+    <call-query href="createPersonaJuridica">
+      <with-param name="id" query-param="id" />
+      <with-param name="razonSocial" query-param="razonSocial" />
+      <with-param name="identificadorNumero" query-param="identificadorNumero" />
+      <with-param name="identificadorLetra" query-param="identificadorLetra" />
+      <with-param name="tipoPersona" query-param="tipoPersona" />
+      <with-param name="personaContacto" query-param="personaContacto" />
+    </call-query>
+  </resource>
+
+  <query id="createPersonaJuridica" useConfig="sgpDataSource">
+    <sql>
+      INSERT INTO persona_juridica(id, razon_social, identificador_numero, identificador_letra, tipo_persona, persona_contacto_id)
+        VALUES (:id, :razonSocial, :identificadorNumero, :identificadorLetra, :tipoPersona, :personaContacto)
+      RETURNING
+        id,
+        razon_social AS razonSocial,
+        identificador_numero AS identificadorNumero,
+        identificador_letra AS identificadorLetra,
+        tipo_persona AS tipoPersona, 
+        persona_contacto_id AS personaContacto;
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" />
+    <param name="razonSocial" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="identificadorNumero" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="identificadorLetra" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="tipoPersona" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="personaContacto" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "razonSocial": "$razonSocial",
+          "identificadorNumero": "$identificadorNumero",
+          "identificadorLetra": "$identificadorLetra",
+          "tipoPersona": "$tipoPersona",
+          "personaContacto": "$personaContacto"
+        }
+      }
+    </result>
+  </query>
+
+  <!-- findPersonaJuridicaById -->
+  <resource method="GET" path="/personas/juridica/{id}">
+    <description />
+    <call-query href="findPersonaJuridicaById">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findPersonaJuridicaById" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        pj.id,
+        pj.razon_social AS razonSocial,
+        pj.identificador_numero AS identificadorNumero,
+        pj.identificador_letra AS identificadorLetra,
+        pj.tipo_persona AS tipoPersona,
+        pj.persona_contacto_id AS personaContacto
+      FROM persona_juridica pj
+      WHERE pj.id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "razonSocial": "$razonSocial",
+          "identificadorNumero": "$identificadorNumero",
+          "identificadorLetra": "$identificadorLetra",
+          "tipoPersona": "$tipoPersona",
+          "personaContacto": "$personaContacto"
+        }
+      }
+    </result>
+  </query>
+
+  <!-- updatePersonaJuridica -->
+  <resource method="PUT" path="/personas/juridica/{id}">
+    <description />
+    <call-query href="updatePersonaJuridica">
+      <with-param name="id" query-param="id" />
+      <with-param name="razonSocial" query-param="razonSocial" />
+      <with-param name="identificadorNumero" query-param="identificadorNumero" />
+      <with-param name="identificadorLetra" query-param="identificadorLetra" />
+      <with-param name="tipoPersona" query-param="tipoPersona" />
+      <with-param name="personaContacto" query-param="personaContacto" />
+    </call-query>
+  </resource>
+
+  <query id="updatePersonaJuridica" useConfig="sgpDataSource">
+    <sql>
+      UPDATE persona_juridica SET
+        razon_social=:razonSocial,
+        identificador_numero=:identificadorNumero,
+        identificador_letra=:identificadorLetra,
+        tipo_persona=:tipoPersona,
+        persona_contacto_id=:personaContacto
+      WHERE id=:id
+      RETURNING 
+        id,
+        razon_social AS razonSocial,
+        identificador_numero AS identificadorNumero,
+        identificador_letra AS identificadorLetra,
+        tipo_persona AS tipoPersona, 
+        persona_contacto_id AS personaContacto;
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" />
+    <param name="razonSocial" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="identificadorNumero" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="identificadorLetra" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="tipoPersona" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="personaContacto" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$id",
+          "razonSocial": "$razonSocial",
+          "identificadorNumero": "$identificadorNumero",
+          "identificadorLetra": "$identificadorLetra",
+          "tipoPersona": "$tipoPersona",
+          "personaContacto": "$personaContacto"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findPersonaJuridicaDomicilio -->
+  <resource method="GET" path="/personas/juridica/{id}/domicilio">
+    <description />
+    <call-query href="findPersonaJuridicaDomicilio">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findPersonaJuridicaDomicilio" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, personaId, tipoVia, nombreVia, numero, poblacion, codigoPostal, provincia, pais, ampliacionDomicilio
+      FROM (
+        SELECT
+          d.id, 
+          d.persona_id AS personaId,
+          d.tipo_via AS tipoVia,
+          d.nombre_via AS nombreVia,
+          d.numero,
+          d.poblacion,
+          d.codigo_postal AS codigoPostal,
+          d.provincia,
+          d.pais,
+          d.ampliacion_domicilio AS ampliacionDomicilio
+        FROM domicilio d
+          JOIN persona_juridica pj ON pj.id=d.persona_id
+      ) AS query
+      WHERE personaId = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "personaRef": "$personaId",
+          "tipoVia": "$tipoVia",
+          "nombreVia": "$nombreVia",
+          "numero": "$numero",
+          "poblacion": "$poblacion",
+          "codigoPostal": "$codigoPostal",
+          "provincia": "$provincia",
+          "pais": "$pais",
+          "ampliacionDomicilio": "$ampliacionDomicilio"
+        }
+      }
+    </result>
+  </query>
+
+  <!-- findAllPersonaJuridicaEmails -->
+  <resource method="GET" path="/personas/juridica/{id}/emails">
+    <description />
+    <call-query href="findAllPersonaJuridicaEmails">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonaJuridicaEmails" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, personaId, email, tipoEmail
+      FROM (
+        SELECT
+          e.id, 
+          e.persona_id AS personaId,
+          e.email,
+          e.tipo_email AS tipoEmail
+        FROM email e
+          JOIN persona_juridica pj ON pj.id=e.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "email": "$email",
+              "tipoEmail": "$tipoEmail"
+            }
+          ]
+        }
+      }  
+    </result>
+  </query>
+
+  <!-- countAllPersonaJuridicaEmails -->
+  <resource method="GET" path="/personas/juridica/{id}/emails/count">
+    <description />
+    <call-query href="countAllPersonaJuridicaEmails">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonaJuridicaEmails" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT
+          e.id, 
+          e.persona_id AS personaId,
+          e.email,
+          e.tipo_email AS tipoEmail
+        FROM email e
+          JOIN persona_juridica pj ON pj.id=e.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+  <!-- findAllPersonaJuridicaTelefonos -->
+  <resource method="GET" path="/personas/juridica/{id}/telefonos">
+    <description />
+    <call-query href="findAllPersonaJuridicaTelefonos">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllPersonaJuridicaTelefonos" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, personaId, telefono, tipoTelefono
+      FROM (
+        SELECT
+          t.id, 
+          t.persona_id AS personaId,
+          t.telefono,
+          t.tipo_telefono AS tipoTelefono
+        FROM telefono t
+          JOIN persona_juridica pj ON pj.id=t.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "telefono": "$telefono",
+              "tipoTelefono": "$tipoTelefono"
+            }
+          ]
+        }
+      }  
+    </result>
+  </query>
+
+  <!-- countAllPersonaJuridicaTelefonos -->
+  <resource method="GET" path="/personas/juridica/{id}/telefonos/count">
+    <description />
+    <call-query href="countAllPersonaJuridicaTelefonos">
+      <with-param name="id" query-param="id" />
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllPersonaJuridicaTelefonos" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT
+          t.id, 
+          t.persona_id AS personaId,
+          t.telefono,
+          t.tipo_telefono AS tipoTelefono
+        FROM telefono t
+          JOIN persona_juridica pj ON pj.id=t.persona_id
+      ) AS query
+      WHERE personaId = :id AND :filterQuery
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+
+
+  <!-- ****************************************************** -->
+  <!-- EMPRESA ECONOMICA -->
+  <!-- ****************************************************** -->
+
+  <!-- findAllEmpresaEconomicas -->
+  <resource method="GET" path="/empresaeconomicas">
+    <description />
+    <call-query href="findAllEmpresaEconomicas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllEmpresaEconomicas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id, tipoDocumento, numeroDocumento, personaRefPadre, razonSocial, direccion, tipoEmpresa
+      FROM (
+        SELECT
+          e.id,
+          e.tipo_documento AS tipoDocumento,
+          e.numero_documento AS numeroDocumento,
+          e.empresa_economica_padre_id AS personaRefPadre,
+          e.razon_social AS razonSocial,
+          e.direccion,
+          e.tipo_empresa AS tipoEmpresa
+        FROM empresa_economica e
+      ) AS query
+      WHERE :filterQuery :sortQuery :paginationQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "personaRef": "$id",
+              "personaRefPadre": "$personaRefPadre",
+              "razonSocial": "$razonSocial",
+              "tipoDocumento": "$tipoDocumento",
+              "numeroDocumento": "$numeroDocumento",
+              "direccion": "$direccion",
+              "tipoEmpresa": "$tipoEmpresa"
+            }
+          ]
+        }
+      }   
+    </result>
+  </query>
+
+  
+  <!-- countAllEmpresaEconomicas -->
+  <resource method="GET" path="/empresaeconomicas/count">
+    <description />
+    <call-query href="countAllEmpresaEconomicas">
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+  <query id="countAllEmpresaEconomicas" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT
+          e.id,
+          e.tipo_documento AS tipoDocumento,
+          e.numero_documento AS numeroDocumento,
+          e.empresa_economica_padre_id AS personaRefPadre,
+          e.razon_social AS razonSocial,
+          e.direccion,
+          e.tipo_empresa AS tipoEmpresa
+        FROM empresa_economica e
+      ) AS query
+      WHERE :filterQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+	</result>
+  </query>
+
+  <!-- findEmpresaEconomicaById -->
+  <resource method="GET" path="/empresaeconomicas/{id}">
+    <description />
+    <call-query href="findEmpresaEconomicaById">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findEmpresaEconomicaById" useConfig="sgpDataSource">
+    <sql>
+      SELECT 
+        id,
+        tipo_documento AS tipoDocumento,
+        numero_documento AS numeroDocumento,
+        empresa_economica_padre_id AS personaRefPadre,
+        razon_social AS razonSocial,
+        direccion,
+        tipo_empresa AS tipoEmpresa
+      FROM empresa_economica e
+      WHERE e.id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "id": "$id",
+          "personaRefPadre": "$personaRefPadre",
+          "razonSocial": "$razonSocial",
+          "tipoDocumento": "$tipoDocumento",
+          "numeroDocumento": "$numeroDocumento",
+          "direccion": "$direccion",
+          "tipoEmpresa": "$tipoEmpresa"
+        }
+      }
+    </result>
+  </query>
+
+  <config id="sgpDataSource">
+    <property name="carbon_datasource_name">SGP_DS</property>
+  </config>
+</data>

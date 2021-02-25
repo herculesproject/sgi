@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<endpoint name="sgp-service" xmlns="http://ws.apache.org/ns/synapse">
-    <address uri="http://localhost:8081/sgp">
+<endpoint name="sgp-endpoint" xmlns="http://ws.apache.org/ns/synapse">
+    <address uri="http://localhost:8280/services/sgp-service">
         <timeout>
             <duration>1000</duration>
-            <responseAction>fault</responseAction>
         </timeout>
         <suspendOnFailure>
             <initialDuration>-1</initialDuration>
