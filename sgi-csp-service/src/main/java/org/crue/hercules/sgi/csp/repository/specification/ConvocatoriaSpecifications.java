@@ -1,27 +1,14 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.AreaTematica_;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica_;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante_;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora_;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaFase_;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
-import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
-import org.crue.hercules.sgi.csp.model.FuenteFinanciacion_;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ConvocatoriaSpecifications {
@@ -76,116 +63,6 @@ public class ConvocatoriaSpecifications {
     return (root, query, cb) -> {
       return root.get(Convocatoria_.unidadGestionRef).in(acronimos);
 
-    };
-  }
-
-  /**
-   * {@link Convocatoria} asociada al area temática recibida.
-   * 
-   * @param idAreaTematica Identificador de {@link AreaTematica}
-   * 
-   * @return specification para obtener las {@link Convocatoria} activas
-   */
-
-  public static Specification<Convocatoria> byAreaTematicaId(Long idAreaTematica) {
-    return (root, query, cb) -> {
-
-      Subquery<Long> queryConvocatoriaAreaTematica = query.subquery(Long.class);
-      Root<ConvocatoriaAreaTematica> subqRoot = queryConvocatoriaAreaTematica.from(ConvocatoriaAreaTematica.class);
-      queryConvocatoriaAreaTematica.select(subqRoot.get(ConvocatoriaAreaTematica_.convocatoria).get(Convocatoria_.id))
-          .where(cb.equal(subqRoot.get(ConvocatoriaAreaTematica_.areaTematica).get(AreaTematica_.id), idAreaTematica));
-
-      return root.get(Convocatoria_.id).in(queryConvocatoriaAreaTematica);
-    };
-  }
-
-  /**
-   * {@link Convocatoria} asociada a la entidad convocante recibida.
-   * 
-   * @param entidadRef Referencia de la entidad convocante.
-   * 
-   * @return specification para obtener las {@link Convocatoria} activas
-   */
-  public static Specification<Convocatoria> byEntidadConvocanteRef(String entidadRef) {
-    return (root, query, cb) -> {
-
-      Subquery<Long> queryConvocatoriaEntidadConvocante = query.subquery(Long.class);
-      Root<ConvocatoriaEntidadConvocante> subqRoot = queryConvocatoriaEntidadConvocante
-          .from(ConvocatoriaEntidadConvocante.class);
-      queryConvocatoriaEntidadConvocante
-          .select(subqRoot.get(ConvocatoriaEntidadConvocante_.convocatoria).get(Convocatoria_.id))
-          .where(cb.equal(subqRoot.get(ConvocatoriaEntidadConvocante_.entidadRef), entidadRef));
-
-      return root.get(Convocatoria_.id).in(queryConvocatoriaEntidadConvocante);
-    };
-  }
-
-  /**
-   * {@link Convocatoria} asociada a la entidad financiera recibida.
-   * 
-   * @param entidadRef Referencia de la entidad financiera.
-   * 
-   * @return specification para obtener las {@link Convocatoria} activas
-   */
-  public static Specification<Convocatoria> byEntidadFinancieraRef(String entidadRef) {
-    return (root, query, cb) -> {
-
-      Subquery<Long> queryConvocatoriaEntidadFinanciera = query.subquery(Long.class);
-      Root<ConvocatoriaEntidadFinanciadora> subqRoot = queryConvocatoriaEntidadFinanciera
-          .from(ConvocatoriaEntidadFinanciadora.class);
-      queryConvocatoriaEntidadFinanciera
-          .select(subqRoot.get(ConvocatoriaEntidadFinanciadora_.convocatoria).get(Convocatoria_.id))
-          .where(cb.equal(subqRoot.get(ConvocatoriaEntidadFinanciadora_.entidadRef), entidadRef));
-
-      return root.get(Convocatoria_.id).in(queryConvocatoriaEntidadFinanciera);
-    };
-  }
-
-  /**
-   * {@link Convocatoria} asociada a la fuente de financiación recibida.
-   * 
-   * @param fuenteFinanciacionId Identificador {@link FuenteFinanciacion}
-   * 
-   * @return specification para obtener las {@link Convocatoria} asociadas a la
-   *         fuente de financiación.
-   */
-  public static Specification<Convocatoria> byFuenteFinanciacionId(Long fuenteFinanciacionId) {
-    return (root, query, cb) -> {
-
-      Subquery<Long> queryConvocatoriaEntidadFinanciera = query.subquery(Long.class);
-      Root<ConvocatoriaEntidadFinanciadora> subqRoot = queryConvocatoriaEntidadFinanciera
-          .from(ConvocatoriaEntidadFinanciadora.class);
-      queryConvocatoriaEntidadFinanciera
-          .select(subqRoot.get(ConvocatoriaEntidadFinanciadora_.convocatoria).get(Convocatoria_.id))
-          .where(cb.equal(subqRoot.get(ConvocatoriaEntidadFinanciadora_.fuenteFinanciacion).get(FuenteFinanciacion_.id),
-              fuenteFinanciacionId));
-
-      return root.get(Convocatoria_.id).in(queryConvocatoriaEntidadFinanciera);
-    };
-  }
-
-  /**
-   * {@link Convocatoria} dentro del plazo de presentación de solicitudes.
-   * 
-   * @return specification para obtener las {@link Convocatoria} dentro del plazo
-   *         de presentación de solicitudes.
-   */
-  public static Specification<Convocatoria> inPlazoPresentacionSolicitudes() {
-    return (root, query, cb) -> {
-
-      Subquery<Long> queryConfiguracionSolicitud = query.subquery(Long.class);
-      Root<ConfiguracionSolicitud> subqRoot = queryConfiguracionSolicitud.from(ConfiguracionSolicitud.class);
-
-      // Dentro del rango de fechas de la configuración
-      Predicate plazoInicio = cb.lessThanOrEqualTo(subqRoot.get(ConfiguracionSolicitud_.fasePresentacionSolicitudes)
-          .get(ConvocatoriaFase_.fechaInicio).as(java.time.LocalDate.class), LocalDate.now());
-      Predicate plazoFin = cb.greaterThanOrEqualTo(subqRoot.get(ConfiguracionSolicitud_.fasePresentacionSolicitudes)
-          .get(ConvocatoriaFase_.fechaFin).as(java.time.LocalDate.class), LocalDate.now());
-      Predicate dentroPlazo = cb.and(plazoInicio, plazoFin);
-
-      queryConfiguracionSolicitud.select(subqRoot.get(ConfiguracionSolicitud_.convocatoria).get(Convocatoria_.id))
-          .where(dentroPlazo);
-      return root.get(Convocatoria_.id).in(queryConfiguracionSolicitud);
     };
   }
 }

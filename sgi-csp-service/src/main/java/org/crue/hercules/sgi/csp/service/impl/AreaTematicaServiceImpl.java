@@ -10,8 +10,7 @@ import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.AreaTematicaSpecifications;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -236,15 +235,13 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
   @Override
-  public Page<AreaTematica> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<AreaTematica> specByQuery = new QuerySpecification<AreaTematica>(query);
-    Specification<AreaTematica> specActivos = AreaTematicaSpecifications.activos();
-
-    Specification<AreaTematica> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<AreaTematica> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<AreaTematica> specs = AreaTematicaSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -256,16 +253,13 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
   @Override
-  public Page<AreaTematica> findAllGrupo(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllGrupo(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<AreaTematica> specByQuery = new QuerySpecification<AreaTematica>(query);
-    Specification<AreaTematica> specActivos = AreaTematicaSpecifications.activos();
-    Specification<AreaTematica> specGrupos = AreaTematicaSpecifications.grupos();
-
-    Specification<AreaTematica> specs = Specification.where(specGrupos).and(specActivos).and(specByQuery);
+  public Page<AreaTematica> findAllGrupo(String query, Pageable pageable) {
+    log.debug("findAllGrupo(String query, Pageable pageable) - start");
+    Specification<AreaTematica> specs = AreaTematicaSpecifications.grupos().and(AreaTematicaSpecifications.activos())
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllGrupo(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllGrupo(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -277,15 +271,13 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
   @Override
-  public Page<AreaTematica> findAllTodosGrupo(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodosGrupo(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<AreaTematica> specByQuery = new QuerySpecification<AreaTematica>(query);
-    Specification<AreaTematica> specGrupos = AreaTematicaSpecifications.grupos();
-
-    Specification<AreaTematica> specs = Specification.where(specGrupos).and(specByQuery);
+  public Page<AreaTematica> findAllTodosGrupo(String query, Pageable pageable) {
+    log.debug("findAllTodosGrupo(String query, Pageable pageable) - start");
+    Specification<AreaTematica> specs = AreaTematicaSpecifications.grupos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllTodosGrupo(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodosGrupo(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -299,16 +291,13 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
   @Override
-  public Page<AreaTematica> findAllHijosAreaTematica(Long areaTematicaId, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllHijosAreaTematica(Long areaTematicaId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<AreaTematica> specByQuery = new QuerySpecification<AreaTematica>(query);
-    Specification<AreaTematica> specHijos = AreaTematicaSpecifications.hijos(areaTematicaId);
-
-    Specification<AreaTematica> specs = Specification.where(specHijos).and(specByQuery);
+  public Page<AreaTematica> findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) {
+    log.debug("findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) - start");
+    Specification<AreaTematica> specs = AreaTematicaSpecifications.hijos(areaTematicaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllHijosAreaTematica(Long areaTematicaId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

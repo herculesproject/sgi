@@ -23,7 +23,6 @@ import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -302,7 +301,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoSocioPeriodoPagoService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -356,7 +355,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoSocioPeriodoPagoService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ProyectoSocioPeriodoPago> pageResponse = new PageImpl<>(proyectoSocioPeriodoPago, pageable, 0);
@@ -400,7 +399,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoSocioEquipoService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -453,7 +452,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoSocioEquipoService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ProyectoSocioEquipo> pageResponse = new PageImpl<>(proyectoSocioEquipo, pageable, 0);
@@ -494,7 +493,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoSocioPeriodoJustificacionService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -551,7 +550,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoSocioPeriodoJustificacionService.findAllByProyectoSocio(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ProyectoSocioPeriodoJustificacion> pageResponse = new PageImpl<>(proyectoSociosPeriodoJustificaciones,

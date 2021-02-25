@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -38,7 +35,7 @@ public interface TipoFinanciacionService {
    * @return la lista de entidades {@link TipoFinanciacion} paginadas y/o
    *         filtradas
    */
-  Page<TipoFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoFinanciacion> findAll(String query, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link TipoFinanciacion} paginadas y/o filtradas
@@ -48,7 +45,7 @@ public interface TipoFinanciacionService {
    * @return la lista de entidades {@link TipoFinanciacion} paginadas y/o
    *         filtradas
    */
-  Page<TipoFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoFinanciacion> findAllTodos(String query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoFinanciacion} por id.

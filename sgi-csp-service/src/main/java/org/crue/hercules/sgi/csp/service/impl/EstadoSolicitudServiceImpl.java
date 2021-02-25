@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.springframework.data.domain.Page;
@@ -57,9 +57,9 @@ public class EstadoSolicitudServiceImpl implements EstadoSolicitudService {
    */
   @Override
   public Page<EstadoSolicitud> findAllBySolicitud(Long idSolicitud, Pageable paging) {
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllBySolicitud(Long solicitudId, Pageable paging) - start");
     Page<EstadoSolicitud> returnValue = repository.findAllByidSolicitud(idSolicitud, paging);
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitud(Long solicitudId, Pageable paging) - end");
     return returnValue;
   }
 

@@ -3,9 +3,8 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -73,7 +72,7 @@ public interface SolicitudService {
    * @return el listado de entidades {@link Solicitud} activas paginadas y
    *         filtradas.
    */
-  Page<Solicitud> findAllRestringidos(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs);
+  Page<Solicitud> findAllRestringidos(String query, Pageable paging, List<String> unidadGestionRefs);
 
   /**
    * Obtiene todas las entidades {@link Solicitud} paginadas y filtradas.
@@ -83,7 +82,7 @@ public interface SolicitudService {
    * @param unidadGestionRefs lista de referencias de las unidades de gestion.
    * @return el listado de entidades {@link Solicitud} paginadas y filtradas.
    */
-  Page<Solicitud> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs);
+  Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging, List<String> unidadGestionRefs);
 
   /**
    * Comprueba si la soliciutd está asociada a una convocatoria SGI.

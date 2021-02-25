@@ -11,7 +11,6 @@ import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -279,7 +278,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
       data.add(generarMockTipoFinanciacion(Long.valueOf(i)));
     }
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -323,7 +322,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Page<TipoRegimenConcurrencia> page = new PageImpl<>(Collections.emptyList());
           return page;
@@ -347,8 +346,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
       data.add(generarMockTipoFinanciacion(Long.valueOf(i)));
     }
 
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -393,8 +391,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Page<TipoRegimenConcurrencia> page = new PageImpl<>(Collections.emptyList());
           return page;

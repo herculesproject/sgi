@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,25 +11,20 @@ import org.springframework.data.domain.Pageable;
 
 public interface ConvocatoriaFaseService {
 
-  
-   /**
+  /**
    * Guarda la entidad {@link ConvocatoriaFase}.
    * 
-   * @param convocatoriaFase la entidad {@link ConvocatoriaFase} a
-   *                                 guardar.
-   * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase}
-   *         persistida.
+   * @param convocatoriaFase la entidad {@link ConvocatoriaFase} a guardar.
+   * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase} persistida.
    */
   ConvocatoriaFase create(ConvocatoriaFase convocatoriaFase);
 
   /**
    * Actualiza la entidad {@link ConvocatoriaFase}.
    * 
-   * @param convocatoriaFaseActualizar la entidad
-   *                                           {@link ConvocatoriaFase} a
-   *                                           guardar.
-   * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase}
-   *         persistida.
+   * @param convocatoriaFaseActualizar la entidad {@link ConvocatoriaFase} a
+   *                                   guardar.
+   * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase} persistida.
    */
   ConvocatoriaFase update(ConvocatoriaFase convocatoriaFaseActualizar);
 
@@ -60,6 +52,5 @@ public interface ConvocatoriaFaseService {
    * @return la lista de entidades {@link ConvocatoriaFase} de la
    *         {@link Convocatoria} paginadas.
    */
-  Page<ConvocatoriaFase> findAllByConvocatoria(Long convocatoriaId, List<QueryCriteria> query,
-      Pageable pageable);
+  Page<ConvocatoriaFase> findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable);
 }

@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,45 +49,44 @@ public class TipoDocumentoController {
   /**
    * Devuelve una lista paginada y filtrada {@link TipoDocumento} activos.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
-  ResponseEntity<Page<TipoDocumento>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<TipoDocumento>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAll(String query, Pageable paging) - start");
     Page<TipoDocumento> page = tipoDocumentoService.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAll(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
    * Devuelve una lista paginada y filtrada {@link TipoDocumento}.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/todos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
-  ResponseEntity<Page<TipoDocumento>> findAllTodos(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<TipoDocumento>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllTodos(String query, Pageable paging) - start");
     Page<TipoDocumento> page = tipoDocumentoService.findAllTodos(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllTodos(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

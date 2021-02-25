@@ -14,8 +14,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProrrogaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -202,15 +201,13 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
    *         paginadas.
    */
   @Override
-  public Page<ProyectoProrroga> findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ProyectoProrroga> specByQuery = new QuerySpecification<ProyectoProrroga>(query);
-    Specification<ProyectoProrroga> specByProyecto = ProyectoProrrogaSpecifications.byProyectoId(proyectoId);
-
-    Specification<ProyectoProrroga> specs = Specification.where(specByProyecto).and(specByQuery);
+  public Page<ProyectoProrroga> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    Specification<ProyectoProrroga> specs = ProyectoProrrogaSpecifications.byProyectoId(proyectoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoProrroga> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

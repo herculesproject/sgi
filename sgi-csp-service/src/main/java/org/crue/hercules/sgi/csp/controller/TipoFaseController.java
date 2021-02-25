@@ -1,12 +1,9 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.TipoFaseService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,17 +43,17 @@ public class TipoFaseController {
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
-  ResponseEntity<Page<TipoFase>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<TipoFase>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAll(String query, Pageable paging) - start");
     Page<TipoFase> page = tipoFaseService.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAll(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -69,17 +66,17 @@ public class TipoFaseController {
    */
   @GetMapping("/todos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
-  ResponseEntity<Page<TipoFase>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<TipoFase>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllTodos(String query, Pageable paging) - start");
     Page<TipoFase> page = tipoFaseService.findAllTodos(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllTodos(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

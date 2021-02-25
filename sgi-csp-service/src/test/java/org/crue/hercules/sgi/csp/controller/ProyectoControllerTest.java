@@ -44,7 +44,6 @@ import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SocioPeriodoJustificacionDocumentoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -415,9 +414,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(
-            service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -456,9 +453,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data Proyecto
-    BDDMockito
-        .given(
-            service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Proyecto>>() {
           @Override
           public Page<Proyecto> answer(InvocationOnMock invocation) throws Throwable {
@@ -486,8 +481,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito.given(
-        service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -527,8 +521,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data Proyecto
-    BDDMockito.given(
-        service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Proyecto>>() {
           @Override
           public Page<Proyecto> answer(InvocationOnMock invocation) throws Throwable {
@@ -567,10 +560,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoHitoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoHito>>() {
+    BDDMockito.given(proyectoHitoService.findAllByProyecto(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ProyectoHito>>() {
           @Override
           public Page<ProyectoHito> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
@@ -621,10 +612,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoHitoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoHito>>() {
+    BDDMockito.given(proyectoHitoService.findAllByProyecto(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ProyectoHito>>() {
           @Override
           public Page<ProyectoHito> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
@@ -663,10 +652,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoFaseService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoFase>>() {
+    BDDMockito.given(proyectoFaseService.findAllByProyecto(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ProyectoFase>>() {
           @Override
           public Page<ProyectoFase> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
@@ -717,10 +704,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoFaseService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoFase>>() {
+    BDDMockito.given(proyectoFaseService.findAllByProyecto(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ProyectoFase>>() {
           @Override
           public Page<ProyectoFase> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
@@ -761,7 +746,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoPaqueteTrabajoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoPaqueteTrabajo>>() {
           @Override
           public Page<ProyectoPaqueteTrabajo> answer(InvocationOnMock invocation) throws Throwable {
@@ -815,7 +800,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoPaqueteTrabajoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoPaqueteTrabajo>>() {
           @Override
           public Page<ProyectoPaqueteTrabajo> answer(InvocationOnMock invocation) throws Throwable {
@@ -854,10 +839,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -904,9 +887,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // given: no data ProyectoSocio
     Long proyectoId = 1L;
 
-    BDDMockito
-        .given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(proyectoSocioService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoSocio>>() {
           @Override
           public Page<ProyectoSocio> answer(InvocationOnMock invocation) throws Throwable {
@@ -944,10 +926,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoEquipoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(proyectoEquipoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -995,9 +975,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // given: no data ProyectoEquipo
     Long proyectoId = 1L;
 
-    BDDMockito
-        .given(proyectoEquipoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(proyectoEquipoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoEquipo>>() {
           @Override
           public Page<ProyectoEquipo> answer(InvocationOnMock invocation) throws Throwable {
@@ -1038,7 +1017,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoPeriodoSeguimientoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoPeriodoSeguimiento>>() {
           @Override
           public Page<ProyectoPeriodoSeguimiento> answer(InvocationOnMock invocation) throws Throwable {
@@ -1093,7 +1072,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoPeriodoSeguimientoService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoPeriodoSeguimiento>>() {
           @Override
           public Page<ProyectoPeriodoSeguimiento> answer(InvocationOnMock invocation) throws Throwable {
@@ -1135,7 +1114,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoEntidadGestoraService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoEntidadGestora>>() {
           @Override
           public Page<ProyectoEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
@@ -1188,7 +1167,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(proyectoEntidadGestoraService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoEntidadGestora>>() {
           @Override
           public Page<ProyectoEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
@@ -1228,9 +1207,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoProrrogaService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(proyectoProrrogaService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoProrroga>>() {
           @Override
           public Page<ProyectoProrroga> answer(InvocationOnMock invocation) throws Throwable {
@@ -1282,9 +1260,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(proyectoProrrogaService.findAllByProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(proyectoProrrogaService.findAllByProyecto(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoProrroga>>() {
           @Override
           public Page<ProyectoProrroga> answer(InvocationOnMock invocation) throws Throwable {

@@ -9,7 +9,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -279,7 +278,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -321,7 +320,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     List<AreaTematica> areasTematicas = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           Page<AreaTematica> pageResponse = new PageImpl<>(areasTematicas, pageable, 0);
@@ -346,8 +345,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllGrupo(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -390,8 +388,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     List<AreaTematica> AreaTematicas = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllGrupo(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           Page<AreaTematica> pageResponse = new PageImpl<>(AreaTematicas, pageable, 0);
@@ -417,8 +414,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllTodosGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodosGrupo(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -461,8 +457,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     List<AreaTematica> areasTematicas = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllTodosGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodosGrupo(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           Page<AreaTematica> pageResponse = new PageImpl<>(areasTematicas, pageable, 0);
@@ -492,10 +487,8 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(service.findAllHijosAreaTematica(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllHijosAreaTematica(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -543,10 +536,8 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(service.findAllHijosAreaTematica(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllHijosAreaTematica(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<AreaTematica> pageResponse = new PageImpl<>(areasTematicas, pageable, 0);
           return pageResponse;

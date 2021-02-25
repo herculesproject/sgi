@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.springframework.data.domain.Page;
@@ -57,9 +57,9 @@ public class EstadoProyectoServiceImpl implements EstadoProyectoService {
    */
   @Override
   public Page<EstadoProyecto> findAllByProyecto(Long idProyecto, Pageable paging) {
-    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllByProyecto(Long idProyecto, Pageable paging) - start");
     Page<EstadoProyecto> returnValue = repository.findAllByIdProyecto(idProyecto, paging);
-    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllByProyecto(Long idProyecto, Pageable paging) - end");
     return returnValue;
   }
 

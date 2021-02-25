@@ -9,8 +9,7 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProgramaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -195,15 +194,12 @@ public class ProgramaServiceImpl implements ProgramaService {
    * @return la lista de entidades {@link Programa} paginadas.
    */
   @Override
-  public Page<Programa> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specActivos = ProgramaSpecifications.activos();
-
-    Specification<Programa> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<Programa> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<Programa> specs = ProgramaSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -215,16 +211,13 @@ public class ProgramaServiceImpl implements ProgramaService {
    * @return la lista de entidades {@link Programa} paginadas.
    */
   @Override
-  public Page<Programa> findAllPlan(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllPlan(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specActivos = ProgramaSpecifications.activos();
-    Specification<Programa> specPlanes = ProgramaSpecifications.planes();
-
-    Specification<Programa> specs = Specification.where(specPlanes).and(specActivos).and(specByQuery);
+  public Page<Programa> findAllPlan(String query, Pageable pageable) {
+    log.debug("findAllPlan(String query, Pageable pageable) - start");
+    Specification<Programa> specs = ProgramaSpecifications.activos().and(ProgramaSpecifications.planes())
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllPlan(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllPlan(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -236,15 +229,12 @@ public class ProgramaServiceImpl implements ProgramaService {
    * @return la lista de entidades {@link Programa} paginadas.
    */
   @Override
-  public Page<Programa> findAllTodosPlan(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specPlanes = ProgramaSpecifications.planes();
-
-    Specification<Programa> specs = Specification.where(specPlanes).and(specByQuery);
+  public Page<Programa> findAllTodosPlan(String query, Pageable pageable) {
+    log.debug("findAllTodosPlan(String query, Pageable pageable) - start");
+    Specification<Programa> specs = ProgramaSpecifications.planes().and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodosPlan(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -258,15 +248,13 @@ public class ProgramaServiceImpl implements ProgramaService {
    * @return la lista de entidades {@link Programa} paginadas.
    */
   @Override
-  public Page<Programa> findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specHijos = ProgramaSpecifications.hijos(programaId);
-
-    Specification<Programa> specs = Specification.where(specHijos).and(specByQuery);
+  public Page<Programa> findAllHijosPrograma(Long programaId, String query, Pageable pageable) {
+    log.debug("findAllHijosPrograma(Long programaId, String query, Pageable pageable) - start");
+    Specification<Programa> specs = ProgramaSpecifications.hijos(programaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllHijosPrograma(Long programaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

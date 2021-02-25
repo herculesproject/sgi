@@ -7,7 +7,6 @@ import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -72,7 +71,7 @@ public interface SolicitudProyectoPresupuestoService {
    * @param paging      parámetros de paginación.
    * @return lista paginada.
    */
-  Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging);
+  Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, String query, Pageable paging);
 
   /**
    * Recupera la lista paginada de {@link SolicitudProyectoPresupuesto} de una
@@ -86,7 +85,7 @@ public interface SolicitudProyectoPresupuestoService {
    * @return lista paginada.
    */
   Page<SolicitudProyectoPresupuesto> findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, boolean ajena,
-      List<QueryCriteria> query, Pageable paging);
+      String query, Pageable paging);
 
   /**
    * Obtiene el {@link SolicitudProyectoPresupuestoTotales} de la

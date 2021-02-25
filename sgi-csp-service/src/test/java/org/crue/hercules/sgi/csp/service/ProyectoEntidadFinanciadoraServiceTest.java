@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Lists;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
@@ -463,7 +462,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<ProyectoEntidadFinanciadora> page = service.findAllByProyecto(convocatoriaId, Lists.emptyList(), paging);
+    Page<ProyectoEntidadFinanciadora> page = service.findAllByProyecto(convocatoriaId, null, paging);
 
     // then: Devuelve la pagina 3 con los ProyectoEntidadFinanciadora del 31 al 37
     Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);

@@ -1,11 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -56,7 +53,7 @@ public interface ModeloTipoFaseService {
    * @return la lista de entidades {@link ModeloTipoFase} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoFase> findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable);
+  Page<ModeloTipoFase> findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable);
 
   /**
    * Obtiene los {@link ModeloTipoFase} activos para convocatorias para un
@@ -68,7 +65,7 @@ public interface ModeloTipoFaseService {
    * @return la lista de entidades {@link ModeloTipoFase} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoFase> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, List<QueryCriteria> query,
+  Page<ModeloTipoFase> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query,
       Pageable pageable);
 
   /**
@@ -81,7 +78,6 @@ public interface ModeloTipoFaseService {
    * @return la lista de entidades {@link ModeloTipoFase} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoFase> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query,
-      Pageable pageable);
+  Page<ModeloTipoFase> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable);
 
 }

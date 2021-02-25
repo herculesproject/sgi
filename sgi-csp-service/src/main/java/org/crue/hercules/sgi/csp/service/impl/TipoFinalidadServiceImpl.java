@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.TipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFinalidadSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinalidadService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -144,15 +141,13 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @Override
-  public Page<TipoFinalidad> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<TipoFinalidad> specByQuery = new QuerySpecification<TipoFinalidad>(query);
-    Specification<TipoFinalidad> specActivos = TipoFinalidadSpecifications.activos();
-
-    Specification<TipoFinalidad> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<TipoFinalidad> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<TipoFinalidad> specs = TipoFinalidadSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoFinalidad> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -164,11 +159,11 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @Override
-  public Page<TipoFinalidad> findAllTodos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<TipoFinalidad> spec = new QuerySpecification<TipoFinalidad>(query);
-    Page<TipoFinalidad> returnValue = repository.findAll(spec, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+  public Page<TipoFinalidad> findAllTodos(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<TipoFinalidad> specs = SgiRSQLJPASupport.toSpecification(query);
+    Page<TipoFinalidad> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 

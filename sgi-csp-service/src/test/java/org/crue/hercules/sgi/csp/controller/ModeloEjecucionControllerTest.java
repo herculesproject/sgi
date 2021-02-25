@@ -26,7 +26,6 @@ import org.crue.hercules.sgi.csp.service.ModeloTipoFaseService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFinalidadService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoHitoService;
 import org.crue.hercules.sgi.csp.service.ModeloUnidadService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -302,8 +301,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(
-        modeloEjecucionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(modeloEjecucionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloEjecucion>>() {
           @Override
           public Page<ModeloEjecucion> answer(InvocationOnMock invocation) throws Throwable {
@@ -353,8 +351,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito.given(
-        modeloEjecucionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(modeloEjecucionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloEjecucion>>() {
           @Override
           public Page<ModeloEjecucion> answer(InvocationOnMock invocation) throws Throwable {
@@ -386,8 +383,9 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(modeloEjecucionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ModeloEjecucion>>() {
+    BDDMockito
+        .given(modeloEjecucionService.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ModeloEjecucion>>() {
           @Override
           public Page<ModeloEjecucion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -436,8 +434,9 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito.given(modeloEjecucionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ModeloEjecucion>>() {
+    BDDMockito
+        .given(modeloEjecucionService.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ModeloEjecucion>>() {
           @Override
           public Page<ModeloEjecucion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -517,7 +516,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoEnlaceService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoEnlace>>() {
           @Override
           public Page<ModeloTipoEnlace> answer(InvocationOnMock invocation) throws Throwable {
@@ -572,7 +571,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoEnlaceService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoEnlace>>() {
           @Override
           public Page<ModeloTipoEnlace> answer(InvocationOnMock invocation) throws Throwable {
@@ -615,7 +614,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFaseService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFase>>() {
           @Override
           public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -669,7 +668,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFaseService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFase>>() {
           @Override
           public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -706,7 +705,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFaseService.findAllByModeloEjecucionActivosConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFase>>() {
           @Override
           public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -761,7 +760,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFaseService.findAllByModeloEjecucionActivosConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFase>>() {
           @Override
           public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -799,7 +798,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFaseService.findAllByModeloEjecucionActivosProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFase>>() {
           @Override
           public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -854,7 +853,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFaseService.findAllByModeloEjecucionActivosProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFase>>() {
           @Override
           public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -898,7 +897,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoDocumentoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoDocumento>>() {
           @Override
           public Page<ModeloTipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
@@ -953,7 +952,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoDocumentoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoDocumento>>() {
           @Override
           public Page<ModeloTipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
@@ -996,7 +995,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFinalidadService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFinalidad>>() {
           @Override
           public Page<ModeloTipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
@@ -1052,7 +1051,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoFinalidadService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoFinalidad>>() {
           @Override
           public Page<ModeloTipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
@@ -1096,7 +1095,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1150,7 +1149,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1187,7 +1186,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucionActivosConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1242,7 +1241,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucionActivosConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1280,7 +1279,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucionActivosProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1335,7 +1334,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucionActivosProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1373,7 +1372,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucionActivosSolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1428,7 +1427,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloTipoHitoService.findAllByModeloEjecucionActivosSolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloTipoHito>>() {
           @Override
           public Page<ModeloTipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -1472,7 +1471,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloUnidadService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloUnidad>>() {
           @Override
           public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {
@@ -1526,7 +1525,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(modeloUnidadService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ModeloUnidad>>() {
           @Override
           public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {

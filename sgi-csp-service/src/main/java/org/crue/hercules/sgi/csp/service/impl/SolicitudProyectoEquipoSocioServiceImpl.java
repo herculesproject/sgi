@@ -14,8 +14,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEquipoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -190,20 +189,15 @@ public class SolicitudProyectoEquipoSocioServiceImpl implements SolicitudProyect
    *         {@link SolicitudProyectoSocio} paginadas.
    */
   @Override
-  public Page<SolicitudProyectoEquipoSocio> findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId,
-      List<QueryCriteria> query, Pageable paging) {
-    log.debug(
-        "findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, List<QueryCriteria> query, Pageable paging) - start");
+  public Page<SolicitudProyectoEquipoSocio> findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, String query,
+      Pageable paging) {
+    log.debug("findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, String query, Pageable paging) - start");
 
-    Specification<SolicitudProyectoEquipoSocio> specByQuery = new QuerySpecification<SolicitudProyectoEquipoSocio>(
-        query);
-    Specification<SolicitudProyectoEquipoSocio> specBySolicitud = SolicitudProyectoEquipoSocioSpecifications
-        .bySolicitudProyectoSocio(solicitudProyectoSocioId);
-    Specification<SolicitudProyectoEquipoSocio> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<SolicitudProyectoEquipoSocio> specs = SolicitudProyectoEquipoSocioSpecifications
+        .bySolicitudProyectoSocio(solicitudProyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoEquipoSocio> returnValue = repository.findAll(specs, paging);
-    log.debug(
-        "findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, String query, Pageable paging) - end");
     return returnValue;
 
   }

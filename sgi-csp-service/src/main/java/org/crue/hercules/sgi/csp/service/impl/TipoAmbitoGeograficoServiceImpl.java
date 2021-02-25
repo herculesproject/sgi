@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoAmbitoGeograficoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoAmbitoGeograficoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoAmbitoGeograficoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -117,15 +114,13 @@ public class TipoAmbitoGeograficoServiceImpl implements TipoAmbitoGeograficoServ
    *         filtradas.
    */
   @Override
-  public Page<TipoAmbitoGeografico> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<TipoAmbitoGeografico> specByQuery = new QuerySpecification<TipoAmbitoGeografico>(query);
-    Specification<TipoAmbitoGeografico> specActivos = TipoAmbitoGeograficoSpecifications.activos();
-
-    Specification<TipoAmbitoGeografico> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<TipoAmbitoGeografico> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<TipoAmbitoGeografico> specs = TipoAmbitoGeograficoSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoAmbitoGeografico> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -139,14 +134,12 @@ public class TipoAmbitoGeograficoServiceImpl implements TipoAmbitoGeograficoServ
    *         filtradas.
    */
   @Override
-  public Page<TipoAmbitoGeografico> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<TipoAmbitoGeografico> specByQuery = new QuerySpecification<TipoAmbitoGeografico>(query);
-
-    Specification<TipoAmbitoGeografico> specs = Specification.where(specByQuery);
+  public Page<TipoAmbitoGeografico> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
+    Specification<TipoAmbitoGeografico> specs = SgiRSQLJPASupport.toSpecification(query);
 
     Page<TipoAmbitoGeografico> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
   }
 

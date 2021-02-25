@@ -37,7 +37,6 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -361,46 +360,45 @@ public class ConvocatoriaController {
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} activas paginadas y
    *         filtradas.
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
-  ResponseEntity<Page<Convocatoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Convocatoria>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    log.debug("findAll(String query,Pageable paging) - start");
     Page<Convocatoria> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAll(String query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAll(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} activas paginadas y
    *         filtradas.
    */
   @GetMapping("/investigador")
-  ResponseEntity<Page<Convocatoria>> findAllInvestigador(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Convocatoria>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllInvestigador(List<QueryCriteria> query,Pageable paging) - start");
+    log.debug("findAllInvestigador(String query,Pageable paging) - start");
     Page<Convocatoria> page = service.findAllInvestigador(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllInvestigador(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAllInvestigador(String query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllInvestigador(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAllInvestigador(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -408,16 +406,15 @@ public class ConvocatoriaController {
    * Devuelve una lista paginada y filtrada {@link Convocatoria} activas
    * registradas restringidas a las del usuario.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   @GetMapping("/restringidos")
   // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
-  ResponseEntity<Page<Convocatoria>> findAllRestringidos(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Convocatoria>> findAllRestringidos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging, Authentication atuhentication) {
-    log.debug("findAllRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - start");
+    log.debug("findAllRestringidos(String query, Pageable paging, Authentication atuhentication) - start");
 
     List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
       if (acronimo.getAuthority().indexOf("_") > 0) {
@@ -429,49 +426,47 @@ public class ConvocatoriaController {
     Page<Convocatoria> page = service.findAllRestringidos(query, paging, acronimosUnidadGestion);
 
     if (page.isEmpty()) {
-      log.debug("findAllRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - end");
+      log.debug("findAllRestringidos(String query, Pageable paging, Authentication atuhentication) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllRestringidos(List<QueryCriteria> query, Pageable paging Authentication atuhentication) - end");
+    log.debug("findAllRestringidos(String query, Pageable paging Authentication atuhentication) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria}.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   @GetMapping("/todos")
   // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
-  ResponseEntity<Page<Convocatoria>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Convocatoria>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - start");
+    log.debug("findAllTodos(String query,Pageable paging) - start");
     Page<Convocatoria> page = service.findAllTodos(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAllTodos(String query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAllTodos(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
    * Devuelve una lista paginada y filtrada {@link Convocatoria}.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   @GetMapping("/todos/restringidos")
   // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
-  ResponseEntity<Page<Convocatoria>> findAllTodosRestringidos(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Convocatoria>> findAllTodosRestringidos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug(
-        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication authentication) - start");
+    log.debug("findAllTodosRestringidos(String query,Pageable paging, Authentication authentication) - start");
 
     List<String> acronimosUnidadGestion = authentication.getAuthorities().stream().map(acronimo -> {
       if (acronimo.getAuthority().indexOf("_") > 0) {
@@ -483,12 +478,10 @@ public class ConvocatoriaController {
     Page<Convocatoria> page = service.findAllTodosRestringidos(query, paging, acronimosUnidadGestion);
 
     if (page.isEmpty()) {
-      log.debug(
-          "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication authentication) - end");
+      log.debug("findAllTodosRestringidos(String query,Pageable paging, Authentication authentication) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug(
-        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging Authentication authentication) - end");
+    log.debug("findAllTodosRestringidos(String query,Pageable paging Authentication authentication) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -503,23 +496,22 @@ public class ConvocatoriaController {
    * {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriahitos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
   ResponseEntity<Page<ConvocatoriaHito>> findAllConvocatoriaHito(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaHito(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaHito(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaHito> page = convocatoriaHitoService.findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaHito(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaHito(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -534,24 +526,23 @@ public class ConvocatoriaController {
    * {@link ConvocatoriaEntidadFinanciadora} de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaentidadfinanciadoras")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
   ResponseEntity<Page<ConvocatoriaEntidadFinanciadora>> findAllConvocatoriaEntidadFinanciadora(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaEntidadFinanciadora> page = convocatoriaEntidadFinanciadoraService.findAllByConvocatoria(id, query,
         paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
@@ -567,23 +558,22 @@ public class ConvocatoriaController {
    * de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaentidadgestoras")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
   ResponseEntity<Page<ConvocatoriaEntidadGestora>> findAllConvocatoriaEntidadGestora(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadGestora(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaEntidadGestora> page = convocatoriaEntidadGestoraService.findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaEntidadGestora(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaEntidadGestora(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -598,23 +588,22 @@ public class ConvocatoriaController {
    * {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriafases")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-V')")
   ResponseEntity<Page<ConvocatoriaFase>> findAllConvocatoriaFases(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaFase(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaFase(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaFase> page = convocatoriaFaseService.findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaFase(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaFase(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -629,23 +618,22 @@ public class ConvocatoriaController {
    * la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaareatematicas")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
   ResponseEntity<Page<ConvocatoriaAreaTematica>> findAllConvocatoriaAreaTematica(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaAreaTematica(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaAreaTematica> page = convocatoriaAreaTematicaService.findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaAreaTematica(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaAreaTematica(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -660,23 +648,22 @@ public class ConvocatoriaController {
    * {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriadocumentos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
   ResponseEntity<Page<ConvocatoriaDocumento>> findAllConvocatoriaDocumento(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaDocumento(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaDocumento(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaDocumento> page = convocatoriaDocumentoService.findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaDocumento(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaDocumento(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaDocumento(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaDocumento(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -691,23 +678,22 @@ public class ConvocatoriaController {
    * {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaenlaces")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
   ResponseEntity<Page<ConvocatoriaEnlace>> findAllConvocatoriaEnlace(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEnlace(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaEnlace> page = convocatoriaEnlaceService.findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaEnlace(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaEnlace(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -722,24 +708,23 @@ public class ConvocatoriaController {
    * {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaentidadconvocantes")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
   ResponseEntity<Page<ConvocatoriaEntidadConvocante>> findAllConvocatoriaEntidadConvocantes(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaEntidadConvocante> page = convocatoriaEntidadConvocanteService.findAllByConvocatoria(id, query,
         paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaEntidadConvocantes(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -754,24 +739,23 @@ public class ConvocatoriaController {
    * {@link ConvocatoriaPeriodoJustificacion} de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaperiodojustificaciones")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
   ResponseEntity<Page<ConvocatoriaPeriodoJustificacion>> findAllConvocatoriaPeriodoJustificacion(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaPeriodoJustificacion> page = convocatoriaPeriodoJustificacionService.findAllByConvocatoria(id,
         query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -786,27 +770,24 @@ public class ConvocatoriaController {
    * {@link convocatoriaPeriodoSeguimientoCientifico} de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaperiodoseguimientocientificos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-V')")
   ResponseEntity<Page<ConvocatoriaPeriodoSeguimientoCientifico>> findAllConvocatoriaPeriodoSeguimientoCientifico(
-      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug(
-        "findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, String query, Pageable paging) - start");
     Page<ConvocatoriaPeriodoSeguimientoCientifico> page = convocatoriaPeriodoSeguimientoCientificoService
         .findAllByConvocatoria(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug(
-          "findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug(
-        "findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

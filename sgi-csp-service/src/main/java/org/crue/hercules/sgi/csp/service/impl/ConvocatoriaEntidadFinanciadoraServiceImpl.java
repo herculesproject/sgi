@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
@@ -16,8 +18,7 @@ import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadFinanciadoraSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 /**
  * Service Implementation para la gestión de
@@ -257,18 +257,14 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
    * @return la lista de entidades {@link ConvocatoriaEntidadFinanciadora} de la
    *         {@link Convocatoria} paginadas.
    */
-  public Page<ConvocatoriaEntidadFinanciadora> findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query,
+  public Page<ConvocatoriaEntidadFinanciadora> findAllByConvocatoria(Long idConvocatoria, String query,
       Pageable pageable) {
-    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ConvocatoriaEntidadFinanciadora> specByQuery = new QuerySpecification<ConvocatoriaEntidadFinanciadora>(
-        query);
-    Specification<ConvocatoriaEntidadFinanciadora> specByConvocatoria = ConvocatoriaEntidadFinanciadoraSpecifications
-        .byConvocatoriaId(idConvocatoria);
-
-    Specification<ConvocatoriaEntidadFinanciadora> specs = Specification.where(specByConvocatoria).and(specByQuery);
+    log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - start");
+    Specification<ConvocatoriaEntidadFinanciadora> specs = ConvocatoriaEntidadFinanciadoraSpecifications
+        .byConvocatoriaId(idConvocatoria).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ConvocatoriaEntidadFinanciadora> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - end");
     return returnValue;
   }
 

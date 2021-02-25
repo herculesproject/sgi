@@ -10,7 +10,6 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,24 +65,23 @@ public class ProyectoEntidadConvocanteController {
    * {@link ProyectoEntidadConvocanteDto} del {@link Proyecto}.
    * 
    * @param id     Identificador de {@link Proyecto}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoEntidadConvocanteDto>> findAllEntidadConvocantes(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEntidadConvocantes(Long id, String query, Pageable paging) - start");
 
     Page<ProyectoEntidadConvocanteDto> page = convert(service.findAllByProyecto(id, query, paging));
 
     if (page.isEmpty()) {
-      log.debug("findAllEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllEntidadConvocantes(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllEntidadConvocantes(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

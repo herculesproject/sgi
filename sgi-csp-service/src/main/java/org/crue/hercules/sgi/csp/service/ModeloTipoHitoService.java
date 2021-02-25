@@ -1,11 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,7 +52,7 @@ public interface ModeloTipoHitoService {
    * @return la lista de entidades {@link TipoHito} del {@link ModeloEjecucion}
    *         paginadas.
    */
-  Page<ModeloTipoHito> findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable);
+  Page<ModeloTipoHito> findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable);
 
   /**
    * Obtiene los {@link ModeloTipoHito} activos para convocatorias para un
@@ -67,7 +64,7 @@ public interface ModeloTipoHitoService {
    * @return la lista de entidades {@link ModeloTipoHito} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoHito> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, List<QueryCriteria> query,
+  Page<ModeloTipoHito> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query,
       Pageable pageable);
 
   /**
@@ -80,8 +77,7 @@ public interface ModeloTipoHitoService {
    * @return la lista de entidades {@link ModeloTipoHito} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoHito> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query,
-      Pageable pageable);
+  Page<ModeloTipoHito> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable);
 
   /**
    * Obtiene los {@link ModeloTipoHito} activos para solicitudes para un
@@ -93,7 +89,7 @@ public interface ModeloTipoHitoService {
    * @return la lista de entidades {@link ModeloTipoHito} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoHito> findAllByModeloEjecucionActivosSolicitud(Long idModeloEjecucion, List<QueryCriteria> query,
+  Page<ModeloTipoHito> findAllByModeloEjecucionActivosSolicitud(Long idModeloEjecucion, String query,
       Pageable pageable);
 
 }

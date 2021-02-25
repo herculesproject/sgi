@@ -13,8 +13,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -167,19 +166,15 @@ public class SolicitudProyectoEquipoServiceImpl implements SolicitudProyectoEqui
    *         {@link SolicitudProyectoDatos} paginadas.
    */
   @Override
-  public Page<SolicitudProyectoEquipo> findAllBySolicitud(Long solicitudDatosProyectoId, List<QueryCriteria> query,
+  public Page<SolicitudProyectoEquipo> findAllBySolicitud(Long solicitudDatosProyectoId, String query,
       Pageable paging) {
-    log.debug(
-        "findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, String query, Pageable paging) - start");
 
-    Specification<SolicitudProyectoEquipo> specByQuery = new QuerySpecification<SolicitudProyectoEquipo>(query);
-    Specification<SolicitudProyectoEquipo> specBySolicitud = SolicitudProyectoEquipoSpecifications
-        .bySolicitudId(solicitudDatosProyectoId);
-    Specification<SolicitudProyectoEquipo> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<SolicitudProyectoEquipo> specs = SolicitudProyectoEquipoSpecifications
+        .bySolicitudId(solicitudDatosProyectoId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoEquipo> returnValue = repository.findAll(specs, paging);
-    log.debug(
-        "findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, String query, Pageable paging) - end");
     return returnValue;
   }
 

@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -87,16 +84,13 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    * @return la lista de entidades {@link TipoHito} paginadas
    */
   @Override
-  public Page<TipoHito> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<TipoHito> specByQuery = new QuerySpecification<TipoHito>(query);
-    Specification<TipoHito> specActivos = TipoHitoSpecifications.activos();
-
-    Specification<TipoHito> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<TipoHito> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<TipoHito> specs = TipoHitoSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoHito> returnValue = tipoHitoRepository.findAll(specs, pageable);
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -108,13 +102,13 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    * @return la lista de entidades {@link TipoHito} paginadas
    */
   @Override
-  public Page<TipoHito> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<TipoHito> spec = new QuerySpecification<TipoHito>(query);
+  public Page<TipoHito> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<TipoHito> specs = SgiRSQLJPASupport.toSpecification(query);
 
-    Page<TipoHito> returnValue = tipoHitoRepository.findAll(spec, pageable);
+    Page<TipoHito> returnValue = tipoHitoRepository.findAll(specs, pageable);
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 

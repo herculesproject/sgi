@@ -101,7 +101,7 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id+";
+    String sort = "id,asc";
 
     URI uriFindAllProyectoSocioPeriodoJustificacion = UriComponentsBuilder
         .fromUriString("/proyectosocios" + PATH_PARAMETER_ID + CONTROLLER_BASE_PATH).queryParam("s", sort)

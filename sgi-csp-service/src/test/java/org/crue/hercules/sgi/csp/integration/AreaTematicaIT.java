@@ -145,8 +145,8 @@ public class AreaTematicaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ARTM-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
@@ -179,8 +179,8 @@ public class AreaTematicaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ARTM-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/grupo").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -213,8 +213,8 @@ public class AreaTematicaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ARTM-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/grupo/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -247,8 +247,8 @@ public class AreaTematicaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     Long areaTematicaId = 1L;
 

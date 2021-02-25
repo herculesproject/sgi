@@ -5,7 +5,6 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -50,7 +49,7 @@ public interface SocioPeriodoJustificacionDocumentoService {
    *         la {@link ProyectoSocioPeriodoJustificacion} paginadas.
    */
   Page<SocioPeriodoJustificacionDocumento> findAllByProyectoSocioPeriodoJustificacion(
-      Long idProyectoSocioPeriodoJustificacion, List<QueryCriteria> query, Pageable pageable);
+      Long idProyectoSocioPeriodoJustificacion, String query, Pageable pageable);
 
   /**
    * Obtiene las {@link SocioPeriodoJustificacionDocumento} para una

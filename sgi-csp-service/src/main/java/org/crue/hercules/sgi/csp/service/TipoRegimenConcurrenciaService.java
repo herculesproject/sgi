@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -49,7 +46,7 @@ public interface TipoRegimenConcurrenciaService {
    * @return el listado de entidades {@link TipoRegimenConcurrencia} paginadas y
    *         filtradas.
    */
-  Page<TipoRegimenConcurrencia> findAll(List<QueryCriteria> query, Pageable paging);
+  Page<TipoRegimenConcurrencia> findAll(String query, Pageable paging);
 
   /**
    * Obtiene todas las entidades {@link TipoRegimenConcurrencia} paginadas y
@@ -60,7 +57,7 @@ public interface TipoRegimenConcurrenciaService {
    * @return el listado de entidades {@link TipoRegimenConcurrencia} paginadas y
    *         filtradas.
    */
-  Page<TipoRegimenConcurrencia> findAllTodos(List<QueryCriteria> query, Pageable paging);
+  Page<TipoRegimenConcurrencia> findAllTodos(String query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link TipoRegimenConcurrencia} por id.

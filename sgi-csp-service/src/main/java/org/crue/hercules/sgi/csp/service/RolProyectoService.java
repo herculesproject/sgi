@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -70,7 +67,7 @@ public interface RolProyectoService {
    * @return el listado de entidades {@link RolProyecto} activas paginadas y
    *         filtradas.
    */
-  Page<RolProyecto> findAll(List<QueryCriteria> query, Pageable paging);
+  Page<RolProyecto> findAll(String query, Pageable paging);
 
   /**
    * Obtiene todas las entidades {@link RolProyecto} paginadas y filtradas.
@@ -79,6 +76,6 @@ public interface RolProyectoService {
    * @param paging información de paginación.
    * @return el listado de entidades {@link RolProyecto} paginadas y filtradas.
    */
-  Page<RolProyecto> findAllTodos(List<QueryCriteria> query, Pageable paging);
+  Page<RolProyecto> findAllTodos(String query, Pageable paging);
 
 }

@@ -1,29 +1,37 @@
 package org.crue.hercules.sgi.csp.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto")
@@ -192,4 +200,28 @@ public class Proyecto extends BaseEntity {
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
 
+  // Relations mapping, only for JPA metamodel generation
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @JsonIgnore
+  private final List<ProyectoEquipo> equipos = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @JsonIgnore
+  private final List<ProyectoSocio> socios = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoId")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @JsonIgnore
+  private final List<ProyectoEntidadFinanciadora> entidadesFinanciadoras = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoId")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @JsonIgnore
+  private final List<ProyectoEntidadConvocante> entidadesConvocantes = null;
 }

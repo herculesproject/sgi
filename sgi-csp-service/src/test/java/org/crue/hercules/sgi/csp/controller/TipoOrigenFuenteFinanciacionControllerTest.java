@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
 import org.crue.hercules.sgi.csp.service.TipoOrigenFuenteFinanciacionService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -52,8 +51,9 @@ public class TipoOrigenFuenteFinanciacionControllerTest extends BaseControllerTe
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(tipoOrigenFuenteFinanciacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoOrigenFuenteFinanciacion>>() {
+    BDDMockito.given(
+        tipoOrigenFuenteFinanciacionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoOrigenFuenteFinanciacion>>() {
           @Override
           public Page<TipoOrigenFuenteFinanciacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -103,8 +103,9 @@ public class TipoOrigenFuenteFinanciacionControllerTest extends BaseControllerTe
     List<TipoOrigenFuenteFinanciacion> tiposOrigenFuenteFinanciacion = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito.given(tipoOrigenFuenteFinanciacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoOrigenFuenteFinanciacion>>() {
+    BDDMockito.given(
+        tipoOrigenFuenteFinanciacionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoOrigenFuenteFinanciacion>>() {
           @Override
           public Page<TipoOrigenFuenteFinanciacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);

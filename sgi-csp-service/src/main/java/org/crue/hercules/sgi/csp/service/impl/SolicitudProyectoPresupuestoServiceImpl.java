@@ -14,8 +14,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoReposito
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoPresupuestoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -160,18 +159,14 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
    *         {@link Solicitud} paginadas.
    */
   @Override
-  public Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query,
-      Pageable paging) {
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
+  public Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, String query, Pageable paging) {
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - start");
 
-    Specification<SolicitudProyectoPresupuesto> specByQuery = new QuerySpecification<SolicitudProyectoPresupuesto>(
-        query);
-    Specification<SolicitudProyectoPresupuesto> specBySolicitud = SolicitudProyectoPresupuestoSpecifications
-        .bySolicitudId(solicitudId);
-    Specification<SolicitudProyectoPresupuesto> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<SolicitudProyectoPresupuesto> specs = SolicitudProyectoPresupuestoSpecifications
+        .bySolicitudId(solicitudId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoPresupuesto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -188,24 +183,18 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
    */
   @Override
   public Page<SolicitudProyectoPresupuesto> findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef,
-      boolean ajena, List<QueryCriteria> query, Pageable paging) {
+      boolean ajena, String query, Pageable paging) {
     log.debug(
-        "findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, List<QueryCriteria> query, Pageable paging) - start");
+        "findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, String query, Pageable paging) - start");
 
-    Specification<SolicitudProyectoPresupuesto> specByQuery = new QuerySpecification<SolicitudProyectoPresupuesto>(
-        query);
-    Specification<SolicitudProyectoPresupuesto> specBySolicitud = SolicitudProyectoPresupuestoSpecifications
-        .bySolicitudId(solicitudId);
-    Specification<SolicitudProyectoPresupuesto> specByEntidadRef = SolicitudProyectoPresupuestoSpecifications
-        .byEntidadRef(entidadRef);
-    Specification<SolicitudProyectoPresupuesto> specByFinanciacionAjena = SolicitudProyectoPresupuestoSpecifications
-        .byFinanciacionAjena(ajena);
-    Specification<SolicitudProyectoPresupuesto> specs = Specification.where(specByQuery).and(specBySolicitud)
-        .and(specByEntidadRef).and(specByFinanciacionAjena);
+    Specification<SolicitudProyectoPresupuesto> specs = SolicitudProyectoPresupuestoSpecifications
+        .bySolicitudId(solicitudId).and(SolicitudProyectoPresupuestoSpecifications.byEntidadRef(entidadRef))
+        .and(SolicitudProyectoPresupuestoSpecifications.byFinanciacionAjena(ajena))
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoPresupuesto> returnValue = repository.findAll(specs, paging);
     log.debug(
-        "findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+        "findAllBySolicitudAndEntidadRef(Long solicitudId, String entidadRef, String query, Pageable paging) - end");
     return returnValue;
   }
 

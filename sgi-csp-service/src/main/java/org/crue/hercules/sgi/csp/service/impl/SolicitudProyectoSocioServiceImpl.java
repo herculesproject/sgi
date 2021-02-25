@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -8,6 +9,7 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundExcept
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
@@ -18,9 +20,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -186,18 +186,14 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
    *         {@link Solicitud} paginadas.
    */
   @Override
-  public Page<SolicitudProyectoSocio> findAllBySolicitud(Long solicitudID, List<QueryCriteria> query, Pageable paging) {
-    log.debug(
-        "findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, List<QueryCriteria> query, Pageable paging) - start");
+  public Page<SolicitudProyectoSocio> findAllBySolicitud(Long solicitudID, String query, Pageable paging) {
+    log.debug("findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, String query, Pageable paging) - start");
 
-    Specification<SolicitudProyectoSocio> specByQuery = new QuerySpecification<SolicitudProyectoSocio>(query);
-    Specification<SolicitudProyectoSocio> specBySolicitud = SolicitudProyectoSocioSpecifications
-        .bySolicitudId(solicitudID);
-    Specification<SolicitudProyectoSocio> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<SolicitudProyectoSocio> specs = SolicitudProyectoSocioSpecifications.bySolicitudId(solicitudID)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoSocio> returnValue = repository.findAll(specs, paging);
-    log.debug(
-        "findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, String query, Pageable paging) - end");
     return returnValue;
   }
 

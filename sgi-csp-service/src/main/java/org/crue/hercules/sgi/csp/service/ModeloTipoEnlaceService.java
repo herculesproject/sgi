@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -46,6 +43,6 @@ public interface ModeloTipoEnlaceService {
    * @return la lista de entidades {@link ModeloTipoEnlace} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  Page<ModeloTipoEnlace> findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable);
+  Page<ModeloTipoEnlace> findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable);
 
 }

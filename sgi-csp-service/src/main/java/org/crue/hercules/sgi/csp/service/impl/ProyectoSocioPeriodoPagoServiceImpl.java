@@ -14,8 +14,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoPagoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -159,19 +158,14 @@ public class ProyectoSocioPeriodoPagoServiceImpl implements ProyectoSocioPeriodo
    *         {@link ProyectoSocio} paginadas.
    */
   @Override
-  public Page<ProyectoSocioPeriodoPago> findAllByProyectoSocio(Long idProyectoSocio, List<QueryCriteria> query,
-      Pageable paging) {
-    log.debug(
-        "findAllByProyectoSocio(Long idProyectoSocioPeriodoPago, List<QueryCriteria> query, Pageable paging) - start");
+  public Page<ProyectoSocioPeriodoPago> findAllByProyectoSocio(Long idProyectoSocio, String query, Pageable paging) {
+    log.debug("findAllByProyectoSocio(Long idProyectoSocioPeriodoPago, String query, Pageable paging) - start");
 
-    Specification<ProyectoSocioPeriodoPago> specByQuery = new QuerySpecification<ProyectoSocioPeriodoPago>(query);
-    Specification<ProyectoSocioPeriodoPago> specBySolicitud = ProyectoSocioPeriodoPagoSpecifications
-        .byProyectoSocioId(idProyectoSocio);
-    Specification<ProyectoSocioPeriodoPago> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<ProyectoSocioPeriodoPago> specs = ProyectoSocioPeriodoPagoSpecifications
+        .byProyectoSocioId(idProyectoSocio).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoSocioPeriodoPago> returnValue = repository.findAll(specs, paging);
-    log.debug(
-        "findAllByProyectoSocio(Long idProyectoSocioPeriodoPago, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllByProyectoSocio(Long idProyectoSocioPeriodoPago, String query, Pageable paging) - end");
     return returnValue;
   }
 

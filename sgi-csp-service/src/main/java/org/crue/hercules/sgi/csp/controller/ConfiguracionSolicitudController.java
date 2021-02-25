@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -11,7 +9,6 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -128,27 +125,24 @@ public class ConfiguracionSolicitudController {
    * de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/documentorequiridosolicitudes")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
   ResponseEntity<Page<DocumentoRequeridoSolicitud>> findAllConvocatoriaDocumentoRequeridoSolicitud(
-      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug(
-        "findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, String query, Pageable paging) - start");
     Page<DocumentoRequeridoSolicitud> page = documentoRequeridoSolicitudService.findAllByConvocatoria(id, query,
         paging);
 
     if (page.isEmpty()) {
-      log.debug(
-          "findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug(
-        "findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllConvocatoriaDocumentoRequeridoSolicitud(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
@@ -158,14 +152,13 @@ public class ConfiguracionSolicitudController {
    * {@link Convocatoria} correspondientes a la fase de presentacion.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/tipodocumentofasepresentaciones")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
   ResponseEntity<Page<TipoDocumento>> findAllTipoDocumentosFasePresentacion(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTipoDocumentosFasePresentacion(Long id, Pageable paging) - start");
     Page<TipoDocumento> page = tipoDocumentoService.findAllTipoDocumentosFasePresentacionConvocatoria(id, paging);
 

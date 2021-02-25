@@ -6,9 +6,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -26,7 +23,6 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
-import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
@@ -66,6 +62,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacio
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
@@ -80,8 +77,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionServic
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -411,117 +407,22 @@ public class ProyectoServiceImpl implements ProyectoService {
    *         filtradas.
    */
   @Override
-  public Page<Proyecto> findAllRestringidos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    if (query == null) {
-      query = new ArrayList<>();
-    }
+  public Page<Proyecto> findAllRestringidos(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
 
-    List<QueryCriteria> queryProyecto = query.stream()
-        .filter(queryCriteria -> !queryCriteria.getKey().equals("miembroEquipo")
-            && !queryCriteria.getKey().startsWith("socioColaborador")
-            && !queryCriteria.getKey().startsWith("entidadFinanciadora")
-            && !queryCriteria.getKey().startsWith("entidadConvocante")
-            && !queryCriteria.getKey().startsWith("fuenteFinanciacion")
-            && !queryCriteria.getKey().startsWith("planInvestigacion")
-            && !queryCriteria.getKey().startsWith("responsableProyecto"))
-        .collect(Collectors.toList());
-
-    Specification<Proyecto> specByQuery = new QuerySpecification<Proyecto>(queryProyecto);
-    Specification<Proyecto> specActivos = ProyectoSpecifications.activos();
-    Specification<Proyecto> specs = Specification.where(specActivos).and(specByQuery);
+    Specification<Proyecto> specs = ProyectoSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query, ProyectoPredicateResolver.getInstance(programaRepository)));
 
     // TODO: Add right authority
     // No tiene acceso a todos los UO
     if (!SgiSecurityContextHolder.hasAuthority("CSP-PRO-C")) {
       Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
           .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
-      specs = Specification.where(specActivos).and(specByUnidadGestionRefIn).and(specByQuery);
-    }
-
-    // Referencia MiembroEquipo
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaMiembroEquipo = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("miembroEquipo")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaMiembroEquipo)) {
-        specs = specs.and(ProyectoSpecifications.byReferenciaMiembroEquipo(referenciaMiembroEquipo.get(0).getValue()));
-      }
-    }
-
-    // Referencia ResponsableProyecto
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaResponsableProyecto = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("responsableProyecto")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaResponsableProyecto)) {
-        specs = specs.and(
-            ProyectoSpecifications.byReferenciaResponsableProyecto(referenciaResponsableProyecto.get(0).getValue()));
-      }
-    }
-
-    // Referencia SocioColaborador
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaSocioColaborador = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("socioColaborador")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaSocioColaborador)) {
-        specs = specs
-            .and(ProyectoSpecifications.byReferenciaSocioColaborador(referenciaSocioColaborador.get(0).getValue()));
-      }
-    }
-
-    // Entidad financiadora
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaEntidadFinanciadora = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("entidadFinanciadora")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaEntidadFinanciadora)) {
-        specs = specs.and(
-            ProyectoSpecifications.byReferenciaEntidadFinanciadora(referenciaEntidadFinanciadora.get(0).getValue()));
-      }
-    }
-
-    // Entidad convocante
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaEntidadConvocante = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("entidadConvocante")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaEntidadConvocante)) {
-        specs = specs
-            .and(ProyectoSpecifications.byReferenciaEntidadConvocante(referenciaEntidadConvocante.get(0).getValue()));
-      }
-    }
-
-    // Fuente financiacion
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaFuenteFinanciacion = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("fuenteFinanciacion")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaFuenteFinanciacion)) {
-        specs = specs
-            .and(ProyectoSpecifications.byReferenciaFuenteFinanciacion(referenciaFuenteFinanciacion.get(0).getValue()));
-      }
-    }
-
-    // Plan de Investigación
-    if (query.size() > queryProyecto.size()) {
-      List<QueryCriteria> referenciaPlanInvestigacion = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("planInvestigacion")).collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaPlanInvestigacion)) {
-        List<Programa> programasQuery = new ArrayList<Programa>();
-        List<Programa> programasHijos = new ArrayList<Programa>();
-        Long idProgramaRaiz = Long.parseLong(referenciaPlanInvestigacion.get(0).getValue());
-        Optional<Programa> programaRaizOpt = programaRepository.findById(idProgramaRaiz);
-        if (programaRaizOpt.isPresent()) {
-          programasQuery.add(programaRaizOpt.get());
-          programasHijos.add(programaRaizOpt.get());
-        }
-        programasHijos = programaRepository.findByPadreIn(programasHijos);
-        while (CollectionUtils.isNotEmpty(programasHijos)) {
-          programasQuery.addAll(programasHijos);
-          programasHijos = programaRepository.findByPadreIn(programasHijos);
-        }
-        specs = specs.and(ProyectoSpecifications.byReferenciaPlanInvestigacion(programasQuery));
-      }
+      specs = specs.and(specByUnidadGestionRefIn);
     }
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -533,27 +434,23 @@ public class ProyectoServiceImpl implements ProyectoService {
    * @return el listado de entidades {@link Proyecto} paginadas y filtradas.
    */
   @Override
-  public Page<Proyecto> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    if (query == null) {
-      query = new ArrayList<>();
-    }
+  public Page<Proyecto> findAllTodosRestringidos(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Proyecto> specByQuery = new QuerySpecification<Proyecto>(query);
-    Specification<Proyecto> specs = Specification.where(specByQuery);
+    Specification<Proyecto> specs = SgiRSQLJPASupport.toSpecification(query);
 
     // TODO: Add right authority
     // No tiene acceso a todos los UO
     if (!SgiSecurityContextHolder.hasAuthority("CSP-PRO-C")) {
       Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
           .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
-      specs = Specification.where(specByUnidadGestionRefIn).and(specByQuery);
+      specs = specs.and(specByUnidadGestionRefIn);
     }
 
     // TODO implementar buscador avanzado
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 

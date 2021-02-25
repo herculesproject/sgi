@@ -12,7 +12,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SocioPeriodoJustificacionDocumentoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -147,24 +146,24 @@ public class ProyectoSocioPeriodoJustificacionController {
    * {@link ProyectoSocioPeriodoJustificacion}.
    * 
    * @param id     Identificador de {@link ProyectoSocioPeriodoJustificacion}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/socioperiodojustificaciondocumentos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
   ResponseEntity<Page<SocioPeriodoJustificacionDocumento>> findAllProyectoSocioPeriodoJustificacion(
-      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllProyectoSocioPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllProyectoSocioPeriodoJustificacion(Long id, String query, Pageable paging) - start");
     Page<SocioPeriodoJustificacionDocumento> page = socioPeriodoJustificacionDocumentoService
         .findAllByProyectoSocioPeriodoJustificacion(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllProyectoSocioPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllProyectoSocioPeriodoJustificacion(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllProyectoSocioPeriodoJustificaciones(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllProyectoSocioPeriodoJustificaciones(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

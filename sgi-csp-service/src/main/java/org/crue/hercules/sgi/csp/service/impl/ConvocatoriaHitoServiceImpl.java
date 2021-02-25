@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
@@ -14,8 +13,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -98,8 +96,9 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
 
     convocatoriaHito.setTipoHito(modeloTipoHito.get().getTipoHito());
 
-    Assert.isTrue(!repository
-        .findByConvocatoriaIdAndFechaAndTipoHitoId(convocatoriaHito.getConvocatoria().getId(), convocatoriaHito.getFecha(), convocatoriaHito.getTipoHito().getId()).isPresent(),
+    Assert.isTrue(
+        !repository.findByConvocatoriaIdAndFechaAndTipoHitoId(convocatoriaHito.getConvocatoria().getId(),
+            convocatoriaHito.getFecha(), convocatoriaHito.getTipoHito().getId()).isPresent(),
         "Ya existe un Hito con el mismo tipo en esa fecha");
 
     Assert.isTrue(convocatoriaHito.getTipoHito().getActivo(), "El TipoHito debe estar activo");
@@ -239,17 +238,13 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
    *         {@link Convocatoria} paginadas.
    */
   @Override
-  public Page<ConvocatoriaHito> findAllByConvocatoria(Long convocatoriaId, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ConvocatoriaHito> specByQuery = new QuerySpecification<ConvocatoriaHito>(query);
-    Specification<ConvocatoriaHito> specByConvocatoria = ConvocatoriaHitoSpecifications
-        .byConvocatoriaId(convocatoriaId);
-
-    Specification<ConvocatoriaHito> specs = Specification.where(specByConvocatoria).and(specByQuery);
+  public Page<ConvocatoriaHito> findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) {
+    log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - start");
+    Specification<ConvocatoriaHito> specs = ConvocatoriaHitoSpecifications.byConvocatoriaId(convocatoriaId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ConvocatoriaHito> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - end");
     return returnValue;
 
   }

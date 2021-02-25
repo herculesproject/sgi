@@ -188,8 +188,8 @@ public class RolSocioIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-RSOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "id-";
-    String filter = "descripcion~%00%";
+    String sort = "id,desc";
+    String filter = "descripcion=ke=00";
 
     // when: find RolSocio
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -227,8 +227,8 @@ public class RolSocioIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-RSOC-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "id-";
-    String filter = "descripcion~%00%";
+    String sort = "id,desc";
+    String filter = "descripcion=ke=00";
 
     // when: find RolSocio
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)

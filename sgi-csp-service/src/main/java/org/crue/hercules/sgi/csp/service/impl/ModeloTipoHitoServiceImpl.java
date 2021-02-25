@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
@@ -13,8 +11,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloTipoHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloTipoHitoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -174,18 +171,14 @@ public class ModeloTipoHitoServiceImpl implements ModeloTipoHitoService {
    * @return la lista de entidades {@link TipoHito} del {@link ModeloEjecucion}
    *         paginadas.
    */
-  public Page<ModeloTipoHito> findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloTipoHito> specByQuery = new QuerySpecification<ModeloTipoHito>(query);
-    Specification<ModeloTipoHito> specByModeloEjecucion = ModeloTipoHitoSpecifications
-        .byModeloEjecucionId(idModeloEjecucion);
-    Specification<ModeloTipoHito> specActivos = ModeloTipoHitoSpecifications.activos();
-
-    Specification<ModeloTipoHito> specs = Specification.where(specActivos).and(specByModeloEjecucion).and(specByQuery);
+  public Page<ModeloTipoHito> findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) {
+    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) - start");
+    Specification<ModeloTipoHito> specs = ModeloTipoHitoSpecifications.activos()
+        .and(ModeloTipoHitoSpecifications.byModeloEjecucionId(idModeloEjecucion))
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloTipoHito> returnValue = modeloTipoHitoRepository.findAll(specs, pageable);
-    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -200,22 +193,17 @@ public class ModeloTipoHitoServiceImpl implements ModeloTipoHitoService {
    *         {@link ModeloEjecucion} paginadas.
    */
   @Override
-  public Page<ModeloTipoHito> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion,
-      List<QueryCriteria> query, Pageable pageable) {
+  public Page<ModeloTipoHito> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query,
+      Pageable pageable) {
     log.debug(
-        "findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloTipoHito> specByQuery = new QuerySpecification<ModeloTipoHito>(query);
-    Specification<ModeloTipoHito> specByModeloEjecucion = ModeloTipoHitoSpecifications
-        .byModeloEjecucionId(idModeloEjecucion);
-    Specification<ModeloTipoHito> specActivosConvocatoria = ModeloTipoHitoSpecifications.activosConvocatoria();
-    Specification<ModeloTipoHito> specActivos = ModeloTipoHitoSpecifications.activos();
-
-    Specification<ModeloTipoHito> specs = Specification.where(specActivos).and(specByModeloEjecucion)
-        .and(specActivosConvocatoria).and(specByQuery);
+        "findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query, Pageable pageable) - start");
+    Specification<ModeloTipoHito> specs = ModeloTipoHitoSpecifications.activos()
+        .and(ModeloTipoHitoSpecifications.byModeloEjecucionId(idModeloEjecucion))
+        .and(ModeloTipoHitoSpecifications.activosConvocatoria()).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloTipoHito> returnValue = modeloTipoHitoRepository.findAll(specs, pageable);
     log.debug(
-        "findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - end");
+        "findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -230,22 +218,16 @@ public class ModeloTipoHitoServiceImpl implements ModeloTipoHitoService {
    *         {@link ModeloEjecucion} paginadas.
    */
   @Override
-  public Page<ModeloTipoHito> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query,
+  public Page<ModeloTipoHito> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query,
       Pageable pageable) {
     log.debug(
-        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloTipoHito> specByQuery = new QuerySpecification<ModeloTipoHito>(query);
-    Specification<ModeloTipoHito> specByModeloEjecucion = ModeloTipoHitoSpecifications
-        .byModeloEjecucionId(idModeloEjecucion);
-    Specification<ModeloTipoHito> specActivosProyecto = ModeloTipoHitoSpecifications.activosProyecto();
-    Specification<ModeloTipoHito> specActivos = ModeloTipoHitoSpecifications.activos();
-
-    Specification<ModeloTipoHito> specs = Specification.where(specActivos).and(specByModeloEjecucion)
-        .and(specActivosProyecto).and(specByQuery);
+        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable) - start");
+    Specification<ModeloTipoHito> specs = ModeloTipoHitoSpecifications.activos()
+        .and(ModeloTipoHitoSpecifications.byModeloEjecucionId(idModeloEjecucion))
+        .and(ModeloTipoHitoSpecifications.activosProyecto()).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloTipoHito> returnValue = modeloTipoHitoRepository.findAll(specs, pageable);
-    log.debug(
-        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -260,22 +242,16 @@ public class ModeloTipoHitoServiceImpl implements ModeloTipoHitoService {
    *         {@link ModeloEjecucion} paginadas.
    */
   @Override
-  public Page<ModeloTipoHito> findAllByModeloEjecucionActivosSolicitud(Long idModeloEjecucion,
-      List<QueryCriteria> query, Pageable pageable) {
+  public Page<ModeloTipoHito> findAllByModeloEjecucionActivosSolicitud(Long idModeloEjecucion, String query,
+      Pageable pageable) {
     log.debug(
-        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloTipoHito> specByQuery = new QuerySpecification<ModeloTipoHito>(query);
-    Specification<ModeloTipoHito> specByModeloEjecucion = ModeloTipoHitoSpecifications
-        .byModeloEjecucionId(idModeloEjecucion);
-    Specification<ModeloTipoHito> specActivosSolicitud = ModeloTipoHitoSpecifications.activosSolcitud();
-    Specification<ModeloTipoHito> specActivos = ModeloTipoHitoSpecifications.activos();
-
-    Specification<ModeloTipoHito> specs = Specification.where(specActivos).and(specByModeloEjecucion)
-        .and(specActivosSolicitud).and(specByQuery);
+        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable) - start");
+    Specification<ModeloTipoHito> specs = ModeloTipoHitoSpecifications.activos()
+        .and(ModeloTipoHitoSpecifications.byModeloEjecucionId(idModeloEjecucion))
+        .and(ModeloTipoHitoSpecifications.activosSolcitud()).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloTipoHito> returnValue = modeloTipoHitoRepository.findAll(specs, pageable);
-    log.debug(
-        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 

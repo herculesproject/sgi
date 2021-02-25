@@ -101,7 +101,7 @@ public class SolicitudProyectoPeriodoPagoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "mes+";
+    String sort = "mes,asc";
 
     URI uriFindAllSolicitudProyectoPeriodoPago = UriComponentsBuilder
         .fromUriString("/solicitudproyectosocio" + PATH_PARAMETER_ID + CONTROLLER_BASE_PATH).queryParam("s", sort)

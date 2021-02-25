@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoFaseNotFoundException;
@@ -16,8 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -157,15 +155,13 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
    *         paginadas.
    */
   @Override
-  public Page<ProyectoFase> findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ProyectoFase> specByQuery = new QuerySpecification<ProyectoFase>(query);
-    Specification<ProyectoFase> specByProyecto = ProyectoFaseSpecifications.byProyectoId(proyectoId);
-
-    Specification<ProyectoFase> specs = Specification.where(specByProyecto).and(specByQuery);
+  public Page<ProyectoFase> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    Specification<ProyectoFase> specs = ProyectoFaseSpecifications.byProyectoId(proyectoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoFase> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

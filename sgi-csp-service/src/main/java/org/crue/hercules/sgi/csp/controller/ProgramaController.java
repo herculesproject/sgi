@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -133,17 +130,17 @@ public class ProgramaController {
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
-  ResponseEntity<Page<Programa>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Programa>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAll(String query, Pageable paging) - start");
     Page<Programa> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAll(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -157,17 +154,17 @@ public class ProgramaController {
    */
   @GetMapping("/plan")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
-  ResponseEntity<Page<Programa>> findAllPlan(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Programa>> findAllPlan(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllPlan(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllPlan(String query, Pageable paging) - start");
     Page<Programa> page = service.findAllPlan(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllPlan(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllPlan(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllPlan(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllPlan(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -181,17 +178,17 @@ public class ProgramaController {
    */
   @GetMapping("/plan/todos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
-  ResponseEntity<Page<Programa>> findAllTodosPlan(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Programa>> findAllTodosPlan(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllTodosPlan(String query, Pageable paging) - start");
     Page<Programa> page = service.findAllTodosPlan(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllTodosPlan(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodosPlan(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -206,17 +203,16 @@ public class ProgramaController {
   @GetMapping("/{id}/hijos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
   ResponseEntity<Page<Programa>> findAllHijosPrograma(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllHijosPrograma(List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllHijosPrograma(String query, Pageable paging) - start");
     Page<Programa> page = service.findAllHijosPrograma(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllHijosPrograma(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllHijosPrograma(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllHijosPrograma(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllHijosPrograma(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,7 +44,7 @@ public interface TipoAmbitoGeograficoService {
    * @return la lista de entidades {@link TipoAmbitoGeografico} paginadas y/o
    *         filtradas.
    */
-  Page<TipoAmbitoGeografico> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoAmbitoGeografico> findAll(String query, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link TipoAmbitoGeografico} paginadas y/o
@@ -58,7 +55,7 @@ public interface TipoAmbitoGeograficoService {
    * @return la lista de entidades {@link TipoAmbitoGeografico} paginadas y/o
    *         filtradas.
    */
-  Page<TipoAmbitoGeografico> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoAmbitoGeografico> findAllTodos(String query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoAmbitoGeografico} por su id.

@@ -15,7 +15,6 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -282,9 +281,8 @@ public class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest
     Integer pageSize = 10;
 
     BDDMockito
-        .given(
-            proyectoPeriodoSeguimientoDocumentoService.findAllByProyectoPeriodoSeguimiento(ArgumentMatchers.<Long>any(),
-                ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(proyectoPeriodoSeguimientoDocumentoService.findAllByProyectoPeriodoSeguimiento(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoPeriodoSeguimientoDocumento>>() {
           @Override
           public Page<ProyectoPeriodoSeguimientoDocumento> answer(InvocationOnMock invocation) throws Throwable {
@@ -344,9 +342,8 @@ public class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest
     Integer pageSize = 10;
 
     BDDMockito
-        .given(
-            proyectoPeriodoSeguimientoDocumentoService.findAllByProyectoPeriodoSeguimiento(ArgumentMatchers.<Long>any(),
-                ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(proyectoPeriodoSeguimientoDocumentoService.findAllByProyectoPeriodoSeguimiento(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProyectoPeriodoSeguimientoDocumento>>() {
           @Override
           public Page<ProyectoPeriodoSeguimientoDocumento> answer(InvocationOnMock invocation) throws Throwable {

@@ -9,7 +9,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -150,8 +149,8 @@ public class TipoHitoControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(tipoHitoService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAll(
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -196,8 +195,8 @@ public class TipoHitoControllerTest extends BaseControllerTest {
     List<TipoHito> tiposHito = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito
-        .given(tipoHitoService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAll(
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -226,9 +225,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(
-            tipoHitoService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -273,9 +270,8 @@ public class TipoHitoControllerTest extends BaseControllerTest {
     List<TipoHito> tiposHito = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito
-        .given(
-            tipoHitoService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAllTodos(
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {

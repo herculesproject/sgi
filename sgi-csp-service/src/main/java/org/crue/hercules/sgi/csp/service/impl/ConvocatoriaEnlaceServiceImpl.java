@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
@@ -13,8 +12,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEnlaceSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -244,17 +242,13 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
    *         filtradas.
    */
   @Override
-  public Page<ConvocatoriaEnlace> findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query,
-      Pageable paging) {
-    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ConvocatoriaEnlace> specByQuery = new QuerySpecification<ConvocatoriaEnlace>(query);
-    Specification<ConvocatoriaEnlace> specByConvocatoria = ConvocatoriaEnlaceSpecifications
-        .byConvocatoriaId(idConvocatoria);
-
-    Specification<ConvocatoriaEnlace> specs = Specification.where(specByConvocatoria).and(specByQuery);
+  public Page<ConvocatoriaEnlace> findAllByConvocatoria(Long idConvocatoria, String query, Pageable paging) {
+    log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - start");
+    Specification<ConvocatoriaEnlace> specs = ConvocatoriaEnlaceSpecifications.byConvocatoriaId(idConvocatoria)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ConvocatoriaEnlace> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - end");
     return returnValue;
 
   }

@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
@@ -13,8 +11,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloTipoFinalidadSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFinalidadService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -141,19 +138,14 @@ public class ModeloTipoFinalidadServiceImpl implements ModeloTipoFinalidadServic
    * @return la lista de entidades {@link ModeloTipoEnlace} del
    *         {@link ModeloEjecucion} paginadas.
    */
-  public Page<ModeloTipoFinalidad> findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloTipoFinalidad> specByQuery = new QuerySpecification<ModeloTipoFinalidad>(query);
-    Specification<ModeloTipoFinalidad> specActivos = ModeloTipoFinalidadSpecifications.activos();
-    Specification<ModeloTipoFinalidad> specByModeloEjecucion = ModeloTipoFinalidadSpecifications
-        .byModeloEjecucionId(idModeloEjecucion);
-
-    Specification<ModeloTipoFinalidad> specs = Specification.where(specActivos).and(specByModeloEjecucion)
-        .and(specByQuery);
+  public Page<ModeloTipoFinalidad> findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) {
+    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) - start");
+    Specification<ModeloTipoFinalidad> specs = ModeloTipoFinalidadSpecifications.activos()
+        .and(ModeloTipoFinalidadSpecifications.byModeloEjecucionId(idModeloEjecucion))
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloTipoFinalidad> returnValue = modeloTipoFinalidadRepository.findAll(specs, pageable);
-    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 

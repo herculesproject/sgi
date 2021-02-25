@@ -15,7 +15,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -290,7 +289,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(prorrogaDocumentoService.findAllByProyectoProrroga(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProrrogaDocumento>>() {
           @Override
           public Page<ProrrogaDocumento> answer(InvocationOnMock invocation) throws Throwable {
@@ -344,7 +343,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(prorrogaDocumentoService.findAllByProyectoProrroga(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ProrrogaDocumento>>() {
           @Override
           public Page<ProrrogaDocumento> answer(InvocationOnMock invocation) throws Throwable {

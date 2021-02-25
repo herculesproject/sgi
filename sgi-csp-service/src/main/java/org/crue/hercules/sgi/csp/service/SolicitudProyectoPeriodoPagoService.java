@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -44,7 +43,7 @@ public interface SolicitudProyectoPeriodoPagoService {
    * @return lista paginada.
    */
   Page<SolicitudProyectoPeriodoPago> findAllBySolicitudProyectoSocio(Long idSolicitudProyectoProyectoSocio,
-      List<QueryCriteria> query, Pageable paging);
+      String query, Pageable paging);
 
   /**
    * Actualiza el listado de {@link SolicitudProyectoPeriodoPago} de la

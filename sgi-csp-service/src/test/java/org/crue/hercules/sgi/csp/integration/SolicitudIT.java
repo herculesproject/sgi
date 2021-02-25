@@ -206,8 +206,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones-";
-    String filter = "unidadGestionRef:OPE";
+    String sort = "observaciones,desc";
+    String filter = "unidadGestionRef==OPE";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -245,8 +245,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones-";
-    String filter = "unidadGestionRef:OPE";
+    String sort = "observaciones,desc";
+    String filter = "unidadGestionRef==OPE";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
@@ -287,8 +287,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "entidadRef~%-00%";
+    String sort = "id,desc";
+    String filter = "entidadRef=ke=-00";
 
     Long solicitudId = 1L;
 
@@ -329,7 +329,7 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
+    String sort = "id,desc";
 
     Long solicitudId = 1L;
 
@@ -371,8 +371,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "documentoRef~%-00%";
+    String sort = "id,desc";
+    String filter = "documentoRef=ke=-00";
 
     Long solicitudId = 1L;
 
@@ -405,8 +405,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "comentario~%-00%";
+    String sort = "id,desc";
+    String filter = "comentario=ke=-00";
 
     Long solicitudId = 1L;
 
@@ -495,8 +495,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "rolSocio.id:1";
+    String sort = "id,desc";
+    String filter = "rolSocio.id==1";
 
     Long solicitudId = 1L;
 
@@ -530,8 +530,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "entidadRef~%00%";
+    String sort = "id,desc";
+    String filter = "entidadRef=ke=00";
 
     Long solicitudId = 1L;
 
@@ -589,8 +589,8 @@ public class SolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=00";
 
     Long solicitudId = 1L;
 

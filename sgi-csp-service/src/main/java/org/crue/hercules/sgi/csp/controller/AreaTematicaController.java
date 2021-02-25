@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -134,17 +131,17 @@ public class AreaTematicaController {
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-ARTM-V')")
-  ResponseEntity<Page<AreaTematica>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<AreaTematica>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAll(String query, Pageable paging) - start");
     Page<AreaTematica> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAll(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -158,17 +155,17 @@ public class AreaTematicaController {
    */
   @GetMapping("/grupo")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-ARTM-V')")
-  ResponseEntity<Page<AreaTematica>> findAllGrupo(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<AreaTematica>> findAllGrupo(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllGrupo(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllGrupo(String query, Pageable paging) - start");
     Page<AreaTematica> page = service.findAllGrupo(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllGrupo(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllGrupo(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllGrupo(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllGrupo(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -182,18 +179,17 @@ public class AreaTematicaController {
    */
   @GetMapping("/grupo/todos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-ARTM-V')")
-  ResponseEntity<Page<AreaTematica>> findAllTodosGrupo(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<AreaTematica>> findAllTodosGrupo(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllTodosGrupo(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllTodosGrupo(String query, Pageable paging) - start");
     Page<AreaTematica> page = service.findAllTodosGrupo(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodosGrupo(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllTodosGrupo(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllTodosGrupo(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodosGrupo(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -208,17 +204,16 @@ public class AreaTematicaController {
   @GetMapping("/{id}/hijos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-ARTM-V')")
   ResponseEntity<Page<AreaTematica>> findAllHijosAreaTematica(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllHijosAreaTematica(List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllHijosAreaTematica(String query, Pageable paging) - start");
     Page<AreaTematica> page = service.findAllHijosAreaTematica(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllHijosAreaTematica(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllHijosAreaTematica(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllHijosAreaTematica(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllHijosAreaTematica(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

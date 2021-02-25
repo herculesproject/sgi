@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloEjecucionSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -148,15 +145,13 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
    *         filtradas.
    */
   @Override
-  public Page<ModeloEjecucion> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloEjecucion> specByQuery = new QuerySpecification<ModeloEjecucion>(query);
-    Specification<ModeloEjecucion> specActivos = ModeloEjecucionSpecifications.activos();
-
-    Specification<ModeloEjecucion> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<ModeloEjecucion> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<ModeloEjecucion> specs = ModeloEjecucionSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -169,12 +164,12 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
    *         filtradas.
    */
   @Override
-  public Page<ModeloEjecucion> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloEjecucion> spec = new QuerySpecification<ModeloEjecucion>(query);
+  public Page<ModeloEjecucion> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
+    Specification<ModeloEjecucion> specs = SgiRSQLJPASupport.toSpecification(query);
 
-    Page<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(spec, pageable);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    Page<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(specs, pageable);
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
   }
 

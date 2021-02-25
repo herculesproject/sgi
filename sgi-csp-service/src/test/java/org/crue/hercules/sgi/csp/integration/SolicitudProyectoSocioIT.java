@@ -9,9 +9,9 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -167,8 +167,8 @@ public class SolicitudProyectoSocioIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "solicitudProyectoSocio.id:1";
+    String sort = "id,desc";
+    String filter = "solicitudProyectoSocio.id==1";
 
     Long solicitudId = 1L;
 
@@ -203,8 +203,8 @@ public class SolicitudProyectoSocioIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "personaRef:user-003";
+    String sort = "id,desc";
+    String filter = "personaRef==user-003";
 
     Long solicitudProyectoSocioId = 1L;
 
@@ -239,8 +239,8 @@ public class SolicitudProyectoSocioIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "solicitudProyectoSocio.id:1";
+    String sort = "id,desc";
+    String filter = "solicitudProyectoSocio.id==1";
 
     Long solicitudId = 1L;
 

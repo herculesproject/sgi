@@ -13,8 +13,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -170,15 +169,13 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
    * @return la lista de entidades {@link ProyectoEquipo} de la {@link Proyecto}
    *         paginadas.
    */
-  public Page<ProyectoEquipo> findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ProyectoEquipo> specByQuery = new QuerySpecification<ProyectoEquipo>(query);
-    Specification<ProyectoEquipo> specByProyecto = ProyectoEquipoSpecifications.byProyectoId(proyectoId);
-
-    Specification<ProyectoEquipo> specs = Specification.where(specByProyecto).and(specByQuery);
+  public Page<ProyectoEquipo> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    Specification<ProyectoEquipo> specs = ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoEquipo> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

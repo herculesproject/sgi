@@ -1,13 +1,10 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoOrigenFuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoOrigenFuenteFinanciacionSpecification;
 import org.crue.hercules.sgi.csp.service.TipoOrigenFuenteFinanciacionService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,18 +40,14 @@ public class TipoOrigenFuenteFinanciacionServiceImpl implements TipoOrigenFuente
    *         y/o filtradas.
    */
   @Override
-  public Page<TipoOrigenFuenteFinanciacion> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+  public Page<TipoOrigenFuenteFinanciacion> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<TipoOrigenFuenteFinanciacion> specByQuery = new QuerySpecification<TipoOrigenFuenteFinanciacion>(
-        query);
-
-    Specification<TipoOrigenFuenteFinanciacion> specActivos = TipoOrigenFuenteFinanciacionSpecification.activos();
-
-    Specification<TipoOrigenFuenteFinanciacion> specs = Specification.where(specByQuery).and(specActivos);
+    Specification<TipoOrigenFuenteFinanciacion> specs = TipoOrigenFuenteFinanciacionSpecification.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoOrigenFuenteFinanciacion> returnValue = tipoOrigenFuenteFinanciacionRepository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
 
     return returnValue;
   }

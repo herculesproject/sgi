@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
@@ -14,8 +16,7 @@ import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEntidadFinanciadoraAjenaSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 /**
  * Service Implementation para la gestión de
@@ -175,19 +175,14 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
    *         {@link SolicitudProyectoEntidadFinanciadoraAjena} de la
    *         {@link Solicitud} paginadas.
    */
-  public Page<SolicitudProyectoEntidadFinanciadoraAjena> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query,
+  public Page<SolicitudProyectoEntidadFinanciadoraAjena> findAllBySolicitud(Long solicitudId, String query,
       Pageable pageable) {
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<SolicitudProyectoEntidadFinanciadoraAjena> specByQuery = new QuerySpecification<SolicitudProyectoEntidadFinanciadoraAjena>(
-        query);
-    Specification<SolicitudProyectoEntidadFinanciadoraAjena> specBySolicitud = SolicitudProyectoEntidadFinanciadoraAjenaSpecifications
-        .bySolicitudId(solicitudId);
-
-    Specification<SolicitudProyectoEntidadFinanciadoraAjena> specs = Specification.where(specBySolicitud)
-        .and(specByQuery);
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable pageable) - start");
+    Specification<SolicitudProyectoEntidadFinanciadoraAjena> specs = SolicitudProyectoEntidadFinanciadoraAjenaSpecifications
+        .bySolicitudId(solicitudId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoEntidadFinanciadoraAjena> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

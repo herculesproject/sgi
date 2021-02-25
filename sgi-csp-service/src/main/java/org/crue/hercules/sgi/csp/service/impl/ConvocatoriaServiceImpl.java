@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -28,10 +27,10 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.ConvocatoriaPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.access.expression.SgiMethodSecurityExpressionRoot;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -409,13 +408,13 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    *         filtradas.
    */
   @Override
-  public Page<Convocatoria> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Convocatoria> specByQuery = new QuerySpecification<Convocatoria>(query);
-    Specification<Convocatoria> specActivos = ConvocatoriaSpecifications.activos();
-    Specification<Convocatoria> specs = Specification.where(specByQuery).and(specActivos);
+  public Page<Convocatoria> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
     Page<Convocatoria> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -429,16 +428,15 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    *         investigador paginadas y filtradas.
    */
   @Override
-  public Page<Convocatoria> findAllInvestigador(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Convocatoria> specByQuery = getFiltroAplicado(query);
-    Specification<Convocatoria> specActivos = ConvocatoriaSpecifications.activos();
-    Specification<Convocatoria> specRegistradas = ConvocatoriaSpecifications.registradas();
-    Specification<Convocatoria> specConfiguracion = ConvocatoriaSpecifications.configuracionSolicitudTramitacionSGI();
-    Specification<Convocatoria> specs = Specification.where(specByQuery).and(specActivos).and(specRegistradas)
-        .and(specConfiguracion);
+  public Page<Convocatoria> findAllInvestigador(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.activos()
+        .and(ConvocatoriaSpecifications.registradas())
+        .and(ConvocatoriaSpecifications.configuracionSolicitudTramitacionSGI())
+        .and(SgiRSQLJPASupport.toSpecification(query, ConvocatoriaPredicateResolver.getInstance()));
+
     Page<Convocatoria> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -450,13 +448,14 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   @Override
-  public Page<Convocatoria> findAllTodos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+  public Page<Convocatoria> findAllTodos(String query, Pageable paging) {
+    log.debug("findAllTodos(String query, Pageable paging) - start");
 
-    Specification<Convocatoria> spec = getFiltroAplicado(query);
+    Specification<Convocatoria> specs = SgiRSQLJPASupport.toSpecification(query,
+        ConvocatoriaPredicateResolver.getInstance());
 
-    Page<Convocatoria> returnValue = repository.findAll(spec, paging);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    Page<Convocatoria> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -471,22 +470,17 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   @Override
-  public Page<Convocatoria> findAllRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> acronimosUnidadGestion) {
-    log.debug(
-        "findAllRestringidos(List<QueryCriteria> query, Pageable paging, List<String> acronimosUnidadGestion) - start");
+  public Page<Convocatoria> findAllRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion) {
+    log.debug("findAllRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion) - start");
 
-    Specification<Convocatoria> specByQuery = getFiltroAplicado(query);
-    Specification<Convocatoria> specActivos = ConvocatoriaSpecifications.activos();
-    Specification<Convocatoria> specRegistradas = ConvocatoriaSpecifications.registradas();
-    Specification<Convocatoria> specAcronimos = ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion);
-    Specification<Convocatoria> specs = Specification.where(specActivos).and(specRegistradas).and(specByQuery)
-        .and(specAcronimos);
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.activos()
+        .and(ConvocatoriaSpecifications.registradas())
+        .and(ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion))
+        .and(SgiRSQLJPASupport.toSpecification(query, ConvocatoriaPredicateResolver.getInstance()));
 
     Page<Convocatoria> returnValue = repository.findAll(specs, paging);
 
-    log.debug(
-        "findAllRestringidos(List<QueryCriteria> query, Pageable paging, List<String> acronimosUnidadGestion) - end");
+    log.debug("findAllRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion) - end");
     return returnValue;
   }
 
@@ -501,24 +495,16 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   @Override
-  public Page<Convocatoria> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
+  public Page<Convocatoria> findAllTodosRestringidos(String query, Pageable paging,
       List<String> acronimosUnidadGestion) {
-    log.debug(
-        "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - start");
+    log.debug("findAllTodosRestringidos(String query, Pageable paging,  List<String> acronimosUnidadGestion) - start");
 
-    Specification<Convocatoria> spec = getFiltroAplicado(query);
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion)
+        .and(SgiRSQLJPASupport.toSpecification(query, ConvocatoriaPredicateResolver.getInstance()));
 
-    Specification<Convocatoria> specAcronimos = ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion);
-    if (spec != null) {
-      spec = spec.and(specAcronimos);
-    } else {
-      spec = Specification.where(specAcronimos);
-    }
+    Page<Convocatoria> returnValue = repository.findAll(specs, paging);
 
-    Page<Convocatoria> returnValue = repository.findAll(spec, paging);
-
-    log.debug(
-        "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - end");
+    log.debug("findAllTodosRestringidos(String query, Pageable paging,  List<String> acronimosUnidadGestion) - end");
     return returnValue;
   }
 
@@ -832,118 +818,5 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
         "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
 
     log.debug("validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
-  }
-
-  /**
-   * Devuelve la Specification para el filtro avanzado de convocatoria.
-   * 
-   * @param query opciones de búsqueda.
-   */
-  private Specification<Convocatoria> getFiltroAplicado(List<QueryCriteria> query) {
-    log.debug("getFiltroAplicado(List<QueryCriteria> query) - start");
-    Specification<Convocatoria> spec = null;
-
-    List<QueryCriteria> queryEntity = CollectionUtils.isEmpty(query) ? query
-        : query.stream()
-            .filter(criteria -> !criteria.getKey().equals("areaTematica.id")
-                && !criteria.getKey().equals("convocatoriaEntidadConvocante.entidadRef")
-                && !criteria.getKey().equals("convocatoriaEntidadFinanciadora.entidadRef")
-                && !criteria.getKey().equals("fuenteFinanciacion.id")
-                && !criteria.getKey().equals("abiertoPlazoPresentacionSolicitud"))
-            .collect(Collectors.toList());
-
-    if (!CollectionUtils.isEmpty(queryEntity)) {
-      Specification<Convocatoria> specByQuery = new QuerySpecification<Convocatoria>(queryEntity);
-      spec = Specification.where(specByQuery);
-    }
-
-    // Área temática
-    List<QueryCriteria> idAreaTematica = CollectionUtils.isEmpty(query) ? query
-        : query.stream().filter(criteria -> criteria.getKey().equals("areaTematica.id")).collect(Collectors.toList());
-    if (!CollectionUtils.isEmpty(idAreaTematica)) {
-      Specification<Convocatoria> specByAreaTematicaId = ConvocatoriaSpecifications
-          .byAreaTematicaId(Long.valueOf(idAreaTematica.get(0).getValue()));
-
-      if (spec != null) {
-
-        spec = spec.and(specByAreaTematicaId);
-      } else {
-        spec = Specification.where(specByAreaTematicaId);
-      }
-
-    }
-
-    // Entidad convocante
-    List<QueryCriteria> entidadConvocanteRef = CollectionUtils.isEmpty(query) ? query
-        : query.stream().filter(criteria -> criteria.getKey().equals("convocatoriaEntidadConvocante.entidadRef"))
-            .collect(Collectors.toList());
-    if (!CollectionUtils.isEmpty(entidadConvocanteRef)) {
-      Specification<Convocatoria> specByEntidadConvocanteRef = ConvocatoriaSpecifications
-          .byEntidadConvocanteRef(entidadConvocanteRef.get(0).getValue());
-
-      if (spec != null) {
-
-        spec = spec.and(specByEntidadConvocanteRef);
-      } else {
-        spec = Specification.where(specByEntidadConvocanteRef);
-      }
-
-    }
-
-    // Entidad financiadora
-    List<QueryCriteria> entidadFinanciadoraRef = CollectionUtils.isEmpty(query) ? query
-        : query.stream().filter(criteria -> criteria.getKey().equals("convocatoriaEntidadFinanciadora.entidadRef"))
-            .collect(Collectors.toList());
-    if (!CollectionUtils.isEmpty(entidadFinanciadoraRef)) {
-      Specification<Convocatoria> specByEntidadFinanciadoraRef = ConvocatoriaSpecifications
-          .byEntidadFinancieraRef(entidadFinanciadoraRef.get(0).getValue());
-
-      if (spec != null) {
-
-        spec = spec.and(specByEntidadFinanciadoraRef);
-      } else {
-        spec = Specification.where(specByEntidadFinanciadoraRef);
-      }
-
-    }
-
-    // Fuente financiación
-    List<QueryCriteria> fuenteFinanciacionId = CollectionUtils.isEmpty(query) ? query
-        : query.stream().filter(criteria -> criteria.getKey().equals("fuenteFinanciacion.id"))
-            .collect(Collectors.toList());
-    if (!CollectionUtils.isEmpty(fuenteFinanciacionId)) {
-      Specification<Convocatoria> specByFuenteFinanciacionRef = ConvocatoriaSpecifications
-          .byFuenteFinanciacionId(Long.valueOf(fuenteFinanciacionId.get(0).getValue()));
-
-      if (spec != null) {
-
-        spec = spec.and(specByFuenteFinanciacionRef);
-      } else {
-        spec = Specification.where(specByFuenteFinanciacionRef);
-      }
-
-    }
-
-    // Plazo Presentacion Solicitudes
-    List<QueryCriteria> plazoPresentacionSolicitud = CollectionUtils.isEmpty(query) ? query
-        : query.stream().filter(criteria -> criteria.getKey().equals("abiertoPlazoPresentacionSolicitud"))
-            .collect(Collectors.toList());
-    if (!CollectionUtils.isEmpty(plazoPresentacionSolicitud)) {
-      if (Boolean.valueOf(plazoPresentacionSolicitud.get(0).getValue())) {
-        Specification<Convocatoria> specInPlazoPresentacionSolicitudes = ConvocatoriaSpecifications
-            .inPlazoPresentacionSolicitudes();
-
-        if (spec != null) {
-          spec = spec.and(specInPlazoPresentacionSolicitudes);
-        } else {
-          spec = Specification.where(specInPlazoPresentacionSolicitudes);
-        }
-      }
-    }
-
-    log.debug("getFiltroAplicado(List<QueryCriteria> query) - end");
-
-    return spec;
-
   }
 }

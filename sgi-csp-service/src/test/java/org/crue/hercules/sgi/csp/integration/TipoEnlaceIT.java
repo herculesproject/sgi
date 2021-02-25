@@ -147,8 +147,8 @@ public class TipoEnlaceIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     // when: find TipoEnlace
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -186,8 +186,8 @@ public class TipoEnlaceIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     // when: find TipoEnlace
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)

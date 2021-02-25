@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.repository.RolSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.RolSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.RolSocioService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -174,13 +171,11 @@ public class RolSocioServiceImpl implements RolSocioService {
    *         filtradas.
    */
   @Override
-  public Page<RolSocio> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<RolSocio> specByQuery = new QuerySpecification<RolSocio>(query);
-    Specification<RolSocio> specActivos = RolSocioSpecifications.activos();
-    Specification<RolSocio> specs = Specification.where(specByQuery).and(specActivos);
+  public Page<RolSocio> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<RolSocio> specs = RolSocioSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query));
     Page<RolSocio> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -192,11 +187,11 @@ public class RolSocioServiceImpl implements RolSocioService {
    * @return el listado de entidades {@link RolSocio} paginadas y filtradas.
    */
   @Override
-  public Page<RolSocio> findAllTodos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<RolSocio> spec = new QuerySpecification<RolSocio>(query);
-    Page<RolSocio> returnValue = repository.findAll(spec, paging);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+  public Page<RolSocio> findAllTodos(String query, Pageable paging) {
+    log.debug("findAllTodos(String query, Pageable paging) - start");
+    Specification<RolSocio> specs = SgiRSQLJPASupport.toSpecification(query);
+    Page<RolSocio> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return returnValue;
   }
 

@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -52,7 +49,7 @@ public interface ConceptoGastoService {
    * @param query    la información del filtro.
    * @return la lista de entidades {@link ConceptoGasto} paginadas y/o filtradas.
    */
-  Page<ConceptoGasto> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<ConceptoGasto> findAll(String query, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link ConceptoGasto} paginadas y/o filtradas.
@@ -61,7 +58,7 @@ public interface ConceptoGastoService {
    * @param query    la información del filtro.
    * @return la lista de entidades {@link ConceptoGasto} paginadas y/o filtradas.
    */
-  Page<ConceptoGasto> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+  Page<ConceptoGasto> findAllTodos(String query, Pageable pageable);
 
   /**
    * Obtiene {@link ConceptoGasto} por su id.

@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoAmbitoGeograficoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoOrigenFuenteFinanciacionNotFoundException;
@@ -11,8 +9,7 @@ import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoOrigenFuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.FuenteFinanciacionSpecifications;
 import org.crue.hercules.sgi.csp.service.FuenteFinanciacionService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -216,15 +213,13 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
    *         filtradas.
    */
   @Override
-  public Page<FuenteFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<FuenteFinanciacion> specByQuery = new QuerySpecification<FuenteFinanciacion>(query);
-    Specification<FuenteFinanciacion> specActivos = FuenteFinanciacionSpecifications.activos();
-
-    Specification<FuenteFinanciacion> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<FuenteFinanciacion> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<FuenteFinanciacion> specs = FuenteFinanciacionSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<FuenteFinanciacion> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -238,14 +233,12 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
    *         filtradas.
    */
   @Override
-  public Page<FuenteFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<FuenteFinanciacion> specByQuery = new QuerySpecification<FuenteFinanciacion>(query);
-
-    Specification<FuenteFinanciacion> specs = Specification.where(specByQuery);
+  public Page<FuenteFinanciacion> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
+    Specification<FuenteFinanciacion> specs = SgiRSQLJPASupport.toSpecification(query);
 
     Page<FuenteFinanciacion> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
   }
 

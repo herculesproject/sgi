@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFaseService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -86,17 +83,13 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
    */
   @Override
-  public Page<TipoFase> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+  public Page<TipoFase> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
 
-    Specification<TipoFase> specByQuery = new QuerySpecification<TipoFase>(query);
-    Specification<TipoFase> specActivos = TipoFaseSpecifications.activos();
-
-    Specification<TipoFase> specs = Specification.where(specActivos).and(specByQuery);
-
+    Specification<TipoFase> specs = TipoFaseSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query));
     Page<TipoFase> returnValue = tipoFaseRepository.findAll(specs, pageable);
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -108,14 +101,14 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
    */
   @Override
-  public Page<TipoFase> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
+  public Page<TipoFase> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
 
-    Specification<TipoFase> spec = new QuerySpecification<TipoFase>(query);
+    Specification<TipoFase> specs = SgiRSQLJPASupport.toSpecification(query);
 
-    Page<TipoFase> returnValue = tipoFaseRepository.findAll(spec, pageable);
+    Page<TipoFase> returnValue = tipoFaseRepository.findAll(specs, pageable);
 
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
 
   }

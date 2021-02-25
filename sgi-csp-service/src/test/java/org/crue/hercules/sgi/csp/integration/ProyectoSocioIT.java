@@ -197,8 +197,8 @@ public class ProyectoSocioIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "proyectoSocio.id:1";
+    String sort = "id,desc";
+    String filter = "proyectoSocio.id==1";
 
     Long solicitudId = 1L;
 
@@ -237,8 +237,8 @@ public class ProyectoSocioIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CPSCI-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "personaRef~%person%";
+    String sort = "id,desc";
+    String filter = "personaRef=ke=person";
 
     Long convocatoriaId = 1L;
 
@@ -284,8 +284,8 @@ public class ProyectoSocioIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%observ%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=observ";
 
     Long convocatoriaId = 1L;
 

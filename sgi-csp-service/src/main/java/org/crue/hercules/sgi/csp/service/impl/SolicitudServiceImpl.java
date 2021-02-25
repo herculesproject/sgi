@@ -3,11 +3,9 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -35,11 +33,11 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.access.expression.SgiMethodSecurityExpressionRoot;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +47,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -303,30 +302,15 @@ public class SolicitudServiceImpl implements SolicitudService {
    *         filtradas.
    */
   @Override
-  public Page<Solicitud> findAllRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> unidadGestionRefs) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - start");
-    if (query == null) {
-      query = new ArrayList<>();
-    }
+  public Page<Solicitud> findAllRestringidos(String query, Pageable paging, List<String> unidadGestionRefs) {
+    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - start");
 
-    List<QueryCriteria> querySinReferenciaConvocatoria = query.stream()
-        .filter(queryCriteria -> !queryCriteria.getKey().equals("referenciaConvocatoria")).collect(Collectors.toList());
-
-    Specification<Solicitud> specByQuery = new QuerySpecification<Solicitud>(querySinReferenciaConvocatoria);
-    Specification<Solicitud> specActivos = SolicitudSpecifications.activos();
-    Specification<Solicitud> specByUnidadGestionRefIn = SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs);
-    Specification<Solicitud> specs = Specification.where(specActivos).and(specByUnidadGestionRefIn).and(specByQuery);
-
-    if (query.size() > querySinReferenciaConvocatoria.size()) {
-      String referenciaConvocatoria = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("referenciaConvocatoria")).findFirst().get()
-          .getValue();
-      specs = specs.and(SolicitudSpecifications.byReferenciaConvocatoria(referenciaConvocatoria));
-    }
+    Specification<Solicitud> specs = SolicitudSpecifications.activos()
+        .and(SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs))
+        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - end");
+    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - end");
     return returnValue;
   }
 
@@ -339,132 +323,14 @@ public class SolicitudServiceImpl implements SolicitudService {
    * @return el listado de entidades {@link Solicitud} paginadas y filtradas.
    */
   @Override
-  public Page<Solicitud> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> unidadGestionRefs) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - start");
-    if (query == null) {
-      query = new ArrayList<>();
-    }
+  public Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging, List<String> unidadGestionRefs) {
+    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - start");
 
-    List<QueryCriteria> querySolicitud = query.stream()
-        .filter(queryCriteria -> !queryCriteria.getKey().equals("referenciaConvocatoria")
-            && !queryCriteria.getKey().startsWith("convocatoria.configuracionSolicitud")
-            && !queryCriteria.getKey().startsWith("convocatoria.entidadFinanciadora")
-            && !queryCriteria.getKey().startsWith("convocatoria.entidadConvocante"))
-        .collect(Collectors.toList());
-
-    Specification<Solicitud> specByQuery = new QuerySpecification<Solicitud>(querySolicitud);
-    Specification<Solicitud> specByUnidadGestionRefIn = SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs);
-    Specification<Solicitud> specs = Specification.where(specByUnidadGestionRefIn).and(specByQuery);
-
-    // Referencia Convocatoria
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> referenciaConvocatoria = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("referenciaConvocatoria"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(referenciaConvocatoria)) {
-        specs = specs.and(SolicitudSpecifications.byReferenciaConvocatoria(referenciaConvocatoria.get(0).getValue()));
-      }
-
-    }
-
-    // Fecha de inicio de la convocatoria fase
-    // Desde
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey()
-              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.desde"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
-        specs = specs.and(SolicitudSpecifications.byFechaInicioDesdeConfiguracionSolicitud(
-            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
-      }
-    }
-
-    // Hasta
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey()
-              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.hasta"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
-        specs = specs.and(SolicitudSpecifications.byFechaInicioHastaConfiguracionSolicitud(
-            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
-      }
-    }
-
-    // Fecha fin de la convocatoria fase
-    // Desde
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey()
-              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.desde"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
-        specs = specs.and(SolicitudSpecifications.byFechaFinDesdeConfiguracionSolicitud(
-            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
-      }
-    }
-
-    // Hasta
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey()
-              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.hasta"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
-        specs = specs.and(SolicitudSpecifications.byFechaFinHastaConfiguracionSolicitud(
-            LocalDateTime.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
-      }
-    }
-
-    // Entidad financiadora
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> convocatoriaEntidadFinanciadora = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadFinanciadora.entidadRef"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(convocatoriaEntidadFinanciadora)) {
-        specs = specs.and(SolicitudSpecifications
-            .byConvocatoriaEntidadFinanciadora(convocatoriaEntidadFinanciadora.get(0).getValue()));
-      }
-    }
-
-    // Entidad financiadora fuente financiación
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> convocatoriaEntidadFinanciadoraFuenteFinanciacionId = query.stream()
-          .filter(
-              queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadFinanciadora.fuenteFinanciacion.id"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(convocatoriaEntidadFinanciadoraFuenteFinanciacionId)) {
-        specs = specs.and(SolicitudSpecifications.byConvocatoriaEntidadFinanciadoraFinanciacionId(
-            Long.valueOf(convocatoriaEntidadFinanciadoraFuenteFinanciacionId.get(0).getValue())));
-      }
-    }
-
-    // Entidad convocante
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> convocatoriaEntidadConvocante = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadConvocante.entidadRef"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(convocatoriaEntidadConvocante)) {
-        specs = specs.and(
-            SolicitudSpecifications.byConvocatoriaEntidadConvocante(convocatoriaEntidadConvocante.get(0).getValue()));
-      }
-    }
-
-    // Entidad convocante programa
-    if (query.size() > querySolicitud.size()) {
-      List<QueryCriteria> convocatoriaEntidadConvocanteProgramaId = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadConvocante.programa.id"))
-          .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(convocatoriaEntidadConvocanteProgramaId)) {
-        specs = specs.and(SolicitudSpecifications.byConvocatoriaEntidadConvocanteProgramaId(
-            Long.valueOf(convocatoriaEntidadConvocanteProgramaId.get(0).getValue())));
-      }
-    }
+    Specification<Solicitud> specs = SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs)
+        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs) - end");
+    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - end");
     return returnValue;
   }
 
@@ -543,7 +409,7 @@ public class SolicitudServiceImpl implements SolicitudService {
       if (solicitudProyectoDatos.getColaborativo() && solicitudProyectoDatos.getCoordinadorExterno()) {
         List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
             .findAllBySolicitudProyectoDatosIdAndRolSocioCoordinadorTrue(solicitudProyectoDatos.getId());
-        Assert.isTrue(CollectionUtils.isNotEmpty(solicitudProyectoSocios),
+        Assert.isTrue(!CollectionUtils.isEmpty(solicitudProyectoSocios),
             "Al menos debe existir un socio con Rol socio coordinador.");
 
       }
@@ -987,7 +853,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
             .findAllBySolicitudProyectoDatosIdAndRolSocioCoordinadorTrue(solicitudProyectoDatos.getId());
         log.debug("cumpleValidacionesPresentada(Long id) - end");
-        return CollectionUtils.isNotEmpty(solicitudProyectoSocios);
+        return !CollectionUtils.isEmpty(solicitudProyectoSocios);
 
       }
     }
@@ -1026,7 +892,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     log.debug("hasDocumentacionRequerida(Long idConvocatoria) - end");
 
-    return CollectionUtils.isNotEmpty(solicitudDocumentos);
+    return !CollectionUtils.isEmpty(solicitudDocumentos);
   }
 
   /**
@@ -1063,7 +929,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     List<SolicitudProyectoEquipo> solicitudProyectoEquipos = solicitudProyectoEquipoRepository
         .findAllBySolicitudProyectoDatosIdAndPersonaRef(idSolicitudProyectoDatos, solicitanteRef);
 
-    return CollectionUtils.isNotEmpty(solicitudProyectoEquipos);
+    return !CollectionUtils.isEmpty(solicitudProyectoEquipos);
   }
 
   /**

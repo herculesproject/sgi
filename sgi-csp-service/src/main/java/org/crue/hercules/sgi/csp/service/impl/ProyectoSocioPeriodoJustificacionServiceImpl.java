@@ -15,8 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoJustificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -218,18 +217,14 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
    * @return la lista de entidades {@link ProyectoSocioPeriodoJustificacion} de la
    *         {@link ProyectoSocio} paginadas.
    */
-  public Page<ProyectoSocioPeriodoJustificacion> findAllByProyectoSocio(Long proyectoSocioId, List<QueryCriteria> query,
+  public Page<ProyectoSocioPeriodoJustificacion> findAllByProyectoSocio(Long proyectoSocioId, String query,
       Pageable pageable) {
-    log.debug("findAllByProyectoSocio(Long proyectoSocioId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ProyectoSocioPeriodoJustificacion> specByQuery = new QuerySpecification<ProyectoSocioPeriodoJustificacion>(
-        query);
-    Specification<ProyectoSocioPeriodoJustificacion> specByProyectoSocio = ProyectoSocioPeriodoJustificacionSpecifications
-        .byProyectoSocioId(proyectoSocioId);
-
-    Specification<ProyectoSocioPeriodoJustificacion> specs = Specification.where(specByProyectoSocio).and(specByQuery);
+    log.debug("findAllByProyectoSocio(Long proyectoSocioId, String query, Pageable pageable) - start");
+    Specification<ProyectoSocioPeriodoJustificacion> specs = ProyectoSocioPeriodoJustificacionSpecifications
+        .byProyectoSocioId(proyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoSocioPeriodoJustificacion> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyectoSocio(Long proyectoSocioId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyectoSocio(Long proyectoSocioId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

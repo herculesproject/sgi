@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -59,7 +56,7 @@ public interface ProgramaService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Programa} paginadas.
    */
-  Page<Programa> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<Programa> findAll(String query, Pageable pageable);
 
   /**
    * Obtiene los planes activos (los {@link Programa} con padre null).
@@ -68,7 +65,7 @@ public interface ProgramaService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Programa} paginadas.
    */
-  Page<Programa> findAllPlan(List<QueryCriteria> query, Pageable pageable);
+  Page<Programa> findAllPlan(String query, Pageable pageable);
 
   /**
    * Obtiene los planes (los {@link Programa} con padre null).
@@ -77,7 +74,7 @@ public interface ProgramaService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Programa} paginadas.
    */
-  Page<Programa> findAllTodosPlan(List<QueryCriteria> query, Pageable pageable);
+  Page<Programa> findAllTodosPlan(String query, Pageable pageable);
 
   /**
    * Obtiene los {@link Programa} hijos directos del {@link Programa} con el id
@@ -88,6 +85,6 @@ public interface ProgramaService {
    * @param pageable   la información de la paginación.
    * @return la lista de entidades {@link Programa} paginadas.
    */
-  Page<Programa> findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable);
+  Page<Programa> findAllHijosPrograma(Long programaId, String query, Pageable pageable);
 
 }

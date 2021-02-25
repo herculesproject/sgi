@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -58,7 +55,6 @@ public interface ConvocatoriaEntidadConvocanteService {
    * @return la lista de entidades {@link ConvocatoriaEntidadConvocante} de la
    *         {@link Convocatoria} paginadas.
    */
-  Page<ConvocatoriaEntidadConvocante> findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query,
-      Pageable pageable);
+  Page<ConvocatoriaEntidadConvocante> findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable);
 
 }

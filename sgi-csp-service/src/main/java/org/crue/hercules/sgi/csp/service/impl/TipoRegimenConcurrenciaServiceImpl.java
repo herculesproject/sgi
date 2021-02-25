@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoRegimenConcurrenciaSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoRegimenConcurrenciaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -117,14 +114,13 @@ public class TipoRegimenConcurrenciaServiceImpl implements TipoRegimenConcurrenc
    *         filtradas.
    */
   @Override
-  public Page<TipoRegimenConcurrencia> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<TipoRegimenConcurrencia> specByQuery = new QuerySpecification<TipoRegimenConcurrencia>(query);
-    Specification<TipoRegimenConcurrencia> specActivos = TipoRegimenConcurrenciaSpecifications.activos();
+  public Page<TipoRegimenConcurrencia> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<TipoRegimenConcurrencia> specs = TipoRegimenConcurrenciaSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
-    Specification<TipoRegimenConcurrencia> specs = Specification.where(specActivos).and(specByQuery);
     Page<TipoRegimenConcurrencia> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -138,11 +134,11 @@ public class TipoRegimenConcurrenciaServiceImpl implements TipoRegimenConcurrenc
    *         filtradas.
    */
   @Override
-  public Page<TipoRegimenConcurrencia> findAllTodos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<TipoRegimenConcurrencia> spec = new QuerySpecification<TipoRegimenConcurrencia>(query);
-    Page<TipoRegimenConcurrencia> returnValue = repository.findAll(spec, paging);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+  public Page<TipoRegimenConcurrencia> findAllTodos(String query, Pageable paging) {
+    log.debug("findAllTodos(String query, Pageable paging) - start");
+    Specification<TipoRegimenConcurrencia> specs = SgiRSQLJPASupport.toSpecification(query);
+    Page<TipoRegimenConcurrencia> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return returnValue;
   }
 

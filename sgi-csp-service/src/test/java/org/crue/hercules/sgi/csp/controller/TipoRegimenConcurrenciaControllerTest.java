@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.TipoRegimenConcurrenciaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -228,7 +227,7 @@ public class TipoRegimenConcurrenciaControllerTest extends BaseControllerTest {
       data.add(generarMockTipoRegimenConcurrencia(Long.valueOf(i), Boolean.TRUE));
     }
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoRegimenConcurrencia>>() {
           @Override
           public Page<TipoRegimenConcurrencia> answer(InvocationOnMock invocation) throws Throwable {
@@ -274,7 +273,7 @@ public class TipoRegimenConcurrenciaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoRegimenConcurrencia>>() {
           @Override
           public Page<TipoRegimenConcurrencia> answer(InvocationOnMock invocation) throws Throwable {
@@ -301,8 +300,7 @@ public class TipoRegimenConcurrenciaControllerTest extends BaseControllerTest {
       data.add(generarMockTipoRegimenConcurrencia(Long.valueOf(i), Boolean.TRUE));
     }
 
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoRegimenConcurrencia>>() {
           @Override
           public Page<TipoRegimenConcurrencia> answer(InvocationOnMock invocation) throws Throwable {
@@ -349,8 +347,7 @@ public class TipoRegimenConcurrenciaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoRegimenConcurrencia>>() {
           @Override
           public Page<TipoRegimenConcurrencia> answer(InvocationOnMock invocation) throws Throwable {

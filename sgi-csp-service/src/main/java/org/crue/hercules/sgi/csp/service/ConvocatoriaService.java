@@ -8,7 +8,6 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoHito;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -136,7 +135,7 @@ public interface ConvocatoriaService {
    * @return el listado de entidades {@link Convocatoria} activas paginadas y
    *         filtradas.
    */
-  Page<Convocatoria> findAll(List<QueryCriteria> query, Pageable paging);
+  Page<Convocatoria> findAll(String query, Pageable paging);
 
   /**
    * Obtiene todas las entidades {@link Convocatoria} que puede visualizar un
@@ -147,7 +146,7 @@ public interface ConvocatoriaService {
    * @return el listado de entidades {@link Convocatoria} que puede visualizar un
    *         investigador paginadas y filtradas.
    */
-  Page<Convocatoria> findAllInvestigador(List<QueryCriteria> query, Pageable paging);
+  Page<Convocatoria> findAllInvestigador(String query, Pageable paging);
 
   /**
    * Obtiene todas las entidades {@link Convocatoria} paginadas y filtradas.
@@ -156,7 +155,7 @@ public interface ConvocatoriaService {
    * @param paging información de paginación.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
-  Page<Convocatoria> findAllTodos(List<QueryCriteria> query, Pageable paging);
+  Page<Convocatoria> findAllTodos(String query, Pageable paging);
 
   /**
    * Devuelve todas las convocatorias activas registradas que se encuentren dentro
@@ -168,8 +167,7 @@ public interface ConvocatoriaService {
    *                               que se restringe la busqueda.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
-  Page<Convocatoria> findAllRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> acronimosUnidadGestion);
+  Page<Convocatoria> findAllRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion);
 
   /**
    * Devuelve todas las convocatorias activas que se encuentren dentro de la
@@ -181,7 +179,6 @@ public interface ConvocatoriaService {
    *                               que se restringe la busqueda.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
-  Page<Convocatoria> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
-      List<String> acronimosUnidadGestion);
+  Page<Convocatoria> findAllTodosRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion);
 
 }

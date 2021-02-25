@@ -250,8 +250,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones-";
-    String filter = "unidadGestionRef:OPE";
+    String sort = "observaciones,desc";
+    String filter = "unidadGestionRef==OPE";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -292,8 +292,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones-";
-    String filter = "unidadGestionRef:OPE";
+    String sort = "observaciones,desc";
+    String filter = "unidadGestionRef==OPE";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
@@ -335,8 +335,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "comentario~%-00%";
+    String sort = "id,desc";
+    String filter = "comentario=ke=-00";
 
     Long proyectoId = 1L;
 
@@ -380,8 +380,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%-00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
 
     Long proyectoId = 1L;
 
@@ -425,8 +425,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "nombre~%-00%";
+    String sort = "id,desc";
+    String filter = "nombre=ke=-00";
 
     Long proyectoId = 1L;
 
@@ -468,8 +468,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "empresaRef~%00%";
+    String sort = "id,desc";
+    String filter = "empresaRef=ke=00";
 
     Long solicitudId = 1L;
 
@@ -512,8 +512,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "entidadRef~%-00%";
+    String sort = "id,desc";
+    String filter = "entidadRef=ke=-00";
 
     Long proyectoId = 1L;
 
@@ -558,8 +558,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-E")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "personaRef~%00%";
+    String sort = "id,desc";
+    String filter = "personaRef=ke=00";
 
     Long proyectoId = 1L;
 
@@ -601,8 +601,8 @@ public class ProyectoIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THIT-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%-00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
 
     Long proyectoId = 1L;
 

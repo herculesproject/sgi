@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.service.RolSocioService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -317,7 +316,7 @@ public class RolSocioControllerTest extends BaseControllerTest {
       }
     }
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<RolSocio>>() {
           @Override
           public Page<RolSocio> answer(InvocationOnMock invocation) throws Throwable {
@@ -363,7 +362,7 @@ public class RolSocioControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-RSOC-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data RolSocio
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<RolSocio>>() {
           @Override
           public Page<RolSocio> answer(InvocationOnMock invocation) throws Throwable {
@@ -390,8 +389,7 @@ public class RolSocioControllerTest extends BaseControllerTest {
       rolSocios.add(generarMockRolSocio(Long.valueOf(i), (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
     }
 
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<RolSocio>>() {
           @Override
           public Page<RolSocio> answer(InvocationOnMock invocation) throws Throwable {
@@ -438,8 +436,7 @@ public class RolSocioControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-RSOC-V" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data RolSocio
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<RolSocio>>() {
           @Override
           public Page<RolSocio> answer(InvocationOnMock invocation) throws Throwable {

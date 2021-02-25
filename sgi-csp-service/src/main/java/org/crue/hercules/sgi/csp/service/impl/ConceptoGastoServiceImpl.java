@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConceptoGastoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -153,15 +150,13 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
    * @return la lista de entidades {@link ConceptoGasto} paginadas y/o filtradas.
    */
   @Override
-  public Page<ConceptoGasto> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ConceptoGasto> specByQuery = new QuerySpecification<ConceptoGasto>(query);
-    Specification<ConceptoGasto> specActivos = ConceptoGastoSpecifications.activos();
-
-    Specification<ConceptoGasto> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<ConceptoGasto> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<ConceptoGasto> specs = ConceptoGastoSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ConceptoGasto> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -173,11 +168,12 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
    * @return la lista de entidades {@link ConceptoGasto} paginadas y/o filtradas.
    */
   @Override
-  public Page<ConceptoGasto> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ConceptoGasto> specByQuery = new QuerySpecification<ConceptoGasto>(query);
-    Page<ConceptoGasto> returnValue = repository.findAll(specByQuery, pageable);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+  public Page<ConceptoGasto> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
+    Specification<ConceptoGasto> specs = SgiRSQLJPASupport.toSpecification(query);
+
+    Page<ConceptoGasto> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
   }
 

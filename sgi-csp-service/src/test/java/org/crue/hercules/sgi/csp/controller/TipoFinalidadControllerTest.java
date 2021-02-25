@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.service.TipoFinalidadService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -289,7 +288,7 @@ public class TipoFinalidadControllerTest extends BaseControllerTest {
       data.add(generarMockTipoFinalidad(Long.valueOf(i), Boolean.TRUE));
     }
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoFinalidad>>() {
           @Override
           public Page<TipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
@@ -334,7 +333,7 @@ public class TipoFinalidadControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-TFIN-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data TipoFinalidad
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoFinalidad>>() {
           @Override
           public Page<TipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
@@ -361,8 +360,7 @@ public class TipoFinalidadControllerTest extends BaseControllerTest {
       data.add(generarMockTipoFinalidad(Long.valueOf(i), Boolean.TRUE));
     }
 
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoFinalidad>>() {
           @Override
           public Page<TipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
@@ -408,8 +406,7 @@ public class TipoFinalidadControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-TFIN-V" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data TipoFinalidad
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoFinalidad>>() {
           @Override
           public Page<TipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {

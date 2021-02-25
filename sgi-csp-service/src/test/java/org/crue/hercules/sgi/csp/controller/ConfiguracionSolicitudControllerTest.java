@@ -23,7 +23,6 @@ import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -244,7 +243,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(documentoRequeridoSolicitudService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<DocumentoRequeridoSolicitud>>() {
           @Override
           public Page<DocumentoRequeridoSolicitud> answer(InvocationOnMock invocation) throws Throwable {
@@ -301,7 +300,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(documentoRequeridoSolicitudService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<DocumentoRequeridoSolicitud>>() {
           @Override
           public Page<DocumentoRequeridoSolicitud> answer(InvocationOnMock invocation) throws Throwable {

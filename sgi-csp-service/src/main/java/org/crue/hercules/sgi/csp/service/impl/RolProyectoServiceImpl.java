@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.RolProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.RolProyectoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -178,13 +175,13 @@ public class RolProyectoServiceImpl implements RolProyectoService {
    *         filtradas.
    */
   @Override
-  public Page<RolProyecto> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<RolProyecto> specByQuery = new QuerySpecification<RolProyecto>(query);
-    Specification<RolProyecto> specActivos = RolProyectoSpecifications.activos();
-    Specification<RolProyecto> specs = Specification.where(specByQuery).and(specActivos);
+  public Page<RolProyecto> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<RolProyecto> specs = RolProyectoSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
     Page<RolProyecto> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -196,11 +193,11 @@ public class RolProyectoServiceImpl implements RolProyectoService {
    * @return el listado de entidades {@link RolProyecto} paginadas y filtradas.
    */
   @Override
-  public Page<RolProyecto> findAllTodos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<RolProyecto> spec = new QuerySpecification<RolProyecto>(query);
-    Page<RolProyecto> returnValue = repository.findAll(spec, paging);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+  public Page<RolProyecto> findAllTodos(String query, Pageable paging) {
+    log.debug("findAllTodos(String query, Pageable paging) - start");
+    Specification<RolProyecto> specs = SgiRSQLJPASupport.toSpecification(query);
+    Page<RolProyecto> returnValue = repository.findAll(specs, paging);
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return returnValue;
   }
 

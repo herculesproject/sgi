@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -63,6 +60,6 @@ public interface SolicitudDocumentoService {
    * @return la lista de entidades {@link SolicitudDocumento} de la
    *         {@link Solicitud} paginadas.
    */
-  Page<SolicitudDocumento> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable pageable);
+  Page<SolicitudDocumento> findAllBySolicitud(Long solicitudId, String query, Pageable pageable);
 
 }

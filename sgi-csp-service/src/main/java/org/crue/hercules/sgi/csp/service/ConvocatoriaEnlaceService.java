@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,6 +52,6 @@ public interface ConvocatoriaEnlaceService {
    *         filtradas.
    */
 
-  Page<ConvocatoriaEnlace> findAllByConvocatoria(Long id, List<QueryCriteria> query, Pageable paging);
+  Page<ConvocatoriaEnlace> findAllByConvocatoria(Long id, String query, Pageable paging);
 
 }

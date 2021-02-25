@@ -125,8 +125,8 @@ public class TipoRegimenConcurrenciaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ADMIN")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "id-";
-    String filter = "nombre~%-0%";
+    String sort = "id,desc";
+    String filter = "nombre=ke=-0";
 
     // when: find TipoRegimenConcurrencia
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -161,8 +161,8 @@ public class TipoRegimenConcurrenciaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ADMIN")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "id-";
-    String filter = "nombre~%-0%";
+    String sort = "id,desc";
+    String filter = "nombre=ke=-0";
 
     // when: find TipoRegimenConcurrencia
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)

@@ -51,7 +51,6 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -636,7 +635,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
       }
     }
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
@@ -688,8 +687,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
           generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
     }
 
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
@@ -742,10 +740,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
           generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
     }
 
-    BDDMockito
-        .given(service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer(new Answer<Page<Convocatoria>>() {
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -791,7 +787,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data Convocatoria
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
@@ -819,10 +815,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
           generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
     }
 
-    BDDMockito
-        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer(new Answer<Page<Convocatoria>>() {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -868,10 +862,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
   public void findAllRestringidos_EmptyList_Returns204() throws Exception {
     // given: no data Convocatoria
-    BDDMockito
-        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer(new Answer<Page<Convocatoria>>() {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
             Page<Convocatoria> page = new PageImpl<>(Collections.emptyList());
@@ -911,7 +903,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEntidadGestoraService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaEntidadGestora>>() {
           @Override
           public Page<ConvocatoriaEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
@@ -967,7 +959,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEntidadGestoraService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaEntidadGestora>>() {
           @Override
           public Page<ConvocatoriaEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
@@ -1010,7 +1002,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaFaseService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaFase>>() {
           @Override
           public Page<ConvocatoriaFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -1063,7 +1055,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaFaseService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaFase>>() {
           @Override
           public Page<ConvocatoriaFase> answer(InvocationOnMock invocation) throws Throwable {
@@ -1126,7 +1118,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEntidadFinanciadoraService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1182,7 +1174,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEntidadFinanciadoraService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ConvocatoriaEntidadFinanciadora> pageResponse = new PageImpl<>(convocatoriaEntidadFinanciadoras,
@@ -1223,7 +1215,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaDocumentoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaDocumento>>() {
           @Override
           public Page<ConvocatoriaDocumento> answer(InvocationOnMock invocation) throws Throwable {
@@ -1277,7 +1269,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaDocumentoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaDocumento>>() {
           @Override
           public Page<ConvocatoriaDocumento> answer(InvocationOnMock invocation) throws Throwable {
@@ -1320,7 +1312,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEnlaceService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaEnlace>>() {
           @Override
           public Page<ConvocatoriaEnlace> answer(InvocationOnMock invocation) throws Throwable {
@@ -1374,7 +1366,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEnlaceService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaEnlace>>() {
           @Override
           public Page<ConvocatoriaEnlace> answer(InvocationOnMock invocation) throws Throwable {
@@ -1417,7 +1409,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEntidadConvocanteService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1471,7 +1463,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaEntidadConvocanteService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ConvocatoriaEntidadConvocante> pageResponse = new PageImpl<>(convocatoriasEntidadesConvocantes, pageable,
@@ -1561,7 +1553,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaPeriodoJustificacionService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1617,7 +1609,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaPeriodoJustificacionService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ConvocatoriaPeriodoJustificacion> pageResponse = new PageImpl<>(convocatoriasPeriodoJustificaciones,
@@ -1668,7 +1660,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaPeriodoSeguimientoCientificoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1727,7 +1719,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaPeriodoSeguimientoCientificoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ConvocatoriaPeriodoSeguimientoCientifico> pageResponse = new PageImpl<>(
@@ -1864,7 +1856,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaAreaTematicaService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaAreaTematica>>() {
           @Override
           public Page<ConvocatoriaAreaTematica> answer(InvocationOnMock invocation) throws Throwable {
@@ -1920,7 +1912,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaAreaTematicaService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaAreaTematica>>() {
           @Override
           public Page<ConvocatoriaAreaTematica> answer(InvocationOnMock invocation) throws Throwable {
@@ -1963,7 +1955,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaHitoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaHito>>() {
           @Override
           public Page<ConvocatoriaHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -2016,7 +2008,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(convocatoriaHitoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaHito>>() {
           @Override
           public Page<ConvocatoriaHito> answer(InvocationOnMock invocation) throws Throwable {

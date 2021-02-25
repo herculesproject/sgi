@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
@@ -17,8 +16,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudModalidadSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -196,15 +194,14 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
    *         {@link Solicitud} paginadas.
    */
   @Override
-  public Page<SolicitudModalidad> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
+  public Page<SolicitudModalidad> findAllBySolicitud(Long solicitudId, String query, Pageable paging) {
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - start");
 
-    Specification<SolicitudModalidad> specByQuery = new QuerySpecification<SolicitudModalidad>(query);
-    Specification<SolicitudModalidad> specBySolicitud = SolicitudModalidadSpecifications.bySolicitudId(solicitudId);
-    Specification<SolicitudModalidad> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<SolicitudModalidad> specs = SolicitudModalidadSpecifications.bySolicitudId(solicitudId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudModalidad> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - end");
     return returnValue;
   }
 

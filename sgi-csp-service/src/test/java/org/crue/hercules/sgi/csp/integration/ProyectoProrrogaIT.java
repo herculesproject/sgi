@@ -206,8 +206,8 @@ public class ProyectoProrrogaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "comentario~%-00%";
+    String sort = "id,desc";
+    String filter = "comentario=ke=-00";
 
     Long proyectoProrrogaId = 1L;
 

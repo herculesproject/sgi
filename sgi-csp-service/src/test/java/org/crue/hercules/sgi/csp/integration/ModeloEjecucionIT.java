@@ -149,8 +149,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -183,8 +183,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
+    String sort = "nombre,desc";
+    String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -223,8 +223,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoEnlace.nombre-";
-    String filter = "tipoEnlace.descripcion~%00%";
+    String sort = "tipoEnlace.nombre,desc";
+    String filter = "tipoEnlace.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -266,8 +266,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre-";
-    String filter = "tipoFase.descripcion~%00%";
+    String sort = "tipoFase.nombre,desc";
+    String filter = "tipoFase.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -304,8 +304,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre-";
-    String filter = "tipoFase.descripcion~%00%";
+    String sort = "tipoFase.nombre,desc";
+    String filter = "tipoFase.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -342,8 +342,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre-";
-    String filter = "tipoFase.descripcion~%00%";
+    String sort = "tipoFase.nombre,desc";
+    String filter = "tipoFase.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -386,8 +386,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoDocumento.nombre-";
-    String filter = "tipoDocumento.descripcion~%00%";
+    String sort = "tipoDocumento.nombre,desc";
+    String filter = "tipoDocumento.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -430,8 +430,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFinalidad.nombre-";
-    String filter = "tipoFinalidad.descripcion~%00%";
+    String sort = "tipoFinalidad.nombre,desc";
+    String filter = "tipoFinalidad.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -473,8 +473,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre-";
-    String filter = "tipoHito.descripcion~%00%";
+    String sort = "tipoHito.nombre,desc";
+    String filter = "tipoHito.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -511,8 +511,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre-";
-    String filter = "tipoHito.descripcion~%00%";
+    String sort = "tipoHito.nombre,desc";
+    String filter = "tipoHito.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -549,8 +549,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre-";
-    String filter = "tipoHito.descripcion~%00%";
+    String sort = "tipoHito.nombre,desc";
+    String filter = "tipoHito.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -587,8 +587,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre-";
-    String filter = "tipoHito.descripcion~%00%";
+    String sort = "tipoHito.nombre,desc";
+    String filter = "tipoHito.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -630,8 +630,8 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "unidadGestionRef-";
-    String filter = "unidadGestionRef~%00%";
+    String sort = "unidadGestionRef,desc";
+    String filter = "unidadGestionRef=ke=00";
 
     Long idModeloEjecucion = 1L;
 

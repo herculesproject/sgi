@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -69,7 +66,7 @@ public interface SolicitudProyectoSocioService {
    * @param paging      parámetros de paginación.
    * @return lista paginada.
    */
-  Page<SolicitudProyectoSocio> findAllBySolicitud(Long idSolicitud, List<QueryCriteria> query, Pageable paging);
+  Page<SolicitudProyectoSocio> findAllBySolicitud(Long idSolicitud, String query, Pageable paging);
 
   /**
    * Indica si {@link SolicitudProyectoSocio} tiene

@@ -118,7 +118,7 @@ public class ProyectoEquipoIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "fechaInicio+";
+    String sort = "fechaInicio,asc";
 
     URI uriFindAllProyectoEquipo = UriComponentsBuilder
         .fromUriString("/proyectos" + PATH_PARAMETER_ID + CONTROLLER_BASE_PATH).queryParam("s", sort)

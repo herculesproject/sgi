@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SocioPeriodoJustificacionDocumentoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -212,8 +211,9 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(socioPeriodoJustificacionDocumentoService.findAllByProyectoSocioPeriodoJustificacion(
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(socioPeriodoJustificacionDocumentoService.findAllByProyectoSocioPeriodoJustificacion(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -268,8 +268,9 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito.given(socioPeriodoJustificacionDocumentoService.findAllByProyectoSocioPeriodoJustificacion(
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(socioPeriodoJustificacionDocumentoService.findAllByProyectoSocioPeriodoJustificacion(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<ProyectoSocioPeriodoJustificacion> pageResponse = new PageImpl<>(proyectoSociosPeriodoJustificaciones,

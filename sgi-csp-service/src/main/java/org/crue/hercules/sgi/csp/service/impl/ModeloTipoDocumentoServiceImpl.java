@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
@@ -15,8 +14,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloTipoDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -178,19 +176,14 @@ public class ModeloTipoDocumentoServiceImpl implements ModeloTipoDocumentoServic
    *         {@link ModeloEjecucion} paginadas.
    */
   @Override
-  public Page<ModeloTipoDocumento> findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ModeloTipoDocumento> specByQuery = new QuerySpecification<ModeloTipoDocumento>(query);
-    Specification<ModeloTipoDocumento> specActivos = ModeloTipoDocumentoSpecifications.activos();
-    Specification<ModeloTipoDocumento> specByModeloEjecucion = ModeloTipoDocumentoSpecifications
-        .byModeloEjecucionId(idModeloEjecucion);
-
-    Specification<ModeloTipoDocumento> specs = Specification.where(specActivos).and(specByModeloEjecucion)
-        .and(specByQuery);
+  public Page<ModeloTipoDocumento> findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) {
+    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) - start");
+    Specification<ModeloTipoDocumento> specs = ModeloTipoDocumentoSpecifications.activos()
+        .and(ModeloTipoDocumentoSpecifications.byModeloEjecucionId(idModeloEjecucion))
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ModeloTipoDocumento> returnValue = modeloTipoDocumentoRepository.findAll(specs, pageable);
-    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByModeloEjecucion(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 

@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -59,7 +56,7 @@ public interface AreaTematicaService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
-  Page<AreaTematica> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<AreaTematica> findAll(String query, Pageable pageable);
 
   /**
    * Obtiene los grupos activos (los {@link AreaTematica} con padre null).
@@ -68,7 +65,7 @@ public interface AreaTematicaService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
-  Page<AreaTematica> findAllGrupo(List<QueryCriteria> query, Pageable pageable);
+  Page<AreaTematica> findAllGrupo(String query, Pageable pageable);
 
   /**
    * Obtiene los grupos (los {@link AreaTematica} con padre null).
@@ -77,7 +74,7 @@ public interface AreaTematicaService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
-  Page<AreaTematica> findAllTodosGrupo(List<QueryCriteria> query, Pageable pageable);
+  Page<AreaTematica> findAllTodosGrupo(String query, Pageable pageable);
 
   /**
    * Obtiene los {@link AreaTematica} hijos directos del {@link AreaTematica} con
@@ -88,6 +85,6 @@ public interface AreaTematicaService {
    * @param pageable       la información de la paginación.
    * @return la lista de entidades {@link AreaTematica} paginadas.
    */
-  Page<AreaTematica> findAllHijosAreaTematica(Long areaTematicaId, List<QueryCriteria> query, Pageable pageable);
+  Page<AreaTematica> findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable);
 
 }

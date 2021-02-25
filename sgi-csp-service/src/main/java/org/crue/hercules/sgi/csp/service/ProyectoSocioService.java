@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -66,7 +63,7 @@ public interface ProyectoSocioService {
    * @return el listado de entidades {@link ProyectoSocio} del {@link Proyecto}
    *         paginadas y filtradas.
    */
-  Page<ProyectoSocio> findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable paging);
+  Page<ProyectoSocio> findAllByProyecto(Long proyectoId, String query, Pageable paging);
 
   /**
    * Comprueba si existe algun {@link ProyectoSocio} que tenga un rol con el flag

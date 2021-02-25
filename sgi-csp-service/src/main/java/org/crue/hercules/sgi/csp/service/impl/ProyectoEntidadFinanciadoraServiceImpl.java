@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
@@ -15,8 +13,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEntidadFinanciadoraSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -158,18 +155,15 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
    * @return la lista de entidades {@link ProyectoEntidadFinanciadora} del
    *         {@link Proyecto} paginadas.
    */
-  public Page<ProyectoEntidadFinanciadora> findAllByProyecto(Long idProyecto, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable) - start");
+  public Page<ProyectoEntidadFinanciadora> findAllByProyecto(Long idProyecto, String query, Pageable pageable) {
+    log.debug("findAllByProyecto(Long idProyecto, String query, Pageable pageable) - start");
     Assert.notNull(idProyecto, "idProyecto must not be null");
-    Assert.notNull(query, "query must not be null");
 
-    Specification<ProyectoEntidadFinanciadora> specs = Specification
-        .where(new QuerySpecification<ProyectoEntidadFinanciadora>(query))
-        .and(ProyectoEntidadFinanciadoraSpecifications.byProyectoId(idProyecto));
+    Specification<ProyectoEntidadFinanciadora> specs = ProyectoEntidadFinanciadoraSpecifications
+        .byProyectoId(idProyecto).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoEntidadFinanciadora> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyecto(Long idProyecto, String query, Pageable pageable) - end");
     return returnValue;
   }
 

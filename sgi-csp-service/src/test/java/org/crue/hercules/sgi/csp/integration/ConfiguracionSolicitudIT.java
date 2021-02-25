@@ -166,8 +166,8 @@ public class ConfiguracionSolicitudIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%-00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
 
     Long convocatoriaId = 2L;
 

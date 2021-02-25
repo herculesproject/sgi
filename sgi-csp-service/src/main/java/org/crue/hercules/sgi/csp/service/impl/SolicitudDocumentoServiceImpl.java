@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
@@ -8,15 +7,13 @@ import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -162,15 +159,14 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
    *         {@link Solicitud} paginadas.
    */
   @Override
-  public Page<SolicitudDocumento> findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
+  public Page<SolicitudDocumento> findAllBySolicitud(Long solicitudId, String query, Pageable paging) {
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - start");
 
-    Specification<SolicitudDocumento> specByQuery = new QuerySpecification<SolicitudDocumento>(query);
-    Specification<SolicitudDocumento> specBySolicitud = SolicitudDocumentoSpecifications.bySolicitudId(solicitudId);
-    Specification<SolicitudDocumento> specs = Specification.where(specByQuery).and(specBySolicitud);
+    Specification<SolicitudDocumento> specs = SolicitudDocumentoSpecifications.bySolicitudId(solicitudId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudDocumento> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllBySolicitud(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - end");
     return returnValue;
   }
 

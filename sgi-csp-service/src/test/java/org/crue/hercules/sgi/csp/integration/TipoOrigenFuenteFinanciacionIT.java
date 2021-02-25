@@ -47,8 +47,8 @@ public class TipoOrigenFuenteFinanciacionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre-";
-    String filter = "nombre~%00%";
+    String sort = "nombre,desc";
+    String filter = "nombre=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ORIGEN_FUENTE_FINANCIACION_CONTROLLER_BASE_PATH)
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();

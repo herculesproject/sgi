@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -67,6 +64,6 @@ public interface ProyectoPaqueteTrabajoService {
    * @return la lista de entidades {@link ProyectoPaqueteTrabajo} de la
    *         {@link Proyecto} paginadas.
    */
-  Page<ProyectoPaqueteTrabajo> findAllByProyecto(Long proyectoId, List<QueryCriteria> query, Pageable pageable);
+  Page<ProyectoPaqueteTrabajo> findAllByProyecto(Long proyectoId, String query, Pageable pageable);
 
 }

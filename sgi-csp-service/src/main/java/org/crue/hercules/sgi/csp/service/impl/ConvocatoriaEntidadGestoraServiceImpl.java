@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadGestoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -10,8 +8,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadGestoraSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -132,17 +129,13 @@ public class ConvocatoriaEntidadGestoraServiceImpl implements ConvocatoriaEntida
    * @return la lista de entidades {@link ConvocatoriaEntidadGestora} de la
    *         {@link Convocatoria} paginadas.
    */
-  public Page<ConvocatoriaEntidadGestora> findAllByConvocatoria(Long convocatoriaId, List<QueryCriteria> query,
-      Pageable pageable) {
-    log.debug("findAllByConvocatoria(Long convocatoriaId, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ConvocatoriaEntidadGestora> specByQuery = new QuerySpecification<ConvocatoriaEntidadGestora>(query);
-    Specification<ConvocatoriaEntidadGestora> specByConvocatoria = ConvocatoriaEntidadGestoraSpecifications
-        .byConvocatoriaId(convocatoriaId);
-
-    Specification<ConvocatoriaEntidadGestora> specs = Specification.where(specByConvocatoria).and(specByQuery);
+  public Page<ConvocatoriaEntidadGestora> findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) {
+    log.debug("findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) - start");
+    Specification<ConvocatoriaEntidadGestora> specs = ConvocatoriaEntidadGestoraSpecifications
+        .byConvocatoriaId(convocatoriaId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ConvocatoriaEntidadGestora> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByConvocatoria(Long convocatoriaId, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) - end");
     return returnValue;
   }
 

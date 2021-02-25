@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoCodigoEcNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
@@ -243,7 +243,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   public Page<ConvocatoriaConceptoGastoCodigoEc> findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId,
       Pageable pageable) {
     log.debug(
-        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable)) - start");
+        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, Pageable pageable)) - start");
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConvocatoria = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byConvocatoria(convocatoriaId);
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConceptoGastoActivo = ConvocatoriaConceptoGastoCodigoEcSpecifications
@@ -254,8 +254,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     Specification<ConvocatoriaConceptoGastoCodigoEc> specs = Specification.where(specByConvocatoria)
         .and(specByConceptoGastoActivo).and(specByConvocatoriaConceptoGastoPermitido);
     Page<ConvocatoriaConceptoGastoCodigoEc> returnValue = repository.findAll(specs, pageable);
-    log.debug(
-        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -272,7 +271,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   public Page<ConvocatoriaConceptoGastoCodigoEc> findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId,
       Pageable pageable) {
     log.debug(
-        "findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable)) - start");
+        "findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Boolean permitido, Pageable pageable)) - start");
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConvocatoria = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byConvocatoria(convocatoriaId);
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConceptoGastoActivo = ConvocatoriaConceptoGastoCodigoEcSpecifications
@@ -284,7 +283,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
         .and(specByConceptoGastoActivo).and(specByConvocatoriaConceptoGastoPermitido);
     Page<ConvocatoriaConceptoGastoCodigoEc> returnValue = repository.findAll(specs, pageable);
     log.debug(
-        "findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable) - end");
+        "findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Boolean permitido, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -293,7 +292,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
    * {@link Convocatoria}.
    *
    * @param convocatoriaConceptoGastoId el id de la {@link Convocatoria}.
-   * @param pageable       la información de la paginación.
+   * @param pageable                    la información de la paginación.
    * @return la lista de entidades {@link ConvocatoriaConceptoGastoCodigoEc} de la
    *         {@link Convocatoria} paginadas.
    */
@@ -301,7 +300,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   public Page<ConvocatoriaConceptoGastoCodigoEc> findAllByConvocatoriaConceptoGasto(Long convocatoriaConceptoGastoId,
       Pageable pageable) {
     log.debug(
-        "findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable)) - start");
+        "findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Boolean permitido, Pageable pageable)) - start");
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConvocatoriaConceptoGasto = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byConvocatoriaConceptoGasto(convocatoriaConceptoGastoId);
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConceptoGastoActivo = ConvocatoriaConceptoGastoCodigoEcSpecifications

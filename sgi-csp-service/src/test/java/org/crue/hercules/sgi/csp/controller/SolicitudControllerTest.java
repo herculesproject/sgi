@@ -39,7 +39,6 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -351,10 +350,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -392,10 +389,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data Solicitud
-    BDDMockito
-        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer(new Answer<Page<Solicitud>>() {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Solicitud>>() {
           @Override
           public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
             Page<Solicitud> page = new PageImpl<>(Collections.emptyList());
@@ -422,10 +417,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -464,10 +457,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data Solicitud
-    BDDMockito
-        .given(service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
-        .willAnswer(new Answer<Page<Solicitud>>() {
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
+        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Solicitud>>() {
           @Override
           public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
             Page<Solicitud> page = new PageImpl<>(Collections.emptyList());
@@ -507,7 +498,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudModalidadService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -560,7 +551,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudModalidadService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<SolicitudModalidad> pageResponse = new PageImpl<>(solicitudModalidades, pageable, 0);
@@ -693,7 +684,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudDocumentoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -747,7 +738,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudDocumentoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<SolicitudDocumento> pageResponse = new PageImpl<>(solicitudDocumentos, pageable, 0);
@@ -785,10 +776,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(solicitudHitoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(solicitudHitoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -837,10 +826,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(solicitudHitoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(solicitudHitoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<SolicitudHito> pageResponse = new PageImpl<>(solicitudHitos, pageable, 0);
           return pageResponse;
@@ -953,7 +940,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudProyectoSocioService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1017,7 +1004,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudProyectoEntidadFinanciadoraAjenaService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1078,7 +1065,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudProyectoSocioService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<SolicitudProyectoSocio> pageResponse = new PageImpl<>(solicitudProyectoSocio, pageable, 0);
@@ -1118,7 +1105,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudProyectoPresupuestoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
@@ -1174,7 +1161,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(solicitudProyectoPresupuestoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<SolicitudProyectoPresupuesto> pageResponse = new PageImpl<>(solicitudProyectoPresupuestos, pageable, 0);

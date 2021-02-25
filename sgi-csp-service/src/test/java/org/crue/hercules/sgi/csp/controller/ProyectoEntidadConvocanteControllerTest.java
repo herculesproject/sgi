@@ -7,7 +7,6 @@ import org.crue.hercules.sgi.csp.dto.ProyectoEntidadConvocanteDto;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -41,9 +40,8 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
     Long proyectoId = 1L;
     List<ProyectoEntidadConvocante> proyectoEntidadConvocantes = new ArrayList<>();
 
-    BDDMockito.given(service.findAllByProyecto(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoEntidadConvocante>>() {
+    BDDMockito.given(service.findAllByProyecto(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ProyectoEntidadConvocante>>() {
           @Override
           public Page<ProyectoEntidadConvocante> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
@@ -74,9 +72,8 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
       proyectoEntidadConvocantes.add(proyectoEntidadConvocante);
     }
 
-    BDDMockito.given(service.findAllByProyecto(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ProyectoEntidadConvocante>>() {
+    BDDMockito.given(service.findAllByProyecto(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ProyectoEntidadConvocante>>() {
           @Override
           public Page<ProyectoEntidadConvocante> answer(InvocationOnMock invocation) throws Throwable {
             return new PageImpl<>(proyectoEntidadConvocantes);

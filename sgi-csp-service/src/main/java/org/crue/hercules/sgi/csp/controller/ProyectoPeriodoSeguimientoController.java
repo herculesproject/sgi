@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
@@ -10,7 +8,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -149,26 +146,24 @@ public class ProyectoPeriodoSeguimientoController {
    * {@link ProyectoPeriodoSeguimiento}.
    * 
    * @param id     Identificador de {@link ProyectoPeriodoSeguimiento}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoperiodoseguimientodocumentos")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoPeriodoSeguimientoDocumento>> findAllProyectoPeriodoSeguimientoDocumentos(
-      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug(
-        "findAllProyectoPeriodoSeguimientoDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllProyectoPeriodoSeguimientoDocumentos(Long id, String query, Pageable paging) - start");
     Page<ProyectoPeriodoSeguimientoDocumento> page = proyectoPeriodoSeguimientoDocumentoService
         .findAllByProyectoPeriodoSeguimiento(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug(
-          "findAllProyectoPeriodoSeguimientoDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllProyectoPeriodoSeguimientoDocumentos(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllProyectoPeriodoSeguimientoDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllProyectoPeriodoSeguimientoDocumentos(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.TipoHito;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -35,7 +32,7 @@ public interface TipoHitoService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoHito} paginadas y/o filtradas
    */
-  Page<TipoHito> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoHito> findAll(String query, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link TipoHito} activas paginadas y/o filtradas
@@ -44,7 +41,7 @@ public interface TipoHitoService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoHito} paginadas y/o filtradas
    */
-  Page<TipoHito> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoHito> findAllTodos(String query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoHito} por id.

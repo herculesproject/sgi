@@ -261,12 +261,10 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
    */
   @Override
   public Page<ConvocatoriaConceptoGasto> findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Pageable pageable) {
-    log.debug(
-        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable)) - start");
+    log.debug("findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Pageable pageable)) - start");
     Page<ConvocatoriaConceptoGasto> returnValue = repository
         .findAllByConvocatoriaIdAndConceptoGastoActivoTrueAndPermitidoTrue(convocatoriaId, pageable);
-    log.debug(
-        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -282,12 +280,10 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
   @Override
   public Page<ConvocatoriaConceptoGasto> findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId,
       Pageable pageable) {
-    log.debug(
-        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable)) - start");
+    log.debug("findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Pageable pageable)) - start");
     Page<ConvocatoriaConceptoGasto> returnValue = repository
         .findAllByConvocatoriaIdAndConceptoGastoActivoTrueAndPermitidoFalse(convocatoriaId, pageable);
-    log.debug(
-        "findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Boolean permitido, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByConvocatoriaAndPermitidoTrue(Long convocatoriaId, Pageable pageable) - end");
     return returnValue;
   }
 

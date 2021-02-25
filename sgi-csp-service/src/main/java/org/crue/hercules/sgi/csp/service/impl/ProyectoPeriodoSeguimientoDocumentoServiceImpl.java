@@ -9,15 +9,13 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoSeguimientoDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -179,20 +177,14 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
    */
   @Override
   public Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(
-      Long proyectoPeriodoSeguimientoId, List<QueryCriteria> query, Pageable paging) {
-    log.debug(
-        "findAllByProyectoPeriodoSeguimiento(Long solicitudId, List<QueryCriteria> query, Pageable paging) - start");
+      Long proyectoPeriodoSeguimientoId, String query, Pageable paging) {
+    log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - start");
 
-    Specification<ProyectoPeriodoSeguimientoDocumento> specByQuery = new QuerySpecification<ProyectoPeriodoSeguimientoDocumento>(
-        query);
-    Specification<ProyectoPeriodoSeguimientoDocumento> specByProyectoPeriodoSeguimiento = ProyectoPeriodoSeguimientoDocumentoSpecifications
-        .byProyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoId);
-    Specification<ProyectoPeriodoSeguimientoDocumento> specs = Specification.where(specByQuery)
-        .and(specByProyectoPeriodoSeguimiento);
+    Specification<ProyectoPeriodoSeguimientoDocumento> specs = ProyectoPeriodoSeguimientoDocumentoSpecifications
+        .byProyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoPeriodoSeguimientoDocumento> returnValue = repository.findAll(specs, paging);
-    log.debug(
-        "findAllByProyectoPeriodoSeguimiento(Long solicitudId, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - end");
     return returnValue;
   }
 

@@ -449,8 +449,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "codigo-";
-    String filter = "titulo~%00%";
+    String sort = "codigo,desc";
+    String filter = "titulo=ke=00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -488,8 +488,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "codigo-";
-    String filter = "titulo~%00%";
+    String sort = "codigo,desc";
+    String filter = "titulo=ke=00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
@@ -525,8 +525,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "codigo-";
-    String filter = "titulo~%00%";
+    String sort = "codigo,desc";
+    String filter = "titulo=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -551,8 +551,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "codigo-";
-    String filter = "titulo~%00%";
+    String sort = "codigo,desc";
+    String filter = "titulo=ke=00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_RESTRINGIDOS)
@@ -590,8 +590,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "codigo-";
-    String filter = "titulo~%00%";
+    String sort = "codigo,desc";
+    String filter = "titulo=ke=00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder
@@ -628,8 +628,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "codigo-";
-    String filter = "titulo~%00%";
+    String sort = "codigo,desc";
+    String filter = "titulo=ke=00";
 
     URI uri = UriComponentsBuilder
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS + PATH_PARAMETER_RESTRINGIDOS).queryParam("s", sort)
@@ -658,8 +658,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "entidadRef~%-0%";
+    String sort = "id,desc";
+    String filter = "entidadRef=ke=-0";
 
     Long convocatoriaId = 1L;
 
@@ -701,8 +701,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "entidadRef~%-0%";
+    String sort = "id,desc";
+    String filter = "entidadRef=ke=-0";
 
     Long convocatoriaId = 1L;
 
@@ -744,8 +744,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "entidadRef~%-0%";
+    String sort = "id,desc";
+    String filter = "entidadRef=ke=-0";
 
     Long convocatoriaId = 1L;
 
@@ -787,8 +787,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CATEM-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "convocatoria.id:1,observaciones~%-0%";
+    String sort = "id,desc";
+    String filter = "convocatoria.id==1;observaciones=ke=-0";
 
     Long convocatoriaId = 1L;
 
@@ -830,8 +830,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%-00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -873,8 +873,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "descripcion~%-00%";
+    String sort = "id,desc";
+    String filter = "descripcion=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -914,8 +914,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%-00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -950,8 +950,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CHIT-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "comentario~%-00%";
+    String sort = "id,desc";
+    String filter = "comentario=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -994,8 +994,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "observaciones~%-00%";
+    String sort = "id,desc";
+    String filter = "observaciones=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -1037,8 +1037,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CPSCI-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "numPeriodo-";
-    String filter = "observaciones~%-00%";
+    String sort = "numPeriodo,desc";
+    String filter = "observaciones=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -1083,8 +1083,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "obs~%-00%";
+    String sort = "id,desc";
+    String filter = "obs=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -1121,8 +1121,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "id-";
-    String filter = "obs~%-00%";
+    String sort = "id,desc";
+    String filter = "obs=ke=-00";
 
     Long convocatoriaId = 1L;
 

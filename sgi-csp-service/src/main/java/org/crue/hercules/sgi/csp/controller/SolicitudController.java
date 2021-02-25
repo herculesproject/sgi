@@ -9,8 +9,8 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
@@ -29,7 +29,6 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -245,16 +244,16 @@ public class SolicitudController {
    * Devuelve una lista paginada y filtrada {@link Solicitud} activas que se
    * encuentren dentro de la unidad de gestión del usuario logueado
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Solicitud} activas paginadas y
    *         filtradas.
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
-  ResponseEntity<Page<Solicitud>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Solicitud>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAll(String query, Pageable paging) - start");
 
     List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
       if (authority.getAuthority().indexOf("_") > 0) {
@@ -266,10 +265,10 @@ public class SolicitudController {
     Page<Solicitud> page = service.findAllRestringidos(query, paging, unidadGestionRefs);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAll(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -277,16 +276,16 @@ public class SolicitudController {
    * Devuelve una lista paginada y filtrada {@link Solicitud} que se encuentren
    * dentro de la unidad de gestión del usuario logueado
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging {@link Pageable}.
    * @return el listado de entidades {@link Solicitud} activas paginadas y
    *         filtradas.
    */
   @GetMapping("/todos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
-  ResponseEntity<Page<Solicitud>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<Solicitud>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllTodos(String query, Pageable paging) - start");
 
     List<String> unidadGestionRefs = authentication.getAuthorities().stream().map(authority -> {
       if (authority.getAuthority().indexOf("_") > 0) {
@@ -298,10 +297,10 @@ public class SolicitudController {
     Page<Solicitud> page = service.findAllTodosRestringidos(query, paging, unidadGestionRefs);
 
     if (page.isEmpty()) {
-      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllTodos(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -310,23 +309,22 @@ public class SolicitudController {
    * {@link Solicitud}.
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudmodalidades")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudModalidad>> findAllSolicitudModalidad(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudModalidad(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudModalidad(Long id, String query, Pageable paging) - start");
     Page<SolicitudModalidad> page = solicitudModalidadService.findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudModalidad(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudModalidad(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudModalidad(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudModalidad(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -335,7 +333,7 @@ public class SolicitudController {
    * {@link Solicitud}.
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/estadosolicitudes")
@@ -359,23 +357,22 @@ public class SolicitudController {
    * Devuelve una lista paginada de {@link SolicitudHito}
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudhitos")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudHito>> findAllSolicitudHito(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudHito(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudHito(Long id, String query, Pageable paging) - start");
     Page<SolicitudHito> page = solicitudHitoService.findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudHito(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudModalidad(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudModalidad(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -384,23 +381,22 @@ public class SolicitudController {
    * {@link Solicitud}.
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicituddocumentos")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudDocumento>> findAllSolicitudDocumentos(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudDocumentos(Long id, String query, Pageable paging) - start");
     Page<SolicitudDocumento> page = solicitudDocumentoService.findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudDocumentos(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudDocumentos(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -445,23 +441,22 @@ public class SolicitudController {
    * Devuelve una lista paginada de {@link SolicitudProyectoSocio}
    * 
    * @param id     Identificador de {@link SolicitudProyectoSocio}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectosocio")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudProyectoSocio>> findAllSolicitudProyectoSocio(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoSocio(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoSocio> page = solicitudProyectoSocioService.findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudProyectoSocio(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudProyectoSocio(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudProyectoSocio(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -469,23 +464,22 @@ public class SolicitudController {
    * Devuelve una lista paginada de {@link SolicitudProyectoEquipo}
    * 
    * @param id     Identificador de {@link SolicitudProyectoDatos}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectoequipo")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudProyectoEquipo>> findAllSolicitudProyectoEquipo(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoEquipo(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoEquipo> page = solicitudProyectoEquipoService.findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudProyectoEquipo(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudProyectoEquipo(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudProyectoEquipo(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -494,27 +488,24 @@ public class SolicitudController {
    * {@link SolicitudProyectoEntidadFinanciadoraAjena}
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectoentidadfinanciadoraajenas")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudProyectoEntidadFinanciadoraAjena>> findAllSolicitudProyectoEntidadFinanciadoraAjena(
-      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug(
-        "findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    log.debug("findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoEntidadFinanciadoraAjena> page = solicitudProyectoEntidadFinanciadoraAjenaService
         .findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug(
-          "findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug(
-        "findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudProyectoEntidadFinanciadoraAjena(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -538,23 +529,22 @@ public class SolicitudController {
    * Devuelve una lista paginada de {@link SolicitudProyectoPresupuesto}
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuesto(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudProyectoPresupuesto(Long id, List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoPresupuesto(Long id, String query, Pageable paging) - start");
     Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitud(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudProyectoPresupuesto(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllSolicitudProyectoPresupuesto(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudProyectoPresupuesto(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllSolicitudProyectoPresupuesto(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -562,28 +552,27 @@ public class SolicitudController {
    * Devuelve una lista paginada de {@link SolicitudProyectoPresupuesto}
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos/entidadconvocatoria/{entidadRef}")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuestoEntidadConvocatoria(
-      @PathVariable Long id, @PathVariable String entidadRef,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @PathVariable String entidadRef, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug(
-        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - start");
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - start");
     Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitudAndEntidadRef(id,
         entidadRef, false, query, paging);
 
     if (page.isEmpty()) {
       log.debug(
-          "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+          "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     log.debug(
-        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -591,28 +580,27 @@ public class SolicitudController {
    * Devuelve una lista paginada de {@link SolicitudProyectoPresupuesto}
    * 
    * @param id     Identificador de {@link Solicitud}.
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos/entidadajena/{entidadRef}")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuestoEntidadAjena(
-      @PathVariable Long id, @PathVariable String entidadRef,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @PathVariable Long id, @PathVariable String entidadRef, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug(
-        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - start");
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - start");
     Page<SolicitudProyectoPresupuesto> page = solicitudProyectoPresupuestoService.findAllBySolicitudAndEntidadRef(id,
         entidadRef, true, query, paging);
 
     if (page.isEmpty()) {
       log.debug(
-          "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+          "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     log.debug(
-        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, List<QueryCriteria> query, Pageable paging) - end");
+        "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

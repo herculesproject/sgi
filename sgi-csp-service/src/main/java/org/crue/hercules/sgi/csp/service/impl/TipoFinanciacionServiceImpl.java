@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFinanciacionSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -94,16 +91,14 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
    *         filtradas
    */
   @Override
-  public Page<TipoFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<TipoFinanciacion> specByQuery = new QuerySpecification<TipoFinanciacion>(query);
-    Specification<TipoFinanciacion> specActivos = TipoFinanciacionSpecifications.activos();
-
-    Specification<TipoFinanciacion> specs = Specification.where(specActivos).and(specByQuery);
+  public Page<TipoFinanciacion> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<TipoFinanciacion> specs = TipoFinanciacionSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<TipoFinanciacion> returnValue = tipoFinanciacionRepository.findAll(specs, pageable);
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -116,13 +111,13 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
    *         filtradas
    */
   @Override
-  public Page<TipoFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<TipoFinanciacion> spec = new QuerySpecification<TipoFinanciacion>(query);
+  public Page<TipoFinanciacion> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
+    Specification<TipoFinanciacion> specs = SgiRSQLJPASupport.toSpecification(query);
 
-    Page<TipoFinanciacion> returnValue = tipoFinanciacionRepository.findAll(spec, pageable);
+    Page<TipoFinanciacion> returnValue = tipoFinanciacionRepository.findAll(specs, pageable);
 
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
   }
 

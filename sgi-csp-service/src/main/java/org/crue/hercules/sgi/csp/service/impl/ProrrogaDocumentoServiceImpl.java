@@ -15,8 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProrrogaDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -164,16 +163,13 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
    *         filtradas.
    */
   @Override
-  public Page<ProrrogaDocumento> findAllByProyectoProrroga(Long idProrroga, List<QueryCriteria> query,
-      Pageable paging) {
-    log.debug("findAllByProyectoProrroga(Long idProrroga, List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<ProrrogaDocumento> specByQuery = new QuerySpecification<ProrrogaDocumento>(query);
-    Specification<ProrrogaDocumento> specByProrroga = ProrrogaDocumentoSpecifications.byProyectoProrrogaId(idProrroga);
-
-    Specification<ProrrogaDocumento> specs = Specification.where(specByProrroga).and(specByQuery);
+  public Page<ProrrogaDocumento> findAllByProyectoProrroga(Long idProrroga, String query, Pageable paging) {
+    log.debug("findAllByProyectoProrroga(Long idProrroga, String query, Pageable pageable) - start");
+    Specification<ProrrogaDocumento> specs = ProrrogaDocumentoSpecifications.byProyectoProrrogaId(idProrroga)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProrrogaDocumento> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllByProyectoProrroga(Long idProrroga, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyectoProrroga(Long idProrroga, String query, Pageable pageable) - end");
     return returnValue;
 
   }
@@ -193,7 +189,7 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
     Specification<ProrrogaDocumento> specs = Specification.where(specByProyecto);
 
     List<ProrrogaDocumento> returnValue = repository.findAll(specs);
-    log.debug("findAllByProyecto(Long idProyecto, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllByProyecto(Long idProyecto) - end");
     return returnValue;
   }
 

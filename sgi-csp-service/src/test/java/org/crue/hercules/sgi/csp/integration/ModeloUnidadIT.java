@@ -109,8 +109,8 @@ public class ModeloUnidadIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "unidadGestionRef-";
-    String filter = "modeloEjecucion.descripcion~%00%";
+    String sort = "unidadGestionRef,desc";
+    String filter = "modeloEjecucion.descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
@@ -143,8 +143,8 @@ public class ModeloUnidadIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "unidadGestionRef-";
-    String filter = "modeloEjecucion.descripcion~%00%";
+    String sort = "unidadGestionRef,desc";
+    String filter = "modeloEjecucion.descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

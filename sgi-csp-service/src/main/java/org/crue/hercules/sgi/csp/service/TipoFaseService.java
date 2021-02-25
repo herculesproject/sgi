@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.TipoFase;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -36,7 +33,7 @@ public interface TipoFaseService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
    */
-  Page<TipoFase> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoFase> findAll(String query, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link TipoFase} paginadas y/o filtradas. Obtener
@@ -46,7 +43,7 @@ public interface TipoFaseService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
    */
-  Page<TipoFase> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoFase> findAllTodos(String query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoFase} por id.
