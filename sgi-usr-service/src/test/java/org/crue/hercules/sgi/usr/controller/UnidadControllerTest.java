@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.usr.exceptions.UnidadNotFoundException;
 import org.crue.hercules.sgi.usr.model.Unidad;
 import org.crue.hercules.sgi.usr.service.UnidadService;
@@ -180,7 +179,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -224,7 +223,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     List<Unidad> unidades = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           Page<Unidad> pageResponse = new PageImpl<>(unidades, pageable, 0);
@@ -251,8 +250,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -297,8 +295,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     List<Unidad> unidades = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           Page<Unidad> pageResponse = new PageImpl<>(unidades, pageable, 0);
@@ -362,10 +359,8 @@ public class UnidadControllerTest extends BaseControllerTest {
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito
-        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<List<String>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<List<String>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -409,10 +404,8 @@ public class UnidadControllerTest extends BaseControllerTest {
     List<Unidad> unidades = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito
-        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<List<String>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<List<String>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           Page<Unidad> pageResponse = new PageImpl<>(unidades, pageable, 0);
           return pageResponse;

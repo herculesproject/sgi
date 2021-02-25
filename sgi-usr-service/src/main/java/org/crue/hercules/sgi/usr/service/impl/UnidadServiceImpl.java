@@ -2,8 +2,7 @@ package org.crue.hercules.sgi.usr.service.impl;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.usr.exceptions.UnidadNotFoundException;
 import org.crue.hercules.sgi.usr.model.Unidad;
 import org.crue.hercules.sgi.usr.repository.UnidadRepository;
@@ -123,15 +122,15 @@ public class UnidadServiceImpl implements UnidadService {
    * @return la lista de entidades {@link Unidad} paginadas y/o filtradas.
    */
   @Override
-  public Page<Unidad> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Unidad> specByQuery = new QuerySpecification<Unidad>(query);
+  public Page<Unidad> findAll(String query, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+    Specification<Unidad> specByQuery = SgiRSQLJPASupport.toSpecification(query);
     Specification<Unidad> specActivos = UnidadSpecifications.activos();
 
     Specification<Unidad> specs = Specification.where(specActivos).and(specByQuery);
 
     Page<Unidad> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -143,11 +142,11 @@ public class UnidadServiceImpl implements UnidadService {
    * @return la lista de entidades {@link Unidad} paginadas y/o filtradas.
    */
   @Override
-  public Page<Unidad> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Unidad> specByQuery = new QuerySpecification<Unidad>(query);
+  public Page<Unidad> findAllTodos(String query, Pageable pageable) {
+    log.debug("findAllTodos(String query, Pageable pageable) - start");
+    Specification<Unidad> specByQuery = SgiRSQLJPASupport.toSpecification(query);
     Page<Unidad> returnValue = repository.findAll(specByQuery, pageable);
-    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -162,18 +161,17 @@ public class UnidadServiceImpl implements UnidadService {
    * @return listado paginado de {@link Unidad}
    */
   @Override
-  public Page<Unidad> findAllRestringidos(List<QueryCriteria> query, List<String> acronimosUnidadGestion,
-      Pageable pageable) {
-    log.debug("findAllTodosRestringidos(List<QueryCriteria> query, Object credentials, Pageable pageable) - start");
+  public Page<Unidad> findAllRestringidos(String query, List<String> acronimosUnidadGestion, Pageable pageable) {
+    log.debug("findAllTodosRestringidos(String query, Object credentials, Pageable pageable) - start");
 
-    Specification<Unidad> specByQuery = new QuerySpecification<Unidad>(query);
+    Specification<Unidad> specByQuery = SgiRSQLJPASupport.toSpecification(query);
     Specification<Unidad> specAcronimos = UnidadSpecifications.acronimosIn(acronimosUnidadGestion);
 
     Specification<Unidad> specs = Specification.where(specByQuery).and(specAcronimos);
 
     Page<Unidad> returnValue = repository.findAll(specs, pageable);
 
-    log.debug("findAllTodosRestringidos(List<QueryCriteria> query, Object credentials, Pageable pageable) - end");
+    log.debug("findAllTodosRestringidos(String query, Object credentials, Pageable pageable) - end");
     return returnValue;
   }
 
