@@ -2,17 +2,16 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } 
 import { SgiConverter } from '@sgi/framework/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import {
-  SgiRestFilter, SgiRestFilterType, SgiRestFindOptions,
-  SgiRestListResult, SgiRestPageRequest, SgiRestSort, SgiRestSortDirection
-} from './types';
+import { SgiRestFilter } from './filter';
+import { SgiRestSort } from './sort';
+import { SgiRestFindOptions, SgiRestListResult, SgiRestPageRequest } from './types';
 
 
 /**
  * Base service to consume REST endpoints of read only entities with support for transformation
  *
  * Contains the common operations.
- * 
+ *
  * @template K type of ID
  * @template S type of rest response
  * @template T type of return element
@@ -112,23 +111,19 @@ export abstract class SgiReadOnlyMutableRestService<K extends number | string, S
     return headers;
   }
 
-  private getSearchParam(sort: SgiRestSort, filters: SgiRestFilter[]): HttpParams {
+  private getSearchParam(sort: SgiRestSort, filter: SgiRestFilter): HttpParams {
     let param = new HttpParams();
-    const filterValues: string[] = [];
-    if (filters) {
-      filters.forEach((filter) => {
-        if (filter.field && filter.value && filter.type && filter.type !== SgiRestFilterType.NONE) {
-          filterValues.push(filter.field + filter.type.toString() + filter.value);
-        }
-      });
+    if (filter) {
+      const filterString = filter.toString();
+      if (filterString.length) {
+        param = param.append('q', filter.toString());
+      }
     }
-    if (filterValues.length > 0) {
-      param = param.append('q', filterValues.join(','));
-    }
-    // Sorting only is valid if al least a field is declared
-    if (sort && sort.field) {
-      // If no declared direction, then ASC is used
-      param = param.append('s', sort.field + (sort.direction ? sort.direction.toString() : SgiRestSortDirection.ASC));
+    if (sort) {
+      const sortString = sort.toString();
+      if (sortString.length) {
+        param = param.append('s', sort.toString());
+      }
     }
 
     return param;
@@ -150,7 +145,7 @@ export abstract class SgiReadOnlyMutableRestService<K extends number | string, S
   } {
     return {
       headers: this.getRequestHeaders(options?.page),
-      params: this.getSearchParam(options?.sort, options?.filters),
+      params: this.getSearchParam(options?.sort, options?.filter),
       observe: 'response'
     };
   }

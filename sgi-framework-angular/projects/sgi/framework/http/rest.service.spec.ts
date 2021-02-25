@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { EMPTY } from 'rxjs';
+import { RSQLSgiRestFilter, SgiRestFilterOperator } from './filter';
 import { SgiRestService } from './rest.service';
-import { SgiRestFilterType, SgiRestFindOptions, SgiRestSortDirection } from './types';
+import { RSQLSgiRestSort, SgiRestSortDirection } from './sort';
+import { SgiRestFindOptions } from './types';
 
 const fakeEndpoint = 'http://localhost:8080/fake';
 
@@ -287,10 +288,7 @@ describe('SgiRestService', () => {
   it('findAll(options.sort) should GET ListResult with sort ASC parameter', () => {
     // given: find sort options
     const findOptions: SgiRestFindOptions = {
-      sort: {
-        field: 'id',
-        direction: SgiRestSortDirection.ASC
-      }
+      sort: new RSQLSgiRestSort('id', SgiRestSortDirection.ASC)
     };
 
     // when: create method called
@@ -300,7 +298,7 @@ describe('SgiRestService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}?s=id+`, 'GET with sort to API');
+    const req = httpMock.expectOne(`${fakeEndpoint}?s=id,asc`, 'GET with sort to API');
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
@@ -311,10 +309,7 @@ describe('SgiRestService', () => {
   it('findAll(options.sort) should GET ListResult with sort DESC parameter', () => {
     // given: find sort options
     const findOptions: SgiRestFindOptions = {
-      sort: {
-        field: 'id',
-        direction: SgiRestSortDirection.DESC
-      }
+      sort: new RSQLSgiRestSort('id', SgiRestSortDirection.DESC)
     };
 
     // when: findAll method called
@@ -324,7 +319,7 @@ describe('SgiRestService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}?s=id-`, 'GET with sort to API');
+    const req = httpMock.expectOne(`${fakeEndpoint}?s=id,desc`, 'GET with sort to API');
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
@@ -335,28 +330,10 @@ describe('SgiRestService', () => {
   it('findAll(options.filters) with GREATHER, EQUALS, NOT_EQUALS and LOWER should GET ListResult with filter parameter', () => {
     // given: find filters options
     const findOptions: SgiRestFindOptions = {
-      filters: [
-        {
-          field: 'id',
-          type: SgiRestFilterType.GREATHER,
-          value: '1'
-        },
-        {
-          field: 'name',
-          type: SgiRestFilterType.EQUALS,
-          value: 'George'
-        },
-        {
-          field: 'surname',
-          type: SgiRestFilterType.NOT_EQUALS,
-          value: 'Watson'
-        },
-        {
-          field: 'age',
-          type: SgiRestFilterType.LOWER,
-          value: '50'
-        }
-      ]
+      filter: new RSQLSgiRestFilter('id', SgiRestFilterOperator.GREATHER, '1')
+        .and('name', SgiRestFilterOperator.EQUALS, 'George')
+        .and('surname', SgiRestFilterOperator.NOT_EQUALS, 'Watson')
+        .and('age', SgiRestFilterOperator.LOWER, '50')
     };
 
     // when: findAll method called
@@ -366,7 +343,7 @@ describe('SgiRestService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}?q=${encodeURI('id>1,name:George,surname!:Watson,age<50')}`, 'GET with filter to API');
+    const req = httpMock.expectOne(`${fakeEndpoint}?q=${encodeURI('id=gt="1";name=="George";surname!="Watson";age=lt="50"')}`, 'GET with filter to API');
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
@@ -377,28 +354,10 @@ describe('SgiRestService', () => {
   it('findAll(options.filters) with GREATHER_OR_EQUAL, LIKE, NOT_LIKE and LOWER_OR_EQUAL should GET ListResult with filter parameter', () => {
     // given: find filters options
     const findOptions: SgiRestFindOptions = {
-      filters: [
-        {
-          field: 'id',
-          type: SgiRestFilterType.GREATHER_OR_EQUAL,
-          value: '1'
-        },
-        {
-          field: 'name',
-          type: SgiRestFilterType.LIKE,
-          value: 'George'
-        },
-        {
-          field: 'surname',
-          type: SgiRestFilterType.NOT_LIKE,
-          value: 'Watson'
-        },
-        {
-          field: 'age',
-          type: SgiRestFilterType.LOWER_OR_EQUAL,
-          value: '50'
-        }
-      ]
+      filter: new RSQLSgiRestFilter('id', SgiRestFilterOperator.GREATHER_OR_EQUAL, '1')
+        .and('name', SgiRestFilterOperator.LIKE, 'George')
+        .and('surname', SgiRestFilterOperator.NOT_LIKE, 'Watson')
+        .and('age', SgiRestFilterOperator.LOWER_OR_EQUAL, '50')
     };
 
     // when: findAll method called
@@ -408,7 +367,7 @@ describe('SgiRestService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}?q=${encodeURI('id>:1,name~George,surname!~Watson,age<:50')}`, 'GET with filter to API');
+    const req = httpMock.expectOne(`${fakeEndpoint}?q=${encodeURI('id=ge="1";name=ke="George";surname=nk="Watson";age=le="50"')}`, 'GET with filter to API');
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
@@ -423,32 +382,11 @@ describe('SgiRestService', () => {
         index: 0,
         size: 1
       },
-      sort: {
-        field: 'id',
-        direction: SgiRestSortDirection.DESC
-      },
-      filters: [
-        {
-          field: 'id',
-          type: SgiRestFilterType.GREATHER,
-          value: '1'
-        },
-        {
-          field: 'name',
-          type: SgiRestFilterType.EQUALS,
-          value: 'George'
-        },
-        {
-          field: 'surname',
-          type: SgiRestFilterType.LIKE,
-          value: 'Watson'
-        },
-        {
-          field: 'age',
-          type: SgiRestFilterType.LOWER_OR_EQUAL,
-          value: '50'
-        }
-      ]
+      sort: new RSQLSgiRestSort('id', SgiRestSortDirection.DESC),
+      filter: new RSQLSgiRestFilter('id', SgiRestFilterOperator.GREATHER, '1')
+        .and('name', SgiRestFilterOperator.EQUALS, 'George')
+        .and('surname', SgiRestFilterOperator.LIKE, 'Watson')
+        .and('age', SgiRestFilterOperator.LOWER_OR_EQUAL, '50')
     };
 
     // when: findAll method called
@@ -466,7 +404,7 @@ describe('SgiRestService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}?q=${encodeURI('id>1,name:George,surname~Watson,age<:50')}&s=id-`, 'GET pagination with filter and sort to API');
+    const req = httpMock.expectOne(`${fakeEndpoint}?q=${encodeURI('id=gt="1";name=="George";surname=ke="Watson";age=le="50"')}&s=id,desc`, 'GET pagination with filter and sort to API');
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
     // then: the right Pagination page header
