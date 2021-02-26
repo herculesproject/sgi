@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
-import org.crue.hercules.sgi.csp.enums.TipoHorasAnualesEnum;
-import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -148,7 +146,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 
@@ -172,7 +170,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 
@@ -349,7 +347,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 
@@ -377,7 +375,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 
@@ -601,7 +599,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id == null ? 1 : id);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id == null ? 1 : id));
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.BORRADOR);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 
@@ -628,7 +626,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyecto.setConfidencial(Boolean.FALSE);
     proyecto.setCosteHora(true);
     proyecto.setTimesheet(true);
-    proyecto.setTipoHorasAnuales(TipoHorasAnualesEnum.REALES);
+    proyecto.setTipoHorasAnuales(Proyecto.TipoHorasAnuales.REAL);
     proyecto.setActivo(true);
     proyecto.setEstado(estadoProyecto);
 

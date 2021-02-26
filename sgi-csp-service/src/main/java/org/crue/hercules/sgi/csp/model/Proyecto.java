@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.model;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,13 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.converter.TipoHojaFirmaConverter;
-import org.crue.hercules.sgi.csp.converter.TipoHorasAnualesConverter;
-import org.crue.hercules.sgi.csp.converter.TipoPlantillaJustificacionConverter;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
-import org.crue.hercules.sgi.csp.enums.TipoHojaFirmaEnum;
-import org.crue.hercules.sgi.csp.enums.TipoHorasAnualesEnum;
-import org.crue.hercules.sgi.csp.enums.TipoPlantillaJustificacionEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +38,16 @@ public class Proyecto extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
+  /** Tipo de horas anuales. */
+  public enum TipoHorasAnuales {
+    /** Valor fijo */
+    FIJO,
+    /** Reales (TS) */
+    REAL,
+    /** Por categoría */
+    CATEGORIA;
+  }
 
   /** Id */
   @Id
@@ -118,11 +121,6 @@ public class Proyecto extends BaseEntity {
   @JoinColumn(name = "tipo_ambito_geografico_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_AMBITOGEOGRAFICO"))
   private TipoAmbitoGeografico ambitoGeografico;
 
-  // /** Plantilla justificación */
-  @Column(name = "plantilla_justificacion", length = 10, nullable = true)
-  @Convert(converter = TipoPlantillaJustificacionConverter.class)
-  private TipoPlantillaJustificacionEnum plantillaJustificacion;
-
   /** Confidencial */
   @Column(name = "confidencial", nullable = true)
   private Boolean confidencial;
@@ -148,11 +146,6 @@ public class Proyecto extends BaseEntity {
   @Column(name = "timesheet", nullable = true)
   private Boolean timesheet;
 
-  /** Hoja firma */
-  @Column(name = "plantilla_hoja_firma", length = 50, nullable = true)
-  @Convert(converter = TipoHojaFirmaConverter.class)
-  private TipoHojaFirmaEnum plantillaHojaFirma;
-
   /** Paquetes de trabajo */
   @Column(name = "paquetes_trabajo", nullable = true)
   private Boolean paquetesTrabajo;
@@ -163,8 +156,8 @@ public class Proyecto extends BaseEntity {
 
   /** Tipo horas anuales */
   @Column(name = "tipo_horas_anuales", length = 50, nullable = true)
-  @Convert(converter = TipoHorasAnualesConverter.class)
-  private TipoHorasAnualesEnum tipoHorasAnuales;
+  @Enumerated(EnumType.STRING)
+  private TipoHorasAnuales tipoHorasAnuales;
 
   /** Contratos */
   @Column(name = "contratos", nullable = true)

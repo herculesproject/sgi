@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPeriodoPagoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
@@ -378,7 +377,7 @@ public class SolicitudProyectoPeriodoPagoServiceTest {
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+        .setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudProyectoPeriodoPago;
   }
 

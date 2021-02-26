@@ -7,13 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -331,7 +330,7 @@ public class ProyectoSocioIT extends BaseIT {
             .estado(//
                 EstadoProyecto.builder()//
                     .id(1L)//
-                    .estado(TipoEstadoProyectoEnum.BORRADOR)//
+                    .estado(EstadoProyecto.Estado.BORRADOR)//
                     .build())
             .build())//
         .empresaRef("empresa-" + suffix)//

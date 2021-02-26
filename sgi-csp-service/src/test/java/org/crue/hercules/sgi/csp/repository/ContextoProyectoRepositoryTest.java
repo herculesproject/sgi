@@ -4,10 +4,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.enums.TipoPropiedadResultadosEnum;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -91,7 +90,7 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
     contextoProyecto.setProyecto(proyecto);
     contextoProyecto.setIntereses("intereses");
     contextoProyecto.setObjetivos("objetivos");
-    contextoProyecto.setPropiedadResultados(TipoPropiedadResultadosEnum.COMPARTIDA);
+    contextoProyecto.setPropiedadResultados(ContextoProyecto.PropiedadResultados.COMPARTIDA);
     return contextoProyecto;
   }
 

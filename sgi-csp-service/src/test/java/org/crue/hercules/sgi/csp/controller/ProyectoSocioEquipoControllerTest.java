@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -179,7 +178,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
         .nombre("nombre-001")//
         .descripcion("descripcion-001")//
         .rolPrincipal(Boolean.FALSE)//
-        .equipo(TipoEquipoProyectoEnum.INVESTIGACION).activo(Boolean.TRUE)//
+        .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)//
         .build();
 
     ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()//

@@ -8,18 +8,23 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
-import org.crue.hercules.sgi.csp.enums.TipoHorasAnualesEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
+import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
@@ -35,15 +40,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacio
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
-import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
-import org.crue.hercules.sgi.csp.model.EstadoProyecto;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
-import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -487,7 +484,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     // given: Actualizar un proyecto con estado Finalizado
     Proyecto proyecto = generarMockProyecto(1L);
     proyecto.getEstado().setId(4L);
-    proyecto.getEstado().setEstado(TipoEstadoProyectoEnum.FINALIZADO);
+    proyecto.getEstado().setEstado(EstadoProyecto.Estado.FINALIZADO);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
     BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
@@ -902,7 +899,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     proyecto.setConfidencial(Boolean.FALSE);
     proyecto.setCosteHora(true);
     proyecto.setTimesheet(true);
-    proyecto.setTipoHorasAnuales(TipoHorasAnualesEnum.REALES);
+    proyecto.setTipoHorasAnuales(Proyecto.TipoHorasAnuales.REAL);
     proyecto.setActivo(true);
 
     if (id != null) {
@@ -922,7 +919,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("Estado-" + id);
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.BORRADOR);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 

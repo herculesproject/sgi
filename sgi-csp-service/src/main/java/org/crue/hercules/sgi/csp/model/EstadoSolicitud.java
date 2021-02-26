@@ -3,8 +3,9 @@ package org.crue.hercules.sgi.csp.model;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,9 +13,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.crue.hercules.sgi.csp.converter.TipoEstadoSolicitudConverter;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +34,39 @@ public class EstadoSolicitud extends BaseEntity {
    */
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Enumerado tipo estado de las solicitudes.
+   *
+   */
+  public enum Estado {
+    /** Borrador */
+    BORRADOR,
+    /** Presentada */
+    PRESENTADA,
+    /** Admitida provisional */
+    ADMITIDA_PROVISIONAL,
+    /** Excluida provisional */
+    EXCLUIDA_PROVISIONAL,
+    /** Alegada admisión */
+    ALEGADA_ADMISION,
+    /** Excluida */
+    EXCLUIDA,
+    /** Admitida definitiva */
+    ADMITIDA_DEFINITIVA,
+    /** Concedida provisional */
+    CONCECIDA_PROVISIONAL,
+    /** Denegada provisional */
+    DENEGADA_PROVISIONAL,
+    /** Alegada admisión */
+    ALEGADA_CONCESION,
+    /** Desistida */
+    DESISTIDA,
+    /** Concedida */
+    CONCECIDA,
+    /** Denegada */
+    DENEGADA;
+  }
+
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
@@ -50,9 +81,9 @@ public class EstadoSolicitud extends BaseEntity {
 
   /** Tipo estado solicitud */
   @Column(name = "estado", length = 50, nullable = false)
-  @Convert(converter = TipoEstadoSolicitudConverter.class)
+  @Enumerated(EnumType.STRING)
   @NotNull
-  private TipoEstadoSolicitudEnum estado;
+  private Estado estado;
 
   /** Fecha. */
   @Column(name = "fecha_estado", nullable = false)

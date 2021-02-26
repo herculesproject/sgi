@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -531,7 +530,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   private Solicitud generarMockSolicitud(Long id, Long convocatoriaId, String convocatoriaExterna) {
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(1L);
-    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
 
     Programa programa = new Programa();
     programa.setId(1L);
@@ -596,8 +595,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .convocatoria(convocatoria)//
         .tramitacionSGI(Boolean.TRUE)//
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(TipoFormularioSolicitudEnum.ESTANDAR)//
-        .baremacionRef("Sin baremación")//
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
         .build();
 
     return configuracionSolicitud;

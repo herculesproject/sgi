@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
@@ -626,7 +625,7 @@ public class RolProyectoServiceTest extends BaseServiceTest {
         .descripcion("descripcion-" + suffix)//
         .rolPrincipal(Boolean.FALSE)//
         .responsableEconomico(Boolean.FALSE)//
-        .equipo(TipoEquipoProyectoEnum.INVESTIGACION)//
+        .equipo(RolProyecto.Equipo.INVESTIGACION)//
         .colectivoRef("PDI")//
         .activo(Boolean.TRUE)//
         .build();

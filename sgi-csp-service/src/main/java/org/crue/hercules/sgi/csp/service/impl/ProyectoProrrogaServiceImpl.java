@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -106,7 +105,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
       proyectoProrroga.setNumProrroga(proyectoProrrogaActualizar.getNumProrroga());
       proyectoProrroga.setFechaConcesion(proyectoProrrogaActualizar.getFechaConcesion());
-      proyectoProrroga.setTipoProrroga(proyectoProrrogaActualizar.getTipoProrroga());
+      proyectoProrroga.setTipo(proyectoProrrogaActualizar.getTipo());
       proyectoProrroga.setFechaFin(proyectoProrrogaActualizar.getFechaFin());
       proyectoProrroga.setImporte(proyectoProrrogaActualizar.getImporte());
       proyectoProrroga.setObservaciones(proyectoProrrogaActualizar.getObservaciones());
@@ -255,12 +254,12 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
         "validarProyectoProrroga(ProyectoProrroga datosProyectoProrroga, ProyectoProrroga datosOriginales) - start");
 
     // Si TipoProrroga "Importe" FechaFin irá vacío
-    if (datosProyectoProrroga.getTipoProrroga().equals(TipoProrrogaEnum.IMPORTE)) {
+    if (datosProyectoProrroga.getTipo() == ProyectoProrroga.Tipo.IMPORTE) {
       datosProyectoProrroga.setFechaFin(null);
     }
 
     // Si TipoProrroga "Tiempo" Importe irá vacío
-    if (datosProyectoProrroga.getTipoProrroga().equals(TipoProrrogaEnum.TIEMPO)) {
+    if (datosProyectoProrroga.getTipo() == ProyectoProrroga.Tipo.TIEMPO) {
       datosProyectoProrroga.setImporte(null);
     }
 
@@ -326,7 +325,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     Assert.notNull(datosProyectoProrroga.getNumProrroga(),
         "Número de prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
 
-    Assert.notNull(datosProyectoProrroga.getTipoProrroga(),
+    Assert.notNull(datosProyectoProrroga.getTipo(),
         "Tipo prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
 
     Assert.notNull(datosProyectoProrroga.getFechaConcesion(),
@@ -334,14 +333,14 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
     // Será obligatorio si se ha seleccionado en el campo TipoProrroga "Tiempo" o
     // "Tiempo e importe"
-    if (!datosProyectoProrroga.getTipoProrroga().equals(TipoProrrogaEnum.IMPORTE)) {
+    if (datosProyectoProrroga.getTipo() != ProyectoProrroga.Tipo.IMPORTE) {
       Assert.isTrue(datosProyectoProrroga.getFechaFin() != null,
           "Nueva fecha fin proyecto no puede ser null para  para realizar la acción sobre ProyectoProrroga");
     }
 
     // Será obligatorio si se ha seleccionado en el campo TipoProrroga "Importe" o
     // "Tiempo e importe"
-    if (!datosProyectoProrroga.getTipoProrroga().equals(TipoProrrogaEnum.TIEMPO)) {
+    if (datosProyectoProrroga.getTipo() != ProyectoProrroga.Tipo.TIEMPO) {
       Assert.isTrue(
           datosProyectoProrroga.getImporte() != null
               && datosProyectoProrroga.getImporte().compareTo(BigDecimal.ZERO) >= 0,

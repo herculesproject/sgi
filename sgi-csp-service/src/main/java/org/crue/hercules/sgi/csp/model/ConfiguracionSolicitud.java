@@ -3,8 +3,9 @@ package org.crue.hercules.sgi.csp.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,8 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import org.crue.hercules.sgi.csp.converter.TipoFormularioSolicitudConverter;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -69,11 +69,7 @@ public class ConfiguracionSolicitud extends BaseEntity {
 
   /** Tipo Formulario Solicitud */
   @Column(name = "formulario_solicitud", length = 50, nullable = true)
-  @Convert(converter = TipoFormularioSolicitudConverter.class)
-  private TipoFormularioSolicitudEnum formularioSolicitud;
-
-  /** Baremación */
-  @Column(name = "baremacion_ref", nullable = true)
-  private String baremacionRef;
+  @Enumerated(EnumType.STRING)
+  private FormularioSolicitud formularioSolicitud;
 
 }

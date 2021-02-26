@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
@@ -474,7 +473,7 @@ public class SolicitudProyectoEquipoServiceTest {
 
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+        .setEstado(EstadoSolicitud.Estado.BORRADOR);
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setSolicitanteRef("personaRef-001");
     return solicitudProyectoEquipo;
   }

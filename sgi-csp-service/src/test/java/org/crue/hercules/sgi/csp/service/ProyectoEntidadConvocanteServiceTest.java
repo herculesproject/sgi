@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -55,7 +54,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
-            .estado(EstadoProyecto.builder().estado(TipoEstadoProyectoEnum.BORRADOR).build()).build()));
+            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoEntidadConvocante>any()))
         .willAnswer(new Answer<ProyectoEntidadConvocante>() {
@@ -107,7 +106,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
         .builder().id(proyectoEntidadConvocanteId).proyectoId(proyectoId).entidadRef("Entidad").build()));
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
-            .estado(EstadoProyecto.builder().estado(TipoEstadoProyectoEnum.BORRADOR).build()).build()));
+            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoEntidadConvocante>any()))
         .willAnswer(new Answer<ProyectoEntidadConvocante>() {
@@ -192,7 +191,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
         .builder().id(proyectoEntidadConvocanteId).proyectoId(proyectoId).entidadRef("Entidad").build()));
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
-            .estado(EstadoProyecto.builder().estado(TipoEstadoProyectoEnum.BORRADOR).build()).build()));
+            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -231,7 +230,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(proyectoEntidadConvocantes));
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
-            .estado(EstadoProyecto.builder().estado(TipoEstadoProyectoEnum.BORRADOR).build()).build()));
+            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     // when: find unlimited
     Page<ProyectoEntidadConvocante> page = service.findAllByProyecto(1L, null, Pageable.unpaged());
@@ -271,7 +270,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
         });
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
-            .estado(EstadoProyecto.builder().estado(TipoEstadoProyectoEnum.BORRADOR).build()).build()));
+            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);

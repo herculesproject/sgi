@@ -3,8 +3,8 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.EstadoSolicitudServiceImpl;
@@ -134,7 +134,7 @@ public class EstadoSolicitudServiceTest {
     estadoSolicitud.setId(id);
     estadoSolicitud.setIdSolicitud(1L);
     estadoSolicitud.setComentario("Comentario");
-    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
     estadoSolicitud.setFechaEstado(LocalDateTime.now());
 
     return estadoSolicitud;

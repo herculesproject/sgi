@@ -6,14 +6,12 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
-
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
@@ -28,7 +26,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -65,7 +62,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void create_ReturnsProyectoEntidadFinanciadora() {
     // given: Un nuevo ProyectoEntidadFinanciadora
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(null);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -120,7 +117,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     ProyectoEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(null);
     convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(-10);
 
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
 
@@ -164,7 +161,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void create_WithNoExistingFuenteFinanciacion_ThrowsFuenteFinanciacionNotFoundException() {
     // given: a ProyectoEntidadFinanciadora with non existing FuenteFinanciacion
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(null);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
 
@@ -182,7 +179,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void create_WithFuenteFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ProyectoEntidadFinanciadora with FuenteFinanciacion activo=false
     ProyectoEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(null);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
     convocatoriaEntidadFinanciadora.getFuenteFinanciacion().setActivo(false);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
@@ -201,7 +198,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void create_WithNoExistingTipoFinanciacion_ThrowsFuenteFinanciacionNotFoundException() {
     // given: a ProyectoEntidadFinanciadora with non existing TipoFinanciacion
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(null);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -221,7 +218,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     // given: a ProyectoEntidadFinanciadora with TipoFinanciacion activo=false
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(null);
     proyectoEntidadFinanciadora.getTipoFinanciacion().setActivo(false);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -245,7 +242,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadoraPorcentajeActualizado = generarMockProyectoEntidadFinanciadora(
         1L);
     proyectoEntidadFinanciadoraPorcentajeActualizado.setPorcentajeFinanciacion(1);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -289,7 +286,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadoraOld = generarMockProyectoEntidadFinanciadora(1L);
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(1L);
     proyectoEntidadFinanciadora.setPorcentajeFinanciacion(-10);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
@@ -320,7 +317,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void update_WithNoExistingFuenteFinanciacion_ThrowsFuenteFinanciacionNotFoundException() {
     // given: a ProyectoEntidadFinanciadora with non existing FuenteFinanciacion
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(1L);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoEntidadFinanciadora));
@@ -339,7 +336,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void update_WithNoExistingTipoFinanciacion_ThrowsTipoFinanciacionNotFoundException() {
     // given: a ProyectoEntidadFinanciadora with non existing TipoFinanciacion
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(1L);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoEntidadFinanciadora));
@@ -363,7 +360,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     ProyectoEntidadFinanciadora convocatoriaEntidadFinanciadoraActualizada = generarMockProyectoEntidadFinanciadora(1L);
     convocatoriaEntidadFinanciadoraActualizada.getFuenteFinanciacion().setId(2L);
     convocatoriaEntidadFinanciadoraActualizada.getFuenteFinanciacion().setActivo(false);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -387,7 +384,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadoraActualizada = generarMockProyectoEntidadFinanciadora(1L);
     proyectoEntidadFinanciadoraActualizada.getTipoFinanciacion().setId(2L);
     proyectoEntidadFinanciadoraActualizada.getTipoFinanciacion().setActivo(false);
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -410,7 +407,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   public void delete_WithExistingId_ReturnsProyectoEntidadFinanciadora() {
     // given: existing ProyectoEntidadFinanciadora
     Long id = 1L;
-    Proyecto proyecto = buildProyecto(1L, "UGI", TipoEstadoProyectoEnum.ABIERTO);
+    Proyecto proyecto = buildProyecto(1L, "UGI", EstadoProyecto.Estado.ABIERTO);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
@@ -546,7 +543,7 @@ public class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     return proyectoEntidadFinanciadora;
   }
 
-  private Proyecto buildProyecto(Long id, String unidadGestionRef, TipoEstadoProyectoEnum estado) {
+  private Proyecto buildProyecto(Long id, String unidadGestionRef, EstadoProyecto.Estado estado) {
     EstadoProyecto estadoProyecto = EstadoProyecto.builder()
     //@formatter:off
       .estado(estado)

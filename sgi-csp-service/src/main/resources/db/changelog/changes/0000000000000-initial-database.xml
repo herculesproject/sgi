@@ -259,7 +259,6 @@
             <column name="creation_date" type="TIMESTAMP"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
             <column name="last_modified_date" type="TIMESTAMP"/>
-            <column name="baremacion_ref" type="VARCHAR(255)"/>
             <column name="formulario_solicitud" type="VARCHAR(50)"/>
             <column name="importe_maximo_solicitud" type="DECIMAL(19, 2)"/>
             <column defaultValueBoolean="false" name="tramitacion_sgi" type="BOOLEAN"/>
@@ -558,7 +557,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="observaciones" type="VARCHAR(2000)"/>
-            <column name="tipo_justificacion" type="VARCHAR(10)"/>
+            <column name="tipo" type="VARCHAR(10)"/>
             <column name="convocatoria_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -912,8 +911,6 @@
             <column name="limitativo" type="BOOLEAN"/>
             <column name="observaciones" type="VARCHAR(2000)"/>
             <column name="paquetes_trabajo" type="BOOLEAN"/>
-            <column name="plantilla_hoja_firma" type="VARCHAR(50)"/>
-            <column name="plantilla_justificacion" type="VARCHAR(10)"/>
             <column name="timesheet" type="BOOLEAN"/>
             <column name="tipo_horas_anuales" type="VARCHAR(50)"/>
             <column name="titulo" type="VARCHAR(250)">
@@ -1184,7 +1181,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="observaciones" type="VARCHAR(2000)"/>
-            <column name="tipo_prorroga" type="VARCHAR(50)">
+            <column name="tipo" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="proyecto_id" type="BIGINT">

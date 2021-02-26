@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.junit.jupiter.api.Test;
@@ -65,9 +64,9 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     // otro nuevo y sin los otros 3 periodos existentes
     Long convocatoriaId = 1L;
     ConvocatoriaPeriodoJustificacion newConvocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null, 27, 30, TipoJustificacionEnum.FINAL, 1L);
+        null, 27, 30, ConvocatoriaPeriodoJustificacion.Tipo.FINAL, 1L);
     ConvocatoriaPeriodoJustificacion updatedConvocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        4L, 24, 26, TipoJustificacionEnum.PERIODICA, 1L);
+        4L, 24, 26, ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO, 1L);
 
     List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones = Arrays
         .asList(newConvocatoriaPeriodoJustificacion, updatedConvocatoriaPeriodoJustificacion);
@@ -100,8 +99,8 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(responseData.get(0).getNumPeriodo()).as("get(0).getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones()")
         .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getObservaciones());
-    Assertions.assertThat(responseData.get(0).getTipoJustificacion()).as("get(0).getTipoJustificacion()")
-        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getTipoJustificacion());
+    Assertions.assertThat(responseData.get(0).getTipo()).as("get(0).getTipo()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getTipo());
 
     Assertions.assertThat(responseData.get(1).getConvocatoria().getId()).as("get(1).getConvocatoria().getId()")
         .isEqualTo(convocatoriaId);
@@ -116,8 +115,8 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(responseData.get(1).getNumPeriodo()).as("get(1).getNumPeriodo()").isEqualTo(2);
     Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones()")
         .isEqualTo(newConvocatoriaPeriodoJustificacion.getObservaciones());
-    Assertions.assertThat(responseData.get(1).getTipoJustificacion()).as("get(1).getTipoJustificacion()")
-        .isEqualTo(newConvocatoriaPeriodoJustificacion.getTipoJustificacion());
+    Assertions.assertThat(responseData.get(1).getTipo()).as("get(1).getTipo()")
+        .isEqualTo(newConvocatoriaPeriodoJustificacion.getTipo());
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
@@ -170,8 +169,8 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-001");
-    Assertions.assertThat(convocatoriaPeriodoJustificacion.getTipoJustificacion()).as("getTipoJustificacion()")
-        .isEqualTo(TipoJustificacionEnum.PERIODICA);
+    Assertions.assertThat(convocatoriaPeriodoJustificacion.getTipo()).as("getTipo()")
+        .isEqualTo(ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO);
   }
 
   /**
@@ -185,7 +184,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
    * @return el objeto ConvocatoriaPeriodoJustificacion
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id, Integer mesInicial,
-      Integer mesFinal, TipoJustificacionEnum tipo, Long convocatoriaId) {
+      Integer mesFinal, ConvocatoriaPeriodoJustificacion.Tipo tipo, Long convocatoriaId) {
     Convocatoria convocatoria = new Convocatoria();
     convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
 
@@ -198,7 +197,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
     convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
-    convocatoriaPeriodoJustificacion.setTipoJustificacion(tipo);
+    convocatoriaPeriodoJustificacion.setTipo(tipo);
 
     return convocatoriaPeriodoJustificacion;
   }

@@ -40,4 +40,4 @@ INSERT INTO csp.modelo_tipo_fase (id, tipo_fase_id, modelo_ejecucion_id, solicit
 INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-18', '2020-11-01', 'observaciones-1');
 
 -- CONFIGURACION SOLICITUD
-INSERT INTO csp.configuracion_solicitud(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud, baremacion_ref) VALUES(1, 1, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
+INSERT INTO csp.configuracion_solicitud(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud) VALUES(1, 1, TRUE, 1, 12345, 'ESTANDAR');

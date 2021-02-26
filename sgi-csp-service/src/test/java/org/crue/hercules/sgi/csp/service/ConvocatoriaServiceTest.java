@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -2133,32 +2133,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
   }
 
-  @Test
-  public void update_RegistradaWithoutBaremacion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Registrada without Baremacion at
-    // ConfiguracionSolicitud
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
-    configuracionSolicitud.setBaremacionRef(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
-        // then: throw exception as Baremacion is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Tipo baremación no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
-  }
-
   /**
    * FINAL Test Requeridos en ConfiguracionSolicitud para las Registradas
    */
@@ -2624,28 +2598,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
   }
 
-  @Test
-  public void registrar_WithEstadoBorradorAndWithoutBaremacion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador without Baremacion at
-    // ConfiguracionSolicitud
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
-    configuracionSolicitud.setBaremacionRef(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud));
-
-    Assertions.assertThatThrownBy(
-        // when: registrar Convocatoria
-        () -> service.registrar(convocatoria.getId()))
-        // then: throw exception as Baremacion is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Tipo baremación no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
-  }
-
   /**
    * FINAL Test Requeridos en ConfiguracionSolicitud para las Registradas
    */
@@ -2988,28 +2940,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     configuracionSolicitud.setFormularioSolicitud(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(configuracionSolicitud));
-
-    // when: check registrable
-    boolean responseData = service.registrable(id);
-
-    // then: returns FALSE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isFalse();
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
-  public void registrable_WithoutBaremacionRef_ReturnsFalse() throws Exception {
-    // given: existing id without BaremacionRef
-    Long id = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
-    configuracionSolicitud.setBaremacionRef(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
@@ -3504,8 +3434,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .tramitacionSGI(Boolean.TRUE)//
         .fasePresentacionSolicitudes(convocatoriaFase)//
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(TipoFormularioSolicitudEnum.ESTANDAR)//
-        .baremacionRef("Sin baremación")//
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
         .build();
 
     return configuracionSolicitud;

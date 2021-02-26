@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.junit.jupiter.api.Test;
@@ -44,11 +43,11 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseReposito
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
         convocatoria1, 1, 1, 2, LocalDate.of(2020, 10, 10), LocalDate.of(2020, 11, 20), "observaciones-1",
-        TipoJustificacionEnum.FINAL);
+        ConvocatoriaPeriodoJustificacion.Tipo.FINAL);
     entityManager.persistAndFlush(convocatoriaPeriodoJustificacion1);
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = new ConvocatoriaPeriodoJustificacion(null,
         convocatoria1, 2, 3, 5, LocalDate.of(2020, 12, 10), LocalDate.of(2021, 11, 20), "observaciones-2",
-        TipoJustificacionEnum.PERIODICA);
+        ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO);
     entityManager.persistAndFlush(convocatoriaPeriodoJustificacion2);
 
     Long convocatoriaIdBuscado = convocatoria1.getId();
@@ -83,11 +82,11 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseReposito
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
         convocatoria1, 2, 7, 9, LocalDate.of(2020, 12, 10), LocalDate.of(2021, 11, 20), "observaciones-1",
-        TipoJustificacionEnum.PERIODICA);
+        ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO);
     entityManager.persistAndFlush(convocatoriaPeriodoJustificacion1);
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = new ConvocatoriaPeriodoJustificacion(null,
         convocatoria1, 1, 3, 5, LocalDate.of(2020, 10, 10), LocalDate.of(2020, 11, 20), "observaciones-2",
-        TipoJustificacionEnum.PERIODICA);
+        ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO);
     entityManager.persistAndFlush(convocatoriaPeriodoJustificacion2);
 
     Long convocatoriaIdBuscado = convocatoria1.getId();

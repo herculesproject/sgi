@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -166,7 +164,7 @@ public class ProyectoSocioEquipoIT extends BaseIT {
             .estado(//
                 EstadoProyecto.builder()//
                     .id(1L)//
-                    .estado(TipoEstadoProyectoEnum.BORRADOR)//
+                    .estado(EstadoProyecto.Estado.BORRADOR)//
                     .build())
             .build())//
         .empresaRef("empresa-001")//
@@ -176,8 +174,8 @@ public class ProyectoSocioEquipoIT extends BaseIT {
         .numInvestigadores(5)//
         .importeConcedido(BigDecimal.valueOf(1000))//
         .build(),
-        RolProyecto.builder().id(1L).abreviatura("001").nombre("rolProyecto1")
-            .equipo(TipoEquipoProyectoEnum.INVESTIGACION).activo(Boolean.TRUE).build(),
+        RolProyecto.builder().id(1L).abreviatura("001").nombre("rolProyecto1").equipo(RolProyecto.Equipo.INVESTIGACION)
+            .activo(Boolean.TRUE).build(),
         "001", LocalDate.of(2021, 4, 10), null);
 
     return proyectoSocioEquipo;

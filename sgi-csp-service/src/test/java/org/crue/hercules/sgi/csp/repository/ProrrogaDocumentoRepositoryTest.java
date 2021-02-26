@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
@@ -139,7 +138,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .proyecto(proyecto)//
         .numProrroga(1)//
         .fechaConcesion(fechaConcesion)//
-        .tipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE)//
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
         .fechaFin(LocalDate.of(2020, 12, 31))//
         .importe(BigDecimal.valueOf(123.45))//
         .observaciones("observaciones-proyecto-prorroga" + suffix)//

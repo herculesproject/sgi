@@ -23,12 +23,9 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Spring Data JPA repository para {@link Proyecto}.
  */
-@Slf4j
 @Component
 public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomSolicitudProyectoPresupuestoRepository {
 

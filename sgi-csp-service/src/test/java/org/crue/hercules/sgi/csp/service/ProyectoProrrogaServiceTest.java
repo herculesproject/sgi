@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -80,8 +79,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
         .isEqualTo(proyectoProrroga.getNumProrroga());
     Assertions.assertThat(proyectoProrrogaCreado.getFechaConcesion()).as("getFechaConcesion()")
         .isEqualTo(proyectoProrroga.getFechaConcesion());
-    Assertions.assertThat(proyectoProrrogaCreado.getTipoProrroga()).as("getTipoProrroga()")
-        .isEqualTo(proyectoProrroga.getTipoProrroga());
+    Assertions.assertThat(proyectoProrrogaCreado.getTipo()).as("getTipo()").isEqualTo(proyectoProrroga.getTipo());
     Assertions.assertThat(proyectoProrrogaCreado.getFechaFin()).as("getFechaFin()")
         .isEqualTo(proyectoProrroga.getFechaFin());
     Assertions.assertThat(proyectoProrrogaCreado.getImporte()).as("getImporte()")
@@ -135,7 +133,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga without TipoProrroga
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setId(null);
-    proyectoProrroga.setTipoProrroga(null);
+    proyectoProrroga.setTipo(null);
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoProrroga
@@ -165,7 +163,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga tipo Tiempo without FechaFin
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setId(null);
-    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setTipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     proyectoProrroga.setFechaFin(null);
 
     Assertions.assertThatThrownBy(
@@ -181,7 +179,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga tipo Tiempo without Importe
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setId(null);
-    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setTipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     proyectoProrroga.setImporte(null);
 
     Assertions.assertThatThrownBy(
@@ -290,8 +288,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getNumProrroga()).as("getNumProrroga()").isEqualTo(proyectoProrroga.getNumProrroga());
     Assertions.assertThat(updated.getFechaConcesion()).as("getFechaConcesion()")
         .isEqualTo(proyectoProrroga.getFechaConcesion());
-    Assertions.assertThat(updated.getTipoProrroga()).as("getTipoProrroga()")
-        .isEqualTo(proyectoProrroga.getTipoProrroga());
+    Assertions.assertThat(updated.getTipo()).as("getTipo()").isEqualTo(proyectoProrroga.getTipo());
     Assertions.assertThat(updated.getFechaFin()).as("getFechaFin()").isEqualTo(proyectoProrroga.getFechaFin());
     Assertions.assertThat(updated.getImporte()).as("getImporte()").isEqualTo(proyectoProrroga.getImporte());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
@@ -346,7 +343,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga without TipoProrroga
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setObservaciones("observaciones-modificada");
-    proyectoProrroga.setTipoProrroga(null);
+    proyectoProrroga.setTipo(null);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoProrroga
@@ -376,7 +373,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga without FechaFin
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setObservaciones("observaciones-modificada");
-    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setTipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     proyectoProrroga.setFechaFin(null);
 
     Assertions.assertThatThrownBy(
@@ -392,7 +389,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga without Importe
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setObservaciones("observaciones-modificada");
-    proyectoProrroga.setTipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE);
+    proyectoProrroga.setTipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     proyectoProrroga.setImporte(null);
 
     Assertions.assertThatThrownBy(
@@ -657,7 +654,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
             .build())//
         .numProrroga(1)//
         .fechaConcesion(LocalDate.of(2020, 01, 01))//
-        .tipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE)//
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
         .fechaFin(LocalDate.of(2020, 12, 31))//
         .importe(BigDecimal.valueOf(123.45))//
         .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//

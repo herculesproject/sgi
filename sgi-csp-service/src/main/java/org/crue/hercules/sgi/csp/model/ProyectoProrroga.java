@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,9 +18,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.crue.hercules.sgi.csp.converter.TipoProrrogaConverter;
-import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +38,16 @@ public class ProyectoProrroga extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
+  /** Tipo de prórroga. */
+  public enum Tipo {
+    /** Tiempo */
+    TIEMPO,
+    /** Importe */
+    IMPORTE,
+    /** Tiempo e importe */
+    TIEMPO_IMPORTE;
+  }
 
   /** Id */
   @Id
@@ -66,10 +74,10 @@ public class ProyectoProrroga extends BaseEntity {
   private LocalDate fechaConcesion;
 
   /** Tipo prórroga */
-  @Column(name = "tipo_prorroga", length = 50, nullable = false)
-  @Convert(converter = TipoProrrogaConverter.class)
+  @Column(name = "tipo", length = 50, nullable = false)
+  @Enumerated(EnumType.STRING)
   @NotNull
-  private TipoProrrogaEnum tipoProrroga;
+  private Tipo tipo;
 
   /** Fecha fin */
   @Column(name = "fecha_fin", nullable = true)

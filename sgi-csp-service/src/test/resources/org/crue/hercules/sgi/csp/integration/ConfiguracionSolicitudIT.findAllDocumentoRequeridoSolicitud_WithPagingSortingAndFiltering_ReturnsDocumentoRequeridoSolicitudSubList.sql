@@ -33,11 +33,11 @@ INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inici
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO csp.configuracion_solicitud 
-(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud, baremacion_ref) 
-VALUES(1, 1, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345, 'ESTANDAR');
 INSERT INTO csp.configuracion_solicitud 
-(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud, baremacion_ref) 
-VALUES(2, 2, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud) 
+VALUES(2, 2, TRUE, 1, 12345, 'ESTANDAR');
 
 -- MODELO TIPO FASE
 INSERT INTO csp.modelo_tipo_fase (id, tipo_fase_id, modelo_ejecucion_id, solicitud, convocatoria, proyecto, activo) VALUES (1, 1, 1, true, true, true, true);

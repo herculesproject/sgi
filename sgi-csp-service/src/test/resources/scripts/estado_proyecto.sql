@@ -10,7 +10,7 @@
 */
 INSERT INTO csp.estado_proyecto 
 (id, id_proyecto, estado, fecha_estado, comentario) 
-VALUES (1, 1, 'Borrador', '2020-11-17 15:00', 'comentario-estado-proyecto-001');
+VALUES (1, 1, 'BORRADOR', '2020-11-17 15:00', 'comentario-estado-proyecto-001');
 
 
 

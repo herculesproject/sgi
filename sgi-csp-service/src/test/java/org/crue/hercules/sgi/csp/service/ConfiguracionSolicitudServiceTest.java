@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -102,8 +102,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(configuracionSolicitud.getImporteMaximoSolicitud());
     Assertions.assertThat(created.getFormularioSolicitud()).as("getFormularioSolicitud()")
         .isEqualTo(configuracionSolicitud.getFormularioSolicitud());
-    Assertions.assertThat(created.getBaremacionRef()).as("getBaremacionRef()")
-        .isEqualTo(configuracionSolicitud.getBaremacionRef());
   }
 
   @Test
@@ -139,7 +137,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(created.getFasePresentacionSolicitudes()).as("getFasePresentacionSolicitudes()").isNull();
     Assertions.assertThat(created.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()").isNull();
     Assertions.assertThat(created.getFormularioSolicitud()).as("getFormularioSolicitud()").isNull();
-    Assertions.assertThat(created.getBaremacionRef()).as("getBaremacionRef()").isNull();
   }
 
   @Test
@@ -235,24 +232,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as Formulario can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
-  }
-
-  @Test
-  public void create_WithConvocatoriaRegistradaAndWithoutBaremacion_ThrowsIllegalArgumentException() {
-    // given: a ConfiguracionSolicitud with convocatoria registrada and without
-    // Baremacion
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
-    configuracionSolicitud.setBaremacionRef(null);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
-
-    Assertions.assertThatThrownBy(
-        // when: create ConfiguracionSolicitud
-        () -> service.create(configuracionSolicitud))
-        // then: throw exception as Baremacion can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Tipo baremación no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
   }
 
   @Test
@@ -354,8 +333,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(updatedConfiguracionSolicitud.getImporteMaximoSolicitud());
     Assertions.assertThat(updated.getFormularioSolicitud()).as("getFormularioSolicitud()")
         .isEqualTo(originalConfiguracionSolicitud.getFormularioSolicitud());
-    Assertions.assertThat(updated.getBaremacionRef()).as("getBaremacionRef()")
-        .isEqualTo(originalConfiguracionSolicitud.getBaremacionRef());
   }
 
   @Test
@@ -394,7 +371,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()")
         .isEqualTo(updatedConfiguracionSolicitud.getImporteMaximoSolicitud());
     Assertions.assertThat(updated.getFormularioSolicitud()).as("getFormularioSolicitud()").isNull();
-    Assertions.assertThat(updated.getBaremacionRef()).as("getBaremacionRef()").isNull();
   }
 
   @Test
@@ -489,30 +465,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as Formulario can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
-  }
-
-  @Test
-  public void update_WithConvocatoriaRegistradaAndWithoutBaremacion_ThrowsIllegalArgumentException() {
-    // given: a ConfiguracionSolicitud with convocatoria registrada and without
-    // Baremacion
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    updatedConfiguracionSolicitud.setBaremacionRef(null);
-
-    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
-        // then: throw exception as Baremacion can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Tipo baremación no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
   }
 
   @Test
@@ -707,8 +659,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(configuracionSolicitudExistente.getImporteMaximoSolicitud());
     Assertions.assertThat(found.getFormularioSolicitud()).as("getFormularioSolicitud()")
         .isEqualTo(configuracionSolicitudExistente.getFormularioSolicitud());
-    Assertions.assertThat(found.getBaremacionRef()).as("getBaremacionRef()")
-        .isEqualTo(configuracionSolicitudExistente.getBaremacionRef());
   }
 
   @Test
@@ -757,8 +707,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .tramitacionSGI(Boolean.TRUE)//
         .fasePresentacionSolicitudes(convocatoriaFase)//
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(TipoFormularioSolicitudEnum.ESTANDAR)//
-        .baremacionRef("Sin baremación")//
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
         .build();
 
     return configuracionSolicitud;

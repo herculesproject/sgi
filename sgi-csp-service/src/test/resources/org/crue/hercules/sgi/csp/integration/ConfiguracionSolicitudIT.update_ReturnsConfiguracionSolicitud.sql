@@ -31,5 +31,5 @@ INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inici
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO csp.configuracion_solicitud 
-(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud, baremacion_ref) 
-VALUES(1, 1, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345, 'ESTANDAR');

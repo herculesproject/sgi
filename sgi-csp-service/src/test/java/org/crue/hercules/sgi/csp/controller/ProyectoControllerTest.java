@@ -11,8 +11,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
-import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -1361,7 +1359,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("Estado-" + id);
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.BORRADOR);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 
@@ -1530,7 +1528,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
         .proyecto(Proyecto.builder().id(proyectoId).build())//
         .numProrroga(1)//
         .fechaConcesion(LocalDate.of(2020, 01, 01))//
-        .tipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE)//
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
         .fechaFin(LocalDate.of(2020, 12, 31))//
         .importe(BigDecimal.valueOf(123.45))//
         .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//

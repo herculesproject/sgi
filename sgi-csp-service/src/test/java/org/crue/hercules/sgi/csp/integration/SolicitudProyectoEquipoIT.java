@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -155,7 +154,7 @@ public class SolicitudProyectoEquipoIT {
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setId(solicitudProyectoDatosId);
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+        .setEstado(EstadoSolicitud.Estado.BORRADOR);
 
     return solicitudProyectoEquipo;
   }

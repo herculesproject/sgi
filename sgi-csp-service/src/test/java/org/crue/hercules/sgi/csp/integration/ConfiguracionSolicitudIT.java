@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
@@ -93,8 +93,6 @@ public class ConfiguracionSolicitudIT {
         .isEqualTo(configuracionSolicitud.getImporteMaximoSolicitud());
     Assertions.assertThat(responseData.getFormularioSolicitud()).as("getFormularioSolicitud()")
         .isEqualTo(configuracionSolicitud.getFormularioSolicitud());
-    Assertions.assertThat(responseData.getBaremacionRef()).as("getBaremacionRef()")
-        .isEqualTo(configuracionSolicitud.getBaremacionRef());
   }
 
   @Sql
@@ -128,8 +126,6 @@ public class ConfiguracionSolicitudIT {
         .isEqualTo(BigDecimal.valueOf(54321));
     Assertions.assertThat(responseData.getFormularioSolicitud()).as("getFormularioSolicitud()")
         .isEqualTo(configuracionSolicitud.getFormularioSolicitud());
-    Assertions.assertThat(responseData.getBaremacionRef()).as("getBaremacionRef()")
-        .isEqualTo(configuracionSolicitud.getBaremacionRef());
   }
 
   @Sql
@@ -153,8 +149,7 @@ public class ConfiguracionSolicitudIT {
     Assertions.assertThat(responseData.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()")
         .isEqualTo(new BigDecimal("54321.00"));
     Assertions.assertThat(responseData.getFormularioSolicitud()).as("getFormularioSolicitud()")
-        .isEqualTo(TipoFormularioSolicitudEnum.ESTANDAR);
-    Assertions.assertThat(responseData.getBaremacionRef()).as("getBaremacionRef()").isEqualTo("Sin baremación");
+        .isEqualTo(FormularioSolicitud.ESTANDAR);
 
   }
 
@@ -234,8 +229,7 @@ public class ConfiguracionSolicitudIT {
         .tramitacionSGI(Boolean.TRUE)//
         .fasePresentacionSolicitudes(convocatoriaFase)//
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(TipoFormularioSolicitudEnum.ESTANDAR)//
-        .baremacionRef("Sin baremación")//
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
         .build();
 
     return configuracionSolicitud;

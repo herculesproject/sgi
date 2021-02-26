@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -237,7 +236,7 @@ public class SolicitudDocumentoControllerTest extends BaseControllerTest {
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
 
     solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 

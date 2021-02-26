@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
@@ -48,9 +47,9 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
     // otro nuevo y sin los otros 3 periodos existentes
     Long convocatoriaId = 1L;
     ConvocatoriaPeriodoJustificacion newConvocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null, 27, 30, TipoJustificacionEnum.FINAL, 1L);
+        null, 27, 30, ConvocatoriaPeriodoJustificacion.Tipo.FINAL, 1L);
     ConvocatoriaPeriodoJustificacion updatedConvocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        4L, 24, 26, TipoJustificacionEnum.PERIODICA, 1L);
+        4L, 24, 26, ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO, 1L);
 
     List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones = Arrays
         .asList(updatedConvocatoriaPeriodoJustificacion, newConvocatoriaPeriodoJustificacion);
@@ -89,8 +88,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFinPresentacion").value("2020-11-20"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].observaciones")
             .value(convocatoriaPeriodoJustificaciones.get(0).getObservaciones()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].tipoJustificacion")
-            .value(convocatoriaPeriodoJustificaciones.get(0).getTipoJustificacion().getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].tipo")
+            .value(convocatoriaPeriodoJustificaciones.get(0).getTipo().toString()))
 
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(5))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].convocatoria.id").value(convocatoriaId))
@@ -104,8 +103,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFinPresentacion").value("2020-11-20"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].observaciones")
             .value(convocatoriaPeriodoJustificaciones.get(1).getObservaciones()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].tipoJustificacion")
-            .value(convocatoriaPeriodoJustificaciones.get(1).getTipoJustificacion().getValue()));
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].tipo")
+            .value(convocatoriaPeriodoJustificaciones.get(1).getTipo().toString()));
   }
 
   @Test
@@ -154,8 +153,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
         .andExpect(MockMvcResultMatchers.jsonPath("mesFinal").value(2))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-10-10"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-11-20"))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoJustificacion").value("periodica"));
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-1")).andExpect(
+            MockMvcResultMatchers.jsonPath("tipo").value(ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO.toString()));
   }
 
   @Test
@@ -182,7 +181,7 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
    * @return el objeto ConvocatoriaPeriodoJustificacion
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id) {
-    return generarMockConvocatoriaPeriodoJustificacion(id, 1, 2, TipoJustificacionEnum.PERIODICA, id);
+    return generarMockConvocatoriaPeriodoJustificacion(id, 1, 2, ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO, id);
   }
 
   /**
@@ -196,7 +195,7 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
    * @return el objeto ConvocatoriaPeriodoJustificacion
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id, Integer mesInicial,
-      Integer mesFinal, TipoJustificacionEnum tipo, Long convocatoriaId) {
+      Integer mesFinal, ConvocatoriaPeriodoJustificacion.Tipo tipo, Long convocatoriaId) {
     Convocatoria convocatoria = new Convocatoria();
     convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
 
@@ -209,7 +208,7 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
     convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
     convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
-    convocatoriaPeriodoJustificacion.setTipoJustificacion(tipo);
+    convocatoriaPeriodoJustificacion.setTipo(tipo);
 
     return convocatoriaPeriodoJustificacion;
   }

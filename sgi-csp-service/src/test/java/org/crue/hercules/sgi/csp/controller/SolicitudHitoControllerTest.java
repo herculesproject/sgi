@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.time.LocalDate;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -229,7 +228,7 @@ public class SolicitudHitoControllerTest extends BaseControllerTest {
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 

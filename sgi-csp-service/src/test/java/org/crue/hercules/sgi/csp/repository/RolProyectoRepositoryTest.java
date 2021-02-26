@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +109,7 @@ public class RolProyectoRepositoryTest extends BaseRepositoryTest {
         .descripcion("descripcion-" + suffix)//
         .rolPrincipal(Boolean.FALSE)//
         .responsableEconomico(Boolean.FALSE)//
-        .equipo(TipoEquipoProyectoEnum.INVESTIGACION)//
+        .equipo(RolProyecto.Equipo.INVESTIGACION)//
         .colectivoRef("PDI")//
         .activo(activo)//
         .build();

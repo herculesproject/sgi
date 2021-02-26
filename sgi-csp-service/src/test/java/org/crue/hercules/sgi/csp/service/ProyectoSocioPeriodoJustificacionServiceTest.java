@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -524,7 +523,7 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     proyectoSocio.setId(id == null ? 1 : id);
     proyectoSocio.setProyecto(new Proyecto());
     proyectoSocio.getProyecto().setEstado(new EstadoProyecto());
-    proyectoSocio.getProyecto().getEstado().setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    proyectoSocio.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
     proyectoSocio.setFechaFin(LocalDate.of(2022, 12, 23));
 
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();

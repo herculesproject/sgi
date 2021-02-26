@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -172,12 +171,12 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
       throws Exception {
     // given: a ProyectoSocio with RolSocio with coordinador false
     ProyectoSocio proyectoSocioExistente = generarMockProyectoSocio(1L);
-    proyectoSocioExistente.getProyecto().getEstado().setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    proyectoSocioExistente.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
     proyectoSocioExistente.getProyecto().setColaborativo(true);
     proyectoSocioExistente.getProyecto().setCoordinadorExterno(true);
 
     ProyectoSocio proyectoSocio = generarMockProyectoSocio(1L);
-    proyectoSocio.getProyecto().getEstado().setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    proyectoSocio.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
     proyectoSocio.getProyecto().setColaborativo(true);
     proyectoSocio.getProyecto().setCoordinadorExterno(true);
     proyectoSocio.setRolSocio(RolSocio.builder().id(2L).coordinador(false).build());
@@ -229,7 +228,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     // given: no existing id
     Long id = 1L;
     ProyectoSocio proyectoSocio = generarMockProyectoSocio(1L);
-    proyectoSocio.getProyecto().getEstado().setEstado(TipoEstadoProyectoEnum.ABIERTO);
+    proyectoSocio.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
     proyectoSocio.getProyecto().setColaborativo(true);
     proyectoSocio.getProyecto().setCoordinadorExterno(true);
 
@@ -402,7 +401,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
             .estado(//
                 EstadoProyecto.builder()//
                     .id(1L)//
-                    .estado(TipoEstadoProyectoEnum.BORRADOR)//
+                    .estado(EstadoProyecto.Estado.BORRADOR)//
                     .build())
             .build())//
         .empresaRef("empresa-" + suffix)//

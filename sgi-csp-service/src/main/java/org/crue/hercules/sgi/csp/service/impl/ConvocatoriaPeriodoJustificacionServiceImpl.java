@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -138,7 +137,7 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
 
       Assert.isTrue(
           periodoJustificacionAnterior == null || (periodoJustificacionAnterior != null
-              && periodoJustificacionAnterior.getTipoJustificacion().equals(TipoJustificacionEnum.PERIODICA)),
+              && periodoJustificacionAnterior.getTipo() == ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO),
           "El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
 
       periodoJustificacionAnterior = periodoJustificacion;

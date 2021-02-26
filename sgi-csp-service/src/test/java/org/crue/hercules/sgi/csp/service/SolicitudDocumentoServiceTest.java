@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -366,7 +365,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
 
     solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 }

@@ -5,8 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -30,7 +29,7 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
     // buscado
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
         .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(TipoFormularioSolicitudEnum.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
     SolicitudProyectoDatos solicitudProyectoDatos = entityManager
         .persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
             Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
@@ -40,7 +39,7 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
     entityManager.persistAndFlush(rolSocio);
 
     RolProyecto rolProyecto = RolProyecto.builder().abreviatura("001").nombre("Rol1").descripcion("Rol1")
-        .rolPrincipal(Boolean.FALSE).responsableEconomico(Boolean.FALSE).equipo(TipoEquipoProyectoEnum.INVESTIGACION)
+        .rolPrincipal(Boolean.FALSE).responsableEconomico(Boolean.FALSE).equipo(RolProyecto.Equipo.INVESTIGACION)
         .colectivoRef("PDI").activo(Boolean.TRUE).build();
     entityManager.persistAndFlush(rolProyecto);
 

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+
 import org.apache.commons.lang3.StringUtils;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoDatosNotFoundException;
@@ -19,12 +19,12 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
@@ -139,7 +139,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     repository.save(solicitud);
 
     // Crea el estado inicial de la solicitud
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.BORRADOR, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.BORRADOR, null);
 
     // Actualiza la el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -190,7 +190,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
       if (null == data.getConvocatoria()) {
         data.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
-        if (data.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())) {
+        if (data.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR) {
           data.setCodigoExterno(solicitud.getCodigoExterno());
         }
       }
@@ -504,7 +504,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     // VALIDACIONES
 
     // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Existe una convocatoria asociada a la solicitud
@@ -521,7 +521,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     }
 
     // Si el formulario es de tipo Estándar
-    if (solicitud.getFormularioSolicitud().getValue().equals(TipoFormularioSolicitudEnum.ESTANDAR.getValue())) {
+    if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
 
       SolicitudProyectoDatos solicitudProyectoDatos = solicitudProyectoDatosRepository
           .findBySolicitudId(solicitud.getId())
@@ -551,7 +551,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     }
     // Se cambia el estado de la solicitud a presentada
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.PRESENTADA, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.PRESENTADA, null);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -577,12 +577,12 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Se cambia el estado de la solicitud a "Admitida provisionalmente".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL, null);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -608,13 +608,13 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Estado
     Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-            || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue()),
+        solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Se cambia el estado de la solicitud a "Admitida definitivamente".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA, null);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -639,14 +639,12 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Se cambia el estado de la solicitud a "Concedida provisional".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL,
-        null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL, null);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -673,14 +671,13 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Estado
     Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
-            || solicitud.getEstado().getEstado().getValue()
-                .equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
+        solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Se cambia el estado de la solicitud a "Concedida".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.CONCECIDA, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.CONCECIDA, null);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -706,7 +703,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -714,7 +711,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Excluir provisionalmente".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL,
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL,
         comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
@@ -741,8 +738,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -750,7 +746,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Alegada admisión".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.ALEGADA_ADMISION,
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ALEGADA_ADMISION,
         comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
@@ -777,8 +773,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -786,7 +781,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Excluida".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.EXCLUIDA, comentario);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.EXCLUIDA, comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -812,8 +807,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -821,7 +815,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Denegada provisional".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL,
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.DENEGADA_PROVISIONAL,
         comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
@@ -848,8 +842,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -857,7 +850,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Alegada concesión".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.ALEGADA_CONCESION,
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ALEGADA_CONCESION,
         comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
@@ -884,8 +877,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -893,7 +885,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Denegada provisional".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.DENEGADA, comentario);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.DENEGADA, comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -921,13 +913,13 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
-        || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
-        || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
-        || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
-        || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue())
-        || solicitud.getEstado().getEstado().getValue()
-            .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue()),
+    Assert.isTrue(
+        solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL
+            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL,
         "La solicitud no se encuentra en un estado correcto.");
 
     // Comentario
@@ -935,7 +927,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Se cambia el estado de la solicitud a "Desistida".
 
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, TipoEstadoSolicitudEnum.DESISTIDA, comentario);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.DESISTIDA, comentario);
 
     // Actualiza el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -959,8 +951,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("cumpleValidacionesPresentada(Long id) - start");
     Solicitud solicitud = repository.findById(id).get();
 
-    if (solicitud == null
-        || !solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())) {
+    if (solicitud == null || solicitud.getEstado().getEstado() != EstadoSolicitud.Estado.BORRADOR) {
       log.debug("cumpleValidacionesPresentada(Long id) - end");
       return Boolean.FALSE;
     }
@@ -973,7 +964,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     }
 
     // Si el formulario es de tipo Estándar
-    if (solicitud.getFormularioSolicitud().getValue().equals(TipoFormularioSolicitudEnum.ESTANDAR.getValue())) {
+    if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
 
       SolicitudProyectoDatos solicitudProyectoDatos = solicitudProyectoDatosRepository
           .findBySolicitudId(solicitud.getId())
@@ -1097,19 +1088,17 @@ public class SolicitudServiceImpl implements SolicitudService {
    * Añade el nuevo {@link EstadoSolicitud} y actualiza la {@link Solicitud} con
    * dicho estado.
    * 
-   * @param solicitud           la {@link Solicitud} para la que se añade el nuevo
-   *                            estado.
-   * @param tipoEstadoSolicitud El nuevo {@link TipoEstadoSolicitudEnum} de la
-   *                            {@link Solicitud}.
+   * @param solicitud la {@link Solicitud} para la que se añade el nuevo estado.
+   * @param estado    El nuevo {@link EstadoSolicitud.Estado} de la
+   *                  {@link Solicitud}.
    * @return la {@link Solicitud} con el estado actualizado.
    */
-  private EstadoSolicitud addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud,
-      String comentario) {
+  private EstadoSolicitud addEstadoSolicitud(Solicitud solicitud, EstadoSolicitud.Estado estado, String comentario) {
     log.debug(
         "addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud, String comentario) - start");
 
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
-    estadoSolicitud.setEstado(tipoEstadoSolicitud);
+    estadoSolicitud.setEstado(estado);
     estadoSolicitud.setIdSolicitud(solicitud.getId());
     estadoSolicitud.setComentario(comentario);
     estadoSolicitud.setFechaEstado(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
@@ -1135,7 +1124,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     final Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
     // Si la solicitud no está en estado CONCEDIDA no se puede crear el proyecto a
     // partir de la misma
-    if (!solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.CONCECIDA)) {
+    if (!solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCECIDA)) {
       posibleCrearProyecto = false;
     }
 
@@ -1147,7 +1136,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Si el formulario de la solicitud no es de tipo ESTANDAR no se podrá crear el
     // proyecto a partir de ella
-    if (posibleCrearProyecto && !solicitud.getFormularioSolicitud().equals(TipoFormularioSolicitudEnum.ESTANDAR)) {
+    if (posibleCrearProyecto && solicitud.getFormularioSolicitud() != FormularioSolicitud.ESTANDAR) {
       posibleCrearProyecto = false;
     }
 
@@ -1219,19 +1208,19 @@ public class SolicitudServiceImpl implements SolicitudService {
     }
 
     if (returnValue && isAdministradorOrGestor) {
-      returnValue = (solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.BORRADOR)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.PRESENTADA)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION));
+      returnValue = (solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION);
     }
 
     if (returnValue && isInvestigador) {
-      returnValue = (solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.BORRADOR)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL)
-          || solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL));
+      returnValue = (solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL
+          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL);
     }
 
     log.debug("modificable(Long id) - end");

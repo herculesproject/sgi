@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -751,7 +750,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id));
-    estadoProyecto.setEstado(TipoEstadoProyectoEnum.BORRADOR);
+    estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(LocalDateTime.now());
     estadoProyecto.setIdProyecto(1L);
 

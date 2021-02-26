@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -49,7 +48,7 @@ public class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         .nombre("nombre-001")//
         .descripcion("descripcion-001")//
         .rolPrincipal(Boolean.FALSE)//
-        .equipo(TipoEquipoProyectoEnum.INVESTIGACION).activo(Boolean.TRUE)//
+        .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)//
         .build());
 
     ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(ProyectoSocio.builder()//

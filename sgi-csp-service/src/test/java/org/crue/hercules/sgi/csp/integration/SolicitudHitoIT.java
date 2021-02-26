@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
@@ -140,7 +139,7 @@ public class SolicitudHitoIT {
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 

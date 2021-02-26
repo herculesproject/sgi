@@ -1,8 +1,9 @@
 package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,9 +15,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import org.crue.hercules.sgi.csp.converter.TipoPropiedadResultadosConverter;
-import org.crue.hercules.sgi.csp.enums.TipoPropiedadResultadosEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +34,18 @@ public class ContextoProyecto extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
+  /** Propiedad resultados */
+  public enum PropiedadResultados {
+    /** Sin resultados */
+    SIN_RESULTADOS,
+    /** Universidad */
+    UNIVERSIDAD,
+    /** Entidad financiadora */
+    ENTIDAD_FINANCIADORA,
+    /** Compartida */
+    COMPARTIDA;
+  }
 
   /** Id. */
   @Id
@@ -64,8 +74,8 @@ public class ContextoProyecto extends BaseEntity {
 
   /** Propiedad resultados */
   @Column(name = "propiedad_resultados", length = 25, nullable = true)
-  @Convert(converter = TipoPropiedadResultadosConverter.class)
-  private TipoPropiedadResultadosEnum propiedadResultados;
+  @Enumerated(EnumType.STRING)
+  private PropiedadResultados propiedadResultados;
 
   /** AreaTematica convocatoria */
   @ManyToOne

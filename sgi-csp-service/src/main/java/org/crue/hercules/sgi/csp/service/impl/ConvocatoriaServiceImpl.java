@@ -316,8 +316,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
             // campos requeridos a nivel de configuración solicitud
             if (configuracionSolicitud.get().getTramitacionSGI() != null
-                && configuracionSolicitud.get().getFormularioSolicitud() != null
-                && configuracionSolicitud.get().getBaremacionRef() != null) {
+                && configuracionSolicitud.get().getFormularioSolicitud() != null) {
 
               // con tramitación SGI debe tener una fase asignada
               if (!(configuracionSolicitud.get().getFasePresentacionSolicitudes() == null
@@ -831,9 +830,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     // Tipo Formulario Solicitud
     Assert.notNull(datosConfiguracionSolicitud.getFormularioSolicitud(),
         "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
-    // Baremación
-    Assert.notNull(datosConfiguracionSolicitud.getBaremacionRef(),
-        "Tipo baremación no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
 
     log.debug("validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
   }

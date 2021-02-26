@@ -2,11 +2,11 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
@@ -183,8 +183,8 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
         "La Unidad de Gestión no es gestionable por el usuario");
 
     Assert.isTrue(
-        !proyecto.getEstado().getEstado().equals(TipoEstadoProyectoEnum.FINALIZADO)
-            && !proyecto.getEstado().getEstado().equals(TipoEstadoProyectoEnum.CANCELADO),
+        proyecto.getEstado().getEstado() != EstadoProyecto.Estado.FINALIZADO
+            && proyecto.getEstado().getEstado() != EstadoProyecto.Estado.CANCELADO,
         "El proyecto no está en un estado en el que puede ser actualizado");
   }
 

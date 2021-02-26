@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
@@ -247,8 +247,8 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
         proyectoSocioPeriodoJustificacion.getFechaInicio().isBefore(proyectoSocioPeriodoJustificacion.getFechaFin()),
         "La fecha final tiene que ser posterior a la fecha inicial");
 
-    if (proyectoSocioPeriodoJustificacion.getProyectoSocio().getProyecto().getEstado().getEstado()
-        .equals(TipoEstadoProyectoEnum.ABIERTO)) {
+    if (proyectoSocioPeriodoJustificacion.getProyectoSocio().getProyecto().getEstado()
+        .getEstado() == EstadoProyecto.Estado.ABIERTO) {
       Assert.isTrue(
           proyectoSocioPeriodoJustificacion.getFechaInicioPresentacion() != null
               && proyectoSocioPeriodoJustificacion.getFechaFinPresentacion() != null,

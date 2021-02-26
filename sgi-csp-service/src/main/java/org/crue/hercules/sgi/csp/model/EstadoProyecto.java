@@ -3,8 +3,9 @@ package org.crue.hercules.sgi.csp.model;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,9 +15,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.persistence.UniqueConstraint;
 
-import org.crue.hercules.sgi.csp.converter.TipoEstadoProyectoConverter;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +22,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "estado_proyecto", uniqueConstraints = { @UniqueConstraint(columnNames = { "estado",
-    "id_proyecto" }, name = "UK_ESTADOPROYECTO_ESTADO_PROYECTO") })
+@Table(name = "estado_proyecto", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "estado", "id_proyecto" }, name = "UK_ESTADOPROYECTO_ESTADO_PROYECTO") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -37,6 +35,23 @@ public class EstadoProyecto extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
+  /**
+   * Estados del proyecto
+   */
+  public enum Estado {
+
+    /** Borrador */
+    BORRADOR,
+    /** Provisional */
+    PROVISIONAL,
+    /** Abierto */
+    ABIERTO,
+    /** Finalizado */
+    FINALIZADO,
+    /** Cancelado */
+    CANCELADO;
+  }
 
   /** Id */
   @Id
@@ -52,9 +67,9 @@ public class EstadoProyecto extends BaseEntity {
 
   /** Tipo estado proyecto */
   @Column(name = "estado", length = 50, nullable = false)
-  @Convert(converter = TipoEstadoProyectoConverter.class)
+  @Enumerated(EnumType.STRING)
   @NotNull
-  private TipoEstadoProyectoEnum estado;
+  private Estado estado;
 
   /** Fecha. */
   @Column(name = "fecha_estado", nullable = false)

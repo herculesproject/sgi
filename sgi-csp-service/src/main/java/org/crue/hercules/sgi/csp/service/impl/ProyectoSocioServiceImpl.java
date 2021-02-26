@@ -2,8 +2,8 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
@@ -93,7 +93,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
       if (!proyectoSocio.getRolSocio().getCoordinador() && proyectoSocioExistente.getRolSocio().getCoordinador()) {
 
-        if (proyectoSocioExistente.getProyecto().getEstado().getEstado().equals(TipoEstadoProyectoEnum.ABIERTO)
+        if (proyectoSocioExistente.getProyecto().getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO)
             && proyectoSocioExistente.getProyecto().getColaborativo()
             && proyectoSocioExistente.getProyecto().getCoordinadorExterno()) {
 
@@ -133,7 +133,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
       // Validaciones
       if (proyectoSocio.getRolSocio().getCoordinador()) {
 
-        if (proyectoSocio.getProyecto().getEstado().getEstado().equals(TipoEstadoProyectoEnum.ABIERTO)
+        if (proyectoSocio.getProyecto().getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO)
             && proyectoSocio.getProyecto().getColaborativo() && proyectoSocio.getProyecto().getCoordinadorExterno()) {
 
           Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocio.getProyecto().getId()),

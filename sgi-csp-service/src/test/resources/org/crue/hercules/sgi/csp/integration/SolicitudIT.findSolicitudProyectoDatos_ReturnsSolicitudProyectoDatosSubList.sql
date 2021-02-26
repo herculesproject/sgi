@@ -30,8 +30,8 @@ INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inici
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO csp.configuracion_solicitud 
-(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud, baremacion_ref) 
-VALUES(1, 1, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud) 
+VALUES(1, 1, TRUE, 1, 12345, 'ESTANDAR');
 
 -- PROGRAMA
 INSERT INTO csp.programa (id, nombre, descripcion, programa_padre_id, activo) VALUES (1, 'nombre-001', 'descripcion-001', null, true);
@@ -44,19 +44,19 @@ INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_r
 
 
 -- ESTADO SOLICITUD
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'Borrador', '2020-11-17 15:00', 'comentario');
+INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17 15:00', 'comentario');
 
 -- SOLICITUD
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (1, null, 'SGI_SLC1202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-001', null, 'OPE', 'Estándar', true);
+ VALUES (1, null, 'SGI_SLC1202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-001', null, 'OPE', 'ESTANDAR', true);
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (2, null, 'SGI_SLC2202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-002', null, 'OPE', 'Estándar', true);
+ VALUES (2, null, 'SGI_SLC2202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-002', null, 'OPE', 'ESTANDAR', true);
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (3, null, 'SGI_SLC3202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-003', null, 'OPE', 'Estándar', true);
+ VALUES (3, null, 'SGI_SLC3202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-003', null, 'OPE', 'ESTANDAR', true);
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (4, null, 'SGI_SLC4202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-004', null, 'OPE', 'Estándar', false);
+ VALUES (4, null, 'SGI_SLC4202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-004', null, 'OPE', 'ESTANDAR', false);
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (5, null, 'SGI_SLC5202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-005', null, 'OTRI', 'Estándar', true);
+ VALUES (5, null, 'SGI_SLC5202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones-005', null, 'OTRI', 'ESTANDAR', true);
 
 
 -- SOLICITUD PROYECTO DATOS

@@ -8,7 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoProrrogaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -81,7 +80,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("numProrroga").value(proyectoProrroga.getNumProrroga()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("fechaConcesion").value(proyectoProrroga.getFechaConcesion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoProrroga").value(proyectoProrroga.getTipoProrroga().getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipo").value(proyectoProrroga.getTipo().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value(proyectoProrroga.getFechaFin().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("importe").value(proyectoProrroga.getImporte()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(proyectoProrroga.getObservaciones()));
@@ -130,8 +129,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("numProrroga").value(proyectoProrrogaExistente.getNumProrroga()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaConcesion")
             .value(proyectoProrrogaExistente.getFechaConcesion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoProrroga")
-            .value(proyectoProrrogaExistente.getTipoProrroga().getValue()))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipo").value(proyectoProrrogaExistente.getTipo().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value(proyectoProrrogaExistente.getFechaFin().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("importe").value(proyectoProrrogaExistente.getImporte()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(proyectoProrroga.getObservaciones()));
@@ -381,7 +379,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .proyecto(Proyecto.builder().id(proyectoId).build())//
         .numProrroga(1)//
         .fechaConcesion(LocalDate.of(2020, 01, 01))//
-        .tipoProrroga(TipoProrrogaEnum.TIEMPO_IMPORTE)//
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
         .fechaFin(LocalDate.of(2020, 12, 31))//
         .importe(BigDecimal.valueOf(123.45))//
         .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//

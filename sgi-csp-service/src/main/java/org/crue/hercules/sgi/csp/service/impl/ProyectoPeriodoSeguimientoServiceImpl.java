@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
@@ -358,8 +358,8 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
     Assert.notNull(datosProyectoPeriodoSeguimiento.getFechaFin(), "FechaFin no puede ser null para "
         + ((datosOriginales == null) ? "crear" : "actualizar") + " ProyectoPeriodoSeguimiento");
 
-    if (datosProyectoPeriodoSeguimiento.getProyecto().getEstado() != null && datosProyectoPeriodoSeguimiento
-        .getProyecto().getEstado().getEstado().equals(TipoEstadoProyectoEnum.ABIERTO)) {
+    if (datosProyectoPeriodoSeguimiento.getProyecto().getEstado() != null
+        && datosProyectoPeriodoSeguimiento.getProyecto().getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO) {
       Assert.notNull(datosProyectoPeriodoSeguimiento.getFechaInicioPresentacion(),
           "FechaInicioPresentacion no puede ser null para " + ((datosOriginales == null) ? "crear" : "actualizar")
               + " ProyectoPeriodoSeguimiento");

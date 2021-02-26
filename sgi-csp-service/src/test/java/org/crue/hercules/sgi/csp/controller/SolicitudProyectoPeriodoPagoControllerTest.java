@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPeriodoPagoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -178,7 +177,7 @@ public class SolicitudProyectoPeriodoPagoControllerTest extends BaseControllerTe
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());
     solicitudProyectoPeriodoPago.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+        .setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudProyectoPeriodoPago;
   }
 }

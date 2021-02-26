@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
@@ -241,7 +240,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
     solicitudProyectoEquipo.getSolicitudProyectoDatos().setSolicitud(new Solicitud());
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
     solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+        .setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudProyectoEquipo;
   }
 

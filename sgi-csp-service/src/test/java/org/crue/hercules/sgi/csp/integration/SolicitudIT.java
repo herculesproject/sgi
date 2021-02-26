@@ -5,8 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -350,11 +349,11 @@ public class SolicitudIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
     Assertions.assertThat(estadosSolicitud.get(0).getEstado()).as("get(0).getEstado()")
-        .isEqualTo(TipoEstadoSolicitudEnum.EXCLUIDA);
+        .isEqualTo(EstadoSolicitud.Estado.EXCLUIDA);
     Assertions.assertThat(estadosSolicitud.get(1).getEstado()).as("get(1).getEstado()")
-        .isEqualTo(TipoEstadoSolicitudEnum.PRESENTADA);
+        .isEqualTo(EstadoSolicitud.Estado.PRESENTADA);
     Assertions.assertThat(estadosSolicitud.get(2).getEstado()).as("get(2).getEstado()")
-        .isEqualTo(TipoEstadoSolicitudEnum.BORRADOR);
+        .isEqualTo(EstadoSolicitud.Estado.BORRADOR);
   }
 
   /**
@@ -628,7 +627,7 @@ public class SolicitudIT {
   private Solicitud generarMockSolicitud(Long id) {
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(1L);
-    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
 
     Programa programa = new Programa();
     programa.setId(1L);
@@ -644,7 +643,7 @@ public class SolicitudIT {
     solicitud.setObservaciones("observaciones");
     solicitud.setConvocatoriaExterna(null);
     solicitud.setUnidadGestionRef("OPE");
-    solicitud.setFormularioSolicitud(TipoFormularioSolicitudEnum.ESTANDAR);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.ESTANDAR);
     solicitud.setActivo(true);
 
     if (id != null) {

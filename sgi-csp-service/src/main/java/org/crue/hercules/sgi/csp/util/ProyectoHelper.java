@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.util;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
+import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.util.Assert;
@@ -17,10 +17,8 @@ public class ProyectoHelper {
   public static void checkCanUpdate(Proyecto proyecto) {
     checkCanRead(proyecto);
     Assert.isTrue(proyecto.getActivo(), "El Proyecto está desactivado");
-    TipoEstadoProyectoEnum estadoActual = proyecto.getEstado().getEstado();
-    Assert.isTrue(
-        !estadoActual.equals(TipoEstadoProyectoEnum.FINALIZADO)
-            && !estadoActual.equals(TipoEstadoProyectoEnum.CANCELADO),
+    EstadoProyecto.Estado estadoActual = proyecto.getEstado().getEstado();
+    Assert.isTrue(estadoActual != EstadoProyecto.Estado.FINALIZADO && estadoActual != EstadoProyecto.Estado.CANCELADO,
         "El proyecto no está en un estado en el que puede ser actualizado");
   }
 

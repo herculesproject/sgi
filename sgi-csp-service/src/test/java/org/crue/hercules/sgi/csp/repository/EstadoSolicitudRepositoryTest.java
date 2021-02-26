@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.repository;
 import java.time.LocalDateTime;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class EstadoSolicitudRepositoryTest extends BaseRepositoryTest {
    * @return EstadoSolicitud
    */
   private EstadoSolicitud generarMockEstadoSolicitud(Long id) {
-    return EstadoSolicitud.builder().estado(TipoEstadoSolicitudEnum.BORRADOR).idSolicitud(id)
+    return EstadoSolicitud.builder().estado(EstadoSolicitud.Estado.BORRADOR).idSolicitud(id)
         .fechaEstado(LocalDateTime.now()).comentario("comentario").build();
   }
 

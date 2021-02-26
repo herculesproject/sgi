@@ -1,59 +1,56 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
-import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
@@ -65,23 +62,23 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
+import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
+import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
-import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
-import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
-import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
-import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -219,7 +216,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     repository.save(proyecto);
 
     // Crea el estado inicial del proyecto
-    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, TipoEstadoProyectoEnum.BORRADOR, null);
+    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
 
     proyecto.setEstado(estadoProyecto);
     // Actualiza el estado actual del proyecto con el nuevo estado
@@ -282,8 +279,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setModeloEjecucion(proyectoActualizar.getModeloEjecucion());
       data.setObservaciones(proyectoActualizar.getObservaciones());
       data.setPaquetesTrabajo(proyectoActualizar.getPaquetesTrabajo());
-      data.setPlantillaHojaFirma(proyectoActualizar.getPlantillaHojaFirma());
-      data.setPlantillaJustificacion(proyectoActualizar.getPlantillaJustificacion());
       data.setTimesheet(proyectoActualizar.getTimesheet());
       data.setTipoHorasAnuales(proyectoActualizar.getTipoHorasAnuales());
       data.setTitulo(proyectoActualizar.getTitulo());
@@ -568,11 +563,11 @@ public class ProyectoServiceImpl implements ProyectoService {
    * 
    * @param proyecto           la {@link Proyecto} para la que se añade el nuevo
    *                           estado.
-   * @param tipoEstadoProyecto El nuevo {@link TipoEstadoProyectoEnum} de la
+   * @param tipoEstadoProyecto El nuevo {@link EstadoProyecto.Estado} de la
    *                           {@link Proyecto}.
    * @return la {@link Proyecto} con el estado actualizado.
    */
-  private EstadoProyecto addEstadoProyecto(Proyecto proyecto, TipoEstadoProyectoEnum tipoEstadoProyecto,
+  private EstadoProyecto addEstadoProyecto(Proyecto proyecto, EstadoProyecto.Estado tipoEstadoProyecto,
       String comentario) {
     log.debug(
         "addEstadoProyecto(Proyecto proyecto, TipoEstadoProyectoEnum tipoEstadoProyecto, String comentario) - start");
@@ -630,7 +625,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     // Validación de campos obligatorios según estados. Solo aplicaría en el
     // actualizar ya que en el crear el estado siempre será "Borrador"
-    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado().equals(TipoEstadoProyectoEnum.ABIERTO)) {
+    if (proyecto.getEstado() != null && proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO) {
       // En la validación del crear no pasará por aquí, aún no tendrá estado.
       Assert.isTrue(proyecto.getFinalidad() != null,
           "El campo finalidad debe ser obligatorio para el proyecto en estado 'Abierto'");
@@ -648,7 +643,7 @@ public class ProyectoServiceImpl implements ProyectoService {
           "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'Abierto'");
 
       Assert.isTrue(
-          proyecto.getEstado().getEstado().equals(TipoEstadoProyectoEnum.ABIERTO) && proyecto.getTimesheet() != null,
+          proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO && proyecto.getTimesheet() != null,
           "El campo timesheet debe ser obligatorio para el proyecto en estado 'Abierto'");
 
       Assert.isTrue(proyecto.getPaquetesTrabajo() != null,
@@ -1114,14 +1109,14 @@ public class ProyectoServiceImpl implements ProyectoService {
    * 
    */
   private void validarDatosSolicitud(Solicitud solicitud) {
-    Assert.isTrue(solicitud.getEstado().getEstado().equals(TipoEstadoSolicitudEnum.CONCECIDA),
-        "La solicitud debe estar en estado " + TipoEstadoSolicitudEnum.CONCECIDA.getValue());
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA,
+        "La solicitud debe estar en estado " + EstadoSolicitud.Estado.CONCECIDA);
 
     Assert.isTrue(!repository.existsBySolicitudId(solicitud.getId()),
         "La solicitud con id: " + solicitud.getId() + " ya está asociada a un proyecto");
 
-    Assert.isTrue(solicitud.getFormularioSolicitud().equals(TipoFormularioSolicitudEnum.ESTANDAR),
-        "El formulario de la solicitud debe ser de tipo " + TipoFormularioSolicitudEnum.ESTANDAR.getValue());
+    Assert.isTrue(solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR,
+        "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.ESTANDAR);
   }
 
   /**
@@ -1166,7 +1161,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     repository.save(proyecto);
 
     // Crea el estado inicial del proyecto
-    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, TipoEstadoProyectoEnum.BORRADOR, null);
+    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
 
     proyecto.setEstado(estadoProyecto);
     // Actualiza el estado actual del proyecto con el nuevo estado

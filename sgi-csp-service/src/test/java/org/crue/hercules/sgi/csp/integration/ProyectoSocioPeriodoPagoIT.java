@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -147,7 +146,7 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
             .estado(//
                 EstadoProyecto.builder()//
                     .id(1L)//
-                    .estado(TipoEstadoProyectoEnum.BORRADOR)//
+                    .estado(EstadoProyecto.Estado.BORRADOR)//
                     .build())
             .build())//
         .empresaRef("empresa-001")//

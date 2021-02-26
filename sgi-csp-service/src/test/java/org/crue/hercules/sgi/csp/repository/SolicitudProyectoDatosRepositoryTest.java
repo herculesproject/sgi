@@ -3,7 +3,7 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.junit.jupiter.api.Test;
@@ -31,14 +31,14 @@ public class SolicitudProyectoDatosRepositoryTest {
 
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
         .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(TipoFormularioSolicitudEnum.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
     SolicitudProyectoDatos solicitudProyectoDatos1 = entityManager
         .persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
             Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()//
         .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(TipoFormularioSolicitudEnum.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
     entityManager.persistAndFlush(new SolicitudProyectoDatos(null, solicitud2, "solicitud2", null, null, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
@@ -62,12 +62,12 @@ public class SolicitudProyectoDatosRepositoryTest {
     // buscado
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
         .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(TipoFormularioSolicitudEnum.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
     entityManager.persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()//
         .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(TipoFormularioSolicitudEnum.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
     entityManager.persistAndFlush(new SolicitudProyectoDatos(null, solicitud2, "solicitud2", null, null, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 

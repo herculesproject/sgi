@@ -1,13 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
@@ -27,13 +25,12 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-
-import org.mockito.stubbing.Answer;
 
 /**
  * SolicitudHitoServiceTest
@@ -394,7 +391,7 @@ public class SolicitudHitoServiceTest {
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 

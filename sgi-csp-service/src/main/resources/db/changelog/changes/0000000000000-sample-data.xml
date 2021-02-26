@@ -2140,7 +2140,7 @@ industries" />
       <column name="fecha_inicio_presentacion" value="2021-12-01" />
       <column name="fecha_fin_presentacion" value="2021-12-31" />
       <column name="observaciones" value="null" />
-      <column name="tipo_justificacion" value="periodica" />
+      <column name="tipo" value="PERIODICO" />
     </insert>
     <insert tableName="convocatoria_periodo_justificacion">
       <column name="id" valueSequenceNext="convocatoria_periodo_justificacion_seq" />
@@ -2151,7 +2151,7 @@ industries" />
       <column name="fecha_inicio_presentacion" value="2022-12-01" />
       <column name="fecha_fin_presentacion" value="2022-12-31" />
       <column name="observaciones" value="null" />
-      <column name="tipo_justificacion" value="final" />
+      <column name="tipo" value="PERIODICO" />
     </insert>
     <insert tableName="convocatoria_periodo_justificacion">
       <column name="id" valueSequenceNext="convocatoria_periodo_justificacion_seq" />
@@ -2162,7 +2162,7 @@ industries" />
       <column name="fecha_inicio_presentacion" value="2022-06-01" />
       <column name="fecha_fin_presentacion" value="2022-06-30" />
       <column name="observaciones" value="null" />
-      <column name="tipo_justificacion" value="periodica" />
+      <column name="tipo" value="PERIODICO" />
     </insert>
     <insert tableName="convocatoria_periodo_justificacion">
       <column name="id" valueSequenceNext="convocatoria_periodo_justificacion_seq" />
@@ -2173,7 +2173,7 @@ industries" />
       <column name="fecha_inicio_presentacion" value="2023-12-01" />
       <column name="fecha_fin_presentacion" value="2023-12-31" />
       <column name="observaciones" value="null" />
-      <column name="tipo_justificacion" value="final" />
+      <column name="tipo" value="FINAL" />
     </insert>
   </changeSet>
 
@@ -2308,8 +2308,7 @@ industries" />
       <column name="tramitacion_sgi" value="true" />
       <column name="convocatoria_fase_id" value="2" />
       <column name="importe_maximo_solicitud" value="null" />
-      <column name="formulario_solicitud" value="Estándar" />
-      <column name="baremacion_ref" value="Sin baremación" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
     </insert>
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
@@ -2317,8 +2316,7 @@ industries" />
       <column name="tramitacion_sgi" value="false" />
       <column name="convocatoria_fase_id" value="null" />
       <column name="importe_maximo_solicitud" value="null" />
-      <column name="formulario_solicitud" value="Estándar" />
-      <column name="baremacion_ref" value="Sin baremación" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
     </insert>
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
@@ -2326,8 +2324,7 @@ industries" />
       <column name="tramitacion_sgi" value="false" />
       <column name="convocatoria_fase_id" value="null" />
       <column name="importe_maximo_solicitud" value="null" />
-      <column name="formulario_solicitud" value="Estándar" />
-      <column name="baremacion_ref" value="Sin baremación" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
     </insert>
     <insert tableName="configuracion_solicitud">
       <column name="id" valueSequenceNext="configuracion_solicitud_seq" />
@@ -2335,8 +2332,7 @@ industries" />
       <column name="tramitacion_sgi" value="false" />
       <column name="convocatoria_fase_id" value="5" />
       <column name="importe_maximo_solicitud" value="null" />
-      <column name="formulario_solicitud" value="Estándar" />
-      <column name="baremacion_ref" value="Sin baremación" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
     </insert>
   </changeSet>
 
@@ -2360,49 +2356,49 @@ industries" />
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="1" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-01 16:17:27.789" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="2" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-01 16:56:12.217" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="3" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-01 17:29:09.713" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="4" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-01 17:41:44.396" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="5" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-02 09:43:15.301" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="6" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-03 12:56:26.504" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_solicitud">
       <column name="id" valueSequenceNext="estado_solicitud_seq" />
       <column name="id_solicitud" value="7" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-03 18:28:58.118" />
       <column name="comentario" value="null" />
     </insert>
@@ -2420,7 +2416,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="UGI" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="solicitud">
@@ -2434,7 +2430,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="UGI" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="solicitud">
@@ -2448,7 +2444,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="solicitud">
@@ -2462,7 +2458,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="solicitud">
@@ -2476,7 +2472,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="solicitud">
@@ -2490,7 +2486,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="unidad_gestion_ref" value="OPE" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="solicitud">
@@ -2504,7 +2500,7 @@ industries" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
-      <column name="formulario_solicitud" value="Estándar" />
+      <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -2575,7 +2571,7 @@ industries" />
       <column name="descripcion" value="Investigadora principal" />
       <column name="rol_principal" value="true" />
       <column name="responsable_economico" value="false" />
-      <column name="equipo" value="Equipo de investigación" />
+      <column name="equipo" value="INVESTIGACION" />
       <column name="colectivo_ref" value="null" />
       <column name="activo" value="true" />
     </insert>
@@ -2586,7 +2582,7 @@ industries" />
       <column name="descripcion" value="Miembro del equipo de investigación" />
       <column name="rol_principal" value="false" />
       <column name="responsable_economico" value="false" />
-      <column name="equipo" value="Equipo de investigación" />
+      <column name="equipo" value="INVESTIGACION" />
       <column name="colectivo_ref" value="null" />
       <column name="activo" value="true" />
     </insert>
@@ -2596,21 +2592,21 @@ industries" />
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="id_proyecto" value="1" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-01 17:51:14.481" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="id_proyecto" value="2" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-01 17:56:11.935" />
       <column name="comentario" value="null" />
     </insert>
     <insert tableName="estado_proyecto">
       <column name="id" valueSequenceNext="estado_proyecto_seq" />
       <column name="id_proyecto" value="3" />
-      <column name="estado" value="Borrador" />
+      <column name="estado" value="BORRADOR" />
       <column name="fecha_estado" value="2021-02-02 10:53:13.658" />
       <column name="comentario" value="null" />
     </insert>
@@ -2632,17 +2628,15 @@ industries" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="plantilla_justificacion" value="N/A" />
       <column name="confidencial" value="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="false" />
       <column name="coordinador_externo" value="false" />
       <column name="uni_subcontratada" value="false" />
       <column name="timesheet" value="true" />
-      <column name="plantilla_hoja_firma" value="N/A" />
       <column name="paquetes_trabajo" value="false" />
       <column name="coste_hora" value="true" />
-      <column name="tipo_horas_anuales" value="Por categoría" />
+      <column name="tipo_horas_anuales" value="CATEGORIA" />
       <column name="contratos" value="false" />
       <column name="facturacion" value="false" />
       <column name="iva" value="false" />
@@ -2667,17 +2661,15 @@ industries" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="plantilla_justificacion" value="N/A" />
       <column name="confidencial" value="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="false" />
       <column name="uni_subcontratada" value="false" />
       <column name="timesheet" value="true" />
-      <column name="plantilla_hoja_firma" value="N/A" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
-      <column name="tipo_horas_anuales" value="Reales (TS)" />
+      <column name="tipo_horas_anuales" value="REAL" />
       <column name="contratos" value="false" />
       <column name="facturacion" value="false" />
       <column name="iva" value="false" />
@@ -2702,17 +2694,15 @@ industries" />
       <column name="convocatoria_externa" value="null" />
       <column name="solicitud_id" value="null" />
       <column name="tipo_ambito_geografico_id" value="5" />
-      <column name="plantilla_justificacion" value="N/A" />
       <column name="confidencial" value="false" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="true" />
       <column name="uni_subcontratada" value="false" />
       <column name="timesheet" value="true" />
-      <column name="plantilla_hoja_firma" value="N/A" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
-      <column name="tipo_horas_anuales" value="Valor fijo" />
+      <column name="tipo_horas_anuales" value="CATEGORIA" />
       <column name="contratos" value="false" />
       <column name="facturacion" value="false" />
       <column name="iva" value="false" />
@@ -2862,7 +2852,7 @@ industries" />
       <column name="proyecto_id" value="2" />
       <column name="num_prorroga" value="1" />
       <column name="fecha_concesion" value="2021-02-02" />
-      <column name="tipo_prorroga" value="Tiempo" />
+      <column name="tipo" value="TIEMPO" />
       <column name="importe" value="null" />
       <column name="fecha_fin" value="2023-12-05" />
       <column name="observaciones" value="" />

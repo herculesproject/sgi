@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEquipoProyectoEnum;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -188,7 +187,7 @@ public class RolProyectoIT extends BaseIT {
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()").isEqualTo(Boolean.FALSE);
     Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
         .isEqualTo(Boolean.FALSE);
-    Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(TipoEquipoProyectoEnum.INVESTIGACION);
+    Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(RolProyecto.Equipo.INVESTIGACION);
     Assertions.assertThat(responseData.getColectivoRef()).as("getColectivoRef()").isEqualTo("PDI");
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
@@ -288,7 +287,7 @@ public class RolProyectoIT extends BaseIT {
         .descripcion("descripcion-" + suffix)//
         .rolPrincipal(Boolean.FALSE)//
         .responsableEconomico(Boolean.FALSE)//
-        .equipo(TipoEquipoProyectoEnum.INVESTIGACION)//
+        .equipo(RolProyecto.Equipo.INVESTIGACION)//
         .colectivoRef("PDI")//
         .activo(Boolean.TRUE)//
         .build();

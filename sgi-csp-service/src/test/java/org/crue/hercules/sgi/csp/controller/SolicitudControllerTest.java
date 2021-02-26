@@ -10,8 +10,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -1217,7 +1216,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
     solicitud.setConvocatoriaExterna(null);
     solicitud.setUnidadGestionRef("OPE");
-    solicitud.setFormularioSolicitud(TipoFormularioSolicitudEnum.RRHH);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.RRHH);
     solicitud.setActivo(true);
 
     if (id != null) {
@@ -1268,7 +1267,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
 
     solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 
@@ -1282,7 +1281,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(id);
     estadoSolicitud.setComentario("Estado-" + id);
-    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
     estadoSolicitud.setFechaEstado(LocalDateTime.now());
     estadoSolicitud.setIdSolicitud(1L);
 
@@ -1305,7 +1304,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 
@@ -1324,7 +1323,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .presupuestoPorEntidades(Boolean.TRUE).build();
 
     solicitudProyectoDatos.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudProyectoDatos.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    solicitudProyectoDatos.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudProyectoDatos;
   }
 

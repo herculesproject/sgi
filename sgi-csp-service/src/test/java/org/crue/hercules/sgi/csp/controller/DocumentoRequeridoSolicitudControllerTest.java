@@ -3,7 +3,7 @@ package org.crue.hercules.sgi.csp.controller;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.DocumentoRequeridoSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -263,8 +263,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
         .tramitacionSGI(Boolean.TRUE)//
         .fasePresentacionSolicitudes(convocatoriaFase)//
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(TipoFormularioSolicitudEnum.ESTANDAR)//
-        .baremacionRef("Sin baremación")//
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
         .build();
 
     return configuracionSolicitud;
