@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -45,14 +45,13 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   ROUTE_NAMES = ROUTE_NAMES;
   textoCrear = MSG_BUTTON_NEW;
 
-  TipoEstadoProyecto = TipoEstadoProyecto;
-
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   proyecto$: Observable<IProyecto[]>;
 
-  estadoProyecto = Object.keys(TipoEstadoProyecto).map<string>(
-    (key) => TipoEstadoProyecto[key]);
+  get Estado() {
+    return Estado;
+  }
 
   busquedaAvanzada = false;
 
@@ -69,6 +68,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -146,9 +149,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     const filtros = [];
     this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
     this.addFiltro(filtros, 'acronimo', SgiRestFilterType.LIKE, this.formGroup.controls.acronimo.value);
-    const estado = Object.keys(TipoEstadoProyecto)
-      .filter(key => TipoEstadoProyecto[key] === this.formGroup.controls.estado.value)[0];
-    this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, estado);
+    this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, this.formGroup.controls.estado.value);
     if (this.formGroup.controls.activo.value !== 'todos') {
       this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
     }

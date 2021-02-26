@@ -1,4 +1,4 @@
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { Fragment } from '@core/services/action-service';
@@ -180,7 +180,7 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
     if (!this.proyecto?.activo) {
       return true;
     }
-    if (this.proyecto?.estado?.estado === TipoEstadoProyecto.CANCELADO || this.proyecto?.estado?.estado === TipoEstadoProyecto.FINALIZADO) {
+    if (this.proyecto?.estado?.estado === Estado.CANCELADO || this.proyecto?.estado?.estado === Estado.FINALIZADO) {
       return true;
     }
     return false;

@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { FormFragment } from '@core/services/action-service';
@@ -125,6 +125,6 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
 
   get isAbierto(): boolean {
     const proyecto = this.proyectoSocio.proyecto;
-    return proyecto?.estado?.estado === TipoEstadoProyecto.ABIERTO;
+    return proyecto?.estado?.estado === Estado.ABIERTO;
   }
 }

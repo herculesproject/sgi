@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { DateValidator } from '@core/validators/date-validator';
@@ -38,7 +38,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
         fechaConcesion: new FormControl('', [
           Validators.required
         ]),
-        tipoProrroga: new FormControl('', [
+        tipo: new FormControl('', [
           Validators.required
         ]),
         fechaFin: new FormControl({ value: '', disabled: true }),
@@ -53,7 +53,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
       }
     );
 
-    this.subscriptions.push(form.controls.tipoProrroga.valueChanges.subscribe((value: TipoProrrogaEnum) => {
+    this.subscriptions.push(form.controls.tipo.valueChanges.subscribe((value: Tipo) => {
       this.addValidations(value);
     }));
 
@@ -69,12 +69,12 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
       numProrroga: proyectoProrroga.numProrroga,
       fechaConcesion: proyectoProrroga.fechaConcesion,
       fechaFin: proyectoProrroga.fechaFin,
-      tipoProrroga: proyectoProrroga.tipoProrroga,
+      tipo: proyectoProrroga.tipo,
       importe: proyectoProrroga.importe,
       observaciones: proyectoProrroga.observaciones
     };
 
-    this.addValidations(proyectoProrroga.tipoProrroga);
+    this.addValidations(proyectoProrroga.tipo);
     return result;
   }
 
@@ -90,7 +90,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     this.proyectoProrroga.numProrroga = form.numProrroga.value;
     this.proyectoProrroga.fechaConcesion = form.fechaConcesion.value;
     this.proyectoProrroga.fechaFin = form.fechaFin.value;
-    this.proyectoProrroga.tipoProrroga = form.tipoProrroga.value;
+    this.proyectoProrroga.tipo = form.tipo.value;
     this.proyectoProrroga.importe = form.importe.value;
     this.proyectoProrroga.observaciones = form.observaciones.value;
     return this.proyectoProrroga;
@@ -117,10 +117,10 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     return this.service.update(proyectoProrroga.id, proyectoProrroga);
   }
 
-  private addValidations(value: TipoProrrogaEnum) {
+  private addValidations(value: Tipo) {
     const form = this.getFormGroup().controls;
     if (!this.readonly) {
-      if (value === TipoProrrogaEnum.TIEMPO) {
+      if (value === Tipo.TIEMPO) {
         form.fechaFin.setValidators([Validators.required]);
         form.fechaFin.enable();
         form.importe.setValidators([
@@ -128,7 +128,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
           Validators.max(2_147_483_647)
         ]);
         form.importe.disable();
-      } else if (value === TipoProrrogaEnum.IMPORTE) {
+      } else if (value === Tipo.IMPORTE) {
         form.importe.setValidators([
           Validators.required,
           Validators.min(1),

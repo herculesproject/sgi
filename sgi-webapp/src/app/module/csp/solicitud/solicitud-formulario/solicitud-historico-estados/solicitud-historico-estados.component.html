@@ -11,7 +11,7 @@
       <ng-container matColumnDef="estado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'csp.solicitud.historicoEstado.estado' | translate}} </th>
-        <td mat-cell *matCellDef="let wrapper">{{wrapper.value.estado}}</td>
+        <td mat-cell *matCellDef="let wrapper">{{ESTADO_MAP.get(wrapper.value.estado) | translate}}</td>
       </ng-container>
 
       <!-- Fecha estado Column -->

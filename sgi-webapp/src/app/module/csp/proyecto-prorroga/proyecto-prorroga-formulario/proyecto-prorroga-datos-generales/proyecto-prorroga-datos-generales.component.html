@@ -42,9 +42,9 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto-prorroga.tipoProrroga' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="tipoProrroga" required>
-            <mat-option *ngFor="let tipo of tipoProrroga" [value]="tipo | translate">
-              {{ tipo | translate}}
+          <mat-select matNativeControl formControlName="tipo" required>
+            <mat-option *ngFor="let tipo of TIPO_MAP | keyvalue" [value]="tipo.key">
+              {{ tipo.value | translate}}
             </mat-option>
           </mat-select>
         </mat-form-field>

@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { ESTADO_MAP, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,10 @@ export class ProyectoHistoricoEstadosComponent extends FragmentComponent impleme
   dataSource: MatTableDataSource<IEstadoProyecto> = new MatTableDataSource<IEstadoProyecto>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   constructor(
     protected snackBarService: SnackBarService,

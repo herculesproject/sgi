@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
-import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
+import { IProyecto, TIPO_HORAS_ANUALES_MAP } from '@core/models/csp/proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -56,14 +56,13 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     return CLASIFICACION_CVN_MAP;
   }
 
-  tipoHoras = Object.keys(TipoHorasAnualesEnum).map<string>(
-    (key) => TipoHorasAnualesEnum[key]);
+  get TIPO_HORAS_ANUALES_MAP() {
+    return TIPO_HORAS_ANUALES_MAP;
+  }
 
-  tipoHoja = Object.keys(TipoHojaFirmaEnum).map<string>(
-    (key) => TipoHojaFirmaEnum[key]);
-
-  plantilla = Object.keys(TipoPlantillaJustificacionEnum).map<string>(
-    (key) => TipoPlantillaJustificacionEnum[key]);
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   private obligatorioTimesheet: boolean;
   requiredHoras = false;
@@ -116,7 +115,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.loadAmbitosGeograficos();
 
     if (!this.fragment.isEdit()) {
-      this.formGroup.controls.estado.setValue(TipoEstadoProyecto.BORRADOR);
+      this.formGroup.controls.estado.setValue(Estado.BORRADOR);
     }
 
     this.subscriptions.push(this.formGroup.controls.costeHora.valueChanges.pipe(
@@ -182,11 +181,11 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
         this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
       }
     } else {
-      if (this.formGroup.controls.horasAnuales.value) {
-        this.formGroup.controls.horasAnuales.patchValue(null);
+      if (this.formGroup.controls.tipoHorasAnuales.value) {
+        this.formGroup.controls.tipoHorasAnuales.patchValue(null);
         this.requiredHoras = false;
-        this.formGroup.controls.horasAnuales.setValidators(null);
-        this.formGroup.controls.horasAnuales.updateValueAndValidity({ onlySelf: true });
+        this.formGroup.controls.tipoHorasAnuales.setValidators(null);
+        this.formGroup.controls.tipoHorasAnuales.updateValueAndValidity({ onlySelf: true });
       }
       if (this.formGroup.controls.timesheet.value === false) {
         this.obligatorioTimesheet = false;
@@ -194,8 +193,8 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
         this.formGroup.controls.timesheet.updateValueAndValidity({ onlySelf: true });
       }
       this.requiredHoras = false;
-      this.formGroup.controls.horasAnuales.setValidators(null);
-      this.formGroup.controls.horasAnuales.updateValueAndValidity({ onlySelf: true });
+      this.formGroup.controls.tipoHorasAnuales.setValidators(null);
+      this.formGroup.controls.tipoHorasAnuales.updateValueAndValidity({ onlySelf: true });
     }
   }
 

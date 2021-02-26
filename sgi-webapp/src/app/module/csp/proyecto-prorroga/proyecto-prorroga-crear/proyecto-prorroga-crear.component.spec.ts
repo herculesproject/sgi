@@ -14,7 +14,7 @@ import { SharedModule } from '@shared/shared.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { ProyectoProrrogaCrearComponent } from './proyecto-prorroga-crear.component';
 import { ProyectoProrrogaActionService } from '../proyecto-prorroga.action.service';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrrogaState } from '../../proyecto/proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 
@@ -33,7 +33,7 @@ describe('ProyectoProrrogaCrearComponent', () => {
     id: 1,
     proyecto,
     fechaConcesion: new Date(),
-    tipoProrroga: TipoProrrogaEnum.TIEMPO,
+    tipo: Tipo.TIEMPO,
     fechaFin: new Date(),
     numProrroga: 1
   } as IProyectoProrroga;

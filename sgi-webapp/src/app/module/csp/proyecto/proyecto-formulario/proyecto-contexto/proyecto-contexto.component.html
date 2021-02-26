@@ -52,8 +52,9 @@
         <mat-form-field>
           <mat-label>{{'csp.contexto.proyecto.propiedad.resultados' | translate}}</mat-label>
           <mat-select matNativeControl formControlName="propiedadResultados">
-            <mat-option *ngFor="let propiedad of propiedadResultados" [value]="propiedad | translate">
-              {{ propiedad | translate}}
+            <mat-option *ngFor="let propiedadResultados of PROPIEDAD_RESULTADOS_MAP | keyvalue"
+              [value]="propiedadResultados.key">
+              {{ propiedadResultados.value | translate}}
             </mat-option>
           </mat-select>
         </mat-form-field>

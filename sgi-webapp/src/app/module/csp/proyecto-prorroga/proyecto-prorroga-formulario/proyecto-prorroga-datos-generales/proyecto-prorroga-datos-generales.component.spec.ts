@@ -12,7 +12,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { ProyectoProrrogaDatosGeneralesComponent } from './proyecto-prorroga-datos-generales.component';
 import { ProyectoProrrogaActionService } from '../../proyecto-prorroga.action.service';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrrogaState } from '../../../proyecto/proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
 

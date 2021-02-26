@@ -4,7 +4,7 @@ import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
-import { IProyecto, TipoHojaFirmaEnum, TipoHorasAnualesEnum, TipoPlantillaJustificacionEnum } from '@core/models/csp/proyecto';
+import { IProyecto, TipoHorasAnuales } from '@core/models/csp/proyecto';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
@@ -71,9 +71,6 @@ interface IProyectoBackend {
   /** ambitoGeografico */
   ambitoGeografico: ITipoAmbitoGeografico;
 
-  /** plantillaJustificacion */
-  plantillaJustificacion: TipoPlantillaJustificacionEnum;
-
   /** confidencial */
   confidencial: boolean;
 
@@ -95,9 +92,6 @@ interface IProyectoBackend {
   /** timesheet */
   timesheet: boolean;
 
-  /** plantillaHojaFirma */
-  plantillaHojaFirma: TipoHojaFirmaEnum;
-
   /** paquetesTrabajo */
   paquetesTrabajo: boolean;
 
@@ -105,7 +99,7 @@ interface IProyectoBackend {
   costeHora: boolean;
 
   /** tipoHorasAnuales */
-  tipoHorasAnuales: TipoHorasAnualesEnum;
+  tipoHorasAnuales: TipoHorasAnuales;
 
   /** contratos */
   contratos: boolean;
@@ -166,14 +160,12 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
         convocatoriaExterna: value.convocatoriaExterna,
         solicitud: value.solicitud,
         ambitoGeografico: value.ambitoGeografico,
-        plantillaJustificacion: value.plantillaJustificacion,
         confidencial: value.confidencial,
         clasificacionCVN: value.clasificacionCVN,
         colaborativo: value.colaborativo,
         coordinadorExterno: value.coordinadorExterno,
         uniSubcontratada: value.uniSubcontratada,
         timesheet: value.timesheet,
-        plantillaHojaFirma: value.plantillaHojaFirma,
         paquetesTrabajo: value.paquetesTrabajo,
         costeHora: value.costeHora,
         tipoHorasAnuales: value.tipoHorasAnuales,
@@ -205,14 +197,12 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
         convocatoriaExterna: value.convocatoriaExterna,
         solicitud: value.solicitud,
         ambitoGeografico: value.ambitoGeografico,
-        plantillaJustificacion: value.plantillaJustificacion,
         confidencial: value.confidencial,
         clasificacionCVN: value.clasificacionCVN,
         colaborativo: value.colaborativo,
         coordinadorExterno: value.coordinadorExterno,
         uniSubcontratada: value.uniSubcontratada,
         timesheet: value.timesheet,
-        plantillaHojaFirma: value.plantillaHojaFirma,
         paquetesTrabajo: value.paquetesTrabajo,
         costeHora: value.costeHora,
         tipoHorasAnuales: value.tipoHorasAnuales,

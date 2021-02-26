@@ -5,7 +5,8 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
+import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
+import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -37,8 +38,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
-  tiposFormulario: TipoFormularioSolicitud[];
-
   private unidadesGestion = [] as IUnidadGestion[];
   unidadesGestionFiltered$: Observable<IUnidadGestion[]>;
 
@@ -51,6 +50,14 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   private subscriptions = [] as Subscription[];
+
+  get FORMULARIO_SOLICITUD_MAP() {
+    return FORMULARIO_SOLICITUD_MAP;
+  }
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -98,7 +105,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   ngOnInit(): void {
     super.ngOnInit();
     this.loadUnidadesGestion();
-    this.loadTiposFormulario();
 
     this.dataSourceEntidadesConvocantes = new MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>();
 
@@ -182,13 +188,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       }
     );
 
-  }
-
-  /**
-   * Carga los tipos de justificacion del enum TipoFormularioSolicitud
-   */
-  private loadTiposFormulario() {
-    this.tiposFormulario = Object.keys(TipoFormularioSolicitud).map(key => TipoFormularioSolicitud[key]);
   }
 
   /**

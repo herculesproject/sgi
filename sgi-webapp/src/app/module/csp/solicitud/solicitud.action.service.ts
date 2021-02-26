@@ -19,7 +19,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
@@ -30,7 +30,7 @@ import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/so
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
 import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.fragment';
-import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { Estado } from '@core/models/csp/estado-solicitud';
 
 
 @Injectable()
@@ -172,7 +172,7 @@ export class SolicitudActionService extends ActionService {
       this.subscriptions.push(subscription);
 
       // Si se encuentra en estado borrador se debe comprobar si cumple las validacones para  hacer el cambio a "Presentada".
-      if (this.solicitud.estado.estado === TipoEstadoSolicitud.BORRADOR) {
+      if (this.solicitud.estado.estado === Estado.BORRADOR) {
         this.presentable(this.solicitud.id).subscribe(
           (isPrentable) => {
             this.isPresentable$.next(isPrentable);

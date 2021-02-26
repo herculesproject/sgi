@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IConvocatoria } from './convocatoria';
@@ -6,19 +7,7 @@ import { ISolicitud } from './solicitud';
 import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
-export enum TipoPlantillaJustificacionEnum {
-  N = 'N/A'
-}
 
-export enum TipoHojaFirmaEnum {
-  N = 'N/A'
-}
-
-export enum TipoHorasAnualesEnum {
-  VALOR_FIJO = 'Valor fijo',
-  REALES = 'Reales (TS)',
-  POR_CATEGORIA = 'Por categoría'
-}
 
 export interface IProyecto {
 
@@ -67,9 +56,6 @@ export interface IProyecto {
   /** ambitoGeografico */
   ambitoGeografico: ITipoAmbitoGeografico;
 
-  /** plantillaJustificacion */
-  plantillaJustificacion: TipoPlantillaJustificacionEnum;
-
   /** confidencial */
   confidencial: boolean;
 
@@ -88,9 +74,6 @@ export interface IProyecto {
   /** timesheet */
   timesheet: boolean;
 
-  /** plantillaHojaFirma */
-  plantillaHojaFirma: TipoHojaFirmaEnum;
-
   /** paquetesTrabajo */
   paquetesTrabajo: boolean;
 
@@ -98,7 +81,7 @@ export interface IProyecto {
   costeHora: boolean;
 
   /** tipoHorasAnuales */
-  tipoHorasAnuales: TipoHorasAnualesEnum;
+  tipoHorasAnuales: TipoHorasAnuales;
 
   /** contratos */
   contratos: boolean;
@@ -124,3 +107,16 @@ export interface IProyecto {
   /** activo  */
   activo: boolean;
 }
+
+
+export enum TipoHorasAnuales {
+  FIJO = 'FIJO',
+  REAL = 'REAL',
+  CATEGORIA = 'CATEGORIA'
+}
+
+export const TIPO_HORAS_ANUALES_MAP: Map<TipoHorasAnuales, string> = new Map([
+  [TipoHorasAnuales.FIJO, marker('csp.proyecto.tipo-horas-anuales.FIJO')],
+  [TipoHorasAnuales.REAL, marker('csp.proyecto.tipo-horas-anuales.REAL')],
+  [TipoHorasAnuales.CATEGORIA, marker('csp.proyecto.tipo-horas-anuales.CATEGORIA')]
+]);

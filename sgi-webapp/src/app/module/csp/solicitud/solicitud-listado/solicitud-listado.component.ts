@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -46,14 +46,14 @@ const MSG_ERROR_CREAR_PROYECTO = marker('csp.solicitud.listado.crear.proyecto.er
 })
 export class SolicitudListadoComponent extends AbstractTablePaginationComponent<ISolicitud> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
-  TipoEstadoSolicitud = TipoEstadoSolicitud;
+
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   solicitudes$: Observable<ISolicitud[]>;
   textoCrear = MSG_BUTTON_NEW;
 
-  tiposEstadoSolicitud: TipoEstadoSolicitud[];
+
   busquedaAvanzada = false;
   private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
@@ -62,6 +62,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   mapCrearProyecto: Map<number, boolean> = new Map();
   mapModificable: Map<number, boolean> = new Map();
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -109,7 +113,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       fuenteFinanciacion: new FormControl(undefined)
     });
 
-    this.loadTiposEstadoSolicitud();
     this.getFuentesFinanciacion();
     this.getPlanesInvestigacion();
   }
@@ -171,8 +174,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   protected createFilters(): SgiRestFilter[] {
     let filtros: SgiRestFilter[] = [];
     this.addFiltro(filtros, 'referenciaConvocatoria', SgiRestFilterType.LIKE, this.formGroup.controls.referenciaConvocatoria.value);
-    this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, Object.keys(TipoEstadoSolicitud)
-      .filter(key => TipoEstadoSolicitud[key] === this.formGroup.controls.estadoSolicitud.value)[0]);
+    this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, this.formGroup.controls.estadoSolicitud.value);
     if (this.busquedaAvanzada) {
       filtros = this.createFiltersAvanzados(filtros);
     }
@@ -204,10 +206,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.addFiltro(filtros, 'convocatoria.entidadFinanciadora.fuenteFinanciacion.id', SgiRestFilterType.EQUALS,
       controls.fuenteFinanciacion.value?.id);
     return filtros;
-  }
-
-  loadTiposEstadoSolicitud(): void {
-    this.tiposEstadoSolicitud = Object.keys(TipoEstadoSolicitud).map(key => TipoEstadoSolicitud[key]);
   }
 
   /**

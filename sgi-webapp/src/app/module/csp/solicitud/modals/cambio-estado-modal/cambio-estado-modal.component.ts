@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -12,8 +12,8 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
 export interface SolicitudCambioEstadoModalComponentData {
-  estadoActual: TipoEstadoSolicitud;
-  estadoNuevo: TipoEstadoSolicitud;
+  estadoActual: Estado;
+  estadoNuevo: Estado;
   comentario: string;
 }
 @Component({
@@ -29,6 +29,11 @@ export class CambioEstadoModalComponent implements OnInit {
   fxFlexProperties2: FxFlexProperties;
   fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
+  }
 
   constructor(public matDialogRef: MatDialogRef<SolicitudCambioEstadoModalComponentData>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudCambioEstadoModalComponentData,

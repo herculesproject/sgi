@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FormFragment } from '@core/services/action-service';
@@ -53,7 +53,7 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
       }
     );
 
-    if (this.proyecto?.estado?.estado === TipoEstadoProyecto.ABIERTO) {
+    if (this.proyecto?.estado?.estado === Estado.ABIERTO) {
       form.controls.fechaInicioPresentacion.setValidators([Validators.required]);
       form.controls.fechaFinPresentacion.setValidators([Validators.required]);
     } else {

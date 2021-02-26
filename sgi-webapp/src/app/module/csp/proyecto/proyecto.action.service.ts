@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ActionService } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
@@ -103,7 +103,7 @@ export class ProyectoActionService extends ActionService {
     if (!this.proyecto?.activo) {
       return true;
     }
-    if (this.proyecto?.estado?.estado === TipoEstadoProyecto.CANCELADO || this.proyecto?.estado?.estado === TipoEstadoProyecto.FINALIZADO) {
+    if (this.proyecto?.estado?.estado === Estado.CANCELADO || this.proyecto?.estado?.estado === Estado.FINALIZADO) {
       return true;
     }
     return false;

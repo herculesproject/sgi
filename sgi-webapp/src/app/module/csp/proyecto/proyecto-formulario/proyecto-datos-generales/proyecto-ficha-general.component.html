@@ -10,8 +10,12 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.ficha.general.estado' | translate}}</mat-label>
-          <input type="text" placeholder="{{'csp.proyecto.ficha.general.estado' | translate}}" matInput
-            formControlName="estado">
+          <mat-select formControlName="estado" disabled
+            placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
+            <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
+              {{ estado.value | translate}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
 
@@ -265,19 +269,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Plantilla de justificación ecónomica-->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.ficha.general.justificacion' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="justificacion">
-            <mat-option *ngFor="let hoja of plantilla" [value]="hoja | translate">
-              {{ hoja | translate}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
     </div>
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -383,19 +374,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Plantilla hoja firma -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.ficha.general.hoja.firma' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="plantillaHojaFirma">
-            <mat-option *ngFor="let tipo of tipoHoja" [value]="tipo | translate">
-              {{ tipo | translate}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
       <!-- Paquete de trabajo -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
@@ -437,12 +415,13 @@
         [fxFlexOrder]="fxFlexProperties.order" *ngIf="requiredHoras">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.ficha.general.horas.anuales' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="horasAnuales" [required]="requiredHoras">
-            <mat-option *ngFor="let tipo of tipoHoras" [value]="tipo | translate">
-              {{ tipo | translate}}
+          <mat-select matNativeControl formControlName="tipoHorasAnuales" [required]="requiredHoras">
+            <mat-option *ngFor="let tipoHorasAnuales of TIPO_HORAS_ANUALES_MAP | keyvalue"
+              [value]="tipoHorasAnuales.key">
+              {{ tipoHorasAnuales.value | translate}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="formGroup.controls.horasAnuales.errors?.required">
+          <mat-error *ngIf="formGroup.controls.tipoHorasAnuales.errors?.required">
             {{'csp.proyecto.ficha.general.coste.horas.anuales.error.required' | translate}}
           </mat-error>
         </mat-form-field>

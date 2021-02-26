@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga, TIPO_MAP } from '@core/models/csp/proyecto-prorroga';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
@@ -23,8 +23,7 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
   periodoSeguimientosSelectedProyecto: IProyectoProrroga[] = [];
   FormGroupUtil = FormGroupUtil;
 
-  tipoProrroga = Object.keys(TipoProrrogaEnum).map<string>(
-    (key) => TipoProrrogaEnum[key]);
+
 
   constructor(
     protected actionService: ProyectoProrrogaActionService
@@ -60,6 +59,10 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
 
   private loadProrrogasSelectedProyecto(): void {
     this.periodoSeguimientosSelectedProyecto = this.formPart.selectedProyectoProrrogas;
+  }
+
+  get TIPO_MAP() {
+    return TIPO_MAP;
   }
 
 }

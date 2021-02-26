@@ -2,7 +2,7 @@
 import { IConvocatoria } from './convocatoria';
 import { IEstadoSolicitud } from './estado-solicitud';
 import { IPersona } from '../sgp/persona';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 
 export interface ISolicitud {
@@ -34,7 +34,7 @@ export interface ISolicitud {
   solicitante: IPersona;
 
   /** Tipo formulario solicitud */
-  formularioSolicitud: TipoFormularioSolicitud;
+  formularioSolicitud: FormularioSolicitud;
 
   /** Unidad gestion */
   unidadGestion: IUnidadGestion;

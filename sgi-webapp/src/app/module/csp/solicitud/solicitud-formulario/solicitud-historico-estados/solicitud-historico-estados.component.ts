@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { ESTADO_MAP, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
@@ -32,6 +32,10 @@ export class SolicitudHistoricoEstadosComponent extends FragmentComponent implem
   ) {
     super(actionService.FRAGMENT.HISTORICO_ESTADOS, actionService);
     this.formPart = this.fragment as SolicitudHistoricoEstadosFragment;
+  }
+
+  get ESTADO_MAP() {
+    return ESTADO_MAP;
   }
 
   ngOnInit(): void {

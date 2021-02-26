@@ -1,16 +1,15 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
 import { FormFragment } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 
 export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<IConfiguracionSolicitud> {
   configuracionSolicitud: IConfiguracionSolicitud;
@@ -37,7 +36,6 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       formularioSolicitud: new FormControl(''),
       fechaInicioFase: new FormControl({ value: '', disabled: true }),
       fechaFinFase: new FormControl({ value: '', disabled: true }),
-      tipoBaremacion: new FormControl(''),
       importeMaximoSolicitud: new FormControl(null, [Validators.maxLength(50)]),
     });
     if (this.readonly) {
@@ -62,8 +60,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       fechaInicioFase: fechaInicio,
       fechaFinFase: fechaFin,
       importeMaximoSolicitud: configuracionSolicitud ? configuracionSolicitud?.importeMaximoSolicitud : null,
-      formularioSolicitud: configuracionSolicitud ? configuracionSolicitud?.formularioSolicitud : null,
-      tipoBaremacion: configuracionSolicitud ? configuracionSolicitud?.baremacionRef : null,
+      formularioSolicitud: configuracionSolicitud ? configuracionSolicitud?.formularioSolicitud : null
     };
     return result;
   }
@@ -104,7 +101,6 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     this.configuracionSolicitud.tramitacionSGI = form.tramitacionSGI ? true : false;
     this.configuracionSolicitud.fasePresentacionSolicitudes = form.fasePresentacionSolicitudes ? form.fasePresentacionSolicitudes : null;
 
-    this.configuracionSolicitud.baremacionRef = form.tipoBaremacion;
     this.configuracionSolicitud.formularioSolicitud = form.formularioSolicitud;
     this.configuracionSolicitud.importeMaximoSolicitud = form.importeMaximoSolicitud;
 

@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { IProyectoContexto, PropiedadResultados } from '@core/models/csp/proyecto-contexto';
+import { IProyectoContexto, PROPIEDAD_RESULTADOS_MAP } from '@core/models/csp/proyecto-contexto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -33,9 +33,6 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   columns = ['nombreRaizArbol', 'areaTematicaConvocatoria', 'areaTematicaProyecto', 'acciones'];
-
-  propiedadResultados = Object.keys(PropiedadResultados).map<string>(
-    (key) => PropiedadResultados[key]);
 
   private subscriptions = [] as Subscription[];
 
@@ -92,6 +89,11 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
         }
       }
     );
+  }
+
+
+  get PROPIEDAD_RESULTADOS_MAP() {
+    return PROPIEDAD_RESULTADOS_MAP;
   }
 
 }

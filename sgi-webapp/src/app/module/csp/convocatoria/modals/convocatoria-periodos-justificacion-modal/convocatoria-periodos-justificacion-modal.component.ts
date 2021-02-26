@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } fro
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
-import { IConvocatoriaPeriodoJustificacion, TipoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
+import { IConvocatoriaPeriodoJustificacion, Tipo, TIPO_MAP } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -35,8 +35,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
 
   FormGroupUtil = FormGroupUtil;
 
-  tiposJustificacion: TipoJustificacion[];
-
   textSaveOrUpdate: string;
 
   constructor(
@@ -66,7 +64,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.loadTiposJustificacion();
     this.textSaveOrUpdate = this.data.convocatoriaPeriodoJustificacion?.numPeriodo ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
@@ -82,17 +79,17 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       });
 
     const periodoJustificacionFinal = this.data.convocatoriaPeriodoJustificacionList
-      .find(periodoJustificacion => periodoJustificacion.value.tipoJustificacion === TipoJustificacion.FINAL
+      .find(periodoJustificacion => periodoJustificacion.value.tipo === Tipo.FINAL
         && periodoJustificacion.value.mesInicial !== this.data.convocatoriaPeriodoJustificacion.mesInicial);
 
     const ultimoPeriodoJustificacionNoFinal = this.data.convocatoriaPeriodoJustificacionList
-      .filter(periodoJustificacion => periodoJustificacion.value.tipoJustificacion !== TipoJustificacion.FINAL
+      .filter(periodoJustificacion => periodoJustificacion.value.tipo !== Tipo.FINAL
         && periodoJustificacion.value.mesInicial !== this.data.convocatoriaPeriodoJustificacion.mesInicial)
       .sort((a, b) => (b.value.mesInicial > a.value.mesInicial) ? 1 : ((a.value.mesInicial > b.value.mesInicial) ? -1 : 0)).find(c => true);
 
     const formGroup = new FormGroup({
       numPeriodo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.numPeriodo, [Validators.required]),
-      tipoJustificacion: new FormControl(this.data.convocatoriaPeriodoJustificacion?.tipoJustificacion, [Validators.required]),
+      tipo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.tipo, [Validators.required]),
       desdeMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesInicial, [Validators.required, Validators.min(1)]),
       hastaMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesFinal, [Validators.required, Validators.min(2)]),
       fechaInicio: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion, []),
@@ -112,9 +109,9 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
 
     // Si ya existe un periodo final tiene que ser el ultimo y solo puede haber 1
     if (periodoJustificacionFinal) {
-      formGroup.get('tipoJustificacion').setValidators([
-        StringValidator.notIn([TipoJustificacion.FINAL]),
-        formGroup.get('tipoJustificacion').validator
+      formGroup.get('tipo').setValidators([
+        StringValidator.notIn([Tipo.FINAL]),
+        formGroup.get('tipo').validator
       ]);
 
       formGroup.get('desdeMes').setValidators([
@@ -136,7 +133,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   protected getDatosForm(): IConvocatoriaPeriodoJustificacion {
     const convocatoriaPeriodoJustificacion = this.data.convocatoriaPeriodoJustificacion;
     convocatoriaPeriodoJustificacion.numPeriodo = this.formGroup.get('numPeriodo').value;
-    convocatoriaPeriodoJustificacion.tipoJustificacion = this.formGroup.get('tipoJustificacion').value;
+    convocatoriaPeriodoJustificacion.tipo = this.formGroup.get('tipo').value;
     convocatoriaPeriodoJustificacion.mesInicial = this.formGroup.get('desdeMes').value;
     convocatoriaPeriodoJustificacion.mesFinal = this.formGroup.get('hastaMes').value;
     convocatoriaPeriodoJustificacion.fechaInicioPresentacion = this.formGroup.get('fechaInicio').value;
@@ -146,12 +143,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   }
 
 
-  /**
-   * Carga los tipos de justificacion del enum TipoJustificacion
-   */
-  loadTiposJustificacion() {
-    this.tiposJustificacion = Object.keys(TipoJustificacion).map(key => TipoJustificacion[key]);
-  }
+
 
   /**
    * Recalcula el numero de periodo en funcion de la ordenacion por mes inicial de todos los periodos.
@@ -177,7 +169,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   private isFinalUltimoPeriodo(mesFinUltimoPeriodoNoFinal: number): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 
-      const tipoJustificacionControl = formGroup.controls.tipoJustificacion;
+      const tipoJustificacionControl = formGroup.controls.tipo;
       const mesInicioControl = formGroup.controls.desdeMes;
 
       if (!mesFinUltimoPeriodoNoFinal || (tipoJustificacionControl.errors && !tipoJustificacionControl.errors.finalNotLast)
@@ -188,7 +180,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       const mesInicioNumber = mesInicioControl.value;
       const tipoJustificacionValue = tipoJustificacionControl.value;
 
-      if (tipoJustificacionValue === TipoJustificacion.FINAL && mesInicioNumber < mesFinUltimoPeriodoNoFinal) {
+      if (tipoJustificacionValue === Tipo.FINAL && mesInicioNumber < mesFinUltimoPeriodoNoFinal) {
         tipoJustificacionControl.setErrors({ finalNotLast: true });
         tipoJustificacionControl.markAsTouched({ onlySelf: true });
       } else if (tipoJustificacionControl.errors) {
@@ -196,6 +188,10 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
         tipoJustificacionControl.updateValueAndValidity({ onlySelf: true });
       }
     };
+  }
+
+  get TIPO_MAP() {
+    return TIPO_MAP;
   }
 
 }

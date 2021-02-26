@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -60,7 +60,7 @@ interface ISolicitudBackend {
   solicitanteRef: string;
 
   /** Tipo formulario solicitud */
-  formularioSolicitud: TipoFormularioSolicitud;
+  formularioSolicitud: FormularioSolicitud;
 
   /** Unidad gestion */
   unidadGestionRef: string;

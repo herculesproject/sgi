@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { ActionService } from '@core/services/action-service';
 import { ProyectoProrrogaDocumentoService } from '@core/services/csp/proyecto-prorroga-documento.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -74,7 +74,7 @@ export class ProyectoProrrogaActionService extends ActionService {
   private mostrarAvisoImporte(): boolean {
     const proyectoProrroga = this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : {} as IProyectoProrroga;
     let mostrarAvisoImporte = false;
-    if (proyectoProrroga.tipoProrroga === TipoProrrogaEnum.IMPORTE || proyectoProrroga.tipoProrroga === TipoProrrogaEnum.TIEMPO_IMPORTE) {
+    if (proyectoProrroga.tipo === Tipo.IMPORTE || proyectoProrroga.tipo === Tipo.TIEMPO_IMPORTE) {
       if (history.state?.proyectoProrroga && history.state?.proyectoProrroga.id) {
         if (proyectoProrroga.importe !== history.state?.proyectoProrroga.importe) {
           mostrarAvisoImporte = true;

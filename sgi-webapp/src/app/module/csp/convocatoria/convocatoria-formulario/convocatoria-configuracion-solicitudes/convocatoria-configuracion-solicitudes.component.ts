@@ -5,8 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
+import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
@@ -43,11 +42,9 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
-  tiposFormularioSolicitud = Object.keys(TipoFormularioSolicitud).map<string>(
-    (key) => TipoFormularioSolicitud[key]);
-
-  tipoBaremacion = Object.keys(TipoBaremacionEnum).map<string>(
-    (key) => TipoBaremacionEnum[key]);
+  get FORMULARIO_SOLICITUD_MAP() {
+    return FORMULARIO_SOLICITUD_MAP;
+  }
 
   columns = ['nombre', 'descripcion', 'observaciones', 'acciones'];
   numPage = [5, 10, 25, 100];
@@ -241,7 +238,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
 
     const data: ConvocatoriaConfiguracionSolicitudesModalData = {
       documentoRequerido: wrapper ? wrapper.value : documentosRequerido,
-      modeloEjecucionId: modeloEjecucionId,
+      modeloEjecucionId,
       readonly: this.formPart.readonly
     };
     const config = {

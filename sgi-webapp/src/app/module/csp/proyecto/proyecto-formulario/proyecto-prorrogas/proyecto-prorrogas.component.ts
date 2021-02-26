@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoProrroga, TipoProrrogaEnum } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProrroga, Tipo, TIPO_MAP } from '@core/models/csp/proyecto-prorroga';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -16,12 +16,6 @@ import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoProrrogasFragment } from './proyecto-prorrogas.fragment';
-
-
-
-const MSG_DELETE = marker('csp.proyecto-prorroga.borrar');
-const MSG_DELETE_DOCUMENTO = marker('csp.proyecto-prorroga.borrar.documentos');
-
 
 export interface IProyectoProrrogaState {
   proyecto: IProyecto;
@@ -47,11 +41,15 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
 
   lastProyectoProrroga: IProyectoProrroga;
 
-  displayedColumns = ['numProrroga', 'fechaConcesion', 'tipoProrroga', 'fechaFin', 'importe', 'observaciones', 'acciones'];
+  displayedColumns = ['numProrroga', 'fechaConcesion', 'tipo', 'fechaFin', 'importe', 'observaciones', 'acciones'];
 
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoProrroga>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  get TIPO_MAP() {
+    return TIPO_MAP;
+  }
 
   constructor(
     public actionService: ProyectoActionService,
@@ -135,12 +133,12 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
 
 
   private getInfoMensajeDelete(proyectoProrroga: IProyectoProrroga, documento: boolean) {
-    switch (proyectoProrroga.tipoProrroga) {
-      case TipoProrrogaEnum.IMPORTE:
+    switch (proyectoProrroga.tipo) {
+      case Tipo.IMPORTE:
         return documento ? marker('csp.proyecto-prorroga.borrar.documentos.importe') : marker('csp.proyecto-prorroga.borrar.importe');
-      case TipoProrrogaEnum.TIEMPO:
+      case Tipo.TIEMPO:
         return documento ? marker('csp.proyecto-prorroga.borrar.documentos.tiempo') : marker('csp.proyecto-prorroga.borrar.tiempo');
-      case TipoProrrogaEnum.TIEMPO_IMPORTE:
+      case Tipo.TIEMPO_IMPORTE:
         return documento ? marker('csp.proyecto-prorroga.borrar.documentos.tiempoImporte') : marker('csp.proyecto-prorroga.borrar.tiempoImporte');
       default:
         return '';

@@ -5,8 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
@@ -72,10 +71,9 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   const configuracionSolicitud: IConfiguracionSolicitud = {
     convocatoria,
     fasePresentacionSolicitudes,
-    formularioSolicitud: TipoFormularioSolicitud.ESTANDAR,
+    formularioSolicitud: FormularioSolicitud.ESTANDAR,
     id: 1,
     importeMaximoSolicitud: 1_000_000,
-    baremacionRef: TipoBaremacionEnum.SIN_BAREMACION,
     tramitacionSGI: true
   };
 

@@ -150,23 +150,9 @@
         <mat-label>{{'csp.convocatoria.configuracionSolicitud.formularioSolicitud' | translate}}</mat-label>
         <mat-select matNativeControl formControlName="formularioSolicitud">
           <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let tipoFormularioSolicitud of tiposFormularioSolicitud"
-            [value]="tipoFormularioSolicitud | translate">
-            {{ tipoFormularioSolicitud | translate}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <!-- Baremación -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field>
-        <mat-label>{{'csp.convocatoria.configuracionSolicitud.baremacion' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="tipoBaremacion">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let baremacion of tipoBaremacion" [value]="baremacion | translate">
-            {{ baremacion | translate}}
+          <mat-option *ngFor="let formularioSolicitud of FORMULARIO_SOLICITUD_MAP | keyvalue"
+            [value]="formularioSolicitud.key">
+            {{ formularioSolicitud.value | translate}}
           </mat-option>
         </mat-select>
       </mat-form-field>

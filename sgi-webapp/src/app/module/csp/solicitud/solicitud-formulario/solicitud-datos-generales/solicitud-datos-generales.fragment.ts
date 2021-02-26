@@ -1,7 +1,7 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
-import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { Estado } from '@core/models/csp/estado-solicitud';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
@@ -79,13 +79,13 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       map(() => {
         if (this.solicitud && this.solicitud.estado) {
           const estadosComentarioVisble = [
-            TipoEstadoSolicitud.EXCLUIDA_PROVISIONAL,
-            TipoEstadoSolicitud.DESISTIDA,
-            TipoEstadoSolicitud.ALEGADA_ADMISION,
-            TipoEstadoSolicitud.EXCLUIDA,
-            TipoEstadoSolicitud.DENEGADA_PROVISIONAL,
-            TipoEstadoSolicitud.ALEGADA_CONCESION,
-            TipoEstadoSolicitud.DENEGADA
+            Estado.EXCLUIDA_PROVISIONAL,
+            Estado.DESISTIDA,
+            Estado.ALEGADA_ADMISION,
+            Estado.EXCLUIDA,
+            Estado.DENEGADA_PROVISIONAL,
+            Estado.ALEGADA_CONCESION,
+            Estado.DENEGADA
           ];
 
           this.showComentariosEstado$.next(estadosComentarioVisble.includes(this.solicitud.estado.estado));
@@ -104,12 +104,12 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
-      estado: new FormControl({ value: TipoEstadoSolicitud.BORRADOR, disabled: true }),
+      estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
       solicitante: new FormControl('', Validators.required),
       convocatoria: new FormControl({ value: '', disabled: this.isEdit() }),
       comentariosEstado: new FormControl({ value: '', disabled: true }),
       convocatoriaExterna: new FormControl(''),
-      tipoFormulario: new FormControl({ value: '', disabled: this.isEdit() }),
+      formularioSolicitud: new FormControl({ value: null, disabled: this.isEdit() }),
       unidadGestion: new FormControl({ value: '' }),
       codigoExterno: new FormControl('', Validators.maxLength(50)),
       codigoRegistro: new FormControl({ value: '', disabled: true }),
@@ -149,7 +149,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       solicitante: solicitud.solicitante,
       convocatoria: solicitud.convocatoria,
       convocatoriaExterna: solicitud.convocatoriaExterna,
-      tipoFormulario: solicitud.formularioSolicitud,
+      formularioSolicitud: solicitud.formularioSolicitud,
       unidadGestion: solicitud.unidadGestion,
       codigoRegistro: solicitud.codigoRegistroInterno,
       codigoExterno: solicitud.codigoExterno,
@@ -168,7 +168,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     this.solicitud.solicitante = form.solicitante.value;
     this.solicitud.convocatoria = form.convocatoria.value;
     this.solicitud.convocatoriaExterna = form.convocatoriaExterna.value;
-    this.solicitud.formularioSolicitud = form.tipoFormulario.value;
+    this.solicitud.formularioSolicitud = form.formularioSolicitud.value;
     this.solicitud.unidadGestion = form.unidadGestion.value;
     this.solicitud.codigoExterno = form.codigoExterno.value;
     this.solicitud.observaciones = form.observaciones.value;
@@ -354,7 +354,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
       this.subscriptions.push(
         this.configuracionSolicitudService.findById(convocatoria.id).subscribe(configuracionSolicitud => {
-          this.getFormGroup().controls.tipoFormulario.setValue(configuracionSolicitud.formularioSolicitud);
+          this.getFormGroup().controls.formularioSolicitud.setValue(configuracionSolicitud.formularioSolicitud);
         })
       );
 
@@ -364,13 +364,13 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     } else if (!this.isEdit()) {
       // Clean dependencies
       this.getFormGroup().controls.unidadGestion.setValue(null);
-      this.getFormGroup().controls.tipoFormulario.setValue(null);
+      this.getFormGroup().controls.formularioSolicitud.setValue(null);
       this.entidadesConvocantesModalidad$.next([]);
 
       // Enable fields
       this.getFormGroup().controls.convocatoriaExterna.enable();
       this.getFormGroup().controls.unidadGestion.enable();
-      this.getFormGroup().controls.tipoFormulario.enable();
+      this.getFormGroup().controls.formularioSolicitud.enable();
     }
   }
 
@@ -525,7 +525,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   private setConditionalValidators(form: FormGroup, solicitud?: ISolicitud): void {
     const convocatoriaControl = form.controls.convocatoria;
     const convocatoriaExternaControl = form.controls.convocatoriaExterna;
-    const tipoFormularioControl = form.controls.tipoFormulario;
+    const formularioSolicitudControl = form.controls.formularioSolicitud;
     const unidadGestionControl = form.controls.unidadGestion;
 
     const convocatoriaSolicitud = solicitud ? solicitud.convocatoria : convocatoriaControl.value;
@@ -539,22 +539,22 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       else if (!convocatoriaSolicitud) {
         convocatoriaControl.setValidators(null);
         convocatoriaExternaControl.setValidators([Validators.required, Validators.maxLength(50)]);
-        tipoFormularioControl.setValidators([Validators.required]);
+        formularioSolicitudControl.setValidators([Validators.required]);
         unidadGestionControl.setValidators([Validators.required, IsEntityValidator.isValid()]);
       } else {
         convocatoriaControl.setValidators([Validators.required]);
         convocatoriaExternaControl.setValidators(null);
-        tipoFormularioControl.setValidators(null);
+        formularioSolicitudControl.setValidators(null);
         unidadGestionControl.setValidators(null);
 
         convocatoriaExternaControl.disable({ emitEvent: false });
-        tipoFormularioControl.disable({ emitEvent: false });
+        formularioSolicitudControl.disable({ emitEvent: false });
         unidadGestionControl.disable({ emitEvent: false });
       }
 
       convocatoriaControl.updateValueAndValidity({ emitEvent: false });
       convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
-      tipoFormularioControl.updateValueAndValidity({ emitEvent: false });
+      formularioSolicitudControl.updateValueAndValidity({ emitEvent: false });
       unidadGestionControl.updateValueAndValidity({ emitEvent: false });
     } else if (!this.readonly && convocatoriaSolicitud) {
       unidadGestionControl.disable({ emitEvent: false });

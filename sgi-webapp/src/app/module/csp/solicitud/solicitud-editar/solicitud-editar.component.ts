@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
-import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
-import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
+import { Estado } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -67,6 +67,10 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   disableCambioEstado = false;
   isPresentable: Boolean = false;
 
+  get Estado() {
+    return Estado;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
@@ -101,7 +105,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
    */
   isTipoEstandar(): void {
     const formularioSolicitud = this.actionService.getDatosGeneralesSolicitud().formularioSolicitud;
-    this.tipoEstandar = formularioSolicitud === TipoFormularioSolicitud.ESTANDAR;
+    this.tipoEstandar = formularioSolicitud === FormularioSolicitud.ESTANDAR;
   }
 
   saveOrUpdate(): void {
@@ -120,7 +124,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
 
 
 
-  hasEstadoCambio(...estadosSolicitud: TipoEstadoSolicitud[]): boolean {
+  hasEstadoCambio(...estadosSolicitud: Estado[]): boolean {
 
 
     let estadoCorrecto: boolean = false;
@@ -136,11 +140,6 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
     return estadoCorrecto;
 
   }
-
-  public get TipoEstadoSolicitud() {
-    return TipoEstadoSolicitud;
-  }
-
 
 
   cambioEstado(accion: string) {
@@ -217,31 +216,31 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         break;
       }
       case MSG_BUTTON_EXCLUIR_PROVISIONALMENTE: {
-        this.openModal(TipoEstadoSolicitud.EXCLUIDA_PROVISIONAL);
+        this.openModal(Estado.EXCLUIDA_PROVISIONAL);
         break;
       }
       case MSG_BUTTON_ALEGAR_ADMISION: {
-        this.openModal(TipoEstadoSolicitud.ALEGADA_ADMISION);
+        this.openModal(Estado.ALEGADA_ADMISION);
         break;
       }
       case MSG_BUTTON_EXCLUIR: {
-        this.openModal(TipoEstadoSolicitud.EXCLUIDA);
+        this.openModal(Estado.EXCLUIDA);
         break;
       }
       case MSG_BUTTON_DENEGAR_PROVISIONALMENTE: {
-        this.openModal(TipoEstadoSolicitud.DENEGADA_PROVISIONAL);
+        this.openModal(Estado.DENEGADA_PROVISIONAL);
         break;
       }
       case MSG_BUTTON_ALEGAR_CONCESION: {
-        this.openModal(TipoEstadoSolicitud.ALEGADA_CONCESION);
+        this.openModal(Estado.ALEGADA_CONCESION);
         break;
       }
       case MSG_BUTTON_DENEGAR: {
-        this.openModal(TipoEstadoSolicitud.DENEGADA);
+        this.openModal(Estado.DENEGADA);
         break;
       }
       case MSG_BUTTON_DESISTIR: {
-        this.openModal(TipoEstadoSolicitud.DESISTIDA);
+        this.openModal(Estado.DESISTIDA);
         break;
       }
       default: {
@@ -255,7 +254,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   /**
   * Apertura de modal cambio de estado para insertar comentario
   */
-  openModal(estadoNuevo: TipoEstadoSolicitud): void {
+  openModal(estadoNuevo: Estado): void {
     const data: SolicitudCambioEstadoModalComponentData = {
       estadoActual: this.actionService.getDatosGeneralesSolicitud()?.estado?.estado,
       estadoNuevo: estadoNuevo,
@@ -283,9 +282,9 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
    * @param comentario  comentario de cambio de estado.
    * @param estadoNuevo Nuevo estado de la solicitud.
    */
-  cambioEstadoComentario(comentario: string, estadoNuevo: TipoEstadoSolicitud) {
+  cambioEstadoComentario(comentario: string, estadoNuevo: Estado) {
     switch (estadoNuevo) {
-      case TipoEstadoSolicitud.EXCLUIDA_PROVISIONAL: {
+      case Estado.EXCLUIDA_PROVISIONAL: {
         this.actionService.excluirProvisionalmente(comentario).subscribe(
           () => { },
           (error) => {
@@ -299,7 +298,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
         break;
       }
-      case TipoEstadoSolicitud.ALEGADA_ADMISION: {
+      case Estado.ALEGADA_ADMISION: {
         this.actionService.alegarAdmision(comentario).subscribe(
           () => { },
           (error) => {
@@ -313,7 +312,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
         break;
       }
-      case TipoEstadoSolicitud.EXCLUIDA: {
+      case Estado.EXCLUIDA: {
         this.actionService.excluir(comentario).subscribe(
           () => { },
           (error) => {
@@ -327,7 +326,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
         break;
       }
-      case TipoEstadoSolicitud.DENEGADA_PROVISIONAL: {
+      case Estado.DENEGADA_PROVISIONAL: {
         this.actionService.denegarProvisionalmente(comentario).subscribe(
           () => { },
           (error) => {
@@ -341,7 +340,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
         break;
       }
-      case TipoEstadoSolicitud.ALEGADA_CONCESION: {
+      case Estado.ALEGADA_CONCESION: {
         this.actionService.alegarConcesion(comentario).subscribe(
           () => { },
           (error) => {
@@ -355,7 +354,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
         break;
       }
-      case TipoEstadoSolicitud.DENEGADA: {
+      case Estado.DENEGADA: {
         this.actionService.denegar(comentario).subscribe(
           () => { },
           (error) => {
@@ -370,7 +369,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         break;
       }
 
-      case TipoEstadoSolicitud.DESISTIDA: {
+      case Estado.DESISTIDA: {
         this.actionService.desistir(comentario).subscribe(
           () => { },
           (error) => {

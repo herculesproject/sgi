@@ -9,8 +9,12 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.solicitud.datosGenerales.estado' | translate}}</mat-label>
-        <input type="text" placeholder="{{'csp.solicitud.datosGenerales.estado' | translate}}" matInput
-          formControlName="estado">
+        <mat-select formControlName="estado" disabled
+          placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
+          <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
+            {{ estado.value | translate}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
 
@@ -70,9 +74,11 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form" fxFill>
         <mat-label>{{'csp.solicitud.datosGenerales.tipoFormulario' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="tipoFormulario" [required]="formPart.convocatoriaExternaRequired">
-          <mat-option *ngFor="let tipo of tiposFormulario" [value]="tipo">
-            {{ tipo | translate}}
+        <mat-select matNativeControl formControlName="formularioSolicitud"
+          [required]="formPart.convocatoriaExternaRequired">
+          <mat-option *ngFor="let formularioSolicitud of FORMULARIO_SOLICITUD_MAP | keyvalue"
+            [value]="formularioSolicitud.key">
+            {{ formularioSolicitud.value | translate}}
           </mat-option>
         </mat-select>
       </mat-form-field>

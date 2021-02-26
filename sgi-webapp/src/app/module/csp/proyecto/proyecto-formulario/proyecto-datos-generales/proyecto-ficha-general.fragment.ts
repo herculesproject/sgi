@@ -1,7 +1,7 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
-import { TipoEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
@@ -120,9 +120,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       contratacion: new FormControl(null),
       facturacion: new FormControl(null),
       iva: new FormControl(null),
-      plantillaHojaFirma: new FormControl(null),
-      justificacion: new FormControl(null),
-      horasAnuales: new FormControl(''),
+      tipoHorasAnuales: new FormControl(''),
       observaciones: new FormControl(''),
       comentario: new FormControl({
         value: '',
@@ -169,9 +167,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       contratacion: proyecto.contratos,
       facturacion: proyecto.facturacion,
       iva: proyecto.iva,
-      plantillaHojaFirma: proyecto.plantillaHojaFirma,
-      justificacion: proyecto.plantillaJustificacion,
-      horasAnuales: proyecto.tipoHorasAnuales,
+      tipoHorasAnuales: proyecto.tipoHorasAnuales,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario
     };
@@ -234,10 +230,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.contratos = form.contratacion.value;
     this.proyecto.facturacion = form.facturacion.value;
     this.proyecto.iva = form.iva.value;
-    this.proyecto.plantillaHojaFirma = form.plantillaHojaFirma.value;
-    this.proyecto.plantillaJustificacion = form.justificacion.value;
-    if (form.horasAnuales.value?.length > 0) {
-      this.proyecto.tipoHorasAnuales = form.horasAnuales.value;
+    if (form.tipoHorasAnuales.value?.length > 0) {
+      this.proyecto.tipoHorasAnuales = form.tipoHorasAnuales.value;
     } else {
       this.proyecto.tipoHorasAnuales = undefined;
     }
@@ -344,7 +338,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * Añade validadores al formulario dependiendo del estado del proyecto
    */
   private checkEstado(formgroup: FormGroup, proyecto: IProyecto): void {
-    if (proyecto.estado.estado === TipoEstadoProyecto.ABIERTO) {
+    if (proyecto.estado.estado === Estado.ABIERTO) {
       formgroup.get('finalidad').setValidators([
         Validators.required, IsEntityValidator.isValid()]);
       formgroup.get('ambitoGeografico').setValidators([
@@ -369,10 +363,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       this.abiertoRequired = true;
       this.comentarioEstadoCancelado = false;
-    } else if (proyecto.estado.estado === TipoEstadoProyecto.CANCELADO) {
+    } else if (proyecto.estado.estado === Estado.CANCELADO) {
       this.comentarioEstadoCancelado = true;
       this.getFormGroup().disable();
-    } else if (proyecto.estado.estado === TipoEstadoProyecto.FINALIZADO) {
+    } else if (proyecto.estado.estado === Estado.FINALIZADO) {
       this.comentarioEstadoCancelado = false;
       this.getFormGroup().disable();
     } else {
@@ -384,7 +378,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   get requiredAbierto() {
-    return this.proyecto.estado.estado === TipoEstadoProyecto.ABIERTO;
+    return this.proyecto.estado.estado === Estado.ABIERTO;
   }
 
   saveOrUpdate(): Observable<number> {
