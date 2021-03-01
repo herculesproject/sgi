@@ -186,7 +186,7 @@ public class ComiteIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredComiteList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 5L;
-    String query = "comite~Comite%,id:" + id;
+    String query = "comite=ke=Comite;id==" + id;
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -212,7 +212,7 @@ public class ComiteIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoFungibleList() throws Exception {
     // when: Ordenación por comite desc
-    String query = "comite-";
+    String query = "comite,desc";
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -247,9 +247,9 @@ public class ComiteIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V", "ETI-CNV-V")));
     // when: Ordena por comite desc
-    String sort = "comite-";
+    String sort = "comite,desc";
     // when: Filtra por comite like e id equals
-    String filter = "comite~%";
+    String filter = "comite=ke=Comite";
 
     URI uri = UriComponentsBuilder.fromUriString(COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

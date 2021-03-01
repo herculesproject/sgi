@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,7 +33,6 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -53,7 +51,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * EvaluacionControllerTest
@@ -224,8 +221,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito
-        .given(evaluacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(evaluacionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
@@ -245,8 +241,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     List<Evaluacion> evaluaciones = new ArrayList<>();
     evaluaciones.isEmpty();
 
-    BDDMockito
-        .given(evaluacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(evaluacionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(evaluaciones));
 
     mockMvc
@@ -264,8 +259,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito
-        .given(evaluacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(evaluacionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Evaluacion>>() {
           @Override
           public Page<Evaluacion> answer(InvocationOnMock invocation) throws Throwable {
@@ -320,66 +314,13 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     }
     String query = "esRevMinima:true,id:5";
 
-    BDDMockito
-        .given(evaluacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(evaluacionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Evaluacion>>() {
           @Override
           public Page<Evaluacion> answer(InvocationOnMock invocation) throws Throwable {
-            List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
-
             List<Evaluacion> content = new ArrayList<>();
             for (Evaluacion evaluacion : evaluaciones) {
-              boolean add = true;
-              for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(Evaluacion.class, queryCriteria.getKey());
-                field.setAccessible(true);
-                String fieldValue = ReflectionUtils.getField(field, evaluacion).toString();
-                switch (queryCriteria.getOperation()) {
-                  case EQUALS:
-                    if (!fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) > 0)) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) >= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LIKE:
-                    if (!fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) < 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) <= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_EQUALS:
-                    if (fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_LIKE:
-                    if (fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  default:
-                    break;
-                }
-              }
-              if (add) {
+              if (evaluacion.getEsRevMinima().equals(Boolean.TRUE) && evaluacion.getId().equals(5L)) {
                 content.add(evaluacion);
               }
             }
@@ -449,10 +390,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacionWithIsEliminable(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito
-        .given(evaluacionService.findAllByConvocatoriaReunionIdAndNoEsRevMinima(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(evaluaciones));
+    BDDMockito.given(evaluacionService.findAllByConvocatoriaReunionIdAndNoEsRevMinima(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
     mockMvc
@@ -472,10 +411,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     // given: One hundred EvaluacionWithIsEliminable
     List<EvaluacionWithIsEliminable> evaluaciones = new ArrayList<>();
 
-    BDDMockito
-        .given(evaluacionService.findAllByConvocatoriaReunionIdAndNoEsRevMinima(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(evaluaciones));
+    BDDMockito.given(evaluacionService.findAllByConvocatoriaReunionIdAndNoEsRevMinima(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
     mockMvc
@@ -779,10 +716,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito
-        .given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(evaluaciones));
+    BDDMockito.given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
     mockMvc
@@ -801,10 +736,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     List<Evaluacion> evaluaciones = new ArrayList<>();
     evaluaciones.isEmpty();
 
-    BDDMockito
-        .given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(evaluaciones));
+    BDDMockito.given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
@@ -823,10 +756,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito
-        .given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Evaluacion>>() {
+    BDDMockito.given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Evaluacion>>() {
           @Override
           public Page<Evaluacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -880,7 +811,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<List<QueryCriteria>>any(),
+    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
@@ -900,7 +831,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     List<Evaluacion> evaluaciones = new ArrayList<>();
     evaluaciones.isEmpty();
 
-    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<List<QueryCriteria>>any(),
+    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     mockMvc

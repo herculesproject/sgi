@@ -166,7 +166,7 @@ public class EstadoMemoriaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredEstadoMemoriaList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 5L;
-    String query = "memoria.titulo~Memoria%,id:" + id;
+    String query = "memoria.titulo=ke=Memoria;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -189,7 +189,7 @@ public class EstadoMemoriaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedEstadoMemoriaList() throws Exception {
     // when: Ordenación por memoria titulo desc
-    String query = "id-";
+    String query = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -218,9 +218,9 @@ public class EstadoMemoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por memoria titulo desc
-    String sort = "id-";
+    String sort = "id,desc";
     // when: Filtra por titulo like e id equals
-    String filter = "memoria.titulo~%";
+    String filter = "memoria.titulo=ke=Memoria";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

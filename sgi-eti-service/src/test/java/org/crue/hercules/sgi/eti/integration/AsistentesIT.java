@@ -190,7 +190,7 @@ public class AsistentesIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredAsistentesList() throws Exception {
     // when: Búsqueda por motivo like e id equals
     Long id = 5L;
-    String query = "motivo~motivo%,id:" + id;
+    String query = "motivo=ke=Motivo;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -217,7 +217,7 @@ public class AsistentesIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedAsistentesList() throws Exception {
     // when: Ordenación por motivo desc
-    String query = "motivo-";
+    String query = "motivo,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -253,9 +253,9 @@ public class AsistentesIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "motivo-";
+    String sort = "motivo,desc";
     // when: Filtra por motivo like
-    String filter = "motivo~%motivo%";
+    String filter = "motivo=ke=Motivo";
 
     URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

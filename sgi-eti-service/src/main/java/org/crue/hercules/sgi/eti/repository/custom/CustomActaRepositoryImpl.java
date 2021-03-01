@@ -21,8 +21,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -50,8 +49,10 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
    * @param pageable la información de la paginación.
    * @return la lista de {@link ActaWithNumEvaluaciones} paginadas y/o filtradas.
    */
-  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - start");
+  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(String query, Pageable pageable) {
+    // TODO: Revisar la consulta cuando se filtra por número de acta, ya que busca
+    // restando 1 al valor introducido
+    log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - start");
 
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -74,7 +75,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
 
     // Where
     if (query != null) {
-      Specification<Acta> spec = new QuerySpecification<Acta>(query);
+      Specification<Acta> spec = SgiRSQLJPASupport.toSpecification(query);
       listPredicates.add(spec.toPredicate(root, cq, cb));
       listPredicatesCount.add(spec.toPredicate(rootCount, cq, cb));
     }
@@ -109,7 +110,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     List<ActaWithNumEvaluaciones> result = typedQuery.getResultList();
     Page<ActaWithNumEvaluaciones> returnValue = new PageImpl<ActaWithNumEvaluaciones>(result, pageable, count);
 
-    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - end");
 
     return returnValue;
   }

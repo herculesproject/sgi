@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -53,7 +51,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * MemoriaControllerTest
@@ -308,8 +305,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
       memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
     }
 
-    BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(memoriaService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
@@ -331,8 +327,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
           "Memoria" + String.format("%03d", i), i));
     }
 
-    BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(memoriaService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Memoria>>() {
           @Override
           public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
@@ -385,66 +380,13 @@ public class MemoriaControllerTest extends BaseControllerTest {
     }
     String query = "titulo~Memoria%,id:5";
 
-    BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(memoriaService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Memoria>>() {
           @Override
           public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
-            List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
-
             List<Memoria> content = new ArrayList<>();
             for (Memoria memoria : memorias) {
-              boolean add = true;
-              for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(Memoria.class, queryCriteria.getKey());
-                field.setAccessible(true);
-                String fieldValue = ReflectionUtils.getField(field, memoria).toString();
-                switch (queryCriteria.getOperation()) {
-                  case EQUALS:
-                    if (!fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) > 0)) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) >= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LIKE:
-                    if (!fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) < 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) <= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_EQUALS:
-                    if (fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_LIKE:
-                    if (fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  default:
-                    break;
-                }
-              }
-              if (add) {
+              if (memoria.getTitulo().startsWith("Memoria") && memoria.getId().equals(5L)) {
                 content.add(memoria);
               }
             }
@@ -469,8 +411,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Memorias empty
     List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
 
-    BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(memoriaService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(memorias));
     // when: find unlimited
     mockMvc
@@ -715,7 +656,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     }
     // String query = "comite.id:1,fechaLimite<:2020-09-10";
 
-    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(ArgumentMatchers.<List<QueryCriteria>>any(),
+    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited asignables para tipo convocatoria ordinaria o
@@ -738,7 +679,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Memorias empty
     List<Memoria> memorias = new ArrayList<>();
 
-    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(ArgumentMatchers.<List<QueryCriteria>>any(),
+    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
@@ -763,10 +704,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     }
     // String query = "comite.id:1,fechaLimite<:2020-09-10";
 
-    BDDMockito
-        .given(memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(memorias));
+    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited asignables para tipo convocatoria seguimiento
     mockMvc
@@ -787,10 +726,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Memorias empty
     List<Memoria> memorias = new ArrayList<>();
 
-    BDDMockito
-        .given(memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(memorias));
+    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
     mockMvc
@@ -1215,8 +1152,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
           "numRef-55" + String.valueOf(i), "Memoria" + String.format("%03d", i)));
     }
 
-    BDDMockito.given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
+    BDDMockito
+        .given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willReturn(new PageImpl<>(memoriasPeticionEvaluacion));
 
     // when: find unlimited asignables by convocatoria
@@ -1239,8 +1177,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
       memoriasPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i),
           "numRef-55" + String.valueOf(i), "Memoria" + String.format("%03d", i)));
     }
-    BDDMockito.given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
+    BDDMockito
+        .given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
           @Override
           public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
@@ -1288,8 +1227,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Memorias empty
     List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = new ArrayList<>();
 
-    BDDMockito.given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
+    BDDMockito
+        .given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willReturn(new PageImpl<>(memoriasPeticionEvaluacion));
 
     // when: find unlimited

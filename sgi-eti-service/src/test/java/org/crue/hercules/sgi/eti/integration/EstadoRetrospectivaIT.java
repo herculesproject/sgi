@@ -161,7 +161,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     response.add(getMockData(3L));
     response.add(getMockData(4L));
     response.add(getMockData(5L));
-    String sort = "id+";
+    String sort = "id,asc";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .build(false).toUri();
@@ -214,7 +214,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
 
     // search by codigo like, id equals
     Long id = 3L;
-    String query = "nombre~EstadoRetrospectiva0%,id:" + id;
+    String query = "nombre=ke=EstadoRetrospectiva0;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -241,7 +241,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     // given: Datos existentes
 
     // sort by id desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .build(false).toUri();
@@ -275,10 +275,10 @@ public class EstadoRetrospectivaIT extends BaseIT {
     headers.add("X-Page-Size", "2");
 
     // sort
-    String sort = "id-";
+    String sort = "id,desc";
 
     // search
-    String query = "nombre~EstadoRetrospectiva0%";
+    String query = "nombre=ke=EstadoRetrospectiva0";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", query).build(false).toUri();

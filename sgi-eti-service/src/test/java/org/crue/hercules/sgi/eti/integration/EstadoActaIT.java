@@ -168,7 +168,7 @@ public class EstadoActaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredEstadoActaList() throws Exception {
     // when: Búsqueda por estado acta id equals
     Long id = 5L;
-    String query = "id:" + id;
+    String query = "id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -188,7 +188,7 @@ public class EstadoActaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedEstadoActaList() throws Exception {
     // when: Ordenación por id desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
         .toUri();
@@ -215,9 +215,9 @@ public class EstadoActaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por id desc
-    String sort = "id-";
+    String sort = "id,desc";
     // when: Filtra por id menor
-    String filter = "id<6";
+    String filter = "id=lt=6";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

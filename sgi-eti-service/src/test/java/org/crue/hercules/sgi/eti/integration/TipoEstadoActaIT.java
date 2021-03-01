@@ -151,7 +151,7 @@ public class TipoEstadoActaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoActaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 1L;
-    String query = "nombre~En%,id:" + id;
+    String query = "nombre=ke=En;id==" + id;
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -177,7 +177,7 @@ public class TipoEstadoActaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoEstadoActaList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -212,9 +212,9 @@ public class TipoEstadoActaIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like
-    String filter = "nombre~%finalizada%";
+    String filter = "nombre=ke=Finalizada";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

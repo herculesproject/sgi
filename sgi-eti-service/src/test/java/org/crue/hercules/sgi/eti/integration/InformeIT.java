@@ -163,7 +163,7 @@ public class InformeIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredInformeList() throws Exception {
     // when: Búsqueda por documentoRef like e id equals
     Long id = 5L;
-    String query = "documentoRef~DocumentoFormulario%,id:" + id;
+    String query = "documentoRef=ke=DocumentoFormulario;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(INFORME_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -185,7 +185,7 @@ public class InformeIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedInformeList() throws Exception {
     // when: Ordenación por documentoRef desc
-    String query = "documentoRef-";
+    String query = "documentoRef,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(INFORME_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -214,9 +214,9 @@ public class InformeIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por documentoRef desc
-    String sort = "documentoRef-";
+    String sort = "documentoRef,desc";
     // when: Filtra por documentoRef like e id equals
-    String filter = "documentoRef~%";
+    String filter = "documentoRef=ke=Documento";
 
     URI uri = UriComponentsBuilder.fromUriString(INFORME_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

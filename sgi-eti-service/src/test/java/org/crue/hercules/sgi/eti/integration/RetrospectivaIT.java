@@ -214,7 +214,7 @@ public class RetrospectivaIT extends BaseIT {
 
     // search by codigo like, id equals
     Long id = 5L;
-    String query = "fechaRetrospectiva<=2020-07-05,id:" + id;
+    String query = "fechaRetrospectiva=le=2020-07-05;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -241,7 +241,7 @@ public class RetrospectivaIT extends BaseIT {
     // given: Datos existentes
 
     // sort by id desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
         .toUri();
@@ -275,10 +275,10 @@ public class RetrospectivaIT extends BaseIT {
     headers.add("X-Page-Size", "2");
 
     // sort
-    String sort = "id-";
+    String sort = "id,desc";
 
     // search
-    String query = "estadoRetrospectiva.nombre~Retrospectiva0%";
+    String query = "estadoRetrospectiva.nombre=ke=Retrospectiva0";
 
     URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", query).build(false).toUri();

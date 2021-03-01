@@ -151,7 +151,7 @@ public class TipoMemoriaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoMemoriaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 5L;
-    String query = "nombre~TipoMemoria%,id:" + id;
+    String query = "nombre=ke=TipoMemoria;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -173,7 +173,7 @@ public class TipoMemoriaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoMemoriaList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -202,9 +202,9 @@ public class TipoMemoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    String filter = "nombre=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

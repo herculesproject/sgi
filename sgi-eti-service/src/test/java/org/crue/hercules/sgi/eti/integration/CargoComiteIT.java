@@ -148,7 +148,7 @@ public class CargoComiteIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredCargoComiteList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 1L;
-    String query = "nombre~PRESI%,id:" + id;
+    String query = "nombre=ke=PRESI;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -170,7 +170,7 @@ public class CargoComiteIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedCargoComiteList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -198,9 +198,9 @@ public class CargoComiteIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like e id equals
-    String filter = "nombre~%VOCAL%";
+    String filter = "nombre=ke=VOCAL";
 
     URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

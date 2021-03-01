@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
 import org.crue.hercules.sgi.eti.service.TareaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -46,7 +44,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * PeticionEvaluacionControllerTest
@@ -205,7 +202,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
         .willReturn(new PageImpl<>(peticionEvaluaciones));
 
     // when: find unlimited
@@ -226,7 +223,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
         .willReturn(new PageImpl<>(peticionEvaluaciones));
 
     mockMvc
@@ -247,7 +244,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
         .willAnswer(new Answer<Page<PeticionEvaluacion>>() {
           @Override
           public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
@@ -303,65 +300,14 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.isNull()))
         .willAnswer(new Answer<Page<PeticionEvaluacion>>() {
           @Override
           public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
-            List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
-
             List<PeticionEvaluacion> content = new ArrayList<>();
             for (PeticionEvaluacion peticionEvaluacion : peticionEvaluaciones) {
-              boolean add = true;
-              for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(PeticionEvaluacion.class, queryCriteria.getKey());
-                field.setAccessible(true);
-                String fieldValue = ReflectionUtils.getField(field, peticionEvaluacion).toString();
-                switch (queryCriteria.getOperation()) {
-                  case EQUALS:
-                    if (!fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) > 0)) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) >= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LIKE:
-                    if (!fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) < 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) <= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_EQUALS:
-                    if (fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_LIKE:
-                    if (fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  default:
-                    break;
-                }
-              }
-              if (add) {
+              if (peticionEvaluacion.getTitulo().startsWith("PeticionEvaluacion")
+                  && peticionEvaluacion.getId().equals(5L)) {
                 content.add(peticionEvaluacion);
               }
             }
@@ -825,8 +771,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(),
-            ArgumentMatchers.anyString()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willReturn(new PageImpl<>(peticionEvaluaciones));
 
     // when: find unlimited
@@ -846,8 +791,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(),
-            ArgumentMatchers.anyString()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willReturn(new PageImpl<>(peticionEvaluaciones));
 
     mockMvc
@@ -866,7 +810,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
           .add(generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i)));
     }
     BDDMockito
-        .given(peticionEvaluacionService.findAllByPersonaRef(ArgumentMatchers.<List<QueryCriteria>>any(),
+        .given(peticionEvaluacionService.findAllByPersonaRef(ArgumentMatchers.<String>any(),
             ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willAnswer(new Answer<Page<PeticionEvaluacion>>() {
           @Override
@@ -917,7 +861,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
 
     BDDMockito
-        .given(peticionEvaluacionService.findAllByPersonaRef(ArgumentMatchers.<List<QueryCriteria>>any(),
+        .given(peticionEvaluacionService.findAllByPersonaRef(ArgumentMatchers.<String>any(),
             ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willReturn(new PageImpl<>(peticionEvaluaciones));
 
@@ -939,8 +883,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(),
-            ArgumentMatchers.anyString()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willAnswer(new Answer<Page<PeticionEvaluacion>>() {
           @Override
           public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
@@ -997,66 +940,14 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(peticionEvaluacionService.findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(),
-            ArgumentMatchers.anyString()))
+            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willAnswer(new Answer<Page<PeticionEvaluacion>>() {
           @Override
           public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
-            List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
-
             List<PeticionEvaluacion> content = new ArrayList<>();
             for (PeticionEvaluacion peticionEvaluacion : peticionEvaluaciones) {
-              boolean add = true;
-              for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(PeticionEvaluacion.class, queryCriteria.getKey());
-                field.setAccessible(true);
-                String fieldValue = ReflectionUtils.getField(field, peticionEvaluacion).toString();
-                switch (queryCriteria.getOperation()) {
-                  case EQUALS:
-                    if (!fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) > 0)) {
-                      add = false;
-                    }
-                    break;
-                  case GREATER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) >= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LIKE:
-                    if (!fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) < 0)) {
-                      add = false;
-                    }
-                    break;
-                  case LOWER_OR_EQUAL:
-                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) <= 0)) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_EQUALS:
-                    if (fieldValue.equals(queryCriteria.getValue())) {
-                      add = false;
-                    }
-                    break;
-                  case NOT_LIKE:
-                    if (fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
-                      add = false;
-                    }
-                    break;
-                  default:
-                    break;
-                }
-              }
-              if (add) {
+              if (peticionEvaluacion.getTitulo().startsWith("PeticionEvaluacion")
+                  && peticionEvaluacion.getId().equals(5L)) {
                 content.add(peticionEvaluacion);
               }
             }

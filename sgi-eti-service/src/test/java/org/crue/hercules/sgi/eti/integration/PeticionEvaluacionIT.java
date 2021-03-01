@@ -179,7 +179,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    String query = "id+";
+    String query = "id,asc";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -209,7 +209,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 2L;
-    String query = "peticionEvaluacion.titulo~PeticionEvaluacion%,peticionEvaluacion.id:" + id;
+    String query = "peticionEvaluacion.titulo=ke=PeticionEvaluacion;peticionEvaluacion.id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -231,7 +231,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedPeticionEvaluacionList() throws Exception {
     // when: Ordenación por titulo desc
-    String query = "titulo-";
+    String query = "titulo,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -260,9 +260,9 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc
-    String sort = "titulo-";
+    String sort = "titulo,desc";
     // when: Filtra por titulo like e id equals
-    String filter = "peticionEvaluacion.titulo~%%";
+    String filter = "peticionEvaluacion.titulo=ke=Peticion";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -488,9 +488,9 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por id desc
-    String sort = "id-";
+    String sort = "id,desc";
     // when: Filtra por numReferencia like
-    String filter = "numReferencia~%ref-%";
+    String filter = "numReferencia=ke=ref-";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/memorias")
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();

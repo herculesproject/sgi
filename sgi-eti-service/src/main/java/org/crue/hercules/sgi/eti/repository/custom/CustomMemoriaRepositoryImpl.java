@@ -74,6 +74,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    */
   @Override
   public Page<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) {
+    // TODO: Revisar uso pageable. Se está haciendo consulta páginada pero ne está
+    // obteniendo el count total.
     log.debug("findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) - start");
     final List<Predicate> predicates = new ArrayList<>();
 

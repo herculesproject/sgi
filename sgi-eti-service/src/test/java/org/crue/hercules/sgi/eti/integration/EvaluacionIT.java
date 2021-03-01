@@ -221,7 +221,7 @@ public class EvaluacionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredEvaluacionList() throws Exception {
     // when: Búsqueda por esRevMinima equals e id equals
     Long id = 5L;
-    String query = "esRevMinima:true,id:" + id;
+    String query = "esRevMinima==true;id==" + id;
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -248,7 +248,7 @@ public class EvaluacionIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedEvaluacionList() throws Exception {
     // when: Ordenación por id desc
-    String query = "id-";
+    String query = "id,desc";
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -282,9 +282,9 @@ public class EvaluacionIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
     // when: Ordena por id desc
-    String sort = "id-";
+    String sort = "id,desc";
     // when: Filtra por version equals
-    String filter = "version:3";
+    String filter = "version==3";
 
     URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -344,7 +344,7 @@ public class EvaluacionIT extends BaseIT {
       throws Exception {
     // when: Búsqueda por esRevMinima equals e id equals
     Long id = 10L;
-    String query = "esRevMinima:true,id:" + id;
+    String query = "esRevMinima==true;id==" + id;
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -372,7 +372,7 @@ public class EvaluacionIT extends BaseIT {
   public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithSortQuery_ReturnsOrderedEvaluacionList()
       throws Exception {
     // when: Ordenación por id desc
-    String query = "id-";
+    String query = "id,desc";
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -405,9 +405,9 @@ public class EvaluacionIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
     // when: Ordena por id desc
-    String sort = "id-";
+    String sort = "id,desc";
     // when: Filtra por version equals
-    String filter = "version:1";
+    String filter = "version==1";
 
     URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();

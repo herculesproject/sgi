@@ -122,7 +122,7 @@ public class ActaIT extends BaseIT {
     final ResponseEntity<Acta> fullDataActa = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(headers, null), Acta.class, 1L);
 
-    String query = "acta.id:" + acta.getId();
+    String query = "acta.id==" + acta.getId();
     URI uri = UriComponentsBuilder.fromUriString(ESTADOACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
 
@@ -206,7 +206,7 @@ public class ActaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
     // when: Ordenación por id asc
-    String sort = "id+";
+    String sort = "id,asc";
 
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
@@ -231,7 +231,7 @@ public class ActaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredActaWithNumEvaluacionesList() throws Exception {
     // when: Búsqueda por acta id equals
     Long id = 5L;
-    String query = "id:" + id;
+    String query = "id==" + id;
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -254,7 +254,7 @@ public class ActaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedActaWithNumEvaluacionesList() throws Exception {
     // when: Ordenación por id desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -287,9 +287,9 @@ public class ActaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
     // when: Ordena por id desc
-    String sort = "id-";
+    String sort = "id,desc";
     // when: Filtra por id menor
-    String filter = "id<4";
+    String filter = "id=lt=4";
 
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

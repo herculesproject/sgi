@@ -139,7 +139,7 @@ public class ApartadoIT extends BaseIT {
 
     // search by codigo like, id equals
     Long id = 3L;
-    String query = "nombre~Apartado0,id:" + id;
+    String query = "nombre=ke=Apartado0;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(APARTADO_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -166,7 +166,7 @@ public class ApartadoIT extends BaseIT {
     // given: Datos existentes
 
     // sort by id desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(APARTADO_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
         .toUri();
@@ -200,10 +200,10 @@ public class ApartadoIT extends BaseIT {
     headers.add("X-Page-Size", "2");
 
     // sort
-    String sort = "id-";
+    String sort = "id,desc";
 
     // search
-    String query = "nombre~Apartado0";
+    String query = "nombre=ke=Apartado0";
 
     URI uri = UriComponentsBuilder.fromUriString(APARTADO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", query).build(false).toUri();

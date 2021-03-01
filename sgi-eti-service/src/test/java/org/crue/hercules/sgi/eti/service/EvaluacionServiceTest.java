@@ -37,7 +37,6 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -592,10 +591,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 1L, 1L));
     }
 
-    BDDMockito
-        .given(evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(evaluaciones));
+    BDDMockito.given(evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
     Page<Evaluacion> page = evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(null, Pageable.unpaged());
@@ -615,10 +612,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 1L, 1L));
     }
 
-    BDDMockito
-        .given(evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Evaluacion>>() {
+    BDDMockito.given(evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Evaluacion>>() {
           @Override
           public Page<Evaluacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -673,10 +668,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 4L, 1L));
     response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 4L, 1L));
     Page<Evaluacion> pageResponse = new PageImpl<>(response);
-    BDDMockito
-        .given(evaluacionRepository.findByEvaluador(ArgumentMatchers.anyString(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(evaluacionRepository.findByEvaluador(ArgumentMatchers.anyString(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
 
     // when: se listar sus evaluaciones
     Page<Evaluacion> result = evaluacionService.findByEvaluador(personaRef, null, Pageable.unpaged());
@@ -711,10 +704,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 11L, 1L));
     response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 11L, 1L));
     Page<Evaluacion> pageResponse = new PageImpl<>(response);
-    BDDMockito
-        .given(evaluacionRepository.findEvaluacionesEnSeguimientosByEvaluador(ArgumentMatchers.anyString(),
-            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(evaluacionRepository.findEvaluacionesEnSeguimientosByEvaluador(ArgumentMatchers.anyString(),
+        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
 
     // when: se listar sus evaluaciones
     Page<Evaluacion> result = evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(personaRef, null,
@@ -740,10 +731,8 @@ public class EvaluacionServiceTest extends BaseServiceTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 18L, 1L));
     }
 
-    BDDMockito
-        .given(evaluacionRepository.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(evaluaciones));
+    BDDMockito.given(evaluacionRepository.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
     Page<Evaluacion> page = evaluacionService.findByEvaluacionesEnSeguimientoFinal(null, Pageable.unpaged());

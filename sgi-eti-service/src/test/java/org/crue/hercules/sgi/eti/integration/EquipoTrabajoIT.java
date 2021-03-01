@@ -97,7 +97,7 @@ public class EquipoTrabajoIT extends BaseIT {
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredEquipoTrabajoList() throws Exception {
     // when: Búsqueda por id equals
-    String query = "id:5";
+    String query = "id==5";
 
     URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -119,7 +119,7 @@ public class EquipoTrabajoIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedEquipoTrabajoList() throws Exception {
     // when: Ordenación por personaRef desc
-    String query = "personaRef-";
+    String query = "personaRef,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -150,9 +150,9 @@ public class EquipoTrabajoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por personaRef desc
-    String sort = "personaRef-";
+    String sort = "personaRef,desc";
     // when: Filtra por personaRef like
-    String filter = "personaRef~%";
+    String filter = "personaRef=ke=user-";
 
     URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

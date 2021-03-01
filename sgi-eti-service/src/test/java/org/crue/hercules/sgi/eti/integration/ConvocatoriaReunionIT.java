@@ -284,7 +284,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // when: Ordenación por id asc
-    String sort = "id-";
+    String sort = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .build(false).toUri();
@@ -318,7 +318,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // search by codigo like, id equals
     Long id = 3L;
-    String query = "numeroActa<4,id:" + id;
+    String query = "numeroActa=lt=4;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -347,7 +347,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // sort by id desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .build(false).toUri();
@@ -385,10 +385,10 @@ public class ConvocatoriaReunionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // sort desc
-    String sort = "id-";
+    String sort = "id,desc";
 
     // search
-    String query = "numeroActa<4";
+    String query = "numeroActa=lt=4";
 
     URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).query(query)
         .queryParam("s", sort).build(false).toUri();

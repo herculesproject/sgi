@@ -156,7 +156,7 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoConvocatoriaReunionList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 3L;
-    String query = "nombre~Seguimiento%,id:" + id;
+    String query = "nombre=ke=Seguimiento;id==" + id;
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -183,7 +183,7 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoConvocatoriaReunionList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -218,9 +218,9 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V")));
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like
-    String filter = "nombre~%extra%";
+    String filter = "nombre=ke=Extra";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

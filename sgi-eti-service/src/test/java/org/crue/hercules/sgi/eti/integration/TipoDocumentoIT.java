@@ -25,7 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoDocumento.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = { 
+@Sql(scripts = {
 // @formatter:off  
   "classpath:scripts/formulario.sql", 
   "classpath:scripts/tipo_documento.sql" 
@@ -164,7 +164,7 @@ public class TipoDocumentoIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoDocumentoList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 5L;
-    String query = "nombre~TipoDocumento%,id:" + id;
+    String query = "nombre=ke=TipoDocumento;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -186,7 +186,7 @@ public class TipoDocumentoIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoDocumentoList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -215,9 +215,9 @@ public class TipoDocumentoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like e id equals
-    String filter = "nombre~%";
+    String filter = "nombre=ke=TipoDocumento";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

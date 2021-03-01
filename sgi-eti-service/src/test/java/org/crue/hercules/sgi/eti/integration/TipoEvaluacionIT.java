@@ -133,7 +133,7 @@ public class TipoEvaluacionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "4");
-    String sort = "nombre-";
+    String sort = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .build(false).toUri();
@@ -162,7 +162,7 @@ public class TipoEvaluacionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEvaluacionList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 5L;
-    String query = "nombre~TipoEvaluacion%,id:" + id;
+    String query = "nombre=ke=TipoEvaluacion;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -184,7 +184,7 @@ public class TipoEvaluacionIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoEvaluacionList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -213,9 +213,9 @@ public class TipoEvaluacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like e id equals
-    String filter = "nombre~%";
+    String filter = "nombre=ke=TipoEvaluacion";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

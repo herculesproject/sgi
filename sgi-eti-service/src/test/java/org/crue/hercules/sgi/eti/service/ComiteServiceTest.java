@@ -10,7 +10,6 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.service.impl.ComiteServiceImpl;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -73,13 +72,11 @@ public class ComiteServiceTest extends BaseServiceTest {
     List<Comite> comiteResponseList = new ArrayList<Comite>();
 
     // given: Una lista vacía
-    BDDMockito
-        .given(comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(comiteService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(comiteResponseList));
 
     // when: Se realiza la búsqueda de comites
-    Page<Comite> comiteList = comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any());
+    Page<Comite> comiteList = comiteService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any());
 
     // then: Recuperamos la lista vacía
     Assertions.assertThat(comiteList);

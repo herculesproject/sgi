@@ -139,7 +139,7 @@ public class TareaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTareaList() throws Exception {
     // when: Búsqueda por tarea like e id equals
     Long id = 5L;
-    String query = "tarea~Tarea%,id:" + id;
+    String query = "tarea=ke=Tarea;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -161,7 +161,7 @@ public class TareaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTareaList() throws Exception {
     // when: Ordenación por tarea desc
-    String sort = "tarea-";
+    String sort = "tarea,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
@@ -189,9 +189,9 @@ public class TareaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por tarea desc
-    String sort = "tarea-";
+    String sort = "tarea,desc";
     // when: Filtra por tarea like
-    String filter = "tarea~%";
+    String filter = "tarea=ke=Tarea";
 
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

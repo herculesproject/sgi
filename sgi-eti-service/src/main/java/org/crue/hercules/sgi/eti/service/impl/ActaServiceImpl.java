@@ -19,7 +19,6 @@ import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -111,11 +110,11 @@ public class ActaServiceImpl implements ActaService {
    * @param query  información del filtro.
    * @return el listado de {@link ActaWithNumEvaluaciones} paginadas y filtradas.
    */
-  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - start");
+  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(String query, Pageable paging) {
+    log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - start");
 
     Page<ActaWithNumEvaluaciones> returnValue = actaRepository.findAllActaWithNumEvaluaciones(query, paging);
-    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - end");
     return returnValue;
   }
 

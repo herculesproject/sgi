@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
@@ -9,7 +7,6 @@ import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.service.ActaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,23 +52,22 @@ public class ActaController {
   /**
    * Devuelve una lista paginada y filtrada {@link ActaWithNumEvaluaciones}.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable
    * @return la lista de {@link ActaWithNumEvaluaciones} paginadas y/o filtradas.
    */
   @GetMapping()
   @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-V')")
   ResponseEntity<Page<ActaWithNumEvaluaciones>> findAllActaWithNumEvaluaciones(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - start");
     Page<ActaWithNumEvaluaciones> page = service.findAllActaWithNumEvaluaciones(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

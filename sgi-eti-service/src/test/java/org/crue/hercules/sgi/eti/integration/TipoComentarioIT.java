@@ -147,7 +147,7 @@ public class TipoComentarioIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoComentarioList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 1L;
-    String query = "nombre~gestor%,id:" + id;
+    String query = "nombre=ik=gestor;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -169,7 +169,7 @@ public class TipoComentarioIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedTipoComentarioList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -197,9 +197,9 @@ public class TipoComentarioIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like
-    String filter = "nombre~%gest%";
+    String filter = "nombre=ke=GEST";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();

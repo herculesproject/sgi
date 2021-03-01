@@ -1,13 +1,11 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
-
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -15,12 +13,10 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,22 +80,21 @@ public class MemoriaController {
   /**
    * Devuelve una lista paginada y filtrada {@link Memoria}.
    * 
-   * @param query  filtro de {@link QueryCriteria}.
+   * @param query  filtro de búsqueda.
    * @param paging pageable
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V', 'ETI-PEV-E')")
-  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAll(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    log.debug("findAll(String query,Pageable paging) - start");
     Page<MemoriaPeticionEvaluacion> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAll(String query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAll(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -128,10 +123,10 @@ public class MemoriaController {
     Page<Memoria> page = service.findAllMemoriasAsignablesConvocatoria(idConvocatoria, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAll(String query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAll(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -147,22 +142,21 @@ public class MemoriaController {
    * la fecha límite de la convocatoria de reunión y las que tengan una
    * retrospectiva en estado "En secretaría".
    * 
-   * @param query    filtro de {@link QueryCriteria}.
+   * @param query    filtro de búsqueda.
    * @param pageable pageable
    */
   @GetMapping("/tipo-convocatoria-ord-ext")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C')")
   ResponseEntity<Page<Memoria>> findAllAsignablesTipoConvocatoriaOrdExt(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query,Pageable pageable) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAllAsignablesTipoConvocatoriaOrdExt(String query,Pageable pageable) - start");
     Page<Memoria> page = service.findAllAsignablesTipoConvocatoriaOrdExt(query, pageable);
 
     if (page.isEmpty()) {
-      log.debug("findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query,Pageable pageable) - end");
+      log.debug("findAllAsignablesTipoConvocatoriaOrdExt(String query,Pageable pageable) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query,Pageable pageable) - end");
+    log.debug("findAllAsignablesTipoConvocatoriaOrdExt(String query,Pageable pageable) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -178,22 +172,21 @@ public class MemoriaController {
    * fecha de envío es igual o menor a la fecha límite de la convocatoria de
    * reunión.
    * 
-   * @param query    filtro de {@link QueryCriteria}.
+   * @param query    filtro de búsqueda.
    * @param pageable pageable
    */
   @GetMapping("/tipo-convocatoria-seg")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C')")
   ResponseEntity<Page<Memoria>> findAllAsignablesTipoConvocatoriaSeguimiento(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query,Pageable pageable) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(String query,Pageable pageable) - start");
     Page<Memoria> page = service.findAllAsignablesTipoConvocatoriaSeguimiento(query, pageable);
 
     if (page.isEmpty()) {
-      log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query,Pageable pageable) - end");
+      log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(String query,Pageable pageable) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query,Pageable pageable) - end");
+    log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(String query,Pageable pageable) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -446,7 +439,7 @@ public class MemoriaController {
   /**
    * Devuelve una lista paginada y filtrada de {@link Memoria}.
    * 
-   * @param query          filtro de {@link QueryCriteria}.
+   * @param query          filtro de búsqueda.
    * @param paging         pageable
    * @param authentication Authentication
    * @return la lista de entidades {@link Memoria} paginadas.
@@ -454,19 +447,19 @@ public class MemoriaController {
   @GetMapping("/persona")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
   ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAllMemoriasEvaluacionByPersonaRef(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(List<QueryCriteria> query,Pageable paging) - start");
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging,
+      Authentication authentication) {
+    log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(String query,Pageable paging) - start");
     String personaRef = authentication.getName();
 
     Page<MemoriaPeticionEvaluacion> page = service
         .findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(query, paging, personaRef);
 
     if (page.isEmpty()) {
-      log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(String query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

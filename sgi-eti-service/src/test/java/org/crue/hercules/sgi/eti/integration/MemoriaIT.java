@@ -217,7 +217,7 @@ public class MemoriaIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredMemoriaList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 5L;
-    String query = "titulo~Memoria%,id:" + id;
+    String query = "titulo=ke=Memoria;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -244,7 +244,7 @@ public class MemoriaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedMemoriaList() throws Exception {
     // when: Ordenación por titulo desc
-    String query = "titulo-";
+    String query = "titulo,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -280,9 +280,9 @@ public class MemoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc
-    String sort = "titulo-";
+    String sort = "titulo,desc";
     // when: Filtra por titulo like e id equals
-    String filter = "titulo~%00%";
+    String filter = "titulo=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -430,7 +430,7 @@ public class MemoriaIT extends BaseIT {
 
     // given: search query with comité y fecha límite de una convocatoria de tipo
     // ordinario o extraordinario
-    String query = "comite.id:1,fechaEnvioSecretaria<:2020-08-01";
+    String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01";
     // String query = "comite.id:1";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
@@ -474,7 +474,7 @@ public class MemoriaIT extends BaseIT {
     // given: search query with comité y fecha límite de una convocatoria de tipo
     // seguimiento
 
-    String query = "comite.id:1,fechaEnvioSecretaria<:2020-08-01";
+    String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01";
     // String query = "comite.id:1";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_SEG)

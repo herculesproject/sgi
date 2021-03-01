@@ -162,7 +162,7 @@ public class DictamenIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredDictamenList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 2L;
-    String query = "nombre~favorable%,id:" + id;
+    String query = "nombre=ke=Favorable;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -184,7 +184,7 @@ public class DictamenIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedDictamenList() throws Exception {
     // when: Ordenación por nombre desc
-    String query = "nombre-";
+    String query = "nombre,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -212,9 +212,9 @@ public class DictamenIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
-    String sort = "nombre-";
+    String sort = "nombre,desc";
     // when: Filtra por nombre like
-    String filter = "nombre~%pendiente%";
+    String filter = "nombre=ik=pendiente";
 
     URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
