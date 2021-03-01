@@ -14,7 +14,7 @@ import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -235,15 +235,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    * Listado de modelos de ejecucion
    */
   loadModelosEjecucion(): void {
-    const options = {
-      filters: [
-        {
-          field: 'unidadGestionRef',
-          type: SgiRestFilterType.EQUALS,
-          value: this.formGroup.controls.unidadGestion.value?.acronimo,
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('unidadGestionRef', SgiRestFilterOperator.EQUALS, this.formGroup.controls.unidadGestion.value?.acronimo)
+    };
     const subcription = this.unidadModeloService.findAll(options).subscribe(
       res => {
         this.modelosEjecucionFiltered = res.items.map(item => item.modeloEjecucion);
@@ -269,15 +263,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     if (modeloEjecucion) {
       const id = modeloEjecucion.id;
       if (id && !isNaN(id)) {
-        const options = {
-          filters: [
-            {
-              field: 'tipoFinalidad.activo',
-              type: SgiRestFilterType.EQUALS,
-              value: 'true',
-            } as SgiRestFilter
-          ]
-        } as SgiRestFindOptions;
+        const options: SgiRestFindOptions = {
+          filter: new RSQLSgiRestFilter('tipoFinalidad.activo', SgiRestFilterOperator.EQUALS, 'true')
+        };
         this.subscriptions.push(
           this.modeloEjecucionService.findModeloTipoFinalidad(id, options).pipe(
             map(res => {

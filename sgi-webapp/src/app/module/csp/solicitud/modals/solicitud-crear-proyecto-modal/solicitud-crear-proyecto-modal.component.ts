@@ -12,7 +12,7 @@ import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { DateValidator } from '@core/validators/date-validator';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -21,8 +21,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 const MSG_ERROR_INIT = marker('csp.solicitud.crear.proyecto.error.cargar');
 
 export interface ISolicitudCrearProyectoModalData {
-  proyecto: IProyecto
-  solicitudProyectoDatos: ISolicitudProyectoDatos
+  proyecto: IProyecto;
+  solicitudProyectoDatos: ISolicitudProyectoDatos;
 }
 
 @Component({
@@ -110,15 +110,9 @@ export class SolicitudCrearProyectoModalComponent extends
   }
 
   loadModelosEjecucion(): void {
-    const options = {
-      filters: [
-        {
-          field: 'unidadGestionRef',
-          type: SgiRestFilterType.EQUALS,
-          value: this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.unidadGestion?.acronimo
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('unidadGestionRef', SgiRestFilterOperator.EQUALS, this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.unidadGestion?.acronimo)
+    };
     const subcription = this.unidadModeloService.findAll(options).subscribe(
       res => {
         this.modelosEjecucionFiltered = res.items.map(item => item.modeloEjecucion);

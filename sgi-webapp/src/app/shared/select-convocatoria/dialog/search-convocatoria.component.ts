@@ -13,7 +13,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
@@ -43,7 +43,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     'fuenteFinanciacion'];
   elementosPagina = [5, 10, 25, 100];
   totalElementos = 0;
-  private filter: SgiRestFilter[];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -93,11 +92,8 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
             index: reset ? 0 : this.paginator.pageIndex,
             size: this.paginator.pageSize
           },
-          sort: {
-            direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-            field: this.sort.active
-          },
-          filters: this.buildFilters(this.dialogRef.componentInstance.data)
+          // TODO: Add sorts
+          filter: this.buildFilter(this.dialogRef.componentInstance.data)
         }
       )
       .pipe(
@@ -190,49 +186,11 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       );
   }
 
-  private buildFilters(convocatoria: IConvocatoria): SgiRestFilter[] {
-    this.filter = [];
-    if (convocatoria.titulo) {
-      const filterTitulo: SgiRestFilter = {
-        field: 'titulo',
-        type: SgiRestFilterType.LIKE,
-        value: convocatoria.titulo,
-      };
-
-      this.filter.push(filterTitulo);
-    }
-
-    if (convocatoria.codigo) {
-      const filterCodigo: SgiRestFilter = {
-        field: 'codigo',
-        type: SgiRestFilterType.LIKE,
-        value: convocatoria.codigo,
-      };
-
-      this.filter.push(filterCodigo);
-    }
-
-    if (convocatoria.anio) {
-      const filterAnio: SgiRestFilter = {
-        field: 'anio',
-        type: SgiRestFilterType.EQUALS,
-        value: convocatoria.anio?.toString(),
-      };
-
-      this.filter.push(filterAnio);
-    }
-
-    if (convocatoria.abiertoPlazoPresentacionSolicitud) {
-      const filterPlazoAbierto: SgiRestFilter = {
-        field: 'abiertoPlazoPresentacionSolicitud',
-        type: SgiRestFilterType.EQUALS,
-        value: convocatoria.abiertoPlazoPresentacionSolicitud?.toString(),
-      };
-
-      this.filter.push(filterPlazoAbierto);
-    }
-
-    return this.filter;
+  private buildFilter(convocatoria: IConvocatoria): SgiRestFilter {
+    return new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, convocatoria.titulo)
+      .and('codigo', SgiRestFilterOperator.LIKE_ICASE, convocatoria.codigo)
+      .and('anio', SgiRestFilterOperator.EQUALS, convocatoria.anio?.toString())
+      .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, convocatoria.abiertoPlazoPresentacionSolicitud?.toString());
   }
 
 

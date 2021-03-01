@@ -17,7 +17,7 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
@@ -115,31 +115,24 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
       'numeroIniciales', 'numeroRevisiones', 'numeroTotal', 'estadoActual.nombre', 'acciones'];
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtro: SgiRestFilter[] = [];
-    this.addFiltro(filtro, 'convocatoriaReunion.comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
-
-    if (this.formGroup.controls.fechaEvaluacionInicio) {
-      const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionInicio.value);
-      this.addFiltro(filtro, 'convocatoriaReunion.fechaEvaluacion',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('convocatoriaReunion.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString());
+    if (controls.fechaEvaluacionInicio) {
+      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionInicio.value);
+      filter.and('convocatoriaReunion.fechaEvaluacion',
+        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
     }
-
-    if (this.formGroup.controls.fechaEvaluacionFin) {
-      const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionFin.value);
-      this.addFiltro(filtro, 'convocatoriaReunion.fechaEvaluacion',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-
+    if (controls.fechaEvaluacionFin) {
+      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionFin.value);
+      filter.and('convocatoriaReunion.fechaEvaluacion',
+        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
     }
+    filter
+      .and('convocatoriaReunion.numeroActa', SgiRestFilterOperator.EQUALS, controls.numeroActa?.value.toString())
+      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoActa.value?.id?.toString());
 
-    this.addFiltro(filtro, 'convocatoriaReunion.numeroActa',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.numeroActa.value);
-
-    this.addFiltro(filtro, 'estadoActual.id',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoActa.value.id);
-
-    return filtro;
+    return filter;
   }
 
   protected loadTable(reset?: boolean) {

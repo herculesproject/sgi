@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IDocumentosProyecto } from '@core/models/csp/documentos-proyecto';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto, TipoHorasAnuales } from '@core/models/csp/proyecto';
@@ -23,7 +24,7 @@ import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SgiMutableRestService, SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiMutableRestService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -31,7 +32,6 @@ import { IProyectoEntidadFinanciadoraBackend, ProyectoEntidadFinanciadoraService
 import { IProyectoEntidadGestoraBackend, ProyectoEntidadGestoraService } from './proyecto-entidad-gestora.service';
 import { IProyectoEquipoBackend, ProyectoEquipoService } from './proyecto-equipo.service';
 import { IProyectoSocioBackend, ProyectoSocioService } from './proyecto-socio.service';
-import { IDocumentosProyecto } from '@core/models/csp/documentos-proyecto';
 
 interface IProyectoBackend {
 
@@ -312,30 +312,15 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   private findEntidadesFinanciadorasFilterAjenas(id: number, ajenas: boolean, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoEntidadFinanciadora>> {
     let queryOptions: SgiRestFindOptions = options;
-    if (queryOptions) {
-      let filterExists: SgiRestFilter;
-      if (queryOptions.filters) {
-        filterExists = queryOptions.filters.find(filter => filter.field === 'ajena');
-      }
-      else {
-        filterExists = { field: 'ajena' } as SgiRestFilter;
-      }
-      if (filterExists) {
-        // Force value
-        filterExists.type = SgiRestFilterType.EQUALS;
-        filterExists.value = `${ajenas}`;
-      }
+    if (!queryOptions) {
+      queryOptions = {};
+    }
+    if (queryOptions.filter) {
+      queryOptions.filter.remove('ajena');
+      queryOptions.filter.and('ajena', SgiRestFilterOperator.EQUALS, `${ajenas}`);
     }
     else {
-      queryOptions = {
-        filters: [
-          {
-            field: 'ajena',
-            type: SgiRestFilterType.EQUALS,
-            value: `${ajenas}`
-          }
-        ]
-      };
+      queryOptions.filter = new RSQLSgiRestFilter('ajena', SgiRestFilterOperator.EQUALS, `${ajenas}`);
     }
     return this.findEntidadesFinanciadoras(id, queryOptions);
   }
@@ -501,10 +486,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
 
 
   /**
-  * Recupera todos los documentos de un proyecto
-  * @param id Identificador del proyecto.
-  * @returns .
-  */
+   * Recupera todos los documentos de un proyecto
+   * @param id Identificador del proyecto.
+   * @returns .
+   */
   findAllDocumentos(idProyecto: number):
     Observable<IDocumentosProyecto> {
     const endpointUrl = `${this.endpointUrl}/${idProyecto}/documentos`;

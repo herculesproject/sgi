@@ -15,7 +15,7 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { Subscription } from 'rxjs';
 import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
@@ -113,15 +113,9 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
     }));
     this.group.initialize();
     const id = this.formPart.proyecto?.modeloEjecucion?.id;
-    const options = {
-      filters: [
-        {
-          field: 'tipoDocumento.activo',
-          type: SgiRestFilterType.EQUALS,
-          value: 'true',
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('tipoDocumento.activo', SgiRestFilterOperator.EQUALS, 'true')
+    };
     this.subscriptions.push(
       this.modeloEjecucionService.findModeloTipoDocumento(id, options).subscribe(
         (tipos) => {

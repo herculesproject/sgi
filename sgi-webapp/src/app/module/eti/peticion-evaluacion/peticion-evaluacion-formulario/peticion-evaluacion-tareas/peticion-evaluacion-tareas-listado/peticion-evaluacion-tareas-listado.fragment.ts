@@ -6,7 +6,6 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { TareaService } from '@core/services/eti/tarea.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFilter } from '@sgi/framework/http';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 import { EquipoInvestigadorListadoFragment } from '../../equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
@@ -14,7 +13,6 @@ import { MemoriasListadoFragment } from '../../memorias-listado/memorias-listado
 export class PeticionEvaluacionTareasFragment extends Fragment {
 
   tareas$: BehaviorSubject<StatusWrapper<ITarea>[]> = new BehaviorSubject<StatusWrapper<ITarea>[]>([]);
-  filter: SgiRestFilter[];
 
   private deletedTareas: StatusWrapper<ITarea>[] = [];
   equiposTrabajo: IEquipoTrabajo[] = [];

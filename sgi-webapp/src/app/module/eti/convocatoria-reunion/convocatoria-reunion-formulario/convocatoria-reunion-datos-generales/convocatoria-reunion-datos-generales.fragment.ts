@@ -12,7 +12,7 @@ import { DateValidator } from '@core/validators/date-validator';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
@@ -78,13 +78,8 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
    * Carga los convocantes de la convocatoria
    */
   loadConvocantes(): Observable<IConvocatoriaReunion> {
-    const filterComite: SgiRestFilter = {
-      field: 'comite.id',
-      type: SgiRestFilterType.EQUALS,
-      value: this.convocatoriaReunion.comite.id.toString()
-    };
     const options: SgiRestFindOptions = {
-      filters: [filterComite]
+      filter: new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, this.convocatoriaReunion.comite.id.toString())
     };
     return this.evaluadorService.findAll(options).pipe(
       switchMap((listadoConvocantes) => {

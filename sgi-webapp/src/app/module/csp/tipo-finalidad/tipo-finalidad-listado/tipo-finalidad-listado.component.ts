@@ -10,7 +10,7 @@ import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service'
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -66,7 +66,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
       nombre: new FormControl(''),
       activo: new FormControl('true')
     });
-    this.filter = this.createFilters();
+    this.filter = this.createFilter();
   }
 
   protected createObservable(): Observable<SgiRestListResult<ITipoFinalidad>> {
@@ -82,13 +82,14 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
     this.tiposFinalidad$ = this.getObservableLoadTable(reset);
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtros = [];
-    this.addFiltro(filtros, 'nombre', SgiRestFilterType.LIKE, this.formGroup.controls.nombre.value);
-    if (this.formGroup.controls.activo.value !== 'todos') {
-      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
+    if (controls.activo.value !== 'todos') {
+      filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
-    return filtros;
+
+    return filter;
   }
 
   onClearFilters() {

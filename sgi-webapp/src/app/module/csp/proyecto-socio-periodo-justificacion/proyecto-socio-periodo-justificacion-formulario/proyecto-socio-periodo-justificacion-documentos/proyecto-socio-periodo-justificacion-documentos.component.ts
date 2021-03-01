@@ -15,7 +15,7 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { SgiRestFindOptions, SgiRestSort, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
@@ -122,12 +122,8 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
       visible: new FormControl(false)
     }));
     this.group.initialize();
-    const sort: SgiRestSort = {
-      direction: SgiRestSortDirection.ASC,
-      field: 'nombre'
-    };
     const options: SgiRestFindOptions = {
-      sort
+      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
     };
     this.tiposDocumento$ = this.tipoDocumentoService.findTodos(options).pipe(
       map(result => result.items)

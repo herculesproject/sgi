@@ -28,7 +28,7 @@ import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.se
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of, Subscription } from 'rxjs';
 import { map, mergeAll, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
@@ -158,7 +158,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.loadFinalidades();
     this.fuenteFinanciacion();
     this.loadAreasTematica();
-    this.filter = this.createFilters();
+    this.filter = this.createFilter();
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
@@ -263,30 +263,29 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.convocatorias$ = this.getObservableLoadTable(reset);
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtros = [];
-    this.addFiltro(filtros, 'codigo', SgiRestFilterType.LIKE, this.formGroup.controls.codigo.value);
-    this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
-    this.addFiltro(filtros, 'estado', SgiRestFilterType.EQUALS, this.formGroup.controls.estado.value);
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value);
 
-    if (this.formGroup.controls.activo.value !== 'todos') {
-      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    filter
+      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('estado', SgiRestFilterOperator.EQUALS, controls.estado.value);
+    if (controls.activo.value !== 'todos') {
+      filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
+    filter
+      .and('anio', SgiRestFilterOperator.EQUALS, controls.anio.value)
+      .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.acronimo)
+      .and('modeloEjecucion.id', SgiRestFilterOperator.EQUALS, controls.modeloEjecucion.value?.id?.toString())
+      .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value)
+      .and('finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString())
+      .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
+      .and('entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
+      .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.personaRef)
+      .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
+      .and('areasTematicas.id', SgiRestFilterOperator.EQUALS, controls.areaTematica.value?.id?.toString());
 
-    this.addFiltro(filtros, 'anio', SgiRestFilterType.EQUALS, this.formGroup.controls.anio.value);
-    this.addFiltro(filtros, 'unidadGestionRef', SgiRestFilterType.EQUALS, this.formGroup.controls.unidadGestion.value?.acronimo);
-    this.addFiltro(filtros, 'modeloEjecucion.id', SgiRestFilterType.EQUALS, this.formGroup.controls.modeloEjecucion.value?.id);
-    this.addFiltro(filtros, 'abiertoPlazoPresentacionSolicitud', SgiRestFilterType.EQUALS,
-      this.formGroup.controls.abiertoPlazoPresentacionSolicitud.value);
-    this.addFiltro(filtros, 'finalidad.id', SgiRestFilterType.EQUALS, this.formGroup.controls.finalidad.value?.id);
-    this.addFiltro(filtros, 'ambitoGeografico.id', SgiRestFilterType.EQUALS, this.formGroup.controls.ambitoGeografico.value?.id);
-    this.addFiltro(filtros, 'convocatoriaEntidadConvocante.entidadRef',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.entidadConvocante.value?.personaRef);
-    this.addFiltro(filtros, 'convocatoriaEntidadFinanciadora.entidadRef',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.entidadFinanciadora.value?.personaRef);
-    this.addFiltro(filtros, 'fuenteFinanciacion.id', SgiRestFilterType.EQUALS, this.formGroup.controls.fuenteFinanciacion.value?.id);
-    this.addFiltro(filtros, 'areaTematica.id', SgiRestFilterType.EQUALS, this.formGroup.controls.areaTematica.value?.id);
-    return filtros;
+    return filter;
   }
 
   onClearFilters() {
@@ -395,15 +394,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   private loadModelosEjecucion() {
     this.formGroup.get('modeloEjecucion').setValue('');
     this.formGroup.get('finalidad').setValue('');
-    const options = {
-      filters: [
-        {
-          field: 'unidadGestionRef',
-          type: SgiRestFilterType.EQUALS,
-          value: this.formGroup.controls.unidadGestion.value.acronimo,
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('unidadGestionRef', SgiRestFilterOperator.EQUALS, this.formGroup.controls.unidadGestion.value.acronimo)
+    };
     this.subscriptions.push(this.unidadModeloService.findAll(options).subscribe(
       res => {
         this.modelosEjecucionFiltered = res.items.map(item => item.modeloEjecucion);

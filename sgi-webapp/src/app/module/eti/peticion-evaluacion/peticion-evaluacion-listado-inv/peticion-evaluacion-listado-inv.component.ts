@@ -14,7 +14,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -92,40 +92,11 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     return observable$;
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    this.filter = [];
-
-    if (this.formGroup.controls.comite.value) {
-      const filterComite: SgiRestFilter = {
-        field: 'comite.id',
-        type: SgiRestFilterType.EQUALS,
-        value: this.formGroup.controls.comite.value.id,
-      };
-
-      this.filter.push(filterComite);
-    }
-
-    if (this.formGroup.controls.codigo.value) {
-      const filterCodigo: SgiRestFilter = {
-        field: 'peticionEvaluacion.codigo',
-        type: SgiRestFilterType.LIKE,
-        value: this.formGroup.controls.codigo.value,
-      };
-
-      this.filter.push(filterCodigo);
-    }
-
-    if (this.formGroup.controls.titulo.value) {
-      const filterTitulo: SgiRestFilter = {
-        field: 'peticionEvaluacion.titulo',
-        type: SgiRestFilterType.LIKE,
-        value: this.formGroup.controls.titulo.value,
-      };
-
-      this.filter.push(filterTitulo);
-    }
-
-    return this.filter;
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    return new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
+      .and('peticionEvaluacion.codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
+      .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value);
   }
 
   protected loadTable(reset?: boolean) {

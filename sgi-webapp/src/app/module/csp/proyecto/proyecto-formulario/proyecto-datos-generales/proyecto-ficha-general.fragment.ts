@@ -15,7 +15,7 @@ import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service'
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult, SgiRestSort, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
 import moment from 'moment';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
@@ -309,12 +309,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         );
       }
 
-      const sort: SgiRestSort = {
-        direction: SgiRestSortDirection.ASC,
-        field: 'numPeriodo'
-      };
       const options: SgiRestFindOptions = {
-        sort
+        sort: new RSQLSgiRestSort('numPeriodo', SgiRestSortDirection.ASC)
       };
       this.subscriptions.push(
         this.convocatoriaService.findSeguimientosCientificos(convocatoria.id, options).subscribe(
@@ -412,15 +408,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    * @returns observable para recuperar los datos
    */
   private loadUnidadGestion(acronimo: string): Observable<SgiRestListResult<IUnidadGestion>> {
-    const options = {
-      filters: [
-        {
-          field: 'acronimo',
-          type: SgiRestFilterType.EQUALS,
-          value: acronimo,
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, acronimo)
+    };
 
     return this.unidadGestionService.findAll(options).pipe(
       tap(result => {

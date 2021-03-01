@@ -16,7 +16,7 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -110,20 +110,17 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtro: SgiRestFilter[] = [];
-
-    this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
-
-    if (this.formGroup.controls.estado.value) {
-      this.addFiltro(filtro, 'fechaBaja', SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()));
-      this.addFiltro(filtro, 'fechaAlta', SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()));
-
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString());
+    if (controls.estado.value) {
+      filter
+        .and('fechaBaja', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()))
+        .and('fechaAlta', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()));
     }
+    filter.and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value);
 
-    this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
-
-    return filtro;
+    return filter;
   }
 
 
@@ -289,7 +286,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * @param persona persona seleccionado
    */
   public setUsuario(persona: IPersona) {
-    this.formGroup.controls.solicitante.setValue(persona.personaRef);
+    this.formGroup.controls.solicitante.setValue(persona?.personaRef);
   }
 
   /**

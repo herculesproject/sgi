@@ -15,7 +15,7 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -118,15 +118,9 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     }));
     this.group.initialize();
     const id = this.actionService.modeloEjecucionId;
-    const options = {
-      filters: [
-        {
-          field: 'convocatoria',
-          type: SgiRestFilterType.EQUALS,
-          value: 'true',
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('convocatoria', SgiRestFilterOperator.EQUALS, 'true')
+    };
 
     this.subscriptions.push(
       this.modeloEjecucionService.findModeloTipoDocumento(id).pipe(

@@ -14,7 +14,7 @@ import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.se
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IsYearPlus } from '@core/validators/is-year-plus';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -193,15 +193,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
-    const options = {
-      filters: [
-        {
-          field: 'acronimo',
-          type: SgiRestFilterType.LIKE,
-          value: unidadGestionRef,
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, unidadGestionRef)
+    };
     return this.unidadGestionService.findAll(options).pipe(
       map(list => {
         if (list.items.length === 1) {

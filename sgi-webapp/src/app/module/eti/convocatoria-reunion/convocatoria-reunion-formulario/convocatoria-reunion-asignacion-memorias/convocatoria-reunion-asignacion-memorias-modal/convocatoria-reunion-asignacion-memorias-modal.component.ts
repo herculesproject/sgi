@@ -17,7 +17,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
@@ -53,7 +53,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   idConvocatoria: number;
   isTipoConvocatoriaSeguimiento: boolean;
   filterData: { idComite: number, idTipoConvocatoria: number, fechaLimite: Date };
-  filterMemoriasAsignables: SgiRestFilter[];
+  filterMemoriasAsignables: SgiRestFilter;
   memoriasAsignadas: IMemoria[];
   evaluacion: IEvaluacion;
 
@@ -88,7 +88,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
       this.filterData = params.filterMemoriasAsignables;
       this.evaluacion = params.evaluacion;
     }
-    this.buildFilters();
+    this.buildFilter();
   }
 
   ngOnInit(): void {
@@ -141,29 +141,17 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * Construye los filtros necesarios para la búsqueda de las memorias asignables.
    *
    */
-  private buildFilters(): void {
-    this.filterMemoriasAsignables = [];
-
+  private buildFilter(): void {
     if (this.filterData && this.filterData.idComite &&
       this.filterData.idTipoConvocatoria &&
       this.filterData.fechaLimite) {
-
       this.isTipoConvocatoriaSeguimiento = (this.filterData.idTipoConvocatoria === 3) ? true : false;
 
-      const filtroComite = {
-        field: 'comite.id',
-        type: SgiRestFilterType.EQUALS,
-        value: this.filterData.idComite.toString(),
-      };
-
-      const filtroFechaLimite = {
-        field: 'fechaEnvioSecretaria',
-        type: SgiRestFilterType.LOWER_OR_EQUAL,
-        value: DateUtils.formatFechaAsISODate(this.filterData.fechaLimite),
-      };
-
-      this.filterMemoriasAsignables.push(filtroComite);
-      this.filterMemoriasAsignables.push(filtroFechaLimite);
+      this.filterMemoriasAsignables = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, this.filterData.idComite.toString())
+        .and('fechaEnvioSecretaria', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.filterData.fechaLimite))
+    }
+    else {
+      this.filterMemoriasAsignables = undefined;
     }
   }
 
@@ -203,7 +191,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    */
   private loadMemoriasAsignablesConvocatoriaSeguimiento(): void {
     this.subscriptions.push(this.memoriaService
-      .findAllAsignablesTipoConvocatoriaSeguimiento({ filters: this.filterMemoriasAsignables })
+      .findAllAsignablesTipoConvocatoriaSeguimiento({ filter: this.filterMemoriasAsignables })
       .subscribe(
         (response: SgiRestListResult<IMemoria>) => {
           this.memorias = response.items;
@@ -233,7 +221,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    */
   private loadMemoriasAsignablesConvocatoriaOrdExt(): void {
     this.subscriptions.push(this.memoriaService
-      .findAllAsignablesTipoConvocatoriaOrdExt({ filters: this.filterMemoriasAsignables })
+      .findAllAsignablesTipoConvocatoriaOrdExt({ filter: this.filterMemoriasAsignables })
       .subscribe(
         (response: SgiRestListResult<IMemoria>) => {
           this.memorias = response.items;

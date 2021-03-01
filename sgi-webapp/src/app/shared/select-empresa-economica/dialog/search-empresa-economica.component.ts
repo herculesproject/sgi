@@ -9,7 +9,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -34,7 +34,6 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
   displayedColumns = ['tipo', 'tipoDocumento', 'numeroDocumento', 'razonSocial', 'direccion', 'tipoEmpresa', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
   totalElementos = 0;
-  private filter: SgiRestFilter[];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -86,11 +85,8 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
         index: reset ? 0 : this.paginator.pageIndex,
         size: this.paginator.pageSize
       },
-      sort: {
-        direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-        field: this.sort.active
-      },
-      filters: this.getFilters()
+      // TODO: Add sorts
+      filter: this.getFilter()
     };
     this.empresasEconomicas$ = this.empresaEconomicaService.findAll(options)
       .pipe(
@@ -115,24 +111,10 @@ export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewIn
       );
   }
 
-  private getFilters(): SgiRestFilter[] {
-    this.filter = [];
-    const filterNumeroDocumento: SgiRestFilter = {
-      field: 'numeroDocumento',
-      type: SgiRestFilterType.LIKE,
-      value: this.formGroup.controls.numeroDocumento.value,
-    };
-
-    this.filter.push(filterNumeroDocumento);
-
-    const filterRazonSocial: SgiRestFilter = {
-      field: 'razonSocial',
-      type: SgiRestFilterType.LIKE,
-      value: this.formGroup.controls.razonSocial.value,
-    };
-
-    this.filter.push(filterRazonSocial);
-    return this.filter;
+  private getFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    return new RSQLSgiRestFilter('numeroDocumento', SgiRestFilterOperator.LIKE_ICASE, controls.numeroDocumento.value)
+      .and('razonSocial', SgiRestFilterOperator.LIKE_ICASE, controls.razonSocial.value);
   }
 
   checkSelectedEmpresa(empresa: IEmpresaEconomica) {

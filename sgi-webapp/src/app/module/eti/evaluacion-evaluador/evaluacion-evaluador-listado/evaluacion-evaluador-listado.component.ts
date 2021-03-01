@@ -19,7 +19,7 @@ import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.servic
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -249,23 +249,19 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     return tipoConvocatoriaReunion?.nombre;
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtros = [];
-    this.addFiltro(filtros, 'memoria.comite.id', SgiRestFilterType.EQUALS,
-      this.formGroup.controls.comite.value.id);
-    const inicio = DateUtils.getFechaInicioDia(this.formGroup.controls.fechaEvaluacionInicio.value);
-    this.addFiltro(filtros, 'convocatoriaReunion.fechaEvaluacion', SgiRestFilterType.GREATHER_OR_EQUAL,
-      DateUtils.formatFechaAsISODateTime(inicio));
-    const fin = DateUtils.getFechaInicioDia(this.formGroup.controls.fechaEvaluacionFin.value);
-    this.addFiltro(filtros, 'convocatoriaReunion.fechaEvaluacion', SgiRestFilterType.LOWER_OR_EQUAL,
-      DateUtils.formatFechaAsISODateTime(fin));
-    this.addFiltro(filtros, 'memoria.numReferencia', SgiRestFilterType.EQUALS,
-      this.formGroup.controls.memoriaNumReferencia.value);
-    this.addFiltro(filtros, 'convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterType.EQUALS,
-      this.formGroup.controls.tipoConvocatoria.value.id);
-    this.addFiltro(filtros, 'tipoEvaluacion.id', SgiRestFilterType.EQUALS,
-      this.formGroup.controls.tipoEvaluacion.value.id);
-    return filtros;
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('memoria.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString());
+    const inicio = DateUtils.getFechaInicioDia(controls.fechaEvaluacionInicio.value);
+    filter.and('convocatoriaReunion.fechaEvaluacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(inicio));
+    const fin = DateUtils.getFechaInicioDia(controls.fechaEvaluacionFin.value);
+    filter
+      .and('convocatoriaReunion.fechaEvaluacion', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fin))
+      .and('memoria.numReferencia', SgiRestFilterOperator.EQUALS, controls.memoriaNumReferencia.value)
+      .and('convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoria.value?.id?.toString())
+      .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
+
+    return filter;
   }
 
   /**

@@ -1,12 +1,12 @@
-import { AfterViewInit, OnDestroy, OnInit, ViewChild, Directive } from '@angular/core';
+import { AfterViewInit, Directive, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import {
+  RSQLSgiRestSort,
   SgiRestFilter,
-  SgiRestFilterType,
   SgiRestFindOptions,
   SgiRestListResult,
   SgiRestSortDirection
@@ -20,7 +20,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   columnas: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: SgiRestFilter[];
+  filter: SgiRestFilter;
   suscripciones: Subscription[];
   formGroup: FormGroup;
 
@@ -37,7 +37,6 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   ngOnInit(): void {
     this.totalElementos = 0;
     this.suscripciones = [];
-    this.filter = [];
     this.initColumns();
   }
 
@@ -69,7 +68,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    * Load table data
    */
   onSearch(): void {
-    this.filter = this.createFilters();
+    this.filter = this.createFilter();
     this.loadTable(true);
   }
 
@@ -78,11 +77,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    */
   onClearFilters(): void {
     FormGroupUtil.clean(this.formGroup);
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
+    this.filter = undefined;
     this.loadTable(true);
   }
 
@@ -122,29 +117,15 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    * @param reset Indica la pagina actual es la primera o no
    */
   protected getFindOptions(reset?: boolean): SgiRestFindOptions {
-    const options = {
+    const options: SgiRestFindOptions = {
       page: {
         index: reset ? 0 : this.paginator?.pageIndex,
         size: this.paginator?.pageSize,
       },
-      sort: {
-        direction: SgiRestSortDirection.fromSortDirection(this.sort?.direction),
-        field: this.sort?.active,
-      },
-      filters: this.filter,
-    } as SgiRestFindOptions;
+      sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+      filter: this.filter,
+    };
     return options;
-  }
-
-  protected addFiltro(filtros: SgiRestFilter[], nombre: string, tipo: SgiRestFilterType, valor: any): void {
-    if (valor) {
-      const filtro: SgiRestFilter = {
-        field: nombre,
-        type: tipo,
-        value: valor,
-      };
-      filtros.push(filtro);
-    }
   }
 
   /**
@@ -174,5 +155,5 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   /**
    * Crea los filtros para el listado
    */
-  protected abstract createFilters(): SgiRestFilter[];
+  protected abstract createFilter(): SgiRestFilter;
 }

@@ -17,11 +17,11 @@ import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocat
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { DateUtils } from '@core/utils/date-utils';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, startWith, switchMap } from 'rxjs/operators';
-import { DateUtils } from '@core/utils/date-utils';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -121,34 +121,26 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       'dictamen.nombre', 'version', 'acciones'];
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtro: SgiRestFilter[] = [];
-    this.addFiltro(filtro, 'memoria.comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
-    this.addFiltro(filtro, 'tipoEvaluacion.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEvaluacion.value.id);
-
-
-    if (this.formGroup.controls.fechaEvaluacionInicio) {
-      const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionInicio.value);
-      this.addFiltro(filtro, 'fechaDictamen',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
-
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('memoria.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
+      .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
+    if (controls.fechaEvaluacionInicio) {
+      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionInicio.value);
+      filter.and('fechaDictamen',
+        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
     }
-
-    if (this.formGroup.controls.fechaEvaluacionFin) {
-      const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionFin.value);
-      this.addFiltro(filtro, 'fechaDictamen',
-        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
-
+    if (controls.fechaEvaluacionFin) {
+      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionFin.value);
+      filter.and('fechaDictamen',
+        SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
     }
+    filter
+      .and('memoria.numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.referenciaMemoria.value)
+      .and('convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoriaReunion.value?.id?.toString())
+      .and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, this.personaRefSolicitante);
 
-
-    this.addFiltro(filtro, 'memoria.numReferencia', SgiRestFilterType.LIKE, this.formGroup.controls.referenciaMemoria.value);
-    this.addFiltro(filtro, 'convocatoriaReunion.tipoConvocatoriaReunion',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.tipoConvocatoriaReunion.value.id);
-    this.addFiltro(filtro, 'memoria.peticionEvaluacion.personaRef',
-      SgiRestFilterType.EQUALS, this.personaRefSolicitante);
-
-    return filtro;
+    return filter;
   }
 
   protected loadTable(reset?: boolean) {

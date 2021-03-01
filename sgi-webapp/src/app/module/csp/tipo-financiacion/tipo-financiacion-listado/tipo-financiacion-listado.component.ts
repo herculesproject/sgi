@@ -10,7 +10,7 @@ import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.se
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -64,7 +64,7 @@ export class TipoFinanciacionListadoComponent extends AbstractTablePaginationCom
     this.formGroup = new FormGroup({
       activo: new FormControl('true')
     });
-    this.filter = this.createFilters();
+    this.filter = this.createFilter();
   }
 
   protected createObservable(): Observable<SgiRestListResult<ITipoFinanciacion>> {
@@ -80,12 +80,14 @@ export class TipoFinanciacionListadoComponent extends AbstractTablePaginationCom
     this.tipoFinanciaciones$ = this.getObservableLoadTable(reset);
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtros = [];
-    if (this.formGroup.controls.activo.value !== 'todos') {
-      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+
+    if (controls.activo.value !== 'todos') {
+      return new RSQLSgiRestFilter('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
-    return filtros;
+
+    return undefined;
   }
 
   onClearFilters() {

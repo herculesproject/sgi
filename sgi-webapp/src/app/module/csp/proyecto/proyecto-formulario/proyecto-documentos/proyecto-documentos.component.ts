@@ -1,6 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { OnDestroy } from '@angular/core';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -16,7 +15,7 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
@@ -139,15 +138,9 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
 
 
     const idModeloEjecucion = this.actionService.proyecto?.modeloEjecucion?.id;
-    const options = {
-      filters: [
-        {
-          field: 'proyecto',
-          type: SgiRestFilterType.EQUALS,
-          value: 'true',
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('proyecto', SgiRestFilterOperator.EQUALS, 'true')
+    };
     this.subscriptions.push(
       this.modeloEjecucionService.findModeloTipoDocumento(idModeloEjecucion).pipe(
         tap(() => {

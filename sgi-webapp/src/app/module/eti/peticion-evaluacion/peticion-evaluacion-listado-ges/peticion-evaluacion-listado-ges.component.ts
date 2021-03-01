@@ -17,7 +17,7 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -148,14 +148,13 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     this.displayedColumns = ['solicitante', 'codigo', 'titulo', 'fuenteFinanciacion', 'fechaInicio', 'fechaFin', 'acciones'];
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtro: SgiRestFilter[] = [];
-    this.addFiltro(filtro, 'peticionEvaluacion.codigo', SgiRestFilterType.LIKE, this.formGroup.controls.codigo.value);
-    this.addFiltro(filtro, 'peticionEvaluacion.titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
-    this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
-    this.addFiltro(filtro, 'estadoActual.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoMemoria.value.id);
-    this.addFiltro(filtro, 'peticionEvaluacion.personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
-    return filtro;
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    return new RSQLSgiRestFilter('peticionEvaluacion.codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
+      .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
+      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
+      .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value);
   }
 
   protected loadTable(reset?: boolean) {

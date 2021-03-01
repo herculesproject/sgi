@@ -17,7 +17,7 @@ import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocat
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -38,7 +38,6 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
 
   displayedColumns: string[];
   totalElementos: number;
-  filter: SgiRestFilter[];
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -84,7 +83,6 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
 
 
     this.totalElementos = 0;
-    this.filter = [];
   }
 
 
@@ -96,29 +94,22 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
     this.displayedColumns = ['comite', 'fechaEvaluacion', 'codigo', 'horaInicio', 'lugar', 'tipoConvocatoriaReunion', 'fechaEnvio', 'acciones'];
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtro: SgiRestFilter[] = [];
-    this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
-    this.addFiltro(filtro, 'tipoConvocatoriaReunion.id',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.tipoConvocatoriaReunion.value.id);
-
-
-
-    if (this.formGroup.controls.fechaEvaluacionDesde.value) {
-      const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionDesde.value);
-      this.addFiltro(filtro, 'fechaEvaluacion',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
+      .and('tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoriaReunion.value?.id?.toString());
+    if (controls.fechaEvaluacionDesde.value) {
+      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionDesde.value);
+      filter.and('fechaEvaluacion',
+        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
+    }
+    if (controls.fechaEvaluacionHasta.value) {
+      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionHasta.value);
+      filter.and('fechaEvaluacion',
+        SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
     }
 
-    if (this.formGroup.controls.fechaEvaluacionHasta.value) {
-      const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionHasta.value);
-
-      this.addFiltro(filtro, 'fechaEvaluacion',
-        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-
-    }
-    return filtro;
+    return filter;
   }
 
 

@@ -17,7 +17,7 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -128,28 +128,13 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtro: SgiRestFilter[] = [];
-    if (this.formGroup.controls.comite.value) {
-      this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
-    }
-
-    if (this.formGroup.controls.titulo.value) {
-      this.addFiltro(filtro, 'peticionEvaluacion.titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
-    }
-
-    if (this.formGroup.controls.numReferencia.value) {
-      this.addFiltro(filtro, 'numReferencia', SgiRestFilterType.EQUALS, this.formGroup.controls.numReferencia.value);
-    }
-
-    if (this.formGroup.controls.tipoEstadoMemoria.value) {
-      this.addFiltro(filtro, 'estadoActual.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoMemoria.value.id);
-    }
-
-    if (this.personaRef) {
-      this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.personaRef);
-    }
-    return filtro;
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    return new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
+      .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.numReferencia.value)
+      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
+      .and('personaRef', SgiRestFilterOperator.EQUALS, this.personaRef);
   }
 
   protected loadTable(reset?: boolean) {
@@ -253,8 +238,8 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
    * @param personaRef referencia del persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
-    this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
-    this.datosSolicitante = solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
+    this.formGroup.controls.solicitante.setValue(solicitante?.personaRef);
+    this.datosSolicitante = solicitante?.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
     this.personaRef = solicitante?.personaRef;
   }
 

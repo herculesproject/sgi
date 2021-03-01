@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
-import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -21,7 +21,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -123,7 +123,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.loadAmbitoGeografico();
     this.loadPlanInvestigacion();
     this.loadFuenteFinanciacion();
-    this.filter = this.createFilters();
+    this.filter = this.createFilter();
   }
 
   onClearFilters() {
@@ -145,34 +145,32 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.proyecto$ = this.getObservableLoadTable(reset);
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    const filtros = [];
-    this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
-    this.addFiltro(filtros, 'acronimo', SgiRestFilterType.LIKE, this.formGroup.controls.acronimo.value);
-    this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, this.formGroup.controls.estado.value);
-    if (this.formGroup.controls.activo.value !== 'todos') {
-      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+  protected createFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    const filter = new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.acronimo.value)
+      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value);
+    if (controls.activo.value !== 'todos') {
+      filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
-    this.addFiltro(filtros, 'unidadGestionRef', SgiRestFilterType.EQUALS, this.formGroup.controls.unidadGestion.value?.acronimo);
-    this.addFiltro(filtros, 'fechaInicio',
-      SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaInicioDesde.value));
-    this.addFiltro(filtros, 'fechaInicio',
-      SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaInicioHasta.value));
-    this.addFiltro(filtros, 'fechaFin',
-      SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaFinDesde.value));
-    this.addFiltro(filtros, 'fechaFin',
-      SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.formGroup.controls.fechaFinHasta.value));
-    this.addFiltro(filtros, 'ambitoGeografico.id', SgiRestFilterType.EQUALS, this.formGroup.controls.ambitoGeografico.value?.id);
-    this.addFiltro(filtros, 'responsableProyecto', SgiRestFilterType.EQUALS, this.formGroup.controls.responsableProyecto.value?.personaRef);
-    this.addFiltro(filtros, 'miembroEquipo', SgiRestFilterType.EQUALS, this.formGroup.controls.miembroEquipo.value?.personaRef);
-    this.addFiltro(filtros, 'socioColaborador', SgiRestFilterType.EQUALS, this.formGroup.controls.socioColaborador.value?.personaRef);
-    this.addFiltro(filtros, 'convocatoria.id', SgiRestFilterType.EQUALS, this.formGroup.controls.convocatoria.value?.id);
-    this.addFiltro(filtros, 'entidadConvocante', SgiRestFilterType.EQUALS, this.formGroup.controls.entidadConvocante.value?.personaRef);
-    this.addFiltro(filtros, 'planInvestigacion', SgiRestFilterType.EQUALS, this.formGroup.controls.planInvestigacion.value?.id);
-    this.addFiltro(filtros, 'entidadFinanciadora', SgiRestFilterType.EQUALS, this.formGroup.controls.entidadFinanciadora.value?.personaRef);
-    this.addFiltro(filtros, 'fuenteFinanciacion', SgiRestFilterType.EQUALS, this.formGroup.controls.fuenteFinanciacion.value?.id);
+    filter
+      .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.acronimo)
+      .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioDesde.value))
+      .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioHasta.value))
+      .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinDesde.value))
+      .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinHasta.value))
+      .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
+      .and('responsableProyecto', SgiRestFilterOperator.EQUALS, controls.responsableProyecto.value?.personaRef)
+      .and('equipos.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.personaRef)
+      .and('socios.empresaRef', SgiRestFilterOperator.EQUALS, controls.socioColaborador.value?.personaRef)
+      .and('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
+      .and('entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
+      .and('planInvestigacion', SgiRestFilterOperator.EQUALS, controls.planInvestigacion.value?.id?.toString())
+      .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.personaRef)
+      .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString());
 
-    return filtros;
+    return filter;
   }
 
   /**

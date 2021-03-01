@@ -9,7 +9,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -68,15 +68,9 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
   loadTipoDocumento() {
     const modeloEjecucionId = this.data.modeloEjecucionId;
     const idTipoFase = this.data.documentoRequerido.configuracionSolicitud.fasePresentacionSolicitudes?.tipoFase.id;
-    const options = {
-      filters: [
-        {
-          field: 'modeloTipoFase.tipoFase.id',
-          type: SgiRestFilterType.EQUALS,
-          value: idTipoFase ? idTipoFase.toString() : null
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('modeloTipoFase.tipoFase.id', SgiRestFilterOperator.EQUALS, idTipoFase ? idTipoFase.toString() : null)
+    };
     const subscription = this.modeloEjecucionService.findModeloTipoDocumento(modeloEjecucionId, options).pipe(
       map((result => {
         const listado: ITipoDocumento[] = [];

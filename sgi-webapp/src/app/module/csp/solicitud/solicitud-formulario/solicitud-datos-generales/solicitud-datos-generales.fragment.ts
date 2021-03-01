@@ -18,7 +18,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -396,15 +396,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    * @returns observable para recuperar los datos
    */
   private loadUnidadGestion(acronimo: string): Observable<SgiRestListResult<IUnidadGestion>> {
-    const options = {
-      filters: [
-        {
-          field: 'acronimo',
-          type: SgiRestFilterType.EQUALS,
-          value: acronimo,
-        } as SgiRestFilter
-      ]
-    } as SgiRestFindOptions;
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, acronimo)
+    };
 
     return this.unidadGestionService.findAll(options).pipe(
       tap(result => {

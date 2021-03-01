@@ -8,7 +8,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -27,7 +27,6 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
   displayedColumns: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: SgiRestFilter[];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -44,12 +43,6 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
     this.displayedColumns = ['nombre', 'primerApellido', 'segundoApellido', 'numIdentificadorPersonal'];
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
-
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -75,11 +68,8 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
             index: reset ? 0 : this.paginator.pageIndex,
             size: this.paginator.pageSize
           },
-          sort: {
-            direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-            field: 'personaRef'
-          },
-          filters: this.buildFilters(this.data)
+          // TODO: Add sorts
+          filter: this.buildFilter(this.data)
         }
       )
       .pipe(
@@ -104,49 +94,12 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
       );
   }
 
-  private buildFilters(persona: IPersona): SgiRestFilter[] {
-    this.filter = [];
-    if (persona.nombre) {
-      const filterNombre: SgiRestFilter = {
-        field: 'nombre',
-        type: SgiRestFilterType.EQUALS,
-        value: persona.nombre,
-      };
-      this.filter.push(filterNombre);
-    }
-    if (persona.primerApellido) {
-      const filterPrimerApellido: SgiRestFilter = {
-        field: 'primerApellido',
-        type: SgiRestFilterType.EQUALS,
-        value: persona.primerApellido,
-      };
-      this.filter.push(filterPrimerApellido);
-    }
-    if (persona.segundoApellido) {
-      const filterSegundoApellido: SgiRestFilter = {
-        field: 'segundoApellido',
-        type: SgiRestFilterType.EQUALS,
-        value: persona.segundoApellido,
-      };
-      this.filter.push(filterSegundoApellido);
-    }
-    if (persona.identificadorNumero) {
-      const filterNumIdentificadorPersonal: SgiRestFilter = {
-        field: 'identificadorNumero',
-        type: SgiRestFilterType.EQUALS,
-        value: persona.identificadorNumero,
-      };
-      this.filter.push(filterNumIdentificadorPersonal);
-    }
-    if (persona.identificadorLetra) {
-      const filterLetraIdentificadorPersonal: SgiRestFilter = {
-        field: 'identificadorLetra',
-        type: SgiRestFilterType.EQUALS,
-        value: persona.identificadorLetra,
-      };
-      this.filter.push(filterLetraIdentificadorPersonal);
-    }
-    return this.filter;
+  private buildFilter(persona: IPersona): SgiRestFilter {
+    return new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.EQUALS, persona.nombre)
+      .and('primerApellido', SgiRestFilterOperator.EQUALS, persona.primerApellido)
+      .and('segundoApellido', SgiRestFilterOperator.EQUALS, persona.segundoApellido)
+      .and('identificadorNumero', SgiRestFilterOperator.EQUALS, persona.identificadorNumero)
+      .and('identificadorLetra', SgiRestFilterOperator.EQUALS, persona.identificadorLetra);
   }
 
   ngAfterViewInit(): void {

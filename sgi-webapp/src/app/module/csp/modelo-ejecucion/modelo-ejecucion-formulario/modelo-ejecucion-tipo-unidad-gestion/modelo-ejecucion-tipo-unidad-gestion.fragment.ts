@@ -5,7 +5,7 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
@@ -34,15 +34,9 @@ export class ModeloEjecucionTipoUnidadGestionFragment extends Fragment {
 
           const modeloUnidadObservable = response.items.
             map(modeloTipoHito => {
-              const options = {
-                filters: [
-                  {
-                    field: 'acronimo',
-                    type: SgiRestFilterType.LIKE,
-                    value: modeloTipoHito.unidadGestion.acronimo,
-                  } as SgiRestFilter
-                ]
-              } as SgiRestFindOptions;
+              const options: SgiRestFindOptions = {
+                filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, modeloTipoHito.unidadGestion.acronimo)
+              };
               return this.unidadGestionService.findAll(options).pipe(
                 map(unidadesGestion => {
                   modeloTipoHito.unidadGestion = unidadesGestion.items[0];

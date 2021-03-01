@@ -1,14 +1,14 @@
-import { AfterViewInit, OnDestroy, OnInit, ViewChild, Directive } from '@angular/core';
+import { AfterViewInit, Directive, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import {
+  RSQLSgiRestSort,
   SgiRestFilter,
-  SgiRestFilterType,
   SgiRestFindOptions,
   SgiRestListResult,
-  SgiRestSortDirection,
+  SgiRestSortDirection
 } from '@sgi/framework/http';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -74,11 +74,7 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
    */
   onClearFilters(): void {
     FormGroupUtil.clean(this.formGroup);
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
+    this.filter = undefined;
     this.loadTable(true);
   }
 
@@ -115,24 +111,10 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
    */
   protected getFindOptions(reset?: boolean): SgiRestFindOptions {
     const options = {
-      sort: {
-        direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-        field: this.sort.active,
-      },
+      sort: new RSQLSgiRestSort(this.sort.active, SgiRestSortDirection.fromSortDirection(this.sort.direction)),
       filters: this.filter,
     };
     return options;
-  }
-
-  protected addFiltro(filtros: SgiRestFilter[], nombre: string, tipo: SgiRestFilterType, valor: any): void {
-    if (valor) {
-      const filtro: SgiRestFilter = {
-        field: nombre,
-        type: tipo,
-        value: valor,
-      };
-      filtros.push(filtro);
-    }
   }
 
   /**

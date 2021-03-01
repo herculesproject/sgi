@@ -15,7 +15,7 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -168,12 +168,10 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   }
 
   private getConvocantes(comite: IComite): Observable<IEvaluador[]> {
-    const filterComite = {
-      field: 'comite.id',
-      type: SgiRestFilterType.EQUALS,
-      value: comite.id.toString()
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, comite.id.toString())
     };
-    return this.evaluadorService.findAll({ filters: [filterComite] })
+    return this.evaluadorService.findAll(options)
       .pipe(
         switchMap((listadoConvocantes) => {
           const personaRefsConvocantes = listadoConvocantes.items.map((convocante: IEvaluador) => convocante.personaRef);

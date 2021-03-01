@@ -20,7 +20,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -171,41 +171,42 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.solicitudes$ = this.getObservableLoadTable(reset);
   }
 
-  protected createFilters(): SgiRestFilter[] {
-    let filtros: SgiRestFilter[] = [];
-    this.addFiltro(filtros, 'referenciaConvocatoria', SgiRestFilterType.LIKE, this.formGroup.controls.referenciaConvocatoria.value);
-    this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, this.formGroup.controls.estadoSolicitud.value);
-    if (this.busquedaAvanzada) {
-      filtros = this.createFiltersAvanzados(filtros);
-    }
-    return filtros;
-  }
-
-  private createFiltersAvanzados(filtros: SgiRestFilter[]): SgiRestFilter[] {
+  protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    if (controls.plazoAbierto.value) {
-      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.desde',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioDesde.value));
-      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.hasta',
-        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioHasta.value));
-      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.desde',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinDesde.value));
-      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.hasta',
-        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinHasta.value));
+    const filter = new RSQLSgiRestFilter('referenciaConvocatoria', SgiRestFilterOperator.LIKE_ICASE, controls.referenciaConvocatoria.value)
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value);
+    if (this.busquedaAvanzada) {
+      if (controls.plazoAbierto.value) {
+        // TODO: Fix when dateTime are right managed
+        if (controls.fechaInicioDesde.value) {
+          filter.and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
+            SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioDesde.value) + 'T00:00:00');
+        }
+        if (controls.fechaInicioHasta.value) {
+          filter.and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
+            SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioHasta.value) + 'T23:59:59');
+        }
+        if (controls.fechaFinDesde.value) {
+          filter.and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
+            SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinDesde.value) + 'T00:00:00');
+        }
+        if (controls.fechaFinHasta.value) {
+          filter.and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
+            SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinHasta.value) + 'T23:59:59');
+        }
+      }
+      filter
+        .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.personaRef)
+        .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value)
+        .and('convocatoria.anio', SgiRestFilterOperator.EQUALS, controls.añoConvocatoria.value)
+        .and('convocatoria.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloConvocatoria.value)
+        .and('convocatoria.entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
+        .and('convocatoria.entidadesConvocantes.programa.id', SgiRestFilterOperator.EQUALS, controls.planInvestigacion.value?.id?.toString())
+        .and('convocatoria.entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.personaRef)
+        .and('convocatoria.entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString());
     }
-    this.addFiltro(filtros, 'solicitanteRef', SgiRestFilterType.LIKE, controls.solicitante.value?.personaRef);
-    this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, controls.activo.value);
-    this.addFiltro(filtros, 'convocatoria.anio', SgiRestFilterType.EQUALS, controls.añoConvocatoria.value);
-    this.addFiltro(filtros, 'convocatoria.titulo', SgiRestFilterType.LIKE, controls.tituloConvocatoria.value);
-    this.addFiltro(filtros, 'convocatoria.entidadConvocante.entidadRef', SgiRestFilterType.EQUALS,
-      controls.entidadConvocante.value?.personaRef);
-    this.addFiltro(filtros, 'convocatoria.entidadConvocante.programa.id', SgiRestFilterType.EQUALS,
-      controls.planInvestigacion.value?.id);
-    this.addFiltro(filtros, 'convocatoria.entidadFinanciadora.entidadRef', SgiRestFilterType.EQUALS,
-      controls.entidadFinanciadora.value?.personaRef);
-    this.addFiltro(filtros, 'convocatoria.entidadFinanciadora.fuenteFinanciacion.id', SgiRestFilterType.EQUALS,
-      controls.fuenteFinanciacion.value?.id);
-    return filtros;
+
+    return filter;
   }
 
   /**
