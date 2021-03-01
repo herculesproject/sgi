@@ -58,19 +58,19 @@ public class EstadoActaIT extends BaseIT {
   public void getEstadoActa_WithId_ReturnsEstadoActa() throws Exception {
     final ResponseEntity<EstadoActa> response = restTemplate.exchange(
         ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        EstadoActa.class, 2L);
+        EstadoActa.class, 4L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final EstadoActa estadoActa = response.getBody();
 
-    Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(2L);
+    Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(4L);
     Assertions.assertThat(estadoActa.getActa()).as("acta").isNotNull();
     Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
     Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
-        .isEqualTo(LocalDateTime.of(2020, 07, 14, 19, 32, 0));
+        .isEqualTo(LocalDateTime.of(2020, 07, 14, 19, 34, 0));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class EstadoActaIT extends BaseIT {
   public void removeEstadoActa_Success() throws Exception {
 
     // when: Delete con id existente
-    long id = 2L;
+    long id = 4L;
     final ResponseEntity<EstadoActa> response = restTemplate.exchange(
         ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
         EstadoActa.class, id);
@@ -125,13 +125,13 @@ public class EstadoActaIT extends BaseIT {
 
     final ResponseEntity<EstadoActa> response = restTemplate.exchange(
         ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, replaceEstadoActa),
-        EstadoActa.class, 2L);
+        EstadoActa.class, 4L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final EstadoActa estadoActa = response.getBody();
 
-    Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(2L);
+    Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(4L);
     Assertions.assertThat(estadoActa.getActa()).as("acta").isNotNull();
     Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
@@ -159,9 +159,9 @@ public class EstadoActaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).as("x-page-size").isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).as("x-total-count").isEqualTo("7");
 
-    // Contiene de id=7 a 8
-    Assertions.assertThat(estadosActas.get(0).getId()).as("0.id").isEqualTo(7);
-    Assertions.assertThat(estadosActas.get(1).getId()).as("1.id").isEqualTo(8);
+    // Contiene de id=9 a 10
+    Assertions.assertThat(estadosActas.get(0).getId()).as("0.id").isEqualTo(9);
+    Assertions.assertThat(estadosActas.get(1).getId()).as("1.id").isEqualTo(10);
   }
 
   @Test
@@ -204,7 +204,7 @@ public class EstadoActaIT extends BaseIT {
     Assertions.assertThat(estadosActas.size()).as("size").isEqualTo(7);
     for (int i = 0; i < 7; i++) {
       EstadoActa estadoActa = estadosActas.get(i);
-      Assertions.assertThat(estadoActa.getId()).as((8 - i) + ".id").isEqualTo(8 - i);
+      Assertions.assertThat(estadoActa.getId()).as((8 - i) + ".id").isEqualTo(10 - i);
     }
   }
 
@@ -217,7 +217,7 @@ public class EstadoActaIT extends BaseIT {
     // when: Ordena por id desc
     String sort = "id-";
     // when: Filtra por id menor
-    String filter = "id<4";
+    String filter = "id<6";
 
     URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -235,9 +235,9 @@ public class EstadoActaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("x-page-size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("2");
 
-    // Contiene id=3, 2
-    Assertions.assertThat(estadosActas.get(0).getId()).as("0.id").isEqualTo(3);
-    Assertions.assertThat(estadosActas.get(1).getId()).as("1.id").isEqualTo(2);
+    // Contiene id=4, 5
+    Assertions.assertThat(estadosActas.get(0).getId()).as("0.id").isEqualTo(5);
+    Assertions.assertThat(estadosActas.get(1).getId()).as("1.id").isEqualTo(4);
   }
 
   /**

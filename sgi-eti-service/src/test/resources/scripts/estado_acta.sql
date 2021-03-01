@@ -21,10 +21,6 @@ INSERT INTO eti.acta (id, convocatoria_reunion_id, hora_inicio, minuto_inicio, h
 
 -- ESTADO ACTA
 INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
-  VALUES (2, 1, 1, '2020-07-14 19:32:00');
-INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
-  VALUES (3, 1, 1, '2020-07-14 19:33:00');
-INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
   VALUES (4, 1, 1, '2020-07-14 19:34:00');
 INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
   VALUES (5, 1, 1, '2020-07-14 19:35:00');
@@ -34,3 +30,7 @@ INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
   VALUES (7, 1, 1, '2020-07-14 19:37:00');
 INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
   VALUES (8, 1, 1, '2020-07-14 19:38:00');
+INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
+  VALUES (9, 1, 1, '2020-07-14 19:39:00');
+INSERT INTO eti.estado_acta (id, acta_id, tipo_estado_acta_id, fecha_estado)
+  VALUES (10, 1, 1, '2020-07-14 19:40:00');

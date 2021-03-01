@@ -69,21 +69,21 @@ public class EstadoMemoriaIT extends BaseIT {
   public void getEstadoMemoria_WithId_ReturnsEstadoMemoria() throws Exception {
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(
         ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        EstadoMemoria.class, 2L);
+        EstadoMemoria.class, 3L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final EstadoMemoria estadoMemoria = response.getBody();
 
-    Assertions.assertThat(estadoMemoria.getId()).isEqualTo(2L);
-    Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria2");
-    Assertions.assertThat(estadoMemoria.getTipoEstadoMemoria().getNombre()).isEqualTo("Completada");
+    Assertions.assertThat(estadoMemoria.getId()).isEqualTo(3L);
+    Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria3");
+    Assertions.assertThat(estadoMemoria.getTipoEstadoMemoria().getNombre()).isEqualTo("En secretaría");
   }
 
   @Test
   public void addEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 2L);
+    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 1L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(ESTADO_MEMORIA_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoEstadoMemoria), EstadoMemoria.class);
@@ -96,7 +96,7 @@ public class EstadoMemoriaIT extends BaseIT {
   public void removeEstadoMemoria_Success() throws Exception {
 
     // when: Delete con id existente
-    long id = 2L;
+    long id = 3L;
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(
         ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
         EstadoMemoria.class, id);
@@ -120,7 +120,7 @@ public class EstadoMemoriaIT extends BaseIT {
   @Test
   public void replaceEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 2L);
+    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 1L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(
         ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
@@ -152,18 +152,14 @@ public class EstadoMemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EstadoMemoria> estadoMemorias = response.getBody();
-    Assertions.assertThat(estadoMemorias.size()).isEqualTo(2);
+    Assertions.assertThat(estadoMemorias.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("6");
 
-    // Contiene de memoria titulo='Memoria7' a 'Memoria8' y tipo estado memoria
-    // nombre='TipoEstadoMemoria7' a nombre='TipoEstadoMemoria8'
-    Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo()).isEqualTo("Memoria7");
-    Assertions.assertThat(estadoMemorias.get(1).getMemoria().getTitulo()).isEqualTo("Memoria8");
-    Assertions.assertThat(estadoMemorias.get(0).getTipoEstadoMemoria().getNombre())
-        .isEqualTo("Pendiente de correcciones");
-    Assertions.assertThat(estadoMemorias.get(1).getTipoEstadoMemoria().getNombre()).isEqualTo("No procede evaluar");
+    // Contiene la 'Memoria8' y tipo estado memoria nombre='No procede evaluar'
+    Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo()).isEqualTo("Memoria8");
+    Assertions.assertThat(estadoMemorias.get(0).getTipoEstadoMemoria().getNombre()).isEqualTo("No procede evaluar");
   }
 
   @Test
@@ -207,8 +203,8 @@ public class EstadoMemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EstadoMemoria> estadoMemorias = response.getBody();
-    Assertions.assertThat(estadoMemorias.size()).isEqualTo(7);
-    for (int i = 0; i < 7; i++) {
+    Assertions.assertThat(estadoMemorias.size()).isEqualTo(6);
+    for (int i = 0; i < 6; i++) {
       EstadoMemoria estadoMemoria = estadoMemorias.get(i);
       Assertions.assertThat(estadoMemoria.getId()).isEqualTo(8 - i);
       Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 8 - i));
@@ -241,7 +237,7 @@ public class EstadoMemoriaIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("7");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("6");
 
     // Contiene titulo='Memoria8', 'Memoria7', 'Memoria6'
     Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 8));
