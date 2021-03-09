@@ -91,9 +91,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field color="primary">
           <mat-label>{{'csp.proyecto.ficha.general.fecha.inicio'| translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaInicio></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
             {{'csp.proyecto.ficha.general.fecha.inicio.error.requerido' | translate}}
           </mat-error>
@@ -108,9 +109,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field color="primary">
           <mat-label>{{'csp.proyecto.ficha.general.fecha.fin'| translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin" required>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaFin></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
             {{'csp.proyecto.ficha.general.fecha.fin.error.requerido' | translate}}
           </mat-error>

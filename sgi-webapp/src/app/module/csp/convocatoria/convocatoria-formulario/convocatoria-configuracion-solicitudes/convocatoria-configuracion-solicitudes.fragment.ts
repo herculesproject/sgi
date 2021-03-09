@@ -34,8 +34,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       tramitacionSGI: new FormControl(false),
       fasePresentacionSolicitudes: new FormControl(''),
       formularioSolicitud: new FormControl(''),
-      fechaInicioFase: new FormControl({ value: '', disabled: true }),
-      fechaFinFase: new FormControl({ value: '', disabled: true }),
+      fechaInicioFase: new FormControl({ value: null, disabled: true }),
+      fechaFinFase: new FormControl({ value: null, disabled: true }),
       importeMaximoSolicitud: new FormControl(null, [Validators.maxLength(50)]),
     });
     if (this.readonly) {
@@ -45,24 +45,14 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   }
 
   protected buildPatch(configuracionSolicitud: IConfiguracionSolicitud): { [key: string]: any; } {
-
-    const fechaInicio = typeof configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio === 'string' ?
-      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio) :
-      configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio;
-
-    const fechaFin = typeof configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin === 'string' ?
-      new Date(configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin) :
-      configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin;
-
-    const result = {
+    return {
       tramitacionSGI: configuracionSolicitud ? configuracionSolicitud?.tramitacionSGI : false,
       fasePresentacionSolicitudes: configuracionSolicitud ? configuracionSolicitud?.fasePresentacionSolicitudes : null,
-      fechaInicioFase: fechaInicio,
-      fechaFinFase: fechaFin,
+      fechaInicioFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio,
+      fechaFinFase: configuracionSolicitud?.fasePresentacionSolicitudes?.fechaFin,
       importeMaximoSolicitud: configuracionSolicitud ? configuracionSolicitud?.importeMaximoSolicitud : null,
       formularioSolicitud: configuracionSolicitud ? configuracionSolicitud?.formularioSolicitud : null
     };
-    return result;
   }
 
   protected initializer(key: number): Observable<IConfiguracionSolicitud> {

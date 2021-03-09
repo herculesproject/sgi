@@ -10,11 +10,11 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { SgiRestListResult } from '@sgi/framework/http/types';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -110,7 +110,7 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
     this.suscripciones.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
-      (value) => this.validarFecha(new Date(value))));
+      (value) => this.validarFecha(value)));
   }
 
   /**
@@ -119,17 +119,12 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    * @param tipoHito convocatoria tipoHito
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
-    let fechas: Date[] = [];
+    let fechas: DateTime[] = [];
     if (tipoHito && typeof tipoHito !== 'string') {
       const convocatoriasHitos = this.data.hitos.filter(hito =>
         hito.tipoHito.id === (tipoHito as ITipoHito).id &&
-        (hito.fecha != this.data.hito.fecha));
-      fechas = convocatoriasHitos.map(
-        hito => {
-          const fecha = DateUtils.fechaToDate(hito.fecha);
-          return fecha;
-        }
-      );
+        (!hito.fecha.equals(this.data.hito.fecha)));
+      fechas = convocatoriasHitos.map(hito => hito.fecha);
     }
     this.formGroup.setValidators([
       TipoHitoValidator.notInDate('fechaInicio', fechas, this.data?.hitos?.map(hito => hito.tipoHito))
@@ -140,8 +135,8 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    * Si la fecha actual es inferior - Checkbox disabled
    * Si la fecha actual es superior - Checkbox enable
    */
-  private validarFecha(date: Date) {
-    if (date <= new Date()) {
+  private validarFecha(date: DateTime) {
+    if (date <= DateTime.now()) {
       this.formGroup.get('aviso').disable();
       this.formGroup.get('aviso').setValue(false);
     } else {

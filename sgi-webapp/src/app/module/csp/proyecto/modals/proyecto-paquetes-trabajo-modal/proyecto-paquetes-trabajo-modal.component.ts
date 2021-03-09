@@ -8,7 +8,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { StringValidator } from '@core/validators/string-validator';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
@@ -17,8 +17,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 
 export interface PaquetesTrabajoModalData {
   paquetesTrabajo: IProyectoPaqueteTrabajo[];
-  fechaInicio: Date;
-  fechaFin: Date;
+  fechaInicio: DateTime;
+  fechaFin: DateTime;
   paqueteTrabajo: IProyectoPaqueteTrabajo;
 }
 
@@ -151,14 +151,9 @@ export class ValidarRangoProyecto {
         return;
       }
 
-      const fechaInicio = moment(fechaInicioForm.value).format('YYYY-MM-DD');
-      const fechaFin = moment(fechaFinForm.value).format('YYYY-MM-DD');
-      const fechaProyectoInicio = moment(paqueteTrabajo.fechaInicio).format('YYYY-MM-DD');
-      const fechaProyectoFin = moment(paqueteTrabajo.fechaFin).format('YYYY-MM-DD');
-
       if (formGroup.controls.fechaInicio.value !== null && formGroup.controls.fechaFin.value !== null) {
-        if (!((fechaProyectoInicio <= fechaInicio) &&
-          (fechaProyectoFin >= fechaFin))) {
+        if (!((paqueteTrabajo.fechaInicio <= fechaInicioForm.value) &&
+          (paqueteTrabajo.fechaFin >= fechaFinForm.value))) {
           fechaInicioForm.setErrors({ invalid: true });
           fechaInicioForm.markAsTouched({ onlySelf: true });
           fechaFinForm.setErrors({ invalid: true });

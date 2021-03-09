@@ -279,13 +279,13 @@
       <!-- Fecha inicio solicitud Column -->
       <ng-container matColumnDef="fechaInicioSolicitud">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.fecha.inicio.solicitud' | translate}} </th>
-        <td mat-cell *matCellDef="let element">{{element.fase.fechaInicio | date:'dd/MM/yyyy'}}</td>
+        <td mat-cell *matCellDef="let element">{{element.fase.fechaInicio | luxon:'short'}}</td>
       </ng-container>
 
       <!-- Fecha fin solicitud Column -->
       <ng-container matColumnDef="fechaFinSolicitud">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.fecha.fin.solicitud' | translate}} </th>
-        <td mat-cell *matCellDef="let element">{{element.fase.fechaFin | date:'dd/MM/yyyy'}}</td>
+        <td mat-cell *matCellDef="let element">{{element.fase.fechaFin | luxon:'short'}}</td>
       </ng-container>
 
       <!-- Estado convocante Column -->

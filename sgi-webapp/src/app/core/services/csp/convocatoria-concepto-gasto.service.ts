@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
+import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { environment } from '@env';
@@ -22,21 +24,22 @@ export class ConvocatoriaConceptoGastoService extends SgiRestService<number, ICo
   }
 
   /**
- * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
- * @param id convocatoriaConceptoGasto
- * @param options opciones de búsqueda.
- */
+   * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
+   * @param id convocatoriaConceptoGasto
+   * @param options opciones de búsqueda.
+   */
   findAllConvocatoriaConceptoGastoCodigoEcs(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
     const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec`;
-    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl);
+    return this.find<IConvocatoriaConceptoGastoCodigoEcBackend, IConvocatoriaConceptoGastoCodigoEc>(
+      endpointUrl, undefined, CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER);
   }
 
   /**
- * Comprueba si existe códigos económicos asociados a la convocatoria concepto de gasto
- *
- * @param id Id de la convocatoria concepto de gasto
- * @retrurn true/false
- */
+   * Comprueba si existe códigos económicos asociados a la convocatoria concepto de gasto
+   *
+   * @param id Id de la convocatoria concepto de gasto
+   * @retrurn true/false
+   */
   existsCodigosEconomicos(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/convocatoriagastocodigoec`;
     return this.http.head(url, { observe: 'response' }).pipe(

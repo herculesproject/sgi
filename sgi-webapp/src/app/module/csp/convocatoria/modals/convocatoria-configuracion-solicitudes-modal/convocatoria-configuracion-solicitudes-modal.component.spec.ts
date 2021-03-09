@@ -10,13 +10,14 @@ import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitu
 import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
-import { ITipoDocumento, ITipoFase, IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
+import { IModeloEjecucion, ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { DateTime } from 'luxon';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-
 import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from './convocatoria-configuracion-solicitudes-modal.component';
+
 
 describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   let component: ConvocatoriaConfiguracionSolicitudesModalComponent;
@@ -25,7 +26,7 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   const convocatoria: IConvocatoria = {
     activo: true,
     ambitoGeografico: undefined,
-    anio: new Date().getFullYear(),
+    anio: DateTime.now().year,
     clasificacionCVN: ClasificacionCVN.AYUDAS,
     codigo: '',
     colaborativos: true,
@@ -54,8 +55,8 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
 
   const fasePresentacionSolicitudes: IConvocatoriaFase = {
     convocatoria,
-    fechaFin: new Date(),
-    fechaInicio: new Date(),
+    fechaFin: DateTime.now(),
+    fechaInicio: DateTime.now(),
     id: 1,
     observaciones: '',
     tipoFase

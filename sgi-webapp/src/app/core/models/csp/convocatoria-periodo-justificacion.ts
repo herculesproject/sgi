@@ -1,36 +1,27 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { DateTime } from 'luxon';
 import { IConvocatoria } from './convocatoria';
 
 export interface IConvocatoriaPeriodoJustificacion {
   /** Id */
   id: number;
-
   /** Convocatoria */
   convocatoria: IConvocatoria;
-
   /** Num Periodo */
   numPeriodo: number;
-
   /** Mes inicial */
   mesInicial: number;
-
   /** Mes final */
   mesFinal: number;
-
   /** Fecha inicio */
-  fechaInicioPresentacion: Date;
-
+  fechaInicioPresentacion: DateTime;
   /** Fecha fin */
-  fechaFinPresentacion: Date;
-
+  fechaFinPresentacion: DateTime;
   /** Observaciones */
   observaciones: string;
-
   /** Tipo */
   tipo: Tipo;
-
 }
-
 
 export enum Tipo {
   PERIODICO = 'PERIODICO',

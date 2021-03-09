@@ -16,7 +16,6 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
-import moment from 'moment';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -94,9 +93,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required, Validators.maxLength(200)]),
       acronimo: new FormControl('', [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
-      fechaInicio: new FormControl('', [
+      fechaInicio: new FormControl(null, [
         Validators.required]),
-      fechaFin: new FormControl('', [
+      fechaFin: new FormControl(null, [
         Validators.required]),
       convocatoria: new FormControl({
         value: '',
@@ -244,9 +243,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   /**
-  * Recupera los datos proyecto de una solicitud
-  * @param idSolicitud id
-  */
+   * Recupera los datos proyecto de una solicitud
+   * @param idSolicitud id
+   */
   private loadProyectoDatos(idSolicitud: number): Observable<ISolicitudProyectoDatos> {
     if (idSolicitud) {
       return this.solicitudService.findSolicitudProyectoDatos(idSolicitud).pipe(
@@ -443,20 +442,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     const finForm = this.getFormGroup().get('fechaFin');
     this.deleteErrorRange(finForm);
     if (this.seguimientoCientificos.length > 0) {
-      const fechaInicio = inicioForm.value ? new Date(inicioForm.value) : undefined;
-      const fechaFin = finForm.value ? new Date(finForm.value) : undefined;
-      if (fechaInicio && fechaFin) {
-        fechaInicio.setHours(0);
-        fechaInicio.setMinutes(0);
-        fechaInicio.setSeconds(0);
-        fechaFin.setHours(0);
-        fechaFin.setMinutes(0);
-        fechaFin.setSeconds(0);
+      if (inicioForm.value && finForm.value) {
         const mesInicial = this.seguimientoCientificos[0].mesInicial;
         const mesFinal = this.seguimientoCientificos[this.seguimientoCientificos.length - 1].mesFinal;
-        const inicioProyecto = moment(fechaInicio).add((mesInicial - 1), 'M').toDate();
-        const finProyecto = moment(fechaInicio).add((mesFinal - 1), 'M').toDate();
-        if (inicioProyecto >= fechaInicio && finProyecto <= fechaFin) {
+        const inicioProyecto = inicioForm.value.plus({ months: mesInicial - 1 });
+        const finProyecto = finForm.value.plus({ months: mesFinal - 1 });
+        if (inicioProyecto >= inicioForm.value && finProyecto <= finForm.value) {
           return;
         }
         this.addErrorRange(finForm);

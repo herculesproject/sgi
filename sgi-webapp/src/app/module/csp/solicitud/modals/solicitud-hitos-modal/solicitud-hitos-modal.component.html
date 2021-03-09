@@ -38,9 +38,10 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
             <mat-label>{{'csp.solicitud.hitos.fecha.inicio'| translate}}</mat-label>
-            <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+            <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-            <mat-datepicker #pickerFechaInicio></mat-datepicker>
+            <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+            </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{'csp.solicitud.hitos.fecha.inicio.error.vacio' | translate}}
             </mat-error>

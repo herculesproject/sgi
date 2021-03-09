@@ -125,9 +125,9 @@
 
           <mat-form-field color="primary" fxFill>
             <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.fechaInicio' | translate}}</mat-label>
-            <input matInput formControlName="fechaInicio" [matDatepicker]="picker1">
+            <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="picker1">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
+            <ngx-mat-datetime-picker #picker1 showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
           </mat-form-field>
 
         </div>
@@ -137,9 +137,9 @@
 
           <mat-form-field color="primary" fxFill>
             <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.fechaFin' | translate}}</mat-label>
-            <input matInput formControlName="fechaFin" [matDatepicker]="picker2">
+            <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="picker2">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
+            <ngx-mat-datetime-picker #picker2 showSeconds="true" [defaultTime]="[23,59,59]"></ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
               {{'csp.convocatoria.periodoJustificacion.modal.fechaFin.after' | translate}}
             </mat-error>
@@ -175,7 +175,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" md-button mat-raised-button type="submit" (click)="saveOrUpdate()" *ngIf="!data.readonly">
       {{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+      translate}}</button>
   </div>
 </div>

@@ -20,7 +20,6 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-
   nuevaPersonaEquipo: IPersona;
 
   constructor(
@@ -49,20 +48,11 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
     const equipoTrabajo: IEquipoTrabajo = {
       id: null,
       peticionEvaluacion: null,
-      personaRef: this.nuevaPersonaEquipo?.personaRef,
-      nombre: this.nuevaPersonaEquipo?.nombre,
-      primerApellido: this.nuevaPersonaEquipo?.primerApellido,
-      segundoApellido: this.nuevaPersonaEquipo?.segundoApellido,
-      identificadorNumero: this.nuevaPersonaEquipo?.identificadorNumero,
-      identificadorLetra: this.nuevaPersonaEquipo?.identificadorLetra,
-      nivelAcademico: this.nuevaPersonaEquipo?.nivelAcademico,
-      vinculacion: this.nuevaPersonaEquipo?.vinculacion,
-      eliminable: true
+      persona: this.nuevaPersonaEquipo
     };
 
     this.matDialogRef.close(equipoTrabajo);
   }
-
 
   /**
    * Setea el persona seleccionado a través del componente

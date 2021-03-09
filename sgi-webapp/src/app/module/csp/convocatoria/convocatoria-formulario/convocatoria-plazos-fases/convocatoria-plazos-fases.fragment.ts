@@ -23,7 +23,7 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
 
   protected onInitialize(): void {
     if (this.getKey()) {
-      this.convocatoriaService.findFasesConvocatoria(this.getKey() as number).pipe(
+      this.convocatoriaService.findAllConvocatoriaFases(this.getKey() as number).pipe(
         map((response) => response.items)
       ).subscribe((plazosFases) => {
         this.plazosFase$.next(plazosFases.map(

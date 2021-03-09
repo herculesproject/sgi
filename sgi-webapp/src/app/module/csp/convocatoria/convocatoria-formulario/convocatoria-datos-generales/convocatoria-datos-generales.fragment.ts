@@ -15,6 +15,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IsYearPlus } from '@core/validators/is-year-plus';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -63,7 +64,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       }),
       unidadGestion: new FormControl('', [
         Validators.required, IsEntityValidator.isValid()]),
-      anio: new FormControl(new Date().getFullYear(), [
+      anio: new FormControl(DateTime.now().year, [
         Validators.required,
         Validators.min(1000),
         Validators.max(9999),

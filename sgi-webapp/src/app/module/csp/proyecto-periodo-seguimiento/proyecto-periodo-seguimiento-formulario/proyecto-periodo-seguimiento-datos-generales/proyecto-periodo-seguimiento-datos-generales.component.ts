@@ -3,7 +3,6 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { merge, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -24,12 +23,6 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
   private subscriptions: Subscription[] = [];
   periodoSeguimientosSelectedProyecto: IProyectoPeriodoSeguimiento[] = [];
   FormGroupUtil = FormGroupUtil;
-
-  /** ngx-mat-datetime-picker */
-  showSeconds = true;
-  defaultTimeStart = [0, 0, 0];
-  defaultTimeEnd = [23, 59, 59];
-  /** ngx-mat-datetime-picker */
 
   constructor(
     protected actionService: ProyectoPeriodoSeguimientoActionService
@@ -80,8 +73,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
-    const fechaInicio = fechaInicioForm.value ? DateUtils.fechaToDate(fechaInicioForm.value).getTime() : Number.MIN_VALUE;
-    const fechaFin = fechaFinForm.value ? DateUtils.fechaToDate(fechaFinForm.value).getTime() : Number.MAX_VALUE;
+    const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
+    const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
 
     const proyectoPeriodoSeguimientos = this.periodoSeguimientosSelectedProyecto.filter(
       element => element.id !== this.formPart.proyectoPeriodoSeguimiento.id);
@@ -89,8 +82,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     const ranges = proyectoPeriodoSeguimientos.map(proyectoPeriodoSeguimiento => {
       return {
         inicio: proyectoPeriodoSeguimiento.fechaInicio ?
-          DateUtils.fechaToDate(proyectoPeriodoSeguimiento.fechaInicio).getTime() : Number.MIN_VALUE,
-        fin: proyectoPeriodoSeguimiento.fechaFin ? DateUtils.fechaToDate(proyectoPeriodoSeguimiento.fechaFin).getTime() : Number.MAX_VALUE
+          proyectoPeriodoSeguimiento.fechaInicio.toMillis() : Number.MIN_VALUE,
+        fin: proyectoPeriodoSeguimiento.fechaFin ? proyectoPeriodoSeguimiento.fechaFin.toMillis() : Number.MAX_VALUE
       };
     });
 

@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
+import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -23,7 +24,6 @@ import {
 } from '../equipo-investigador-crear-modal/equipo-investigador-crear-modal.component';
 import { EquipoInvestigadorListadoFragment } from './equipo-investigador-listado.fragment';
 
-
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.eliminar');
 const MSG_ERROR_INVESTIGADOR_REPETIDO = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.investigadorRepetido');
 
@@ -39,7 +39,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
 
   displayedColumns: string[];
 
-  datasource: MatTableDataSource<StatusWrapper<IEquipoTrabajo>> = new MatTableDataSource<StatusWrapper<IEquipoTrabajo>>();
+  datasource: MatTableDataSource<StatusWrapper<IEquipoTrabajo>> = new MatTableDataSource<StatusWrapper<IEquipoTrabajoWithIsEliminable>>();
 
   private subscriptions: Subscription[] = [];
   private listadoFragment: EquipoInvestigadorListadoFragment;
@@ -72,12 +72,14 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
       this.datasource.data = equiposTrabajo;
     });
     this.datasource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IEquipoTrabajo>, property: string) => {
+      (wrapper: StatusWrapper<IEquipoTrabajoWithIsEliminable>, property: string) => {
         switch (property) {
           case 'numDocumento':
-            return wrapper.value?.identificadorNumero + wrapper.value?.identificadorLetra;
+            return wrapper.value?.persona?.identificadorNumero + wrapper.value?.persona?.identificadorLetra;
           case 'nombreCompleto':
-            return wrapper.value?.nombre + ' ' + wrapper.value?.primerApellido + ' ' + wrapper.value?.segundoApellido;
+            return wrapper.value?.persona?.nombre
+              + ' ' + wrapper.value?.persona?.primerApellido
+              + wrapper.value?.persona?.segundoApellido;
           default:
             return wrapper.value[property];
         }
@@ -96,11 +98,11 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     const dialogRef = this.matDialog.open(EquipoInvestigadorCrearModalComponent, config);
 
     dialogRef.afterClosed().subscribe(
-      (equipoTrabajoAniadido: IEquipoTrabajo) => {
+      (equipoTrabajoAniadido: IEquipoTrabajoWithIsEliminable) => {
         if (equipoTrabajoAniadido) {
           const isRepetido =
             this.listadoFragment.equiposTrabajo$.value.some(equipoTrabajoWrapper =>
-              equipoTrabajoAniadido.personaRef === equipoTrabajoWrapper.value.personaRef);
+              equipoTrabajoAniadido.persona.personaRef === equipoTrabajoWrapper.value.persona.personaRef);
 
           if (isRepetido) {
             this.snackBarService.showError(MSG_ERROR_INVESTIGADOR_REPETIDO);
@@ -118,7 +120,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
    *
    * @param wrappedEquipoTrabajo equipo de trabajo a eliminar.
    */
-  delete(wrappedEquipoTrabajo: StatusWrapper<IEquipoTrabajo>): void {
+  delete(wrappedEquipoTrabajo: StatusWrapper<IEquipoTrabajoWithIsEliminable>): void {
     const dialogSubscription = this.dialogService.showConfirmation(
       MSG_CONFIRM_DELETE
     ).subscribe((aceptado) => {

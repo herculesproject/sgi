@@ -25,37 +25,34 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
     const rangosExistentes = this.selectedPeriodosJustificacion?.map(
       periodo => {
         const value: IRange = {
-          inicio: new Date(periodo.fechaInicio),
-          fin: new Date(periodo.fechaFin)
+          inicio: periodo.fechaInicio,
+          fin: periodo.fechaFin
         };
         return value;
       }
     );
-    const fechaInicio = typeof this.proyectoSocio?.fechaInicio === 'string' ?
-      new Date(this.proyectoSocio?.fechaInicio) : this.proyectoSocio?.fechaInicio;
-    const fechaFin = typeof this.proyectoSocio?.fechaFin === 'string' ?
-      new Date(this.proyectoSocio?.fechaFin) : this.proyectoSocio?.fechaFin;
+
     const form = new FormGroup(
       {
         numPeriodo: new FormControl({
           value: this.periodoJustificacion.numPeriodo,
           disabled: true
         }),
-        fechaInicio: new FormControl('', [
+        fechaInicio: new FormControl(null, [
           Validators.required,
-          DateValidator.minDate(fechaInicio),
-          DateValidator.maxDate(fechaFin)
+          DateValidator.minDate(this.proyectoSocio?.fechaInicio),
+          DateValidator.maxDate(this.proyectoSocio?.fechaFin)
         ]),
-        fechaFin: new FormControl('', [
+        fechaFin: new FormControl(null, [
           Validators.required,
-          DateValidator.minDate(fechaInicio),
-          DateValidator.maxDate(fechaFin)
+          DateValidator.minDate(this.proyectoSocio?.fechaInicio),
+          DateValidator.maxDate(this.proyectoSocio?.fechaFin)
         ]),
         fechaInicioPresentacion: new FormControl(null),
         fechaFinPresentacion: new FormControl(null),
         observaciones: new FormControl('', [Validators.maxLength(2_000)]),
         documentacionRecibida: new FormControl(false),
-        fechaRecepcion: new FormControl(''),
+        fechaRecepcion: new FormControl(null),
       },
       {
         validators: [
@@ -73,11 +70,11 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
   protected buildPatch(value: IProyectoSocioPeriodoJustificacion): { [key: string]: any; } {
     const result = {
       documentacionRecibida: value.documentacionRecibida,
-      fechaFin: value.fechaFin ? new Date(value.fechaFin) : undefined,
+      fechaFin: value.fechaFin,
       fechaFinPresentacion: value.fechaFinPresentacion,
-      fechaInicio: value.fechaInicio ? new Date(value.fechaInicio) : undefined,
+      fechaInicio: value.fechaInicio,
       fechaInicioPresentacion: value.fechaInicioPresentacion,
-      fechaRecepcion: value.fechaRecepcion ? new Date(value.fechaRecepcion) : undefined,
+      fechaRecepcion: value.fechaRecepcion,
       observaciones: value.observaciones,
       numPeriodo: value.numPeriodo
     };

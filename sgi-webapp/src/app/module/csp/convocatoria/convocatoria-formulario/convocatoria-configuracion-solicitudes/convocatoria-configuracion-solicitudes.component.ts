@@ -199,19 +199,13 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   habilitarCampos(): void {
     const tipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value;
 
-    const fechaInicio = typeof tipoFase?.fechaInicio === 'string' ?
-      new Date(tipoFase?.fechaInicio) : tipoFase?.fechaInicio;
-
-    const fechaFin = typeof tipoFase?.fechaFin === 'string' ?
-      new Date(tipoFase?.fechaFin) : tipoFase?.fechaFin;
-
     if (tipoFase) {
       this.convocatoriaFase = tipoFase;
-      this.formGroup.controls.fechaInicioFase.setValue(fechaInicio);
-      this.formGroup.controls.fechaFinFase.setValue(fechaFin);
+      this.formGroup.controls.fechaInicioFase.setValue(tipoFase?.fechaInicio);
+      this.formGroup.controls.fechaFinFase.setValue(tipoFase?.fechaFin);
     } else {
-      this.formGroup.controls.fechaInicioFase.setValue('');
-      this.formGroup.controls.fechaFinFase.setValue('');
+      this.formGroup.controls.fechaInicioFase.setValue(null);
+      this.formGroup.controls.fechaFinFase.setValue(null);
     }
   }
 

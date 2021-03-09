@@ -1,6 +1,5 @@
-import { IProyecto } from './proyecto';
-import { IPrograma } from './programa';
 import { IEmpresaEconomica } from '../sgp/empresa-economica';
+import { IPrograma } from './programa';
 
 export interface IProyectoEntidadConvocante {
   id: number;

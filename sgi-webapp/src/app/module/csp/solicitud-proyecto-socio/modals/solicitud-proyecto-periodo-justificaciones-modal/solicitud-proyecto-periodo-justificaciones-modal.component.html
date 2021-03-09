@@ -96,10 +96,11 @@
           <mat-form-field fxFill>
             <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaInicio' | translate}}
             </mat-label>
-            <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" id="fechaInicio"
+            <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" id="fechaInicio"
               placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaInicio' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-            <mat-datepicker #pickerFechaInicio></mat-datepicker>
+            <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+            </ngx-mat-datetime-picker>
           </mat-form-field>
         </div>
 
@@ -108,10 +109,11 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaFin' | translate}}</mat-label>
-            <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin" id="fechaInicio"
+            <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" id="fechaInicio"
               placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaFin' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-            <mat-datepicker #pickerFechaFin></mat-datepicker>
+            <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+            </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
               {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaFin.after' | translate}}
             </mat-error>

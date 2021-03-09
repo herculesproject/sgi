@@ -87,14 +87,14 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'eti.peticionEvaluacion.listado.fechaInicio' | translate}}
         </th>
-        <td mat-cell *matCellDef="let peticionEvaluacion"> {{peticionEvaluacion.fechaInicio}} </td>
+        <td mat-cell *matCellDef="let peticionEvaluacion"> {{peticionEvaluacion.fechaInicio | luxon: 'short'}} </td>
       </ng-container>
 
       <!-- Fecha fin -->
       <ng-container matColumnDef="fechaFin">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.peticionEvaluacion.listado.fechaFin' | translate}}
         </th>
-        <td mat-cell *matCellDef="let peticionEvaluacion"> {{peticionEvaluacion.fechaFin}} </td>
+        <td mat-cell *matCellDef="let peticionEvaluacion"> {{peticionEvaluacion.fechaFin | luxon: 'short'}} </td>
       </ng-container>
 
       <!-- Acciones Column -->

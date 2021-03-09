@@ -66,9 +66,11 @@ export class EvaluadorConflictosInteresListadoComponent extends FragmentComponen
       (wrapper: StatusWrapper<IConflictoInteres>, property: string) => {
         switch (property) {
           case 'identificador':
-            return wrapper.value.identificadorNumero + wrapper.value.identificadorLetra;
+            return wrapper.value.personaConflicto.identificadorNumero + wrapper.value.personaConflicto.identificadorLetra;
           case 'nombreCompleto':
-            return wrapper.value.nombre + ' ' + wrapper.value.primerApellido + ' ' + wrapper.value.segundoApellido;
+            return wrapper.value.personaConflicto.nombre
+              + ' ' + wrapper.value.personaConflicto.primerApellido
+              + ' ' + wrapper.value.personaConflicto.segundoApellido;
           default:
             return wrapper.value[property];
         }

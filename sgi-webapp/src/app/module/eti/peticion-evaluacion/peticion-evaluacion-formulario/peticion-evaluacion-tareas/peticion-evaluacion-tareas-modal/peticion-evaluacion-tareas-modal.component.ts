@@ -266,7 +266,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     if (typeof equipoTrabajo === 'string') {
       return null;
     }
-    return equipoTrabajo?.nombre + ' ' + equipoTrabajo?.primerApellido + ' ' + equipoTrabajo?.segundoApellido;
+    return equipoTrabajo?.persona.nombre + ' ' + equipoTrabajo?.persona.primerApellido + ' ' + equipoTrabajo?.persona.segundoApellido;
   }
 
   /**
@@ -332,7 +332,6 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
       (tipoTarea => tipoTarea.nombre.toLowerCase().includes(filterValue));
   }
 
-
   /**
    * Devuelve los datos de persona de los equipos de trabajo
    * @param equiposTrabajo listado de equipos de trabajo
@@ -341,14 +340,10 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
   loadDatosUsuario(equiposTrabajo: IEquipoTrabajo[]) {
     this.equipoTrabajoListado = [];
     equiposTrabajo.forEach(equipoTrabajo => {
-      this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(equipoTrabajo.personaRef)
+      this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(equipoTrabajo.persona?.personaRef)
         .subscribe(
           (persona: IPersona) => {
-            equipoTrabajo.nombre = persona.nombre;
-            equipoTrabajo.primerApellido = persona.primerApellido;
-            equipoTrabajo.segundoApellido = persona.segundoApellido;
-            equipoTrabajo.identificadorNumero = persona.identificadorNumero;
-            equipoTrabajo.identificadorLetra = persona.identificadorLetra;
+            equipoTrabajo.persona = persona;
             this.equipoTrabajoListado.push(equipoTrabajo);
           },
           (error) => {
@@ -369,12 +364,14 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();
     } else {
-      filterValue = value.nombre.toLowerCase() + ' ' + value.primerApellido.toLowerCase() + ' ' + value.segundoApellido.toLowerCase();
+      filterValue = value.persona.nombre.toLowerCase()
+        + ' ' + value.persona.primerApellido.toLowerCase()
+        + ' ' + value.persona.segundoApellido.toLowerCase();
     }
 
     return this.equipoTrabajoListado?.filter
-      (equipoTrabajo => (equipoTrabajo.nombre.toLowerCase() + ' ' + equipoTrabajo.primerApellido.toLowerCase() + ' ' +
-        equipoTrabajo.segundoApellido.toLowerCase()).includes(filterValue));
+      (equipoTrabajo => (equipoTrabajo.persona.nombre.toLowerCase() + ' ' + equipoTrabajo.persona.primerApellido.toLowerCase() + ' ' +
+        equipoTrabajo.persona.segundoApellido.toLowerCase()).includes(filterValue));
   }
 
   /**

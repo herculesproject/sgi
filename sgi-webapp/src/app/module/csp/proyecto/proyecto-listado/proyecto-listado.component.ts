@@ -18,7 +18,7 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
@@ -105,10 +105,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       estado: new FormControl(''),
       activo: new FormControl('true'),
       unidadGestion: new FormControl('', [IsEntityValidator.isValid()]),
-      fechaInicioDesde: new FormControl(''),
-      fechaInicioHasta: new FormControl(''),
-      fechaFinDesde: new FormControl(''),
-      fechaFinHasta: new FormControl(''),
+      fechaInicioDesde: new FormControl(),
+      fechaInicioHasta: new FormControl(),
+      fechaFinDesde: new FormControl(),
+      fechaFinHasta: new FormControl(),
       ambitoGeografico: new FormControl(''),
       responsableProyecto: new FormControl(''),
       miembroEquipo: new FormControl(''),
@@ -129,6 +129,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   onClearFilters() {
     super.onClearFilters();
     this.formGroup.controls.activo.setValue('true');
+    this.formGroup.controls.fechaInicioDesde.setValue(null);
+    this.formGroup.controls.fechaInicioHasta.setValue(null);
+    this.formGroup.controls.fechaFinDesde.setValue(null);
+    this.formGroup.controls.fechaFinHasta.setValue(null);
     this.onSearch();
   }
 
@@ -156,10 +160,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     }
     filter
       .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.acronimo)
-      .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioDesde.value))
-      .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioHasta.value))
-      .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinDesde.value))
-      .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinHasta.value))
+      .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
+      .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
+      .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
+      .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
       .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
       .and('responsableProyecto', SgiRestFilterOperator.EQUALS, controls.responsableProyecto.value?.personaRef)
       .and('equipos.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.personaRef)
@@ -226,83 +230,83 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   /**
-  * Mostrar busqueda avanzada
-  */
+   * Mostrar busqueda avanzada
+   */
   toggleBusquedaAvanzada(): void {
     this.busquedaAvanzada = !this.busquedaAvanzada;
   }
 
   /**
-  * Devuelve el nombre de una unidad de gestión.
-  * @param unidadGestion unidad de gestión
-  * @returns nombre de una unidad de gestión
-  */
+   * Devuelve el nombre de una unidad de gestión.
+   * @param unidadGestion unidad de gestión
+   * @returns nombre de una unidad de gestión
+   */
   getUnidadGestion(unidadGestion?: IUnidadGestion): string | undefined {
     return typeof unidadGestion === 'string' ? unidadGestion : unidadGestion?.nombre;
   }
 
   /**
-* Devuelve el nombre de una fuente de financiacion.
-* @param fuente de financiacion fuente de financiacion.
-* @returns nombre de una fuente de financiacion
-*/
+   * Devuelve el nombre de una fuente de financiacion.
+   * @param fuente de financiacion fuente de financiacion.
+   * @returns nombre de una fuente de financiacion
+   */
   getFuenteFinanciacion(fuente?: IFuenteFinanciacion): string | undefined {
     return typeof fuente === 'string' ? fuente : fuente?.nombre;
   }
 
   /**
-  * Devuelve el nombre de un tipo de ámbito geográfico.
-  * @param ambito de un ámbito geográfico
-  * @returns nombre de un ámbito geográfico
-  */
+   * Devuelve el nombre de un tipo de ámbito geográfico.
+   * @param ambito de un ámbito geográfico
+   * @returns nombre de un ámbito geográfico
+   */
   getAmbitoGeografico(ambito?: ITipoAmbitoGeografico): string | undefined {
     return typeof ambito === 'string' ? ambito : ambito?.nombre;
   }
 
   /**
-  * Devuelve el nombre de un plan de investigación.
-  * @param plan de un plan de investigación.
-  * @returns nombre de de un plan de investigación
-  */
+   * Devuelve el nombre de un plan de investigación.
+   * @param plan de un plan de investigación.
+   * @returns nombre de de un plan de investigación
+   */
   getPlanInvestigacion(plan?: IFuenteFinanciacion): string | undefined {
     return typeof plan === 'string' ? plan : plan?.nombre;
   }
 
   /**
-  * Filtra la lista devuelta por el servicio de Unidades de Gestión
-  *
-  * @param value del input para autocompletar
-  */
+   * Filtra la lista devuelta por el servicio de Unidades de Gestión
+   *
+   * @param value del input para autocompletar
+   */
   private filtroUnidadGestion(value: string): IUnidadGestion[] {
     const filterValue = value.toString().toLowerCase();
     return this.unidadGestionFiltered.filter(unidadGestion => unidadGestion.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
-  * Filtra la lista devuelta por el servicio de Tipos de ámbitos geográficos
-  *
-  * @param value del input para autocompletar
-  */
+   * Filtra la lista devuelta por el servicio de Tipos de ámbitos geográficos
+   *
+   * @param value del input para autocompletar
+   */
   private filtroAmbitoGeografico(value: string): ITipoAmbitoGeografico[] {
     const filterValue = value.toString().toLowerCase();
     return this.ambitoGeograficoFiltered.filter(ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
-  * Filtra la lista devuelta por el servicio de Planes e Investigación
-  *
-  * @param value del input para autocompletar
-  */
+   * Filtra la lista devuelta por el servicio de Planes e Investigación
+   *
+   * @param value del input para autocompletar
+   */
   private filtroPlanInvestigacion(value: string): IPrograma[] {
     const filterValue = value.toString().toLowerCase();
     return this.planInvestigacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
-  * Filtra la lista devuelta por el servicio de Fuentes de Financiación
-  *
-  * @param value del input para autocompletar
-  */
+   * Filtra la lista devuelta por el servicio de Fuentes de Financiación
+   *
+   * @param value del input para autocompletar
+   */
   private filtroFuenteFinanciacion(value: string): IFuenteFinanciacion[] {
     const filterValue = value.toString().toLowerCase();
     return this.fuenteFinanciacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
@@ -354,8 +358,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   /**
-  * Cargar planes de investigación
-  */
+   * Cargar planes de investigación
+   */
   private loadPlanInvestigacion() {
     this.suscripciones.push(
       this.programaService.findAllPlan().subscribe(
@@ -376,8 +380,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   /**
-  * Cargar ámbitos geográficos
-  */
+   * Cargar ámbitos geográficos
+   */
   private loadAmbitoGeografico() {
     this.suscripciones.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
@@ -398,4 +402,3 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
 }
-

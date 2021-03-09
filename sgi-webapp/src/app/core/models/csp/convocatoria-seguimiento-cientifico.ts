@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { IConvocatoria } from './convocatoria';
 
 export interface IConvocatoriaSeguimientoCientifico {
@@ -5,8 +6,8 @@ export interface IConvocatoriaSeguimientoCientifico {
   numPeriodo: number;
   mesInicial: number;
   mesFinal: number;
-  fechaInicioPresentacion: Date;
-  fechaFinPresentacion: Date;
+  fechaInicioPresentacion: DateTime;
+  fechaFinPresentacion: DateTime;
   observaciones: string;
   convocatoria: IConvocatoria;
 }

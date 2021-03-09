@@ -31,14 +31,14 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesFragment extends FormFragme
           value: this.getLastNumPeriodo() ? this.getLastNumPeriodo() + 1 : 1,
           disabled: true
         }),
-        fechaInicio: new FormControl('', [
+        fechaInicio: new FormControl(null, [
           Validators.required
         ]),
-        fechaFin: new FormControl('', [
+        fechaFin: new FormControl(null, [
           Validators.required
         ]),
-        fechaInicioPresentacion: new FormControl(''),
-        fechaFinPresentacion: new FormControl(''),
+        fechaInicioPresentacion: new FormControl(null),
+        fechaFinPresentacion: new FormControl(null),
         observaciones: new FormControl('', [Validators.maxLength(250)]),
         fechaInicioProyecto: new FormControl(this.proyecto?.fechaInicio),
         fechaFinProyecto: new FormControl(this.proyecto?.fechaFin)

@@ -9,7 +9,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { DateValidator } from '@core/validators/date-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
@@ -47,12 +46,6 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
   private suscripciones: Subscription[] = [];
 
   textSaveOrUpdate: string;
-
-  /** ngx-mat-datetime-picker */
-  showSeconds = true;
-  defaultTimeStart = [0, 0, 0];
-  defaultTimeEnd = [23, 59, 59];
-  /** ngx-mat-datetime-picker */
 
   constructor(
     private readonly logger: NGXLogger,
@@ -125,8 +118,8 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
       rangoFechas = convocatoriasFases.map(
         fase => {
           const rango: IRange = {
-            inicio: DateUtils.fechaToDate(fase.fechaInicio).getTime(),
-            fin: DateUtils.fechaToDate(fase.fechaFin).getTime()
+            inicio: fase.fechaInicio,
+            fin: fase.fechaFin
           };
           return rango;
         }

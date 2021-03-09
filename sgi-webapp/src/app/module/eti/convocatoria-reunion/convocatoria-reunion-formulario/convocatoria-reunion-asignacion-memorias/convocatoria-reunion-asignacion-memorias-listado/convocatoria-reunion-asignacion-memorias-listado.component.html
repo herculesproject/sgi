@@ -17,8 +17,8 @@
           {{'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1' | translate}}
         </th>
         <td mat-cell *matCellDef="let wrapper">
-          {{wrapper.value.evaluador1?.nombre}} {{wrapper.value.evaluador1?.primerApellido}}
-          {{wrapper.value.evaluador1?.segundoApellido}}
+          {{wrapper.value.evaluador1?.persona?.nombre}} {{wrapper.value.evaluador1?.persona?.primerApellido}}
+          {{wrapper.value.evaluador1?.persona?.segundoApellido}}
         </td>
       </ng-container>
 
@@ -28,8 +28,8 @@
           {{'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2' | translate}}
         </th>
         <td mat-cell *matCellDef="let wrapper">
-          {{wrapper.value.evaluador2?.nombre}} {{wrapper.value.evaluador2?.primerApellido}}
-          {{wrapper.value.evaluador2?.segundoApellido}}
+          {{wrapper.value.evaluador2?.persona?.nombre}} {{wrapper.value.evaluador2?.persona?.primerApellido}}
+          {{wrapper.value.evaluador2?.persona?.segundoApellido}}
         </td>
       </ng-container>
 

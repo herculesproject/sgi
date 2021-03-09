@@ -10,10 +10,10 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
-import { DateUtils } from '@core/utils/date-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { IRange } from '@core/validators/range-validator';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -25,8 +25,8 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ProyectoEquipoSocioModalData {
   proyectoSocioEquipo: IProyectoSocioEquipo;
   selectedProyectoSocioEquipos: IProyectoSocioEquipo[];
-  fechaInicioProyectoSocio: Date;
-  fechaFinProyectoSocio: Date;
+  fechaInicioProyectoSocio: DateTime;
+  fechaFinProyectoSocio: DateTime;
   isEdit: boolean;
 }
 
@@ -141,14 +141,14 @@ export class ProyectoSocioEquipoModalComponent extends
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
-    const fechaInicio = fechaInicioForm.value ? DateUtils.fechaToDate(fechaInicioForm.value).getTime() : Number.MIN_VALUE;
-    const fechaFin = fechaFinForm.value ? DateUtils.fechaToDate(fechaFinForm.value).getTime() : Number.MAX_VALUE;
+    const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
+    const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
     const ranges = this.data.selectedProyectoSocioEquipos
       .filter(element => element.persona.personaRef === personaForm.value?.personaRef)
       .map(value => {
         const range: IRange = {
-          inicio: value.fechaInicio ? DateUtils.fechaToDate(value.fechaInicio).getTime() : Number.MIN_VALUE,
-          fin: value.fechaFin ? DateUtils.fechaToDate(value.fechaFin).getTime() : Number.MAX_VALUE,
+          inicio: value.fechaInicio ? value.fechaInicio.toMillis() : Number.MIN_VALUE,
+          fin: value.fechaFin ? value.fechaFin.toMillis() : Number.MAX_VALUE,
         };
         return range;
       });

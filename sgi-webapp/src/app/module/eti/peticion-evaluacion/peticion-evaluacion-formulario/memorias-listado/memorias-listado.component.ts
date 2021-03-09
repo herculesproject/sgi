@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IMemoria } from '@core/models/eti/memoria';
-import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
+import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -48,7 +48,8 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   displayedColumns: string[] = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
   disableEnviarSecretaria = true;
 
-  datasource: MatTableDataSource<StatusWrapper<IMemoria>> = new MatTableDataSource<StatusWrapper<IMemoria>>();
+  datasource: MatTableDataSource<StatusWrapper<IMemoriaPeticionEvaluacion>>
+    = new MatTableDataSource<StatusWrapper<IMemoriaPeticionEvaluacion>>();
 
   private subscriptions: Subscription[] = [];
   private listadoFragment: MemoriasListadoFragment;
@@ -83,7 +84,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     ));
 
     this.datasource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IMemoria>, property: string) => {
+      (wrapper: StatusWrapper<IMemoriaPeticionEvaluacion>, property: string) => {
         switch (property) {
           case 'comite':
             return wrapper.value.comite?.comite;
@@ -146,7 +147,6 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   }
 
   hasPermisoEnviarSecretaria(estadoMemoriaId: number): boolean {
-
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
     // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
     // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
@@ -208,7 +208,6 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
         }
       );
   }
-
 
   hasPermisoEliminar(estadoMemoriaId: number): boolean {
     // Si el estado es 'En elaboración' o 'Completada'.

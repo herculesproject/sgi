@@ -25,7 +25,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   formPart: ConvocatoriaPeriodosJustificacionFragment;
   private subscriptions: Subscription[] = [];
 
-  displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
+  displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'observaciones', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
 
   dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoJustificacion>>;
@@ -48,10 +48,6 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaPeriodoJustificacion>, property: string) => {
         switch (property) {
-          case 'fechaInicio':
-            return wrapper.value.fechaInicioPresentacion ? new Date(wrapper.value.fechaInicioPresentacion).getTime() : 0;
-          case 'fechaFin':
-            return wrapper.value.fechaFinPresentacion ? new Date(wrapper.value.fechaFinPresentacion).getTime() : 0;
           default:
             return wrapper.value[property];
         }

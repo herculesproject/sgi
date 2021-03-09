@@ -81,9 +81,10 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field color="primary">
         <mat-label>{{'eti.peticionEvaluacion.fecha.inicio'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio">
+        <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaInicio></mat-datepicker>
+        <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
       </mat-form-field>
       <mat-error
         *ngIf="FormGroupUtil.checkError(formGroup, 'fechaInicio') && formGroup.get('fechaInicio').errors.required">
@@ -93,9 +94,10 @@
 
       <mat-form-field color="primary">
         <mat-label>{{'eti.peticionEvaluacion.fecha.fin'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin">
+        <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaFin></mat-datepicker>
+        <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+        </ngx-mat-datetime-picker>
       </mat-form-field>
       <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'fechaFin') && formGroup.get('fechaFin').errors.required">
         {{'eti.peticionEvaluacion.fechaFin.error.vacio' | translate}}

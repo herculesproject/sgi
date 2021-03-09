@@ -6,7 +6,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
-import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
+import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -110,7 +110,8 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   protected createObservable(): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
     const observable$ = this.memoriaService.findAll(this.getFindOptions());
-    return observable$;
+    // TODO: Eliminar casteo cuando se solucion la respuesta del back
+    return observable$ as unknown as Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>>;
   }
   protected initColumns(): void {
     this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
@@ -137,7 +138,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   getComite(comite: IComite): string {
     return comite?.comite;
   }
-
 
   /**
    * Devuelve el nombre de un estado memoria.
@@ -229,7 +229,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   public setUsuario(solicitante: IPersona) {
     this.formGroup.controls.solicitante.setValue(solicitante?.personaRef);
   }
-
 
   /**
    * Se recupera el estado anterior de la memoria

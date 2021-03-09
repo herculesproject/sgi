@@ -1,14 +1,13 @@
-import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { NullIdValidador } from '@core/validators/null-id-validador';
-import { Observable, of, EMPTY } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IEvaluador } from '@core/models/eti/evaluador';
+import { IPersona } from '@core/models/sgp/persona';
+import { FormFragment } from '@core/services/action-service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { IPersona } from '@core/models/sgp/persona';
-import { DateUtils } from '@core/utils/date-utils';
 import { DateValidator } from '@core/validators/date-validator';
+import { NullIdValidador } from '@core/validators/null-id-validador';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
 
@@ -52,8 +51,8 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
 
     return this.fb.group({
       comite: new FormControl({ value: '', disabled: this.isEdit() }, [new NullIdValidador().isValid()]),
-      fechaAlta: ['', Validators.required],
-      fechaBaja: [''],
+      fechaAlta: [null, Validators.required],
+      fechaBaja: [null],
       cargoComite: new FormControl({ value: null }, [new NullIdValidador().isValid()]),
       resumen: ['']
     }, {
@@ -65,8 +64,8 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
     return this.service.findById(key).pipe(
       switchMap((value) => {
         this.evaluador = value;
-        this.loadPersona(value.personaRef);
-        this.initialPersonaRef = this.evaluador.personaRef;
+        this.loadPersona(value.persona.personaRef);
+        this.initialPersonaRef = this.evaluador.persona.personaRef;
         return of(this.evaluador);
       }),
       catchError(() => {
@@ -94,7 +93,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
     this.evaluador.fechaBaja = form.fechaBaja;
     this.evaluador.cargoComite = form.cargoComite === '' ? null : form.cargoComite;
     this.evaluador.resumen = form.resumen;
-    this.evaluador.personaRef = this.selectedPersona?.personaRef;
+    this.evaluador.persona = this.selectedPersona;
     return this.evaluador;
   }
 

@@ -10,8 +10,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { Subscription } from 'rxjs';
 
-const MSG_SUCCESS = marker('eti.acta.asistentes.correcto');
-const MSG_ERROR = marker('eti.acta.asistentes.error');
 const MSG_ERROR_FORM = marker('form-group.error');
 const MSG_ERROR_CONFLICTO_REPETIDO = marker('eti.evaluador.conflictoInteres.formulario.listado.personaConflicto.repetida');
 
@@ -29,7 +27,6 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
   conflictoInteresSuscripcion: Subscription;
 
   nuevaPersonaConflicto: IPersona;
-
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public conflictos: IConflictoInteres[],
@@ -60,7 +57,7 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
     if (conflictoInteres) {
       const isRepetido =
         this.conflictos.some(conflictoListado =>
-          conflictoInteres.personaConflictoRef === conflictoListado.personaConflictoRef);
+          conflictoInteres.personaConflicto.personaRef === conflictoListado.personaConflicto.personaRef);
 
       if (isRepetido) {
         this.snackBarService.showError(MSG_ERROR_CONFLICTO_REPETIDO);
@@ -101,28 +98,13 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
       fechaAlta: null,
       fechaBaja: null,
       id: null,
-      identificadorLetra: null,
-      identificadorNumero: null,
-      nivelAcademico: null,
-      nombre: null,
-      personaRef: null,
-      primerApellido: null,
       resumen: null,
-      segundoApellido: null,
-      vinculacion: null
+      persona: null
     };
     const conflictoInteres: IConflictoInteres = {
       evaluador: evaluadorObj,
       id: null,
-      personaConflictoRef: this.nuevaPersonaConflicto?.personaRef,
-      personaRef: this.nuevaPersonaConflicto?.personaRef,
-      nombre: this.nuevaPersonaConflicto?.nombre,
-      primerApellido: this.nuevaPersonaConflicto?.primerApellido,
-      segundoApellido: this.nuevaPersonaConflicto?.segundoApellido,
-      identificadorNumero: this.nuevaPersonaConflicto?.identificadorNumero,
-      identificadorLetra: this.nuevaPersonaConflicto?.identificadorLetra,
-      nivelAcademico: this.nuevaPersonaConflicto?.nivelAcademico,
-      vinculacion: this.nuevaPersonaConflicto?.vinculacion
+      personaConflicto: this.nuevaPersonaConflicto,
     };
     return conflictoInteres;
   }

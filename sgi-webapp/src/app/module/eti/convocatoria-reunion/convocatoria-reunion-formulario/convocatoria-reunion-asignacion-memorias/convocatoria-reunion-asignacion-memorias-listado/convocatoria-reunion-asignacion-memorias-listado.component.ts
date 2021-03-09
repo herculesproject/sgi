@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -28,8 +29,10 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
 
   displayedColumns: string[];
 
-  datasource: MatTableDataSource<StatusWrapper<IEvaluacion>> = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
-  private evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacion>[]> = new BehaviorSubject<StatusWrapper<IEvaluacion>[]>([]);
+  datasource: MatTableDataSource<StatusWrapper<IEvaluacionWithIsEliminable>> =
+    new MatTableDataSource<StatusWrapper<IEvaluacionWithIsEliminable>>();
+  private evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacionWithIsEliminable>[]> =
+    new BehaviorSubject<StatusWrapper<IEvaluacionWithIsEliminable>[]>([]);
 
   private listadoFragment: ConvocatoriaReunionAsignacionMemoriasListadoFragment;
   disableAsignarMemorias: boolean;
@@ -63,20 +66,23 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     ));
 
     this.datasource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IEvaluacion>, property: string) => {
+      (wrapper: StatusWrapper<IEvaluacionWithIsEliminable>, property: string) => {
         switch (property) {
           case 'numReferencia':
             return wrapper.value.memoria?.numReferencia;
           case 'evaluador1':
-            return wrapper.value.evaluador1?.nombre + wrapper.value.evaluador1?.primerApellido + wrapper.value.evaluador1?.segundoApellido;
+            return wrapper.value.evaluador1?.persona?.nombre
+              + wrapper.value.evaluador1?.persona?.primerApellido
+              + wrapper.value.evaluador1?.persona?.segundoApellido;
           case 'evaluador2':
-            return wrapper.value.evaluador2?.nombre + wrapper.value.evaluador2?.primerApellido + wrapper.value.evaluador2?.segundoApellido;
+            return wrapper.value.evaluador2?.persona?.nombre
+              + wrapper.value.evaluador2?.persona?.primerApellido
+              + wrapper.value.evaluador2?.persona?.segundoApellido;
           default:
             return wrapper.value[property];
         }
       };
   }
-
 
   ngOnDestroy() {
     this.subscriptions?.forEach(x => x.unsubscribe());
@@ -104,7 +110,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       memoria: null,
       tipoEvaluacion: null,
       version: null,
-      eliminable: true
     };
 
     const config = {
@@ -126,7 +131,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
 
     this.subscriptions.push(
       dialogRef.afterClosed().subscribe(
-        (evaluacionAniadida: IEvaluacion) => {
+        (evaluacionAniadida: IEvaluacionWithIsEliminable) => {
           if (evaluacionAniadida) {
             this.listadoFragment.addEvaluacion(evaluacionAniadida);
           }
@@ -134,13 +139,12 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       ));
   }
 
-
   /**
    * Elimina la evaluación.
    * @param evaluacionId id de la evaluacion a eliminar.
    * @param event evento lanzado.
    */
-  borrar(wrappedEvaluacion: StatusWrapper<IEvaluacion>): void {
+  borrar(wrappedEvaluacion: StatusWrapper<IEvaluacionWithIsEliminable>): void {
     const dialogSubscription = this.dialogService.showConfirmation(
       'eti.convocatoriaReunion.listado.eliminar'
     ).subscribe((aceptado) => {
@@ -157,7 +161,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    *
    * @param evaluacion evaluación a modificar
    */
-  openUpdateModal(evaluacion: StatusWrapper<IEvaluacion>): void {
+  openUpdateModal(evaluacion: StatusWrapper<IEvaluacionWithIsEliminable>): void {
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -175,7 +179,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
 
     const dialogRef = this.matDialog.open(ConvocatoriaReunionAsignacionMemoriasModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (resultado: IEvaluacion) => {
+      (resultado: IEvaluacionWithIsEliminable) => {
         if (resultado) {
           evaluacion.setEdited();
           this.fragment.setChanges(true);

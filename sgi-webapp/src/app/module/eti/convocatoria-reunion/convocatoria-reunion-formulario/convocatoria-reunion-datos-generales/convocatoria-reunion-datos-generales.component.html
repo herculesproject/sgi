@@ -40,11 +40,12 @@
       <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.titulo' | translate}}
         </mat-label>
-        <input matInput formControlName="fechaEvaluacion" [matDatepicker]="pickerFechaEvaluacion"
+        <input matInput formControlName="fechaEvaluacion" [ngxMatDatetimePicker]="pickerFechaEvaluacion"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.titulo' | translate"
           required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaEvaluacion"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaEvaluacion></mat-datepicker>
+        <ngx-mat-datetime-picker #pickerFechaEvaluacion showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
         <mat-error *ngIf="formGroup.controls.fechaEvaluacion.errors?.required">
           {{'eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.error.vacio' | translate}}
         </mat-error>
@@ -60,11 +61,12 @@
       <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate}}
         </mat-label>
-        <input matInput formControlName="fechaLimite" [matDatepicker]="pickerFechaLimite"
+        <input matInput formControlName="fechaLimite" [ngxMatDatetimePicker]="pickerFechaLimite"
           [readOnly]="disableCamposDatosGenerales"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate" required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaLimite"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaLimite></mat-datepicker>
+        <ngx-mat-datetime-picker #pickerFechaLimite showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
         <mat-error *ngIf="formGroup.controls.fechaLimite.errors?.required">
           {{'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.error.vacio' | translate}}
         </mat-error>

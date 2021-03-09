@@ -1,14 +1,14 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { DateTime } from 'luxon';
 import { IProyecto } from './proyecto';
-
 
 export interface IProyectoProrroga {
   id: number;
   proyecto: IProyecto;
   numProrroga: number;
-  fechaConcesion: Date;
+  fechaConcesion: DateTime;
   tipo: Tipo;
-  fechaFin: Date;
+  fechaFin: DateTime;
   importe: number;
   observaciones: string;
 }

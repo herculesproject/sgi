@@ -14,14 +14,14 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
@@ -52,7 +52,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
 
   idConvocatoria: number;
   isTipoConvocatoriaSeguimiento: boolean;
-  filterData: { idComite: number, idTipoConvocatoria: number, fechaLimite: Date };
+  filterData: { idComite: number, idTipoConvocatoria: number, fechaLimite: DateTime };
   filterMemoriasAsignables: SgiRestFilter;
   memoriasAsignadas: IMemoria[];
   evaluacion: IEvaluacion;
@@ -148,13 +148,12 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
       this.isTipoConvocatoriaSeguimiento = (this.filterData.idTipoConvocatoria === 3) ? true : false;
 
       this.filterMemoriasAsignables = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, this.filterData.idComite.toString())
-        .and('fechaEnvioSecretaria', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(this.filterData.fechaLimite))
+        .and('fechaEnvioSecretaria', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.filterData.fechaLimite));
     }
     else {
       this.filterMemoriasAsignables = undefined;
     }
   }
-
 
   /**
    * Recupera un listado de los memorias asignables a la convocatoria.
@@ -265,7 +264,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
                 if (response.items) {
                   const evaluadores = response.items;
 
-                  const personaRefsEvaluadores = evaluadores.map((convocante: IEvaluador) => convocante.personaRef);
+                  const personaRefsEvaluadores = evaluadores.map((convocante: IEvaluador) => convocante.persona.personaRef);
 
                   if (personaRefsEvaluadores.length === 0) {
                     return of([]);
@@ -276,10 +275,10 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
                       const personas = result.items;
 
                       evaluadores.forEach((evaluador: IEvaluador) => {
-                        const datosPersonaEvaluador = personas.find((persona: IPersona) => evaluador.personaRef === persona.personaRef);
-                        evaluador.nombre = datosPersonaEvaluador?.nombre;
-                        evaluador.primerApellido = datosPersonaEvaluador?.primerApellido;
-                        evaluador.segundoApellido = datosPersonaEvaluador?.segundoApellido;
+                        const datosPersonaEvaluador = personas.find(
+                          (persona: IPersona) => evaluador.persona.personaRef === persona.personaRef
+                        );
+                        evaluador.persona = datosPersonaEvaluador;
                       });
 
                       return evaluadores;
@@ -327,8 +326,6 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     ));
   }
 
-
-
   /**
    * Filtro de campo autocompletable memoria.
    * @param value value a filtrar (string o memoria).
@@ -364,12 +361,13 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();
     } else {
-      filterValue = (value.nombre + ' ' + value.primerApellido + ' ' + value.segundoApellido).toLowerCase();
+      filterValue = (value.persona.nombre + ' ' + value.persona.primerApellido + ' ' + value.persona.segundoApellido).toLowerCase();
     }
 
     return this.evaluadores.filter
       (evaluador =>
-        (evaluador.nombre + ' ' + evaluador.primerApellido + ' ' + evaluador.segundoApellido).toLowerCase().includes(filterValue));
+        (evaluador.persona.nombre + ' ' + evaluador.persona.primerApellido + ' ' + evaluador.persona.segundoApellido)
+          .toLowerCase().includes(filterValue));
   }
 
   /**
@@ -379,7 +377,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * @returns nombre completo del evaluador
    */
   getEvaluador(evaluador: IEvaluador): string {
-    return evaluador ? evaluador.nombre + ' ' + evaluador.primerApellido + ' ' + evaluador.segundoApellido : '';
+    return evaluador ? evaluador.persona.nombre + ' ' + evaluador.persona.primerApellido + ' ' + evaluador.persona.segundoApellido : '';
   }
 
   /**
@@ -389,27 +387,22 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * @returns referencia y titulo memoria
    */
   getMemoria(memoria: IMemoria): string {
-
     return memoria ? (memoria.numReferencia + ' - ' + memoria.titulo) : '';
   }
 
   getDatosForm(): IEvaluacion {
-    const evaluacion = this.evaluacion;
     const convocatoriaReunion: IConvocatoriaReunion = {
       activo: null,
       anio: null,
       codigo: null,
       comite: null,
-      convocantes: null,
       fechaEnvio: null,
       fechaEvaluacion: null,
       fechaLimite: null,
       horaInicio: null,
       id: null,
-      idActa: null,
       lugar: null,
       minutoInicio: null,
-      numEvaluaciones: null,
       numeroActa: null,
       ordenDia: null,
       tipoConvocatoriaReunion: null

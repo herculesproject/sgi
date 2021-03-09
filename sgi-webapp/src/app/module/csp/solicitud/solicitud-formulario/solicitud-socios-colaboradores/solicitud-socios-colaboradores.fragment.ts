@@ -30,14 +30,14 @@ export class SolicitudSociosColaboradoresFragment extends Fragment {
     if (id) {
       const subscription = this.solicitudService.findAllSolicitudProyectoSocio(id).pipe(
         switchMap((proyectoSocios) =>
-          from(proyectoSocios).pipe(
+          from(proyectoSocios.items).pipe(
             mergeMap((proyectoSocio) =>
               this.empresaEconomicaService.findById(proyectoSocio.empresa.personaRef).pipe(
                 tap(empresaEconomica => proyectoSocio.empresa = empresaEconomica),
                 catchError(() => of())
               )
             ),
-            map(() => proyectoSocios)
+            map(() => proyectoSocios.items)
           )
         ),
         map(results => results.map(

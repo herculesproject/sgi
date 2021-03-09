@@ -33,13 +33,13 @@
     <!-- Fecha inicio Column -->
     <ng-container matColumnDef="fechaInicio">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.hitos.fechaInicio' | translate}} </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.fechaInicio | date:'dd/MM/yyyy'}} </td>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.fechaInicio | luxon:'short'}} </td>
     </ng-container>
 
     <!-- Fecha fin Column -->
     <ng-container matColumnDef="fechaFin">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.hitos.fechaFin' | translate}} </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.fechaFin | date:'dd/MM/yyyy'}} </td>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value?.fechaFin | luxon:'short'}} </td>
     </ng-container>
 
     <!-- horas dedicacion Column -->

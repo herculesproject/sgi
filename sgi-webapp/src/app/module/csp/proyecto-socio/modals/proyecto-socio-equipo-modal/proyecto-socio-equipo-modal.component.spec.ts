@@ -1,17 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { ProyectoSocioEquipoModalComponent, ProyectoEquipoSocioModalData } from './proyecto-socio-equipo-modal.component';
-import { SharedModule } from '@shared/shared.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-import TestUtils from '@core/utils/test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SharedModule } from '@shared/shared.module';
+import { DateTime } from 'luxon';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ProyectoEquipoSocioModalData, ProyectoSocioEquipoModalComponent } from './proyecto-socio-equipo-modal.component';
 
 describe('ProyectoSocioEquipoModalComponent', () => {
   let component: ProyectoSocioEquipoModalComponent;
@@ -30,8 +30,8 @@ describe('ProyectoSocioEquipoModalComponent', () => {
     isEdit: false,
     proyectoSocioEquipo,
     selectedProyectoSocioEquipos: [],
-    fechaFinProyectoSocio: new Date(),
-    fechaInicioProyectoSocio: new Date()
+    fechaFinProyectoSocio: DateTime.now(),
+    fechaInicioProyectoSocio: DateTime.now()
   };
 
   beforeEach(waitForAsync(() => {

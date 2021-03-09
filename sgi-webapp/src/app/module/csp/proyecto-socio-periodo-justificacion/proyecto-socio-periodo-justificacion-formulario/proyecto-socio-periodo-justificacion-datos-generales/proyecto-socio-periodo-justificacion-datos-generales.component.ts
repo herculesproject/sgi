@@ -19,11 +19,6 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesComponent extends
   fxFlexProperties: FxFlexProperties;
   private subscriptions: Subscription[] = [];
 
-  /** ngx-mat-datetime-picker */
-  showSeconds = true;
-  defaultFechaInicioPresentacion = [0, 0, 0];
-  defaultFechaFinPresentacion = [23, 59, 59];
-
   constructor(
     protected actionService: ProyectoSocioPeriodoJustificacionActionService
   ) {

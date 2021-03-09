@@ -47,8 +47,8 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
           Validators.min(1),
           Validators.max(2_147_483_647)
         ]),
-        fechaInicio: new FormControl(''),
-        fechaFin: new FormControl(''),
+        fechaInicio: new FormControl(null),
+        fechaFin: new FormControl(null),
       },
       {
         validators: [

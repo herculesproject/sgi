@@ -10,9 +10,9 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { DateValidator } from '@core/validators/date-validator';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -67,9 +67,12 @@ export class SolicitudCrearProyectoModalComponent extends
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
-        fechaInicio: new FormControl('', [Validators.required]),
-        fechaFin: new FormControl('', [Validators.required]),
-        modeloEjecucion: new FormControl(this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.convocatoria?.modeloEjecucion, [Validators.required])
+        fechaInicio: new FormControl(null, [Validators.required]),
+        fechaFin: new FormControl(null, [Validators.required]),
+        modeloEjecucion: new FormControl(
+          this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.convocatoria?.modeloEjecucion,
+          [Validators.required]
+        )
       },
       {
         validators: [
@@ -97,7 +100,7 @@ export class SolicitudCrearProyectoModalComponent extends
       fechaInicio: this.formGroup.controls.fechaInicio.value,
       fechaFin: this.formGroup.controls.fechaFin.value,
       modeloEjecucion: this.formGroup.controls.modeloEjecucion.value
-    } as IProyecto
+    } as IProyecto;
   }
 
   /**
@@ -111,7 +114,11 @@ export class SolicitudCrearProyectoModalComponent extends
 
   loadModelosEjecucion(): void {
     const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('unidadGestionRef', SgiRestFilterOperator.EQUALS, this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.unidadGestion?.acronimo)
+      filter: new RSQLSgiRestFilter(
+        'unidadGestionRef',
+        SgiRestFilterOperator.EQUALS,
+        this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.unidadGestion?.acronimo
+      )
     };
     const subcription = this.unidadModeloService.findAll(options).subscribe(
       res => {
@@ -140,12 +147,10 @@ export class SolicitudCrearProyectoModalComponent extends
     return this.modelosEjecucionFiltered.filter(modeloEjecucion => modeloEjecucion.nombre.toLowerCase().includes(filterValue));
   }
 
-  private getFechaFinProyecto(fecha: string): void {
-    const fechaInicio = fecha ? DateUtils.fechaToDate(fecha) : null;
-    let fechaFin = fechaInicio;
-    if (fechaInicio && this.solicitudCrearProyectoModalData?.solicitudProyectoDatos?.duracion) {
-      fechaFin.setMonth(fechaInicio.getMonth() + this.solicitudCrearProyectoModalData?.solicitudProyectoDatos?.duracion);
-      this.formGroup.controls.fechaFin.setValue(DateUtils.formatFechaAsISODate(fechaFin));
+  private getFechaFinProyecto(fecha: DateTime): void {
+    if (fecha && this.solicitudCrearProyectoModalData?.solicitudProyectoDatos?.duracion) {
+      const fechaFin = fecha.plus({ months: this.solicitudCrearProyectoModalData?.solicitudProyectoDatos?.duracion });
+      this.formGroup.controls.fechaFin.setValue(fechaFin);
     }
   }
 

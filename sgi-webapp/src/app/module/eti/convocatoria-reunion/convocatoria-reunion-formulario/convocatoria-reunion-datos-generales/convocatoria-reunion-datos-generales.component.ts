@@ -22,7 +22,6 @@ import { map, startWith, switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-datos-generales.fragment';
 
-
 const MSG_ERROR_LOAD_COMITES = marker('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar');
 const MSG_ERROR_LOAD_CONVOCANTES = marker('eti.convocatoriaReunion.formulario.datosGenerales.convocantes.error.cargar');
@@ -174,7 +173,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     return this.evaluadorService.findAll(options)
       .pipe(
         switchMap((listadoConvocantes) => {
-          const personaRefsConvocantes = listadoConvocantes.items.map((convocante: IEvaluador) => convocante.personaRef);
+          const personaRefsConvocantes = listadoConvocantes.items.map((convocante: IEvaluador) => convocante.persona.personaRef);
           const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes)
             .pipe(
               map((personas: SgiRestListResult<IPersona>) => {
@@ -199,10 +198,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   private loadDatosPersona(listado: SgiRestListResult<IPersona>, evaluadores: IEvaluador[]): IEvaluador[] {
     const personas = listado.items;
     evaluadores.forEach((convocante) => {
-      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.personaRef === persona.personaRef);
-      convocante.nombre = datosPersonaConvocante?.nombre;
-      convocante.primerApellido = datosPersonaConvocante?.primerApellido;
-      convocante.segundoApellido = datosPersonaConvocante?.segundoApellido;
+      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.persona.personaRef === persona.personaRef);
+      convocante.persona = datosPersonaConvocante;
     });
     return evaluadores;
   }

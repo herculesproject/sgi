@@ -11,15 +11,15 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
 interface CodigoEconomicoInfo {
   codigoEconomicoRef: string;
-  fechaInicio: string;
-  fechaFin: string;
+  fechaInicio: DateTime;
+  fechaFin: DateTime;
 }
 
 interface ConceptoGastoInfo {
@@ -211,18 +211,19 @@ export class PartidaGastoModalComponent extends
           nombre: codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.nombre,
           importeMaximo: codigoEconomico.convocatoriaConceptoGasto?.importeMaximo?.toString(),
           mesInicio: codigoEconomico.convocatoriaConceptoGasto?.mesInicial?.toString(),
-          mesFin: codigoEconomico.convocatoriaConceptoGasto?.mesFinal?.toString(), // TODO: recuperar cuando se haga el cambio en ConvocatoriaConceptoGasto
+          // TODO: recuperar cuando se haga el cambio en ConvocatoriaConceptoGasto
+          mesFin: codigoEconomico.convocatoriaConceptoGasto?.mesFinal?.toString(),
           codigosEconomicos: []
-        }
+        };
 
         conceptosGastosInfo.push(conceptoGastoInfo);
       }
 
       const codigoEconomicoInfo: CodigoEconomicoInfo = {
         codigoEconomicoRef: codigoEconomico.codigoEconomicoRef,
-        fechaInicio: moment(codigoEconomico.fechaInicio).format('DD/MM/yyyy'),
-        fechaFin: moment(codigoEconomico.fechaFin).format('DD/MM/yyyy')
-      }
+        fechaInicio: codigoEconomico.fechaInicio,
+        fechaFin: codigoEconomico.fechaFin
+      };
 
       conceptoGastoInfo.codigosEconomicos.push(codigoEconomicoInfo);
     });

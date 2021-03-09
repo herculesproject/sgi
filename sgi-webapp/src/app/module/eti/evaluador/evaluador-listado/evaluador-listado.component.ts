@@ -15,18 +15,13 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
-
-
-
-
-
-
 
 const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
 const MSG_ERROR = marker('eti.evaluador.listado.error');
@@ -100,7 +95,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     this.getComites();
   }
 
-
   protected createObservable(): Observable<SgiRestListResult<IEvaluador>> {
     const observable$ = this.evaluadoresService.findAll(this.getFindOptions());
     return observable$;
@@ -114,16 +108,15 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString());
     if (controls.estado.value) {
+      // TODO: Revisar lógica
       filter
-        .and('fechaBaja', SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()))
-        .and('fechaAlta', SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()));
+        .and('fechaBaja', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(DateTime.now()))
+        .and('fechaAlta', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(DateTime.now().plus({ days: 1 })));
     }
     filter.and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value);
 
     return filter;
   }
-
-
 
   protected loadTable(reset?: boolean) {
     // Do the request with paginator/sort/filter values
@@ -167,15 +160,15 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     this.personasRef = [];
     evaluadores.forEach((evaluador) => {
 
-      if ((evaluador.fechaAlta != null && new Date(evaluador.fechaAlta) <= new Date()) &&
-        ((evaluador.fechaBaja != null && new Date(evaluador.fechaBaja) >= new Date()) || (evaluador.fechaBaja == null))) {
+      if ((evaluador.fechaAlta != null && evaluador.fechaAlta <= DateTime.now()) &&
+        ((evaluador.fechaBaja != null && evaluador.fechaBaja >= DateTime.now()) || (evaluador.fechaBaja == null))) {
         evaluador.activo = true;
       } else {
         evaluador.activo = false;
       }
 
-      if (evaluador.personaRef && evaluador.personaRef !== '') {
-        this.personasRef.push(evaluador.personaRef);
+      if (evaluador.persona.personaRef && evaluador.persona.personaRef !== '') {
+        this.personasRef.push(evaluador.persona.personaRef);
       }
 
       // cambiar en futuro pasando las referencias de las personas
@@ -190,14 +183,10 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * returns el evaluador con los datos de persona
    */
   loadDatosUsuario(evaluador: IEvaluador): IEvaluador {
-    const personaServiceOneSubscription = this.personaFisicaService.getInformacionBasica(evaluador.personaRef)
+    const personaServiceOneSubscription = this.personaFisicaService.getInformacionBasica(evaluador.persona.personaRef)
       .subscribe(
         (persona: IPersona) => {
-          evaluador.nombre = persona.nombre;
-          evaluador.primerApellido = persona.primerApellido;
-          evaluador.segundoApellido = persona.segundoApellido;
-          evaluador.identificadorNumero = persona.identificadorNumero;
-          evaluador.identificadorLetra = persona.identificadorLetra;
+          evaluador.persona = persona;
         },
         (error) => {
           this.logger.error(error);
@@ -234,7 +223,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     this.suscripciones.push(comitesSubscription);
   }
 
-
   /**
    * Filtro de campo autocompletable comité.
    * @param value value a filtrar (string o nombre comité).
@@ -251,7 +239,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     return this.comiteListado.filter
       (comite => comite.comite.toLowerCase().includes(filterValue));
   }
-
 
   /**
    * Elimina el evaluador con el id recibido por parametro.

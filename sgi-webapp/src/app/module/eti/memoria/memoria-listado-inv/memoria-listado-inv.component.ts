@@ -6,7 +6,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
-import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
+import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -23,7 +23,6 @@ import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 
-
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const MSG_ERROR = marker('eti.memoria.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
@@ -38,7 +37,6 @@ const MSG_SUCCESS_ELIMINAR = marker('eti.memorias.formulario.memorias.listado.el
 const MSG_ERROR_ENVIAR_ELIMINAR = marker('eti.memorias.formulario.memorias.listado.eliminar.error');
 const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.error');
 const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.confirmar');
-
 
 @Component({
   selector: 'sgi-memoria-listado-inv',
@@ -68,13 +66,11 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
   estadoMemoriaListado: TipoEstadoMemoria[];
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
-
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
   personaRef: string;
   datosSolicitante: string;
-
 
   constructor(
     private readonly logger: NGXLogger,
@@ -88,7 +84,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
     this.totalElementos = 0;
     this.suscripciones = [];
-
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -121,8 +116,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     const observable$ = this.memoriaService.findAllMemoriasEvaluacionByPersonaRef(this.getFindOptions());
     return observable$;
   }
-
-
 
   protected initColumns(): void {
     this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
@@ -239,7 +232,10 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
    */
   public setUsuario(solicitante: IPersona) {
     this.formGroup.controls.solicitante.setValue(solicitante?.personaRef);
-    this.datosSolicitante = solicitante?.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
+    this.datosSolicitante = solicitante?.nombre
+      ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido
+      : ''
+      ;
     this.personaRef = solicitante?.personaRef;
   }
 
@@ -255,7 +251,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       return false;
     }
   }
-
 
   hasPermisoEliminar(estadoMemoriaId: number): boolean {
     // Si el estado es 'En elaboración' o 'Completada'.
@@ -281,7 +276,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       );
     this.suscripciones.push(dialogSubscription);
   }
-
 
   /**
    * Elimina la memoria.

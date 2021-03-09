@@ -34,7 +34,7 @@
         {{'csp.solicitud-proyecto-socio.periodo-justificacion.listado.fechaInicio' |
         translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper">{{wrapper.value.fechaInicio | date: 'dd/MM/yyyy'}}</td>
+      <td mat-cell *matCellDef="let wrapper">{{wrapper.value.fechaInicio | luxon: 'short'}}</td>
     </ng-container>
 
     <!-- fechaFin Column -->
@@ -43,7 +43,7 @@
         {{'csp.solicitud-proyecto-socio.periodo-justificacion.listado.fechaFin' |
         translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper">{{wrapper.value.fechaFin | date: 'dd/MM/yyyy'}}</td>
+      <td mat-cell *matCellDef="let wrapper">{{wrapper.value.fechaFin | luxon: 'short'}}</td>
     </ng-container>
 
     <!-- Acciones Column -->

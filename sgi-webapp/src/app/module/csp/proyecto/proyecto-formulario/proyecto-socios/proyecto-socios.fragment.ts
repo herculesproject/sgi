@@ -27,7 +27,7 @@ export class ProyectoSociosFragment extends Fragment {
       const subscription = this.proyectoService.findAllProyectoSocioProyecto(id)
         .pipe(
           switchMap((proyectoSocios) =>
-            from(proyectoSocios).pipe(
+            from(proyectoSocios.items).pipe(
               mergeMap((proyectoSocio) =>
                 this.empresaEconomicaService.findById(proyectoSocio.empresa.personaRef).pipe(
                   tap(empresaEconomica => proyectoSocio.empresa = empresaEconomica),
@@ -37,7 +37,7 @@ export class ProyectoSociosFragment extends Fragment {
               map(() => proyectoSocios)
             )
           ),
-          map(results => results.map(proyectoSocio => new StatusWrapper<IProyectoSocio>(proyectoSocio))),
+          map(results => results.items.map(proyectoSocio => new StatusWrapper<IProyectoSocio>(proyectoSocio))),
         ).subscribe(
           (result) => {
             this.proyectoSocios$.next(result);

@@ -37,7 +37,7 @@
             <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="pickerFechaInicio"
               placeholder="{{'csp.proyecto.plazos.modal.fechaInicio' | translate}}" required>
             <mat-datepicker-toggle matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #pickerFechaInicio [showSeconds]="showSeconds" [defaultTime]="defaultTimeStart">
+            <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{'csp.proyecto.plazos.modal.fechaInicio.error.requerido' | translate}}
@@ -59,7 +59,7 @@
             <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="pickerFechaFin"
               placeholder="{{'csp.proyecto.plazos.modal.fechaFin' | translate}}" required>
             <mat-datepicker-toggle matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #pickerFechaFin [showSeconds]="showSeconds" [defaultTime]="defaultTimeEnd">
+            <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
               {{'csp.proyecto.plazos.modal.fechaFin.error.requerido' | translate}}

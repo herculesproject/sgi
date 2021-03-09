@@ -1,5 +1,4 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
@@ -23,7 +22,6 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
 
   private idPeticionEvaluacion: number;
 
-
   constructor(
     private fb: FormBuilder, readonly: boolean, key: number, private service: MemoriaService,
     private personaFisicaService: PersonaFisicaService,
@@ -33,8 +31,6 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
     this.readonly = readonly;
   }
 
-
-
   public loadResponsable(idPeticionEvaluacion: number): void {
     this.idPeticionEvaluacion = idPeticionEvaluacion;
     this.subscriptions.push(
@@ -42,7 +38,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
         map((response) => {
           const equiposTrabajo = response.items;
           if (response.items) {
-            const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo: IEquipoTrabajo) => equipoTrabajo.personaRef);
+            const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo) => equipoTrabajo.persona.personaRef);
             this.personaFisicaService.findByPersonasRefs([...personaRefsEquiposTrabajo]).pipe(
               map(
                 responsePersonas => {
@@ -57,7 +53,6 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
         })
       ).subscribe());
   }
-
 
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
@@ -86,7 +81,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       comite: value.comite,
       tipoMemoria: value.tipoMemoria,
       titulo: value.titulo,
-      personaRef: value.personaRef,
+      personaRef: value.responsable.personaRef,
       codOrganoCompetente: value.codOrganoCompetente,
       memoriaOriginal: value.memoriaOriginal
     };
@@ -99,7 +94,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       this.memoria.tipoMemoria = form.tipoMemoria;
     }
     this.memoria.titulo = form.titulo;
-    this.memoria.personaRef = form.personaResponsable.personaRef;
+    this.memoria.responsable.personaRef = form.personaResponsable.personaRef;
     if (this.memoria.comite.comite === 'CEEA') {
       this.memoria.codOrganoCompetente = form.codOrganoCompetente;
     } else {
@@ -128,7 +123,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
     if (this.getKey()) {
       return this.service.findById(key).pipe(
         switchMap((memoria) => {
-          return this.personaFisicaService.getInformacionBasica(memoria.personaRef).pipe(
+          return this.personaFisicaService.getInformacionBasica(memoria.responsable.personaRef).pipe(
             map((persona) => {
               this.getFormGroup().controls.personaResponsable.setValue(persona);
               this.memoria = memoria;

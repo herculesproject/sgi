@@ -1,7 +1,8 @@
 <!-- Evaluacion listado -->
 <div>
   <h2>{{'eti.evaluacionEvaluador.evaluar.datosMemoria.evaluacionesAnteriores.titulo' | translate}}</h2>
-  <table mat-table [dataSource]="evaluaciones$ | async" matSort class="mat-elevation-z8 table-unidad">
+  <table mat-table [dataSource]="evaluaciones$ | async" matSort matSortActive="evaluacion.memoria.numReferencia"
+    class="mat-elevation-z8 table-unidad">
     <!-- NumReferencia Column -->
     <ng-container matColumnDef="evaluacion.memoria.numReferencia">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -20,7 +21,7 @@
     <ng-container matColumnDef="evaluacion.fechaDictamen">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.evaluacionEvaluador.evaluar.datosMemoria.evaluacionesAnteriores.fechaDictamen' | translate}}</th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion?.evaluacion?.fechaDictamen}}</td>
+      <td mat-cell *matCellDef="let evaluacion">{{evaluacion?.evaluacion?.fechaDictamen | luxon: 'short'}}</td>
     </ng-container>
 
     <!-- Dictamen Column -->

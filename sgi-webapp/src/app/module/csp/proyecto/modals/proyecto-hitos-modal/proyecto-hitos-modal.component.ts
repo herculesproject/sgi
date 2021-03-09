@@ -10,10 +10,10 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { SgiRestListResult } from '@sgi/framework/http/types';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -115,7 +115,7 @@ export class ProyectoHitosModalComponent implements OnInit {
    * Si la fecha actual es superior - Checkbox enable
    */
   private validarFecha() {
-    if (new Date(this.formGroup.get('fecha').value) <= new Date()) {
+    if (this.formGroup.get('fecha').value <= DateTime.now()) {
       this.formGroup.get('aviso').disable();
       this.formGroup.get('aviso').setValue(false);
     } else {
@@ -129,17 +129,12 @@ export class ProyectoHitosModalComponent implements OnInit {
    * @param tipoHito proyecto tipoHito
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
-    let fechas: Date[] = [];
+    let fechas: DateTime[] = [];
     if (tipoHito && typeof tipoHito !== 'string') {
       const proyectoHitos = this.data.hitos.filter(hito =>
         hito.tipoHito.id === (tipoHito as ITipoHito).id &&
-        (hito.fecha !== this.data.hito.fecha));
-      fechas = proyectoHitos.map(
-        hito => {
-          const fecha = DateUtils.fechaToDate(hito.fecha);
-          return fecha;
-        }
-      );
+        (!hito.fecha.equals(this.data.hito.fecha)));
+      fechas = proyectoHitos.map(hito => hito.fecha);
     }
     this.formGroup.setValidators([
       TipoHitoValidator.notInDate('fecha', fechas, this.data?.hitos?.map(hito => hito.tipoHito))

@@ -24,11 +24,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.proyecto-socio.periodo-pago.modal.fechaPrevistaPago' | translate}}</mat-label>
-            <input matInput [matDatepicker]="fechaPrevistaPago" formControlName="fechaPrevistaPago"
+            <input matInput [ngxMatDatetimePicker]="fechaPrevistaPago" formControlName="fechaPrevistaPago"
               id="fechaPrevistaPago" required
               placeholder="{{'csp.proyecto-socio.periodo-pago.modal.fechaPrevistaPago' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="fechaPrevistaPago"></mat-datepicker-toggle>
-            <mat-datepicker #fechaPrevistaPago></mat-datepicker>
+            <ngx-mat-datetime-picker #fechaPrevistaPago showSeconds="true" [defaultTime]="[0,0,0]">
+            </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaPrevistaPago.errors?.required">
               {{'csp.proyecto-socio.periodo-pago.modal.fechaPrevistaPago.required' | translate}}
             </mat-error>
@@ -69,10 +70,10 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.proyecto-socio.periodo-pago.modal.fechaPago' | translate}}</mat-label>
-            <input matInput [matDatepicker]="fechaPago" formControlName="fechaPago" id="fechaPago"
+            <input matInput [ngxMatDatetimePicker]="fechaPago" formControlName="fechaPago" id="fechaPago"
               placeholder="{{'csp.proyecto-socio.periodo-pago.modal.fechaPago' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="fechaPago"></mat-datepicker-toggle>
-            <mat-datepicker #fechaPago></mat-datepicker>
+            <ngx-mat-datetime-picker #fechaPago showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
           </mat-form-field>
         </div>
       </div>

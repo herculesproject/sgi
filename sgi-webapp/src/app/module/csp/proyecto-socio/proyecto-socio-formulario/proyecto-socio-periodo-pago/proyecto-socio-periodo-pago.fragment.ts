@@ -82,8 +82,8 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment {
   private recalcularNumPeriodos(current: StatusWrapper<IProyectoSocioPeriodoPago>[]): void {
     let numPeriodo = 1;
     current.sort((a, b) => {
-      const dateA = new Date(a.value.fechaPrevistaPago);
-      const dateB = new Date(b.value.fechaPrevistaPago);
+      const dateA = a.value.fechaPrevistaPago;
+      const dateB = b.value.fechaPrevistaPago;
       return (dateA > dateB) ? 1 : ((dateB > dateA) ? -1 : 0);
     });
     current.forEach(element => element.value.numPeriodo = numPeriodo++);

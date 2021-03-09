@@ -19,7 +19,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'csp.solicitud.historicoEstado.fechaEstado' | translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaEstado | date:'dd/MM/yyyy'}}</td>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaEstado | luxon:'short'}}</td>
       </ng-container>
 
       <!-- Comentario Column -->

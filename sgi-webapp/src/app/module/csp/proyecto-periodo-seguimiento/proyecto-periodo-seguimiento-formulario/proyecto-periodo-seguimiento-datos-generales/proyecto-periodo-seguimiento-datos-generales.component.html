@@ -28,9 +28,10 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-periodo-seguimiento.datosGenerales.periodoSeguimientoCientifico.fechaInicio'|
             translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaInicio></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.after">
             {{'csp.proyecto-periodo-seguimiento.datosGenerales.periodoSeguimientoCientifico.fechaInicio.error.after'
             |
@@ -49,9 +50,10 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-periodo-seguimiento.datosGenerales.periodoSeguimientoCientifico.fechaFin' |
             translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin" required>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaFin></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.before">
             {{'csp.proyecto-periodo-seguimiento.datosGenerales.periodoSeguimientoCientifico.fechaFin.error.before'
             |
@@ -90,10 +92,8 @@
             [required]="FormGroupUtil.hasValidator(this.formGroup,'fechaInicioPresentacion','required')">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicioPresentacion">
           </mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaInicioPresentacion [showSeconds]="showSeconds"
-            [defaultTime]="defaultTimeStart">
+          <ngx-mat-datetime-picker #pickerFechaInicioPresentacion showSeconds="true" [defaultTime]="[0,0,0]">
           </ngx-mat-datetime-picker>
-
         </mat-form-field>
       </div>
 
@@ -107,8 +107,7 @@
             [required]="FormGroupUtil.hasValidator(this.formGroup,'fechaFinPresentacion','required')">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFinPresentacion">
           </mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaFinPresentacion [showSeconds]="showSeconds"
-            [defaultTime]="defaultTimeEnd">
+          <ngx-mat-datetime-picker #pickerFechaFinPresentacion showSeconds="true" [defaultTime]="[23,59,59]">
           </ngx-mat-datetime-picker>
           <mat-error *ngIf="formGroup.controls.fechaFinPresentacion.errors?.after">
             {{'csp.proyecto-periodo-seguimiento.datosGenerales.plazoPresentacion.fechaFinPresentacion.error.after' |

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { IProyectoSocio } from './proyecto-socio';
 
 export interface IProyectoSocioPeriodoPago {
@@ -5,6 +6,6 @@ export interface IProyectoSocioPeriodoPago {
   proyectoSocio: IProyectoSocio;
   numPeriodo: number;
   importe: number;
-  fechaPrevistaPago: Date;
-  fechaPago: Date;
+  fechaPrevistaPago: DateTime;
+  fechaPago: DateTime;
 }

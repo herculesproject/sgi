@@ -38,9 +38,10 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
             <mat-label>{{'csp.convocatoria.hitos.fecha.inicio'| translate}}</mat-label>
-            <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+            <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-            <mat-datepicker #pickerFechaInicio></mat-datepicker>
+            <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+            </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{'csp.convocatoria.hitos.fecha.inicio.error.vacio' | translate}}
             </mat-error>
@@ -81,7 +82,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button *ngIf="!data.readonly"
       type="submit">{{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+      translate}}</button>
   </div>
 </div>

@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { MemoriaListado } from '@core/models/eti/memoria-listado';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { BehaviorSubject } from 'rxjs';
 import { ActaActionService } from '../../acta.action.service';
-import { ActaMemoriasFragment } from './acta-memorias.fragment';
-
-
-
-
-
+import { ActaMemoriasFragment, MemoriaListado } from './acta-memorias.fragment';
 
 @Component({
   selector: 'sgi-acta-memorias',

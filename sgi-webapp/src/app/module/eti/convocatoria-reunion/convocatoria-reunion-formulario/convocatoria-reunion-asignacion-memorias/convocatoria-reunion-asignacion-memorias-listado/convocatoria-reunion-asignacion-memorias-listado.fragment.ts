@@ -1,5 +1,5 @@
-import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
@@ -9,12 +9,11 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-
 export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragment {
 
-  evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacion>[]> = new BehaviorSubject<StatusWrapper<IEvaluacion>[]>([]);
-  private deleted: StatusWrapper<IEvaluacion>[] = [];
-  private convocatoriaReunion: IConvocatoriaReunion;
+  evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacionWithIsEliminable>[]> =
+    new BehaviorSubject<StatusWrapper<IEvaluacionWithIsEliminable>[]>([]);
+  private deleted: StatusWrapper<IEvaluacionWithIsEliminable>[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -35,13 +34,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
     }
   }
 
-  setConvocatoriaReunion(value: IConvocatoriaReunion) {
-    if (!value || value.id !== this.getKey()) {
-      Error('Value mistmatch');
-    }
-    this.convocatoriaReunion = value;
-  }
-
   saveOrUpdate(): Observable<void> {
     return merge(
       this.deleteEvaluaciones(),
@@ -58,8 +50,8 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
     );
   }
 
-  public addEvaluacion(evaluacion: IEvaluacion) {
-    const wrapped = new StatusWrapper<IEvaluacion>(evaluacion);
+  public addEvaluacion(evaluacion: IEvaluacionWithIsEliminable) {
+    const wrapped = new StatusWrapper<IEvaluacionWithIsEliminable>(evaluacion);
     wrapped.setCreated();
     const current = this.evaluaciones$.value;
     current.push(wrapped);
@@ -69,7 +61,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
     // this.setComplete(true);
   }
 
-  public deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacion>) {
+  public deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacionWithIsEliminable>) {
     const current = this.evaluaciones$.value;
     const index = current.findIndex((value) => value === evaluacion);
     if (index >= 0) {
@@ -80,10 +72,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
       this.evaluaciones$.next(current);
       this.setChanges(true);
     }
-    // Como no es obligario tener memorias asignadas no aplica.
-    // if (current.length === 0) {
-    //   this.setComplete(false);
-    // }
   }
 
   private loadEvaluaciones(idConvocatoria: number): void {
@@ -103,8 +91,8 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
           const personaRefsEvaluadores = new Set<string>();
 
           evaluaciones.forEach((evaluacion: IEvaluacion) => {
-            personaRefsEvaluadores.add(evaluacion?.evaluador1?.personaRef);
-            personaRefsEvaluadores.add(evaluacion?.evaluador2?.personaRef);
+            personaRefsEvaluadores.add(evaluacion?.evaluador1?.persona?.personaRef);
+            personaRefsEvaluadores.add(evaluacion?.evaluador2?.persona?.personaRef);
           });
 
           return this.personaFisicaService.findByPersonasRefs([...personaRefsEvaluadores]).pipe(
@@ -113,16 +101,12 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
 
               evaluaciones.forEach((evaluacion: IEvaluacion) => {
                 const datosPersonaEvaluador1 = personas.find((persona) =>
-                  evaluacion.evaluador1.personaRef === persona.personaRef);
-                evaluacion.evaluador1.nombre = datosPersonaEvaluador1?.nombre;
-                evaluacion.evaluador1.primerApellido = datosPersonaEvaluador1?.primerApellido;
-                evaluacion.evaluador1.segundoApellido = datosPersonaEvaluador1?.segundoApellido;
+                  evaluacion.evaluador1.persona.personaRef === persona.personaRef);
+                evaluacion.evaluador1.persona = datosPersonaEvaluador1;
 
                 const datosPersonaEvaluador2 = personas.find((persona) =>
-                  evaluacion.evaluador2.personaRef === persona.personaRef);
-                evaluacion.evaluador2.nombre = datosPersonaEvaluador2?.nombre;
-                evaluacion.evaluador2.primerApellido = datosPersonaEvaluador2?.primerApellido;
-                evaluacion.evaluador2.segundoApellido = datosPersonaEvaluador2?.segundoApellido;
+                  evaluacion.evaluador2.persona.personaRef === persona.personaRef);
+                evaluacion.evaluador2.persona = datosPersonaEvaluador2;
               });
 
               return evaluaciones;
@@ -136,7 +120,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
         })
       ).subscribe(
         (evaluaciones) => {
-          this.evaluaciones$.next(evaluaciones.map((ev) => new StatusWrapper<IEvaluacion>(ev)));
+          this.evaluaciones$.next(evaluaciones.map((ev) => new StatusWrapper<IEvaluacionWithIsEliminable>(ev)));
         }
       );
   }
@@ -150,9 +134,10 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
       mergeMap((evaluacion) => {
         evaluacion.value.convocatoriaReunion.id = this.getKey() as number;
         return this.service.create(evaluacion.value).pipe(
-          map((savedEvaluacion) => {
+          // TODO: Eliminar casteo ya que el back no retorna el atributo eliminable
+          map((savedEvaluacion: IEvaluacionWithIsEliminable) => {
             const index = this.evaluaciones$.value.findIndex((wrapped) => wrapped === evaluacion);
-            this.evaluaciones$[index] = new StatusWrapper<IEvaluacion>(savedEvaluacion);
+            this.evaluaciones$[index] = new StatusWrapper<IEvaluacionWithIsEliminable>(savedEvaluacion);
           })
         );
       }),
@@ -169,9 +154,10 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
       mergeMap((evaluacion) => {
         evaluacion.value.convocatoriaReunion.id = this.getKey() as number;
         return this.service.update(evaluacion.value.id, evaluacion.value).pipe(
-          map((updatedEvaluacion) => {
+          // TODO: Eliminar casteo ya que realmente el back no retorna el atributo eliminable
+          map((updatedEvaluacion: IEvaluacionWithIsEliminable) => {
             const index = this.evaluaciones$.value.findIndex((wrapped) => wrapped === evaluacion);
-            this.evaluaciones$[index] = new StatusWrapper<IEvaluacion>(updatedEvaluacion);
+            this.evaluaciones$[index] = new StatusWrapper<IEvaluacionWithIsEliminable>(updatedEvaluacion);
           })
         );
       }),

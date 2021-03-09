@@ -9,11 +9,11 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { DateValidator } from '@core/validators/date-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { IRangeDates, RangeValidator } from '@core/validators/range-validator';
+import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { SgiRestListResult } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -49,12 +49,6 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
   private suscripciones: Subscription[] = [];
 
   textSaveOrUpdate: string;
-
-  /** ngx-mat-datetime-picker */
-  showSeconds = true;
-  defaultTimeStart = [0, 0, 0];
-  defaultTimeEnd = [23, 59, 59];
-  /** ngx-mat-datetime-picker */
 
   constructor(
     private readonly logger: NGXLogger,
@@ -101,8 +95,8 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
   /**
    * Validamos fecha para activar o inactivar el checkbox generaAviso
    */
-  private validatorGeneraAviso(fechaFinInput: Date) {
-    const fechaActual = new Date();
+  private validatorGeneraAviso(fechaFinInput: DateTime) {
+    const fechaActual = DateTime.now();
     const fechaFin = fechaFinInput;
     if (fechaFin <= fechaActual) {
       this.formGroup.get('generaAviso').disable();
@@ -140,16 +134,16 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
    * @param tipoFase proyecto tipoFase
    */
   private createValidatorDate(tipoFase: ITipoFase | string): void {
-    let rangoFechas: IRangeDates[] = [];
+    let rangoFechas: IRange[] = [];
     if (tipoFase && typeof tipoFase !== 'string') {
       const proyectoFases = this.data.plazos.filter(plazo =>
         plazo.tipoFase.id === (tipoFase as ITipoFase).id &&
         (plazo.fechaInicio !== this.data.plazo.fechaInicio && plazo.fechaFin !== this.data.plazo.fechaFin));
       rangoFechas = proyectoFases.map(
         fase => {
-          const rango: IRangeDates = {
-            inicio: DateUtils.fechaToDate(fase.fechaInicio),
-            fin: DateUtils.fechaToDate(fase.fechaFin)
+          const rango: IRange = {
+            inicio: fase.fechaInicio,
+            fin: fase.fechaFin
           };
           return rango;
         }

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { ISolicitudProyectoSocio } from './solicitud-proyecto-socio';
 
 export interface ISolicitudProyectoPeriodoJustificacion {
@@ -6,7 +7,7 @@ export interface ISolicitudProyectoPeriodoJustificacion {
   numPeriodo: number;
   mesInicial: number;
   mesFinal: number;
-  fechaInicio: Date;
-  fechaFin: Date;
+  fechaInicio: DateTime;
+  fechaFin: DateTime;
   observaciones: string;
 }

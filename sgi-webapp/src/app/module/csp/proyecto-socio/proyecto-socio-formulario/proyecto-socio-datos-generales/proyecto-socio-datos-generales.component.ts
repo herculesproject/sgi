@@ -5,10 +5,8 @@ import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolSocioService } from '@core/services/csp/rol-socio.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -36,8 +34,7 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
     private readonly logger: NGXLogger,
     protected actionService: ProyectoSocioActionService,
     private snackBarService: SnackBarService,
-    private rolSocioService: RolSocioService,
-    private proyectoService: ProyectoService
+    private rolSocioService: RolSocioService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as ProyectoSocioDatosGeneralesFragment;
@@ -115,14 +112,14 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
         && element.id !== this.formPart.proyectoSocio.id);
 
 
-    const fechaInicio = fechaInicioForm.value ? DateUtils.fechaToDate(fechaInicioForm.value).getTime() : Number.MIN_VALUE;
-    const fechaFin = fechaFinForm.value ? DateUtils.fechaToDate(fechaFinForm.value).getTime() : Number.MAX_VALUE;
+    const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
+    const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
 
 
     const ranges = proyectoSocios.map(proyectoSocio => {
       return {
-        inicio: proyectoSocio.fechaInicio ? DateUtils.fechaToDate(proyectoSocio.fechaInicio).getTime() : Number.MIN_VALUE,
-        fin: proyectoSocio.fechaFin ? DateUtils.fechaToDate(proyectoSocio.fechaFin).getTime() : Number.MAX_VALUE
+        inicio: proyectoSocio.fechaInicio ? proyectoSocio.fechaInicio.toMillis() : Number.MIN_VALUE,
+        fin: proyectoSocio.fechaFin ? proyectoSocio.fechaFin.toMillis() : Number.MAX_VALUE
       };
     });
 

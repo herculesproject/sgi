@@ -1,23 +1,21 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-
-import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
-import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
-
-import { SharedModule } from '@shared/shared.module';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { ProyectoProrrogaCrearComponent } from './proyecto-prorroga-crear.component';
-import { ProyectoProrrogaActionService } from '../proyecto-prorroga.action.service';
-import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
-import { IProyecto } from '@core/models/csp/proyecto';
+import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
+import { SharedModule } from '@shared/shared.module';
+import { DateTime } from 'luxon';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { IProyectoProrrogaState } from '../../proyecto/proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.component';
-
+import { ProyectoProrrogaActionService } from '../proyecto-prorroga.action.service';
+import { ProyectoProrrogaCrearComponent } from './proyecto-prorroga-crear.component';
 
 describe('ProyectoProrrogaCrearComponent', () => {
   let component: ProyectoProrrogaCrearComponent;
@@ -25,16 +23,16 @@ describe('ProyectoProrrogaCrearComponent', () => {
 
   const proyecto: IProyecto = {
     id: 1,
-    fechaInicio: new Date(),
-    fechaFin: new Date()
+    fechaInicio: DateTime.now(),
+    fechaFin: DateTime.now()
   } as IProyecto;
 
   const proyectoProrroga: IProyectoProrroga = {
     id: 1,
     proyecto,
-    fechaConcesion: new Date(),
+    fechaConcesion: DateTime.now(),
     tipo: Tipo.TIEMPO,
-    fechaFin: new Date(),
+    fechaFin: DateTime.now(),
     numProrroga: 1
   } as IProyectoProrroga;
 

@@ -8,6 +8,7 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-listado/convocatoria-reunion-asignacion-memorias-listado.fragment';
@@ -16,7 +17,7 @@ import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunio
 interface DatosAsignacionEvaluacion {
   idComite: number;
   idTipoConvocatoria: number;
-  fechaLimite: Date;
+  fechaLimite: DateTime;
 }
 
 @Injectable()
@@ -64,6 +65,7 @@ export class ConvocatoriaReunionActionService extends ActionService {
   }
 
   public getDatosAsignacion(): DatosAsignacionEvaluacion {
+    // TODO: Arreglar la obtención de esta información cuando el usuario no ha pasado por los datos generales
     const datosAsignacionEvaluacion = {
       idComite: this.datosGenerales.getFormGroup().controls.comite.value?.id,
       idTipoConvocatoria: this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.value?.id,
@@ -74,7 +76,6 @@ export class ConvocatoriaReunionActionService extends ActionService {
 
   onKeyChange(value: number) {
     this.asignacionMemorias.setKey(value);
-    this.asignacionMemorias.setConvocatoriaReunion(this.datosGenerales.getValue());
   }
 
   /**

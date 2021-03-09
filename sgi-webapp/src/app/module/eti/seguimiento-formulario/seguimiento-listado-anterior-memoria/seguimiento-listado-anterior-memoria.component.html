@@ -20,7 +20,7 @@
     <ng-container matColumnDef="fechaDictamen">
       <th mat-header-cell *matHeaderCellDef>
         {{'eti.seguimiento.evaluar.datosMemoria.evaluacionesAnteriores.fechaDictamen' | translate}}</th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion?.evaluacion?.fechaDictamen}}</td>
+      <td mat-cell *matCellDef="let evaluacion">{{evaluacion?.evaluacion?.fechaDictamen | luxon: 'short'}}</td>
     </ng-container>
 
     <!-- Dictamen Column -->

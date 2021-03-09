@@ -10,11 +10,10 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IRange } from '@core/validators/range-validator';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -26,8 +25,8 @@ const MSG_ERROR_INIT = marker('csp.proyecto.equipos.rol.error.cargar');
 export interface ProyectoEquiposModalComponentData {
   equipos: IProyectoEquipo[];
   equipo: IProyectoEquipo;
-  fechaInicioProyecto: Date;
-  fechaFinProyecto: Date;
+  fechaInicioProyecto: DateTime;
+  fechaFinProyecto: DateTime;
   isEdit: boolean;
 }
 
@@ -158,14 +157,14 @@ export class ProyectoEquipoModalComponent extends
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
-    const fechaInicio = fechaInicioForm.value ? DateUtils.fechaToDate(fechaInicioForm.value).getTime() : Number.MIN_VALUE;
-    const fechaFin = fechaFinForm.value ? DateUtils.fechaToDate(fechaFinForm.value).getTime() : Number.MAX_VALUE;
+    const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
+    const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
     const ranges = this.data.equipos.filter(
       element => element.persona.personaRef === personaForm.value?.personaRef)
       .map(value => {
         const range: IRange = {
-          inicio: value.fechaInicio ? DateUtils.fechaToDate(value.fechaInicio).getTime() : Number.MIN_VALUE,
-          fin: value.fechaFin ? DateUtils.fechaToDate(value.fechaFin).getTime() : Number.MAX_VALUE,
+          inicio: value.fechaInicio ? value.fechaInicio.toMillis() : Number.MIN_VALUE,
+          fin: value.fechaFin ? value.fechaFin.toMillis() : Number.MAX_VALUE,
         };
         return range;
       });
@@ -221,19 +220,11 @@ export class ValidarRangoProyecto {
         return;
       }
 
-      let fechaInicio;
-      let fechaFin;
+      const fechaInicio: DateTime = fechaInicioForm.value;
+      const fechaFin: DateTime = fechaFinForm.value;
 
-      if (fechaInicioForm.value) {
-        fechaInicio = moment(fechaInicioForm.value).format('YYYY-MM-DD');
-      }
-
-      if (fechaFinForm.value) {
-        fechaFin = moment(fechaFinForm.value).format('YYYY-MM-DD');
-      }
-
-      const fechaProyectoInicio = moment(proyecto.fechaInicioProyecto).format('YYYY-MM-DD');
-      const fechaProyectoFin = moment(proyecto.fechaFinProyecto).format('YYYY-MM-DD');
+      const fechaProyectoInicio = proyecto.fechaInicioProyecto;
+      const fechaProyectoFin = proyecto.fechaFinProyecto;
 
       if (fechaInicio && (fechaInicio < fechaProyectoInicio || fechaInicio > fechaProyectoFin)) {
         fechaInicioForm.setErrors({ invalid: true });

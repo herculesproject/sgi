@@ -1,14 +1,15 @@
+import { DateTime } from 'luxon';
 import { IProyectoSocio } from './proyecto-socio';
 
 export interface IProyectoSocioPeriodoJustificacion {
   id: number;
   proyectoSocio: IProyectoSocio;
   numPeriodo: number;
-  fechaInicio: Date;
-  fechaFin: Date;
-  fechaInicioPresentacion: Date;
-  fechaFinPresentacion: Date;
+  fechaInicio: DateTime;
+  fechaFin: DateTime;
+  fechaInicioPresentacion: DateTime;
+  fechaFinPresentacion: DateTime;
   observaciones: string;
   documentacionRecibida: boolean;
-  fechaRecepcion: Date;
+  fechaRecepcion: DateTime;
 }

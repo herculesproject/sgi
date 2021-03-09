@@ -35,13 +35,13 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
           value: this.getLastProrroga() ? this.getLastProrroga()?.numProrroga + 1 : 1,
           disabled: true
         }),
-        fechaConcesion: new FormControl('', [
+        fechaConcesion: new FormControl(null, [
           Validators.required
         ]),
         tipo: new FormControl('', [
           Validators.required
         ]),
-        fechaFin: new FormControl({ value: '', disabled: true }),
+        fechaFin: new FormControl({ value: null, disabled: true }),
         importe: new FormControl({ value: '', disabled: true }),
         observaciones: new FormControl('', [Validators.maxLength(250)]),
         fechaUltimaConcesion: new FormControl(this?.getLastProrroga()?.fechaConcesion)

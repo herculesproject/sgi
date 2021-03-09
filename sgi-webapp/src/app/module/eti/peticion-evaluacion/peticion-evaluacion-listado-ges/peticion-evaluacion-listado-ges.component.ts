@@ -23,11 +23,11 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
+
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-ges',
   templateUrl: './peticion-evaluacion-listado-ges.component.html',
@@ -115,17 +115,15 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
         const personaRefsEvaluadores = new Set<string>();
 
         response.items.forEach((peticionEvaluacion: IPeticionEvaluacion) => {
-          personaRefsEvaluadores.add(peticionEvaluacion?.personaRef);
+          personaRefsEvaluadores.add(peticionEvaluacion?.solicitante?.personaRef);
         });
 
         const personaSubscription = this.personaFisicaService.findByPersonasRefs([...personaRefsEvaluadores]).subscribe((result) => {
           const personas = result.items;
           response.items.forEach((peticionEvaluacion: IPeticionEvaluacion) => {
             const datosPersona = personas.find((persona) =>
-              peticionEvaluacion.personaRef === persona.personaRef);
-            peticionEvaluacion.nombre = datosPersona?.nombre;
-            peticionEvaluacion.primerApellido = datosPersona?.primerApellido;
-            peticionEvaluacion.segundoApellido = datosPersona?.segundoApellido;
+              peticionEvaluacion.solicitante.personaRef === persona.personaRef);
+            peticionEvaluacion.solicitante = datosPersona;
           });
         });
         this.suscripciones.push(personaSubscription);
@@ -161,7 +159,6 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     this.peticionesEvaluacion$ = this.getObservableLoadTable(reset);
   }
 
-
   /**
    * Devuelve el nombre de un comité.
    * @param comite comités
@@ -170,7 +167,6 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   getComite(comite: IComite): string {
     return comite?.comite;
   }
-
 
   /**
    * Devuelve el nombre de un estado memoria.
@@ -260,7 +256,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
    * @param solicitante persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
-    this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
+    this.formGroup.controls.solicitante.setValue(solicitante?.personaRef);
   }
 
   /**

@@ -47,9 +47,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field color="primary">
           <mat-label>{{'csp.convocatoria.configuracionSolicitud.fecha.inicio'| translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaInicioFase" formControlName="fechaInicioFase">
+          <input matInput [ngxMatDatetimePicker]="pickerFechaInicioFase" formControlName="fechaInicioFase">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicioFase"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaInicioFase></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaInicioFase showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
         </mat-form-field>
       </div>
 
@@ -58,9 +59,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field color="primary">
           <mat-label>{{'csp.convocatoria.configuracionSolicitud.fecha.fin'| translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaFinFase" formControlName="fechaFinFase">
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFinFase" formControlName="fechaFinFase">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFinFase"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaFinFase></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaFinFase showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
         </mat-form-field>
       </div>
     </div>

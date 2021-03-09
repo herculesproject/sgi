@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IComite } from '@core/models/eti/comite';
-import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
@@ -17,7 +17,7 @@ import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocat
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
@@ -33,7 +33,7 @@ const TEXT_USER_BUTTON = marker('eti.buscarSolicitante.boton.buscar');
   templateUrl: './evaluacion-listado.component.html',
   styleUrls: ['./evaluacion-listado.component.scss']
 })
-export class EvaluacionListadoComponent extends AbstractTablePaginationComponent<IEvaluacionSolicitante> implements OnInit {
+export class EvaluacionListadoComponent extends AbstractTablePaginationComponent<IEvaluacion> implements OnInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -44,7 +44,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  evaluaciones$: Observable<IEvaluacionSolicitante[]> = of();
+  evaluaciones$: Observable<IEvaluacion[]> = of();
 
   private comiteListado: IComite[];
   private tipoEvaluacionListado: TipoEvaluacion[];
@@ -96,8 +96,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
 
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
-      fechaEvaluacionInicio: new FormControl('', []),
-      fechaEvaluacionFin: new FormControl('', []),
+      fechaEvaluacionInicio: new FormControl(null, []),
+      fechaEvaluacionFin: new FormControl(null, []),
       referenciaMemoria: new FormControl('', []),
       tipoConvocatoriaReunion: new FormControl('', []),
       solicitante: new FormControl('', []),
@@ -109,9 +109,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     this.loadTipoConvocatoriasReunion();
   }
 
-
-
-  protected createObservable(): Observable<SgiRestListResult<IEvaluacionSolicitante>> {
+  protected createObservable(): Observable<SgiRestListResult<IEvaluacion>> {
     const observable$ = this.evaluacionesService.findAllByMemoriaAndRetrospectivaEnEvaluacion(this.getFindOptions());
     return observable$;
   }
@@ -124,21 +122,15 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('memoria.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
-      .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
-    if (controls.fechaEvaluacionInicio) {
-      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionInicio.value);
-      filter.and('fechaDictamen',
-        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
-    }
-    if (controls.fechaEvaluacionFin) {
-      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionFin.value);
-      filter.and('fechaDictamen',
-        SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
-    }
-    filter
+      .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString())
+      .and('fechaDictamen', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEvaluacionInicio.value))
+      .and('fechaDictamen', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEvaluacionFin.value))
       .and('memoria.numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.referenciaMemoria.value)
-      .and('convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoriaReunion.value?.id?.toString())
-      .and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, this.personaRefSolicitante);
+      .and(
+        'convocatoriaReunion.tipoConvocatoriaReunion.id',
+        SgiRestFilterOperator.EQUALS,
+        controls.tipoConvocatoriaReunion.value?.id?.toString()
+      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, this.personaRefSolicitante);
 
     return filter;
   }
@@ -148,11 +140,11 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       switchMap((evaluaciones) => {
         return from(evaluaciones).pipe(
           mergeMap(evaluacion => {
-            const personaRef = evaluacion.memoria?.peticionEvaluacion?.personaRef;
+            const personaRef = evaluacion.memoria?.peticionEvaluacion?.solicitante?.personaRef;
             if (personaRef) {
               return this.personaFisicaService.getInformacionBasica(personaRef).pipe(
                 map(persona => {
-                  evaluacion.persona = persona;
+                  evaluacion.memoria.peticionEvaluacion.solicitante = persona;
                   return evaluacion;
                 })
               );
@@ -224,7 +216,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       }));
   }
 
-
   /**
    * Recupera un listado de los tipos convocatoria que hay en el sistema.
    */
@@ -245,7 +236,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       }
     ));
   }
-
 
   /**
    * Filtro de campo autocompletable comité.
@@ -298,7 +288,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       (tipoConvocatoriaReunion => tipoConvocatoriaReunion.nombre.toLowerCase().includes(filterValue));
   }
 
-
   /**
    * Setea el persona seleccionado a través del componente
    * @param persona Persona seleccionada
@@ -315,6 +304,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   onClearFilters(): void {
     super.onClearFilters();
     this.setPersona({} as IPersona);
+    this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
+    this.formGroup.controls.fechaEvaluacionFin.setValue(null);
   }
 
 }

@@ -2,10 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IActaEvaluaciones } from '@core/models/eti/acta-evaluaciones';
+import { IActaWithNumEvaluaciones } from '@core/models/eti/acta-with-num-evaluaciones';
 import { IComite } from '@core/models/eti/comite';
 import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -13,10 +12,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { ActaService } from '@core/services/eti/acta.service';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
@@ -37,7 +35,7 @@ const MSG_FINALIZAR_SUCCESS = marker('eti.acta.listado.finalizar.correcto');
   templateUrl: './acta-listado.component.html',
   styleUrls: ['./acta-listado.component.scss']
 })
-export class ActaListadoComponent extends AbstractTablePaginationComponent<IActaEvaluaciones> implements OnInit {
+export class ActaListadoComponent extends AbstractTablePaginationComponent<IActaWithNumEvaluaciones> implements OnInit {
 
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -49,7 +47,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  actas$: Observable<IActaEvaluaciones[]> = of();
+  actas$: Observable<IActaWithNumEvaluaciones[]> = of();
 
   comiteListado: IComite[];
   comitesSubscription: Subscription;
@@ -68,10 +66,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly actasService: ActaService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
-    private readonly tipoEstadoActaService: TipoEstadoActaService,
-    private readonly router: Router,
-    private readonly evaluacionService: EvaluacionService,
-    private route: ActivatedRoute,
+    private readonly tipoEstadoActaService: TipoEstadoActaService
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -94,8 +89,8 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     super.ngOnInit();
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
-      fechaEvaluacionInicio: new FormControl('', []),
-      fechaEvaluacionFin: new FormControl('', []),
+      fechaEvaluacionInicio: new FormControl(null, []),
+      fechaEvaluacionFin: new FormControl(null, []),
       numeroActa: new FormControl('', []),
       tipoEstadoActa: new FormControl('', [])
     });
@@ -105,7 +100,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     this.getTipoEstadoActas();
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IActaEvaluaciones>> {
+  protected createObservable(): Observable<SgiRestListResult<IActaWithNumEvaluaciones>> {
     const observable$ = this.actasService.findActivasWithEvaluaciones(this.getFindOptions());
     return observable$;
   }
@@ -117,22 +112,36 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('convocatoriaReunion.comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString());
-    if (controls.fechaEvaluacionInicio) {
-      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionInicio.value);
-      filter.and('convocatoriaReunion.fechaEvaluacion',
-        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-    }
-    if (controls.fechaEvaluacionFin) {
-      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionFin.value);
-      filter.and('convocatoriaReunion.fechaEvaluacion',
-        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-    }
-    filter
-      .and('convocatoriaReunion.numeroActa', SgiRestFilterOperator.EQUALS, controls.numeroActa?.value.toString())
-      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoActa.value?.id?.toString());
+    // TODO: Revisar buscador en el backend, parece que no filtra correctamente al acotar por la fecha de evaluacion
+    const filter = new RSQLSgiRestFilter(
+      'convocatoriaReunion.comite.id',
+      SgiRestFilterOperator.EQUALS,
+      controls.comite.value?.id?.toString()
+    ).and(
+      'convocatoriaReunion.fechaEvaluacion',
+      SgiRestFilterOperator.GREATHER_OR_EQUAL,
+      LuxonUtils.toBackend(controls.fechaEvaluacionInicio.value)
+    ).and(
+      'convocatoriaReunion.fechaEvaluacion',
+      SgiRestFilterOperator.LOWER_OR_EQUAL,
+      LuxonUtils.toBackend(controls.fechaEvaluacionFin.value)
+    ).and(
+      'convocatoriaReunion.numeroActa',
+      SgiRestFilterOperator.EQUALS,
+      controls.numeroActa?.value.toString()
+    ).and(
+      'estadoActual.id',
+      SgiRestFilterOperator.EQUALS,
+      controls.tipoEstadoActa.value?.id?.toString()
+    );
 
     return filter;
+  }
+
+  onClearFilters(): void {
+    super.onClearFilters();
+    this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
+    this.formGroup.controls.fechaEvaluacionFin.setValue(null);
   }
 
   protected loadTable(reset?: boolean) {
@@ -189,7 +198,6 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
       });
   }
 
-
   /**
    * Filtro de campo autocompletable comité.
    * @param value value a filtrar (string o nombre comité).
@@ -224,7 +232,6 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
       (tipoEstadoActa => tipoEstadoActa.nombre.toLowerCase().includes(filterValue));
   }
 
-
   /**
    * Finaliza el acta con el id recibido.
    * @param actaId id del acta a finalizar.
@@ -249,7 +256,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
    * @param acta acta a comprobar.
    * @return indicador de si el acta se encuentra finalizada.
    */
-  isFinalizada(acta: IActaEvaluaciones): boolean {
+  isFinalizada(acta: IActaWithNumEvaluaciones): boolean {
     return acta.estadoActa.id === 2;
   }
 
@@ -258,7 +265,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
    * @param acta acta a comprobar.
    * @return indicador de si se puede finalizar el acta.
    */
-  hasFinalizarActa(acta: IActaEvaluaciones): boolean {
+  hasFinalizarActa(acta: IActaWithNumEvaluaciones): boolean {
     return acta.estadoActa.id === 1 && acta.numEvaluacionesNoEvaluadas === 0;
   }
 

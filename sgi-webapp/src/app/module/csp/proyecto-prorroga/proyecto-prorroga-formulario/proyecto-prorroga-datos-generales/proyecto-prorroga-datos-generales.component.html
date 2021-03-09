@@ -23,9 +23,10 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-prorroga.datosGenerales.fechaConcesion'|
             translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaConcesion" formControlName="fechaConcesion" required>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaConcesion" formControlName="fechaConcesion" required>
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaConcesion"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaConcesion></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaConcesion showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
           <mat-error *ngIf="formGroup.controls.fechaConcesion.errors?.after">
             {{'csp.proyecto.seguimiento.cientifico.datosGenerales.fechaConcesion.error.after'
             |
@@ -59,10 +60,11 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-prorroga.datosGenerales.fechaFin' |
             translate}}</mat-label>
-          <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin"
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin"
             [required]="FormGroupUtil.hasValidator(this.formGroup,'fechaFin','required')">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaFin></mat-datepicker>
+          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
         </mat-form-field>
       </div>
     </div>

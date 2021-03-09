@@ -1,18 +1,17 @@
-import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
-import { IPersona } from '@core/models/sgp/persona';
+import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { Fragment } from '@core/services/action-service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { SgiRestListResult } from '@sgi/framework/http';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class EquipoInvestigadorListadoFragment extends Fragment {
 
-  equiposTrabajo$: BehaviorSubject<StatusWrapper<IEquipoTrabajo>[]> = new BehaviorSubject<StatusWrapper<IEquipoTrabajo>[]>([]);
-  private deletedEquiposTrabajo: StatusWrapper<IEquipoTrabajo>[] = [];
+  equiposTrabajo$: BehaviorSubject<StatusWrapper<IEquipoTrabajoWithIsEliminable>[]>
+    = new BehaviorSubject<StatusWrapper<IEquipoTrabajoWithIsEliminable>[]>([]);
+  private deletedEquiposTrabajo: StatusWrapper<IEquipoTrabajoWithIsEliminable>[] = [];
 
   private selectedIdPeticionEvaluacion: number;
 
@@ -35,14 +34,14 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     if (!this.isInitialized() || this.selectedIdPeticionEvaluacion !== idPeticionEvaluacion) {
       this.selectedIdPeticionEvaluacion = idPeticionEvaluacion;
 
-      let equiposTrabajoRecuperados$: Observable<StatusWrapper<IEquipoTrabajo>[]>;
+      let equiposTrabajoRecuperados$: Observable<StatusWrapper<IEquipoTrabajoWithIsEliminable>[]>;
 
       // Si es una petición de evaluación nueva se añade el usuario actual a la lista
       if (!this.selectedIdPeticionEvaluacion) {
         equiposTrabajoRecuperados$ = this.getInvestigadorActual()
           .pipe(
-            map((equipoTrabajo: IEquipoTrabajo) => {
-              const wrapper = new StatusWrapper<IEquipoTrabajo>(equipoTrabajo);
+            map((equipoTrabajo) => {
+              const wrapper = new StatusWrapper<IEquipoTrabajoWithIsEliminable>(equipoTrabajo);
               wrapper.setCreated();
               return [wrapper];
             }),
@@ -54,27 +53,21 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
             const equiposTrabajo = response.items;
 
             if (response.items) {
-              const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo: IEquipoTrabajo) => equipoTrabajo.personaRef);
+              const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo) => equipoTrabajo.persona.personaRef);
               const equiposTrabajoWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs([...personaRefsEquiposTrabajo]).pipe(
-                map((result: SgiRestListResult<IPersona>) => {
+                map((result) => {
                   const personas = result.items;
 
-                  equiposTrabajo.forEach((equipoTrabajo: IEquipoTrabajo) => {
-                    const datosPersona = personas.find((persona: IPersona) =>
-                      equipoTrabajo.personaRef === persona.personaRef);
+                  equiposTrabajo.forEach((equipoTrabajo) => {
+                    const datosPersona = personas.find((persona) =>
+                      equipoTrabajo.persona.personaRef === persona.personaRef);
 
-                    equipoTrabajo.nombre = datosPersona?.nombre;
-                    equipoTrabajo.primerApellido = datosPersona?.primerApellido;
-                    equipoTrabajo.segundoApellido = datosPersona?.segundoApellido;
-                    equipoTrabajo.identificadorNumero = datosPersona?.identificadorNumero;
-                    equipoTrabajo.identificadorLetra = datosPersona?.identificadorLetra;
-                    equipoTrabajo.vinculacion = 'PDI';
-                    equipoTrabajo.nivelAcademico = 'Licenciado';
-                    equipoTrabajo.eliminable = equipoTrabajo.personaRef !==
+                    equipoTrabajo.persona = datosPersona;
+                    equipoTrabajo.eliminable = equipoTrabajo.persona.personaRef !==
                       this.sgiAuthService.authStatus$.getValue().userRefId && equipoTrabajo.eliminable;
                   });
 
-                  return equiposTrabajo.map((equipoTrabajo) => new StatusWrapper<IEquipoTrabajo>(equipoTrabajo));
+                  return equiposTrabajo.map((equipoTrabajo) => new StatusWrapper<IEquipoTrabajoWithIsEliminable>(equipoTrabajo));
                 })
               );
 
@@ -113,8 +106,8 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
    *
    * @param equipoTrabajo un equipoTrabajo
    */
-  addEquipoTrabajo(equipoTrabajo: IEquipoTrabajo): void {
-    const wrapped = new StatusWrapper<IEquipoTrabajo>(equipoTrabajo);
+  addEquipoTrabajo(equipoTrabajo: IEquipoTrabajoWithIsEliminable): void {
+    const wrapped = new StatusWrapper<IEquipoTrabajoWithIsEliminable>(equipoTrabajo);
     wrapped.setCreated();
     const current = this.equiposTrabajo$.value;
     current.push(wrapped);
@@ -128,7 +121,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
    *
    * @param equipoTrabajo un equipoTrabajo
    */
-  deleteEquipoTrabajo(equipoTrabajo: StatusWrapper<IEquipoTrabajo>): void {
+  deleteEquipoTrabajo(equipoTrabajo: StatusWrapper<IEquipoTrabajoWithIsEliminable>): void {
     const current = this.equiposTrabajo$.value;
     const index = current.findIndex((value) => value === equipoTrabajo);
     if (index >= 0) {
@@ -148,21 +141,14 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
    *
    * @return observable con el investigador actual.
    */
-  private getInvestigadorActual(): Observable<IEquipoTrabajo> {
+  private getInvestigadorActual(): Observable<IEquipoTrabajoWithIsEliminable> {
     return this.personaFisicaService.getInformacionBasica(this.sgiAuthService.authStatus$?.getValue()?.userRefId)
       .pipe(
-        map((persona: IPersona) => {
+        map((persona) => {
           return {
             id: null,
             peticionEvaluacion: null,
-            personaRef: persona.personaRef,
-            nombre: persona.nombre,
-            primerApellido: persona.primerApellido,
-            segundoApellido: persona.segundoApellido,
-            identificadorNumero: persona.identificadorNumero,
-            identificadorLetra: persona.identificadorLetra,
-            nivelAcademico: 'Licenciado',
-            vinculacion: 'PDI',
+            persona,
             eliminable: false
           };
         })
@@ -195,9 +181,10 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     return from(createdEquipos).pipe(
       mergeMap((wrappedEquipoTrabajo) => {
         return this.peticionEvaluacionService.createEquipoTrabajo(this.getKey() as number, wrappedEquipoTrabajo.value).pipe(
-          map((savedEquipoTrabajo) => {
+          // TODO: Eliminar el casteo. Realmente existe la casuistica de que el backend no indica si el eliminable o no.
+          map((savedEquipoTrabajo: IEquipoTrabajoWithIsEliminable) => {
             const index = this.equiposTrabajo$.value.findIndex((currentEquipoTrabajo) => currentEquipoTrabajo === wrappedEquipoTrabajo);
-            this.equiposTrabajo$.value[index] = new StatusWrapper<IEquipoTrabajo>(savedEquipoTrabajo);
+            this.equiposTrabajo$.value[index] = new StatusWrapper<IEquipoTrabajoWithIsEliminable>(savedEquipoTrabajo);
             this.equiposTrabajo$.next(this.equiposTrabajo$.value);
           })
         );

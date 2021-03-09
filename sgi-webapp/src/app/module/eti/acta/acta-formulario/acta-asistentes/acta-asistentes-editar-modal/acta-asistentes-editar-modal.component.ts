@@ -7,7 +7,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 
-
 const MSG_ERROR_FORM = marker('form-group.error');
 
 @Component({
@@ -48,8 +47,8 @@ export class ActaAsistentesEditarModalComponent implements OnInit {
    */
   private initFormGroup() {
     this.formGroup = new FormGroup({
-      asistente: new FormControl(this.asistente?.evaluador?.nombre + ' ' + this.asistente?.evaluador?.primerApellido
-        + ' ' + this.asistente?.evaluador?.segundoApellido, [Validators.required]),
+      asistente: new FormControl(this.asistente?.evaluador?.persona?.nombre + ' ' + this.asistente?.evaluador?.persona?.primerApellido
+        + ' ' + this.asistente?.evaluador?.persona?.segundoApellido, [Validators.required]),
       asistencia: new FormControl(this.asistente.asistencia, [Validators.required]),
       motivo: new FormControl(this.asistente.motivo),
     });

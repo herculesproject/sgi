@@ -8,15 +8,16 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { DateTime } from 'luxon';
 
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
 
 export interface ProyectoSocioPeriodoPagoModalData {
   proyectoSocioPeriodoPago: IProyectoSocioPeriodoPago;
-  selectedFechaPrevistas: Date[];
-  fechaInicioProyectoSocio: Date;
-  fechaFinProyectoSocio: Date;
+  selectedFechaPrevistas: DateTime[];
+  fechaInicioProyectoSocio: DateTime;
+  fechaFinProyectoSocio: DateTime;
   isEdit: boolean;
 }
 

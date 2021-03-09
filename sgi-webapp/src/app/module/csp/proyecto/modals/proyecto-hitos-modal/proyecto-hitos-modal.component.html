@@ -38,9 +38,10 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
             <mat-label>{{'csp.proyecto.hitos.fecha'| translate}}</mat-label>
-            <input matInput [matDatepicker]="pickerFecha" formControlName="fecha" required>
+            <input matInput [ngxMatDatetimePicker]="pickerFecha" formControlName="fecha" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
-            <mat-datepicker #pickerFecha></mat-datepicker>
+            <ngx-mat-datetime-picker #pickerFecha showSeconds="true" [defaultTime]="[0,0,0]">
+            </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fecha.errors?.required">
               {{'csp.proyecto.hitos.fecha.error.vacio' | translate}}
             </mat-error>

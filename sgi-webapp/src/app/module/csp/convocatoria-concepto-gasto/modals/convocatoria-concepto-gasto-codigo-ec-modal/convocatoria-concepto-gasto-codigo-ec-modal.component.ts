@@ -2,21 +2,20 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { ICodigoEconomico } from '@core/models/sge/codigo-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { CodigoEconomicoService } from '@core/services/sge/codigo-economico.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { DateValidator } from '@core/validators/date-validator';
+import { SelectValidator } from '@core/validators/select-validator';
+import { SgiRestListResult } from '@sgi/framework/http/types';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
-import { CodigoEconomicoService } from '@core/services/sge/codigo-economico.service';
-import { ICodigoEconomico } from '@core/models/sge/codigo-economico';
-import { SgiRestListResult } from '@sgi/framework/http/types';
-import { DateValidator } from '@core/validators/date-validator';
-import { SelectValidator } from '@core/validators/select-validator';
-import { DateUtils } from '@core/utils/date-utils';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria-concepto-gasto.codigo-ec.error.cargar');
@@ -169,13 +168,13 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
   }
 
   /**
-  * Comprueba que el rango de fechas entre los 2 campos indicados no se superpone con ninguno de los rangos de la lista
-  * filtrada por códigos económicos
-  *
-  * @param startRangeFieldName Nombre del campo que indica el inicio del rango.
-  * @param endRangeFieldName Nombre del campo que indica el fin del rango.
-  * @param filterFieldName Filtro para obtener la lista de rangos con los que se quiere comprobar.
-  */
+   * Comprueba que el rango de fechas entre los 2 campos indicados no se superpone con ninguno de los rangos de la lista
+   * filtrada por códigos económicos
+   *
+   * @param startRangeFieldName Nombre del campo que indica el inicio del rango.
+   * @param endRangeFieldName Nombre del campo que indica el fin del rango.
+   * @param filterFieldName Filtro para obtener la lista de rangos con los que se quiere comprobar.
+   */
   private notOverlapsSameCodigoEconomico(startRangeFieldName: string, endRangeFieldName: string, filterFieldName: string): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 
@@ -190,13 +189,15 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
           return;
         }
 
-        const inicioRangoNumber = inicioRangoControl.value ? DateUtils.fechaToDate(inicioRangoControl.value).getTime() : Number.MIN_VALUE;
-        const finRangoNumber = finRangoControl.value ? DateUtils.fechaToDate(finRangoControl.value).getTime() : Number.MAX_VALUE;
+        const inicioRangoNumber = inicioRangoControl.value ? inicioRangoControl.value.toMillis() : Number.MIN_VALUE;
+        const finRangoNumber = finRangoControl.value ? finRangoControl.value.toMillis() : Number.MAX_VALUE;
 
-        const ranges = this.data.convocatoriaConceptoGastoCodigoEcsTabla.filter(conceptoGasto => conceptoGasto.codigoEconomicoRef === filterFieldControl.value).map(conceptoGasto => {
+        const ranges = this.data.convocatoriaConceptoGastoCodigoEcsTabla.filter(
+          conceptoGasto => conceptoGasto.codigoEconomicoRef === filterFieldControl.value
+        ).map(conceptoGasto => {
           return {
-            inicio: conceptoGasto.fechaInicio ? DateUtils.fechaToDate(conceptoGasto.fechaInicio).getTime() : Number.MIN_VALUE,
-            fin: conceptoGasto.fechaFin ? DateUtils.fechaToDate(conceptoGasto.fechaFin).getTime() : Number.MAX_VALUE
+            inicio: conceptoGasto.fechaInicio ? conceptoGasto.fechaInicio.toMillis() : Number.MIN_VALUE,
+            fin: conceptoGasto.fechaFin ? conceptoGasto.fechaFin.toMillis() : Number.MAX_VALUE
           };
         });
 

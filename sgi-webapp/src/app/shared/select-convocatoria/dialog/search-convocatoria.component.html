@@ -21,8 +21,8 @@
 
 
     <div class="separacion">
-      <button color="primary" md-button mat-raised-button
-        (click)="buscarConvocatorias(true)">{{'botones.buscar' | translate}}</button>
+      <button color="primary" md-button mat-raised-button (click)="buscarConvocatorias(true)">{{'botones.buscar' |
+        translate}}</button>
     </div>
 
 
@@ -56,7 +56,7 @@
           {{'csp.buscadorConvocatoria.listado.fechaInicioSolicitud' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.fase.fechaInicio | date:'dd/MM/yyyy'}}
+          {{element.fase.fechaInicio | luxon:'short'}}
         </td>
       </ng-container>
 
@@ -66,7 +66,7 @@
           {{'csp.buscadorConvocatoria.listado.fechaFinSolicitud' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.fase.fechaFin | date:'dd/MM/yyyy'}}
+          {{element.fase.fechaFin | luxon:'short'}}
         </td>
       </ng-container>
 
@@ -119,8 +119,8 @@
   </div>
 
   <div mat-dialog-actions>
-    <button class="link-cancelar" mat-button (click)="onNoClick()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="onNoClick()" type="button">{{'botones.cancelar' |
+      translate}}</button>
   </div>
 
 </div>

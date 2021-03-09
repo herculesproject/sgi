@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -15,8 +15,8 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { DateUtils } from '@core/utils/date-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -31,7 +31,8 @@ const MSG_SUCCESS_DELETE = marker('eti.convocatoriaReunion.listado.eliminarConfi
   templateUrl: './convocatoria-reunion-listado.component.html',
   styleUrls: ['./convocatoria-reunion-listado.component.scss']
 })
-export class ConvocatoriaReunionListadoComponent extends AbstractTablePaginationComponent<IConvocatoriaReunion> implements OnInit {
+export class ConvocatoriaReunionListadoComponent
+  extends AbstractTablePaginationComponent<IConvocatoriaReunion> implements OnInit, OnDestroy {
   ROUTE_NAMES = ROUTE_NAMES;
 
   FormGroupUtil = FormGroupUtil;
@@ -97,21 +98,18 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
-      .and('tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoriaReunion.value?.id?.toString());
-    if (controls.fechaEvaluacionDesde.value) {
-      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionDesde.value);
-      filter.and('fechaEvaluacion',
-        SgiRestFilterOperator.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-    }
-    if (controls.fechaEvaluacionHasta.value) {
-      const fechaFilter = DateUtils.getFechaFinDia(controls.fechaEvaluacionHasta.value);
-      filter.and('fechaEvaluacion',
-        SgiRestFilterOperator.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
-    }
+      .and('tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoriaReunion.value?.id?.toString())
+      .and('fechaEvaluacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEvaluacionDesde.value))
+      .and('fechaEvaluacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEvaluacionHasta.value));
 
     return filter;
   }
 
+  onClearFilters(): void {
+    super.onClearFilters();
+    this.formGroup.controls.fechaEvaluacionDesde.setValue(null);
+    this.formGroup.controls.fechaEvaluacionHasta.setValue(null);
+  }
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -120,8 +118,8 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
     this.formGroup = this.formBuilder.group({
       comite: new FormControl('', []),
       tipoConvocatoriaReunion: new FormControl('', []),
-      fechaEvaluacionDesde: new FormControl('', []),
-      fechaEvaluacionHasta: new FormControl('', [])
+      fechaEvaluacionDesde: new FormControl(null, []),
+      fechaEvaluacionHasta: new FormControl(null, [])
     });
 
     // Recupera los valores de los combos
@@ -129,6 +127,13 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
     this.loadTiposConvocatoriaReunion();
   }
 
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.dialogSubscription?.unsubscribe();
+    this.convocatoriaReunionDeleteSubscription?.unsubscribe();
+    this.comitesSubscription?.unsubscribe();
+    this.tiposConvocatoriaReunionSubscription?.unsubscribe();
+  }
 
   /**
    * Recupera un listado de los comites que hay en el sistema.

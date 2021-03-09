@@ -9,7 +9,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.numDocumento' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value?.identificadorNumero}}{{wrapper.value?.identificadorLetra}} </td>
+        {{wrapper.value?.persona?.identificadorNumero}}{{wrapper.value?.persona?.identificadorLetra}} </td>
     </ng-container>
 
     <!-- Nombre y apellidos -->
@@ -18,7 +18,8 @@
         {{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.nombreCompleto' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value?.nombre}} {{wrapper.value?.primerApellido}} {{wrapper.value?.segundoApellido}}
+        {{wrapper.value?.persona?.nombre}} {{wrapper.value?.persona?.primerApellido}}
+        {{wrapper.value?.persona?.segundoApellido}}
       </td>
     </ng-container>
 
@@ -28,7 +29,7 @@
         {{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.vinculacion' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value?.vinculacion}}
+        {{wrapper.value?.persona?.vinculacion}}
       </td>
     </ng-container>
 
@@ -38,7 +39,7 @@
         {{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.nivelAcademico' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value?.nivelAcademico}}
+        {{wrapper.value?.persona?.nivelAcademico}}
       </td>
     </ng-container>
 

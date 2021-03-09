@@ -36,7 +36,7 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
     if (solicitudId) {
       const subscription = this.solicitudService.findAllSolicitudProyectoPresupuesto(solicitudId).pipe(
         switchMap((solicitudProyectoPresupuestos) =>
-          from(solicitudProyectoPresupuestos)
+          from(solicitudProyectoPresupuestos.items)
             .pipe(
               map((solicitudProyectoPresupuesto) => {
                 if (solicitudProyectoPresupuesto.empresa.personaRef) {
@@ -51,7 +51,7 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
               }),
               mergeAll(),
               map(() => {
-                return solicitudProyectoPresupuestos
+                return solicitudProyectoPresupuestos.items
                   .map(element => new StatusWrapper<ISolicitudProyectoPresupuesto>(element));
               })
             )

@@ -1,89 +1,83 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import TestUtils from '@core/utils/test-utils';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { ProyectoPeriodoSeguimientoDatosGeneralesComponent } from './proyecto-periodo-seguimiento-datos-generales.component';
-import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
-import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
-import { IProyecto } from '@core/models/csp/proyecto';
+import { DateTime } from 'luxon';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { IProyectoPeriodoSeguimientoState } from '../../../proyecto/proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.component';
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
+import { ProyectoPeriodoSeguimientoDatosGeneralesComponent } from './proyecto-periodo-seguimiento-datos-generales.component';
 
-// TODO: Uncoment when issue https://github.com/h2qutc/angular-material-components/issues/170 is fixed
+describe('ProyectoPeriodoSeguimientoDatosGeneralesComponent', () => {
+  let component: ProyectoPeriodoSeguimientoDatosGeneralesComponent;
+  let fixture: ComponentFixture<ProyectoPeriodoSeguimientoDatosGeneralesComponent>;
 
-// describe('ProyectoPeriodoSeguimientoDatosGeneralesComponent', () => {
-//   let component: ProyectoPeriodoSeguimientoDatosGeneralesComponent;
-//   let fixture: ComponentFixture<ProyectoPeriodoSeguimientoDatosGeneralesComponent>;
+  const proyecto: IProyecto = {
+    id: 1,
+    fechaInicio: DateTime.now(),
+    fechaFin: DateTime.now()
+  } as IProyecto;
 
-//   const proyecto: IProyecto = {
-//     id: 1,
-//     fechaInicio: new Date(),
-//     fechaFin: new Date()
-//   } as IProyecto;
+  const proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento = {
+    id: 1,
+    proyecto,
+    fechaInicio: DateTime.now(),
+    fechaFin: DateTime.now(),
+    numPeriodo: 1
+  } as IProyectoPeriodoSeguimiento;
 
-//   const proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento = {
-//     id: 1,
-//     proyecto,
-//     fechaInicio: new Date(),
-//     fechaFin: new Date(),
-//     numPeriodo: 1
-//   } as IProyectoPeriodoSeguimiento;
+  const selectedProyectoPeriodoSeguimientos: IProyectoPeriodoSeguimiento[] = [
+    proyectoPeriodoSeguimiento as IProyectoPeriodoSeguimiento]
 
-//   const selectedProyectoPeriodoSeguimientos: IProyectoPeriodoSeguimiento[] = [
-//     proyectoPeriodoSeguimiento as IProyectoPeriodoSeguimiento]
+  const state: IProyectoPeriodoSeguimientoState = {
+    proyecto,
+    proyectoPeriodoSeguimiento,
+    selectedProyectoPeriodoSeguimientos,
+    readonly: true
+  };
 
-//   const state: IProyectoPeriodoSeguimientoState = {
-//     proyecto,
-//     proyectoPeriodoSeguimiento,
-//     selectedProyectoPeriodoSeguimientos,
-//     readonly: true
-//   };
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ProyectoPeriodoSeguimientoDatosGeneralesComponent
+      ],
+      imports: [
+        TestUtils.getIdiomas(),
+        MaterialDesignModule,
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        LoggerTestingModule,
+        FlexModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        SharedModule
+      ],
+      providers: [
+        ProyectoPeriodoSeguimientoActionService,
+        SgiAuthService
+      ],
+    })
+      .compileComponents();
+  }));
 
-//   beforeEach(waitForAsync(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [
-//         ProyectoPeriodoSeguimientoDatosGeneralesComponent
-//       ],
-//       imports: [
-//         TestUtils.getIdiomas(),
-//         MaterialDesignModule,
-//         BrowserAnimationsModule,
-//         HttpClientTestingModule,
-//         LoggerTestingModule,
-//         FlexModule,
-//         FormsModule,
-//         ReactiveFormsModule,
-//         RouterTestingModule,
-//         SharedModule,
-//         NgxMatDatetimePickerModule,
-//         NgxMatTimepickerModule,
-//         NgxMatNativeDateModule
-//       ],
-//       providers: [
-//         ProyectoPeriodoSeguimientoActionService,
-//         SgiAuthService
-//       ],
-//     })
-//       .compileComponents();
-//   }));
+  beforeEach(() => {
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
 
-//   beforeEach(() => {
-//     spyOnProperty(history, 'state', 'get').and.returnValue(state);
+    fixture = TestBed.createComponent(ProyectoPeriodoSeguimientoDatosGeneralesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//     fixture = TestBed.createComponent(ProyectoPeriodoSeguimientoDatosGeneralesComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

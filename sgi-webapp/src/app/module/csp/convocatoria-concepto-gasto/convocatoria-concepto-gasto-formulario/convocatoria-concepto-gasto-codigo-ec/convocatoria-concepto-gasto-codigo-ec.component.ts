@@ -1,23 +1,22 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { NGXLogger } from 'ngx-logger';
-import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
-import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
-import { FragmentComponent } from '@core/component/fragment.component';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
-import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroup } from '@angular/forms';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NGXLogger } from 'ngx-logger';
+import { Subscription } from 'rxjs';
+import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
 import { ConvocatoriaConceptoGastoCodigoEcModalComponent, IConvocatoriaConceptoGastoCodigoEcModalComponent } from '../../modals/convocatoria-concepto-gasto-codigo-ec-modal/convocatoria-concepto-gasto-codigo-ec-modal.component';
-import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
 
@@ -81,10 +80,6 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, property: string) => {
         switch (property) {
-          case 'fechaInicio':
-            return wrapper.value.fechaInicio ? new Date(wrapper.value.fechaInicio).getTime() : 0;
-          case 'fechaFin':
-            return wrapper.value.fechaFin ? new Date(wrapper.value.fechaFin).getTime() : 0;
           default:
             return wrapper.value[property];
         }
@@ -92,8 +87,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
-    const convocatoriaConceptoGastoCodigoEcsTabla = this.dataSource.data.map(
-      wrapper => wrapper.value);
+    const convocatoriaConceptoGastoCodigoEcsTabla = this.dataSource.data.map(element => element.value);
 
     convocatoriaConceptoGastoCodigoEcsTabla.splice(numFila, 1);
 
@@ -136,7 +130,9 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     const convocatoriaConceptoGastos = this.actionService.getSelectedConvocatoriaConceptoGastos();
 
     const convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc = {
-      convocatoriaConceptoGasto: this.formPart.convocatoriaConceptoGasto && this.formPart.convocatoriaConceptoGasto.id ? this.formPart.convocatoriaConceptoGasto : this.actionService.getDatosConvocatoriaConceptoGastos(),
+      convocatoriaConceptoGasto:
+        this.formPart.convocatoriaConceptoGasto && this.formPart.convocatoriaConceptoGasto.id
+          ? this.formPart.convocatoriaConceptoGasto : this.actionService.getDatosConvocatoriaConceptoGastos(),
       codigoEconomicoRef: null,
       fechaFin: null,
       fechaInicio: null,
