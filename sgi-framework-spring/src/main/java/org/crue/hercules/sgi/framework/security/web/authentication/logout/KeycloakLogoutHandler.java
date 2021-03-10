@@ -39,9 +39,11 @@ public class KeycloakLogoutHandler extends SecurityContextLogoutHandler {
     log.debug("propagateLogoutToKeycloak(OidcUser user) - start");
     String endSessionEndpoint = user.getIssuer() + "/protocol/openid-connect/logout";
 
-    UriComponentsBuilder builder = UriComponentsBuilder //
-        .fromUriString(endSessionEndpoint) //
+    // @formatter:off
+    UriComponentsBuilder builder = UriComponentsBuilder 
+        .fromUriString(endSessionEndpoint) 
         .queryParam("id_token_hint", user.getIdToken().getTokenValue());
+    // @formatter:on
 
     ResponseEntity<String> logoutResponse = restTemplate.getForEntity(builder.toUriString(), String.class);
     if (logoutResponse.getStatusCode().is2xxSuccessful()) {

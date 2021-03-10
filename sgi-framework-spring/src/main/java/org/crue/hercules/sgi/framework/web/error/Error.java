@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.framework.web.error;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Error {
 
   private HttpStatus status;
-  private ZonedDateTime timestamp;
+  private Instant timestamp;
   private String message;
   private String debugMessage;
   private List<ValidationError> validationErrors;
@@ -46,7 +46,7 @@ public class Error {
 
   public Error(HttpStatus status, String message, Throwable ex) {
     log.debug("Error(HttpStatus status, String message, Throwable ex) - start");
-    timestamp = ZonedDateTime.now();
+    timestamp = Instant.now();
     this.status = status;
     this.message = message;
     if (ex != null) {

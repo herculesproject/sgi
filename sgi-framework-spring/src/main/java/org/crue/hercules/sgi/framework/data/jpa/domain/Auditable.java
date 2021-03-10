@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.framework.data.jpa.domain;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -21,11 +21,11 @@ public abstract class Auditable {
   protected String createdBy;
 
   @CreatedDate
-  protected LocalDateTime creationDate;
+  protected Instant creationDate;
 
   @LastModifiedBy
   protected String lastModifiedBy;
 
   @LastModifiedDate
-  protected LocalDateTime lastModifiedDate;
+  protected Instant lastModifiedDate;
 }

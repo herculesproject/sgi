@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.framework.test.security;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +47,8 @@ public class Oauth2WireMockInitializer implements ApplicationContextInitializer<
           log.debug("buildToken(String username, String... roles) - start");
           JWSSigner signer = new RSASSASigner(rsaJWK);
           JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(username).jwtID(UUID.randomUUID().toString())
-              .audience("someAudience").issuer("someIssuer").expirationTime(new Date(new Date().getTime() + 60 * 1000))
+              .audience("someAudience").issuer("someIssuer")
+              .expirationTime(Date.from(Instant.now().plus(Duration.ofMinutes(1L))))
               .claim("preferred_username", username)
               .claim("realm_access", Collections.singletonMap("roles", Arrays.asList(roles))).build();
           SignedJWT signedJWT = new SignedJWT(

@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.framework.rsql;
 
+import java.time.Instant;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
@@ -52,4 +54,30 @@ public class SgiRSQLJPAPredicateConverter extends RSQLJPAPredicateConverter {
     log.debug("visit(ComparisonNode node, From root) - end");
     return returnValue;
   }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  protected Object convert(String source, Class targetType) {
+    log.debug("convert(String source, Class targetType) - start");
+
+    Object object = null;
+    try {
+      if (defaultConversionService.canConvert(String.class, targetType)) {
+        object = defaultConversionService.convert(source, targetType);
+      }
+      if (targetType.equals(Instant.class)) {
+        object = Instant.parse(source);
+      } else {
+        object = super.convert(source, targetType);
+      }
+      log.debug("convert(String source, Class targetType) - end");
+      return object;
+    } catch (Exception e) {
+      log.error(
+          "Parsing [{}] with [{}] causing [{}], add your parser via RSQLSupport.addConverter(Type.class, Type::valueOf)",
+          source, targetType.getName(), e.getMessage(), e);
+    }
+    log.debug("convert(String source, Class targetType) - end");
+    return null;
+  }
+
 }
