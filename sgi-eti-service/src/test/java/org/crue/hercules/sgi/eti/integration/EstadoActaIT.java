@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class EstadoActaIT extends BaseIT {
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
     Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
-        .isEqualTo(LocalDateTime.of(2020, 07, 14, 19, 34, 0));
+        .isEqualTo(Instant.parse("2020-07-14T00:00:00Z"));
   }
 
   @Test
@@ -92,7 +92,7 @@ public class EstadoActaIT extends BaseIT {
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
     Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
-        .isEqualTo(LocalDateTime.of(2020, 07, 14, 19, 30, 0));
+        .isEqualTo(Instant.parse("2020-07-14T00:00:00Z"));
   }
 
   @Test
@@ -137,7 +137,7 @@ public class EstadoActaIT extends BaseIT {
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
     Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
-        .isEqualTo(LocalDateTime.of(2020, 07, 14, 19, 30, 0));
+        .isEqualTo(Instant.parse("2020-07-14T00:00:00Z"));
   }
 
   @Test
@@ -257,7 +257,7 @@ public class EstadoActaIT extends BaseIT {
     estadoActa.setId(id);
     estadoActa.setActa(acta);
     estadoActa.setTipoEstadoActa(tipoEstadoActa);
-    estadoActa.setFechaEstado(LocalDateTime.of(2020, 07, 14, 19, 30, 0));
+    estadoActa.setFechaEstado(Instant.parse("2020-07-14T00:00:00Z"));
 
     return estadoActa;
   }

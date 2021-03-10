@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,6 +53,6 @@ public class EstadoMemoria extends BaseEntity {
   /** Fecha estado. */
   @Column(name = "fecha_estado", nullable = false)
   @NotNull
-  private LocalDateTime fechaEstado;
+  private Instant fechaEstado;
 
 }

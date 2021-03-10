@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.repository.specification;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.CargoComite_;
 import org.crue.hercules.sgi.eti.model.Comite_;
@@ -34,7 +34,7 @@ public class EvaluadorSpecifications {
     };
   }
 
-  public static Specification<Evaluador> inFechas(LocalDate fechaAlta, LocalDate fechaBaja) {
+  public static Specification<Evaluador> inFechas(Instant fechaAlta, Instant fechaBaja) {
     return (root, query, cb) -> {
       if (fechaBaja != null) {
         return cb.or(

@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -430,7 +432,7 @@ public class MemoriaIT extends BaseIT {
 
     // given: search query with comité y fecha límite de una convocatoria de tipo
     // ordinario o extraordinario
-    String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01";
+    String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01T00:00:00Z";
     // String query = "comite.id:1";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
@@ -474,7 +476,7 @@ public class MemoriaIT extends BaseIT {
     // given: search query with comité y fecha límite de una convocatoria de tipo
     // seguimiento
 
-    String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01";
+    String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01T00:00:00Z";
     // String query = "comite.id:1";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_SEG)
@@ -924,7 +926,7 @@ public class MemoriaIT extends BaseIT {
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, "codOrganoCompetente", Boolean.TRUE, null);
   }
 
@@ -946,8 +948,8 @@ public class MemoriaIT extends BaseIT {
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
@@ -1010,7 +1012,7 @@ public class MemoriaIT extends BaseIT {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(generarMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
-    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;
   }

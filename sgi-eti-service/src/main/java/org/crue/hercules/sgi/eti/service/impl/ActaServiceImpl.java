@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +97,7 @@ public class ActaServiceImpl implements ActaService {
     Acta returnValue = actaRepository.save(acta);
 
     EstadoActa estadoActa = estadoActaRepository
-        .save(new EstadoActa(null, returnValue, tipoEstadoActa.get(), LocalDateTime.now()));
+        .save(new EstadoActa(null, returnValue, tipoEstadoActa.get(), Instant.now()));
     Assert.notNull(estadoActa, "No se ha podido crear el EstadoActa inicial");
 
     return returnValue;
@@ -276,7 +276,7 @@ public class ActaServiceImpl implements ActaService {
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
     tipoEstadoActa.setId(2L);
 
-    EstadoActa estadoActa = new EstadoActa(null, acta, tipoEstadoActa, LocalDateTime.now());
+    EstadoActa estadoActa = new EstadoActa(null, acta, tipoEstadoActa, Instant.now());
     estadoActaRepository.save(estadoActa);
 
     // Actualización del estado actual de acta

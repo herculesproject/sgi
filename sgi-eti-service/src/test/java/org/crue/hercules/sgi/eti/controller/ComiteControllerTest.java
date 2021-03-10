@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -469,7 +469,7 @@ public class ComiteControllerTest extends BaseControllerTest {
 
     return new Memoria(id, numReferencia, new PeticionEvaluacion(),
         new Comite(1L, "CEISH", new Formulario(), Boolean.TRUE), titulo, "user-00" + id,
-        generarMockTipoMemoria(1L, "TipoMemoria1", true), new TipoEstadoMemoria(), LocalDate.now(), Boolean.TRUE, null,
+        generarMockTipoMemoria(1L, "TipoMemoria1", true), new TipoEstadoMemoria(), Instant.now(), Boolean.TRUE, null,
         version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 

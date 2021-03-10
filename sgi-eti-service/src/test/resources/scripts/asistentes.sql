@@ -13,11 +13,11 @@ INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (1, 'Comite1',
 -- CONVOCATORIA REUNION
 INSERT INTO eti.convocatoria_reunion
 (id, comite_id, fecha_evaluacion, fecha_limite, lugar, orden_dia, anio, numero_acta, tipo_convocatoria_reunion_id, hora_inicio, minuto_inicio, fecha_envio, activo)
-VALUES(1, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 01', 'Orden del día convocatoria reunión 01', 2020, 1, 1, 8, 30, '2020-07-13', true);
+VALUES(1, 1, '2020-07-01T00:00:00Z', '2020-08-01T23:59:59Z', 'Lugar 01', 'Orden del día convocatoria reunión 01', 2020, 1, 1, 8, 30, '2020-07-13T00:00:00Z', true);
 
 -- EVALUADOR
 INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
-VALUES (1, 'Evaluador1', 1, 1, '2020-07-01', '2021-07-01', 'user-001', true);
+VALUES (1, 'Evaluador1', 1, 1, '2020-07-01T00:00:00Z', '2021-07-01T23:59:59Z', 'user-001', true);
 
 -- ASISTENTES
 INSERT INTO eti.asistentes (id, evaluador_id, convocatoria_reunion_id, motivo, asistencia)

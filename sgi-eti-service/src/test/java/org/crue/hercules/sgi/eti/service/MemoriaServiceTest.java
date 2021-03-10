@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -947,7 +948,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
   public List<EstadoMemoria> generarEstadosMemoria(Long id) {
     List<EstadoMemoria> estadosMemoria = new ArrayList<EstadoMemoria>();
     EstadoMemoria estadoMemoria = new EstadoMemoria();
-    estadoMemoria.setFechaEstado(LocalDateTime.now());
+    estadoMemoria.setFechaEstado(Instant.now());
     estadoMemoria.setId(id);
     estadoMemoria.setMemoria(generarMockMemoria(1L, "ref-001", "TituloMemoria", 1, 1L));
     estadosMemoria.add(estadoMemoria);
@@ -1141,7 +1142,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE), Instant.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
@@ -1166,8 +1167,8 @@ public class MemoriaServiceTest extends BaseServiceTest {
     memoria.setEstadoActual(tipoEstadoMemoria);
     memoria.setTitulo("Memoria" + String.format("%03d", id));
     memoria.setNumReferencia("numRef-" + String.format("%03d", id));
-    memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
-    memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
+    memoria.setFechaEvaluacion(Instant.parse("2020-05-15T00:00:00Z"));
+    memoria.setFechaLimite(Instant.parse("2020-08-18T23:59:59Z"));
     return memoria;
   }
 
@@ -1189,8 +1190,8 @@ public class MemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
@@ -1253,7 +1254,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(generarMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
-    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;
   }
@@ -1306,8 +1307,8 @@ public class MemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
@@ -1340,8 +1341,8 @@ public class MemoriaServiceTest extends BaseServiceTest {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
-    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setFechaEvaluacion(Instant.now());
+    convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
@@ -1349,7 +1350,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setFechaEnvio(Instant.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
@@ -1367,7 +1368,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setFechaDictamen(Instant.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(version);

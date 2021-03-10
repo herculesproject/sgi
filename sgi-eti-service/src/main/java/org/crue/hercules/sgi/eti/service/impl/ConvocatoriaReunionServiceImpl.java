@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
@@ -53,7 +55,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
         : 1L;
 
     convocatoriaReunion.setNumeroActa(numeroActa);
-    convocatoriaReunion.setAnio(LocalDate.now().getYear());
+    convocatoriaReunion.setAnio(Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR));
 
     ConvocatoriaReunion returnValue = repository.save(convocatoriaReunion);
     log.debug("create(ConvocatoriaReunion convocatoriaReunion) - end");

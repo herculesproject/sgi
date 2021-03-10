@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -238,7 +238,7 @@ public class EstadoActaServiceTest extends BaseServiceTest {
     estadoActa.setId(id);
     estadoActa.setActa(acta);
     estadoActa.setTipoEstadoActa(tipoEstadoActa);
-    estadoActa.setFechaEstado(LocalDateTime.of(2020, 07, 14, 19, 30, 0));
+    estadoActa.setFechaEstado(Instant.parse("2020-07-14T00:00:00Z"));
 
     return estadoActa;
   }

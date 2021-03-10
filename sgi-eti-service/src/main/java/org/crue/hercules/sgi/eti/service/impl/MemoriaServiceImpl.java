@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -409,7 +410,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     // se crea el nuevo estado para la memoria
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(idTipoEstadoMemoria);
-    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, LocalDateTime.now());
+    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, Instant.now());
 
     estadoMemoriaRepository.save(estadoMemoria);
 
@@ -472,7 +473,7 @@ public class MemoriaServiceImpl implements MemoriaService {
             Evaluacion evaluacion = evaluacionRepository.findByMemoriaIdAndVersion(memoria.getId(),
                 memoria.getVersion());
 
-            Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(LocalDateTime.now()),
+            Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
                 "La fecha de la convocatoria es anterior a la actual");
 
             Assert.isNull(evaluacion.getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");
@@ -647,7 +648,7 @@ public class MemoriaServiceImpl implements MemoriaService {
         memoria.setVersion(memoria.getVersion() + 1);
       }
 
-      memoria.setFechaEnvioSecretaria(LocalDate.now());
+      memoria.setFechaEnvioSecretaria(Instant.now());
       memoriaRepository.save(memoria);
 
       return memoria;
@@ -745,7 +746,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug("getReferenciaMemoria(Long id, String numReferencia) - start");
 
     // Referencia memoria
-    int anioActual = LocalDate.now().getYear();
+    int anioActual = Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR);
     StringBuffer sbNumReferencia = new StringBuffer();
     sbNumReferencia.append(comite.getFormulario().getNombre()).append("/").append(anioActual).append("/");
 

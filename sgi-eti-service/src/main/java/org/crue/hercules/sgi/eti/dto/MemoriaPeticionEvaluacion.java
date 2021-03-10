@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -36,16 +35,16 @@ public class MemoriaPeticionEvaluacion implements Serializable {
 
   private Retrospectiva retrospectiva;
 
-  private LocalDateTime fechaEvaluacion;
+  private Instant fechaEvaluacion;
 
-  private LocalDate fechaLimite;
+  private Instant fechaLimite;
 
   private boolean isResponsable;
 
   private boolean activo;
 
   public MemoriaPeticionEvaluacion(Long id, String numReferencia, String titulo, Comite comite,
-      TipoEstadoMemoria estadoActual, LocalDateTime fechaEvaluacion, LocalDate fechaLimite, boolean isResponsable,
+      TipoEstadoMemoria estadoActual, Instant fechaEvaluacion, Instant fechaLimite, boolean isResponsable,
       boolean activo) {
 
     this.id = id;

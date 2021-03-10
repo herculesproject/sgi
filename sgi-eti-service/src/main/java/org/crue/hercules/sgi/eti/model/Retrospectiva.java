@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +45,6 @@ public class Retrospectiva extends BaseEntity {
   /** Fecha Retrospectiva. */
   @Column(name = "fecha_retrospectiva", nullable = false)
   @NotNull
-  private LocalDate fechaRetrospectiva;
+  private Instant fechaRetrospectiva;
 
 }

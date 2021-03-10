@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.converter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     Assertions.assertThat(evaluacionWithIsEliminable.getDictamen().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacionWithIsEliminable.getEvaluador1().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacionWithIsEliminable.getEvaluador2().getId()).isEqualTo(2L);
-    Assertions.assertThat(evaluacionWithIsEliminable.getFechaDictamen()).isEqualTo(LocalDate.now());
+    Assertions.assertThat(evaluacionWithIsEliminable.getFechaDictamen()).isEqualTo(evaluacion.getFechaDictamen());
     Assertions.assertThat(evaluacionWithIsEliminable.getVersion()).isEqualTo(2);
     Assertions.assertThat(evaluacionWithIsEliminable.getEsRevMinima()).isEqualTo(Boolean.TRUE);
     Assertions.assertThat(evaluacionWithIsEliminable.getActivo()).isEqualTo(Boolean.TRUE);
@@ -80,7 +80,7 @@ public class EvaluacionConverterTest extends BaseServiceTest {
 
     evaluacionConverter.isEliminable(evaluacion);
 
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getFechaEvaluacion()).isBefore(LocalDateTime.now());
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getFechaEvaluacion()).isBefore(Instant.now());
   }
 
   @Test
@@ -88,8 +88,8 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     // La evaluación tiene un dictamen.
     Evaluacion evaluacion = generarMockEvaluacion(1L, "Eva1", 1L, 1L);
     // La fecha de la convocatoria es posterior a la actual
-    LocalDateTime today = LocalDateTime.now();
-    evaluacion.getConvocatoriaReunion().setFechaEvaluacion(today.plusYears(1));
+    Instant today = Instant.now();
+    evaluacion.getConvocatoriaReunion().setFechaEvaluacion(Instant.from(today.atZone(ZoneOffset.UTC).plusYears(1)));
 
     evaluacionConverter.isEliminable(evaluacion);
 
@@ -101,13 +101,13 @@ public class EvaluacionConverterTest extends BaseServiceTest {
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, "Eva1", 1L, 1L);
 
-    LocalDateTime today = LocalDateTime.now();
-    evaluacion.getConvocatoriaReunion().setFechaEvaluacion(today.plusYears(1));
+    Instant today = Instant.now();
+    evaluacion.getConvocatoriaReunion().setFechaEvaluacion(Instant.from(today.atZone(ZoneOffset.UTC).plusYears(1)));
     evaluacion.setDictamen(null);
 
     evaluacionConverter.isEliminable(evaluacion);
 
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getFechaEvaluacion()).isAfter(LocalDateTime.now());
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getFechaEvaluacion()).isAfter(Instant.now());
     Assertions.assertThat(evaluacion.getDictamen()).isNull();
     Assertions.assertThat(comentarioRepository.countByEvaluacionId(evaluacion.getId())).isEqualTo(0);
   }
@@ -166,8 +166,8 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
@@ -194,16 +194,16 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     estadoRetrospectiva.setId(idEstadoRetrospectiva);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        tipoMemoria, tipoEstadoMemoria, Instant.now(), Boolean.TRUE,
+        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 05, 10, 05, 10, 10));
-    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-05-10T00:00:00Z"));
+    convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
@@ -211,7 +211,7 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setFechaEnvio(Instant.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
@@ -229,7 +229,7 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setFechaDictamen(Instant.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);

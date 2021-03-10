@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -253,7 +254,7 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
             1),
         generarMockTipoEstadoMemoria(idDatosEstadoMemoria,
             "TipoEstadoMemoria" + String.format("%03d", idDatosEstadoMemoria), Boolean.TRUE),
-        LocalDateTime.now());
+        Instant.now());
 
   }
 
@@ -272,7 +273,7 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
@@ -294,8 +295,8 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
@@ -361,7 +362,7 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(generarMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
-    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;
   }

@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -334,8 +333,8 @@ public class AsistentesControllerTest extends BaseControllerTest {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.now());
-    evaluador.setFechaBaja(LocalDate.now());
+    evaluador.setFechaAlta(Instant.now());
+    evaluador.setFechaBaja(Instant.now());
     evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-" + String.format("%03d", id));
     evaluador.setActivo(Boolean.TRUE);
@@ -360,8 +359,8 @@ public class AsistentesControllerTest extends BaseControllerTest {
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
-    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, 20, 0, 0, 0));
-    data.setFechaLimite(LocalDate.of(2020, 8, 20));
+    data.setFechaEvaluacion(Instant.parse("2020-07-20T00:00:00Z"));
+    data.setFechaLimite(Instant.parse("2020-08-20T23:59:59Z"));
     data.setLugar("Lugar " + String.format("%03d", id));
     data.setOrdenDia("Orden del día convocatoria reunión " + String.format("%03d", id));
     data.setAnio(2020);
@@ -369,7 +368,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7);
     data.setMinutoInicio(30);
-    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
+    data.setFechaEnvio(Instant.parse("2020-07-13T00:00:00Z"));
     data.setActivo(Boolean.TRUE);
 
     return data;

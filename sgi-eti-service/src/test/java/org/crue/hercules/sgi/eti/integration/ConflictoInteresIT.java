@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -158,8 +158,8 @@ public class ConflictoInteresIT extends BaseIT {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.now());
-    evaluador.setFechaBaja(LocalDate.now());
+    evaluador.setFechaAlta(Instant.now());
+    evaluador.setFechaBaja(Instant.now());
     evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-00" + (id != null ? id : "1"));
     evaluador.setActivo(Boolean.TRUE);

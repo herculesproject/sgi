@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -142,8 +141,8 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 1, 10, 10, 10));
-    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
+    convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
@@ -151,7 +150,7 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setFechaEnvio(Instant.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     return convocatoriaReunion;
@@ -175,7 +174,7 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * @return el objeto Evaluador
    */
   private Evaluador generarMockEvaluador(CargoComite cargoComite, Comite comite) {
-    return new Evaluador(null, cargoComite, comite, LocalDate.of(2020, 8, 1), null, "Resumen", "user-001",
+    return new Evaluador(null, cargoComite, comite, Instant.parse("2020-08-01T00:00:00Z"), null, "Resumen", "user-001",
         Boolean.TRUE);
   }
 

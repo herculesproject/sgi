@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -94,9 +95,11 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad existente que se va a actualizar
     Retrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
     String replaceRetrospectivaJson = mapper.writeValueAsString(response);
 
     BDDMockito.given(service.update(ArgumentMatchers.<Retrospectiva>any())).willReturn(response);
@@ -120,9 +123,11 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad a actualizar que no existe
     Retrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
     String replaceRetrospectivaJson = mapper.writeValueAsString(response);
 
     BDDMockito.given(service.update(ArgumentMatchers.<Retrospectiva>any())).will((InvocationOnMock invocation) -> {
@@ -144,9 +149,11 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad existente
     Retrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
 
@@ -165,9 +172,11 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Id de una entidad que no existe
     Retrospectiva retrospectiva = getMockData(1L);
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.willThrow(new RetrospectivaNotFoundException(1L)).given(service).delete(ArgumentMatchers.<Long>any());
 
@@ -186,9 +195,11 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad con un determinado Id
     Retrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(response.getId())).willReturn(response);
 
@@ -212,9 +223,11 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     // given: No existe entidad con el id indicado
     Retrospectiva response = getMockData(1L);
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new RetrospectivaNotFoundException(invocation.getArgument(0));
@@ -393,7 +406,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(getMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
-    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;
   }

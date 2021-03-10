@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
@@ -45,7 +45,7 @@ public class EvaluacionWithIsEliminable implements Serializable {
   private Evaluador evaluador2;
 
   /** Fecha Dictamen */
-  private LocalDate fechaDictamen;
+  private Instant fechaDictamen;
 
   /** Version */
   private Integer version;

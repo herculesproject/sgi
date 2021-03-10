@@ -1,8 +1,9 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -134,9 +135,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Entidad existente que se va a actualizar
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
     String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
     BDDMockito.given(convocatoriaReunionService.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
@@ -171,9 +174,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Entidad a actualizar que no existe
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
     String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
     BDDMockito.given(convocatoriaReunionService.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
@@ -196,9 +201,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Entidad existente
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong())).willReturn(response);
 
@@ -217,9 +224,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Id de una entidad que no existe
     ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -241,9 +250,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Entidad con un determinado Id
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findById(response.getId())).willReturn(response);
 
@@ -277,9 +288,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: No existe entidad con el id indicado
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
 
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -302,10 +315,12 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Entidad con un determinado Id
     ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
-        .append(PATH_PARAMETER_WITH_DATOS_GENERALES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_WITH_DATOS_GENERALES)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findByIdWithDatosGenerales(response.getId())).willReturn(response);
 
@@ -340,10 +355,12 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: No existe entidad con el id indicado
     ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
 
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
-        .append(PATH_PARAMETER_WITH_DATOS_GENERALES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_WITH_DATOS_GENERALES)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findByIdWithDatosGenerales(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -523,9 +540,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append("/asistentes")//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
+    // @formatter:on
 
     List<Asistentes> response = new ArrayList<>();
     response.add(generarMockAsistentes(1L, "Motivo1", Boolean.TRUE));
@@ -555,9 +574,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append("/asistentes")//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
+    // @formatter:on
 
     BDDMockito.given(
         asistentesService.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
@@ -578,9 +599,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append("/asistentes")//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
+    // @formatter:on
 
     List<Asistentes> response = new ArrayList<>();
     response.add(generarMockAsistentes(1L, "Motivo1", Boolean.TRUE));
@@ -620,9 +643,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append("/asistentes")//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
+    // @formatter:on
     List<Asistentes> response = new ArrayList<Asistentes>();
     Pageable pageable = PageRequest.of(1, 2);
     Page<Asistentes> pageResponse = new PageImpl<>(response, pageable, response.size());
@@ -646,9 +671,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void findEvaluacionesActivas_Unlimited_ReturnsFullEvaluacionList() throws Exception {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
+    // @formatter:on
 
     List<Evaluacion> response = new ArrayList<>();
     response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
@@ -677,9 +704,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
+    // @formatter:on
 
     BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
@@ -699,9 +728,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
+    // @formatter:on
 
     List<Evaluacion> response = new ArrayList<>();
     response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
@@ -740,9 +771,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
+    // @formatter:on
 
     List<Evaluacion> response = new ArrayList<Evaluacion>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -766,9 +799,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void getEvaluaciones_WithPaging_ReturnsEvaluacionSubList() throws Exception {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
+    // @formatter:on
 
     List<Evaluacion> response = new ArrayList<>();
     response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
@@ -806,9 +841,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void getEvaluaciones_WithPaging_Returns204() throws Exception {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
+    // @formatter:on
 
     List<Evaluacion> response = new ArrayList<Evaluacion>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -832,9 +869,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void getEvaluaciones_Unlimited_Returns204() throws Exception {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
@@ -853,9 +892,11 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void getEvaluaciones_Unlimited_ReturnsFullEvaluacionList() throws Exception {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
+    // @formatter:on
 
     List<Evaluacion> response = new ArrayList<>();
     response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
@@ -885,10 +926,12 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Entidad existente
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     Evaluacion respoEvaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append("/" + response.getId().toString()).append("/evaluacion")
-        .append("/" + respoEvaluacion.getId().toString())//
+        .append("/" + respoEvaluacion.getId().toString())
         .toString();
+    // @formatter:on
 
     BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong())).willReturn(response);
 
@@ -970,8 +1013,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
-    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, id.intValue(), 0, 0, 1));
-    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
+    data.setFechaEvaluacion(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
+    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
     data.setLugar("Lugar " + txt);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
     data.setAnio(2020);
@@ -979,7 +1022,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7 + id.intValue());
     data.setMinutoInicio(30);
-    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
+    data.setFechaEnvio(Instant.parse("2020-07-13T00:00:00Z"));
     data.setActivo(Boolean.TRUE);
 
     return data;
@@ -1027,8 +1070,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.now());
-    evaluador.setFechaBaja(LocalDate.now());
+    evaluador.setFechaAlta(Instant.now());
+    evaluador.setFechaBaja(Instant.now());
     evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-" + String.format("%03d", id));
     evaluador.setActivo(Boolean.TRUE);
@@ -1063,8 +1106,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
@@ -1085,8 +1128,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
-        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
+        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
+        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), Instant.now()), 3,
         "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
@@ -1098,7 +1141,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setFechaDictamen(Instant.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(getMockData(id, 1L, 1L));
     evaluacion.setTipoEvaluacion(tipoEvaluacion);

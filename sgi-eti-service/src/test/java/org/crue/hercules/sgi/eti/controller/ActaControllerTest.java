@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -339,7 +339,7 @@ public class ActaControllerTest extends BaseControllerTest {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();

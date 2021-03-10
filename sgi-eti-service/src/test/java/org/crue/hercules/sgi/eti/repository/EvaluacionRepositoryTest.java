@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -166,8 +165,8 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
-    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setFechaEvaluacion(Instant.now());
+    convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
@@ -175,7 +174,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setFechaEnvio(Instant.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     return convocatoriaReunion;
@@ -449,7 +448,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
   public PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad,
       TipoInvestigacionTutelada tipoInvestigacionTutelada) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
-        tipoActividad, tipoInvestigacionTutelada, "Fuente financiación", LocalDate.now(), LocalDate.now(), "Resumen",
+        tipoActividad, tipoInvestigacionTutelada, "Fuente financiación", Instant.now(), Instant.now(), "Resumen",
         "Valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
   }
 
@@ -487,7 +486,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
    * @return Retrospectiva
    */
   public Retrospectiva generarMockRetrospectiva(EstadoRetrospectiva estadoRetrospectiva) {
-    return new Retrospectiva(null, estadoRetrospectiva, LocalDate.now());
+    return new Retrospectiva(null, estadoRetrospectiva, Instant.now());
   }
 
   /**
@@ -503,7 +502,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
   public Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
     return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
-        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        tipoEstadoMemoria, Instant.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**
@@ -524,7 +523,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
    * @return un evaluador
    */
   public Evaluador generarMockEvaluador(CargoComite cargoComite, Comite comite) {
-    return new Evaluador(null, cargoComite, comite, LocalDate.now(), LocalDate.now(), "resumen", "persona_ref",
+    return new Evaluador(null, cargoComite, comite, Instant.now(), Instant.now(), "resumen", "persona_ref",
         Boolean.TRUE);
   }
 
@@ -545,7 +544,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(esRevMinima);
-    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setFechaDictamen(Instant.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(version);

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -107,7 +107,7 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
    */
   private PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
-        tipoActividad, null, "Fuente financiación", LocalDate.now(), LocalDate.now(), "Resumen", "Valor social",
+        tipoActividad, null, "Fuente financiación", Instant.now(), Instant.now(), "Resumen", "Valor social",
         "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
   }
 
@@ -145,7 +145,7 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
    * @return Retrospectiva
    */
   private Retrospectiva generarMockRetrospectiva(EstadoRetrospectiva estadoRetrospectiva) {
-    return new Retrospectiva(null, estadoRetrospectiva, LocalDate.now());
+    return new Retrospectiva(null, estadoRetrospectiva, Instant.now());
   }
 
   /**
@@ -161,7 +161,7 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
   private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
     return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
-        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        tipoEstadoMemoria, Instant.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**

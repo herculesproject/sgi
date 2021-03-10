@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -358,7 +358,7 @@ public class ActaIT extends BaseIT {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();

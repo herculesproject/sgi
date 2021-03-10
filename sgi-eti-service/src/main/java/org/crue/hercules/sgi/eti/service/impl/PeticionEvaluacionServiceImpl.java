@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
+
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
@@ -44,7 +47,8 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
         "PeticionEvaluacion id tiene que ser null para crear un nuevo peticionEvaluacion");
 
     PeticionEvaluacion peticionEvaluacionAnio = peticionEvaluacionRepository
-        .findFirstByCodigoContainingOrderByCodigoDesc(String.valueOf(peticionEvaluacion.getFechaInicio().getYear()));
+        .findFirstByCodigoContainingOrderByCodigoDesc(
+            String.valueOf(peticionEvaluacion.getFechaInicio().atZone(ZoneOffset.UTC).get(ChronoField.YEAR)));
 
     Long numEvaluacion = 1L;
     if (peticionEvaluacionAnio != null) {
@@ -54,8 +58,9 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
 
     StringBuilder codigoPeticionEvaluacion = new StringBuilder();
 
-    codigoPeticionEvaluacion.append(String.valueOf(peticionEvaluacion.getFechaInicio().getYear())).append("/")
-        .append(String.format("%03d", numEvaluacion));
+    codigoPeticionEvaluacion
+        .append(String.valueOf(peticionEvaluacion.getFechaInicio().atZone(ZoneOffset.UTC).get(ChronoField.YEAR)))
+        .append("/").append(String.format("%03d", numEvaluacion));
 
     peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
 

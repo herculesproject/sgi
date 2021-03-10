@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
@@ -116,8 +116,8 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
     peticionEvaluacion.setCodigo("Codigo");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");

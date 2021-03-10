@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
@@ -43,10 +43,10 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
   private String fuenteFinanciacion;
 
   /** Fecha Inicio. */
-  private LocalDate fechaInicio;
+  private Instant fechaInicio;
 
   /** Fecha Fin. */
-  private LocalDate fechaFin;
+  private Instant fechaFin;
 
   /** Resumen */
   private String resumen;

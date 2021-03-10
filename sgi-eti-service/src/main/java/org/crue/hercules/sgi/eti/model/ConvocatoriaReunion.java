@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,11 +47,11 @@ public class ConvocatoriaReunion extends BaseEntity {
 
   /** Fecha Evaluación. */
   @Column(name = "fecha_evaluacion", nullable = false)
-  private LocalDateTime fechaEvaluacion;
+  private Instant fechaEvaluacion;
 
   /** Fecha Límite. */
   @Column(name = "fecha_limite", nullable = false)
-  private LocalDate fechaLimite;
+  private Instant fechaLimite;
 
   /** Lugar. */
   @Column(name = "lugar", length = 250, nullable = false)
@@ -89,7 +88,7 @@ public class ConvocatoriaReunion extends BaseEntity {
 
   /** Fecha Envío. */
   @Column(name = "fecha_envio")
-  private LocalDate fechaEnvio;
+  private Instant fechaEnvio;
 
   /** Control de borrado lógico */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

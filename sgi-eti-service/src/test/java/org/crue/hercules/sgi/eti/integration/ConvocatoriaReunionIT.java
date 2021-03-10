@@ -1,8 +1,11 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -41,9 +44,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de ConvocatoriaReunion.
@@ -94,7 +97,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Nueva entidad
     final ConvocatoriaReunion newConvocatoriaReunion = getMockData(1L, 1L, 1L);
-    newConvocatoriaReunion.setAnio(LocalDate.now().getYear());
+    newConvocatoriaReunion.setAnio(Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR));
     newConvocatoriaReunion.setId(null);
     newConvocatoriaReunion.setNumeroActa(3L);
 
@@ -414,9 +417,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Datos existentes
     Long convocatoriaReunionId = 2L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/asistentes").toString();
+    // @formatter:on
 
     List<Asistentes> result = new LinkedList<>();
     result.add(generarMockAsistentes(1L, 1L, convocatoriaReunionId));
@@ -441,9 +446,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
   public void findAsistentes_WithPaging_ReturnsAsistentesSubList() throws Exception {
 
     Long convocatoriaReunionId = 2L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/asistentes").toString();
+    // @formatter:on
 
     List<Asistentes> result = new LinkedList<>();
     result.add(generarMockAsistentes(1L, 1L, convocatoriaReunionId));
@@ -487,9 +494,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Datos existentes
     Long convocatoriaReunionId = 2L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
+    // @formatter:on
 
     List<Evaluacion> result = new ArrayList<>();
     Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
@@ -519,9 +528,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
   public void findEvaluacionesActivas_WithPaging_ReturnsEvaluacionSubList() throws Exception {
 
     Long convocatoriaReunionId = 2L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
+    // @formatter:on
 
     List<Evaluacion> result = new LinkedList<>();
     Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
@@ -570,9 +581,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Datos existentes
     Long convocatoriaReunionId = 2L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
+    // @formatter:on
 
     List<Evaluacion> result = new LinkedList<>();
     Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
@@ -602,9 +615,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
   public void getEvaluaciones_WithPaging_ReturnsEvaluacionSubList() throws Exception {
 
     Long convocatoriaReunionId = 2L;
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+    // @formatter:off
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
+    // @formatter:on
 
     List<Evaluacion> result = new ArrayList<>();
     Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
@@ -694,8 +709,9 @@ public class ConvocatoriaReunionIT extends BaseIT {
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
-    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, id.intValue(), 0, 0, 0));
-    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
+    data.setFechaEvaluacion(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
+    data.setFechaLimite(
+        LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).with(LocalTime.of(23, 59, 59)).toInstant());
     data.setLugar("Lugar " + txt);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
     data.setAnio(2020);
@@ -703,7 +719,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7 + id.intValue());
     data.setMinutoInicio(30);
-    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
+    data.setFechaEnvio(Instant.parse("2020-07-13T00:00:00Z"));
     data.setActivo(Boolean.TRUE);
 
     return data;
@@ -750,8 +766,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.of(2020, 7, 1));
-    evaluador.setFechaBaja(LocalDate.of(2021, 7, 1));
+    evaluador.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));
+    evaluador.setFechaBaja(Instant.parse("2021-07-01T23:59:59Z"));
     evaluador.setResumen("Evaluador" + id);
     evaluador.setPersonaRef("user-00" + id);
     evaluador.setActivo(Boolean.TRUE);
@@ -784,8 +800,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.of(2020, 8, 1));
-    peticionEvaluacion.setFechaInicio(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFechaFin(Instant.parse("2020-08-01T23:59:59Z"));
+    peticionEvaluacion.setFechaInicio(Instant.parse("2020-08-01T00:00:00Z"));
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
@@ -806,9 +822,9 @@ public class ConvocatoriaReunionIT extends BaseIT {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria001", "user-001", tipoMemoria,
-        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.of(2020, 8, 1), Boolean.FALSE,
+        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.parse("2020-08-01T00:00:00Z"), Boolean.FALSE,
         new Retrospectiva(1L, new EstadoRetrospectiva(1L, "EstadoRetrospectiva01", Boolean.TRUE),
-            LocalDate.of(2020, 8, 1)),
+            Instant.parse("2020-08-01T00:00:00Z")),
         3, "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
@@ -820,7 +836,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
+    evaluacion.setFechaDictamen(Instant.parse("2020-08-01T00:00:00Z"));
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(getMockData(2L, 1L, 2L));
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
@@ -864,8 +880,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.of(2020, 8, 1));
-    peticionEvaluacion.setFechaInicio(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFechaFin(Instant.parse("2020-08-01T23:59:59Z"));
+    peticionEvaluacion.setFechaInicio(Instant.parse("2020-08-01T00:00:00Z"));
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
@@ -886,9 +902,9 @@ public class ConvocatoriaReunionIT extends BaseIT {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria001", "user-001", tipoMemoria,
-        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.of(2020, 8, 1), Boolean.FALSE,
+        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.parse("2020-08-01T00:00:00Z"), Boolean.FALSE,
         new Retrospectiva(1L, new EstadoRetrospectiva(1L, "EstadoRetrospectiva01", Boolean.TRUE),
-            LocalDate.of(2020, 8, 1)),
+            Instant.parse("2020-08-01T00:00:00Z")),
         3, "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
@@ -896,8 +912,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(convocatoriaReunionId);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 1, 10, 10, 10));
-    convocatoriaReunion.setFechaLimite(LocalDate.of(2020, 8, 1));
+    convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
+    convocatoriaReunion.setFechaLimite(Instant.parse("2020-08-01T23:59:59Z"));
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
@@ -905,14 +921,14 @@ public class ConvocatoriaReunionIT extends BaseIT {
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.of(2020, 8, 1));
+    convocatoriaReunion.setFechaEnvio(Instant.parse("2020-08-01T00:00:00Z"));
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
+    evaluacion.setFechaDictamen(Instant.parse("2020-08-01T00:00:00Z"));
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setEvaluador1(generarMockEvaluador(1L));

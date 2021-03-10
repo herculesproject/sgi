@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
@@ -138,7 +137,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       retrospectivaRepository.save(evaluacionCompleta.getMemoria().getRetrospectiva());
     } else {
       estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacionCompleta.getMemoria(),
-          evaluacionCompleta.getMemoria().getEstadoActual(), LocalDateTime.now()));
+          evaluacionCompleta.getMemoria().getEstadoActual(), Instant.now()));
     }
 
     memoriaService.update(evaluacionCompleta.getMemoria());
@@ -151,7 +150,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     evaluacion.setActivo(true);
     evaluacion.setEsRevMinima(false);
-    evaluacion.setFechaDictamen(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().toLocalDate());
+    evaluacion.setFechaDictamen(evaluacion.getConvocatoriaReunion().getFechaEvaluacion());
     evaluacion.setTipoEvaluacion(new TipoEvaluacion());
 
     // Convocatoria Seguimiento
@@ -427,7 +426,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     // Si la Evaluación es de Revisión Mínima
     // se actualiza la fechaDictamen con la fecha actual
     if (evaluacionActualizar.getEsRevMinima()) {
-      evaluacionActualizar.setFechaDictamen(LocalDate.now());
+      evaluacionActualizar.setFechaDictamen(Instant.now());
     }
 
     // Si el dictamen es "Favorable" y la Evaluación es de Revisión Mínima
@@ -531,7 +530,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     memoria.setVersion(memoria.getVersion() - 1);
 
-    Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getFechaEvaluacion().isAfter(LocalDateTime.now()),
+    Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
         "La fecha de la convocatoria es anterior a la actual");
 
     Assert.isNull(evaluacion.get().getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");

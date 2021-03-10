@@ -92,9 +92,11 @@ public class EstadoRetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad existente que se va a actualizar
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
     String replaceEstadoRetrospectivaJson = mapper.writeValueAsString(response);
 
     BDDMockito.given(service.update(ArgumentMatchers.<EstadoRetrospectiva>any())).willReturn(response);
@@ -117,9 +119,11 @@ public class EstadoRetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad a actualizar que no existe
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
     String replaceEstadoRetrospectivaJson = mapper.writeValueAsString(response);
 
     BDDMockito.given(service.update(ArgumentMatchers.<EstadoRetrospectiva>any()))
@@ -142,9 +146,11 @@ public class EstadoRetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad existente
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
 
@@ -163,9 +169,11 @@ public class EstadoRetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Id de una entidad que no existe
     EstadoRetrospectiva EstadoRetrospectiva = getMockData(1L);
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EstadoRetrospectivaNotFoundException(invocation.getArgument(0));
@@ -186,9 +194,11 @@ public class EstadoRetrospectivaControllerTest extends BaseControllerTest {
 
     // given: Entidad con un determinado Id
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(response.getId())).willReturn(response);
 
@@ -211,9 +221,11 @@ public class EstadoRetrospectivaControllerTest extends BaseControllerTest {
     // given: No existe entidad con el id indicado
     EstadoRetrospectiva response = getMockData(1L);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EstadoRetrospectivaNotFoundException(invocation.getArgument(0));

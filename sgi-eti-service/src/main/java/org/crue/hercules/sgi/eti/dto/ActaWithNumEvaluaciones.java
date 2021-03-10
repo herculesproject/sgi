@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 
@@ -26,7 +26,7 @@ public class ActaWithNumEvaluaciones implements Serializable {
   private String comite;
 
   /** Fecha de evaluación */
-  private LocalDateTime fechaEvaluacion;
+  private Instant fechaEvaluacion;
 
   /** Número de acta */
   private Integer numeroActa;
@@ -49,7 +49,7 @@ public class ActaWithNumEvaluaciones implements Serializable {
   /** Número de evaluaciones no evaluadas. */
   private Integer numEvaluacionesNoEvaluadas;
 
-  public ActaWithNumEvaluaciones(Long id, String comite, LocalDateTime fechaEvaluacion, Integer numeroActa,
+  public ActaWithNumEvaluaciones(Long id, String comite, Instant fechaEvaluacion, Integer numeroActa,
       String convocatoria, Long numEvaluaciones, Long numRevisiones, Long numEvaluacionesNoEvaluadas,
       TipoEstadoActa estadoActa) {
     this.id = id;

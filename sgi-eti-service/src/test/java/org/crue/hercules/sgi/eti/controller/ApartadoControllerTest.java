@@ -53,9 +53,11 @@ public class ApartadoControllerTest extends BaseControllerTest {
 
     // given: Entidad con un determinado Id
     Apartado response = getMockData(1L, 1L, null);
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(response.getId())).willReturn(response);
 
@@ -80,9 +82,11 @@ public class ApartadoControllerTest extends BaseControllerTest {
     // given: No existe entidad con el id indicado
     Apartado response = getMockData(1L, 1L, null);
 
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ApartadoNotFoundException(invocation.getArgument(0));

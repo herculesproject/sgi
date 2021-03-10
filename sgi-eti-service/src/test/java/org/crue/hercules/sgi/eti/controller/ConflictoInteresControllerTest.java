@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.exceptions.ConflictoInteresNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
@@ -154,8 +154,8 @@ public class ConflictoInteresControllerTest extends BaseControllerTest {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.now());
-    evaluador.setFechaBaja(LocalDate.now());
+    evaluador.setFechaAlta(Instant.now());
+    evaluador.setFechaBaja(Instant.now());
     evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-00" + (id != null ? id : "1"));
     evaluador.setActivo(Boolean.TRUE);

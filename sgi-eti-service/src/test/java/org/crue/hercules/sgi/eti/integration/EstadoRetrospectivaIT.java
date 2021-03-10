@@ -76,9 +76,11 @@ public class EstadoRetrospectivaIT extends BaseIT {
     final EstadoRetrospectiva updatedEstadoRetrospectiva = getMockData(2L);
     updatedEstadoRetrospectiva.setId(1L);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     // when: Se actualiza la entidad
     final ResponseEntity<EstadoRetrospectiva> response = restTemplate.exchange(url, HttpMethod.PUT,
@@ -95,9 +97,11 @@ public class EstadoRetrospectivaIT extends BaseIT {
     // given: Entidad existente
     Long id = 1L;
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     ResponseEntity<EstadoRetrospectiva> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
         EstadoRetrospectiva.class, id);
@@ -121,9 +125,11 @@ public class EstadoRetrospectivaIT extends BaseIT {
     // given: Entidad con un determinado Id
     final EstadoRetrospectiva estadoRetrospectiva = getMockData(1L);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<EstadoRetrospectiva> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
@@ -139,9 +145,11 @@ public class EstadoRetrospectivaIT extends BaseIT {
 
     // given: No existe entidad con el id indicado
     Long id = 6L;
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<EstadoRetrospectiva> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),

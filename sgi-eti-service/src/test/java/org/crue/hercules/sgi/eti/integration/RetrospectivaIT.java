@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,9 +80,11 @@ public class RetrospectivaIT extends BaseIT {
     final Retrospectiva updatedRetrospectiva = getMockData(3L);
     updatedRetrospectiva.setId(4L);
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     // when: Se actualiza la entidad
     final ResponseEntity<Retrospectiva> response = restTemplate.exchange(url, HttpMethod.PUT,
@@ -98,9 +101,11 @@ public class RetrospectivaIT extends BaseIT {
     // given: Entidad existente
     Long id = 3L;
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     ResponseEntity<Retrospectiva> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
         Retrospectiva.class, id);
@@ -122,9 +127,11 @@ public class RetrospectivaIT extends BaseIT {
     // given: Entidad con un determinado Id
     final Retrospectiva retrospectiva = getMockData(3L);
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<Retrospectiva> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
@@ -140,9 +147,11 @@ public class RetrospectivaIT extends BaseIT {
 
     // given: No existe entidad con el id indicado
     Long id = 8L;
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
+    // @formatter:off
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .append(PATH_PARAMETER_ID)
         .toString();
+    // @formatter:on
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<Retrospectiva> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
@@ -214,7 +223,7 @@ public class RetrospectivaIT extends BaseIT {
 
     // search by codigo like, id equals
     Long id = 5L;
-    String query = "fechaRetrospectiva=le=2020-07-05;id==" + id;
+    String query = "fechaRetrospectiva=le=2020-07-05T23:59:59Z;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -310,7 +319,7 @@ public class RetrospectivaIT extends BaseIT {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(getMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
-    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;
   }

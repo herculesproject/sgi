@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOACTA-EDITAR" })
   public void newEstadoActa_ReturnsEstadoActa() throws Exception {
     // given: Un estado acta nuevo
-    String nuevoEstadoActaJson = "{\"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00.00\"}";
+    String nuevoEstadoActaJson = "{\"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00Z\"}";
 
     EstadoActa estadoActa = generarMockEstadoActa(1L);
 
@@ -96,7 +96,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOACTA-EDITAR" })
   public void newEstadoActa_Error_Returns400() throws Exception {
     // given: Un estado acta nuevo que produce un error al crearse
-    String nuevoEstadoActaJson = "{\"id\": 1, \"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00.00\"}";
+    String nuevoEstadoActaJson = "{\"id\": 1, \"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00Z\"}";
 
     BDDMockito.given(estadoActaService.create(ArgumentMatchers.<EstadoActa>any()))
         .willThrow(new IllegalArgumentException());
@@ -115,7 +115,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOACTA-EDITAR" })
   public void replaceEstadoActa_ReturnsEstadoActa() throws Exception {
     // given: Un estado acta a modificar
-    String replaceEstadoActaJson = "{\"id\": 1, \"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00.00\"}";
+    String replaceEstadoActaJson = "{\"id\": 1, \"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00Z\"}";
 
     EstadoActa estadoActaActualizado = generarMockEstadoActa(1L);
 
@@ -136,7 +136,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOACTA-EDITAR" })
   public void replaceEstadoActa_NotFound() throws Exception {
     // given: Un estado acta a modificar
-    String replaceEstadoActaJson = "{\"id\": 1, \"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00.00\"}";
+    String replaceEstadoActaJson = "{\"id\": 1, \"acta\": {\"id\": 100}, \"tipoEstadoActa\": {\"id\": 200}, \"fechaEstado\": \"2020-07-14T19:30:00Z\"}";
 
     BDDMockito.given(estadoActaService.update(ArgumentMatchers.<EstadoActa>any()))
         .will((InvocationOnMock invocation) -> {
@@ -300,7 +300,7 @@ public class EstadoActaControllerTest extends BaseControllerTest {
     estadoActa.setId(id);
     estadoActa.setActa(acta);
     estadoActa.setTipoEstadoActa(tipoEstadoActa);
-    estadoActa.setFechaEstado(LocalDateTime.of(2020, 07, 14, 19, 30, 0));
+    estadoActa.setFechaEstado(Instant.parse("2020-07-14T00:00:00Z"));
 
     return estadoActa;
   }

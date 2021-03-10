@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,7 +101,7 @@ public class ActaServiceTest extends BaseServiceTest {
     BDDMockito.given(actaRepository.save(actaNew)).willReturn(acta);
     BDDMockito.given(tipoEstadoActaRepository.findById(1L)).willReturn(Optional.of(acta.getEstadoActual()));
     BDDMockito.given(estadoActaRepository.save(ArgumentMatchers.any(EstadoActa.class)))
-        .willReturn(new EstadoActa(1L, acta, acta.getEstadoActual(), LocalDateTime.now()));
+        .willReturn(new EstadoActa(1L, acta, acta.getEstadoActual(), Instant.now()));
 
     // when: Creamos el acta
     Acta actaCreado = actaService.create(actaNew);
@@ -297,7 +297,7 @@ public class ActaServiceTest extends BaseServiceTest {
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa(9L, "Finalizada", Boolean.TRUE);
 
-    EstadoActa estadoActa = new EstadoActa(1L, acta, tipoEstadoActa, LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    EstadoActa estadoActa = new EstadoActa(1L, acta, tipoEstadoActa, Instant.parse("2020-08-01T00:00:00Z"));
 
     BDDMockito.given(estadoActaRepository.save(ArgumentMatchers.any(EstadoActa.class))).willReturn(estadoActa);
 
@@ -327,7 +327,7 @@ public class ActaServiceTest extends BaseServiceTest {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();

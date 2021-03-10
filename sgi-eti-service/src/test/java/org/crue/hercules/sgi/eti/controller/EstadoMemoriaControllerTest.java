@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOMEMORIA-EDITAR" })
   public void newEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
     // given: Un nuevo estado memoria
-    String nuevoEstadoMemoriaJson = "{\"memoria\": {\"id\": 1}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
+    String nuevoEstadoMemoriaJson = "{\"memoria\": {\"id\": 1}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T00:00:00Z\"}";
 
     EstadoMemoria estadoMemoria = generarMockEstadoMemoria(1L, 1L);
 
@@ -105,7 +106,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOMEMORIA-EDITAR" })
   public void newEstadoMemoria_Error_Returns400() throws Exception {
     // given: Un nuevo estado memoria que produce un error al crearse
-    String nuevoEstadoMemoriaJson = "{\"memoria\": {\"id\": 1}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
+    String nuevoEstadoMemoriaJson = "{\"memoria\": {\"id\": 1}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T00:00:00Z\"}";
 
     BDDMockito.given(estadoMemoriaService.create(ArgumentMatchers.<EstadoMemoria>any()))
         .willThrow(new IllegalArgumentException());
@@ -125,7 +126,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOMEMORIA-EDITAR" })
   public void replaceEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
     // given: Un estado memoria a modificar
-    String replaceEstadoMemoriaJson = "{\"id\": 1 ,\"memoria\": {\"id\": 2}, \"tipoEstadoMemoria\": {\"id\": 2}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
+    String replaceEstadoMemoriaJson = "{\"id\": 1 ,\"memoria\": {\"id\": 2}, \"tipoEstadoMemoria\": {\"id\": 2}, \"fechaEstado\": \"2016-03-19T00:00:00Z\"}";
 
     EstadoMemoria memoria = generarMockEstadoMemoria(1L, 2L);
 
@@ -147,7 +148,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ESTADOMEMORIA-EDITAR" })
   public void replaceEstadoMemoria_NotFound() throws Exception {
     // given: Una memoria a modificar
-    String replaceEstadoMemoriaJson = "{\"id\": 1 ,\"memoria\": {\"id\": 2}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
+    String replaceEstadoMemoriaJson = "{\"id\": 1 ,\"memoria\": {\"id\": 2}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T00:00:00Z\"}";
 
     BDDMockito.given(estadoMemoriaService.update(ArgumentMatchers.<EstadoMemoria>any()))
         .will((InvocationOnMock invocation) -> {
@@ -311,7 +312,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
             1),
         generarMockTipoEstadoMemoria(idDatosEstadoMemoria,
             "TipoEstadoMemoria" + String.format("%03d", idDatosEstadoMemoria), Boolean.TRUE),
-        LocalDateTime.now());
+        Instant.now());
 
   }
 
@@ -330,7 +331,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
@@ -352,8 +353,8 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
@@ -416,7 +417,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(generarMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
-    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;
   }

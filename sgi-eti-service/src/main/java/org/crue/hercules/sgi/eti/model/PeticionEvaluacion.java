@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -70,11 +70,11 @@ public class PeticionEvaluacion extends BaseEntity {
 
   /** Fecha Inicio. */
   @Column(name = "fecha_inicio")
-  private LocalDate fechaInicio;
+  private Instant fechaInicio;
 
   /** Fecha Fin. */
   @Column(name = "fecha_fin")
-  private LocalDate fechaFin;
+  private Instant fechaFin;
 
   /** Resumen */
   @Column(name = "resumen", length = 8000, nullable = false)

@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -29,10 +28,10 @@ public class ConvocatoriaReunionDatosGenerales implements Serializable {
   private Comite comite;
 
   /** Fecha Evaluación. */
-  private LocalDateTime fechaEvaluacion;
+  private Instant fechaEvaluacion;
 
   /** Fecha Límite. */
-  private LocalDate fechaLimite;
+  private Instant fechaLimite;
 
   /** Lugar. */
   private String lugar;
@@ -56,7 +55,7 @@ public class ConvocatoriaReunionDatosGenerales implements Serializable {
   private Integer minutoInicio;
 
   /** Fecha Envío. */
-  private LocalDate fechaEnvio;
+  private Instant fechaEnvio;
 
   /** Control de borrado lógico */
   private Boolean activo;

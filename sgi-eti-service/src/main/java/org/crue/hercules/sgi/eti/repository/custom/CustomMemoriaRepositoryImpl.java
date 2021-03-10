@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -84,7 +83,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     CriteriaQuery<Memoria> cq = cb.createQuery(Memoria.class);
 
     // Fecha limite convocatoria
-    Subquery<LocalDate> sqFechaLimiteConvocatoria = cq.subquery(LocalDate.class);
+    Subquery<Instant> sqFechaLimiteConvocatoria = cq.subquery(Instant.class);
     Root<ConvocatoriaReunion> convocatoriaFechaLimiteRoot = sqFechaLimiteConvocatoria.from(ConvocatoriaReunion.class);
     sqFechaLimiteConvocatoria.select(convocatoriaFechaLimiteRoot.get(ConvocatoriaReunion_.fechaLimite));
     sqFechaLimiteConvocatoria
@@ -243,11 +242,11 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    * @param cq   criteria query
    * @return subquery que recupera la fecha de evaluación.
    */
-  private Subquery<LocalDateTime> getFechaEvaluacion(Root<Memoria> root, CriteriaBuilder cb,
+  private Subquery<Instant> getFechaEvaluacion(Root<Memoria> root, CriteriaBuilder cb,
       CriteriaQuery<MemoriaPeticionEvaluacion> cq) {
     log.debug("getFechaEvaluacion : {} - start");
 
-    Subquery<LocalDateTime> queryFechaEvaluacion = cq.subquery(LocalDateTime.class);
+    Subquery<Instant> queryFechaEvaluacion = cq.subquery(Instant.class);
     Root<Evaluacion> subqRoot = queryFechaEvaluacion.from(Evaluacion.class);
 
     queryFechaEvaluacion.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion))
@@ -269,11 +268,11 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    * @param cq   criteria query
    * @return subquery que recupera la fecha limite.
    */
-  private Subquery<LocalDate> getFechaLimite(Root<Memoria> root, CriteriaBuilder cb,
+  private Subquery<Instant> getFechaLimite(Root<Memoria> root, CriteriaBuilder cb,
       CriteriaQuery<MemoriaPeticionEvaluacion> cq) {
     log.debug("getFechaLimite : {} - start");
 
-    Subquery<LocalDate> queryFechaLimite = cq.subquery(LocalDate.class);
+    Subquery<Instant> queryFechaLimite = cq.subquery(Instant.class);
     Root<Evaluacion> subqRoot = queryFechaLimite.from(Evaluacion.class);
 
     queryFechaLimite.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaLimite)).where(

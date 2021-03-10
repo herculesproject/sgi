@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +84,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void create_EvaluadorWithCargoPresidenteAndFechaBajaInformada_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo presidente
     String cargoComite = "presidente";
-    LocalDate fecha = LocalDate.now().plusYears(1);
+    Instant fecha = Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofYears(1)));
 
     Evaluador evaluadorNew = generarMockEvaluadorWithCargoComiteAndFechaBaja(null, "EvaluadorNew", 1L, cargoComite,
         fecha);
@@ -102,7 +104,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void create_EvaluadorWithCargoPresidenteAndFechaBajaNull_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo presidente
     String cargoComite = "presidente";
-    LocalDate fecha = null;
+    Instant fecha = null;
 
     Evaluador evaluadorNew = generarMockEvaluadorWithCargoComiteAndFechaBaja(null, "EvaluadorNew", 1L, cargoComite,
         fecha);
@@ -122,7 +124,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void create_EvaluadorWithCargoVocalAndFechaBajaInformada_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo vocal
     String cargoComite = "vocal";
-    LocalDate fecha = LocalDate.now().plusYears(1);
+    Instant fecha = Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofYears(1)));
 
     Evaluador evaluadorNew = generarMockEvaluadorWithCargoComiteAndFechaBaja(null, "EvaluadorNew", 2L, cargoComite,
         fecha);
@@ -142,7 +144,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void create_EvaluadorWithCargoVocalAndFechaBajaNull_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo vocal
     String cargoComite = "vocal";
-    LocalDate fecha = null;
+    Instant fecha = null;
 
     Evaluador evaluadorNew = generarMockEvaluadorWithCargoComiteAndFechaBaja(null, "EvaluadorNew", 2L, cargoComite,
         fecha);
@@ -191,7 +193,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void update_EvaluadorWithCargoPresidenteAndFechaBajaInformada_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo presidente
     String cargoComite = "presidente";
-    LocalDate fecha = LocalDate.now().plusYears(1);
+    Instant fecha = Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofYears(1)));
 
     Evaluador evaluadorServicioActualizado = generarMockEvaluadorWithCargoComiteAndFechaBaja(1L,
         "Evaluador1 actualizada", 1L, cargoComite, fecha);
@@ -214,7 +216,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void update_EvaluadorWithCargoPresidenteAndFechaBajaNull_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo presidente
     String cargoComite = "presidente";
-    LocalDate fecha = null;
+    Instant fecha = null;
 
     Evaluador evaluadorServicioActualizado = generarMockEvaluadorWithCargoComiteAndFechaBaja(1L,
         "Evaluador1 actualizada", 1L, cargoComite, fecha);
@@ -237,7 +239,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void update_EvaluadorWithCargoVocalAndFechaBajaInformada_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo vocal
     String cargoComite = "vocal";
-    LocalDate fecha = LocalDate.now().plusYears(1);
+    Instant fecha = Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofYears(1)));
 
     Evaluador evaluadorServicioActualizado = generarMockEvaluadorWithCargoComiteAndFechaBaja(1L,
         "Evaluador1 actualizada", 2L, cargoComite, fecha);
@@ -260,7 +262,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   public void update_EvaluadorWithCargoVocalAndFechaBajaNull_ReturnsEvaluador() {
     // given: Un nuevo Evaluador con cargo vocal
     String cargoComite = "vocal";
-    LocalDate fecha = null;
+    Instant fecha = null;
 
     Evaluador evaluadorServicioActualizado = generarMockEvaluadorWithCargoComiteAndFechaBaja(1L,
         "Evaluador1 actualizada", 2L, cargoComite, fecha);
@@ -486,8 +488,8 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.now());
-    evaluador.setFechaBaja(LocalDate.now());
+    evaluador.setFechaAlta(Instant.now());
+    evaluador.setFechaBaja(Instant.now());
     evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-00" + id);
     evaluador.setActivo(Boolean.TRUE);
@@ -496,7 +498,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
   }
 
   public Evaluador generarMockEvaluadorWithCargoComiteAndFechaBaja(Long id, String resumen, Long cargoComiteId,
-      String cargoComiteNombre, LocalDate fecha) {
+      String cargoComiteNombre, Instant fecha) {
     CargoComite cargoComite = new CargoComite(cargoComiteId, cargoComiteNombre, Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
@@ -506,7 +508,7 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
-    evaluador.setFechaAlta(LocalDate.now());
+    evaluador.setFechaAlta(Instant.now());
     evaluador.setFechaBaja(fecha);
     evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-00" + id);

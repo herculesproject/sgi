@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -325,8 +326,8 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
-    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, id.intValue(), 0, 0, 0));
-    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
+    data.setFechaEvaluacion(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
+    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
     data.setLugar("Lugar " + txt);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
     data.setAnio(2020);
@@ -334,7 +335,7 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7 + id.intValue());
     data.setMinutoInicio(30);
-    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
+    data.setFechaEnvio(Instant.parse("2020-07-13T00:00:00Z"));
     data.setActivo(Boolean.TRUE);
 
     return data;

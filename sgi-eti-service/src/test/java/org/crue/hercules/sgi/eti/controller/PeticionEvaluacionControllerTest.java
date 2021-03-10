@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -984,8 +983,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
@@ -1018,8 +1017,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     tipoEstadoMemoria.setId(id);
     memoria.setEstadoActual(tipoEstadoMemoria);
 
-    memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
-    memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
+    memoria.setFechaEvaluacion(Instant.parse("2020-05-15T00:00:00Z"));
+    memoria.setFechaLimite(Instant.parse("2020-08-18T23:59:59Z"));
     return memoria;
   }
 

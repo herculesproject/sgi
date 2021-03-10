@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -1509,7 +1509,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva(estadoRetrospectivaId, "Nombre Estado",
         Boolean.TRUE);
-    final Retrospectiva retrospectiva = new Retrospectiva(1L, estadoRetrospectiva, LocalDate.now());
+    final Retrospectiva retrospectiva = new Retrospectiva(1L, estadoRetrospectiva, Instant.now());
     memoria.setRetrospectiva(retrospectiva);
 
     Formulario formulario = new Formulario(1L, "Nombre", "Descripcion");

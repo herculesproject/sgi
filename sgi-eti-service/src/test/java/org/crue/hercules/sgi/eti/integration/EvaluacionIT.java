@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -780,8 +779,8 @@ public class EvaluacionIT extends BaseIT {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.now());
-    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFechaFin(Instant.now());
+    peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
@@ -802,8 +801,8 @@ public class EvaluacionIT extends BaseIT {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
-        new Retrospectiva(1L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), LocalDate.now()), 3,
+        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
+        new Retrospectiva(1L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), Instant.now()), 3,
         "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
@@ -811,14 +810,14 @@ public class EvaluacionIT extends BaseIT {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
-    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setFechaEvaluacion(Instant.now());
+    convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setFechaEnvio(Instant.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     CargoComite cargoComite = new CargoComite();
@@ -831,8 +830,8 @@ public class EvaluacionIT extends BaseIT {
     evaluador1.setResumen("Evaluador1");
     evaluador1.setComite(comite);
     evaluador1.setCargoComite(cargoComite);
-    evaluador1.setFechaAlta(LocalDate.of(2020, 7, 1));
-    evaluador1.setFechaBaja(LocalDate.of(2021, 7, 1));
+    evaluador1.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));
+    evaluador1.setFechaBaja(Instant.parse("2021-07-01T00:00:00Z"));
     evaluador1.setPersonaRef("user-001");
     evaluador1.setActivo(Boolean.TRUE);
 
@@ -841,8 +840,8 @@ public class EvaluacionIT extends BaseIT {
     evaluador2.setResumen("Evaluador2");
     evaluador2.setComite(comite);
     evaluador2.setCargoComite(cargoComite);
-    evaluador2.setFechaAlta(LocalDate.of(2020, 7, 1));
-    evaluador2.setFechaBaja(LocalDate.of(2021, 7, 1));
+    evaluador2.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));
+    evaluador2.setFechaBaja(Instant.parse("2021-07-01T00:00:00Z"));
     evaluador2.setPersonaRef("user");
     evaluador2.setActivo(Boolean.TRUE);
 
@@ -850,7 +849,7 @@ public class EvaluacionIT extends BaseIT {
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setFechaDictamen(Instant.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);

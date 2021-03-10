@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.converter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,7 +72,7 @@ public class EvaluacionConverter {
    */
   public Boolean isEliminable(Evaluacion evaluacion) {
     // La fecha de la convocatoria es anterior a la actual
-    if (evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isBefore(LocalDateTime.now())) {
+    if (evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isBefore(Instant.now())) {
       return false;
     }
 
