@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +97,7 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   public void create_WithFechaAnterior_SaveGeneraAvisoFalse() {
     // given: Un nuevo ConvocatoriaHito con fecha pasada
     ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(null);
-    convocatoriaHito.setFecha(LocalDate.now().minusDays(2));
+    convocatoriaHito.setFecha(Instant.now().minus(Period.ofDays(2)));
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaHito.getConvocatoria()));
     BDDMockito
@@ -327,7 +328,7 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(1L);
     ConvocatoriaHito convocatoriaHitoActualizado = generarMockConvocatoriaHito(1L);
     convocatoriaHitoActualizado.setTipoHito(generarMockTipoHito(2L, Boolean.TRUE));
-    convocatoriaHitoActualizado.setFecha(LocalDate.now().minusDays(2));
+    convocatoriaHitoActualizado.setFecha(Instant.now().minus(Period.ofDays(2)));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaHito));
 
@@ -592,61 +593,63 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
 
+    // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
-        : ModeloEjecucion.builder()//
-            .id(modeloEjecucionId)//
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))//
-            .activo(Boolean.TRUE)//
+        : ModeloEjecucion.builder()
+            .id(modeloEjecucionId)
+            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .activo(Boolean.TRUE)
             .build();
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : TipoFinalidad.builder()//
-            .id(modeloTipoFinalidadId)//
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))//
-            .activo(Boolean.TRUE)//
+        : TipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
+            .activo(Boolean.TRUE)
             .build();
 
     ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : ModeloTipoFinalidad.builder()//
-            .id(modeloTipoFinalidadId)//
-            .modeloEjecucion(modeloEjecucion)//
-            .tipoFinalidad(tipoFinalidad)//
-            .activo(Boolean.TRUE)//
+        : ModeloTipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .modeloEjecucion(modeloEjecucion)
+            .tipoFinalidad(tipoFinalidad)
+            .activo(Boolean.TRUE)
             .build();
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
-        : TipoRegimenConcurrencia.builder()//
-            .id(tipoRegimenConcurrenciaId)//
-            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))//
-            .activo(Boolean.TRUE)//
+        : TipoRegimenConcurrencia.builder()
+            .id(tipoRegimenConcurrenciaId)
+            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))
+            .activo(Boolean.TRUE)
             .build();
 
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
-        : TipoAmbitoGeografico.builder()//
-            .id(tipoAmbitoGeogragicoId)//
-            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))//
-            .activo(Boolean.TRUE)//
+        : TipoAmbitoGeografico.builder()
+            .id(tipoAmbitoGeogragicoId)
+            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))
+            .activo(Boolean.TRUE)
             .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .id(convocatoriaId)//
-        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))//
-        .modeloEjecucion(modeloEjecucion)//
-        .codigo("codigo-" + String.format("%03d", convocatoriaId))//
-        .anio(2020)//
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))//
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))//
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
-        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
-        .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
-        .colaborativos(Boolean.TRUE)//
-        .estado(Convocatoria.Estado.REGISTRADA)//
-        .duracion(12)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
-        .activo(activo)//
+    Convocatoria convocatoria = Convocatoria.builder()
+        .id(convocatoriaId)
+        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
+        .modeloEjecucion(modeloEjecucion)
+        .codigo("codigo-" + String.format("%03d", convocatoriaId))
+        .anio(2020)
+        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .objeto("objeto-" + String.format("%03d", convocatoriaId))
+        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
+        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
+        .regimenConcurrencia(tipoRegimenConcurrencia)
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
+        .colaborativos(Boolean.TRUE)
+        .estado(Convocatoria.Estado.REGISTRADA)
+        .duracion(12)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)
+        .activo(activo)
         .build();
+    // @formatter:on
 
     return convocatoria;
   }
@@ -679,12 +682,14 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
    */
   private ModeloTipoHito generarMockModeloTipoHito(Long id, ConvocatoriaHito convocatoriaHito, Boolean activo) {
 
-    return ModeloTipoHito.builder()//
-        .id(id)//
-        .modeloEjecucion(convocatoriaHito.getConvocatoria().getModeloEjecucion())//
-        .tipoHito(convocatoriaHito.getTipoHito())//
-        .activo(activo)//
+    // @formatter:off
+    return ModeloTipoHito.builder()
+        .id(id)
+        .modeloEjecucion(convocatoriaHito.getConvocatoria().getModeloEjecucion())
+        .tipoHito(convocatoriaHito.getTipoHito())
+        .activo(activo)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -695,13 +700,15 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
    */
   private ConvocatoriaHito generarMockConvocatoriaHito(Long id) {
 
-    return ConvocatoriaHito.builder()//
-        .id(id)//
-        .convocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE))//
-        .fecha(LocalDate.of(2020, 10, 19))//
-        .comentario("comentario" + id)//
-        .generaAviso(Boolean.TRUE)//
-        .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))//
+    // @formatter:off
+    return ConvocatoriaHito.builder()
+        .id(id)
+        .convocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE))
+        .fecha(Instant.parse("2020-10-19T00:00:00Z"))
+        .comentario("comentario" + id)
+        .generaAviso(Boolean.TRUE)
+        .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))
         .build();
+    // @formatter:on
   }
 }

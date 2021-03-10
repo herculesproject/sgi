@@ -1,11 +1,10 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -941,10 +940,9 @@ public class SolicitudServiceImpl implements SolicitudService {
   private String generateCodigoRegistroInterno(Long solicitudId) {
     log.debug("generateCodigoRegistroInterno(Long solicitudId) - start");
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    String codigoRegistroInterno = "SGI_SLC" + solicitudId
-        + formatter.format(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
+    String codigoRegistroInterno = "SGI_SLC" + solicitudId + formatter.format(Instant.now().atZone(ZoneOffset.UTC));
 
     log.debug("generateCodigoRegistroInterno(Long solicitudId) - end");
     return codigoRegistroInterno;
@@ -967,7 +965,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     estadoSolicitud.setEstado(estado);
     estadoSolicitud.setIdSolicitud(solicitud.getId());
     estadoSolicitud.setComentario(comentario);
-    estadoSolicitud.setFechaEstado(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
+    estadoSolicitud.setFechaEstado(Instant.now());
 
     EstadoSolicitud returnValue = estadoSolicitudRepository.save(estadoSolicitud);
 

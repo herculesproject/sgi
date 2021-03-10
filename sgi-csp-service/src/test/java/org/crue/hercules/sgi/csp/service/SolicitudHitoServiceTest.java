@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -176,7 +176,7 @@ public class SolicitudHitoServiceTest {
 
     BDDMockito
         .given(repository.findBySolicitudIdAndFechaAndTipoHitoId(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<Long>any()))
+            ArgumentMatchers.<Instant>any(), ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudHitoExistente));
 
     Assertions.assertThatThrownBy(
@@ -387,7 +387,7 @@ public class SolicitudHitoServiceTest {
 
     SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
         .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(LocalDate.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
+        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());

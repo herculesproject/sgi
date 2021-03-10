@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -216,7 +217,7 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     Long convocatoriaId = 1L;
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
     convocatoriaPeriodoJustificacion
-        .setFechaInicioPresentacion(convocatoriaPeriodoJustificacion.getFechaFinPresentacion().plusDays(1));
+        .setFechaInicioPresentacion(convocatoriaPeriodoJustificacion.getFechaFinPresentacion().plus(Period.ofDays(1)));
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
@@ -398,9 +399,9 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesFinal()).as("getMesFinal()").isEqualTo(2);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion())
-        .as("getFechaInicioPresentacion()").isEqualTo(LocalDate.of(2020, 10, 10));
+        .as("getFechaInicioPresentacion()").isEqualTo(Instant.parse("2020-10-10T00:00:00Z"));
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
-        .isEqualTo(LocalDate.of(2020, 11, 20));
+        .isEqualTo(Instant.parse("2020-11-20T23:59:59Z"));
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-1");
@@ -451,8 +452,8 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setMesInicial(mesInicial);
     convocatoriaPeriodoJustificacion.setMesFinal(mesFinal);
-    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
-    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
     convocatoriaPeriodoJustificacion.setTipo(tipo);
 

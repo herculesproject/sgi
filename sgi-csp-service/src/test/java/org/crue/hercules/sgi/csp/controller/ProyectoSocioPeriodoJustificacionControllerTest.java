@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +110,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
     ProyectoSocioPeriodoJustificacion updatedProyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         4L);
 
-    updatedProyectoSocioPeriodoJustificacion.setFechaRecepcion(LocalDate.now());
+    updatedProyectoSocioPeriodoJustificacion.setFechaRecepcion(Instant.now());
 
     mockMvc
         .perform(MockMvcRequestBuilders
@@ -166,10 +165,10 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("proyectoSocio.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("numPeriodo").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2021-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-10-10T00:00:00"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-11-20T00:00:00"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2021-10-10T23:59:59Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-1"));
   }
 
@@ -304,10 +303,10 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
     proyectoSocioPeriodoJustificacion.setId(id);
     proyectoSocioPeriodoJustificacion.setProyectoSocio(proyectoSocio);
     proyectoSocioPeriodoJustificacion.setNumPeriodo(1);
-    proyectoSocioPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 10, 10));
-    proyectoSocioPeriodoJustificacion.setFechaFin(LocalDate.of(2021, 10, 10));
-    proyectoSocioPeriodoJustificacion.setFechaInicioPresentacion(LocalDateTime.of(2020, 10, 10, 0, 0));
-    proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(LocalDateTime.of(2020, 11, 20, 0, 0));
+    proyectoSocioPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
+    proyectoSocioPeriodoJustificacion.setFechaFin(Instant.parse("2021-10-10T23:59:59Z"));
+    proyectoSocioPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     proyectoSocioPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return proyectoSocioPeriodoJustificacion;

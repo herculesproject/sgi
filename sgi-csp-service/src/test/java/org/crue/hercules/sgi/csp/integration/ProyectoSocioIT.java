@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -176,8 +176,10 @@ public class ProyectoSocioIT extends BaseIT {
     Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto()").isEqualTo(1L);
     Assertions.assertThat(responseData.getEmpresaRef()).as("getEmpresaRef()").isEqualTo("empresa-001");
     Assertions.assertThat(responseData.getRolSocio().getId()).as("getRolSocio().getId()").isEqualTo(1L);
-    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()").isEqualTo(LocalDate.of(2021, 1, 11));
-    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()").isEqualTo(LocalDate.of(2022, 1, 11));
+    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()")
+        .isEqualTo(Instant.parse("2021-01-11T00:00:00Z"));
+    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()")
+        .isEqualTo(Instant.parse("2022-01-11T23:59:59Z"));
     Assertions.assertThat(responseData.getNumInvestigadores()).as("getNumInvestigadores()").isEqualTo(5);
     Assertions.assertThat(responseData.getImporteConcedido()).as("getImporteConcedido()")
         .isEqualTo(new BigDecimal("1000.00"));
@@ -323,23 +325,25 @@ public class ProyectoSocioIT extends BaseIT {
 
     String suffix = String.format("%03d", proyectoSocioId);
 
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder()//
-        .id(proyectoSocioId)//
-        .proyecto(Proyecto.builder()//
-            .id(1L)//
-            .estado(//
-                EstadoProyecto.builder()//
-                    .id(1L)//
-                    .estado(EstadoProyecto.Estado.BORRADOR)//
+    // @formatter:off
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder()
+        .id(proyectoSocioId)
+        .proyecto(Proyecto.builder()
+            .id(1L)
+            .estado(
+                EstadoProyecto.builder()
+                    .id(1L)
+                    .estado(EstadoProyecto.Estado.BORRADOR)
                     .build())
-            .build())//
-        .empresaRef("empresa-" + suffix)//
-        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())//
-        .fechaInicio(LocalDate.of(2021, 1, 11))//
-        .fechaFin(LocalDate.of(2022, 1, 11))//
-        .numInvestigadores(5)//
-        .importeConcedido(BigDecimal.valueOf(1000))//
+            .build())
+        .empresaRef("empresa-" + suffix)
+        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())
+        .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-01-11T23:59:59Z"))
+        .numInvestigadores(5)
+        .importeConcedido(BigDecimal.valueOf(1000))
         .build();
+    // @formatter:on
 
     return proyectoSocio;
   }

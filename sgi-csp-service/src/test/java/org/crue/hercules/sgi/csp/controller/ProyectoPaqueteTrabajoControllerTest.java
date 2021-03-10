@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPaqueteTrabajoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -227,8 +227,8 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
         .andExpect(
             MockMvcResultMatchers.jsonPath("nombre").value("proyecto-paquete-trabajo-" + String.format("%03d", id)))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-01-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-01-15"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-01-01T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-01-15T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("personaMes").value(1D)).andExpect(MockMvcResultMatchers
             .jsonPath("descripcion").value("descripcion-proyecto-paquete-trabajo-" + String.format("%03d", id)));
 
@@ -260,15 +260,17 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
    */
   private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
 
-    return ProyectoPaqueteTrabajo.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 01, 15))//
-        .personaMes(1D)//
-        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoPaqueteTrabajo.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
+        .personaMes(1D)
+        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 
 }

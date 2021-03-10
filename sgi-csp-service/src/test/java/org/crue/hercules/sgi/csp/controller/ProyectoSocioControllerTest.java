@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -579,23 +578,25 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", proyectoSocioId);
 
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder()//
-        .id(proyectoSocioId)//
-        .proyecto(Proyecto.builder()//
-            .id(1L)//
-            .estado(//
-                EstadoProyecto.builder()//
-                    .id(1L)//
-                    .estado(EstadoProyecto.Estado.BORRADOR)//
+    // @formatter:off
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder()
+        .id(proyectoSocioId)
+        .proyecto(Proyecto.builder()
+            .id(1L)
+            .estado(
+                EstadoProyecto.builder()
+                    .id(1L)
+                    .estado(EstadoProyecto.Estado.BORRADOR)
                     .build())
-            .build())//
-        .empresaRef("empresa-" + suffix)//
-        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())//
-        .fechaInicio(LocalDate.of(2021, 1, 11))//
-        .fechaFin(LocalDate.of(2022, 1, 11))//
-        .numInvestigadores(5)//
-        .importeConcedido(BigDecimal.valueOf(1000))//
+            .build())
+        .empresaRef("empresa-" + suffix)
+        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())
+        .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-01-11T23:59:59Z"))
+        .numInvestigadores(5)
+        .importeConcedido(BigDecimal.valueOf(1000))
         .build();
+    // @formatter:on
 
     return proyectoSocio;
   }
@@ -610,24 +611,37 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
     ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(id, "nombre-1", "descripcion-1", true);
 
-    Proyecto proyecto1 = Proyecto.builder()//
-        .id(id).titulo("proyecto 1").acronimo("PR1").fechaInicio(LocalDate.of(2020, 11, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build();
-
-    RolSocio rolSocio = RolSocio.builder()//
-        .id(id).abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .coordinador(Boolean.FALSE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Proyecto proyecto1 = Proyecto.builder()
+        .id(id)
+        .titulo("proyecto 1")
+        .acronimo("PR1")
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE)
         .build();
 
-    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()//
-        .id(id).proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build();
+    RolSocio rolSocio = RolSocio.builder()
+        .id(id)
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
+        .build();
+
+    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
+        .id(id)
+        .proyecto(proyecto1)
+        .empresaRef("empresa-0041")
+        .rolSocio(rolSocio)
+        .build();
+    // @formatter:on
 
     ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago(id, proyectoSocio1, 1,
-        new BigDecimal(3500), LocalDate.of(2021, 4, 10), null);
+        new BigDecimal(3500), Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioPeriodoPago;
   }
@@ -642,31 +656,42 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
 
-    Proyecto proyecto1 = Proyecto.builder()//
-        .id(id).titulo("proyecto 1").acronimo("PR1").fechaInicio(LocalDate.of(2020, 11, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build();
-
-    RolSocio rolSocio = RolSocio.builder()//
-        .id(id).abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .coordinador(Boolean.FALSE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Proyecto proyecto1 = Proyecto.builder()
+        .id(id).titulo("proyecto 1")
+        .acronimo("PR1")
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE)
         .build();
 
-    RolProyecto rolProyecto = RolProyecto.builder()//
-        .id(id).abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .activo(Boolean.TRUE)//
+    RolSocio rolSocio = RolSocio.builder()
+        .id(id).abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
         .build();
 
-    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()//
-        .id(id).proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build();
+    RolProyecto rolProyecto = RolProyecto.builder()
+        .id(id)
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .activo(Boolean.TRUE)
+        .build();
+
+    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
+        .id(id)
+        .proyecto(proyecto1)
+        .empresaRef("empresa-0041")
+        .rolSocio(rolSocio)
+        .build();
+    // @formatter:on
 
     ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1, rolProyecto, "001",
-        LocalDate.of(2021, 4, 10), null);
+        Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioEquipo;
   }
@@ -685,10 +710,10 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
     convocatoriaPeriodoJustificacion.setId(id);
     convocatoriaPeriodoJustificacion.setProyectoSocio(convocatoria);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
-    convocatoriaPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 10, 10));
-    convocatoriaPeriodoJustificacion.setFechaFin(LocalDate.of(2020, 10, 10));
-    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDateTime.of(2020, 10, 10, 0, 0, 0));
-    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDateTime.of(2020, 11, 20, 0, 0, 0));
+    convocatoriaPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
+    convocatoriaPeriodoJustificacion.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
+    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return convocatoriaPeriodoJustificacion;

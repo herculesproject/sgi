@@ -107,77 +107,79 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
    */
   private ConvocatoriaAreaTematica generarConvocatoriaAreaTematica(String suffix) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion" + suffix)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()//
-        .nombre("nombreTipoFinalidad" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
+        .nombre("nombreTipoFinalidad" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
 
-    ModeloTipoFinalidad modeloTipoFinalidad = ModeloTipoFinalidad.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .tipoFinalidad(tipoFinalidad)//
-        .activo(Boolean.TRUE)//
+    ModeloTipoFinalidad modeloTipoFinalidad = ModeloTipoFinalidad.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .tipoFinalidad(tipoFinalidad)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloTipoFinalidad);
 
-    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()//
-        .nombre("nombreTipoRegimenConcurrencia" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()
+        .nombre("nombreTipoRegimenConcurrencia" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoRegimenConcurrencia);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()//
-        .nombre("nombreTipoAmbitoGeografico" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
+        .nombre("nombreTipoAmbitoGeografico" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .unidadGestionRef("unidad" + suffix)//
-        .modeloEjecucion(modeloEjecucion)//
-        .codigo("codigo" + suffix)//
-        .anio(2020)//
-        .titulo("titulo" + suffix)//
-        .objeto("objeto" + suffix)//
-        .observaciones("observaciones" + suffix)//
-        .finalidad(modeloTipoFinalidad.getTipoFinalidad())//
-        .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
-        .colaborativos(Boolean.TRUE)//
-        .estado(Convocatoria.Estado.REGISTRADA)//
-        .duracion(12)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
-        .activo(Boolean.TRUE)//
+    Convocatoria convocatoria = Convocatoria.builder()
+        .unidadGestionRef("unidad" + suffix)
+        .modeloEjecucion(modeloEjecucion)
+        .codigo("codigo" + suffix)
+        .anio(2020)
+        .titulo("titulo" + suffix)
+        .objeto("objeto" + suffix)
+        .observaciones("observaciones" + suffix)
+        .finalidad(modeloTipoFinalidad.getTipoFinalidad())
+        .regimenConcurrencia(tipoRegimenConcurrencia)
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
+        .colaborativos(Boolean.TRUE)
+        .estado(Convocatoria.Estado.REGISTRADA)
+        .duracion(12)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(convocatoria);
 
-    AreaTematica areaTematicaPadre = AreaTematica.builder()//
-        .nombre("nombreAreaTematica" + suffix)//
-        .descripcion("descripcionAreaTematica" + suffix)//
-        .activo(Boolean.TRUE)//
+    AreaTematica areaTematicaPadre = AreaTematica.builder()
+        .nombre("nombreAreaTematica" + suffix)
+        .descripcion("descripcionAreaTematica" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(areaTematicaPadre);
 
-    AreaTematica areaTematica = AreaTematica.builder()//
-        .nombre(suffix)//
-        .descripcion("areaTematica" + suffix)//
-        .padre(areaTematicaPadre)//
-        .activo(Boolean.TRUE)//
+    AreaTematica areaTematica = AreaTematica.builder()
+        .nombre(suffix)
+        .descripcion("areaTematica" + suffix)
+        .padre(areaTematicaPadre)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(areaTematica);
 
-    ConvocatoriaAreaTematica convocatoriaAreaTematica = ConvocatoriaAreaTematica.builder()//
-        .convocatoria(convocatoria)//
-        .areaTematica(areaTematica)//
-        .observaciones("observaciones" + suffix)//
+    ConvocatoriaAreaTematica convocatoriaAreaTematica = ConvocatoriaAreaTematica.builder()
+        .convocatoria(convocatoria)
+        .areaTematica(areaTematica)
+        .observaciones("observaciones" + suffix)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(convocatoriaAreaTematica);
   }
 }

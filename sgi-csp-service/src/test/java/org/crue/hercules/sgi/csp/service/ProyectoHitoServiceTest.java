@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +98,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
     proyectoHito.setId(null);
     proyectoHito.setGeneraAviso(Boolean.TRUE);
-    proyectoHito.setFecha(LocalDate.now().minusDays(2));
+    proyectoHito.setFecha(Instant.now().minus(Period.ofDays(2)));
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
@@ -302,7 +302,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockModeloTipoHito(1L, proyectoHito, Boolean.TRUE)));
     BDDMockito
         .given(repository.findByProyectoIdAndFechaAndTipoHitoId(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<Long>any()))
+            ArgumentMatchers.<Instant>any(), ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoHitoExistente));
 
     Assertions.assertThatThrownBy(
@@ -355,7 +355,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
     ProyectoHito proyectoHitoActualizado = generarMockProyectoHito(1L);
     proyectoHitoActualizado.setTipoHito(generarMockTipoHito(2L, Boolean.TRUE));
-    proyectoHitoActualizado.setFecha(LocalDate.now().minusDays(2));
+    proyectoHitoActualizado.setFecha(Instant.now().minus(Period.ofDays(2)));
     proyectoHitoActualizado.setGeneraAviso(Boolean.TRUE);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHito));
@@ -725,8 +725,8 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-proyecto-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
-    proyecto.setFechaInicio(LocalDate.now());
-    proyecto.setFechaFin(LocalDate.now());
+    proyecto.setFechaInicio(Instant.now());
+    proyecto.setFechaFin(Instant.now());
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -751,7 +751,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id));
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     return estadoProyecto;
@@ -785,12 +785,14 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
    */
   private ModeloTipoHito generarMockModeloTipoHito(Long id, ProyectoHito proyectoHito, Boolean activo) {
 
-    return ModeloTipoHito.builder()//
-        .id(id)//
-        .modeloEjecucion(proyectoHito.getProyecto().getModeloEjecucion())//
-        .tipoHito(proyectoHito.getTipoHito())//
-        .activo(activo)//
+    // @formatter:off
+    return ModeloTipoHito.builder()
+        .id(id)
+        .modeloEjecucion(proyectoHito.getProyecto().getModeloEjecucion())
+        .tipoHito(proyectoHito.getTipoHito())
+        .activo(activo)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -801,13 +803,15 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
    */
   private ProyectoHito generarMockProyectoHito(Long id) {
 
-    return ProyectoHito.builder()//
-        .id(id)//
-        .proyecto(generarMockProyecto(1L))//
-        .fecha(LocalDate.of(2020, 10, 19))//
-        .comentario("comentario-proyecto-hito" + String.format("%03d", id))//
-        .generaAviso(Boolean.TRUE)//
-        .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))//
+    // @formatter:off
+    return ProyectoHito.builder()
+        .id(id)
+        .proyecto(generarMockProyecto(1L))
+        .fecha(Instant.parse("2020-10-19T00:00:00Z"))
+        .comentario("comentario-proyecto-hito" + String.format("%03d", id))
+        .generaAviso(Boolean.TRUE)
+        .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))
         .build();
+    // @formatter:on
   }
 }

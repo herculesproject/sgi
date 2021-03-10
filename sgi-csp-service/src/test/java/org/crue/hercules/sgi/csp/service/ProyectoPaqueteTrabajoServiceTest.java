@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
     BDDMockito
         .given(proyectoRepository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
-            ArgumentMatchers.<Long>any(), ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<LocalDate>any()))
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Instant>any(), ArgumentMatchers.<Instant>any()))
         .willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.save(proyectoPaqueteTrabajo)).will((InvocationOnMock invocation) -> {
@@ -177,7 +178,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // given: Fecha Inicio > fechaFin
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setId(null);
-    proyectoPaqueteTrabajo.setFechaInicio(proyectoPaqueteTrabajo.getFechaFin().plusDays(1));
+    proyectoPaqueteTrabajo.setFechaInicio(proyectoPaqueteTrabajo.getFechaFin().plus(Period.ofDays(1)));
 
     // when: create ProyectoPaqueteTrabajo
     Assertions.assertThatThrownBy(() -> service.create(proyectoPaqueteTrabajo))
@@ -253,7 +254,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
     BDDMockito
         .given(proyectoRepository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
-            ArgumentMatchers.<Long>any(), ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<LocalDate>any()))
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Instant>any(), ArgumentMatchers.<Instant>any()))
         .willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
@@ -280,7 +281,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
     BDDMockito
         .given(proyectoRepository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
-            ArgumentMatchers.<Long>any(), ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<LocalDate>any()))
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Instant>any(), ArgumentMatchers.<Instant>any()))
         .willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoPaqueteTrabajo>any()))
@@ -398,7 +399,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
-    proyectoPaqueteTrabajo.setFechaInicio(proyectoPaqueteTrabajo.getFechaFin().plusDays(1));
+    proyectoPaqueteTrabajo.setFechaInicio(proyectoPaqueteTrabajo.getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
@@ -490,7 +491,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
     BDDMockito
         .given(proyectoRepository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
-            ArgumentMatchers.<Long>any(), ArgumentMatchers.<LocalDate>any(), ArgumentMatchers.<LocalDate>any()))
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Instant>any(), ArgumentMatchers.<Instant>any()))
         .willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
@@ -655,14 +656,16 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
    */
   private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
 
-    return ProyectoPaqueteTrabajo.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 01, 15))//
-        .personaMes(1D)//
-        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoPaqueteTrabajo.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
+        .personaMes(1D)
+        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 }

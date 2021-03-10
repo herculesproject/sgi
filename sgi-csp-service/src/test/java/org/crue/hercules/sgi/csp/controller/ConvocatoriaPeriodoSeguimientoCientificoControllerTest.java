@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,8 +87,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
             .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getMesInicial()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].mesFinal")
             .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicioPresentacion").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicioPresentacion").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFinPresentacion").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].observaciones")
             .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getObservaciones()))
 
@@ -100,8 +100,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
             .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getMesInicial()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].mesFinal")
             .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicioPresentacion").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicioPresentacion").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFinPresentacion").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].observaciones")
             .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getObservaciones()));
   }
@@ -209,8 +209,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
     convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
     convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
     convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
-    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
-    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
 
     return convocatoriaPeriodoSeguimientoCientifico;

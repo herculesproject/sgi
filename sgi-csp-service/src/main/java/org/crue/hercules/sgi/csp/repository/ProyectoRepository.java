@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -20,8 +20,8 @@ public interface ProyectoRepository
    * @param fechaFin    fecha de fin del rango de fechas a comprobar.
    * @return true si está dentro de rango, false si no lo está.
    */
-  boolean existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(Long proyectoId,
-      LocalDate fechaInicio, LocalDate fechaFin);
+  boolean existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(Long proyectoId, Instant fechaInicio,
+      Instant fechaFin);
 
   /**
    * Comprueba si existe alguna {@link Solicitud} asociada a algún

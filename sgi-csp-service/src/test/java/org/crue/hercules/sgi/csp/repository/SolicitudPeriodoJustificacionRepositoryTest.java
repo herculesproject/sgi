@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -27,21 +27,41 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
 
     // given: 2 SolicitudProyectoPeriodoJustificacion para el solicitudProyectoSocio
     // buscado
-    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
-        .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+    // @formatter:off
+    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
+        .creadorRef("user-001")
+        .solicitanteRef("user-002")
+        .unidadGestionRef("OTRI")
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
+        .activo(Boolean.TRUE)
+        .build());
+    // @formatter:on
     SolicitudProyectoDatos solicitudProyectoDatos = entityManager
         .persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
             Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
-    RolSocio rolSocio = RolSocio.builder().abreviatura("001").nombre("Lider").descripcion("Lider")
-        .coordinador(Boolean.FALSE).activo(Boolean.TRUE).build();
+    // @formatter:off
+    RolSocio rolSocio = RolSocio.builder()
+        .abreviatura("001")
+        .nombre("Lider")
+        .descripcion("Lider")
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
+        .build();
     entityManager.persistAndFlush(rolSocio);
 
-    RolProyecto rolProyecto = RolProyecto.builder().abreviatura("001").nombre("Rol1").descripcion("Rol1")
-        .rolPrincipal(Boolean.FALSE).responsableEconomico(Boolean.FALSE).equipo(RolProyecto.Equipo.INVESTIGACION)
-        .colectivoRef("PDI").activo(Boolean.TRUE).build();
+    RolProyecto rolProyecto = RolProyecto.builder()
+        .abreviatura("001")
+        .nombre("Rol1")
+        .descripcion("Rol1")
+        .rolPrincipal(Boolean.FALSE)
+        .responsableEconomico(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION)
+        .colectivoRef("PDI")
+        .activo(Boolean.TRUE)
+        .build();
     entityManager.persistAndFlush(rolProyecto);
+    // @formatter:on
 
     SolicitudProyectoSocio solicitudProyectoSocio1 = entityManager.persistAndFlush(
         new SolicitudProyectoSocio(null, solicitudProyectoDatos, rolSocio, "001", 1, 3, 3, new BigDecimal(468)));
@@ -51,11 +71,11 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
 
     SolicitudProyectoPeriodoJustificacion solicitudProyectoPeriodoJustificacion1 = entityManager
         .persistAndFlush(new SolicitudProyectoPeriodoJustificacion(null, solicitudProyectoSocio1, 1, 2, 3,
-            LocalDate.of(2020, 12, 20), LocalDate.of(2021, 3, 20), null));
+            Instant.parse("2020-12-20T00:00:00Z"), Instant.parse("2021-03-20T00:00:00Z"), null));
     entityManager.persistAndFlush(new SolicitudProyectoPeriodoJustificacion(null, solicitudProyectoSocio1, 1, 4, 6,
-        LocalDate.of(2020, 12, 20), LocalDate.of(2021, 3, 20), null));
+        Instant.parse("2020-12-20T00:00:00Z"), Instant.parse("2021-03-20T00:00:00Z"), null));
     entityManager.persistAndFlush(new SolicitudProyectoPeriodoJustificacion(null, solicitudProyectoSocio2, 1, 4, 6,
-        LocalDate.of(2020, 12, 20), LocalDate.of(2021, 3, 20), null));
+        Instant.parse("2020-12-20T00:00:00Z"), Instant.parse("2021-03-20T00:00:00Z"), null));
 
     Long solicitudProyectoSocioBuscado = solicitudProyectoSocio1.getId();
 

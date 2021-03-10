@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,8 +56,8 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
 
     ProyectoSocioPeriodoJustificacion updateProyectoSocioPeriodoJustificacion1 = generarMockProyectoSocioPeriodoJustificacion(
         4L);
-    updateProyectoSocioPeriodoJustificacion1.setFechaInicio(LocalDate.of(2021, 1, 19));
-    updateProyectoSocioPeriodoJustificacion1.setFechaFin(LocalDate.of(2021, 1, 26));
+    updateProyectoSocioPeriodoJustificacion1.setFechaInicio(Instant.parse("2021-01-19T00:00:00Z"));
+    updateProyectoSocioPeriodoJustificacion1.setFechaFin(Instant.parse("2021-01-26T23:59:59Z"));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -157,7 +157,8 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         1L);
 
-    proyectoSocioPeriodoJustificacion.setFechaInicio(proyectoSocioPeriodoJustificacion.getFechaFin().plusDays(1));
+    proyectoSocioPeriodoJustificacion
+        .setFechaInicio(proyectoSocioPeriodoJustificacion.getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -204,7 +205,7 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         1L);
     proyectoSocioPeriodoJustificacion
-        .setFechaInicioPresentacion(proyectoSocioPeriodoJustificacion.getFechaFinPresentacion().plusDays(1));
+        .setFechaInicioPresentacion(proyectoSocioPeriodoJustificacion.getFechaFinPresentacion().plus(Period.ofDays(1)));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -227,7 +228,7 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         1L);
     proyectoSocioPeriodoJustificacion
-        .setFechaFin(proyectoSocioPeriodoJustificacion.getProyectoSocio().getFechaFin().plusDays(1));
+        .setFechaFin(proyectoSocioPeriodoJustificacion.getProyectoSocio().getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -248,8 +249,8 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
 
     ProyectoSocioPeriodoJustificacion updateProyectoSocioPeriodoJustificacion1 = generarMockProyectoSocioPeriodoJustificacion(
         null);
-    updateProyectoSocioPeriodoJustificacion1.setFechaInicio(LocalDate.of(2021, 1, 19));
-    updateProyectoSocioPeriodoJustificacion1.setFechaFin(LocalDate.of(2021, 1, 26));
+    updateProyectoSocioPeriodoJustificacion1.setFechaInicio(Instant.parse("2021-01-19T00:00:00Z"));
+    updateProyectoSocioPeriodoJustificacion1.setFechaFin(Instant.parse("2021-01-26T23:59:59Z"));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -320,7 +321,8 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         null);
 
-    proyectoSocioPeriodoJustificacion.setFechaInicio(proyectoSocioPeriodoJustificacion.getFechaFin().plusDays(1));
+    proyectoSocioPeriodoJustificacion
+        .setFechaInicio(proyectoSocioPeriodoJustificacion.getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -359,7 +361,7 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         null);
     proyectoSocioPeriodoJustificacion
-        .setFechaInicioPresentacion(proyectoSocioPeriodoJustificacion.getFechaFinPresentacion().plusDays(1));
+        .setFechaInicioPresentacion(proyectoSocioPeriodoJustificacion.getFechaFinPresentacion().plus(Period.ofDays(1)));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -378,7 +380,7 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
         null);
     proyectoSocioPeriodoJustificacion
-        .setFechaFin(proyectoSocioPeriodoJustificacion.getProyectoSocio().getFechaFin().plusDays(1));
+        .setFechaFin(proyectoSocioPeriodoJustificacion.getProyectoSocio().getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -488,13 +490,13 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     Assertions.assertThat(proyectoSocioPeriodoJustificacion).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getFechaInicio()).as("getFechaInicio()")
-        .isEqualTo(LocalDate.of(2020, 9, 10));
+        .isEqualTo(Instant.parse("2020-09-11T00:00:00Z"));
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(LocalDate.of(2020, 12, 20));
+        .isEqualTo(Instant.parse("2020-12-20T23:59:59Z"));
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getFechaInicioPresentacion())
-        .as("getFechaInicioPresentacion()").isEqualTo(LocalDateTime.of(2020, 10, 10, 0, 0));
+        .as("getFechaInicioPresentacion()").isEqualTo(Instant.parse("2020-10-10T00:00:00Z"));
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
-        .isEqualTo(LocalDateTime.of(2020, 11, 20, 0, 0));
+        .isEqualTo(Instant.parse("2020-11-20T23:59:59Z"));
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-1");
@@ -524,16 +526,16 @@ public class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTes
     proyectoSocio.setProyecto(new Proyecto());
     proyectoSocio.getProyecto().setEstado(new EstadoProyecto());
     proyectoSocio.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
-    proyectoSocio.setFechaFin(LocalDate.of(2022, 12, 23));
+    proyectoSocio.setFechaFin(Instant.parse("2022-12-23T23:59:59Z"));
 
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
     proyectoSocioPeriodoJustificacion.setId(id);
     proyectoSocioPeriodoJustificacion.setProyectoSocio(proyectoSocio);
     proyectoSocioPeriodoJustificacion.setNumPeriodo(1);
-    proyectoSocioPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 9, 10));
-    proyectoSocioPeriodoJustificacion.setFechaFin(LocalDate.of(2020, 12, 20));
-    proyectoSocioPeriodoJustificacion.setFechaInicioPresentacion(LocalDateTime.of(2020, 10, 10, 0, 0, 0));
-    proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(LocalDateTime.of(2020, 11, 20, 0, 0, 0));
+    proyectoSocioPeriodoJustificacion.setFechaInicio(Instant.parse("2020-09-11T00:00:00Z"));
+    proyectoSocioPeriodoJustificacion.setFechaFin(Instant.parse("2020-12-20T23:59:59Z"));
+    proyectoSocioPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     proyectoSocioPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return proyectoSocioPeriodoJustificacion;

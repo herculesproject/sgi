@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -37,8 +37,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 999999L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 10, 11, 17, 18, 19);
-    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 10, 20, 17, 18, 19);
+    Instant fechaInicioBuscada = Instant.parse("2020-10-11T00:00:00Z");
+    Instant fechaFinBuscada = Instant.parse("2020-10-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -70,8 +70,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 988888888L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 11, 11, 17, 18, 19);
-    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 11, 20, 17, 18, 19);
+    Instant fechaInicioBuscada = Instant.parse("2020-11-11T00:00:00Z");
+    Instant fechaFinBuscada = Instant.parse("2020-11-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -103,8 +103,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 87999999999L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 10, 11, 17, 18, 19);
-    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 11, 20, 17, 18, 19);
+    Instant fechaInicioBuscada = Instant.parse("2020-10-11T00:00:00Z");
+    Instant fechaFinBuscada = Instant.parse("2020-11-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -136,8 +136,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = 200000000L;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 9, 11, 17, 18, 19);
-    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 10, 20, 17, 18, 19);
+    Instant fechaInicioBuscada = Instant.parse("2020-09-11T00:00:00Z");
+    Instant fechaFinBuscada = Instant.parse("2020-10-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -171,8 +171,8 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Long idConvocatoriaFase = null;
     Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
-    LocalDateTime fechaInicioBuscada = LocalDateTime.of(2020, 9, 11, 17, 18, 19);
-    LocalDateTime fechaFinBuscada = LocalDateTime.of(2020, 11, 20, 17, 18, 19);
+    Instant fechaInicioBuscada = Instant.parse("2020-09-11T00:00:00Z");
+    Instant fechaFinBuscada = Instant.parse("2020-11-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
 
     // when: se busca si existen fechas solapadas
@@ -203,70 +203,72 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
    */
   private ConvocatoriaFase generarConvocatoriaFase(String suffix) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion" + suffix)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()//
-        .nombre("nombreTipoFinalidad" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
+        .nombre("nombreTipoFinalidad" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
 
-    ModeloTipoFinalidad modeloTipoFinalidad = ModeloTipoFinalidad.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .tipoFinalidad(tipoFinalidad)//
-        .activo(Boolean.TRUE)//
+    ModeloTipoFinalidad modeloTipoFinalidad = ModeloTipoFinalidad.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .tipoFinalidad(tipoFinalidad)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloTipoFinalidad);
 
-    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()//
-        .nombre("nombreTipoRegimenConcurrencia" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()
+        .nombre("nombreTipoRegimenConcurrencia" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoRegimenConcurrencia);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()//
-        .nombre("nombreTipoAmbitoGeografico" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
+        .nombre("nombreTipoAmbitoGeografico" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .unidadGestionRef("unidad" + suffix)//
-        .modeloEjecucion(modeloEjecucion)//
-        .codigo("codigo" + suffix)//
-        .anio(2020)//
-        .titulo("titulo" + suffix)//
-        .objeto("objeto" + suffix)//
-        .observaciones("observaciones" + suffix)//
-        .finalidad(modeloTipoFinalidad.getTipoFinalidad())//
-        .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
-        .colaborativos(Boolean.TRUE)//
-        .estado(Convocatoria.Estado.REGISTRADA)//
-        .duracion(12)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
-        .activo(Boolean.TRUE)//
+    Convocatoria convocatoria = Convocatoria.builder()
+        .unidadGestionRef("unidad" + suffix)
+        .modeloEjecucion(modeloEjecucion)
+        .codigo("codigo" + suffix)
+        .anio(2020)
+        .titulo("titulo" + suffix)
+        .objeto("objeto" + suffix)
+        .observaciones("observaciones" + suffix)
+        .finalidad(modeloTipoFinalidad.getTipoFinalidad())
+        .regimenConcurrencia(tipoRegimenConcurrencia)
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
+        .colaborativos(Boolean.TRUE)
+        .estado(Convocatoria.Estado.REGISTRADA)
+        .duracion(12)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(convocatoria);
 
-    TipoFase tipoFase = TipoFase.builder()//
-        .nombre("nombreTipoEnlace" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFase tipoFase = TipoFase.builder()
+        .nombre("nombreTipoEnlace" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFase);
 
-    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()//
-        .convocatoria(convocatoria)//
-        .tipoFase(tipoFase)//
-        .fechaInicio(LocalDateTime.of(2020, 10, 01, 17, 18, 19))//
-        .fechaFin(LocalDateTime.of(2020, 10, 31, 17, 18, 19))//
-        .observaciones("obervaciones" + suffix)//
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .convocatoria(convocatoria)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-31T00:00:00Z"))
+        .observaciones("obervaciones" + suffix)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(convocatoriaFase);
   }
 

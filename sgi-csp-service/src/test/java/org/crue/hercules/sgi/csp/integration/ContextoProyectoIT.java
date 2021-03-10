@@ -1,12 +1,12 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -121,18 +121,20 @@ public class ContextoProyectoIT extends BaseIT {
       idProyecto = 1L;
     }
 
-    contextoProyecto.setProyecto(Proyecto.builder()//
-        .id(idProyecto)//
-        .unidadGestionRef("OPE")//
-        .modeloEjecucion(ModeloEjecucion.builder()//
-            .nombre("nombreModeloEjecucion")//
-            .activo(Boolean.TRUE)//
-            .build())//
-        .titulo("PRO" + (id != null ? id : ""))//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now())//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    contextoProyecto.setProyecto(Proyecto.builder()
+        .id(idProyecto)
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(ModeloEjecucion.builder()
+            .nombre("nombreModeloEjecucion")
+            .activo(Boolean.TRUE)
+            .build())
+        .titulo("PRO" + (id != null ? id : ""))
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.now())
+        .activo(Boolean.TRUE)
         .build());
+    // @formatter:on
     contextoProyecto.setIntereses("intereses");
     return contextoProyecto;
   }

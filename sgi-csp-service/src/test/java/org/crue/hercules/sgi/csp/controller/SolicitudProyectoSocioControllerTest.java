@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -579,8 +579,8 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
     solicitudProyectoPeriodoJustificacion.setNumPeriodo(1);
     solicitudProyectoPeriodoJustificacion.setMesInicial(mesInicial);
     solicitudProyectoPeriodoJustificacion.setMesFinal(mesFinal);
-    solicitudProyectoPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 10, 10));
-    solicitudProyectoPeriodoJustificacion.setFechaFin(LocalDate.of(2020, 11, 20));
+    solicitudProyectoPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
+    solicitudProyectoPeriodoJustificacion.setFechaFin(Instant.parse("2020-11-20T23:59:59Z"));
     solicitudProyectoPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return solicitudProyectoPeriodoJustificacion;

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -64,7 +64,7 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
     Assert.notNull(solicitudHito.getTipoHito(), "El tipo hito no puede ser null para crear la SolicitudHito");
     Assert.notNull(solicitudHito.getGeneraAviso(), "Generar aviso no puede ser null para crear la SolicitudHito");
 
-    if (solicitudHito.getFecha().isBefore(LocalDate.now())) {
+    if (solicitudHito.getFecha().isBefore(Instant.now())) {
       solicitudHito.setGeneraAviso(false);
     }
 
@@ -106,7 +106,7 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
         "La referencia del documento no puede ser null para actualizar la SolicitudHito");
     Assert.notNull(solicitudHito.getGeneraAviso(), "Generar aviso no puede ser null para crear la SolicitudHito");
 
-    if (solicitudHito.getFecha().isBefore(LocalDate.now())) {
+    if (solicitudHito.getFecha().isBefore(Instant.now())) {
       solicitudHito.setGeneraAviso(false);
     }
 

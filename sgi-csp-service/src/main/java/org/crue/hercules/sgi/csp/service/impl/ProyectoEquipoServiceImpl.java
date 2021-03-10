@@ -102,13 +102,13 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
       if (proyectoEquipo.getFechaInicio() != null && proyectoEquipo.getFechaFin() != null) {
         Assert.isTrue(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()),
-            "La fecha fin no puede ser superior a la fecha de inicio");
+            "La fecha de inicio no puede ser superior a la fecha de fin");
 
         Assert.isTrue(
             (proyectoEquipo.getFechaInicio().isAfter(proyectoEquipo.getProyecto().getFechaInicio())
-                || proyectoEquipo.getFechaInicio().isEqual(proyectoEquipo.getProyecto().getFechaInicio()))
+                || proyectoEquipo.getFechaInicio().equals(proyectoEquipo.getProyecto().getFechaInicio()))
                 && (proyectoEquipo.getFechaFin().isBefore(proyectoEquipo.getProyecto().getFechaFin())
-                    || proyectoEquipo.getFechaFin().isEqual(proyectoEquipo.getProyecto().getFechaFin())),
+                    || proyectoEquipo.getFechaFin().equals(proyectoEquipo.getProyecto().getFechaFin())),
             "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
       }
 

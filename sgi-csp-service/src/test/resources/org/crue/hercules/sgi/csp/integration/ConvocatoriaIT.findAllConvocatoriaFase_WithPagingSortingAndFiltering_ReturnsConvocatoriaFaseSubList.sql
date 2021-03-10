@@ -34,10 +34,10 @@ VALUES(2, 'unidad-002', 1, 'codigo-002', 2020, 'titulo-002', 'objeto-002', 'obse
 INSERT INTO csp.tipo_fase (id,nombre,descripcion,activo) VALUES (1,'nombre-1','descripcion-1',true);
 
 --CONVOCATORIA ENLACE
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1,'2020-10-01', '2020-10-02','observaciones-001');
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (2, 1, 1,'2020-10-10', '2020-10-12','observaciones-002');
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (3, 1, 1,'2020-10-13', '2020-10-20','observaciones-003');
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (4, 1, 1,'2020-10-06', '2020-10-08','observaciones4');
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (5, 1, 1,'2020-10-21', '2020-10-25','observaciones-05');
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (6, 1, 1,'2020-10-26', '2020-10-30','observaciones-06');
-INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (7, 2, 1,'2020-10-13', '2020-10-20','observaciones-003');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1,'2020-10-01T00:00:00Z', '2020-10-02T23:59:59Z','observaciones-001');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (2, 1, 1,'2020-10-10T00:00:00Z', '2020-10-12T23:59:59Z','observaciones-002');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (3, 1, 1,'2020-10-13T00:00:00Z', '2020-10-20T23:59:59Z','observaciones-003');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (4, 1, 1,'2020-10-06T00:00:00Z', '2020-10-08T23:59:59Z','observaciones4');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (5, 1, 1,'2020-10-21T00:00:00Z', '2020-10-25T23:59:59Z','observaciones-05');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (6, 1, 1,'2020-10-26T00:00:00Z', '2020-10-30T23:59:59Z','observaciones-06');
+INSERT INTO  csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (7, 2, 1,'2020-10-13T00:00:00Z', '2020-10-20T23:59:59Z','observaciones-003');

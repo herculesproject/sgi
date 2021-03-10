@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -395,8 +395,8 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyecto(proyecto);
     proyectoPeriodoSeguimiento.setNumPeriodo(1);
-    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 19));
-    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 12, 19));
+    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
     proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
 
     return proyectoPeriodoSeguimiento;

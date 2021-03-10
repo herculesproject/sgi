@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -53,17 +53,17 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
     Long proyectoId = 1L;
 
     List<ProyectoEquipo> proyectoEquipoExistentes = new ArrayList<>();
-    proyectoEquipoExistentes
-        .add(generarMockProyectoEquipo(3L, LocalDate.of(2020, 2, 15), LocalDate.of(2020, 3, 15), proyectoId));
-    proyectoEquipoExistentes
-        .add(generarMockProyectoEquipo(4L, LocalDate.of(2020, 3, 16), LocalDate.of(2020, 4, 15), proyectoId));
-    proyectoEquipoExistentes
-        .add(generarMockProyectoEquipo(5L, LocalDate.of(2020, 4, 16), LocalDate.of(2020, 5, 15), proyectoId));
+    proyectoEquipoExistentes.add(generarMockProyectoEquipo(3L, Instant.parse("2020-02-15T00:00:00Z"),
+        Instant.parse("2020-03-15T23:59:59Z"), proyectoId));
+    proyectoEquipoExistentes.add(generarMockProyectoEquipo(4L, Instant.parse("2020-03-16T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), proyectoId));
+    proyectoEquipoExistentes.add(generarMockProyectoEquipo(5L, Instant.parse("2020-04-16T00:00:00Z"),
+        Instant.parse("2020-05-15T23:59:59Z"), proyectoId));
 
-    ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, LocalDate.of(2020, 6, 16),
-        LocalDate.of(2020, 7, 15), proyectoId);
-    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(4L, LocalDate.of(2020, 3, 16),
-        LocalDate.of(2020, 4, 14), proyectoId);
+    ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, Instant.parse("2020-06-16T00:00:00Z"),
+        Instant.parse("2020-07-15T23:59:59Z"), proyectoId);
+    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(4L, Instant.parse("2020-03-16T00:00:00Z"),
+        Instant.parse("2020-04-14T23:59:59Z"), proyectoId);
 
     List<ProyectoEquipo> proyectoEquipoActualizar = new ArrayList<>();
     proyectoEquipoActualizar.add(newProyectoEquipo);
@@ -130,8 +130,8 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   public void update_WithNoExistingConvocatoria_ThrowsProyectoNotFoundException() {
     // given: a ProyectoEquipo with non existing Proyecto
     Long proyectoId = 1L;
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, LocalDate.of(2020, 2, 15), LocalDate.of(2020, 3, 15),
-        proyectoId);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-02-15T00:00:00Z"),
+        Instant.parse("2020-05-15T23:59:59Z"), proyectoId);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -147,8 +147,8 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
     // given: Un ProyectoEquipo a actualizar con un id que
     // no existe
     Long proyectoId = 1L;
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, LocalDate.of(2020, 2, 15), LocalDate.of(2020, 3, 15),
-        proyectoId);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-02-15T00:00:00Z"),
+        Instant.parse("2020-05-15T23:59:59Z"), proyectoId);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(proyectoEquipo.getProyecto()));
@@ -166,8 +166,8 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   public void update_WithFechaInicioAfterFechaFin_ThrowsIllegalArgumentException() {
     // given: a ProyectoEquipo with fecha inicio after fecha fin
     Long proyectoId = 1L;
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, LocalDate.of(2020, 5, 15), LocalDate.of(2020, 3, 15),
-        proyectoId);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-05-15T00:00:00Z"),
+        Instant.parse("2020-03-15T23:59:59Z"), proyectoId);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(proyectoEquipo.getProyecto()));
@@ -180,7 +180,7 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoId, Arrays.asList(proyectoEquipo)))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha fin no puede ser superior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -188,8 +188,8 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
     // given: a ProyectoEquipo with fechaFin greater than
     // duracion proyecto
     Long proyectoId = 1L;
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, LocalDate.of(2020, 5, 15), LocalDate.of(2022, 3, 15),
-        proyectoId);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-05-15T00:00:00Z"),
+        Instant.parse("2022-03-15T00:00:00Z"), proyectoId);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(proyectoEquipo.getProyecto()));
@@ -209,10 +209,10 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   public void update_WithFechasSolapadas_ThrowsIllegalArgumentException() {
     // given: a ProyectoEquipo with fechas solapadas
     Long proyectoId = 1L;
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(null, LocalDate.of(2020, 5, 15),
-        LocalDate.of(2021, 3, 15), proyectoId);
-    ProyectoEquipo proyectoEquipo2 = generarMockProyectoEquipo(null, LocalDate.of(2020, 5, 15),
-        LocalDate.of(2021, 3, 15), proyectoId);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(null, Instant.parse("2020-05-15T00:00:00Z"),
+        Instant.parse("2021-03-15T23:59:59Z"), proyectoId);
+    ProyectoEquipo proyectoEquipo2 = generarMockProyectoEquipo(null, Instant.parse("2020-05-15T00:00:00Z"),
+        Instant.parse("2021-03-15T23:59:59Z"), proyectoId);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(proyectoEquipo.getProyecto()));
@@ -229,8 +229,8 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
   @Test
   public void findById_WithExistingId_ReturnsProyectoEquipo() throws Exception {
     // given: existing ProyectoEquipo
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(1L, LocalDate.of(2020, 5, 15), LocalDate.of(2021, 3, 15),
-        1L);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(1L, Instant.parse("2020-05-15T00:00:00Z"),
+        Instant.parse("2021-03-15T23:59:59Z"), 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyectoEquipo));
 
@@ -268,8 +268,8 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
     Long proyectoId = 1L;
     List<ProyectoEquipo> listaProyectoEquipo = new LinkedList<ProyectoEquipo>();
     for (int i = 1; i <= 100; i++) {
-      listaProyectoEquipo
-          .add(generarMockProyectoEquipo(Long.valueOf(i), LocalDate.of(2020, 5, 15), LocalDate.of(2021, 3, 15), 1L));
+      listaProyectoEquipo.add(generarMockProyectoEquipo(Long.valueOf(i), Instant.parse("2020-05-15T00:00:00Z"),
+          Instant.parse("2021-03-15T23:59:59Z"), 1L));
     }
 
     BDDMockito
@@ -316,20 +316,21 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
    * @param proyectoId  Id Proyecto
    * @return el objeto ProyectoEquipo
    */
-  private ProyectoEquipo generarMockProyectoEquipo(Long id, LocalDate fechaInicio, LocalDate fechaFin,
-      Long proyectoId) {
+  private ProyectoEquipo generarMockProyectoEquipo(Long id, Instant fechaInicio, Instant fechaFin, Long proyectoId) {
 
-    Proyecto proyecto = Proyecto.builder().id(proyectoId)//
-        .titulo("proyecto 2").acronimo("PR2").fechaInicio(LocalDate.of(2020, 1, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").activo(Boolean.TRUE).build();
+    Proyecto proyecto = Proyecto.builder().id(proyectoId).titulo("proyecto 2").acronimo("PR2")
+        .fechaInicio(Instant.parse("2020-01-20T00:00:00Z")).fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE").activo(Boolean.TRUE).build();
 
-    RolProyecto rolProyecto = RolProyecto.builder().id(id)//
-        .abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .rolPrincipal(Boolean.FALSE)//
-        .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)//
+    // @formatter:off
+    RolProyecto rolProyecto = RolProyecto.builder().id(id)
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .rolPrincipal(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)
         .build();
+    // @formatter:on
 
     ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyecto(proyecto).rolProyecto(rolProyecto)
         .fechaInicio(fechaInicio).fechaFin(fechaFin).personaRef("001").horasDedicacion(new Double(2)).build();

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -88,9 +88,9 @@ public class ProyectoPaqueteTrabajoIT extends BaseIT {
     Assertions.assertThat(proyectoPaqueteTrabajo.getNombre()).as("getNombre()")
         .isEqualTo("proyecto-paquete-trabajo-001");
     Assertions.assertThat(proyectoPaqueteTrabajo.getFechaInicio()).as("getFechaInicio()")
-        .isEqualTo(LocalDate.of(2020, 01, 01));
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
     Assertions.assertThat(proyectoPaqueteTrabajo.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(LocalDate.of(2020, 01, 15));
+        .isEqualTo(Instant.parse("2020-01-15T23:59:59Z"));
     Assertions.assertThat(proyectoPaqueteTrabajo.getPersonaMes()).as("getPersonaMes()").isEqualTo(1D);
     Assertions.assertThat(proyectoPaqueteTrabajo.getDescripcion()).as("getDescripcion()")
         .isEqualTo("descripcion-proyecto-equipo-trabajo-001");

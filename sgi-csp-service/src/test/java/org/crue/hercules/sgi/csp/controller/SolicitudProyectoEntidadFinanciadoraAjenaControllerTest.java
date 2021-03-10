@@ -241,30 +241,32 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
    * @return el objeto SolicitudProyectoEntidadFinanciadoraAjena
    */
   private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
-    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()//
-        .id(id == null ? 1 : id)//
-        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())//
+    // @formatter:off
+    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()
+        .id(id == null ? 1 : id)
+        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())
         .build();
 
-    FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()//
-        .id(id == null ? 1 : id)//
-        .activo(true)//
+    FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
+        .id(id == null ? 1 : id)
+        .activo(true)
         .build();
 
-    TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()//
-        .id(id == null ? 1 : id)//
-        .activo(true)//
+    TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()
+        .id(id == null ? 1 : id)
+        .activo(true)
         .build();
 
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = SolicitudProyectoEntidadFinanciadoraAjena
-        .builder()//
-        .id(id)//
-        .solicitudProyectoDatos(solicitudProyectoDatos)//
-        .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))//
-        .fuenteFinanciacion(fuenteFinanciacion)//
-        .tipoFinanciacion(tipoFinanciacion)//
-        .porcentajeFinanciacion(50)//
+        .builder()
+        .id(id)
+        .solicitudProyectoDatos(solicitudProyectoDatos)
+        .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))
+        .fuenteFinanciacion(fuenteFinanciacion)
+        .tipoFinanciacion(tipoFinanciacion)
+        .porcentajeFinanciacion(50)
         .build();
+    // @formatter:on
 
     return solicitudProyectoEntidadFinanciadoraAjena;
   }

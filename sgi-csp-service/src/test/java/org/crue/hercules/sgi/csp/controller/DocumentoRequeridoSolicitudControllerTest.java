@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.DocumentoRequeridoSolicitudNotFoundException;
@@ -236,35 +236,37 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .id(convocatoriaId)//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria = Convocatoria.builder()
+        .id(convocatoriaId)
+        .estado(Convocatoria.Estado.BORRADOR)
+        .activo(Boolean.TRUE)
         .build();
 
-    TipoFase tipoFase = TipoFase.builder()//
-        .id(convocatoriaFaseId)//
-        .nombre("nombre-1")//
-        .activo(Boolean.TRUE)//
+    TipoFase tipoFase = TipoFase.builder()
+        .id(convocatoriaFaseId)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
         .build();
 
-    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()//
-        .id(convocatoriaFaseId)//
-        .convocatoria(convocatoria)//
-        .tipoFase(tipoFase)//
-        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
-        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
-        .observaciones("observaciones")//
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .id(convocatoriaFaseId)
+        .convocatoria(convocatoria)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
+        .observaciones("observaciones")
         .build();
 
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()//
-        .id(configuracionSolicitudId)//
-        .convocatoria(convocatoria)//
-        .tramitacionSGI(Boolean.TRUE)//
-        .fasePresentacionSolicitudes(convocatoriaFase)//
-        .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoria(convocatoria)
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(convocatoriaFase)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)
         .build();
+    // @formatter:on
 
     return configuracionSolicitud;
 
@@ -278,12 +280,14 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
 
-    return TipoDocumento.builder()//
-        .id(id)//
-        .nombre("nombreTipoDocumento-" + id)//
-        .descripcion("descripcionTipoDocumento-" + id)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return TipoDocumento.builder()
+        .id(id)
+        .nombre("nombreTipoDocumento-" + id)
+        .descripcion("descripcionTipoDocumento-" + id)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -294,12 +298,14 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
    */
   private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(Long id) {
 
-    return DocumentoRequeridoSolicitud.builder()//
-        .id(id)//
-        .configuracionSolicitud(generarMockConfiguracionSolicitud(id, id, id))//
-        .tipoDocumento(generarMockTipoDocumento(id))//
-        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)//
+    // @formatter:off
+    return DocumentoRequeridoSolicitud.builder()
+        .id(id)
+        .configuracionSolicitud(generarMockConfiguracionSolicitud(id, id, id))
+        .tipoDocumento(generarMockTipoDocumento(id))
+        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
         .build();
+    // @formatter:on
   }
 
 }

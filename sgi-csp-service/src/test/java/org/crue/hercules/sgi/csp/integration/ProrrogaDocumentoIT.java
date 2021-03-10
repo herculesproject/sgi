@@ -197,14 +197,16 @@ public class ProrrogaDocumentoIT extends BaseIT {
    */
   private ProrrogaDocumento generarMockProrrogaDocumento(Long id, Long proyectoProrrogaId, Long tipoDocumentoId) {
 
-    return ProrrogaDocumento.builder()//
-        .id(id)//
-        .proyectoProrroga(ProyectoProrroga.builder().id(proyectoProrrogaId).build())//
-        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))//
-        .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))//
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())//
-        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))//
-        .visible(Boolean.TRUE)//
+    // @formatter:off
+    return ProrrogaDocumento.builder()
+        .id(id)
+        .proyectoProrroga(ProyectoProrroga.builder().id(proyectoProrrogaId).build())
+        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
+        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .visible(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 }

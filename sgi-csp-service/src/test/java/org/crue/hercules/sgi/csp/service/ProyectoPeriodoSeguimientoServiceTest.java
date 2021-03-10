@@ -1,8 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -141,16 +139,19 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento without FechaInicioPresentacion
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
-    proyectoPeriodoSeguimiento.setFechaFinPresentacion(LocalDateTime.now());
+    proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.now());
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -165,16 +166,19 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento without FechaFinPresentacion
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
-    proyectoPeriodoSeguimiento.setFechaInicioPresentacion(LocalDateTime.now());
+    proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.now());
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -202,8 +206,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento WithInvalidFechas
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
-    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 20));
-    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 10, 10));
+    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-20T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
@@ -222,10 +226,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento WithInvalidFechas
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
-    proyectoPeriodoSeguimiento
-        .setFechaInicioPresentacion(LocalDateTime.of(LocalDate.of(2020, 10, 20), LocalTime.of(0, 0, 0)));
-    proyectoPeriodoSeguimiento
-        .setFechaFinPresentacion(LocalDateTime.of(LocalDate.of(2020, 10, 10), LocalTime.of(23, 59, 59)));
+    proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.parse("2020-10-20T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
@@ -342,16 +344,19 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
-    proyectoPeriodoSeguimiento.setFechaFinPresentacion(LocalDateTime.now());
+    proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.now());
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -370,16 +375,19 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
-    proyectoPeriodoSeguimiento.setFechaInicioPresentacion(LocalDateTime.now());
+    proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.now());
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -415,8 +423,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
-    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 20));
-    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 10, 10));
+    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-20T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
@@ -439,10 +447,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
-    proyectoPeriodoSeguimiento
-        .setFechaInicioPresentacion(LocalDateTime.of(LocalDate.of(2020, 10, 20), LocalTime.of(0, 0, 0)));
-    proyectoPeriodoSeguimiento
-        .setFechaFinPresentacion(LocalDateTime.of(LocalDate.of(2020, 10, 10), LocalTime.of(23, 59, 59)));
+    proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.parse("2020-10-20T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
@@ -600,7 +606,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     estadoProyecto.setId(id == null ? 1 : id);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id == null ? 1 : id));
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
@@ -618,8 +624,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
-    proyecto.setFechaInicio(LocalDate.of(2020, 01, 01));
-    proyecto.setFechaFin(LocalDate.of(2021, 01, 01));
+    proyecto.setFechaInicio(Instant.parse("2020-01-01T00:00:00Z"));
+    proyecto.setFechaFin(Instant.parse("2021-01-01T23:59:59Z"));
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -634,8 +640,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyecto(proyecto);
     proyectoPeriodoSeguimiento.setNumPeriodo(1);
-    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 19));
-    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 12, 19));
+    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
     proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
 
     return proyectoPeriodoSeguimiento;

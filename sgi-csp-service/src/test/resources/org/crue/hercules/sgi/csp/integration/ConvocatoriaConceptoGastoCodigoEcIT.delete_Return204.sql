@@ -28,4 +28,4 @@ insert into csp.concepto_gasto (id,nombre,descripcion,activo) values (1,'concept
 INSERT INTO csp.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, permitido) VALUES(1, 1, 1,true);
 
 --CONVOCATORIA CONCEPTO GASTO CÓDIGO ECONÓMICO
-INSERT INTO csp.convocatoria_concepto_gasto_codigo_ec(id, convocatoria_concepto_gasto_id, codigo_economico_ref, fecha_inicio, fecha_fin) VALUES(1, 1, 'cod-001', '2020-10-03', '2020-10-03');
+INSERT INTO csp.convocatoria_concepto_gasto_codigo_ec(id, convocatoria_concepto_gasto_id, codigo_economico_ref, fecha_inicio, fecha_fin) VALUES(1, 1, 'cod-001', '2020-10-03T00:00:00Z', '2020-10-03T23:59:59Z');

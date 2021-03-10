@@ -20,24 +20,26 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryT
 
     // given: 2 ConvocatoriaEntidadConvocante de los que 1 coincide con el
     // ConvocatoriaId y EntidadRef buscado
-    Convocatoria convocatoria1 = Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-1")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria1 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-1")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-2")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    Convocatoria convocatoria2 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-2")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(convocatoria2);
+    // @formatter:on
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante1 = new ConvocatoriaEntidadConvocante(null,
         convocatoria1, "entidadRef-1", null);
@@ -67,24 +69,26 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryT
   public void findByConvocatoriaIdIdAndEntidadRef_ReturnsNull() throws Exception {
     // given: 2 ConvocatoriaEntidadConvocante que no coincide con el ConvocatoriaId
     // y EntidadRef buscado
-    Convocatoria convocatoria1 = Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-1")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria1 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-1")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-2")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    Convocatoria convocatoria2 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-2")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(convocatoria2);
+    // @formatter:on
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante1 = new ConvocatoriaEntidadConvocante(null,
         convocatoria1, "entidadRef-1", null);

@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -1038,12 +1038,14 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    */
   private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(Long id) {
 
-    return DocumentoRequeridoSolicitud.builder()//
-        .id(id)//
-        .configuracionSolicitud(generarMockConfiguracionSolicitud(id, id, id))//
-        .tipoDocumento(generarMockTipoDocumento(id))//
-        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)//
+    // @formatter:off
+    return DocumentoRequeridoSolicitud.builder()
+        .id(id)
+        .configuracionSolicitud(generarMockConfiguracionSolicitud(id, id, id))
+        .tipoDocumento(generarMockTipoDocumento(id))
+        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1055,15 +1057,17 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    */
   private ModeloTipoFase generarMockModeloTipoFase(ConvocatoriaFase convocatoriaTipoFase) {
 
-    return ModeloTipoFase.builder()//
-        .id(convocatoriaTipoFase.getId() == null ? 1L : convocatoriaTipoFase.getId())//
-        .modeloEjecucion(convocatoriaTipoFase.getConvocatoria().getModeloEjecucion())//
-        .tipoFase(convocatoriaTipoFase.getTipoFase())//
-        .solicitud(Boolean.TRUE)//
-        .convocatoria(Boolean.TRUE)//
-        .proyecto(Boolean.TRUE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return ModeloTipoFase.builder()
+        .id(convocatoriaTipoFase.getId() == null ? 1L : convocatoriaTipoFase.getId())
+        .modeloEjecucion(convocatoriaTipoFase.getConvocatoria().getModeloEjecucion())
+        .tipoFase(convocatoriaTipoFase.getTipoFase())
+        .solicitud(Boolean.TRUE)
+        .convocatoria(Boolean.TRUE)
+        .proyecto(Boolean.TRUE)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1075,14 +1079,16 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    */
   private ModeloTipoDocumento generarMockModeloTipoDocumento(DocumentoRequeridoSolicitud documentoRequeridoSolicitud) {
 
-    return ModeloTipoDocumento.builder()//
-        .id(documentoRequeridoSolicitud.getId() == null ? 1L : documentoRequeridoSolicitud.getId())//
-        .modeloEjecucion(documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion())//
+    // @formatter:off
+    return ModeloTipoDocumento.builder()
+        .id(documentoRequeridoSolicitud.getId() == null ? 1L : documentoRequeridoSolicitud.getId())
+        .modeloEjecucion(documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion())
         .modeloTipoFase(generarMockModeloTipoFase(
-            documentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes()))//
-        .tipoDocumento(documentoRequeridoSolicitud.getTipoDocumento())//
-        .activo(Boolean.TRUE)//
+            documentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes()))
+        .tipoDocumento(documentoRequeridoSolicitud.getTipoDocumento())
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1093,12 +1099,14 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
 
-    return TipoDocumento.builder()//
-        .id(id)//
-        .nombre("nombreTipoDocumento-" + id)//
-        .descripcion("descripcionTipoDocumento-" + id)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return TipoDocumento.builder()
+        .id(id)
+        .nombre("nombreTipoDocumento-" + id)
+        .descripcion("descripcionTipoDocumento-" + id)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1109,12 +1117,14 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    */
   private TipoFase generarMockTipoFase(Long id) {
 
-    return TipoFase.builder()//
-        .id(id)//
-        .nombre("nombreTipoFase-" + id)//
-        .descripcion("descripcionTipoFase-" + id)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return TipoFase.builder()
+        .id(id)
+        .nombre("nombreTipoFase-" + id)
+        .descripcion("descripcionTipoFase-" + id)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1132,23 +1142,25 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
 
     TipoFase tipoFase = generarMockTipoFase(1L);
 
-    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()//
-        .id(convocatoriaFaseId)//
-        .convocatoria(convocatoria)//
-        .tipoFase(tipoFase)//
-        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
-        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
-        .observaciones("observaciones")//
+    // @formatter:off
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .id(convocatoriaFaseId)
+        .convocatoria(convocatoria)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
+        .observaciones("observaciones")
         .build();
 
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()//
-        .id(configuracionSolicitudId)//
-        .convocatoria(convocatoria)//
-        .tramitacionSGI(Boolean.TRUE)//
-        .fasePresentacionSolicitudes(convocatoriaFase)//
-        .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoria(convocatoria)
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(convocatoriaFase)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)
         .build();
+    // @formatter:on
 
     return configuracionSolicitud;
   }
@@ -1168,61 +1180,63 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
 
+    // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
-        : ModeloEjecucion.builder()//
-            .id(modeloEjecucionId)//
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))//
-            .activo(Boolean.TRUE)//
+        : ModeloEjecucion.builder()
+            .id(modeloEjecucionId)
+            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .activo(Boolean.TRUE)
             .build();
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : TipoFinalidad.builder()//
-            .id(modeloTipoFinalidadId)//
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))//
-            .activo(Boolean.TRUE)//
+        : TipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
+            .activo(Boolean.TRUE)
             .build();
 
     ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : ModeloTipoFinalidad.builder()//
-            .id(modeloTipoFinalidadId)//
-            .modeloEjecucion(modeloEjecucion)//
-            .tipoFinalidad(tipoFinalidad)//
-            .activo(Boolean.TRUE)//
+        : ModeloTipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .modeloEjecucion(modeloEjecucion)
+            .tipoFinalidad(tipoFinalidad)
+            .activo(Boolean.TRUE)
             .build();
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
-        : TipoRegimenConcurrencia.builder()//
-            .id(tipoRegimenConcurrenciaId)//
-            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))//
-            .activo(Boolean.TRUE)//
+        : TipoRegimenConcurrencia.builder()
+            .id(tipoRegimenConcurrenciaId)
+            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))
+            .activo(Boolean.TRUE)
             .build();
 
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
-        : TipoAmbitoGeografico.builder()//
-            .id(tipoAmbitoGeogragicoId)//
-            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))//
-            .activo(Boolean.TRUE)//
+        : TipoAmbitoGeografico.builder()
+            .id(tipoAmbitoGeogragicoId)
+            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))
+            .activo(Boolean.TRUE)
             .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .id(convocatoriaId)//
-        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))//
-        .modeloEjecucion(modeloEjecucion)//
-        .codigo("codigo-" + String.format("%03d", convocatoriaId))//
-        .anio(2020)//
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))//
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))//
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
-        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
-        .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
-        .colaborativos(Boolean.TRUE)//
-        .estado(Convocatoria.Estado.REGISTRADA)//
-        .duracion(12)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
-        .activo(activo)//
+    Convocatoria convocatoria = Convocatoria.builder()
+        .id(convocatoriaId)
+        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
+        .modeloEjecucion(modeloEjecucion)
+        .codigo("codigo-" + String.format("%03d", convocatoriaId))
+        .anio(2020)
+        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .objeto("objeto-" + String.format("%03d", convocatoriaId))
+        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
+        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
+        .regimenConcurrencia(tipoRegimenConcurrencia)
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
+        .colaborativos(Boolean.TRUE)
+        .estado(Convocatoria.Estado.REGISTRADA)
+        .duracion(12)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)
+        .activo(activo)
         .build();
+    // @formatter:on
 
     return convocatoria;
   }

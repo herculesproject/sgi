@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -29,8 +29,9 @@ public class ProyectoProrrogaRepositoryTest extends BaseRepositoryTest {
 
     // given: dos registros ProyectoProrroga.
     Proyecto proyecto = generarMockProyecto("-001");
-    generarMockProyectoProrroga("-001", proyecto, LocalDate.of(2020, 01, 01));
-    ProyectoProrroga proyectoProrroga2 = generarMockProyectoProrroga("-002", proyecto, LocalDate.of(2020, 02, 01));
+    generarMockProyectoProrroga("-001", proyecto, Instant.parse("2020-01-01T00:00:00Z"));
+    ProyectoProrroga proyectoProrroga2 = generarMockProyectoProrroga("-002", proyecto,
+        Instant.parse("2020-02-01T23:59:59Z"));
 
     Long idProyectoBusqueda = proyecto.getId();
 
@@ -49,8 +50,8 @@ public class ProyectoProrrogaRepositoryTest extends BaseRepositoryTest {
 
     // given: dos registros ProyectoProrroga.
     Proyecto proyecto = generarMockProyecto("-001");
-    generarMockProyectoProrroga("-001", proyecto, LocalDate.of(2020, 01, 01));
-    generarMockProyectoProrroga("-002", proyecto, LocalDate.of(2020, 02, 01));
+    generarMockProyectoProrroga("-001", proyecto, Instant.parse("2020-01-01T00:00:00Z"));
+    generarMockProyectoProrroga("-002", proyecto, Instant.parse("2020-02-01T23:59:59Z"));
 
     Long idProyectoBusqueda = 2L;
 
@@ -67,8 +68,10 @@ public class ProyectoProrrogaRepositoryTest extends BaseRepositoryTest {
 
     // given: dos registros ProyectoProrroga.
     Proyecto proyecto = generarMockProyecto("-001");
-    ProyectoProrroga proyectoProrroga1 = generarMockProyectoProrroga("-001", proyecto, LocalDate.of(2020, 01, 01));
-    ProyectoProrroga proyectoProrroga2 = generarMockProyectoProrroga("-002", proyecto, LocalDate.of(2020, 02, 01));
+    ProyectoProrroga proyectoProrroga1 = generarMockProyectoProrroga("-001", proyecto,
+        Instant.parse("2020-01-01T00:00:00Z"));
+    ProyectoProrroga proyectoProrroga2 = generarMockProyectoProrroga("-002", proyecto,
+        Instant.parse("2020-02-01T23:59:59Z"));
 
     Long idProyectoProrrogaExcluido = proyectoProrroga2.getId();
     Long idProyectoBusqueda = proyecto.getId();
@@ -89,7 +92,8 @@ public class ProyectoProrrogaRepositoryTest extends BaseRepositoryTest {
 
     // given: dos registros ProyectoProrroga.
     Proyecto proyecto = generarMockProyecto("-001");
-    ProyectoProrroga proyectoProrroga1 = generarMockProyectoProrroga("-001", proyecto, LocalDate.of(2020, 01, 01));
+    ProyectoProrroga proyectoProrroga1 = generarMockProyectoProrroga("-001", proyecto,
+        Instant.parse("2020-01-01T00:00:00Z"));
 
     Long idProyectoProrrogaExcluido = proyectoProrroga1.getId();
     Long idProyectoBusqueda = proyecto.getId();
@@ -111,44 +115,46 @@ public class ProyectoProrrogaRepositoryTest extends BaseRepositoryTest {
    */
   private Proyecto generarMockProyecto(String suffix) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion" + suffix)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()//
-        .nombre("nombreTipoFinalidad" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
+        .nombre("nombreTipoFinalidad" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()//
-        .nombre("nombreTipoAmbitoGeografico" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
+        .nombre("nombreTipoAmbitoGeografico" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    ModeloUnidad modeloUnidad = ModeloUnidad.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .unidadGestionRef("OPE")//
-        .activo(Boolean.TRUE)//
+    ModeloUnidad modeloUnidad = ModeloUnidad.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("OPE")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
-    Proyecto proyecto = Proyecto.builder()//
-        .acronimo("PR" + suffix)//
-        .codigoExterno("COD" + suffix)//
-        .titulo("titulo" + suffix)//
-        .unidadGestionRef("OPE")//
-        .modeloEjecucion(modeloEjecucion)//
-        .finalidad(tipoFinalidad)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .paquetesTrabajo(Boolean.TRUE)//
-        .activo(Boolean.TRUE)//
+    Proyecto proyecto = Proyecto.builder()
+        .acronimo("PR" + suffix)
+        .codigoExterno("COD" + suffix)
+        .titulo("titulo" + suffix)
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion)
+        .finalidad(tipoFinalidad)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .paquetesTrabajo(Boolean.TRUE)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
 
     return entityManager.persistAndFlush(proyecto);
 
@@ -161,17 +167,19 @@ public class ProyectoProrrogaRepositoryTest extends BaseRepositoryTest {
    * @param fechaConcesion fecha concesión
    * @return el objeto ProyectoProrroga
    */
-  private ProyectoProrroga generarMockProyectoProrroga(String suffix, Proyecto proyecto, LocalDate fechaConcesion) {
+  private ProyectoProrroga generarMockProyectoProrroga(String suffix, Proyecto proyecto, Instant fechaConcesion) {
 
-    ProyectoProrroga proyectoProrroga = ProyectoProrroga.builder()//
-        .proyecto(proyecto)//
-        .numProrroga(1)//
-        .fechaConcesion(fechaConcesion)//
-        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .importe(BigDecimal.valueOf(123.45))//
-        .observaciones("observaciones-proyecto-prorroga" + suffix)//
+    // @formatter:off
+    ProyectoProrroga proyectoProrroga = ProyectoProrroga.builder()
+        .proyecto(proyecto)
+        .numProrroga(1)
+        .fechaConcesion(fechaConcesion)
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .importe(BigDecimal.valueOf(123.45))
+        .observaciones("observaciones-proyecto-prorroga" + suffix)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(proyectoProrroga);
   }
 }

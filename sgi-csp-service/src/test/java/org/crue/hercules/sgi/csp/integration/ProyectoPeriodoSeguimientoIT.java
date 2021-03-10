@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -169,12 +169,14 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
    */
   private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id, Long proyectoId) {
 
-    return ProyectoPeriodoSeguimiento.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .numPeriodo(1).fechaInicio(LocalDate.of(2020, 10, 01))//
-        .fechaFin(LocalDate.of(2020, 10, 05))//
-        .observaciones("obs-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoPeriodoSeguimiento.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .numPeriodo(1).fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-04T23:59:59Z"))
+        .observaciones("obs-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 }

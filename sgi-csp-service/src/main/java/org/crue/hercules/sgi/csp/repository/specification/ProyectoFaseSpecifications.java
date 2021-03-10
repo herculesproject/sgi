@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
@@ -63,7 +63,7 @@ public class ProyectoFaseSpecifications {
    * @return specification para obtener los {@link ProyectoFase} con rango de
    *         fechas solapadas
    */
-  public static Specification<ProyectoFase> byRangoFechaSolapados(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+  public static Specification<ProyectoFase> byRangoFechaSolapados(Instant fechaInicio, Instant fechaFin) {
     return (root, query, cb) -> {
       return cb.and(cb.lessThanOrEqualTo(root.get(ProyectoFase_.fechaInicio), fechaFin),
           cb.greaterThanOrEqualTo(root.get(ProyectoFase_.fechaFin), fechaInicio));

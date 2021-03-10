@@ -1,13 +1,13 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto_;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto_;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
@@ -99,16 +99,16 @@ public class ConvocatoriaConceptoGastoCodigoEcSpecifications {
    *         {@link ConvocatoriaConceptoGastoCodigoEc} con rango de fechas
    *         solapadas
    */
-  public static Specification<ConvocatoriaConceptoGastoCodigoEc> byRangoFechaSolapados(LocalDate fechaInicio,
-      LocalDate fechaFin) {
+  public static Specification<ConvocatoriaConceptoGastoCodigoEc> byRangoFechaSolapados(Instant fechaInicio,
+      Instant fechaFin) {
     return (root, query, cb) -> {
       return cb.and(
           cb.or(cb.isNull(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio)),
               cb.lessThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaInicio),
-                  fechaFin != null ? fechaFin : LocalDate.of(2500, 1, 1))),
+                  fechaFin != null ? fechaFin : Instant.parse("2500-01-01T23:59:59Z"))),
           cb.or(cb.isNull(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin)),
               cb.greaterThanOrEqualTo(root.get(ConvocatoriaConceptoGastoCodigoEc_.fechaFin),
-                  fechaInicio != null ? fechaInicio : LocalDate.of(1900, 1, 1))));
+                  fechaInicio != null ? fechaInicio : Instant.parse("1900-01-01T00:00:00Z"))));
     };
   }
 

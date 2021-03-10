@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -62,7 +62,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoHito.getProyecto().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario")
             .value("comentario-proyecto-hito-" + String.format("%03d", proyectoHito.getId())))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(proyectoHito.getTipoHito().getId()));
@@ -106,7 +106,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoHitoExistente.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoHitoExistente.getProyecto().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario")
             .value("comentario-proyecto-hito-" + String.format("%03d", proyectoHito.getId())))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(proyectoHito.getTipoHito().getId()));
@@ -219,8 +219,9 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
         // and the requested ProyectoHito is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19")).andExpect(MockMvcResultMatchers
-            .jsonPath("comentario").value("comentario-proyecto-hito-" + String.format("%03d", id)));
+        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario")
+            .value("comentario-proyecto-hito-" + String.format("%03d", id)));
 
   }
 
@@ -258,7 +259,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
     ProyectoHito proyectoHito = new ProyectoHito();
     proyectoHito.setId(id);
     proyectoHito.setProyecto(proyecto);
-    proyectoHito.setFecha(LocalDate.of(2020, 10, 19));
+    proyectoHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoHito.setComentario("comentario-proyecto-hito-" + String.format("%03d", id));
     proyectoHito.setGeneraAviso(true);
     proyectoHito.setTipoHito(tipoHito);

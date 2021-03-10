@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: Un nuevo ProyectoProrroga
     ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
-    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plusDays(1));
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plus(Period.ofDays(1)));
     proyectoProrroga.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -210,7 +211,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga with fechaConcesion anterior a la última prórroga
     ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
-    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minusDays(1));
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minus(Period.ofDays(1)));
     proyectoProrroga.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -230,8 +231,8 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: Fecha Fin anterior a la de inicio del proyecto
     ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
-    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plusDays(1));
-    proyectoProrroga.setFechaFin(proyectoProrroga.getProyecto().getFechaInicio().minusDays(1));
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plus(Period.ofDays(1)));
+    proyectoProrroga.setFechaFin(proyectoProrroga.getProyecto().getFechaInicio().minus(Period.ofDays(1)));
     proyectoProrroga.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -259,9 +260,9 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: Un nuevo ProyectoProrroga con el tipoProrroga actualizado
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(2L, 1L);
-    proyectoProrrogaAnterior.setFechaConcesion(proyectoProrroga.getFechaConcesion().minusDays(1));
+    proyectoProrrogaAnterior.setFechaConcesion(proyectoProrroga.getFechaConcesion().minus(Period.ofDays(1)));
     ProyectoProrroga proyectoProrrogaActualizado = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrrogaActualizado.setFechaFin(proyectoProrrogaActualizado.getFechaFin().plusDays(1));
+    proyectoProrrogaActualizado.setFechaFin(proyectoProrrogaActualizado.getFechaFin().plus(Period.ofDays(1)));
     proyectoProrrogaActualizado.setObservaciones("observaciones-modificada");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrroga));
@@ -444,7 +445,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
-    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minusDays(1));
+    proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minus(Period.ofDays(1)));
     proyectoProrroga.setObservaciones("observaciones-modificada");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -468,7 +469,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: Fecha Fin anterior a la de inicio del proyecto
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
-    proyectoProrroga.setFechaFin(proyectoProrroga.getProyecto().getFechaInicio().minusDays(1));
+    proyectoProrroga.setFechaFin(proyectoProrroga.getProyecto().getFechaInicio().minus(Period.ofDays(1)));
     proyectoProrroga.setObservaciones("observaciones-modificada");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -645,19 +646,21 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
 
-    return ProyectoProrroga.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder()//
-            .id(proyectoId)//
-            .fechaInicio(LocalDate.of(2020, 01, 01))//
-            .fechaFin(LocalDate.of(2021, 01, 01))//
-            .build())//
-        .numProrroga(1)//
-        .fechaConcesion(LocalDate.of(2020, 01, 01))//
-        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .importe(BigDecimal.valueOf(123.45))//
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoProrroga.builder()
+        .id(id)
+        .proyecto(Proyecto.builder()
+            .id(proyectoId)
+            .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+            .fechaFin(Instant.parse("2021-01-01T23:59:59Z"))
+            .build())
+        .numProrroga(1)
+        .fechaConcesion(Instant.parse("2020-01-01T00:00:00Z"))
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .importe(BigDecimal.valueOf(123.45))
+        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 }

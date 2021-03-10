@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
@@ -62,7 +62,7 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
     Assert.isTrue(convocatoriaHito.getTipoHito() != null && convocatoriaHito.getTipoHito().getId() != null,
         "Id Hito no puede ser null para crear ConvocatoriaHito");
 
-    if (convocatoriaHito.getFecha().isBefore(LocalDate.now())) {
+    if (convocatoriaHito.getFecha().isBefore(Instant.now())) {
       convocatoriaHito.setGeneraAviso(false);
     }
 
@@ -169,7 +169,7 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
 
       convocatoriaHitoActualizar.setTipoHito(modeloTipoHito.get().getTipoHito());
 
-      if (convocatoriaHitoActualizar.getFecha().isBefore(LocalDate.now())) {
+      if (convocatoriaHitoActualizar.getFecha().isBefore(Instant.now())) {
         convocatoriaHitoActualizar.setGeneraAviso(false);
       }
       repository

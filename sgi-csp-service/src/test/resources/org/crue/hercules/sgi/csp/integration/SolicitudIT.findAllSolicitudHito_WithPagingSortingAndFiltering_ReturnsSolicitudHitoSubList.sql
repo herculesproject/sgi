@@ -26,7 +26,7 @@ VALUES(1, 'OPE', 1, 'codigo-001', 2020, 'titulo-001', 'objeto-001', 'observacion
 INSERT INTO csp.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
 
 --CONVOCATORIA FASE
-INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01', '2020-10-15', 'observaciones-1');
+INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO csp.configuracion_solicitud 
@@ -44,7 +44,7 @@ INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_r
 
 
 -- ESTADO SOLICITUD
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17 15:00', 'comentario');
+INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
 
 -- SOLICITUD
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
@@ -57,10 +57,10 @@ INSERT INTO csp.tipo_Hito (id, nombre, descripcion, activo) VALUES (1, 'nombre-0
 
 -- SOLICITUD HITO
 INSERT INTO csp.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha, comentario, genera_aviso ) 
-VALUES (1, 1, 1, '2020-12-02', 'comentario-001', true);
+VALUES (1, 1, 1, '2020-12-02T00:00:00Z', 'comentario-001', true);
 INSERT INTO csp.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha, comentario, genera_aviso ) 
-VALUES (2, 2, 1, '2020-12-02', 'comentario-001', true);
+VALUES (2, 2, 1, '2020-12-02T00:00:00Z', 'comentario-001', true);
 INSERT INTO csp.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha, comentario, genera_aviso ) 
-VALUES (3, 1, 1, '2020-12-02', 'comentario-001', true);
+VALUES (3, 1, 1, '2020-12-02T00:00:00Z', 'comentario-001', true);
 INSERT INTO csp.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha, comentario, genera_aviso ) 
-VALUES (4, 1, 1, '2020-12-02', 'comentario-001', true);
+VALUES (4, 1, 1, '2020-12-02T00:00:00Z', 'comentario-001', true);

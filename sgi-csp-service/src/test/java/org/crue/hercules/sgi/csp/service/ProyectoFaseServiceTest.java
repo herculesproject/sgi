@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -108,8 +108,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // given: Un nuevo ProyectoFase con rango de fechas pasado
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
-    proyectoFase.setFechaInicio(LocalDateTime.now().minusDays(2));
-    proyectoFase.setFechaFin(LocalDateTime.now().minusDays(1));
+    proyectoFase.setFechaInicio(Instant.now().minus(Period.ofDays(2)));
+    proyectoFase.setFechaFin(Instant.now().minus(Period.ofDays(1)));
     proyectoFase.setGeneraAviso(Boolean.TRUE);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -213,7 +213,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // given: Fecha Inicio > fechaFin
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
-    proyectoFase.setFechaInicio(proyectoFase.getFechaFin().plusDays(1));
+    proyectoFase.setFechaInicio(proyectoFase.getFechaFin().plus(Period.ofDays(1)));
 
     // when: create ProyectoFase
     // then: throw exception as Inicio > fechaFin
@@ -324,8 +324,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   public void create_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
     // given: a existing ProyectoFase with date ranges overlapping
     ProyectoFase proyectoFaseExistente = generarMockProyectoFase(2L);
-    proyectoFaseExistente.setFechaInicio(LocalDateTime.of(2020, 10, 18, 0, 0, 0));
-    proyectoFaseExistente.setFechaFin(LocalDateTime.of(2020, 10, 22, 23, 59, 59));
+    proyectoFaseExistente.setFechaInicio(Instant.parse("2020-10-18T00:00:00Z"));
+    proyectoFaseExistente.setFechaFin(Instant.parse("2020-10-22T23:59:59Z"));
 
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
@@ -407,8 +407,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     ProyectoFase proyectoFaseActualizado = generarMockProyectoFase(1L);
     proyectoFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
-    proyectoFaseActualizado.setFechaInicio(LocalDateTime.now().minusDays(2));
-    proyectoFaseActualizado.setFechaFin(LocalDateTime.now().minusDays(1));
+    proyectoFaseActualizado.setFechaInicio(Instant.now().minus(Period.ofDays(2)));
+    proyectoFaseActualizado.setFechaFin(Instant.now().minus(Period.ofDays(1)));
     proyectoFaseActualizado.setGeneraAviso(Boolean.TRUE);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFase));
@@ -514,7 +514,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
-    proyectoFase.setFechaInicio(proyectoFase.getFechaFin().plusDays(1));
+    proyectoFase.setFechaInicio(proyectoFase.getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFaseOriginal));
 
@@ -639,8 +639,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   public void update_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
     // given: a existing ProyectoFase with date ranges overlapping
     ProyectoFase proyectoFaseExistente = generarMockProyectoFase(2L);
-    proyectoFaseExistente.setFechaInicio(LocalDateTime.of(2020, 10, 18, 0, 0, 0));
-    proyectoFaseExistente.setFechaFin(LocalDateTime.of(2020, 10, 22, 23, 59, 59));
+    proyectoFaseExistente.setFechaInicio(Instant.parse("2020-10-18T00:00:00Z"));
+    proyectoFaseExistente.setFechaFin(Instant.parse("2020-10-22T23:59:59Z"));
 
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
@@ -818,8 +818,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-proyecto-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
-    proyecto.setFechaInicio(LocalDate.now());
-    proyecto.setFechaFin(LocalDate.now());
+    proyecto.setFechaInicio(Instant.now());
+    proyecto.setFechaFin(Instant.now());
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -844,7 +844,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id));
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     return estadoProyecto;
@@ -878,12 +878,14 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
    */
   private ModeloTipoFase generarMockModeloTipoFase(Long id, ProyectoFase proyectoFase, Boolean activo) {
 
-    return ModeloTipoFase.builder()//
-        .id(id)//
-        .modeloEjecucion(proyectoFase.getProyecto().getModeloEjecucion())//
-        .tipoFase(proyectoFase.getTipoFase())//
-        .activo(activo)//
+    // @formatter:off
+    return ModeloTipoFase.builder()
+        .id(id)
+        .modeloEjecucion(proyectoFase.getProyecto().getModeloEjecucion())
+        .tipoFase(proyectoFase.getTipoFase())
+        .activo(activo)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -894,14 +896,16 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
    */
   private ProyectoFase generarMockProyectoFase(Long id) {
 
-    return ProyectoFase.builder()//
-        .id(id)//
-        .proyecto(generarMockProyecto(1L))//
-        .fechaInicio(LocalDateTime.of(2020, 10, 19, 0, 0, 0))//
-        .fechaFin(LocalDateTime.of(2020, 10, 20, 23, 59, 59))//
-        .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))//
-        .generaAviso(Boolean.TRUE)//
-        .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))//
+    // @formatter:off
+    return ProyectoFase.builder()
+        .id(id)
+        .proyecto(generarMockProyecto(1L))
+        .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-20T00:00:00Z"))
+        .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))
+        .generaAviso(Boolean.TRUE)
+        .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))
         .build();
+    // @formatter:on
   }
 }

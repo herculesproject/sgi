@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,10 +44,10 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
     // actualizado,
     // otro nuevo y sin los otros 3 periodos existentes
     Long proyectoId = 1L;
-    ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, LocalDate.of(2020, 12, 16),
-        LocalDate.of(2020, 12, 18), 1L);
-    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(4L, LocalDate.of(2020, 4, 2),
-        LocalDate.of(2020, 4, 15), 1L);
+    ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, Instant.parse("2020-12-16T00:00:00Z"),
+        Instant.parse("2020-12-18T23:59:59Z"), 1L);
+    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(4L, Instant.parse("2020-04-02T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), 1L);
 
     List<ProyectoEquipo> proyectoEquipos = Arrays.asList(updatedProyectoEquipo, newProyectoEquipo);
 
@@ -81,8 +81,8 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
             .value(proyectoEquipos.get(0).getRolProyecto().getId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("$[0].horasDedicacion").value(proyectoEquipos.get(0).getHorasDedicacion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicio").value("2020-04-02"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFin").value("2020-04-15"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicio").value("2020-04-02T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFin").value("2020-04-15T23:59:59Z"))
 
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(5))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].proyecto.id").value(proyectoId))
@@ -92,8 +92,8 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
             .value(proyectoEquipos.get(0).getRolProyecto().getId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("$[1].horasDedicacion").value(proyectoEquipos.get(0).getHorasDedicacion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicio").value("2020-12-16"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFin").value("2020-12-18"));
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicio").value("2020-12-16T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFin").value("2020-12-18T23:59:59Z"));
   }
 
   @Test
@@ -101,8 +101,8 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
-    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(1L, LocalDate.of(2020, 4, 2), LocalDate.of(2020, 4, 15),
-        1L);
+    ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(1L, Instant.parse("2020-04-02T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), 1L);
 
     BDDMockito.willThrow(new ProyectoEquipoNotFoundException(id)).given(service).update(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<ProyectoEquipo>anyList());
@@ -171,8 +171,7 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
    * @param proyectoId Id Proyecto
    * @return el objeto ProyectoEquipo
    */
-  private ProyectoEquipo generarMockProyectoEquipo(Long id, LocalDate fechaInicio, LocalDate fechaFin,
-      Long proyectoId) {
+  private ProyectoEquipo generarMockProyectoEquipo(Long id, Instant fechaInicio, Instant fechaFin, Long proyectoId) {
 
     ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyecto(Proyecto.builder().id(proyectoId).build())
         .rolProyecto(RolProyecto.builder().id(1L).build()).fechaInicio(fechaInicio).fechaFin(fechaFin).personaRef("001")

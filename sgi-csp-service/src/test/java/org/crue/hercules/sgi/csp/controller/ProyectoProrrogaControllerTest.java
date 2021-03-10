@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -242,8 +242,8 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("numProrroga").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaConcesion").value("2020-01-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-12-31"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaConcesion").value("2020-01-01T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-12-31T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("importe").value(BigDecimal.valueOf(123.45)))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
             .value("observaciones-proyecto-prorroga-" + String.format("%03d", id)));
@@ -373,16 +373,18 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
 
-    return ProyectoProrroga.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .numProrroga(1)//
-        .fechaConcesion(LocalDate.of(2020, 01, 01))//
-        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .importe(BigDecimal.valueOf(123.45))//
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoProrroga.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .numProrroga(1)
+        .fechaConcesion(Instant.parse("2020-01-01T00:00:00Z"))
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .importe(BigDecimal.valueOf(123.45))
+        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 
   /**
@@ -394,15 +396,17 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
    */
   private ProrrogaDocumento generarMockProrrogaDocumento(Long id, Long proyectoProrrogaId, Long tipoDocumentoId) {
 
-    return ProrrogaDocumento.builder()//
-        .id(id)//
-        .proyectoProrroga(ProyectoProrroga.builder().id(proyectoProrrogaId).build())//
-        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))//
-        .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))//
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())//
-        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))//
-        .visible(Boolean.TRUE)//
+    // @formatter:off
+    return ProrrogaDocumento.builder()
+        .id(id)
+        .proyectoProrroga(ProyectoProrroga.builder().id(proyectoProrrogaId).build())
+        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
+        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .visible(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
 }

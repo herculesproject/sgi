@@ -323,10 +323,12 @@ public class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
    */
   private ProyectoEntidadGestora generarMockProyectoEntidadGestora(Long id, Long proyectoId) {
 
-    return ProyectoEntidadGestora.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoEntidadGestora.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 }

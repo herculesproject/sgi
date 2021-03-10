@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -113,7 +113,7 @@ public class ConvocatoriaHitoIT extends BaseIT {
     Assertions.assertThat(convocatoriaHito.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaHito.getComentario()).as("comentario")
         .isEqualTo(convocatoriaHito.getComentario());
-    Assertions.assertThat(convocatoriaHito.getFecha()).as("getFecha()").isEqualTo("2021-10-22");
+    Assertions.assertThat(convocatoriaHito.getFecha()).as("getFecha()").isEqualTo("2021-10-22T00:00:00Z");
 
   }
 
@@ -134,7 +134,7 @@ public class ConvocatoriaHitoIT extends BaseIT {
     ConvocatoriaHito convocatoriaHito = new ConvocatoriaHito();
     convocatoriaHito.setId(id);
     convocatoriaHito.setConvocatoria(convocatoria);
-    convocatoriaHito.setFecha(LocalDate.of(2020, 10, 19));
+    convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
     convocatoriaHito.setComentario("comentario" + id);
     convocatoriaHito.setGeneraAviso(true);
     convocatoriaHito.setTipoHito(tipoHito);

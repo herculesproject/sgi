@@ -465,14 +465,16 @@ public class RolSocioControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", rolSocioId);
 
-    RolSocio rolSocio = RolSocio.builder()//
-        .id(rolSocioId)//
-        .abreviatura(suffix)//
-        .nombre("nombre-" + suffix)//
-        .descripcion("descripcion-" + suffix)//
-        .coordinador(Boolean.FALSE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    RolSocio rolSocio = RolSocio.builder()
+        .id(rolSocioId)
+        .abreviatura(suffix)
+        .nombre("nombre-" + suffix)
+        .descripcion("descripcion-" + suffix)
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
 
     return rolSocio;
   }

@@ -653,28 +653,30 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
    */
   private ProrrogaDocumento generarMockProrrogaDocumento(Long id, Long proyectoProrrogaId, Long tipoDocumentoId) {
 
-    return ProrrogaDocumento.builder()//
-        .id(id)//
-        .proyectoProrroga(ProyectoProrroga.builder()//
-            .id(proyectoProrrogaId)//
-            .proyecto(Proyecto.builder()//
-                .id(1L)//
-                .modeloEjecucion(ModeloEjecucion.builder()//
-                    .id(1L)//
-                    .activo(Boolean.TRUE)//
-                    .build())//
-                .activo(Boolean.TRUE)//
-                .build())//
-            .build())//
-        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))//
-        .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))//
-        .tipoDocumento(TipoDocumento.builder()//
-            .id(tipoDocumentoId)//
-            .activo(Boolean.TRUE)//
-            .build())//
-        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))//
-        .visible(Boolean.TRUE)//
+    // @formatter:off
+    return ProrrogaDocumento.builder()
+        .id(id)
+        .proyectoProrroga(ProyectoProrroga.builder()
+            .id(proyectoProrrogaId)
+            .proyecto(Proyecto.builder()
+                .id(1L)
+                .modeloEjecucion(ModeloEjecucion.builder()
+                    .id(1L)
+                    .activo(Boolean.TRUE)
+                    .build())
+                .activo(Boolean.TRUE)
+                .build())
+            .build())
+        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
+        .tipoDocumento(TipoDocumento.builder()
+            .id(tipoDocumentoId)
+            .activo(Boolean.TRUE)
+            .build())
+        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .visible(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -686,13 +688,15 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
    */
   private ModeloTipoDocumento generarMockModeloTipoDocumento(ProrrogaDocumento prorrogaDocumento) {
 
-    return ModeloTipoDocumento.builder()//
-        .id(prorrogaDocumento.getId() == null ? 1L : prorrogaDocumento.getId())//
-        .modeloEjecucion(prorrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion())//
-        .modeloTipoFase(null)//
-        .tipoDocumento(prorrogaDocumento.getTipoDocumento())//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return ModeloTipoDocumento.builder()
+        .id(prorrogaDocumento.getId() == null ? 1L : prorrogaDocumento.getId())
+        .modeloEjecucion(prorrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion())
+        .modeloTipoFase(null)
+        .tipoDocumento(prorrogaDocumento.getTipoDocumento())
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
 }

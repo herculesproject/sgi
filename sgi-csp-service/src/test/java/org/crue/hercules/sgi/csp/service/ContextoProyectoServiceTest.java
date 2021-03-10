@@ -1,14 +1,14 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ContextoProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ContextoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ContextoProyectoServiceImpl;
@@ -178,18 +178,20 @@ public class ContextoProyectoServiceTest extends BaseServiceTest {
     if (idProyecto == null) {
       idProyecto = 1L;
     }
-    contextoProyecto.setProyecto(Proyecto.builder()//
-        .id(idProyecto)//
-        .unidadGestionRef("OPE")//
-        .modeloEjecucion(ModeloEjecucion.builder()//
-            .nombre("nombreModeloEjecucion")//
-            .activo(Boolean.TRUE)//
-            .build())//
-        .titulo("PRO" + (id != null ? id : ""))//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now())//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    contextoProyecto.setProyecto(Proyecto.builder()
+        .id(idProyecto)
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(ModeloEjecucion.builder()
+            .nombre("nombreModeloEjecucion")
+            .activo(Boolean.TRUE)
+            .build())
+        .titulo("PRO" + (id != null ? id : ""))
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.now())
+        .activo(Boolean.TRUE)
         .build());
+    // @formatter:on
     contextoProyecto.setIntereses("intereses");
     return contextoProyecto;
   }

@@ -1,8 +1,9 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -654,8 +655,8 @@ public class ProyectoIT {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
-    proyecto.setFechaInicio(LocalDate.now());
-    proyecto.setFechaFin(LocalDate.now().plusMonths(1));
+    proyecto.setFechaInicio(Instant.now());
+    proyecto.setFechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3))));
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -680,7 +681,7 @@ public class ProyectoIT {
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("Estado-" + id);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     return estadoProyecto;

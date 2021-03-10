@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -164,8 +164,10 @@ public class ProyectoFaseIT extends BaseIT {
     Assertions.assertThat(proyectoFase.getProyecto().getId()).as("getProyecto().getId()").isEqualTo(1L);
     Assertions.assertThat(proyectoFase.getObservaciones()).as("observaciones")
         .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", idProyectoFase));
-    Assertions.assertThat(proyectoFase.getFechaInicio()).as("getFechaInicio()").isEqualTo("2020-10-01T00:00:00");
-    Assertions.assertThat(proyectoFase.getFechaFin()).as("getFechaFin()").isEqualTo("2020-10-02T23:59:59");
+    Assertions.assertThat(proyectoFase.getFechaInicio()).as("getFechaInicio()")
+        .isEqualTo(Instant.parse("2020-10-01T00:00:00Z"));
+    Assertions.assertThat(proyectoFase.getFechaFin()).as("getFechaFin()")
+        .isEqualTo(Instant.parse("2020-10-02T23:59:59Z"));
 
   }
 
@@ -179,14 +181,16 @@ public class ProyectoFaseIT extends BaseIT {
    */
   private ProyectoFase generarMockProyectoFase(Long id, Long tipoFaseId, Long proyectoId) {
 
-    return ProyectoFase.builder()//
-        .id(id)//
-        .tipoFase(TipoFase.builder().id(tipoFaseId).build())//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .fechaInicio(LocalDateTime.of(2020, 10, 19, 0, 0, 0))//
-        .fechaFin(LocalDateTime.of(2020, 10, 20, 23, 59, 59))//
-        .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))//
-        .generaAviso(Boolean.TRUE)//
+    // @formatter:off
+    return ProyectoFase.builder()
+        .id(id)
+        .tipoFase(TipoFase.builder().id(tipoFaseId).build())
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-20T00:00:00Z"))
+        .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))
+        .generaAviso(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 }

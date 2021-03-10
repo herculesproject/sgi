@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,8 +87,8 @@ public class SolicitudProyectoPeriodoJustificacionControllerTest extends BaseCon
             .value(solicitudProyectoPeriodoJustificaciones.get(0).getMesInicial()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].mesFinal")
             .value(solicitudProyectoPeriodoJustificaciones.get(0).getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicio").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFin").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicio").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFin").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].observaciones")
             .value(solicitudProyectoPeriodoJustificaciones.get(0).getObservaciones()))
 
@@ -100,9 +100,10 @@ public class SolicitudProyectoPeriodoJustificacionControllerTest extends BaseCon
             .value(solicitudProyectoPeriodoJustificaciones.get(1).getMesInicial()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].mesFinal")
             .value(solicitudProyectoPeriodoJustificaciones.get(1).getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicio").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFin").value("2020-11-20")).andExpect(MockMvcResultMatchers
-            .jsonPath("$[1].observaciones").value(solicitudProyectoPeriodoJustificaciones.get(1).getObservaciones()));
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicio").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFin").value("2020-11-20T23:59:59Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].observaciones")
+            .value(solicitudProyectoPeriodoJustificaciones.get(1).getObservaciones()));
   }
 
   @Test
@@ -149,8 +150,8 @@ public class SolicitudProyectoPeriodoJustificacionControllerTest extends BaseCon
         .andExpect(MockMvcResultMatchers.jsonPath("numPeriodo").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("mesInicial").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("mesFinal").value(2))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-1"));
   }
 
@@ -201,8 +202,8 @@ public class SolicitudProyectoPeriodoJustificacionControllerTest extends BaseCon
     solicitudProyectoPeriodoJustificacion.setNumPeriodo(1);
     solicitudProyectoPeriodoJustificacion.setMesInicial(mesInicial);
     solicitudProyectoPeriodoJustificacion.setMesFinal(mesFinal);
-    solicitudProyectoPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 10, 10));
-    solicitudProyectoPeriodoJustificacion.setFechaFin(LocalDate.of(2020, 11, 20));
+    solicitudProyectoPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
+    solicitudProyectoPeriodoJustificacion.setFechaFin(Instant.parse("2020-11-20T23:59:59Z"));
     solicitudProyectoPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return solicitudProyectoPeriodoJustificacion;

@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -164,9 +164,9 @@ public class SolicitudProyectoPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(solicitudProyectoPeriodoJustificacion.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(solicitudProyectoPeriodoJustificacion.getMesFinal()).as("getMesFinal()").isEqualTo(2);
     Assertions.assertThat(solicitudProyectoPeriodoJustificacion.getFechaInicio()).as("getFechaInicio()")
-        .isEqualTo(LocalDate.of(2020, 10, 10));
+        .isEqualTo(Instant.parse("2020-10-10T00:00:00Z"));
     Assertions.assertThat(solicitudProyectoPeriodoJustificacion.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(LocalDate.of(2020, 11, 20));
+        .isEqualTo(Instant.parse("2020-11-20T23:59:59Z"));
     Assertions.assertThat(solicitudProyectoPeriodoJustificacion.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(solicitudProyectoPeriodoJustificacion.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-001");
@@ -199,8 +199,8 @@ public class SolicitudProyectoPeriodoJustificacionIT extends BaseIT {
     solicitudProyectoPeriodoJustificacion.setNumPeriodo(1);
     solicitudProyectoPeriodoJustificacion.setMesInicial(mesInicial);
     solicitudProyectoPeriodoJustificacion.setMesFinal(mesFinal);
-    solicitudProyectoPeriodoJustificacion.setFechaInicio(LocalDate.of(2020, 10, 10));
-    solicitudProyectoPeriodoJustificacion.setFechaFin(LocalDate.of(2020, 11, 20));
+    solicitudProyectoPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
+    solicitudProyectoPeriodoJustificacion.setFechaFin(Instant.parse("2020-11-20T23:59:59Z"));
     solicitudProyectoPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return solicitudProyectoPeriodoJustificacion;

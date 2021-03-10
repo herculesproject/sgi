@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -67,10 +67,10 @@ public class ProyectoEquipoIT extends BaseIT {
     // actualizado,
     // otro nuevo y sin los otros 3 periodos existentes
     Long proyectoId = 1L;
-    ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, LocalDate.of(2020, 12, 16),
-        LocalDate.of(2020, 12, 18), 1L);
-    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(103L, LocalDate.of(2020, 4, 2),
-        LocalDate.of(2020, 4, 15), 1L);
+    ProyectoEquipo newProyectoEquipo = generarMockProyectoEquipo(null, Instant.parse("2020-12-16T00:00:00Z"),
+        Instant.parse("2020-12-18T23:59:59Z"), 1L);
+    ProyectoEquipo updatedProyectoEquipo = generarMockProyectoEquipo(103L, Instant.parse("2020-04-02T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), 1L);
 
     proyectoEquipos = Arrays.asList(newProyectoEquipo, updatedProyectoEquipo);
 
@@ -157,8 +157,8 @@ public class ProyectoEquipoIT extends BaseIT {
     Assertions.assertThat(responseData.getPersonaRef()).as("getPersonaRef()").isEqualTo("ref-001");
     Assertions.assertThat(responseData.getHorasDedicacion()).as("getHorasDedicacion()").isEqualTo(1);
     Assertions.assertThat(responseData.getRolProyecto().getId()).as("getRolProyecto().getId()").isEqualTo(1);
-    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()").isEqualTo("2020-01-01");
-    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()").isEqualTo("2020-01-15");
+    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()").isEqualTo("2020-01-01T00:00:00Z");
+    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()").isEqualTo("2020-01-15T23:59:59Z");
   }
 
   /**
@@ -170,8 +170,7 @@ public class ProyectoEquipoIT extends BaseIT {
    * @param proyectoId Id Proyecto
    * @return el objeto ProyectoEquipo
    */
-  private ProyectoEquipo generarMockProyectoEquipo(Long id, LocalDate fechaInicio, LocalDate fechaFin,
-      Long proyectoId) {
+  private ProyectoEquipo generarMockProyectoEquipo(Long id, Instant fechaInicio, Instant fechaFin, Long proyectoId) {
 
     ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyecto(Proyecto.builder().id(proyectoId).build())
         .rolProyecto(RolProyecto.builder().id(1L).build()).fechaInicio(fechaInicio).fechaFin(fechaFin).personaRef("001")

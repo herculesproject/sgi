@@ -32,9 +32,9 @@ VALUES(2, 'unidad-002', 1, 'codigo-002', 2020, 'titulo-002', 'objeto-002', 'obse
 
 -- CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
 INSERT INTO csp.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones) 
-  VALUES (1, 1, 1, 1, 2, '2020-10-10', '2020-11-20', 'observaciones-001');
+  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-001');
 INSERT INTO csp.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones) 
-  VALUES (2, 1, 2, 10, 21, '2020-10-10', '2020-11-20', 'observaciones-002');
+  VALUES (2, 1, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-002');
 INSERT INTO csp.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones) 
   VALUES (3, 1, 3, 22, 23, null, null, 'observaciones-003');
 INSERT INTO csp.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones) 

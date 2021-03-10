@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Optional;
 
@@ -633,7 +635,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     // Anio
     if (datosConvocatoria.getAnio() != null) {
-      Assert.isTrue(datosConvocatoria.getAnio() <= (LocalDate.now().getYear() + 1),
+      Assert.isTrue(datosConvocatoria.getAnio() <= (Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR) + 1),
           "Año no debe ser mayor que el año actual + 1");
     }
 

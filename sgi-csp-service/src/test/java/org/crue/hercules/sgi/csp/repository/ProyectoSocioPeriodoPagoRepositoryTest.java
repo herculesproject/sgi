@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -37,33 +37,29 @@ public class ProyectoSocioPeriodoPagoRepositoryTest {
     ModeloEjecucion modeloEjecucion1 = entityManager
         .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true));
 
-    Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()//
-        .titulo("proyecto 1").acronimo("PR1").fechaInicio(LocalDate.of(2020, 11, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build());
+    // @formatter:on
+    Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder().titulo("proyecto 1").acronimo("PR1")
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z")).fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1).activo(Boolean.TRUE).build());
 
-    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()//
-        .abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .coordinador(Boolean.FALSE)//
-        .activo(Boolean.TRUE)//
-        .build());
+    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder().abreviatura("001").nombre("nombre-001")
+        .descripcion("descripcion-001").coordinador(Boolean.FALSE).activo(Boolean.TRUE).build());
 
-    ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(ProyectoSocio.builder()//
-        .proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build());
+    ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(
+        ProyectoSocio.builder().proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build());
 
-    ProyectoSocio proyectoSocio2 = entityManager.persistAndFlush(ProyectoSocio.builder()//
-        .proyecto(proyecto1).empresaRef("empresa-0025").rolSocio(rolSocio).build());
+    ProyectoSocio proyectoSocio2 = entityManager.persistAndFlush(
+        ProyectoSocio.builder().proyecto(proyecto1).empresaRef("empresa-0025").rolSocio(rolSocio).build());
+    // @formatter:on
 
-    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago1 = entityManager.persistAndFlush(
-        new ProyectoSocioPeriodoPago(null, proyectoSocio1, 1, new BigDecimal(3500), LocalDate.of(2021, 4, 10), null));
+    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago1 = entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(
+        null, proyectoSocio1, 1, new BigDecimal(3500), Instant.parse("2021-04-10T00:00:00Z"), null));
 
-    entityManager.persistAndFlush(
-        new ProyectoSocioPeriodoPago(null, proyectoSocio2, 1, new BigDecimal(2750), LocalDate.of(2021, 1, 10), null));
+    entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(null, proyectoSocio2, 1, new BigDecimal(2750),
+        Instant.parse("2021-01-10T00:00:00Z"), null));
 
-    entityManager.persistAndFlush(
-        new ProyectoSocioPeriodoPago(null, proyectoSocio2, 1, new BigDecimal(1500), LocalDate.of(2021, 2, 10), null));
+    entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(null, proyectoSocio2, 1, new BigDecimal(1500),
+        Instant.parse("2021-02-10T00:00:00Z"), null));
 
     Long proyectoSocioId = proyectoSocio1.getId();
 

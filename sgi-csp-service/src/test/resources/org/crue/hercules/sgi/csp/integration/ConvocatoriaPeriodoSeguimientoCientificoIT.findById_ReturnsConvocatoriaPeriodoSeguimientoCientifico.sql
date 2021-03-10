@@ -24,16 +24,16 @@ VALUES(1, 'unidad-001', 1, 'codigo-001', 2020, 'titulo-001', 'objeto-001', 'obse
 -- CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
 insert into csp.convocatoria_periodo_seguimiento_cientifico
 (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones)
-values(1, 1, 1, 1, 2, '2020-01-01', '2020-02-01', 'observaciones-meses-01-02');
+values(1, 1, 1, 1, 2, '2020-01-01T00:00:00Z', '2020-02-01T23:59:59Z', 'observaciones-meses-01-02');
 
 insert into csp.convocatoria_periodo_seguimiento_cientifico
 (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones)
-values(2, 1, 2, 3, 4, '2020-03-01', '2020-04-01', 'observaciones-meses-03-04');
+values(2, 1, 2, 3, 4, '2020-03-01T00:00:00Z', '2020-04-01T23:59:59Z', 'observaciones-meses-03-04');
 
 insert into csp.convocatoria_periodo_seguimiento_cientifico
 (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones)
-values(3, 1, 3, 5, 6, '2020-05-01', '2020-06-01', 'observaciones-meses-05-06');
+values(3, 1, 3, 5, 6, '2020-05-01T00:00:00Z', '2020-06-01T23:59:59Z', 'observaciones-meses-05-06');
 
 insert into csp.convocatoria_periodo_seguimiento_cientifico
 (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones)
-values(4, 1, 4, 7, 8, '2020-07-01', '2020-08-01', 'observaciones-meses-07-08');
+values(4, 1, 4, 7, 8, '2020-07-01T00:00:00Z', '2020-08-01T23:59:59Z', 'observaciones-meses-07-08');

@@ -29,16 +29,28 @@ public class SolicitudProyectoDatosRepositoryTest {
     // given: 2 SolicitudProyectoDatos de los que 1 coincide con el idSolicitud
     // buscado
 
-    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
-        .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+    // @formatter:off
+    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
+        .creadorRef("user-001")
+        .solicitanteRef("user-002")
+        .unidadGestionRef("OTRI")
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
+        .activo(Boolean.TRUE)
+        .build());
+    // @formatter:on
     SolicitudProyectoDatos solicitudProyectoDatos1 = entityManager
         .persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
             Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
-    Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()//
-        .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+    // @formatter:off
+    Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
+        .creadorRef("user-001")
+        .solicitanteRef("user-002")
+        .unidadGestionRef("OTRI")
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
+        .activo(Boolean.TRUE)
+        .build());
+    // @formatter:on
     entityManager.persistAndFlush(new SolicitudProyectoDatos(null, solicitud2, "solicitud2", null, null, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
@@ -60,14 +72,26 @@ public class SolicitudProyectoDatosRepositoryTest {
     // given: 2 SolicitudProyectoDatos de los que ninguno coincide con el
     // idSolicitud
     // buscado
-    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
-        .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+    // @formatter:off
+    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
+        .creadorRef("user-001")
+        .solicitanteRef("user-002")
+        .unidadGestionRef("OTRI")
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
+        .activo(Boolean.TRUE)
+        .build());
+    // @formatter:on
     entityManager.persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
-    Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()//
-        .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+    // @formatter:off
+    Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
+        .creadorRef("user-001")
+        .solicitanteRef("user-002")
+        .unidadGestionRef("OTRI")
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
+        .activo(Boolean.TRUE)
+        .build());
+    // @formatter:on
     entityManager.persistAndFlush(new SolicitudProyectoDatos(null, solicitud2, "solicitud2", null, null, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 

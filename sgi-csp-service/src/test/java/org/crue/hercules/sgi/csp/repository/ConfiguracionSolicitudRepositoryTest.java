@@ -22,25 +22,29 @@ public class ConfiguracionSolicitudRepositoryTest {
   @Test
   public void findByConvocatoriaId_ReturnsConfiguracionSolicitud() throws Exception {
     // given: data ConfiguracionSolicitud to find by Convocatoria
-    Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-1")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-1")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build());
+    // @formatter:on
     ConfiguracionSolicitud configuracionSolicitud1 = entityManager
         .persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria1).build());
 
-    Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-2")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-2")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build());
+    // @formatter:on
     entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria2).build());
 
     Long convocatoriaIdBuscado = configuracionSolicitud1.getConvocatoria().getId();
@@ -58,24 +62,28 @@ public class ConfiguracionSolicitudRepositoryTest {
   @Test
   public void findByModeloEjecucionId_ReturnsNull() throws Exception {
     // given: data ConfiguracionSolicitud to find by Convocatoria
-    Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-1")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-1")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build());
+    // @formatter:on
     entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria1).build());
 
-    Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()//
-        .estado(Convocatoria.Estado.BORRADOR)//
-        .codigo("codigo-2")//
-        .unidadGestionRef("OPE")//
-        .anio(2020)//
-        .titulo("titulo")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-2")
+        .unidadGestionRef("OPE")
+        .anio(2020)
+        .titulo("titulo")
+        .activo(Boolean.TRUE)
         .build());
+    // @formatter:on
     ConfiguracionSolicitud configuracionSolicitud2 = ConfiguracionSolicitud.builder().convocatoria(convocatoria2)
         .build();
 

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
@@ -204,7 +204,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
 
     // Si en el campo Fecha se ha indicado una fecha ya pasada, el campo "generar
     // aviso" tomará el valor false, y no será editable.
-    if (datosProyectoHito.getFecha().isBefore(LocalDate.now())) {
+    if (datosProyectoHito.getFecha().isBefore(Instant.now())) {
       datosProyectoHito.setGeneraAviso(false);
     }
 

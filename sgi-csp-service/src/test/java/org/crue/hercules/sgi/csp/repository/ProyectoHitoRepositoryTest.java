@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +34,7 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
     ProyectoHito proyectoHito2 = generarMockProyectoHito("-002");
 
     Long idProyectoBusqueda = proyectoHito1.getProyecto().getId();
-    LocalDate fechaBusqueda = proyectoHito2.getFecha();
+    Instant fechaBusqueda = proyectoHito2.getFecha();
     Long idTipoHitoBusqueda = proyectoHito1.getTipoHito().getId();
 
     // when: se busca el ProyectoHito
@@ -60,7 +60,7 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
     ProyectoHito proyectoHito2 = generarMockProyectoHito("-002");
 
     Long idProyectoBusqueda = proyectoHito1.getProyecto().getId();
-    LocalDate fechaBusqueda = proyectoHito1.getFecha();
+    Instant fechaBusqueda = proyectoHito1.getFecha();
     Long idTipoHitoBusqueda = proyectoHito2.getTipoHito().getId();
 
     // when: se busca el ProyectoHito
@@ -79,68 +79,70 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
    */
   private ProyectoHito generarMockProyectoHito(String suffix) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion" + suffix)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()//
-        .nombre("nombreTipoFinalidad" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
+        .nombre("nombreTipoFinalidad" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()//
-        .nombre("nombreTipoAmbitoGeografico" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
+        .nombre("nombreTipoAmbitoGeografico" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    ModeloUnidad modeloUnidad = ModeloUnidad.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .unidadGestionRef("OPE")//
-        .activo(Boolean.TRUE)//
+    ModeloUnidad modeloUnidad = ModeloUnidad.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("OPE")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
-    Proyecto proyecto = Proyecto.builder()//
-        .acronimo("PR" + suffix)//
-        .codigoExterno("COD" + suffix)//
-        .titulo("titulo-" + suffix)//
-        .unidadGestionRef("OPE")//
-        .modeloEjecucion(modeloEjecucion)//
-        .finalidad(tipoFinalidad)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .activo(Boolean.TRUE)//
+    Proyecto proyecto = Proyecto.builder()
+        .acronimo("PR" + suffix)
+        .codigoExterno("COD" + suffix)
+        .titulo("titulo-" + suffix)
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion)
+        .finalidad(tipoFinalidad)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto);
 
-    TipoHito tipoHito = TipoHito.builder()//
-        .nombre("tipoHito" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoHito tipoHito = TipoHito.builder()
+        .nombre("tipoHito" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoHito);
 
-    ModeloTipoHito modeloTipoHito = ModeloTipoHito.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .tipoHito(tipoHito)//
-        .convocatoria(Boolean.TRUE)//
-        .proyecto(Boolean.TRUE)//
-        .solicitud(Boolean.TRUE)//
-        .activo(Boolean.TRUE)//
+    ModeloTipoHito modeloTipoHito = ModeloTipoHito.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .tipoHito(tipoHito)
+        .convocatoria(Boolean.TRUE)
+        .proyecto(Boolean.TRUE)
+        .solicitud(Boolean.TRUE)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloTipoHito);
 
-    ProyectoHito proyectoHito = ProyectoHito.builder()//
-        .tipoHito(tipoHito)//
-        .proyecto(proyecto)//
-        .fecha(LocalDate.of(2020, 10, 01))//
-        .comentario("comentarioProyectoHito-" + suffix)//
-        .generaAviso(Boolean.TRUE)//
+    ProyectoHito proyectoHito = ProyectoHito.builder()
+        .tipoHito(tipoHito)
+        .proyecto(proyecto)
+        .fecha(Instant.parse("2020-10-01T00:00:00Z"))
+        .comentario("comentarioProyectoHito-" + suffix)
+        .generaAviso(Boolean.TRUE)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(proyectoHito);
   }
 

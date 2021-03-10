@@ -1,10 +1,11 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,8 +49,7 @@ public class ProyectoPeriodoSeguimientoSpecifications {
    * @return specification para obtener los {@link ProyectoPeriodoSeguimiento} con
    *         rango de fechas solapadas
    */
-  public static Specification<ProyectoPeriodoSeguimiento> byRangoFechaSolapados(LocalDate fechaInicio,
-      LocalDate fechaFin) {
+  public static Specification<ProyectoPeriodoSeguimiento> byRangoFechaSolapados(Instant fechaInicio, Instant fechaFin) {
     return (root, query, cb) -> {
       return cb.and(cb.lessThanOrEqualTo(root.get(ProyectoPeriodoSeguimiento_.fechaInicio), fechaFin),
           cb.greaterThanOrEqualTo(root.get(ProyectoPeriodoSeguimiento_.fechaFin), fechaInicio));

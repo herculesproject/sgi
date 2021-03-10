@@ -103,16 +103,18 @@ public class RolProyectoRepositoryTest extends BaseRepositoryTest {
    */
   private RolProyecto generarMockRolProyecto(String suffix, Boolean activo) {
 
-    RolProyecto rolProyecto = RolProyecto.builder()//
-        .abreviatura(suffix)//
-        .nombre("nombre-" + suffix)//
-        .descripcion("descripcion-" + suffix)//
-        .rolPrincipal(Boolean.FALSE)//
-        .responsableEconomico(Boolean.FALSE)//
-        .equipo(RolProyecto.Equipo.INVESTIGACION)//
-        .colectivoRef("PDI")//
-        .activo(activo)//
+    // @formatter:off
+    RolProyecto rolProyecto = RolProyecto.builder()
+        .abreviatura(suffix)
+        .nombre("nombre-" + suffix)
+        .descripcion("descripcion-" + suffix)
+        .rolPrincipal(Boolean.FALSE)
+        .responsableEconomico(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION)
+        .colectivoRef("PDI")
+        .activo(activo)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(rolProyecto);
   }
 }

@@ -590,13 +590,15 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, unidadGestionRef);
 
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()//
-        .id(configuracionSolicitudId)//
-        .convocatoria(convocatoria)//
-        .tramitacionSGI(Boolean.TRUE)//
-        .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
+    // @formatter:off
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoria(convocatoria)
+        .tramitacionSGI(Boolean.TRUE)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)
         .build();
+    // @formatter:on
 
     return configuracionSolicitud;
   }

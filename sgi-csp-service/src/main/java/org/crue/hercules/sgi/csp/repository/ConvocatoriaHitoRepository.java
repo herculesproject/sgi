@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -21,7 +21,7 @@ public interface ConvocatoriaHitoRepository
    * @param tipoHitoId     Id de la {@link TipoHito}
    * @return una {@link ConvocatoriaHito}
    */
-  Optional<ConvocatoriaHito> findByConvocatoriaIdAndFechaAndTipoHitoId(Long convocatoriaId, LocalDate fecha,
+  Optional<ConvocatoriaHito> findByConvocatoriaIdAndFechaAndTipoHitoId(Long convocatoriaId, Instant fecha,
       Long tipoHitoId);
 
 }

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +135,7 @@ public class EstadoSolicitudServiceTest {
     estadoSolicitud.setIdSolicitud(1L);
     estadoSolicitud.setComentario("Comentario");
     estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
-    estadoSolicitud.setFechaEstado(LocalDateTime.now());
+    estadoSolicitud.setFechaEstado(Instant.now());
 
     return estadoSolicitud;
   }

@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -332,44 +332,46 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .id(1L)//
-        .nombre("nombreModeloEjecucion-1")//
-        .descripcion("descripcionModeloEjecucion-1")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .id(1L)
+        .nombre("nombreModeloEjecucion-1")
+        .descripcion("descripcionModeloEjecucion-1")
+        .activo(Boolean.TRUE)
         .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .id(convocatoriaId)//
-        .modeloEjecucion(modeloEjecucion)//
-        .estado(Convocatoria.Estado.BORRADOR)//
+    Convocatoria convocatoria = Convocatoria.builder()
+        .id(convocatoriaId)
+        .modeloEjecucion(modeloEjecucion)
+        .estado(Convocatoria.Estado.BORRADOR)
 
-        .activo(Boolean.TRUE)//
+        .activo(Boolean.TRUE)
         .build();
 
-    TipoFase tipoFase = TipoFase.builder()//
-        .id(convocatoriaFaseId)//
-        .nombre("nombre-1")//
-        .activo(Boolean.TRUE)//
+    TipoFase tipoFase = TipoFase.builder()
+        .id(convocatoriaFaseId)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
         .build();
 
-    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()//
-        .id(convocatoriaFaseId)//
-        .convocatoria(convocatoria)//
-        .tipoFase(tipoFase)//
-        .fechaInicio(LocalDateTime.of(2020, 10, 1, 17, 18, 19))//
-        .fechaFin(LocalDateTime.of(2020, 10, 15, 17, 18, 19))//
-        .observaciones("observaciones")//
+    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
+        .id(convocatoriaFaseId)
+        .convocatoria(convocatoria)
+        .tipoFase(tipoFase)
+        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
+        .observaciones("observaciones")
         .build();
 
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()//
-        .id(configuracionSolicitudId)//
-        .convocatoria(convocatoria)//
-        .tramitacionSGI(Boolean.TRUE)//
-        .fasePresentacionSolicitudes(convocatoriaFase)//
-        .importeMaximoSolicitud(BigDecimal.valueOf(12345))//
-        .formularioSolicitud(FormularioSolicitud.ESTANDAR)//
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(configuracionSolicitudId)
+        .convocatoria(convocatoria)
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(convocatoriaFase)
+        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
+        .formularioSolicitud(FormularioSolicitud.ESTANDAR)
         .build();
+    // @formatter:on
 
     return configuracionSolicitud;
   }
@@ -384,34 +386,36 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
 
-    TipoFase tipoFase = TipoFase.builder()//
-        .id(1L)//
-        .nombre("nombre-1")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    TipoFase tipoFase = TipoFase.builder()
+        .id(1L)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
         .build();
 
-    ModeloTipoFase.builder()//
-        .id(1L)//
-        .modeloEjecucion(configuracionSolicitud.getConvocatoria().getModeloEjecucion())//
-        .tipoFase(tipoFase)//
-        .solicitud(Boolean.TRUE)//
-        .convocatoria(Boolean.TRUE)//
-        .proyecto(Boolean.TRUE)//
-        .activo(Boolean.TRUE)//
+    ModeloTipoFase.builder()
+        .id(1L)
+        .modeloEjecucion(configuracionSolicitud.getConvocatoria().getModeloEjecucion())
+        .tipoFase(tipoFase)
+        .solicitud(Boolean.TRUE)
+        .convocatoria(Boolean.TRUE)
+        .proyecto(Boolean.TRUE)
+        .activo(Boolean.TRUE)
         .build();
 
-    TipoDocumento tipoDocumento = TipoDocumento.builder()//
-        .id(1L)//
-        .nombre("nombre-1")//
-        .activo(Boolean.TRUE)//
+    TipoDocumento tipoDocumento = TipoDocumento.builder()
+        .id(1L)
+        .nombre("nombre-1")
+        .activo(Boolean.TRUE)
         .build();
 
-    return DocumentoRequeridoSolicitud.builder()//
-        .id(documentoRequeridoSolicitudId)//
-        .configuracionSolicitud(configuracionSolicitud)//
-        .tipoDocumento(tipoDocumento)//
-        .observaciones("observaciones-" + documentoRequeridoSolicitudId)//
+    return DocumentoRequeridoSolicitud.builder()
+        .id(documentoRequeridoSolicitudId)
+        .configuracionSolicitud(configuracionSolicitud)
+        .tipoDocumento(tipoDocumento)
+        .observaciones("observaciones-" + documentoRequeridoSolicitudId)
         .build();
+    // @formatter:on
 
   }
 }

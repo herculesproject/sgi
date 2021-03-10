@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.model;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -86,11 +86,11 @@ public class Proyecto extends BaseEntity {
 
   /** Fecha Inicio. */
   @Column(name = "fecha_inicio", nullable = false)
-  private LocalDate fechaInicio;
+  private Instant fechaInicio;
 
   /** Fecha Fin. */
   @Column(name = "fecha_fin", nullable = false)
-  private LocalDate fechaFin;
+  private Instant fechaFin;
 
   /** Unidad gestion ref */
   @Column(name = "unidad_gestion_ref", length = 50, nullable = false)

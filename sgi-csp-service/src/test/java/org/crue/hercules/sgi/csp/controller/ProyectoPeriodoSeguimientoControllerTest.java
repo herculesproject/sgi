@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +81,9 @@ public class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(
             MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoPeriodoSeguimiento.getProyecto().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19")).andExpect(MockMvcResultMatchers
-            .jsonPath("observaciones").value("obs-" + String.format("%03d", proyectoPeriodoSeguimiento.getId())));
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
+            .value("obs-" + String.format("%03d", proyectoPeriodoSeguimiento.getId())));
   }
 
   @Test
@@ -126,8 +127,9 @@ public class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoPeriodoSeguimientoExistente.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id")
             .value(proyectoPeriodoSeguimientoExistente.getProyecto().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19")).andExpect(MockMvcResultMatchers
-            .jsonPath("observaciones").value("obs-" + String.format("%03d", proyectoPeriodoSeguimiento.getId())));
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
+            .value("obs-" + String.format("%03d", proyectoPeriodoSeguimiento.getId())));
   }
 
   @Test
@@ -238,7 +240,7 @@ public class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest
         // and the requested ProyectoPeriodoSeguimiento is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("obs-001"));
 
   }
@@ -416,8 +418,8 @@ public class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyecto(proyecto);
     proyectoPeriodoSeguimiento.setNumPeriodo(1);
-    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 19));
-    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 12, 19));
+    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
     proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
 
     return proyectoPeriodoSeguimiento;

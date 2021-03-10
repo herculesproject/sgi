@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -115,8 +115,10 @@ public class ConvocatoriaFaseIT extends BaseIT {
     ConvocatoriaFase convocatoriaFase = response.getBody();
     Assertions.assertThat(convocatoriaFase.getId()).as("getId()").isEqualTo(idConvocatoriaFase);
     Assertions.assertThat(convocatoriaFase.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
-    Assertions.assertThat(convocatoriaFase.getFechaInicio()).as("getFechaInicio()").isEqualTo("2020-10-18T00:00");
-    Assertions.assertThat(convocatoriaFase.getFechaFin()).as("getFechaFin()").isEqualTo("2020-11-01T00:00");
+    Assertions.assertThat(convocatoriaFase.getFechaInicio()).as("getFechaInicio()")
+        .isEqualTo(Instant.parse("2020-10-18T00:00:00Z"));
+    Assertions.assertThat(convocatoriaFase.getFechaFin()).as("getFechaFin()")
+        .isEqualTo(Instant.parse("2020-11-01T23:59:59Z"));
     Assertions.assertThat(convocatoriaFase.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(1L);
 
   }
@@ -138,8 +140,8 @@ public class ConvocatoriaFaseIT extends BaseIT {
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
     convocatoriaFase.setConvocatoria(convocatoria);
-    convocatoriaFase.setFechaInicio(LocalDateTime.of(2020, 10, 19, 17, 18, 19));
-    convocatoriaFase.setFechaFin(LocalDateTime.of(2020, 10, 28, 17, 18, 19));
+    convocatoriaFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    convocatoriaFase.setFechaFin(Instant.parse("2020-10-28T23:59:59Z"));
     convocatoriaFase.setTipoFase(tipoFase);
     convocatoriaFase.setObservaciones("observaciones" + id);
 

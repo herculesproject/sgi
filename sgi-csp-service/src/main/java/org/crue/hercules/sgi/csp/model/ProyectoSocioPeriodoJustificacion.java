@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,20 +55,20 @@ public class ProyectoSocioPeriodoJustificacion extends BaseEntity {
   /** Fecha Inicio. */
   @Column(name = "fecha_inicio", nullable = false)
   @NotNull
-  private LocalDate fechaInicio;
+  private Instant fechaInicio;
 
   /** Fecha Fin. */
   @Column(name = "fecha_fin", nullable = false)
   @NotNull
-  private LocalDate fechaFin;
+  private Instant fechaFin;
 
   /** Fecha Inicio Presentación. */
   @Column(name = "fecha_inicio_presentacion", nullable = true)
-  private LocalDateTime fechaInicioPresentacion;
+  private Instant fechaInicioPresentacion;
 
   /** Fecha Fin Presentación. */
   @Column(name = "fecha_fin_presentacion", nullable = true)
-  private LocalDateTime fechaFinPresentacion;
+  private Instant fechaFinPresentacion;
 
   /** Observaciones. */
   @Column(name = "observaciones", length = 2000, nullable = true)
@@ -82,6 +81,6 @@ public class ProyectoSocioPeriodoJustificacion extends BaseEntity {
 
   /** Fecha Recepcion. */
   @Column(name = "fecha_recepcion", nullable = true)
-  private LocalDate fechaRecepcion;
+  private Instant fechaRecepcion;
 
 }

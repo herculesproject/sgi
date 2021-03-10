@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -156,8 +157,8 @@ public class ConvocatoriaConceptoGastoCodigoEcIT {
     convocatoriaConceptoGastoCodigoEc.setId(id);
     convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("cod-" + (id == null ? 1 : id));
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now().minusDays(1));
-    convocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(Instant.now().minus(Period.ofDays(1)));
+    convocatoriaConceptoGastoCodigoEc.setFechaFin(Instant.now());
 
     return convocatoriaConceptoGastoCodigoEc;
   }

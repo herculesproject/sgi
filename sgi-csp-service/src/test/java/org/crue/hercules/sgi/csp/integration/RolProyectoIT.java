@@ -280,17 +280,19 @@ public class RolProyectoIT extends BaseIT {
 
     String suffix = String.format("%03d", rolProyectoId);
 
-    RolProyecto rolProyecto = RolProyecto.builder()//
-        .id(rolProyectoId)//
-        .abreviatura(suffix)//
-        .nombre("nombre-" + suffix)//
-        .descripcion("descripcion-" + suffix)//
-        .rolPrincipal(Boolean.FALSE)//
-        .responsableEconomico(Boolean.FALSE)//
-        .equipo(RolProyecto.Equipo.INVESTIGACION)//
-        .colectivoRef("PDI")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    RolProyecto rolProyecto = RolProyecto.builder()
+        .id(rolProyectoId)
+        .abreviatura(suffix)
+        .nombre("nombre-" + suffix)
+        .descripcion("descripcion-" + suffix)
+        .rolPrincipal(Boolean.FALSE)
+        .responsableEconomico(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION)
+        .colectivoRef("PDI")
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
 
     return rolProyecto;
   }

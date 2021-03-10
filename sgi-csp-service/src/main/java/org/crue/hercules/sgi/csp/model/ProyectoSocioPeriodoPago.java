@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,10 +60,10 @@ public class ProyectoSocioPeriodoPago extends BaseEntity {
   /** Fecha prevista pago */
   @Column(name = "fecha_prevista_pago", nullable = false)
   @NotNull
-  private LocalDate fechaPrevistaPago;
+  private Instant fechaPrevistaPago;
 
   /** Fecha pago */
   @Column(name = "fecha_pago", nullable = true)
-  private LocalDate fechaPago;
+  private Instant fechaPago;
 
 }

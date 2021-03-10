@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -309,7 +309,7 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
     SolicitudProyectoPeriodoJustificacion solicitudProyectoPeriodoJustificacion2 = generarSolicitudProyectoPeriodoJustificacion(
         2L, 1L);
 
-    solicitudProyectoPeriodoJustificacion1.setFechaInicio(LocalDate.of(2021, 12, 19));
+    solicitudProyectoPeriodoJustificacion1.setFechaInicio(Instant.parse("2021-12-19T00:00:00Z"));
 
     List<SolicitudProyectoPeriodoJustificacion> solicitudProyectoPeriodoJustificacionExistentes = new ArrayList<>();
     solicitudProyectoPeriodoJustificacionExistentes.add(generarSolicitudProyectoPeriodoJustificacion(1L, 1L));
@@ -484,8 +484,8 @@ public class SolicitudProyectoPeriodoJustificacionServiceTest {
             .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(1L)
                 .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
             .build())
-        .numPeriodo(2).mesInicial(1).mesFinal(3).fechaInicio(LocalDate.of(2020, 12, 19))
-        .fechaFin(LocalDate.of(2021, 2, 9)).observaciones("Periodo 1").build();
+        .numPeriodo(2).mesInicial(1).mesFinal(3).fechaInicio(Instant.parse("2020-12-19T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-02-09T00:00:00Z")).observaciones("Periodo 1").build();
 
     solicitudProyectoPeriodoJustificacion.getSolicitudProyectoSocio().getSolicitudProyectoDatos().getSolicitud()
         .setEstado(new EstadoSolicitud());

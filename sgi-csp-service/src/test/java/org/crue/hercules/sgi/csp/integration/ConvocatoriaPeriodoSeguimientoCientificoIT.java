@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -161,9 +161,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     Assertions.assertThat(responseData.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()").isEqualTo(2);
     Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
-        .isEqualTo("2020-01-01");
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
     Assertions.assertThat(responseData.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
-        .isEqualTo("2020-02-01");
+        .isEqualTo(Instant.parse("2020-02-01T23:59:59Z"));
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-meses-01-02");
   }
@@ -189,8 +189,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
     convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
     convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
-    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
-    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
 
     return convocatoriaPeriodoSeguimientoCientifico;

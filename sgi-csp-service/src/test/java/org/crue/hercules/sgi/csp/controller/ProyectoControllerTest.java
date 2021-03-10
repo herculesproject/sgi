@@ -2,8 +2,7 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -1311,8 +1310,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("OPE");
-    proyecto.setFechaInicio(LocalDate.now());
-    proyecto.setFechaFin(LocalDate.now());
+    proyecto.setFechaInicio(Instant.now());
+    proyecto.setFechaFin(Instant.now());
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -1337,7 +1336,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     estadoProyecto.setId(id);
     estadoProyecto.setComentario("Estado-" + id);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(LocalDateTime.now());
+    estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setIdProyecto(1L);
 
     return estadoProyecto;
@@ -1360,7 +1359,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     ProyectoHito proyectoHito = new ProyectoHito();
     proyectoHito.setId(id);
     proyectoHito.setProyecto(proyecto);
-    proyectoHito.setFecha(LocalDate.of(2020, 10, 19));
+    proyectoHito.setFecha(Instant.parse("2020-10-19T23:59:59Z"));
     proyectoHito.setComentario("comentario-proyecto-hito-" + String.format("%03d", id));
     proyectoHito.setGeneraAviso(true);
     proyectoHito.setTipoHito(tipoHito);
@@ -1385,8 +1384,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     ProyectoFase proyectoFase = new ProyectoFase();
     proyectoFase.setId(id);
     proyectoFase.setProyecto(proyecto);
-    proyectoFase.setFechaInicio(LocalDateTime.of(2020, 10, 19, 0, 0, 0));
-    proyectoFase.setFechaFin(LocalDateTime.of(2020, 10, 20, 23, 59, 59));
+    proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
     proyectoFase.setGeneraAviso(true);
     proyectoFase.setTipoFase(tipoFase);
@@ -1403,15 +1402,17 @@ public class ProyectoControllerTest extends BaseControllerTest {
    */
   private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
 
-    return ProyectoPaqueteTrabajo.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 01, 15))//
-        .personaMes(1D)//
-        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoPaqueteTrabajo.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
+        .personaMes(1D)
+        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1424,16 +1425,18 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", proyectoSocioId);
 
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder()//
-        .id(proyectoSocioId)//
-        .proyecto(Proyecto.builder().id(1L).build())//
-        .empresaRef("empresa-" + suffix)//
-        .rolSocio(RolSocio.builder().id(1L).build())//
-        .fechaInicio(LocalDate.of(2021, 1, 11))//
-        .fechaFin(LocalDate.of(2022, 1, 11))//
-        .numInvestigadores(5)//
-        .importeConcedido(BigDecimal.valueOf(1000))//
+    // @formatter:off
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder()
+        .id(proyectoSocioId)
+        .proyecto(Proyecto.builder().id(1L).build())
+        .empresaRef("empresa-" + suffix)
+        .rolSocio(RolSocio.builder().id(1L).build())
+        .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-01-11T23:59:59Z"))
+        .numInvestigadores(5)
+        .importeConcedido(BigDecimal.valueOf(1000))
         .build();
+    // @formatter:on
 
     return proyectoSocio;
   }
@@ -1448,8 +1451,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
     ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(proyectoEquipoId)
         .proyecto(Proyecto.builder().id(1L).build()).rolProyecto(RolProyecto.builder().id(1L).build())
-        .fechaInicio(LocalDate.now()).fechaFin(LocalDate.now()).personaRef("001").horasDedicacion(new Double(2))
-        .build();
+        .fechaInicio(Instant.now()).fechaFin(Instant.now()).personaRef("001").horasDedicacion(new Double(2)).build();
 
     return proyectoEquipo;
 
@@ -1469,8 +1471,8 @@ public class ProyectoControllerTest extends BaseControllerTest {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyecto(proyecto);
-    proyectoPeriodoSeguimiento.setFechaInicio(LocalDate.of(2020, 10, 19));
-    proyectoPeriodoSeguimiento.setFechaFin(LocalDate.of(2020, 12, 19));
+    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
     proyectoPeriodoSeguimiento.setObservaciones("obs-" + id);
 
     return proyectoPeriodoSeguimiento;
@@ -1484,11 +1486,13 @@ public class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoEntidadGestora
    */
   private ProyectoEntidadGestora generarMockProyectoEntidadGestora(Long id, Long proyectoId) {
-    return ProyectoEntidadGestora.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoEntidadGestora.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1500,16 +1504,18 @@ public class ProyectoControllerTest extends BaseControllerTest {
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
 
-    return ProyectoProrroga.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .numProrroga(1)//
-        .fechaConcesion(LocalDate.of(2020, 01, 01))//
-        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .importe(BigDecimal.valueOf(123.45))//
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoProrroga.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .numProrroga(1)
+        .fechaConcesion(Instant.parse("2020-01-01T00:00:00Z"))
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .importe(BigDecimal.valueOf(123.45))
+        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 
 }

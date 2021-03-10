@@ -23,9 +23,12 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Spring Data JPA repository para {@link Proyecto}.
  */
+@Slf4j
 @Component
 public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomSolicitudProyectoPresupuestoRepository {
 
@@ -42,7 +45,7 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
    */
   @Override
   public SolicitudProyectoPresupuestoTotales getTotales(Long solicitudId) {
-
+    log.debug("SolicitudProyectoPresupuestoTotales getTotales(Long solicitudId) - start");
     // Crete query
     final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     final CriteriaQuery<SolicitudProyectoPresupuestoTotales> cq = cb
@@ -94,6 +97,7 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
 
     final SolicitudProyectoPresupuestoTotales result = q.getSingleResult();
 
+    log.debug("SolicitudProyectoPresupuestoTotales getTotales(Long solicitudId) - end");
     return result;
   }
 
@@ -107,6 +111,8 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
   @Override
   public List<SolicitudProyectoPresupuestoTotalConceptoGasto> getSolicitudProyectoPresupuestoTotalConceptoGastos(
       Long solicitudId) {
+    log.debug(
+        "SolicitudProyectoPresupuestoTotales getSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - start");
 
     // Crete query
     final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -135,6 +141,8 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
 
     final List<SolicitudProyectoPresupuestoTotalConceptoGasto> result = q.getResultList();
 
+    log.debug(
+        "SolicitudProyectoPresupuestoTotales getSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - start");
     return result;
   }
 

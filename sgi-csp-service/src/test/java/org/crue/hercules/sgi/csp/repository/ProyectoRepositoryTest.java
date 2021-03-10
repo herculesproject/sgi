@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -27,8 +28,8 @@ public class ProyectoRepositoryTest extends BaseRepositoryTest {
     Proyecto proyecto1 = generarMockProyecto("-001");
 
     Long idProyectoBusqueda = proyecto1.getId();
-    LocalDate fechaIniBusqueda = proyecto1.getFechaInicio().plusDays(1);
-    LocalDate fechaFinBusqueda = proyecto1.getFechaFin().minusDays(1);
+    Instant fechaIniBusqueda = proyecto1.getFechaInicio().plus(Period.ofDays(1));
+    Instant fechaFinBusqueda = proyecto1.getFechaFin().minus(Period.ofDays(1));
 
     // when: comprueba si rango de fechas indicadas están dentro del proyecto
     boolean isDentroProyecto = repository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
@@ -46,32 +47,32 @@ public class ProyectoRepositoryTest extends BaseRepositoryTest {
 
     Long idProyectoBusqueda = proyecto1.getId();
 
-    LocalDate fechaIniBusquedaCaso1 = proyecto1.getFechaInicio().minusDays(10);
-    LocalDate fechaFinBusquedaCaso1 = proyecto1.getFechaInicio().minusDays(9);
+    Instant fechaIniBusquedaCaso1 = proyecto1.getFechaInicio().minus(Period.ofDays(10));
+    Instant fechaFinBusquedaCaso1 = proyecto1.getFechaInicio().minus(Period.ofDays(9));
     // when: comprueba si rango de fechas indicadas están dentro del proyecto
     boolean isDentroProyectoCaso1 = repository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
         idProyectoBusqueda, fechaIniBusquedaCaso1, fechaFinBusquedaCaso1);
     // then: Confirma que las fechas están fuera del proyecto
     Assertions.assertThat(isDentroProyectoCaso1).isFalse();
 
-    LocalDate fechaIniBusquedaCaso2 = proyecto1.getFechaInicio().minusDays(1);
-    LocalDate fechaFinBusquedaCaso2 = proyecto1.getFechaFin().minusDays(1);
+    Instant fechaIniBusquedaCaso2 = proyecto1.getFechaInicio().minus(Period.ofDays(1));
+    Instant fechaFinBusquedaCaso2 = proyecto1.getFechaFin().minus(Period.ofDays(1));
     // when: comprueba si rango de fechas indicadas están dentro del proyecto
     boolean isDentroProyectoCaso2 = repository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
         idProyectoBusqueda, fechaIniBusquedaCaso2, fechaFinBusquedaCaso2);
     // then: Confirma que las fechas están fuera del proyecto
     Assertions.assertThat(isDentroProyectoCaso2).isFalse();
 
-    LocalDate fechaIniBusquedaCaso3 = proyecto1.getFechaInicio();
-    LocalDate fechaFinBusquedaCaso3 = proyecto1.getFechaFin().plusDays(1);
+    Instant fechaIniBusquedaCaso3 = proyecto1.getFechaInicio();
+    Instant fechaFinBusquedaCaso3 = proyecto1.getFechaFin().plus(Period.ofDays(1));
     // when: comprueba si rango de fechas indicadas están dentro del proyecto
     boolean isDentroProyectoCaso3 = repository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
         idProyectoBusqueda, fechaIniBusquedaCaso3, fechaFinBusquedaCaso3);
     // then: Confirma que las fechas están fuera del proyecto
     Assertions.assertThat(isDentroProyectoCaso3).isFalse();
 
-    LocalDate fechaIniBusquedaCaso4 = proyecto1.getFechaFin().plusDays(9);
-    LocalDate fechaFinBusquedaCaso4 = proyecto1.getFechaFin().plusDays(10);
+    Instant fechaIniBusquedaCaso4 = proyecto1.getFechaFin().plus(Period.ofDays(9));
+    Instant fechaFinBusquedaCaso4 = proyecto1.getFechaFin().plus(Period.ofDays(10));
     // when: comprueba si rango de fechas indicadas están dentro del proyecto
     boolean isDentroProyectoCaso4 = repository.existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
         idProyectoBusqueda, fechaIniBusquedaCaso4, fechaFinBusquedaCaso4);
@@ -87,43 +88,45 @@ public class ProyectoRepositoryTest extends BaseRepositoryTest {
    */
   private Proyecto generarMockProyecto(String suffix) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion" + suffix)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()//
-        .nombre("nombreTipoFinalidad" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
+        .nombre("nombreTipoFinalidad" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()//
-        .nombre("nombreTipoAmbitoGeografico" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
+        .nombre("nombreTipoAmbitoGeografico" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    ModeloUnidad modeloUnidad = ModeloUnidad.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .unidadGestionRef("OPE")//
-        .activo(Boolean.TRUE)//
+    ModeloUnidad modeloUnidad = ModeloUnidad.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("OPE")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
-    Proyecto proyecto = Proyecto.builder()//
-        .acronimo("PR" + suffix)//
-        .codigoExterno("COD" + suffix)//
-        .titulo("titulo-" + suffix)//
-        .unidadGestionRef("OPE")//
-        .modeloEjecucion(modeloEjecucion)//
-        .finalidad(tipoFinalidad)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .activo(Boolean.TRUE)//
+    Proyecto proyecto = Proyecto.builder()
+        .acronimo("PR" + suffix)
+        .codigoExterno("COD" + suffix)
+        .titulo("titulo-" + suffix)
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion)
+        .finalidad(tipoFinalidad)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(proyecto);
   }
 

@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -20,38 +22,41 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
   @Test
   public void findAllByProyectoIdOrderByFechaInicial_ReturnsProyectoPeriodoSeguimientoList() throws Exception {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
     // given: 10 ProyectoPeriodoSeguimiento with same ProyectoId
-    Proyecto proyecto1 = Proyecto.builder()//
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)//
-        .titulo("PRO1")//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now().plusMonths(3)).activo(Boolean.TRUE)//
+    Proyecto proyecto1 = Proyecto.builder()
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .titulo("PRO1")
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto1);
 
-    Proyecto proyecto2 = Proyecto.builder()//
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)//
-        .titulo("PRO2")//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now().plusMonths(3)).activo(Boolean.TRUE)//
+    Proyecto proyecto2 = Proyecto.builder()
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .titulo("PRO2")
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto2);
+    // @formatter:on
 
     for (int i = 11; i > 1; i--) {
-      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento//
-          .builder()//
-          .proyecto((i % 2 == 0) ? proyecto2 : proyecto1)//
-          .numPeriodo(i / 2)//
-          .fechaInicio(LocalDate.now().plusDays(i - 1))//
-          .fechaFin(LocalDate.now().plusMonths(i))//
+      // @formatter:off
+      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
+          .builder()
+          .proyecto((i % 2 == 0) ? proyecto2 : proyecto1)
+          .numPeriodo(i / 2)
+          .fechaInicio(Instant.now().plus(Period.ofDays(i - 1)))
+          .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
           .build();
-
+      // @formatter:on
       entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
     }
     Long proyectoIdBuscado = proyecto1.getId();
@@ -73,38 +78,42 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
   @Test
   public void findAllByProyectoIdOrderByFechaInicio_ReturnsNull() throws Exception {
     // given: 10 ProyectoPeriodoSeguimiento
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
     // given: 10 ProyectoPeriodoSeguimiento with same ProyectoId
-    Proyecto proyecto1 = Proyecto.builder()//
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)//
-        .titulo("PRO1")//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now().plusMonths(3)).activo(Boolean.TRUE)//
+    Proyecto proyecto1 = Proyecto.builder()
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .titulo("PRO1")
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto1);
 
-    Proyecto proyecto2 = Proyecto.builder()//
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)//
-        .titulo("PRO2")//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now().plusMonths(3)).activo(Boolean.TRUE)//
+    Proyecto proyecto2 = Proyecto.builder()
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .titulo("PRO2")
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto2);
+    // @formatter:on
 
     for (int i = 11; i > 1; i--) {
-      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento//
-          .builder()//
-          .proyecto((i % 2 == 0) ? proyecto2 : proyecto1)//
-          .numPeriodo(i / 2)//
-          .fechaInicio(LocalDate.now())//
-          .fechaFin(LocalDate.now().plusMonths(1))//
-          .observaciones("obs-" + i)//
+      // @formatter:off
+      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
+          .builder()
+          .proyecto((i % 2 == 0) ? proyecto2 : proyecto1)
+          .numPeriodo(i / 2)
+          .fechaInicio(Instant.now())
+          .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1))))
+          .observaciones("obs-" + i)
           .build();
+        // @formatter:on
 
       if (i % 2 == 0) {
         entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);

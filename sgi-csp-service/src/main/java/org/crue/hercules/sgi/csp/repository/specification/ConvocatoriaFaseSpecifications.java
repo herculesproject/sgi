@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
@@ -64,8 +64,7 @@ public class ConvocatoriaFaseSpecifications {
    * @return specification para obtener los {@link ConvocatoriaFase} con rango de
    *         fechas solapadas
    */
-  public static Specification<ConvocatoriaFase> byRangoFechaSolapados(LocalDateTime fechaInicio,
-      LocalDateTime fechaFin) {
+  public static Specification<ConvocatoriaFase> byRangoFechaSolapados(Instant fechaInicio, Instant fechaFin) {
     return (root, query, cb) -> {
       return cb.and(cb.lessThanOrEqualTo(root.get(ConvocatoriaFase_.fechaInicio), fechaFin),
           cb.greaterThanOrEqualTo(root.get(ConvocatoriaFase_.fechaFin), fechaInicio));

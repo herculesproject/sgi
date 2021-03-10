@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoCodigoEcNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
@@ -237,8 +237,8 @@ public class ConvocatoriaConceptoGastoCodigoEcControllerTest extends BaseControl
     convocatoriaConceptoGastoCodigoEc.setId(id);
     convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("cod-" + (id != null ? id : 1));
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now());
-    convocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(Instant.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaFin(Instant.now());
 
     return convocatoriaConceptoGastoCodigoEc;
   }

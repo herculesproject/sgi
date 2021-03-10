@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -140,25 +140,30 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
    */
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
 
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder().id(1L)//
-        .proyecto(Proyecto.builder()//
-            .id(1L)//
-            .estado(//
-                EstadoProyecto.builder()//
-                    .id(1L)//
-                    .estado(EstadoProyecto.Estado.BORRADOR)//
+    // @formatter:off
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder().id(1L)
+        .proyecto(Proyecto.builder()
+            .id(1L)
+            .estado(
+                EstadoProyecto.builder()
+                    .id(1L)
+                    .estado(EstadoProyecto.Estado.BORRADOR)
                     .build())
-            .build())//
-        .empresaRef("empresa-001")//
-        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())//
-        .fechaInicio(LocalDate.of(2021, 1, 11))//
-        .fechaFin(LocalDate.of(2022, 1, 11))//
-        .numInvestigadores(5)//
+            .build())
+        .empresaRef("empresa-001")
+        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())
+        .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-01-11T23:59:59Z"))
+        .numInvestigadores(5)
         .importeConcedido(BigDecimal.valueOf(1000)).build();
 
-    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = ProyectoSocioPeriodoPago.builder().id(id).numPeriodo(1)
-        .proyectoSocio(proyectoSocio).fechaPrevistaPago(LocalDate.of(2022, 1, 5)).importe(new BigDecimal(25811))
-        .build();
+    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = ProyectoSocioPeriodoPago.builder()
+      .id(id)
+      .numPeriodo(1)
+      .proyectoSocio(proyectoSocio)
+      .fechaPrevistaPago(Instant.parse("2022-01-05T00:00:00Z"))
+      .importe(new BigDecimal(25811)).build();
+    // @formatter:on
 
     return proyectoSocioPeriodoPago;
   }

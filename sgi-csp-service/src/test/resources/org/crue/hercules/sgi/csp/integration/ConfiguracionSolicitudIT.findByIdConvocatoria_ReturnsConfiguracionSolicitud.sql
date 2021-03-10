@@ -29,8 +29,8 @@ INSERT INTO csp.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-0
 INSERT INTO csp.tipo_fase (id, nombre, descripcion, activo) VALUES (2, 'nombre-002', 'descripcion-002', true);
 
 -- CONVOCATORIA FASE
-INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01', '2020-10-15', 'observaciones-1');
-INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (2, 1, 2, '2020-10-15', '2020-10-30', 'observaciones-2');
+INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
+INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (2, 1, 2, '2020-10-15T00:00:00Z', '2020-10-30T23:59:59Z', 'observaciones-2');
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO csp.configuracion_solicitud 

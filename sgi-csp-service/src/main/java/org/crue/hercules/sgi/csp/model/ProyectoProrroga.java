@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -71,7 +71,7 @@ public class ProyectoProrroga extends BaseEntity {
   /** Fecha concesión */
   @Column(name = "fecha_concesion", nullable = false)
   @NotNull
-  private LocalDate fechaConcesion;
+  private Instant fechaConcesion;
 
   /** Tipo prórroga */
   @Column(name = "tipo", length = 50, nullable = false)
@@ -81,7 +81,7 @@ public class ProyectoProrroga extends BaseEntity {
 
   /** Fecha fin */
   @Column(name = "fecha_fin", nullable = true)
-  private LocalDate fechaFin;
+  private Instant fechaFin;
 
   /** Importe */
   @Column(name = "importe", nullable = true)

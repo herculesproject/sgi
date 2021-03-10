@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -21,6 +21,6 @@ public interface SolicitudHitoRepository
    * @param tipoHitoId  Id de la {@link TipoHito}
    * @return un {@link SolicitudHito}
    */
-  Optional<SolicitudHito> findBySolicitudIdAndFechaAndTipoHitoId(Long solicitudId, LocalDate fecha, Long tipoHitoId);
+  Optional<SolicitudHito> findBySolicitudIdAndFechaAndTipoHitoId(Long solicitudId, Instant fecha, Long tipoHitoId);
 
 }

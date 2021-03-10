@@ -38,5 +38,5 @@ insert into csp.tipo_hito (id,nombre,descripcion,activo) values (2,'nombre-2','d
 INSERT INTO csp.modelo_tipo_hito (id, modelo_ejecucion_id, tipo_hito_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);
 
 --CONVOCATORIA HITO
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(1, 1, 1,'2020-10-26', 'comentario-1', true);
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(2, 1, 2,'2020-10-19', 'comentario-2', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(1, 1, 1,'2020-10-26T00:00:00Z', 'comentario-1', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(2, 1, 2,'2020-10-19T00:00:00Z', 'comentario-2', true);

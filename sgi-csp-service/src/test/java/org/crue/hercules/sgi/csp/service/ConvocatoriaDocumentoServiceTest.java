@@ -1024,61 +1024,63 @@ public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
   private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
 
+    // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
-        : ModeloEjecucion.builder()//
-            .id(modeloEjecucionId)//
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))//
-            .activo(Boolean.TRUE)//
+        : ModeloEjecucion.builder()
+            .id(modeloEjecucionId)
+            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .activo(Boolean.TRUE)
             .build();
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : TipoFinalidad.builder()//
-            .id(modeloTipoFinalidadId)//
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))//
-            .activo(Boolean.TRUE)//
+        : TipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
+            .activo(Boolean.TRUE)
             .build();
 
     ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : ModeloTipoFinalidad.builder()//
-            .id(modeloTipoFinalidadId)//
-            .modeloEjecucion(modeloEjecucion)//
-            .tipoFinalidad(tipoFinalidad)//
-            .activo(Boolean.TRUE)//
+        : ModeloTipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .modeloEjecucion(modeloEjecucion)
+            .tipoFinalidad(tipoFinalidad)
+            .activo(Boolean.TRUE)
             .build();
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
-        : TipoRegimenConcurrencia.builder()//
-            .id(tipoRegimenConcurrenciaId)//
-            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))//
-            .activo(Boolean.TRUE)//
+        : TipoRegimenConcurrencia.builder()
+            .id(tipoRegimenConcurrenciaId)
+            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))
+            .activo(Boolean.TRUE)
             .build();
 
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
-        : TipoAmbitoGeografico.builder()//
-            .id(tipoAmbitoGeogragicoId)//
-            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))//
-            .activo(Boolean.TRUE)//
+        : TipoAmbitoGeografico.builder()
+            .id(tipoAmbitoGeogragicoId)
+            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))
+            .activo(Boolean.TRUE)
             .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()//
-        .id(convocatoriaId)//
-        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))//
-        .modeloEjecucion(modeloEjecucion)//
-        .codigo("codigo-" + String.format("%03d", convocatoriaId))//
-        .anio(2020)//
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))//
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))//
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
-        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
-        .regimenConcurrencia(tipoRegimenConcurrencia)//
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)//
-        .colaborativos(Boolean.TRUE)//
-        .estado(Convocatoria.Estado.REGISTRADA)//
-        .duracion(12)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .clasificacionCVN(ClasificacionCVN.AYUDAS)//
-        .activo(activo)//
+    Convocatoria convocatoria = Convocatoria.builder()
+        .id(convocatoriaId)
+        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
+        .modeloEjecucion(modeloEjecucion)
+        .codigo("codigo-" + String.format("%03d", convocatoriaId))
+        .anio(2020)
+        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .objeto("objeto-" + String.format("%03d", convocatoriaId))
+        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
+        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
+        .regimenConcurrencia(tipoRegimenConcurrencia)
+        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
+        .colaborativos(Boolean.TRUE)
+        .estado(Convocatoria.Estado.REGISTRADA)
+        .duracion(12)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .clasificacionCVN(ClasificacionCVN.AYUDAS)
+        .activo(activo)
         .build();
+    // @formatter:on
 
     return convocatoria;
   }
@@ -1092,15 +1094,17 @@ public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    */
   private ModeloTipoFase generarMockModeloTipoFase(ConvocatoriaDocumento convocatoriaDocumento) {
 
-    return ModeloTipoFase.builder()//
-        .id(convocatoriaDocumento.getId() == null ? 1L : convocatoriaDocumento.getId())//
-        .modeloEjecucion(convocatoriaDocumento.getConvocatoria().getModeloEjecucion())//
-        .tipoFase(convocatoriaDocumento.getTipoFase())//
-        .solicitud(Boolean.TRUE)//
-        .convocatoria(Boolean.TRUE)//
-        .proyecto(Boolean.TRUE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return ModeloTipoFase.builder()
+        .id(convocatoriaDocumento.getId() == null ? 1L : convocatoriaDocumento.getId())
+        .modeloEjecucion(convocatoriaDocumento.getConvocatoria().getModeloEjecucion())
+        .tipoFase(convocatoriaDocumento.getTipoFase())
+        .solicitud(Boolean.TRUE)
+        .convocatoria(Boolean.TRUE)
+        .proyecto(Boolean.TRUE)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1112,13 +1116,15 @@ public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    */
   private ModeloTipoDocumento generarMockModeloTipoDocumento(ConvocatoriaDocumento convocatoriaDocumento) {
 
-    return ModeloTipoDocumento.builder()//
-        .id(convocatoriaDocumento.getId() == null ? 1L : convocatoriaDocumento.getId())//
-        .modeloEjecucion(convocatoriaDocumento.getConvocatoria().getModeloEjecucion())//
-        .modeloTipoFase(generarMockModeloTipoFase(convocatoriaDocumento))//
-        .tipoDocumento(convocatoriaDocumento.getTipoDocumento())//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return ModeloTipoDocumento.builder()
+        .id(convocatoriaDocumento.getId() == null ? 1L : convocatoriaDocumento.getId())
+        .modeloEjecucion(convocatoriaDocumento.getConvocatoria().getModeloEjecucion())
+        .modeloTipoFase(generarMockModeloTipoFase(convocatoriaDocumento))
+        .tipoDocumento(convocatoriaDocumento.getTipoDocumento())
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1129,12 +1135,14 @@ public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
 
-    return TipoDocumento.builder()//
-        .id(id)//
-        .nombre("nombreTipoDocumento-" + id)//
-        .descripcion("descripcionTipoDocumento-" + id)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return TipoDocumento.builder()
+        .id(id)
+        .nombre("nombreTipoDocumento-" + id)
+        .descripcion("descripcionTipoDocumento-" + id)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1145,12 +1153,14 @@ public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    */
   private TipoFase generarMockTipoFase(Long id) {
 
-    return TipoFase.builder()//
-        .id(id)//
-        .nombre("nombreTipoFase-" + id)//
-        .descripcion("descripcionTipoFase-" + id)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    return TipoFase.builder()
+        .id(id)
+        .nombre("nombreTipoFase-" + id)
+        .descripcion("descripcionTipoFase-" + id)
+        .activo(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 
   /**
@@ -1169,16 +1179,18 @@ public class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     TipoFase tipoFase = generarMockTipoFase(tipoFaseId);
     TipoDocumento tipoDocumento = generarMockTipoDocumento(tipoDocumentoId);
 
-    return ConvocatoriaDocumento.builder()//
-        .id(id)//
-        .convocatoria(convocatoria)//
-        .tipoFase(tipoFase)//
-        .tipoDocumento(tipoDocumento)//
-        .nombre("nombre doc-" + id)//
-        .publico(Boolean.TRUE)//
-        .observaciones("observaciones-" + id)//
-        .documentoRef("documentoRef-" + id)//
+    // @formatter:off
+    return ConvocatoriaDocumento.builder()
+        .id(id)
+        .convocatoria(convocatoria)
+        .tipoFase(tipoFase)
+        .tipoDocumento(tipoDocumento)
+        .nombre("nombre doc-" + id)
+        .publico(Boolean.TRUE)
+        .observaciones("observaciones-" + id)
+        .documentoRef("documentoRef-" + id)
         .build();
+    // @formatter:on
   }
 
 }

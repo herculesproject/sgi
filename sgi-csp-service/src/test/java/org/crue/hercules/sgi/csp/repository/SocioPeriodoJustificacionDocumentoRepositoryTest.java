@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -31,31 +30,41 @@ public class SocioPeriodoJustificacionDocumentoRepositoryTest extends BaseReposi
     ModeloEjecucion modeloEjecucion = entityManager
         .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true));
 
-    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()//
-        .abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .coordinador(Boolean.FALSE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
         .build());
 
-    Proyecto proyecto = entityManager.persistAndFlush(Proyecto.builder().titulo("proyecto")
-        .fechaInicio(LocalDate.of(2020, 9, 18)).fechaFin(LocalDate.of(2022, 10, 11)).unidadGestionRef("OPE")
-        .modeloEjecucion(modeloEjecucion).activo(Boolean.TRUE).build());
+    Proyecto proyecto = entityManager.persistAndFlush(Proyecto.builder()
+        .titulo("proyecto")
+        .fechaInicio(Instant.parse("2020-09-18T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-10-11T23:59:59Z"))
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion)
+        .activo(Boolean.TRUE)
+        .build());
 
-    ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(ProyectoSocio.builder()//
-        .proyecto(proyecto)//
-        .empresaRef("codigo-1")//
-        .rolSocio(rolSocio).build());
+    ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(ProyectoSocio.builder()
+        .proyecto(proyecto)
+        .empresaRef("codigo-1")
+        .rolSocio(rolSocio)
+        .build());
+    // @formatter:on
 
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion1 = entityManager
-        .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1, 1, LocalDate.of(2020, 10, 10),
-            LocalDate.of(2020, 11, 20), LocalDateTime.of(2020, 10, 10, 0, 0, 0),
-            LocalDateTime.of(2020, 11, 20, 0, 0, 0), "observaciones-1", Boolean.TRUE, LocalDate.of(2020, 11, 20)));
+        .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1, 1,
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1",
+            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z")));
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion2 = entityManager
-        .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1, 1, LocalDate.of(2020, 10, 10),
-            LocalDate.of(2020, 11, 20), LocalDateTime.of(2020, 10, 10, 0, 0, 0),
-            LocalDateTime.of(2020, 11, 20, 0, 0, 0), "observaciones-2", Boolean.TRUE, LocalDate.of(2020, 11, 20)));
+        .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1, 1,
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-2",
+            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z")));
 
     TipoDocumento tipoDocumento = entityManager
         .persistAndFlush(TipoDocumento.builder().nombre("tipo1").activo(Boolean.TRUE).build());

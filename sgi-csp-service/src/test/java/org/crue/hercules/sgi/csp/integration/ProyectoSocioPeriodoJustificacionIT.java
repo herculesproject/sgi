@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -179,9 +178,9 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getProyectoSocio().getId()).as("getProyectoSocio().getId()")
         .isEqualTo(1L);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaInicio()).as("getFechaInicio()")
-        .isEqualTo(LocalDate.of(2021, 01, 11));
+        .isEqualTo(Instant.parse("2021-01-11T00:00:00Z"));
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(LocalDate.of(2021, 9, 21));
+        .isEqualTo(Instant.parse("2021-09-21T23:59:59Z"));
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion())
         .as("getFechaInicioPresentacion()").isNull();
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
@@ -211,10 +210,10 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     convocatoriaPeriodoJustificacion.setId(id);
     convocatoriaPeriodoJustificacion.setProyectoSocio(updateProyectoSocioPeriodoJustificacion);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
-    convocatoriaPeriodoJustificacion.setFechaInicio(LocalDate.of(2021, 1, 11));
-    convocatoriaPeriodoJustificacion.setFechaFin(LocalDate.of(2021, 9, 21));
-    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDateTime.of(2021, 10, 10, 0, 0, 0));
-    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDateTime.of(2021, 11, 20, 0, 0, 0));
+    convocatoriaPeriodoJustificacion.setFechaInicio(Instant.parse("2021-01-11T00:00:00Z"));
+    convocatoriaPeriodoJustificacion.setFechaFin(Instant.parse("2021-09-21T23:59:59Z"));
+    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2021-10-10T00:00:00Z"));
+    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2021-11-20T23:59:59Z"));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
 
     return convocatoriaPeriodoJustificacion;

@@ -170,15 +170,17 @@ public class ConvocatoriaDocumentoIT {
     TipoFase tipoFase = TipoFase.builder().id(1L).build();
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(tipoDocumentoId).build();
 
-    return ConvocatoriaDocumento.builder()//
-        .id(id)//
-        .convocatoria(convocatoria)//
-        .tipoFase(tipoFase)//
-        .tipoDocumento(tipoDocumento)//
-        .nombre("nombre doc-" + id)//
-        .publico(Boolean.TRUE)//
-        .observaciones("observacionesConvocatoriaDocumento-" + id)//
-        .documentoRef("documentoRef-" + id)//
+    // @formatter:off
+    return ConvocatoriaDocumento.builder()
+        .id(id)
+        .convocatoria(convocatoria)
+        .tipoFase(tipoFase)
+        .tipoDocumento(tipoDocumento)
+        .nombre("nombre doc-" + id)
+        .publico(Boolean.TRUE)
+        .observaciones("observacionesConvocatoriaDocumento-" + id)
+        .documentoRef("documentoRef-" + id)
         .build();
+    // @formatter:on
   }
 }

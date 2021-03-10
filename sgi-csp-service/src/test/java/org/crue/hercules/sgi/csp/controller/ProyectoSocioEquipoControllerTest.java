@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -160,32 +160,46 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
 
     ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
 
-    Proyecto proyecto1 = Proyecto.builder()//
-        .id(id).titulo("proyecto 1").acronimo("PR1").fechaInicio(LocalDate.of(2020, 11, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build();
-
-    RolSocio rolSocio = RolSocio.builder()//
-        .id(id).abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .coordinador(Boolean.FALSE)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    Proyecto proyecto1 = Proyecto.builder()
+        .id(id)
+        .titulo("proyecto 1")
+        .acronimo("PR1")
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE)
         .build();
 
-    RolProyecto rolProyecto = RolProyecto.builder()//
-        .id(id).abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .rolPrincipal(Boolean.FALSE)//
-        .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)//
+    RolSocio rolSocio = RolSocio.builder()
+        .id(id)
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
         .build();
 
-    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()//
-        .id(id).proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build();
+    RolProyecto rolProyecto = RolProyecto.builder()
+        .id(id)
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .rolPrincipal(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION)
+        .activo(Boolean.TRUE)
+        .build();
+
+    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
+        .id(id)
+        .proyecto(proyecto1)
+        .empresaRef("empresa-0041")
+        .rolSocio(rolSocio)
+        .build();
+    // @formatter:on
 
     ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1, rolProyecto, "001",
-        LocalDate.of(2021, 4, 10), null);
+        Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioEquipo;
   }

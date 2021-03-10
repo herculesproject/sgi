@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -73,18 +73,20 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
    */
   private ContextoProyecto generarMockContextoProyecto(Long id) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion")//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    Proyecto proyecto = Proyecto.builder()//
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)//
-        .titulo("PRO" + (id != null ? id : ""))//
-        .fechaInicio(LocalDate.now())//
-        .fechaFin(LocalDate.now()).activo(Boolean.TRUE)//
+    Proyecto proyecto = Proyecto.builder()
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .titulo("PRO" + (id != null ? id : ""))
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.now()).activo(Boolean.TRUE)
         .build();
+    // @formatter:on
 
     ContextoProyecto contextoProyecto = new ContextoProyecto();
     contextoProyecto.setProyecto(proyecto);

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,7 +74,7 @@ public class EstadoProyecto extends BaseEntity {
   /** Fecha. */
   @Column(name = "fecha_estado", nullable = false)
   @NotNull
-  private LocalDateTime fechaEstado;
+  private Instant fechaEstado;
 
   /** Comentario */
   @Column(name = "comentario", length = 2000, nullable = true)

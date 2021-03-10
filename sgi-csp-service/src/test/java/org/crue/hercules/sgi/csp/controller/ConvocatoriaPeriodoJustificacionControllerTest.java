@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,8 +84,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
             .value(convocatoriaPeriodoJustificaciones.get(0).getMesInicial()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].mesFinal")
             .value(convocatoriaPeriodoJustificaciones.get(0).getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicioPresentacion").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicioPresentacion").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFinPresentacion").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].observaciones")
             .value(convocatoriaPeriodoJustificaciones.get(0).getObservaciones()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].tipo")
@@ -99,8 +99,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
             .value(convocatoriaPeriodoJustificaciones.get(1).getMesInicial()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].mesFinal")
             .value(convocatoriaPeriodoJustificaciones.get(1).getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicioPresentacion").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicioPresentacion").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFinPresentacion").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].observaciones")
             .value(convocatoriaPeriodoJustificaciones.get(1).getObservaciones()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].tipo")
@@ -151,8 +151,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
         .andExpect(MockMvcResultMatchers.jsonPath("numPeriodo").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("mesInicial").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("mesFinal").value(2))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-10-10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-10-10T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-11-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-1")).andExpect(
             MockMvcResultMatchers.jsonPath("tipo").value(ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO.toString()));
   }
@@ -205,8 +205,8 @@ public class ConvocatoriaPeriodoJustificacionControllerTest extends BaseControll
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setMesInicial(mesInicial);
     convocatoriaPeriodoJustificacion.setMesFinal(mesFinal);
-    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
-    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
     convocatoriaPeriodoJustificacion.setTipo(tipo);
 

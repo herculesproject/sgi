@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,8 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     // given: Un nuevo ConvocatoriaConceptoGastoCodigoEc Fecha Inicio > fechaFin
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
         null);
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(convocatoriaConceptoGastoCodigoEc.getFechaFin().plusDays(1));
+    convocatoriaConceptoGastoCodigoEc
+        .setFechaInicio(convocatoriaConceptoGastoCodigoEc.getFechaFin().plus(Period.ofDays(1)));
 
     // when: Creamos el ConvocatoriaConceptoGastoCodigoEc
     // then: Lanza una excepcion porque fecha fin debe ser posterior a fecha inicio
@@ -185,7 +187,8 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     // given: ConvocatoriaConceptoGastoCodigoEc Fecha Inicio > fechaFin
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(convocatoriaConceptoGastoCodigoEc.getFechaFin().plusDays(1));
+    convocatoriaConceptoGastoCodigoEc
+        .setFechaInicio(convocatoriaConceptoGastoCodigoEc.getFechaFin().plus(Period.ofDays(1)));
 
     // when: Modificamos ConvocatoriaConceptoGastoCodigoEc
     // then: Lanza una excepcion porque fecha fin debe ser posterior a fecha inicio
@@ -256,7 +259,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
         1L);
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizado = generarMockConvocatoriaConceptoGastoCodigoEc(
         1L);
-    convocatoriaConceptoGastoCodigoEcActualizado.setFechaFin(LocalDate.of(2050, 10, 10));
+    convocatoriaConceptoGastoCodigoEcActualizado.setFechaFin(Instant.parse("2050-10-10T23:59:59Z"));
     List<ConvocatoriaConceptoGastoCodigoEc> solapadas = new ArrayList<ConvocatoriaConceptoGastoCodigoEc>();
 
     BDDMockito.given(convocatoriaConceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
@@ -406,8 +409,8 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceTest extends BaseServiceTes
     convocatoriaConceptoGastoCodigoEc.setId(id);
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("Cod-" + (id == null ? 1 : id));
     convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
-    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now().minusDays(1));
-    convocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(Instant.now().minus(Period.ofDays(1)));
+    convocatoriaConceptoGastoCodigoEc.setFechaFin(Instant.now());
 
     return convocatoriaConceptoGastoCodigoEc;
   }

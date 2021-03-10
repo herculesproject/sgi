@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
@@ -224,7 +224,7 @@ public class SolicitudHitoControllerTest extends BaseControllerTest {
 
     SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
         .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(LocalDate.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
+        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());

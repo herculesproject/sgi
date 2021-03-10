@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -1269,7 +1268,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     estadoSolicitud.setId(id);
     estadoSolicitud.setComentario("Estado-" + id);
     estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
-    estadoSolicitud.setFechaEstado(LocalDateTime.now());
+    estadoSolicitud.setFechaEstado(Instant.now());
     estadoSolicitud.setIdSolicitud(1L);
 
     return estadoSolicitud;
@@ -1287,7 +1286,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
         .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(LocalDate.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
+        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
         .build();
 
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
@@ -1339,30 +1338,32 @@ public class SolicitudControllerTest extends BaseControllerTest {
    * @return el objeto SolicitudProyectoEntidadFinanciadoraAjena
    */
   private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
-    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()//
-        .id(id == null ? 1 : id)//
-        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())//
+    // @formatter:off
+    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()
+        .id(id == null ? 1 : id)
+        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())
         .build();
 
-    FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()//
-        .id(id == null ? 1 : id)//
-        .activo(true)//
+    FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
+        .id(id == null ? 1 : id)
+        .activo(true)
         .build();
 
-    TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()//
-        .id(id == null ? 1 : id)//
-        .activo(true)//
+    TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()
+        .id(id == null ? 1 : id)
+        .activo(true)
         .build();
 
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = SolicitudProyectoEntidadFinanciadoraAjena
-        .builder()//
-        .id(id)//
-        .solicitudProyectoDatos(solicitudProyectoDatos)//
-        .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))//
-        .fuenteFinanciacion(fuenteFinanciacion)//
-        .tipoFinanciacion(tipoFinanciacion)//
-        .porcentajeFinanciacion(50)//
+        .builder()
+        .id(id)
+        .solicitudProyectoDatos(solicitudProyectoDatos)
+        .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))
+        .fuenteFinanciacion(fuenteFinanciacion)
+        .tipoFinanciacion(tipoFinanciacion)
+        .porcentajeFinanciacion(50)
         .build();
+    // @formatter:on
 
     return solicitudProyectoEntidadFinanciadoraAjena;
   }

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -161,7 +161,7 @@ public class ProyectoHitoIT extends BaseIT {
     Assertions.assertThat(proyectoHito.getProyecto().getId()).as("getProyecto().getId()").isEqualTo(1L);
     Assertions.assertThat(proyectoHito.getComentario()).as("comentario")
         .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", idProyectoHito));
-    Assertions.assertThat(proyectoHito.getFecha()).as("getFecha()").isEqualTo("2020-10-01");
+    Assertions.assertThat(proyectoHito.getFecha()).as("getFecha()").isEqualTo("2020-10-01T00:00:00Z");
 
   }
 
@@ -175,13 +175,15 @@ public class ProyectoHitoIT extends BaseIT {
    */
   private ProyectoHito generarMockProyectoHito(Long id, Long tipoHitoId, Long proyectoId) {
 
-    return ProyectoHito.builder()//
-        .id(id)//
-        .tipoHito(TipoHito.builder().id(tipoHitoId).build())//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .fecha(LocalDate.of(2020, 10, 01))//
-        .comentario("comentario-proyecto-hito-" + (id == null ? "" : String.format("%03d", id)))//
-        .generaAviso(Boolean.TRUE)//
+    // @formatter:off
+    return ProyectoHito.builder()
+        .id(id)
+        .tipoHito(TipoHito.builder().id(tipoHitoId).build())
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .fecha(Instant.parse("2020-10-01T00:00:00Z"))
+        .comentario("comentario-proyecto-hito-" + (id == null ? "" : String.format("%03d", id)))
+        .generaAviso(Boolean.TRUE)
         .build();
+    // @formatter:on
   }
 }

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -62,8 +62,8 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoFase.getProyecto().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
             .value("observaciones-proyecto-fase-" + String.format("%03d", proyectoFase.getId())))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFase.id").value(proyectoFase.getTipoFase().getId()));
@@ -107,8 +107,8 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoFaseExistente.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoFaseExistente.getProyecto().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
             .value("observaciones-proyecto-fase-" + String.format("%03d", proyectoFase.getId())))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFase.id").value(proyectoFase.getTipoFase().getId()));
@@ -221,8 +221,8 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
         // and the requested ProyectoFase is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
         .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
             .value("observaciones-proyecto-fase-" + String.format("%03d", id)));
 
@@ -262,8 +262,8 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
     ProyectoFase proyectoFase = new ProyectoFase();
     proyectoFase.setId(id);
     proyectoFase.setProyecto(proyecto);
-    proyectoFase.setFechaInicio(LocalDateTime.of(2020, 10, 19, 0, 0, 0));
-    proyectoFase.setFechaFin(LocalDateTime.of(2020, 10, 20, 23, 59, 59));
+    proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
+    proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
     proyectoFase.setGeneraAviso(true);
     proyectoFase.setTipoFase(tipoFase);

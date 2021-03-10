@@ -26,21 +26,41 @@ public class SolicitudProyectoEquipoSocioRepositoryTest extends BaseRepositoryTe
 
     // given: 2 SolicitudProyectoEquipoSocio para el SolicitudProyectoSocio buscado
 
-    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()//
-        .creadorRef("user-001").solicitanteRef("user-002").unidadGestionRef("OTRI")
-        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS).activo(Boolean.TRUE).build());
+    // @formatter:off
+    Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
+        .creadorRef("user-001")
+        .solicitanteRef("user-002")
+        .unidadGestionRef("OTRI")
+        .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
+        .activo(Boolean.TRUE)
+        .build());
+    // @formatter:on
     SolicitudProyectoDatos solicitudProyectoDatos = entityManager
         .persistAndFlush(new SolicitudProyectoDatos(null, solicitud1, "solicitud1", null, null, Boolean.TRUE,
             Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
-    RolSocio rolSocio = RolSocio.builder().abreviatura("001").nombre("Lider").descripcion("Lider")
-        .coordinador(Boolean.FALSE).activo(Boolean.TRUE).build();
+    // @formatter:off
+    RolSocio rolSocio = RolSocio.builder()
+        .abreviatura("001")
+        .nombre("Lider")
+        .descripcion("Lider")
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
+        .build();
     entityManager.persistAndFlush(rolSocio);
 
-    RolProyecto rolProyecto = RolProyecto.builder().abreviatura("001").nombre("Rol1").descripcion("Rol1")
-        .rolPrincipal(Boolean.FALSE).responsableEconomico(Boolean.FALSE).equipo(RolProyecto.Equipo.INVESTIGACION)
-        .colectivoRef("PDI").activo(Boolean.TRUE).build();
+    RolProyecto rolProyecto = RolProyecto.builder()
+        .abreviatura("001")
+        .nombre("Rol1")
+        .descripcion("Rol1")
+        .rolPrincipal(Boolean.FALSE)
+        .responsableEconomico(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION)
+        .colectivoRef("PDI")
+        .activo(Boolean.TRUE)
+        .build();
     entityManager.persistAndFlush(rolProyecto);
+    // @formatter:on
 
     SolicitudProyectoSocio solicitudProyectoSocio1 = entityManager.persistAndFlush(
         new SolicitudProyectoSocio(null, solicitudProyectoDatos, rolSocio, "001", 1, 3, 3, new BigDecimal(468)));

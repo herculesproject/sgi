@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -473,7 +473,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     estadoProyecto.setEstado(tipoEstadoProyecto);
     estadoProyecto.setIdProyecto(proyecto.getId());
     estadoProyecto.setComentario(comentario);
-    estadoProyecto.setFechaEstado(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
+    estadoProyecto.setFechaEstado(Instant.now());
 
     EstadoProyecto returnValue = estadoProyectoRepository.save(estadoProyecto);
 
@@ -679,15 +679,15 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoPeriodoSeguimiento entidadProyecto = new ProyectoPeriodoSeguimiento();
       entidadProyecto.setNumPeriodo(convocatoriaSeguimiento.getNumPeriodo());
       entidadProyecto.setProyecto(proyecto);
-      entidadProyecto.setFechaInicio(proyecto.getFechaInicio().plusMonths(convocatoriaSeguimiento.getMesInicial() - 1));
-      entidadProyecto.setFechaFin(proyecto.getFechaInicio().plusMonths(convocatoriaSeguimiento.getMesFinal() - 1));
+      entidadProyecto.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+          .plus(Period.ofMonths(convocatoriaSeguimiento.getMesInicial() - 1))));
+      entidadProyecto.setFechaFin(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+          .plus(Period.ofMonths(convocatoriaSeguimiento.getMesFinal() - 1))));
       if (convocatoriaSeguimiento.getFechaInicioPresentacion() != null) {
-        entidadProyecto.setFechaInicioPresentacion(
-            LocalDateTime.of(convocatoriaSeguimiento.getFechaInicioPresentacion(), LocalTime.of(0, 0, 0)));
+        entidadProyecto.setFechaInicioPresentacion(convocatoriaSeguimiento.getFechaInicioPresentacion());
       }
       if (convocatoriaSeguimiento.getFechaFinPresentacion() != null) {
-        entidadProyecto.setFechaFinPresentacion(
-            LocalDateTime.of(convocatoriaSeguimiento.getFechaFinPresentacion(), LocalTime.of(23, 59, 59)));
+        entidadProyecto.setFechaFinPresentacion(convocatoriaSeguimiento.getFechaFinPresentacion());
       }
       entidadProyecto.setObservaciones(convocatoriaSeguimiento.getObservaciones());
 
@@ -886,8 +886,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       log.debug("Copy SolicitudProyectoEquipo with id: {0}", entidadSolicitud.getId());
       ProyectoEquipo proyectoEquipo = new ProyectoEquipo();
       proyectoEquipo.setProyecto(proyecto);
-      proyectoEquipo.setFechaInicio(proyecto.getFechaInicio().plusMonths(entidadSolicitud.getMesInicio() - 1));
-      proyectoEquipo.setFechaFin(proyecto.getFechaInicio().plusMonths(entidadSolicitud.getMesFin() - 1));
+      proyectoEquipo.setFechaInicio(Instant.from(
+          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesInicio() - 1))));
+      proyectoEquipo.setFechaFin(Instant.from(
+          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesFin() - 1))));
       proyectoEquipo.setRolProyecto(entidadSolicitud.getRolProyecto());
       proyectoEquipo.setPersonaRef(entidadSolicitud.getPersonaRef());
       proyectoEquipos.add(proyectoEquipo);
@@ -909,8 +911,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       log.debug("Copy SolicitudProyectoSocio with id: {0}", entidadSolicitud.getId());
       ProyectoSocio proyectoSocio = new ProyectoSocio();
       proyectoSocio.setProyecto(proyecto);
-      proyectoSocio.setFechaInicio(proyecto.getFechaInicio().plusMonths(entidadSolicitud.getMesInicio() - 1));
-      proyectoSocio.setFechaFin(proyecto.getFechaInicio().plusMonths(entidadSolicitud.getMesFin() - 1));
+      proyectoSocio.setFechaInicio(Instant.from(
+          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesInicio() - 1))));
+      proyectoSocio.setFechaFin(Instant.from(
+          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesFin() - 1))));
       proyectoSocio.setRolSocio(entidadSolicitud.getRolSocio());
       proyectoSocio.setEmpresaRef(entidadSolicitud.getEmpresaRef());
       proyectoSocio.setImporteConcedido(entidadSolicitud.getImporteSolicitado());
@@ -925,9 +929,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       entidadesEquipoSolicitud.stream().forEach((entidadEquipoSolicitud) -> {
         log.debug("Copy SolicitudProyectoEquipoSocio with id: {0}", entidadEquipoSolicitud.getId());
         ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo();
-        proyectoSocioEquipo
-            .setFechaInicio(proyecto.getFechaInicio().plusMonths(entidadEquipoSolicitud.getMesInicio() - 1));
-        proyectoSocioEquipo.setFechaFin(proyecto.getFechaInicio().plusMonths(entidadEquipoSolicitud.getMesFin() - 1));
+        proyectoSocioEquipo.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(entidadEquipoSolicitud.getMesInicio() - 1))));
+        proyectoSocioEquipo.setFechaFin(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(entidadEquipoSolicitud.getMesFin() - 1))));
         proyectoSocioEquipo.setPersonaRef(entidadEquipoSolicitud.getPersonaRef());
         proyectoSocioEquipo.setRolProyecto(entidadEquipoSolicitud.getRolProyecto());
 
@@ -943,8 +948,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       entidadesPeriodoPagoSolicitud.stream().forEach((entidadPeriodoPagoSolicitud) -> {
         log.debug("Copy ProyectoSocioPeriodoPago with id: {0}", entidadPeriodoPagoSolicitud.getId());
         ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago();
-        proyectoSocioPeriodoPago
-            .setFechaPrevistaPago(proyecto.getFechaInicio().plusMonths(entidadPeriodoPagoSolicitud.getMes() - 1));
+        proyectoSocioPeriodoPago.setFechaPrevistaPago(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(entidadPeriodoPagoSolicitud.getMes() - 1))));
         proyectoSocioPeriodoPago.setImporte(entidadPeriodoPagoSolicitud.getImporte());
         proyectoSocioPeriodoPago.setNumPeriodo(entidadPeriodoPagoSolicitud.getNumPeriodo());
 
@@ -961,16 +966,15 @@ public class ProyectoServiceImpl implements ProyectoService {
         log.debug("Copy ProyectoSocioPeriodoJustificacion with id: {0}", entidadPeriodoJustificacionSolicitud.getId());
         ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
         proyectoSocioPeriodoJustificacion.setProyectoSocio(proyectoSocioCreado);
-        proyectoSocioPeriodoJustificacion.setFechaInicio(
-            proyecto.getFechaInicio().plusMonths(entidadPeriodoJustificacionSolicitud.getMesInicial() - 1));
-        proyectoSocioPeriodoJustificacion
-            .setFechaFin(proyecto.getFechaInicio().plusMonths(entidadPeriodoJustificacionSolicitud.getMesFinal() - 1));
+        proyectoSocioPeriodoJustificacion.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(entidadPeriodoJustificacionSolicitud.getMesInicial() - 1))));
+        proyectoSocioPeriodoJustificacion.setFechaFin(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(entidadPeriodoJustificacionSolicitud.getMesFinal() - 1))));
         proyectoSocioPeriodoJustificacion.setNumPeriodo(entidadPeriodoJustificacionSolicitud.getNumPeriodo());
         proyectoSocioPeriodoJustificacion.setObservaciones(entidadPeriodoJustificacionSolicitud.getObservaciones());
         proyectoSocioPeriodoJustificacion
-            .setFechaInicioPresentacion(entidadPeriodoJustificacionSolicitud.getFechaInicio().atTime(0, 0, 0));
-        proyectoSocioPeriodoJustificacion
-            .setFechaFinPresentacion(entidadPeriodoJustificacionSolicitud.getFechaFin().atTime(23, 59, 59));
+            .setFechaInicioPresentacion(entidadPeriodoJustificacionSolicitud.getFechaInicio());
+        proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(entidadPeriodoJustificacionSolicitud.getFechaFin());
 
         this.proyectoSocioPeriodoJustificacionService.create(proyectoSocioPeriodoJustificacion);
       });

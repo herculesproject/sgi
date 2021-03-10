@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -28,35 +28,63 @@ public class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
     ModeloEjecucion modeloEjecucion1 = entityManager
         .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true));
 
-    Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()//
-        .titulo("proyecto 1").acronimo("PR1").fechaInicio(LocalDate.of(2020, 11, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build());
+    // @formatter:off
+    Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()
+        .titulo("proyecto 1")
+        .acronimo("PR1")
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE)
+        .build());
 
-    Proyecto proyecto2 = entityManager.persistAndFlush(Proyecto.builder()//
-        .titulo("proyecto 2").acronimo("PR2").fechaInicio(LocalDate.of(2020, 11, 20))
-        .fechaFin(LocalDate.of(2021, 11, 20)).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build());
+    Proyecto proyecto2 = entityManager.persistAndFlush(Proyecto.builder()
+        .titulo("proyecto 2")
+        .acronimo("PR2")
+        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion1)
+        .activo(Boolean.TRUE)
+        .build());
 
-    RolProyecto rolProyecto = entityManager.persistAndFlush(RolProyecto.builder()//
-        .abreviatura("001")//
-        .nombre("nombre-001")//
-        .descripcion("descripcion-001")//
-        .rolPrincipal(Boolean.FALSE)//
-        .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)//
+    RolProyecto rolProyecto = entityManager.persistAndFlush(RolProyecto.builder()
+        .abreviatura("001")
+        .nombre("nombre-001")
+        .descripcion("descripcion-001")
+        .rolPrincipal(Boolean.FALSE)
+        .equipo(RolProyecto.Equipo.INVESTIGACION)
+        .activo(Boolean.TRUE)
         .build());
 
     ProyectoEquipo proyectoEquipo1 = entityManager.persistAndFlush(
-        ProyectoEquipo.builder().proyecto(proyecto1).rolProyecto(rolProyecto).fechaInicio(LocalDate.now())
-            .fechaFin(LocalDate.now()).personaRef("001").horasDedicacion(new Double(2)).build());
+        ProyectoEquipo.builder()
+          .proyecto(proyecto1)
+          .rolProyecto(rolProyecto)
+          .fechaInicio(Instant.now())
+          .fechaFin(Instant.now())
+          .personaRef("001")
+          .horasDedicacion(new Double(2))
+          .build());
 
-    entityManager.persistAndFlush(
-        ProyectoEquipo.builder().proyecto(proyecto2).rolProyecto(rolProyecto).fechaInicio(LocalDate.now())
-            .fechaFin(LocalDate.now()).personaRef("002").horasDedicacion(new Double(44)).build());
+    entityManager.persistAndFlush(ProyectoEquipo.builder()
+      .proyecto(proyecto2)
+      .rolProyecto(rolProyecto)
+      .fechaInicio(Instant.now())
+      .fechaFin(Instant.now())
+      .personaRef("002")
+      .horasDedicacion(new Double(44))
+      .build());
 
-    entityManager.persistAndFlush(
-        ProyectoEquipo.builder().proyecto(proyecto2).rolProyecto(rolProyecto).fechaInicio(LocalDate.now())
-            .fechaFin(LocalDate.now()).personaRef("002").horasDedicacion(new Double(56)).build());
+    entityManager.persistAndFlush(ProyectoEquipo.builder()
+      .proyecto(proyecto2)
+      .rolProyecto(rolProyecto)
+      .fechaInicio(Instant.now())
+      .fechaFin(Instant.now())
+      .personaRef("002")
+      .horasDedicacion(new Double(56))
+      .build());
+    // @formatter:on
 
     // when: se buscan los ProyectoEquipo por proyecto id
     List<ProyectoEquipo> ProyectoEquipoEncontrados = repository.findAllByProyectoId(proyecto1.getId());

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.predicate;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -66,14 +66,11 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
       return null;
     }
 
-    Predicate plazoInicio = cb.lessThanOrEqualTo(
-        root.get(Convocatoria_.configuracionSolicitud).get(ConfiguracionSolicitud_.fasePresentacionSolicitudes)
-            .get(ConvocatoriaFase_.fechaInicio).as(java.time.LocalDate.class),
-        LocalDate.now());
-    Predicate plazoFin = cb.greaterThanOrEqualTo(
-        root.get(Convocatoria_.configuracionSolicitud).get(ConfiguracionSolicitud_.fasePresentacionSolicitudes)
-            .get(ConvocatoriaFase_.fechaFin).as(java.time.LocalDate.class),
-        LocalDate.now());
+    Instant now = Instant.now();
+    Predicate plazoInicio = cb.lessThanOrEqualTo(root.get(Convocatoria_.configuracionSolicitud)
+        .get(ConfiguracionSolicitud_.fasePresentacionSolicitudes).get(ConvocatoriaFase_.fechaInicio), now);
+    Predicate plazoFin = cb.greaterThanOrEqualTo(root.get(Convocatoria_.configuracionSolicitud)
+        .get(ConfiguracionSolicitud_.fasePresentacionSolicitudes).get(ConvocatoriaFase_.fechaFin), now);
     return cb.and(plazoInicio, plazoFin);
   }
 

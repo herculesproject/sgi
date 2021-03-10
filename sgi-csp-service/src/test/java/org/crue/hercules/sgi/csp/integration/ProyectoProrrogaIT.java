@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,10 +97,10 @@ public class ProyectoProrrogaIT extends BaseIT {
     Assertions.assertThat(proyectoProrrogaActualizado.getId()).as("getId()").isEqualTo(idProyectoProrroga);
     Assertions.assertThat(proyectoProrrogaActualizado.getProyecto().getId()).as("getProyecto().getId()").isEqualTo(1L);
     Assertions.assertThat(proyectoProrrogaActualizado.getFechaConcesion()).as("getFechaConcesion()")
-        .isEqualTo(LocalDate.of(2020, 06, 01));
+        .isEqualTo(Instant.parse("2020-06-01T00:00:00Z"));
     Assertions.assertThat(proyectoProrrogaActualizado.getNumProrroga()).as("getNumProrroga()").isEqualTo(1);
     Assertions.assertThat(proyectoProrrogaActualizado.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(LocalDate.of(2021, 12, 31));
+        .isEqualTo(Instant.parse("2021-12-31T23:59:59Z"));
     Assertions.assertThat(proyectoProrrogaActualizado.getTipo()).as("getTipo()")
         .isEqualTo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     Assertions.assertThat(proyectoProrrogaActualizado.getImporte()).as("getImporte()")
@@ -175,9 +175,10 @@ public class ProyectoProrrogaIT extends BaseIT {
     Assertions.assertThat(proyectoProrroga.getId()).as("getId()").isEqualTo(idProyectoProrroga);
     Assertions.assertThat(proyectoProrroga.getProyecto().getId()).as("getProyecto().getId()").isEqualTo(1L);
     Assertions.assertThat(proyectoProrroga.getFechaConcesion()).as("getFechaConcesion()")
-        .isEqualTo(LocalDate.of(2020, 01, 01));
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
     Assertions.assertThat(proyectoProrroga.getNumProrroga()).as("getNumProrroga()").isEqualTo(1);
-    Assertions.assertThat(proyectoProrroga.getFechaFin()).as("getFechaFin()").isEqualTo(LocalDate.of(2020, 02, 01));
+    Assertions.assertThat(proyectoProrroga.getFechaFin()).as("getFechaFin()")
+        .isEqualTo(Instant.parse("2020-02-01T23:59:59Z"));
     Assertions.assertThat(proyectoProrroga.getTipo()).as("getTipo()").isEqualTo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     Assertions.assertThat(proyectoProrroga.getImporte()).as("getImporte()").isEqualTo(BigDecimal.valueOf(123.45));
     Assertions.assertThat(proyectoProrroga.getObservaciones()).as("getObservaciones()")
@@ -243,15 +244,17 @@ public class ProyectoProrrogaIT extends BaseIT {
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
 
-    return ProyectoProrroga.builder()//
-        .id(id)//
-        .proyecto(Proyecto.builder().id(proyectoId).build())//
-        .numProrroga(1)//
-        .fechaConcesion(LocalDate.of(2020, 06, 01))//
-        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)//
-        .fechaFin(LocalDate.of(2021, 12, 31))//
-        .importe(BigDecimal.valueOf(123.45))//
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))//
+    // @formatter:off
+    return ProyectoProrroga.builder()
+        .id(id)
+        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .numProrroga(1)
+        .fechaConcesion(Instant.parse("2020-06-01T00:00:00Z"))
+        .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
+        .fechaFin(Instant.parse("2021-12-31T23:59:59Z"))
+        .importe(BigDecimal.valueOf(123.45))
+        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();
+    // @formatter:on
   }
 }

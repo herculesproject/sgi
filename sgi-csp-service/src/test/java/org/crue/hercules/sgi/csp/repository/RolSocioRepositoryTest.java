@@ -88,13 +88,15 @@ public class RolSocioRepositoryTest extends BaseRepositoryTest {
    */
   private RolSocio generarMockRolSocio(String suffix, Boolean activo) {
 
-    RolSocio rolSocio = RolSocio.builder()//
-        .abreviatura(suffix)//
-        .nombre("nombre-" + suffix)//
-        .descripcion("descripcion-" + suffix)//
-        .coordinador(Boolean.FALSE)//
-        .activo(activo)//
+    // @formatter:off
+    RolSocio rolSocio = RolSocio.builder()
+        .abreviatura(suffix)
+        .nombre("nombre-" + suffix)
+        .descripcion("descripcion-" + suffix)
+        .coordinador(Boolean.FALSE)
+        .activo(activo)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(rolSocio);
   }
 }

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoFaseNotFoundException;
@@ -180,10 +180,10 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
     // caso se indicaría el mismo valor tanto en fecha de inicio como en fecha de
     // fin.
     if (datosProyectoFase.getFechaInicio() == null) {
-      datosProyectoFase.setFechaInicio(datosProyectoFase.getFechaFin().toLocalDate().atStartOfDay());
+      datosProyectoFase.setFechaInicio(datosProyectoFase.getFechaFin());
     }
     if (datosProyectoFase.getFechaFin() == null) {
-      datosProyectoFase.setFechaFin(datosProyectoFase.getFechaInicio().toLocalDate().atTime(23, 59, 59));
+      datosProyectoFase.setFechaFin(datosProyectoFase.getFechaInicio());
     }
 
     Assert.isTrue(datosProyectoFase.getFechaFin().compareTo(datosProyectoFase.getFechaInicio()) >= 0,
@@ -191,7 +191,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
 
     // Si el rango de fechas es pasado, el campo "generar aviso" tomará el valor
     // false, y no será editable.
-    if (datosProyectoFase.getFechaFin().toLocalDate().isBefore(LocalDate.now())) {
+    if (datosProyectoFase.getFechaFin().isBefore(Instant.now())) {
       datosProyectoFase.setGeneraAviso(false);
     }
 

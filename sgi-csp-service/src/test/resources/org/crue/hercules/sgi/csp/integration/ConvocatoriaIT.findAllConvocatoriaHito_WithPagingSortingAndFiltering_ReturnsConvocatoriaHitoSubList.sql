@@ -34,9 +34,9 @@ VALUES(2, 'unidad-002', 1, 'codigo-002', 2020, 'titulo-002', 'objeto-002', 'obse
 insert into csp.tipo_hito (id,nombre,descripcion,activo) values (1,'nombre-1','descripcion-1',true);
 
 --CONVOCATORIA HITO
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(1, 1, 1,'2021-10-22', 'comentario-001', true);
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(2, 1, 1,'2021-10-23', 'comentario-002', true);
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(3, 1, 1,'2021-10-24', 'comentario-003', true);
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(4, 1, 1,'2021-10-25', 'comentario-4', true);
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(5, 2, 1,'2021-10-26', 'comentario-005', true);
-INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(6, 1, 1,'2021-10-27', 'comentario-06', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(1, 1, 1,'2021-10-22T00:00:00Z', 'comentario-001', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(2, 1, 1,'2021-10-23T00:00:00Z', 'comentario-002', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(3, 1, 1,'2021-10-24T00:00:00Z', 'comentario-003', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(4, 1, 1,'2021-10-25T00:00:00Z', 'comentario-4', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(5, 2, 1,'2021-10-26T00:00:00Z', 'comentario-005', true);
+INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(6, 1, 1,'2021-10-27T00:00:00Z', 'comentario-06', true);

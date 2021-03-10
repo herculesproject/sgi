@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -110,54 +110,56 @@ public class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
    */
   private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(String suffix) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
-        .nombre("nombreModeloEjecucion" + suffix)//
-        .activo(Boolean.TRUE)//
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre("nombreModeloEjecucion" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()//
-        .nombre("nombreTipoFinalidad" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
+        .nombre("nombreTipoFinalidad" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()//
-        .nombre("nombreTipoAmbitoGeografico" + suffix)//
-        .activo(Boolean.TRUE)//
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
+        .nombre("nombreTipoAmbitoGeografico" + suffix)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    ModeloUnidad modeloUnidad = ModeloUnidad.builder()//
-        .modeloEjecucion(modeloEjecucion)//
-        .unidadGestionRef("OPE")//
-        .activo(Boolean.TRUE)//
+    ModeloUnidad modeloUnidad = ModeloUnidad.builder()
+        .modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("OPE")
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
-    Proyecto proyecto = Proyecto.builder()//
-        .acronimo("PR" + suffix)//
-        .codigoExterno("COD" + suffix)//
-        .titulo("titulo-" + suffix)//
-        .unidadGestionRef("OPE")//
-        .modeloEjecucion(modeloEjecucion)//
-        .finalidad(tipoFinalidad)//
-        .ambitoGeografico(tipoAmbitoGeografico)//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 12, 31))//
-        .paquetesTrabajo(Boolean.TRUE)//
-        .activo(Boolean.TRUE)//
+    Proyecto proyecto = Proyecto.builder()
+        .acronimo("PR" + suffix)
+        .codigoExterno("COD" + suffix)
+        .titulo("titulo-" + suffix)
+        .unidadGestionRef("OPE")
+        .modeloEjecucion(modeloEjecucion)
+        .finalidad(tipoFinalidad)
+        .ambitoGeografico(tipoAmbitoGeografico)
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .paquetesTrabajo(Boolean.TRUE)
+        .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto);
 
-    ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = ProyectoPaqueteTrabajo.builder()//
-        .proyecto(proyecto)//
-        .nombre("proyectoPaquete" + suffix)//
-        .fechaInicio(LocalDate.of(2020, 01, 01))//
-        .fechaFin(LocalDate.of(2020, 01, 15))//
-        .personaMes(1D)//
-        .descripcion("descripcionProyectoPaqueteTrabajo-" + suffix)//
+    ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = ProyectoPaqueteTrabajo.builder()
+        .proyecto(proyecto)
+        .nombre("proyectoPaquete" + suffix)
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
+        .personaMes(1D)
+        .descripcion("descripcionProyectoPaqueteTrabajo-" + suffix)
         .build();
+    // @formatter:on
     return entityManager.persistAndFlush(proyectoPaqueteTrabajo);
   }
 

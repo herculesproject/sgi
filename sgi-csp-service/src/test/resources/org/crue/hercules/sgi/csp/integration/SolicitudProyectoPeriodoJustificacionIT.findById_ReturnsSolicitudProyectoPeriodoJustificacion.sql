@@ -26,7 +26,7 @@ VALUES(1, 'OPE', 1, 'codigo-001', 2020, 'titulo-001', 'objeto-001', 'observacion
 INSERT INTO csp.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
 
 --CONVOCATORIA FASE
-INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01', '2020-10-15', 'observaciones-1');
+INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO csp.configuracion_solicitud 
@@ -44,7 +44,7 @@ INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_r
 
 
 -- ESTADO SOLICITUD
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17 15:00', 'comentario');
+INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
 
 -- SOLICITUD
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
@@ -66,6 +66,6 @@ VALUES (2, 1, 1, 2, 6, 8, 4, '002');
 
 -- CONVOCATORIA PERIODO JUSTIFICACION
 INSERT INTO csp.solicitud_proyecto_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (1, 1, 1, 1, 2, '2020-10-10', '2020-11-20', 'observaciones-001');
+  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-001');
 INSERT INTO csp.solicitud_proyecto_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (2, 1, 2, 10, 21, '2020-10-10', '2020-11-20', 'observaciones-002');
+  VALUES (2, 1, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-002');

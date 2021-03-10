@@ -161,12 +161,17 @@ public class DocumentoRequeridoSolicitudIT {
     ConvocatoriaFase fasePresentacionSolicitudes = ConvocatoriaFase.builder().id(1L).convocatoria(convocatoria)
         .tipoFase(tipoFase).build();
 
-    return DocumentoRequeridoSolicitud.builder()//
-        .id(id)//
-        .configuracionSolicitud(ConfiguracionSolicitud.builder().id(configuracionSolicitudId).convocatoria(convocatoria)
-            .fasePresentacionSolicitudes(fasePresentacionSolicitudes).build())//
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())//
-        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)//
+    // @formatter:off
+    return DocumentoRequeridoSolicitud.builder()
+        .id(id)
+        .configuracionSolicitud(ConfiguracionSolicitud.builder()
+          .id(configuracionSolicitudId)
+          .convocatoria(convocatoria)
+          .fasePresentacionSolicitudes(fasePresentacionSolicitudes)
+          .build())
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
+        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
         .build();
+    // @formatter:on
   }
 }

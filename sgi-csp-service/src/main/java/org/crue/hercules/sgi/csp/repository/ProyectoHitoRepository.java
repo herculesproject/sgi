@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -21,6 +21,6 @@ public interface ProyectoHitoRepository
    * @param tipoHitoId Id de la {@link TipoHito}
    * @return un {@link ProyectoHito}
    */
-  Optional<ProyectoHito> findByProyectoIdAndFechaAndTipoHitoId(Long proyectoId, LocalDate fecha, Long tipoHitoId);
+  Optional<ProyectoHito> findByProyectoIdAndFechaAndTipoHitoId(Long proyectoId, Instant fecha, Long tipoHitoId);
 
 }
