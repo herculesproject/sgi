@@ -2,8 +2,8 @@ swagger: '2.0'
 info:
   description: API para la integración con el Sistema de Gestión Personas.
   title: API-SGP
-  version: 1.0.0
-host: 'localhost:8080'
+  version: 0.0.0-SNAPSHOT
+host: 'localhost:8290'
 basePath: /sgp
 schemes:
   - http

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <endpoint name="sgp-endpoint" xmlns="http://ws.apache.org/ns/synapse">
-    <address uri="http://localhost:8280/services/sgp-service">
+    <address uri="http://localhost:8290/services/sgp-service">
         <timeout>
             <duration>1000</duration>
         </timeout>

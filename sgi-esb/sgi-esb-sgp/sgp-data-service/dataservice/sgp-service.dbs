@@ -1,4 +1,4 @@
-<data name="sgp-service" serviceGroup="" transports="http https">
+<data name="sgp-service" serviceGroup="org.crue.hercules.sgi.esb.sgp.dataservice" transports="http https">
   <description />
 
   <!-- ****************************************************** -->
@@ -1129,6 +1129,12 @@
   </query>
 
   <config id="sgpDataSource">
-    <property name="carbon_datasource_name">SGP_DS</property>
+    <property name="org.wso2.ws.dataservice.user">$SYSTEM:SGI_ESB_SGP_DB_USER</property>
+    <property name="org.wso2.ws.dataservice.password">$SYSTEM:SGI_ESB_SGP_DB_PASSWORD</property>
+    <property name="org.wso2.ws.dataservice.protocol">$SYSTEM:SGI_ESB_SGP_DB_PROTOCOL</property>
+    <property name="org.wso2.ws.dataservice.driver">$SYSTEM:SGI_ESB_SGP_DB_DRIVER</property>
+    <property name="org.wso2.ws.dataservice.minpoolsize"/>
+    <property name="org.wso2.ws.dataservice.maxpoolsize"/>
+    <property name="org.wso2.ws.dataservice.validation_query"/>
   </config>
 </data>
