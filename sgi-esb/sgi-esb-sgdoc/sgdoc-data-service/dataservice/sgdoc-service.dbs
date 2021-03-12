@@ -1,0 +1,242 @@
+<data name="sgdoc-service" serviceGroup="org.crue.hercules.sgi.esb.sgdoc.dataservice" transports="https http">
+  <description/>
+
+  <!-- ****************************************************** -->
+  <!-- DOCUMENTOS -->
+  <!-- ****************************************************** -->
+  
+  <!-- findAllDocumentos -->
+  <resource method="GET" path="/documentos" disableStreaming="true">
+    <description />
+    <call-query href="findAllDocumentos">
+      <with-param name="filterQuery" query-param="filterQuery" />
+      <with-param name="sortQuery" query-param="sortQuery" />
+      <with-param name="paginationQuery" query-param="paginationQuery" />
+    </call-query>
+  </resource>
+
+  <query id="findAllDocumentos" useConfig="sgdocDataSource">
+    <sql>
+      SELECT
+        id, nombre, version, to_char(fechaCreacion, 'yyyy-MM-dd') || 'T' || to_char(fechaCreacion, 'HH24:MI:SS.MS') AS fechaCreacion, tipo, autorRef
+      FROM (
+        SELECT 
+          id, nombre, version, fechaCreacion, tipo, autorRef
+        FROM (
+          SELECT 
+            d.id,
+            d.nombre AS nombre,
+            d.version AS version,
+            d.fecha_creacion AS fechaCreacion,
+            d.tipo AS tipo,
+            d.autor_ref AS autorRef
+          FROM documento d
+        ) AS query
+        WHERE :filterQuery :sortQuery :paginationQuery
+      ) AS resultQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <param name="sortQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <param name="paginationQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue=" " type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "items": [
+            {
+              "documentoRef": "$id",
+              "nombre": "$nombre",
+              "version": "$version",
+              "fechaCreacion": "$fechaCreacion",
+              "tipo": "$tipo",
+              "autorRef": "$autorRef"
+            }
+          ]
+        }
+      }
+    </result>
+  </query>
+
+  <!-- countAllDocumentos -->
+  <resource method="GET" path="/documentos/count">
+    <description />
+    <call-query href="countAllDocumentos">
+      <with-param name="filterQuery" query-param="filterQuery" />
+    </call-query>
+  </resource>
+
+  <query id="countAllDocumentos" useConfig="sgdocDataSource">
+    <sql>
+      SELECT 
+        count(id) AS count
+      FROM (
+        SELECT 
+          d.id,
+          d.nombre AS nombre,
+          d.version AS version,
+          d.fecha_creacion AS fechaCreacion,
+          d.tipo AS tipo,
+          d.autor_ref AS autorRef
+        FROM documento d
+      ) AS query
+      WHERE :filterQuery
+    </sql>
+    <param name="filterQuery" paramType="SCALAR" sqlType="QUERY_STRING" defaultValue="true" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "count":"$count"
+        }
+      }
+    </result>
+  </query>
+
+  <!-- createDocumento -->
+  <resource method="POST" path="/documentos">
+    <description />
+    <call-query href="createDocumento">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="archivo" query-param="archivo" />
+      <with-param name="version" query-param="version" />
+      <with-param name="tipo" query-param="tipo" />
+      <with-param name="autorRef" query-param="autorRef" />
+    </call-query>
+  </resource>
+
+  <query id="createDocumento" useConfig="sgdocDataSource">
+    <sql>
+      INSERT INTO documento (id, nombre, archivo, version, fecha_creacion, tipo, autor_ref)
+        VALUES (
+          gen_random_uuid(),
+          NULLIF(:nombre, ''),
+          NULLIF(:archivo, ''),
+          NULLIF(:version, ''), 
+          now(),
+          NULLIF(:tipo, ''),
+          NULLIF(:autorRef, '')
+        )
+      RETURNING
+        id,
+        nombre AS nombre,
+        archivo AS archivo,
+        version AS version,
+        to_char(fecha_creacion, 'yyyy-MM-dd') || 'T' || to_char(fecha_creacion, 'HH24:MI:SS.MS') AS fechaCreacion,
+        tipo AS tipo,
+        autor_ref AS autorRef;
+    </sql>
+    <param name="nombre"  paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}"/>
+    <param name="archivo"  paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}"/>
+    <param name="version" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="tipo" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <param name="autorRef" paramType="SCALAR" sqlType="STRING" defaultValue="#{NULL}" />
+    <result outputType="json">
+      {
+        "result": {
+          "documentoRef": "$id",
+          "nombre": "$nombre",
+          "archivo": "$archivo",
+          "version": "$version",
+          "fechaCreacion": "$fechaCreacion",
+          "tipo": "$tipo",
+          "autorRef": "$autorRef"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- findDocumentoById -->
+  <resource method="GET" path="/documentos/{id}">
+    <description />
+    <call-query href="findDocumentoById">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="findDocumentoById" useConfig="sgdocDataSource">
+    <sql>
+      SELECT
+        d.id,
+        d.nombre AS nombre,
+        d.version AS version,
+        to_char(d.fecha_creacion, 'yyyy-MM-dd') || 'T' || to_char(d.fecha_creacion, 'HH24:MI:SS.MS') AS fechaCreacion,
+        d.tipo AS tipo,
+        d.autor_ref AS autorRef
+      FROM documento d
+      WHERE d.id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "documentoRef": "$id",
+          "nombre": "$nombre",
+          "version": "$version",
+          "fechaCreacion": "$fechaCreacion",
+          "tipo": "$tipo",
+          "autorRef": "$autorRef"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- getDocumentoArchivoById -->
+  <resource method="GET" path="/documentos/{id}/archivo">
+    <description />
+    <call-query href="getDocumentoArchivoById">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="getDocumentoArchivoById" useConfig="sgdocDataSource">
+    <sql>
+      SELECT
+        d.archivo AS archivo
+      FROM documento d
+      WHERE d.id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "archivo": "$archivo"
+        }
+      }
+    </result>
+  </query>
+
+
+  <!-- deleteDocumento -->
+  <resource method="DELETE" path="/documentos/{id}">
+    <description />
+    <call-query href="deleteDocumento">
+      <with-param name="id" query-param="id" />
+    </call-query>
+  </resource>
+
+  <query id="deleteDocumento" returnUpdatedRowCount="true" useConfig="sgdocDataSource">
+    <sql>
+      DELETE FROM documento WHERE id = :id
+    </sql>
+    <param name="id" paramType="SCALAR" sqlType="STRING" defaultValue="0" type="IN" />
+    <result outputType="json">
+      {
+        "result": {
+          "value": $1
+        }
+      }
+    </result>
+  </query>
+
+
+  <config id="sgdocDataSource">
+    <property name="org.wso2.ws.dataservice.user">$SYSTEM:SGI_ESB_SGDOC_DB_USER</property>
+    <property name="org.wso2.ws.dataservice.password">$SYSTEM:SGI_ESB_SGDOC_DB_PASSWORD</property>
+    <property name="org.wso2.ws.dataservice.protocol">$SYSTEM:SGI_ESB_SGDOC_DB_PROTOCOL</property>
+    <property name="org.wso2.ws.dataservice.driver">$SYSTEM:SGI_ESB_SGDOC_DB_DRIVER</property>
+    <property name="org.wso2.ws.dataservice.minpoolsize"/>
+    <property name="org.wso2.ws.dataservice.maxpoolsize"/>
+    <property name="org.wso2.ws.dataservice.validation_query"/>
+  </config>
+
+</data>
