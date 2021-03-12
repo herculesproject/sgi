@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<endpoint name="sge-service" xmlns="http://ws.apache.org/ns/synapse">
-    <address uri="http://localhost:8080/sge">
+<endpoint name="sge-endpoint" xmlns="http://ws.apache.org/ns/synapse">
+    <address uri="http://localhost:8290/services/sge-service">
         <timeout>
             <duration>1000</duration>
-            <responseAction>fault</responseAction>
         </timeout>
         <suspendOnFailure>
             <initialDuration>-1</initialDuration>

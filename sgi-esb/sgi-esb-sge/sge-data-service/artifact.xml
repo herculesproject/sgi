@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="sge-service" groupId="org.crue.hercules.sgi.esb.sge.dataservice" version="0.0.1-SNAPSHOT" type="service/dataservice" serverRole="DataServicesServer">
+        <file>dataservice/sge-service.dbs</file>
+    </artifact>
+</artifacts>
