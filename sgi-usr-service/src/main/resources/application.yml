@@ -117,7 +117,7 @@ spring:
     hibernate:
       # Hibernate will use the entities to validate the database
       # validate | update | create | create-drop
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         # We use a PostgreSQL database
