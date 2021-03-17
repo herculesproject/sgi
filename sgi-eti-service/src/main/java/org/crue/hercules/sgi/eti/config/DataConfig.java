@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.DatabaseStartupValidator;
 import org.springframework.util.StringUtils;
 
@@ -30,6 +31,7 @@ import liquibase.Liquibase;
     "org.crue.hercules.sgi.eti.repository" }, repositoryBaseClass = SgiJpaRepository.class)
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class DataConfig {
+
   @Bean
   public DatabaseDriver databaseDriver(@Value("${spring.datasource.driver-class-name}") String driverClassName) {
     if (StringUtils.hasLength(driverClassName)) {
@@ -54,7 +56,10 @@ public class DataConfig {
   public static BeanFactoryPostProcessor dependsOnPostProcessor() {
     return bf -> {
       // Let beans that need the database depend on the DatabaseStartupValidator
-      // like the JPA EntityManagerFactory or Flyway
+      // like the EntityManagerFactory, Liquibase or JdbcTemplate
+      String[] jdbc = bf.getBeanNamesForType(JdbcTemplate.class);
+      Stream.of(jdbc).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
+
       String[] liquibase = bf.getBeanNamesForType(Liquibase.class);
       Stream.of(liquibase).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
 
