@@ -29,8 +29,10 @@ spring:
   liquibase:
     # Enable Liquibase
     enabled: true
-    # Set default Liquibase schema
+    # Default database schema
     default-schema: usr
+    # Schema to use for Liquibase objects
+    liquibase-schema: usr
     # Set Liquibase contexts same as spring profiles
     contexts: dev
   jpa:
@@ -111,8 +113,10 @@ spring:
   liquibase:
     # Enable Liquibase
     enabled: true
-    # Set default Liquibase schema
+    # Default database schema
     default-schema: usr
+    # Schema to use for Liquibase objects
+    liquibase-schema: usr
   jpa:
     hibernate:
       # Hibernate will use the entities to validate the database

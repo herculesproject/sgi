@@ -56,7 +56,7 @@ public class DataConfig {
   public static BeanFactoryPostProcessor dependsOnPostProcessor() {
     return bf -> {
       // Let beans that need the database depend on the DatabaseStartupValidator
-      // like the JPA EntityManagerFactory or Liquibase
+      // like the EntityManagerFactory, Liquibase or JdbcTemplate
       String[] jdbc = bf.getBeanNamesForType(JdbcTemplate.class);
       Stream.of(jdbc).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
 
