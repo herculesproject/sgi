@@ -23,19 +23,19 @@
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.dataservice</groupId>
       <artifactId>sgp-service</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.1</version>
       <type>dbs</type>
     </dependency>
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.api</groupId>
       <artifactId>API-SGP</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.1</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.endpoint</groupId>
       <artifactId>sgp-endpoint</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.1</version>
       <type>xml</type>
     </dependency>
   </dependencies>

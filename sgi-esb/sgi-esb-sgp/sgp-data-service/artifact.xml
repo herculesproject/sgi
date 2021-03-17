@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><artifacts>
-    <artifact name="sgp-service" groupId="org.crue.hercules.sgi.esb.sgp.dataservice" version="0.0.1-SNAPSHOT" type="service/dataservice" serverRole="DataServicesServer">
+    <artifact name="sgp-service" groupId="org.crue.hercules.sgi.esb.sgp.dataservice" version="0.0.1" type="service/dataservice" serverRole="DataServicesServer">
         <file>dataservice/sgp-service.dbs</file>
     </artifact>
 </artifacts>
