@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.usr.config;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManagerFactory;
@@ -7,8 +8,10 @@ import javax.sql.DataSource;
 
 import org.crue.hercules.sgi.framework.data.domain.SgiAuditorAware;
 import org.crue.hercules.sgi.framework.data.jpa.repository.support.SgiJpaRepository;
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +34,7 @@ import liquibase.Liquibase;
     "org.crue.hercules.sgi.usr.repository" }, repositoryBaseClass = SgiJpaRepository.class)
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class DataConfig {
+  private final static String HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM = "hibernate.default.schema";
 
   @Bean
   public DatabaseDriver databaseDriver(@Value("${spring.datasource.driver-class-name}") String driverClassName) {
@@ -65,6 +69,19 @@ public class DataConfig {
 
       String[] jpa = bf.getBeanNamesForType(EntityManagerFactory.class);
       Stream.of(jpa).map(bf::getBeanDefinition).forEach(it -> it.setDependsOn("databaseStartupValidator"));
+    };
+  }
+
+  @Bean
+  public static HibernatePropertiesCustomizer hibernatePropertiesCustomizer() {
+    return new HibernatePropertiesCustomizer() {
+      @Override
+      public void customize(Map<String, Object> hibernateProperties) {
+        if (hibernateProperties.containsKey(HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM)) {
+          hibernateProperties.put(AvailableSettings.DEFAULT_SCHEMA,
+              hibernateProperties.get(HIBERNATE_CUSTOM_DEFAULT_SCHEMA_PARAM));
+        }
+      }
     };
   }
 
