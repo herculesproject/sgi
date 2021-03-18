@@ -73,6 +73,17 @@
         <artifactId>hibernate-jpamodelgen</artifactId>
         <version>${org.hibernate-jpamodelgen.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.github.perplexhub</groupId>
+        <artifactId>rsql-jpa-spring-boot-starter</artifactId>
+        <version>${rsql-jpa.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sourceforge.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>${jsr305.version}</version>
+        <scope>provided</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -142,7 +153,6 @@
     <dependency>
       <groupId>net.sourceforge.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>${jsr305.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -164,9 +174,7 @@
     <dependency>
       <groupId>io.github.perplexhub</groupId>
       <artifactId>rsql-jpa-spring-boot-starter</artifactId>
-      <version>${rsql-jpa.version}</version>
     </dependency>
-
 
     <!-- ============================================== -->
     <!-- =============== TEST SUPPORT ================= -->
@@ -250,7 +258,7 @@
           <artifactId>maven-jar-plugin</artifactId>
           <configuration>
             <archive>
-              <index>true</index>
+              <index>false</index>
               <manifest>
                 <addClasspath>true</addClasspath>
                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
