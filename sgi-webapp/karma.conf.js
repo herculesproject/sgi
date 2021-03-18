@@ -16,7 +16,7 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '<%= relativePathToWorkspaceRoot %>/coverage/<%= appName%>'),
+      dir: require('path').join(__dirname, './coverage/sgi-webapp'),
       subdir: '.',
       reporters: [
         { type: 'html' },
@@ -33,7 +33,15 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
+        flags: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-gpu',
+          '--disable-web-security',
+          '--disable-extensions',
+          // Without a remote debugging port, Google Chrome exits immediately.
+          '--remote-debugging-port=9222'
+        ]
       },
       ChromeDebug: {
         base: 'Chrome',
