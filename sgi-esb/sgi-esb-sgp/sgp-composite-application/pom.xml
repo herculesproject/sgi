@@ -91,29 +91,6 @@
       </plugin>
       <plugin>
         <groupId>org.wso2.maven</groupId>
-        <artifactId>maven-car-plugin</artifactId>
-        <version>2.1.1</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>car</id>
-            <phase>package</phase>
-            <goals>
-              <goal>car</goal>
-            </goals>
-          </execution>
-        </executions>
-         <configuration>
-          <!-- enable this to re define an archive location other than the default location-->
-          <archiveLocation>/carbonapps</archiveLocation>
-          <!-- enable this to rename the .car file name
-          <archiveName>archive_name</archiveName-->
-          <!-- enable this to rename the carbon application name
-          <cAppName>capp_name</cAppName-->
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.wso2.maven</groupId>
         <artifactId>maven-car-deploy-plugin</artifactId>
         <version>1.1.1</version>
         <extensions>true</extensions>
@@ -134,6 +111,40 @@
     </plugins>
   </build>
   <profiles>
+       <profile>
+          <!-- dev profile. This is the default profile -->
+          <id>dev</id>
+          <activation>
+            <activeByDefault>true</activeByDefault>
+          </activation>
+          <build>
+            <plugins>
+            <plugin>
+              <groupId>org.wso2.maven</groupId>
+              <artifactId>maven-car-plugin</artifactId>
+              <version>2.1.1</version>
+              <extensions>true</extensions>
+              <executions>
+                <execution>
+                  <id>car</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>car</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <!-- enable this to re define an archive location other than the default location-->
+                <archiveLocation>/carbonapps</archiveLocation>
+                <!-- enable this to rename the .car file name
+                <archiveName>archive_name</archiveName-->
+                <!-- enable this to rename the carbon application name
+                <cAppName>capp_name</cAppName-->
+              </configuration>
+            </plugin>
+            </plugins>
+          </build>
+    </profile>
     <profile>
       <!-- CI profile. This is the default profile for CI builds-->
       <id>ci</id>
