@@ -7,7 +7,6 @@
     <artifactId>sgi-esb-sgp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.crue.hercules.sgi.esb.sgp</groupId>
   <artifactId>sgp-integration-project</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>

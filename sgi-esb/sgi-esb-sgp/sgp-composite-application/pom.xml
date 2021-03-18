@@ -7,38 +7,12 @@
     <artifactId>sgi-esb-sgp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.crue.hercules.sgi.esb.sgp</groupId>
   <artifactId>sgp-composite-application</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>carbon/application</packaging>
   <name>sgp-composite-application</name>
   <description>sgp-composite-application</description>
-
-  <!-- ********************************************** -->
-  <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
-  <!-- ********************************************** -->
-
-  <distributionManagement>
-    <repository>
-      <id>releases</id>
-      <url>${dist.repo.rel.url}</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <url>${dist.repo.snap.url}</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-
   <properties>
-   <!-- Distribution Management URL's -->
-    <dist.repo.rel.url>file:///maven-repositories/releases/</dist.repo.rel.url>
-    <dist.repo.snap.url>file:///maven-repositories/snapshots/</dist.repo.snap.url>
-
-    <!-- Encoding -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-
     <org.crue.hercules.sgi.esb.sgp.endpoint_._sgp-endpoint>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgp.endpoint_._sgp-endpoint>
     <org.crue.hercules.sgi.esb.sgp.api_._API-SGP>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.sgp.api_._API-SGP>
     <org.crue.hercules.sgi.esb.sgp.dataservice_._sgp-service>capp/DataServicesServer</org.crue.hercules.sgi.esb.sgp.dataservice_._sgp-service>
@@ -48,19 +22,19 @@
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.dataservice</groupId>
       <artifactId>sgp-service</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.1-SNAPSHOT</version>
       <type>dbs</type>
     </dependency>
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.api</groupId>
       <artifactId>API-SGP</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.crue.hercules.sgi.esb.sgp.endpoint</groupId>
       <artifactId>sgp-endpoint</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.1-SNAPSHOT</version>
       <type>xml</type>
     </dependency>
   </dependencies>
