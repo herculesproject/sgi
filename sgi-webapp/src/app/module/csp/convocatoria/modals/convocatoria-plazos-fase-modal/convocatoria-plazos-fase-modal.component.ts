@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
@@ -13,16 +14,24 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { DateValidator } from '@core/validators/date-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.fases.error.cargar');
-const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.fases.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ERROR_TIPOS = marker('error.csp.convocatoria-tipo-fase');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_PLAZO_KEY = marker('csp.convocatoria-plazo');
+const CONVOCATORIA_PLAZOS_FASE_FECHA_FIN_KEY = marker('csp.convocatoria-plazos-fases.fecha-fin');
+const CONVOCATORIA_PLAZOS_FASE_FECHA_INICIO_KEY = marker('csp.convocatoria-plazos-fases.fecha-inicio');
+const CONVOCATORIA_PLAZOS_FASE_OBSERVACIONES_KEY = marker('csp.convocatoria-plazos-fases.observaciones');
+const CONVOCATORIA_PLAZOS_FASE_TIPO_KEY = marker('csp.convocatoria-plazos-fases.tipo');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 export interface ConvocatoriaPlazosFaseModalComponentData {
   plazos: IConvocatoriaFase[];
   plazo: IConvocatoriaFase;
@@ -46,6 +55,12 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
   private suscripciones: Subscription[] = [];
 
   textSaveOrUpdate: string;
+  title: string;
+
+  msgParamFechaInicioEntity = {};
+  msgParamFechaFinEntity = {};
+  msgParamTipoEntity = {};
+  msgParamObservacionesEntity = {};
 
   constructor(
     private readonly logger: NGXLogger,
@@ -53,6 +68,7 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaPlazosFaseModalComponentData,
     public matDialogRef: MatDialogRef<ConvocatoriaPlazosFaseModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
+    private readonly translate: TranslateService
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -80,8 +96,53 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initFormGroup();
     this.loadTipoFases();
+    this.setupI18N();
     this.textSaveOrUpdate = this.data.plazo.fechaInicio ? MSG_ACEPTAR : MSG_ANADIR;
   }
+
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_PLAZOS_FASE_FECHA_FIN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_PLAZOS_FASE_FECHA_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_PLAZOS_FASE_TIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_PLAZOS_FASE_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    if (this.data.plazo.tipoFase) {
+      this.translate.get(
+        CONVOCATORIA_PLAZO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        CONVOCATORIA_PLAZO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+
+  }
+
 
   /**
    * Inicializa formulario de creación/edición de plazos y fases

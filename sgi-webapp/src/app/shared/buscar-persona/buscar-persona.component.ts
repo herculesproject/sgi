@@ -5,7 +5,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
 
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
-const TEXT_USER_BUTTON = marker('botones.buscar');
+const TEXT_USER_BUTTON = marker('btn.search');
 
 @Component({
   selector: 'sgi-buscar-persona',

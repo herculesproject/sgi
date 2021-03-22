@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -15,18 +16,23 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaDocumentosFragment, NodeDocumento } from './convocatoria-documentos.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.documentos.documento.eliminar.msg');
-const MSG_UPLOAD_SUCCES = marker('file.upload.success');
-const MSG_UPLOAD_ERROR = marker('file.upload.error');
-const MSG_DOWNLOAD_ERROR = marker('file.download.error');
-const MSG_FILE_NOT_FOUND_ERROR = marker('file.info.error');
+const MSG_DELETE = marker('msg.delete.entity');
+const MSG_UPLOAD_SUCCES = marker('msg.file.upload.success');
+const MSG_UPLOAD_ERROR = marker('error.file.upload');
+const MSG_DOWNLOAD_ERROR = marker('error.file.download');
+const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
+const CONVOCATORIA_DOCUMENTO_KEY = marker('csp.convocatoria-documento');
+const CONVOCATORIA_DOCUMENTO_FICHERO_KEY = marker('csp.convocatoria-documento.fichero');
+const CONVOCATORIA_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
+const CONVOCATORIA_DOCUMENTO_PUBLICO_KEY = marker('csp.convocatoria-documento.publico');
 
 enum VIEW_MODE {
   NONE = '',
@@ -77,12 +83,19 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   compareFase = (option: ITipoFase, value: ITipoFase) => option?.id === value?.id;
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
+  msgParamEntity = {};
+  msgParamNombreEntity = {};
+  msgParamFicheroEntity = {};
+  msgParamPublicoEntity = {};
+  textoDelete: string;
+
   constructor(
     private dialogService: DialogService,
     public actionService: ConvocatoriaActionService,
     private modeloEjecucionService: ModeloEjecucionService,
     private documentoService: DocumentoService,
-    private snackBar: SnackBarService
+    private snackBar: SnackBarService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService);
     this.fxFlexProperties = new FxFlexProperties();
@@ -105,6 +118,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
 
   ngOnInit() {
     super.ngOnInit();
+    this.setupI18N();
     this.subscriptions.push(this.formPart.documentos$.subscribe((documentos) => {
       this.dataSource.data = documentos;
     }));
@@ -150,6 +164,43 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
       this.tiposDocumento = this.tipoDocumentosFase.get(value ? value.id : null);
     }));
     this.switchToNone();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_NOMBRE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_FICHERO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFicheroEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_PUBLICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPublicoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+
   }
 
   ngOnDestroy() {
@@ -280,7 +331,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
 
   deleteDetail() {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete, this.msgParamEntity).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteNode(this.viewingNode);

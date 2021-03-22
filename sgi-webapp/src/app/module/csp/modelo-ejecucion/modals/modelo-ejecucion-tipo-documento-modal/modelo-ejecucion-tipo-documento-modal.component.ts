@@ -1,15 +1,22 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { TipoDocumentoService } from '@core/services/csp/tipo-documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
+const MODELO_EJECUCUION_TIPO_DOCUMENTO_KEY = marker('csp.tipo-documento');
+const MODELO_EJECUCUION_TIPO_DOCUMENTO_TIPO_KEY = marker('csp.documento.tipo');
+const MODELO_EJECUCUION_TIPO_DOCUMENTO_FASE_KEY = marker('csp.modelo-ejecucion-tipo-documento.fase');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface ModeloTipoDocumentoModalData {
   modeloTipoDocumento: IModeloTipoDocumento;
   tipoDocumentos: ITipoDocumento[];
@@ -29,16 +36,23 @@ export class ModeloEjecucionTipoDocumentoModalComponent extends
   tipoFases$: Observable<ITipoFase[]>;
   isFaseRequired: boolean = false;
 
+  msgParamFaseEntiy = {};
+  msgParamTipoEntiy = {};
+  title: string;
+
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ModeloEjecucionTipoDocumentoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModeloTipoDocumentoModalData,
-    private tipoDocumentoService: TipoDocumentoService) {
+    private tipoDocumentoService: TipoDocumentoService,
+    private readonly translate: TranslateService) {
     super(snackBarService, matDialogRef, data.modeloTipoDocumento);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
+
+    this.setupI18N();
 
     this.tipoDocumentos$ = this.loadTipoDocumentos();
 
@@ -52,6 +66,32 @@ export class ModeloEjecucionTipoDocumentoModalComponent extends
       });
       this.isFaseRequired = !documentoSinAsignar;
     }));
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      MODELO_EJECUCUION_TIPO_DOCUMENTO_FASE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFaseEntiy = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      MODELO_EJECUCUION_TIPO_DOCUMENTO_TIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoEntiy = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+
+    this.translate.get(
+      MODELO_EJECUCUION_TIPO_DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          TITLE_NEW_ENTITY,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.title = value);
+
   }
 
   protected getFormGroup(): FormGroup {

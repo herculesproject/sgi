@@ -5,18 +5,22 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ProyectoEquiposModalComponentData } from '../../modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoEquipoModalComponent } from './../../modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
 import { ProyectoEquipoFragment } from './proyecto-equipo.fragment';
 
-const MSG_DELETE = marker('csp.proyecto.equipo.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const PROYECTO_EQUIPO_MIEMBRO_KEY = marker('csp.proyecto-equipo-miembro');
 
 @Component({
   selector: 'sgi-proyecto-equipo',
@@ -31,6 +35,9 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['numIdentificacion', 'nombre', 'apellidos', 'rolEquipo', 'fechaInicio', 'fechaFin', 'horas', 'acciones'];
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoEquipo>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -39,7 +46,8 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
     protected proyectoService: ProyectoService,
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService);
     this.formPart = this.fragment as ProyectoEquipoFragment;
@@ -47,6 +55,7 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IProyectoEquipo>, property: string) => {
@@ -73,6 +82,26 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
     this.subscriptions.push(this.formPart.equipos$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_EQUIPO_MIEMBRO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      PROYECTO_EQUIPO_MIEMBRO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   /**
@@ -136,7 +165,7 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
    */
   deleteEquipo(wrapper: StatusWrapper<IProyectoEquipo>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoEquipo(wrapper);

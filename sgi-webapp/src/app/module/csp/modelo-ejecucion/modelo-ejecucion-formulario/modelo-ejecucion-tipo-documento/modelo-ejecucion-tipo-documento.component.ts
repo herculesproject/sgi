@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -12,12 +13,15 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ModeloEjecucionTipoDocumentoModalComponent, ModeloTipoDocumentoModalData } from '../../modals/modelo-ejecucion-tipo-documento-modal/modelo-ejecucion-tipo-documento-modal.component';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoDocumentoFragment } from './modelo-ejecucion-tipo-documento.fragment';
 
-const MSG_DELETE = marker('csp.modelo.ejecucion.tipo.documento.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const MODELO_EJECUCION_TIPO_DOCUMENTO_KEY = marker('csp.tipo-documento');
 
 @Component({
   selector: 'sgi-modelo-ejecucion-tipo-documento',
@@ -38,10 +42,14 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   constructor(
     private dialogService: DialogService,
     private matDialog: MatDialog,
-    private actionService: ModeloEjecucionActionService
+    private actionService: ModeloEjecucionActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TIPO_DOCUMENTOS, actionService);
     this.fxFlexProperties = new FxFlexProperties();
@@ -60,6 +68,7 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     const subscription = this.formPart.modeloTipoDocumento$.subscribe(
       (wrappers: StatusWrapper<IModeloTipoDocumento>[]) => {
         this.modelosTipoDocumentos.data = wrappers;
@@ -81,6 +90,26 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
       };
     this.modelosTipoDocumentos.sort = this.sort;
     this.subscriptions.push(subscription);
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      MODELO_EJECUCION_TIPO_DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      MODELO_EJECUCION_TIPO_DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   ngOnDestroy(): void {
@@ -128,7 +157,7 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
 
   deleteModeloTipoDocumento(wrapper: StatusWrapper<IModeloTipoDocumento>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteModeloTipoDocumento(wrapper);
@@ -136,6 +165,10 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
         }
       )
     );
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 }
 

@@ -5,16 +5,20 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaEnlaceModalComponent, ConvocatoriaEnlaceModalComponentData } from '../../modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
 import { ConvocatoriaEnlaceFragment } from './convocatoria-enlace.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.enlace.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const CONVOCATORIA_ENLACE_KEY = marker('csp.convocatoria-enlace');
 
 @Component({
   selector: 'sgi-convocatoria-enlace',
@@ -33,10 +37,14 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   constructor(
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
+    private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.ENLACES, actionService);
     this.formPart = this.fragment as ConvocatoriaEnlaceFragment;
@@ -44,6 +52,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaEnlace>, property: string) => {
@@ -63,6 +72,26 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     this.subscriptions.push(this.formPart.enlace$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_ENLACE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_ENLACE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   /**
@@ -111,7 +140,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
    */
   deleteEnlace(wrapper: StatusWrapper<IConvocatoriaEnlace>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteEnlace(wrapper);
@@ -123,6 +152,10 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
 }

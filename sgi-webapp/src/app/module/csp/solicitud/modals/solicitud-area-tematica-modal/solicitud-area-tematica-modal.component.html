@@ -1,16 +1,15 @@
 <div class="modal-convocatoria-area-tematica">
   <header mat-dialog-title class="modal-header-material">
-    <h3>
-      {{'csp.convocatoria.area.tematica.modal.titulo' | translate}}</h3>
+    <h3>{{title}}</h3>
   </header>
   <mat-dialog-content>
     <form class="form-inline" [formGroup]="formGroup">
       <div>
         <div>
           <mat-form-field class="input-form">
-            <mat-label>{{'csp.convocatoria.area.tematica.listado.areas.tematicas' | translate}}</mat-label>
-            <input type="text" placeholder="{{'csp.convocatoria.area.tematica.listado.areas.tematicas' | translate}}"
-              arial-label="Number" matInput formControlName="padre">
+            <mat-label>{{'list.entity' | translate:msgParamEntity}}</mat-label>
+            <input type="text" placeholder="{{'list.entity' | translate:msgParamEntity}}" arial-label="Number" matInput
+              formControlName="padre">
           </mat-form-field>
         </div>
       </div>
@@ -54,9 +53,8 @@
   </mat-dialog-content>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
-    *ngIf="!this.data.readonly">{{textSaveOrUpdate |
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()" *ngIf="!this.data.readonly">{{textSaveOrUpdate |
     translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()">{{'btn.cancel' |
     translate}}</button>
 </div>

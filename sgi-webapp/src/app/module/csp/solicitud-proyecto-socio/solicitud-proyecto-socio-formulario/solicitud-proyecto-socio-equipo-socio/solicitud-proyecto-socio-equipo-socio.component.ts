@@ -4,16 +4,20 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { SolicitudProyectoEquipoSocioModalData, SolicitudProyectoSocioEquipoSocioModalComponent } from '../../modals/solicitud-proyecto-socio-equipo-socio-modal/solicitud-proyecto-socio-equipo-socio-modal.component';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoSocioEquipoSocioFragment } from './solicitud-proyecto-socio-equipo-socio.fragment';
 
-const MSG_DELETE = marker('csp.solicitud.proyecto.socio.equipo.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-equipo-socio',
@@ -27,13 +31,17 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['persona', 'nombre', 'apellidos', 'rolProyecto', 'acciones'];
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoEquipoSocio>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private actionService: SolicitudProyectoSocioActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.EQUIPO_SOCIO, actionService);
     this.formPart = this.fragment as SolicitudProyectoSocioEquipoSocioFragment;
@@ -41,6 +49,7 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     const subcription = this.formPart.proyectoEquipoSocios$.subscribe(
       (proyectoEquipos) => {
         this.dataSource.data = proyectoEquipos;
@@ -63,6 +72,25 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
           return wrapper.value[property];
       }
     };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
   }
 
   ngOnDestroy(): void {
@@ -119,7 +147,7 @@ export class SolicitudProyectoSocioEquipoSocioComponent extends FragmentComponen
 
   deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipoSocio>): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteProyectoEquipoSocio(wrapper);

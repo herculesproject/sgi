@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -13,14 +14,18 @@ import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { AreaTematicaData } from '../../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.fragment';
 
-const MSG_ERROR_AREA_TEMATICA = marker('csp.convocatoria.area.tematica.modal.error.areas');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_AREA_TEMATICA = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const AREA_TEMATICA_KEY = marker('csp.area-tematica');
+const AREA_TEMATICA_OBSERVACIONES_KEY = marker('csp.area-tematica.observaciones');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 class NodeAreaTematica {
   parent: NodeAreaTematica;
   areaTematica: StatusWrapper<IAreaTematica>;
@@ -83,12 +88,18 @@ export class ConvocatoriaAreaTematicaModalComponent extends
   checkedNode: NodeAreaTematica;
   hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
 
+  msgParamEntities = {};
+  msgParamEntity = {};
+  msgParamObservacionesEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaAreaTematicaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AreaTematicaData,
-    private areaTematicaService: AreaTematicaService
+    private areaTematicaService: AreaTematicaService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
@@ -104,6 +115,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.loadAreasTematicas();
     this.loadTreeAreaTematica();
     const subscription = this.formGroup.get('padre').valueChanges.pipe(
@@ -111,6 +123,44 @@ export class ConvocatoriaAreaTematicaModalComponent extends
     ).subscribe();
     this.textSaveOrUpdate = this.data.convocatoriaAreaTematica.value.areaTematica?.padre ? MSG_ACEPTAR : MSG_ANADIR;
     this.subscriptions.push(subscription);
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      AREA_TEMATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamEntities = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      AREA_TEMATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      AREA_TEMATICA_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    if (this.data.padre) {
+      this.translate.get(
+        AREA_TEMATICA_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        AREA_TEMATICA_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+
+    }
+
   }
 
   protected getFormGroup(): FormGroup {

@@ -10,7 +10,7 @@ import { GESTION_SEGUIMIENTO_ROUTE_NAMES } from '../gestion-seguimiento-route-na
 import { GestionSeguimientoActionService } from '../gestion-seguimiento.action.service';
 
 
-const MSG_BUTTON_SAVE = marker('botones.aceptar');
+const MSG_BUTTON_SAVE = marker('btn.ok');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
 const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
 

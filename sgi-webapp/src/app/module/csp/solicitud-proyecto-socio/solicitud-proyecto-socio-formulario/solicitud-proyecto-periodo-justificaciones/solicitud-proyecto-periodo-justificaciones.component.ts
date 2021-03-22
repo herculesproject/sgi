@@ -4,16 +4,20 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { SolicitudProyectoPeriodoJustificacionesModalComponent, SolicitudProyectoPeriodoJustificacionesModalData } from '../../modals/solicitud-proyecto-periodo-justificaciones-modal/solicitud-proyecto-periodo-justificaciones-modal.component';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoPeriodoJustificacionesFragment } from './solicitud-proyecto-periodo-justificaciones.fragment';
 
-const MSG_DELETE = marker('csp.solicitud-proyecto-socio.periodo-justificacion.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const SOLICITUD_PROYECTO_PERIODO_JUSTIFICACION_KEY = marker('csp.solicitud-proyecto-periodo-justificacion');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-periodo-justificaciones',
@@ -27,13 +31,17 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'acciones'];
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoPeriodoJustificacion>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private actionService: SolicitudProyectoSocioActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.PERIODOS_JUSTIFICACION, actionService);
     this.formPart = this.fragment as SolicitudProyectoPeriodoJustificacionesFragment;
@@ -41,6 +49,7 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     const subcription = this.formPart.periodoJustificaciones$.subscribe(
       (proyectoEquipos) => {
         this.dataSource.data = proyectoEquipos;
@@ -58,6 +67,25 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
           return wrapper.value[property];
       }
     };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_PROYECTO_PERIODO_JUSTIFICACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_PERIODO_JUSTIFICACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
   }
 
   ngOnDestroy(): void {
@@ -113,7 +141,7 @@ export class SolicitudProyectoPeriodoJustificacionesComponent extends FragmentCo
 
   deletePeriodoJustificacion(wrapper: StatusWrapper<ISolicitudProyectoPeriodoJustificacion>): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoJustificacion(wrapper);

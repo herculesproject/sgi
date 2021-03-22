@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -10,9 +11,16 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { NumberValidator } from '@core/validators/number-validator';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
+import { TranslateService } from '@ngx-translate/core';
+import { switchMap } from 'rxjs/operators';
 
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY = marker('csp.solicitud-proyecto-periodo-justificacion');
+const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_MES_FINAL_KEY = marker('csp.proyecto-socio-periodo-justificacion.mes-fin');
+const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_MES_INICIAL_KEY = marker('csp.proyecto-socio-periodo-justificacion.mes-inicio');
+const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY = marker('title.csp.proyecto-socio-periodo-justificacion.observaciones');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface SolicitudProyectoPeriodoJustificacionesModalData {
   periodoJustificacion: ISolicitudProyectoPeriodoJustificacion;
@@ -32,10 +40,17 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
   implements OnInit {
   textSaveOrUpdate: string;
 
+  msgParamMesFinalEntity = {};
+  msgParamMesInicialEntity = {};
+  msgParamObservacionesEntity = {};
+
+  title: string;
+
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudProyectoPeriodoJustificacionesModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoPeriodoJustificacionesModalData,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
@@ -51,8 +66,48 @@ export class SolicitudProyectoPeriodoJustificacionesModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
+
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_MES_FINAL_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMesFinalEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_MES_INICIAL_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMesInicialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    if (this.data.isEdit) {
+      this.translate.get(
+        PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+
+    }
+  }
+
 
   protected getFormGroup(): FormGroup {
     const solicitudProyectoSocio = this.data.periodoJustificacion.solicitudProyectoSocio;

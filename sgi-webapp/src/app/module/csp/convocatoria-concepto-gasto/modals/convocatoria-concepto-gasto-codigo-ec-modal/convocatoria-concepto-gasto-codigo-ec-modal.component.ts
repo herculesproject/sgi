@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { ICodigoEconomico } from '@core/models/sge/codigo-economico';
@@ -12,16 +13,21 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { DateValidator } from '@core/validators/date-validator';
 import { SelectValidator } from '@core/validators/select-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ERROR_INIT = marker('csp.convocatoria-concepto-gasto.codigo-ec.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
-
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico');
+const CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_SGE_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico.sge');
+const CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_PERMITIDO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico.permitido');
+const CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_NO_PERMITIDO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico.no-permitido');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface IConvocatoriaConceptoGastoCodigoEcModalComponent {
   convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc;
   convocatoriaConceptoGastoCodigoEcsTabla: IConvocatoriaConceptoGastoCodigoEc[];
@@ -47,12 +53,17 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
   codigosEconomicos$: Observable<ICodigoEconomico[]>;
   textSaveOrUpdate: string;
 
+  msgParamEntity = {};
+  msgParamCodigoEconomigoSgeEntity = {};
+  title: string;
+
   constructor(
     private logger: NGXLogger,
     private snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoCodigoEcModalComponent>,
     private codigoEconomicoService: CodigoEconomicoService,
-    @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoCodigoEcModalComponent
+    @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoCodigoEcModalComponent,
+    private readonly translate: TranslateService
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -68,8 +79,59 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
 
   ngOnInit(): void {
     this.initFormGroup();
+    this.setupI18N();
     this.loadCodigosEconomicos();
     this.textSaveOrUpdate = this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef ? MSG_ACEPTAR : MSG_ANADIR;
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_SGE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCodigoEconomigoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && this.data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido) {
+      this.translate.get(
+        CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_PERMITIDO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else if (this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && !this.data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido) {
+      this.translate.get(
+        CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_NO_PERMITIDO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+
+    } else if (!this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && this.data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido) {
+      this.translate.get(
+        CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_PERMITIDO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+
+    } else {
+      this.translate.get(
+        CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_NO_PERMITIDO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
   }
 
   private initFormGroup() {

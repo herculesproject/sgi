@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } fro
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaPeriodoJustificacion, Tipo, TIPO_MAP } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -13,6 +14,8 @@ import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
 import { RangeValidator } from '@core/validators/range-validator';
 import { StringValidator } from '@core/validators/string-validator';
+import { TranslateService } from '@ngx-translate/core';
+import { switchMap } from 'rxjs/operators';
 
 export interface IConvocatoriaPeriodoJustificacionModalData {
   duracion: number;
@@ -21,8 +24,16 @@ export interface IConvocatoriaPeriodoJustificacionModalData {
   readonly: boolean;
 }
 
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_PERIODO_JUSTIFICACION_KEY = marker('csp.convocatoria-periodo-justificacion');
+const CONVOCATORIA_PERIODO_JUSTIFICACION_FECHA_INICIO_KEY = marker('csp.convocatoria-periodo-justificacion.fecha-inicio');
+const CONVOCATORIA_PERIODO_JUSTIFICACION_MES_FIN_KEY = marker('csp.convocatoria-periodo-justificacion.mes-fin');
+const CONVOCATORIA_PERIODO_JUSTIFICACION_MES_INICIO_KEY = marker('csp.convocatoria-periodo-justificacion.mes-inicio');
+const CONVOCTORIA_PERIODO_JUSTIFICACION_PERIODO_KEY = marker('csp.convocatoria-periodo-justificacion.periodo');
+const CONVOCTORIA_PERIODO_JUSTIFICACION_TIPO_KEY = marker('csp.convocatoria-periodo-justificacion.tipo');
+const CONVOCATORIA_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY = marker('csp.convocatoria-periodo-justificacion.observaciones');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 @Component({
   templateUrl: './convocatoria-periodos-justificacion-modal.component.html',
   styleUrls: ['./convocatoria-periodos-justificacion-modal.component.scss']
@@ -36,11 +47,20 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   FormGroupUtil = FormGroupUtil;
 
   textSaveOrUpdate: string;
+  title: string;
+
+  msgParamFechaInicioEntity = {};
+  msgParamMesInicioEntity = {};
+  msgParamMesFinEntity = {};
+  msgParamObservacionesEntity = {};
+  msgParamPeriodoEntity = {};
+  msgParamTipoEntity = {};
 
   constructor(
     protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaPeriodoJustificacionModalData,
-    public matDialogRef: MatDialogRef<ConvocatoriaPeriodosJustificacionModalComponent>
+    public matDialogRef: MatDialogRef<ConvocatoriaPeriodosJustificacionModalComponent>,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.convocatoriaPeriodoJustificacion);
 
@@ -64,7 +84,63 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.textSaveOrUpdate = this.data.convocatoriaPeriodoJustificacion?.numPeriodo ? MSG_ACEPTAR : MSG_ANADIR;
+  }
+
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCTORIA_PERIODO_JUSTIFICACION_PERIODO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPeriodoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCTORIA_PERIODO_JUSTIFICACION_TIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+
+    this.translate.get(
+      CONVOCATORIA_PERIODO_JUSTIFICACION_FECHA_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    this.translate.get(
+      CONVOCATORIA_PERIODO_JUSTIFICACION_MES_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMesInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_PERIODO_JUSTIFICACION_MES_FIN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMesFinEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.convocatoriaPeriodoJustificacion?.numPeriodo) {
+      this.translate.get(
+        CONVOCATORIA_PERIODO_JUSTIFICACION_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        CONVOCATORIA_PERIODO_JUSTIFICACION_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+
+
   }
 
   protected getFormGroup(): FormGroup {

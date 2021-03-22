@@ -1,7 +1,7 @@
 <div class="solicitud-equipo-periodo-pago-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{'csp.solicitud-proyecto-socio.periodo-pago.modal.titulo' | translate}}</h3>
+      {{title}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -11,9 +11,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-pago.modal.numPeriodo' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-socio.periodo-pago.numero-periodo' | translate}}</mat-label>
             <input matInput formControlName="numPeriodo" type="number" id="numPeriodo"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-pago.modal.numPeriodo' | translate}}">
+              placeholder="{{'csp.proyecto-socio.periodo-pago.numero-periodo' | translate}}">
           </mat-form-field>
         </div>
       </div>
@@ -23,20 +23,20 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-pago.modal.mes' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-socio.periodo-pago.mes' | translate}}</mat-label>
             <input matInput formControlName="mes" type="number" id="mes" required
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-pago.modal.mes' | translate}}">
+              placeholder="{{'csp.proyecto-socio.periodo-pago.mes' | translate}}">
             <mat-error *ngIf="formGroup.controls.mes.errors?.required">
-              {{'csp.solicitud-proyecto-socio.periodo-pago.modal.mes.required' | translate}}
+              {{'error.required.entity' | translate:msgParamMesEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mes.errors?.min">
-              {{'csp.solicitud-proyecto-socio.periodo-pago.modal.mes.min' | translate}}
+              {{'error.csp.proyecto-socio.periodo-pago.mes.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mes.errors?.max">
-              {{'csp.solicitud-proyecto-socio.periodo-pago.modal.mes.max' | translate}}
+              {{'error.csp.proyecto-socio.periodo-pago.mes.max' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mes.errors?.contains">
-              {{'csp.solicitud-proyecto-socio.periodo-pago.modal.mes.contains' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -47,14 +47,14 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-pago.modal.importe' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-socio.periodo-pago.importe' | translate}}</mat-label>
             <input matInput formControlName="importe" type="number" id="importe"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-pago.modal.importe' | translate}}">
+              placeholder="{{'csp.proyecto-socio.periodo-pago.importe' | translate}}">
             <mat-error *ngIf="formGroup.controls.importe.errors?.min">
-              {{'csp.solicitud-proyecto-socio.periodo-pago.modal.importe.min' | translate}}
+              {{'error.min.entity' | translate:msgParamImporteEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.importe.errors?.max">
-              {{'csp.solicitud-proyecto-socio.periodo-pago.modal.importe.max' | translate}}
+              {{'error.max.entity' | translate:msgParamImporteEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -63,9 +63,8 @@
   </main>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
-    *ngIf="!this.data.readonly">{{textSaveOrUpdate |
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()" *ngIf="!this.data.readonly">{{textSaveOrUpdate |
     translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
     translate}}</button>
 </div>

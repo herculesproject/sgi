@@ -33,10 +33,10 @@ export class NodeDocumento {
     this.title = title;
     this._level = level;
     if (level === 0 && !title) {
-      this.title = marker('csp.convocatoria.documentos.sinFase.title');
+      this.title = marker('label.csp.documentos.sin-fase');
     }
     else if (level === 1 && !title) {
-      this.title = marker('csp.convocatoria.documentos.sinTipoDocumento.title');
+      this.title = marker('label.csp.documento.sin-tipo');
     }
     this.documento = documento;
     this._childs = [];

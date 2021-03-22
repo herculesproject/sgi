@@ -1,7 +1,7 @@
 <div class="solicitud-equipo-periodo-justificacion-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.titulo' | translate}}</h3>
+      {{title | translate}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -11,9 +11,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.nombre' | translate}}</mat-label>
+            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.nombre' | translate}}</mat-label>
             <input matInput formControlName="nombre" id="numPeriodo"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.nombre' | translate}}">
+              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.nombre' | translate}}">
           </mat-form-field>
         </div>
       </div>
@@ -23,15 +23,15 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.numPeriodo' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-socio-periodo-justificacion.numero-periodo' | translate}}</mat-label>
             <input matInput formControlName="numPeriodo" type="number" id="numPeriodo"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.numPeriodo' | translate}}">
+              placeholder="{{'csp.proyecto-socio-periodo-justificacion.numero-periodo' | translate}}">
           </mat-form-field>
         </div>
       </div>
 
       <div class="fieldset-form">
-        {{'csp.solicitud-proyecto-socio.periodo-justificacion.periodo-justificar.titulo' | translate}}
+        {{'title.csp.proyecto-socio-periodo-justificacion.periodo-justificar' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -40,20 +40,20 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesInicial' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-socio-periodo-justificacion.mes-inicio' | translate}}</mat-label>
             <input matInput formControlName="mesInicial" type="number" id="mesInicial" required
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesInicial' | translate}}">
+              placeholder="{{'csp.proyecto-socio-periodo-justificacion.mes-inicio' | translate}}">
             <mat-error *ngIf="formGroup.controls.mesInicial.errors?.min">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesInicial.min' | translate}}
+              {{'error.csp.proyecto-socio.periodo-justificacion.mes-inicio.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesInicial.errors?.overlapped">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesInicial.overlapped' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamMesInicialEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesInicial.errors?.max">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesInicial.max' | translate}}
+              {{'error.csp.proyecto-socio.periodo-justificacion.mes-inicio.max' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesInicial.errors?.required">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesInicial.required' | translate}}
+              {{'error.required.entity' | translate:msgParamMesInicialEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -62,30 +62,30 @@
         <div [fxFlex.sm]=" fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-socio-periodo-justificacion.mes-fin' | translate}}</mat-label>
             <input matInput formControlName="mesFinal" type="number" id="mesFinal" required
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal' | translate}}">
+              placeholder="{{'csp.proyecto-socio-periodo-justificacion.mes-fin' | translate}}">
             <mat-error *ngIf="formGroup.controls.mesFinal.errors?.min">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal.min' | translate}}
+              {{'error.csp.proyecto-socio.periodo-justificacion.mes-fin.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFinal.errors?.after">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal.after' | translate}}
+              {{'error.after.mes-final' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFinal.errors?.overlapped">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal.overlapped' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamMesFinalEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFinal.errors?.max">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal.max' | translate}}
+              {{'error.csp.proyecto-socio.periodo-justificacion.mes-fin.max' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFinal.errors?.required">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.mesFinal.required' | translate}}
+              {{'error.required.entity' | translate:msgParamMesFinalEntity}}
             </mat-error>
           </mat-form-field>
         </div>
       </div>
 
       <div class="fieldset-form">
-        {{'csp.solicitud-proyecto-socio.periodo-justificacion.periodo-solicitud.titulo' | translate}}
+        {{'title.csp.proyecto-socio-periodo-justificacion.periodo-solicitud-justificacion' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -94,10 +94,10 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaInicio' | translate}}
+            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}
             </mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" id="fechaInicio"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaInicio' | translate}}">
+              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
@@ -108,14 +108,14 @@
         <div [fxFlex.sm]=" fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaFin' | translate}}</mat-label>
+            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.fecha-fin' | translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" id="fechaInicio"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaFin' | translate}}">
+              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.fecha-fin' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.fechaFin.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -126,13 +126,13 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.observaciones' | translate}}
+            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.observaciones' | translate}}
             </mat-label>
             <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-              placeholder="{{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.observaciones' | translate}}">
+              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.observaciones' | translate}}">
             </textarea>
             <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
-              {{'csp.solicitud-proyecto-socio.periodo-justificacion.modal.observaciones.maxlength' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -141,9 +141,8 @@
   </main>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
-    *ngIf="!this.data.readonly">{{textSaveOrUpdate |
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()" *ngIf="!this.data.readonly">{{textSaveOrUpdate |
     translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
     translate}}</button>
 </div>

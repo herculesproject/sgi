@@ -18,7 +18,7 @@ describe('EntidadFinanciadoraModalComponent', () => {
   let fixture: ComponentFixture<EntidadFinanciadoraModalComponent>;
 
   const data: EntidadFinanciadoraDataModal = {
-    title: '',
+    title: 'title',
     entidad: {} as IEntidadFinanciadora,
     selectedEmpresas: [],
     readonly: false

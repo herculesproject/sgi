@@ -2,15 +2,22 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
+import { switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const TIPO_FASE_KEY = marker('csp.tipo-fase');
+const TIPO_FASE_NOMBRE_KEY = marker('csp.tipo-fase.nombre');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 @Component({
   selector: 'sgi-tipo-fase-modal',
   templateUrl: './tipo-fase-modal.component.html',
@@ -22,11 +29,14 @@ export class TipoFaseModalComponent implements OnInit {
   fxFlexProperties: FxFlexProperties;
 
   textSaveOrUpdate: string;
+  title: string;
+  msgParamNombreEntity = {};
 
   constructor(
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<TipoFaseModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public tipoFase: ITipoFase
+    @Inject(MAT_DIALOG_DATA) public tipoFase: ITipoFase,
+    private readonly translate: TranslateService
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -46,11 +56,41 @@ export class TipoFaseModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.setupI18N();
+
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.tipoFase?.nombre),
       descripcion: new FormControl(this.tipoFase?.descripcion)
     });
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      TIPO_FASE_NOMBRE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.tipoFase.nombre) {
+      this.translate.get(
+        TIPO_FASE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        TIPO_FASE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
 
   closeModal(tipoFase?: ITipoFase): void {
     this.matDialogRef.close(tipoFase);

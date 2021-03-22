@@ -8,12 +8,12 @@ import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.se
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, throwError } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ProyectoProrrogaDatosGeneralesFragment } from './proyecto-prorroga-formulario/proyecto-prorroga-datos-generales/proyecto-prorroga-datos-generales.fragment';
 import { ProyectoProrrogaDocumentosFragment } from './proyecto-prorroga-formulario/proyecto-prorroga-documentos/proyecto-prorroga-documentos.fragment';
 
-const MSG_IMPORTE = marker('csp.proyecto-prorroga.saveOrUpdate.importe.msg');
+const MSG_IMPORTE = marker('msg.csp.prorroga.update-importe-proyecto');
 
 @Injectable()
 export class ProyectoProrrogaActionService extends ActionService {

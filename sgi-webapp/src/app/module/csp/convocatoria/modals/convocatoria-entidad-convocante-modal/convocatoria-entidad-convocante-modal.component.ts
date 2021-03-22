@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -17,17 +18,21 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { map, mergeMap, startWith, switchMap, takeLast, tap } from 'rxjs/operators';
 import { ConvocatoriaEntidadConvocanteData } from '../../convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
 
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_FORM_GROUP_WITHOUT_PLAN = marker('msg.csp.convocatoria-entidad-convocante.sin-plan');
+const MSG_FORM_GROUP_WITHOUT_PROGRAMA = marker('msg.csp.convocatoria-entidad-convocante.sin-programa');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY = marker('csp.convocatoria-entidad-convocante');
+const CONVOCATORIA_ENTIDAD_CONVOCANTE_PLAN_KEY = marker('csp.convocatoria-entidad-convocante.plan');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_FORM_GROUP_WITHOUT_PLAN = marker('csp.convocatoria.entidades.convocantes.modal.sin.plan');
-const MSG_FORM_GROUP_WITHOUT_PROGRAMA = marker('csp.convocatoria.entidades.convocantes.modal.sin.programa');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaEntidadConvocanteModalData {
   entidadConvocanteData: ConvocatoriaEntidadConvocanteData;
   selectedEmpresas: IEmpresaEconomica[];
@@ -94,6 +99,10 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   private nodeMap = new Map<number, NodePrograma>();
 
   textSaveOrUpdate: string;
+  textoTitle: string;
+
+  msgParamEntity = {};
+  msgParamPlanEntity = {};
 
   checkedNode: NodePrograma;
   hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
@@ -104,7 +113,8 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadConvocanteModalData,
     protected snackBarService: SnackBarService,
     private programaService: ProgramaService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
 
@@ -134,6 +144,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
 
   ngOnInit() {
     super.ngOnInit();
+    this.setupI18N();
     this.subscriptions.push(this.programaTree$.subscribe(
       (programas) => {
         this.dataSource.data = programas;
@@ -157,6 +168,39 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
       }
     );
     this.subscriptions.push(subcription);
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_PLAN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPlanEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.entidadConvocanteData.empresaEconomica) {
+      this.translate.get(
+        CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.textoTitle = value);
+    } else {
+      this.translate.get(
+        CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.textoTitle = value);
+
+    }
+
   }
 
   private filterPrograma(value: string): IPrograma[] {
@@ -309,5 +353,9 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
         }
       )
     );
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 }

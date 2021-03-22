@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
@@ -13,21 +14,23 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-
-
-
-
-const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
-const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.hitos.error.cargar');
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ERROR_TIPOS = marker('error.csp.convocatoria-tipo-hito');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_HITO_KEY = marker('csp.hito');
+const CONVOCATORIA_HITO_COMENTARIO_KEY = marker('csp.hito.comentario');
+const CONVOCATORIA_HITO_FECHA_INICIO_KEY = marker('csp.hito.fecha-inicio');
+const CONVOCATORIA_HITO_TIPO_KEY = marker('csp.hito.tipo');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface ConvocatoriaHitosModalComponentData {
   hitos: IConvocatoriaHito[],
   hito: IConvocatoriaHito;
@@ -53,15 +56,21 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   private modeloTiposHitoFiltered: IModeloTipoHito[];
 
   textSaveOrUpdate: string;
+  title: string;
 
   suscripciones: Subscription[] = [];
+
+  msgParamComentarioEntity = {};
+  msgParamFechaInicioEntity = {};
+  msgParamTipoEntity = {};
 
   constructor(
     private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaHitosModalComponentData,
-    private snackBarService: SnackBarService) {
+    private snackBarService: SnackBarService,
+    private readonly translate: TranslateService) {
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -88,6 +97,7 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setupI18N();
     this.formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
       fechaInicio: new FormControl(this.data?.hito?.fecha, [Validators.required]),
@@ -111,6 +121,43 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     this.loadTiposHito();
     this.suscripciones.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
       (value) => this.validarFecha(value)));
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_HITO_TIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_HITO_FECHA_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_HITO_COMENTARIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    if (this.data.hito?.tipoHito) {
+      this.translate.get(
+        CONVOCATORIA_HITO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+
+    } else {
+      this.translate.get(
+        CONVOCATORIA_HITO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
   }
 
   /**

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
@@ -27,25 +28,23 @@ import { DialogService } from '@core/services/dialog.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of, Subscription } from 'rxjs';
 import { map, mergeAll, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 
-
-
-
-const MSG_BUTTON_NEW = marker('footer.csp.convocatoria.crear');
-const MSG_ERROR = marker('csp.convocatoria.listado.error');
-const MSG_ERROR_INIT = marker('csp.convocatoria.listado.error.cargar');
-const MSG_REACTIVE = marker('csp.convocatoria.listado.convocatoria.reactivar');
-const MSG_SUCCESS_REACTIVE = marker('csp.convocatoria.listado.convocatoria.reactivar.correcto');
-const MSG_ERROR_REACTIVE = marker('csp.convocatoria.listado.convocatoria.reactivar.error');
-const MSG_DEACTIVATE = marker('csp.convocatoria.listado.convocatoria.desactivar');
-const MSG_ERROR_DEACTIVATE = marker('csp.convocatoria.listado.convocatoria.desactivar.error');
-const MSG_SUCCESS_DEACTIVATE = marker('csp.convocatoria.listado.convocatoria.desactivar.correcto');
-
+const MSG_BUTTON_ADD = marker('btn.add.entity');
+const MSG_ERROR_LOAD = marker('error.load');
+const MSG_REACTIVE = marker('msg.csp.reactivate');
+const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
+const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
+const MSG_DEACTIVATE = marker('msg.deactivate.entity');
+const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
+const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
+const AREA_TENATICA_KEY = marker('csp.area-tematica');
+const CONVOCATORIA_KEY = marker('csp.convocatoria');
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
@@ -65,7 +64,13 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   convocatorias$: Observable<IConvocatoriaListado[]>;
-  textoCrear = MSG_BUTTON_NEW;
+  textoCrear: string;
+  textoDesactivar: string;
+  textoReactivar: string;
+  textoErrorDesactivar: string;
+  textoSuccessDesactivar: string;
+  textoSuccessReactivar: string;
+  textoErrorReactivar: string;
 
   busquedaAvanzada = false;
 
@@ -97,6 +102,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   mapModificable: Map<number, boolean> = new Map();
 
+  msgParamEntity = {};
+  msgParamAreaTematicaEntity = {};
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
@@ -109,9 +117,10 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private fuenteFinanciacionService: FuenteFinanciacionService,
     private areaTematicaService: AreaTematicaService,
     private dialogService: DialogService,
-    public authService: SgiAuthService
+    public authService: SgiAuthService,
+    private readonly translate: TranslateService
   ) {
-    super(snackBarService, MSG_ERROR);
+    super(snackBarService, MSG_ERROR_LOAD);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -126,6 +135,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
 
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
@@ -159,6 +169,100 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.fuenteFinanciacion();
     this.loadAreasTematica();
     this.filter = this.createFilter();
+  }
+
+  private setupI18N(): void {
+
+    this.translate.get(
+      AREA_TENATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAreaTematicaEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_ADD,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDesactivar = value);
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorDesactivar = value);
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessDesactivar = value);
+
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoReactivar = value);
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessReactivar = value);
+
+
+    this.translate.get(
+      CONVOCATORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorReactivar = value);
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
@@ -310,7 +414,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       )
     );
@@ -332,7 +436,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       )
     );
@@ -360,7 +464,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       )
     );
@@ -382,7 +486,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       )
     );
@@ -408,7 +512,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_INIT);
+        this.snackBarService.showError(MSG_ERROR_LOAD);
       }
     ));
   }
@@ -439,7 +543,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             },
             (error) => {
               this.logger.error(error);
-              this.snackBarService.showError(MSG_ERROR_INIT);
+              this.snackBarService.showError(MSG_ERROR_LOAD);
             }
           )
         );
@@ -575,7 +679,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    * @param convocatoria convocatoria
    */
   deactivateConvocatoria(convocatoria: IConvocatoriaListado): void {
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
+    const subcription = this.dialogService.showConfirmation(this.textoDesactivar).pipe(
       switchMap((accept) => {
         if (accept) {
           return this.convocatoriaService.desactivar(convocatoria.convocatoria.id);
@@ -584,12 +688,12 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         }
       })).subscribe(
         () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.snackBarService.showSuccess(this.textoSuccessDesactivar);
           this.loadTable();
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.snackBarService.showError(this.textoErrorDesactivar);
         }
       );
     this.suscripciones.push(subcription);
@@ -600,7 +704,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    * @param convocatoria convocatoria
    */
   activeConvocatoria(convocatoria: IConvocatoriaListado): void {
-    const suscription = this.dialogService.showConfirmation(MSG_REACTIVE).pipe(
+    const suscription = this.dialogService.showConfirmation(this.textoReactivar).pipe(
       switchMap((accept) => {
         if (accept) {
           convocatoria.convocatoria.activo = true;
@@ -610,15 +714,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         }
       })).subscribe(
         () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.snackBarService.showSuccess(this.textoSuccessReactivar);
           this.loadTable();
         },
         (error) => {
           this.logger.error(error);
           convocatoria.convocatoria.activo = false;
-          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.snackBarService.showError(this.textoErrorReactivar);
         }
       );
     this.suscripciones.push(suscription);
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 }

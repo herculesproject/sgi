@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
@@ -13,9 +14,8 @@ import { ProyectoProrrogaDocumentosComponent } from './proyecto-prorroga-formula
 import { PROYECTO_PRORROGA_ROUTE_NAMES } from './proyecto-prorroga-route-names';
 import { ProyectoProrrogaGuard } from './proyecto-prorroga.guard';
 
-
-const MSG_NEW_TITLE = marker('csp.proyecto-prorroga.crear.titulo');
-const MSG_EDIT_TITLE = marker('csp.proyecto-prorroga.editar.titulo');
+const MSG_NEW_TITLE = marker('title.new.entity');
+const MSG_EDIT_TITLE = marker('csp.proyecto-prorroga');
 
 const routes: SgiRoutes = [
   {
@@ -25,6 +25,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: MSG_EDIT_TITLE, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {

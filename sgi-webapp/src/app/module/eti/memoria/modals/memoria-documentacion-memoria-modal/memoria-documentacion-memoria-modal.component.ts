@@ -21,7 +21,7 @@ import { catchError, map, startWith } from 'rxjs/operators';
 
 const MSG_ERROR_APORTAR_DOCUMENTACION = marker('eti.memoria.documentacion.error.aportar');
 const MSG_ERROR_INIT = marker('eti.memoria.documentacion.error.cargar');
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 
 @Component({
   templateUrl: './memoria-documentacion-memoria-modal.component.html',

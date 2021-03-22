@@ -2,14 +2,16 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
 
-
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const SOLICITUD_CAMBIO_ESTADO_COMENTARIO = marker('csp.solicitud.estado-solicitud.comentario');
 
 export interface SolicitudCambioEstadoModalComponentData {
   estadoActual: Estado;
@@ -30,6 +32,8 @@ export class CambioEstadoModalComponent implements OnInit {
   fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  msgParamComentarioEntity = {};
+
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -37,7 +41,8 @@ export class CambioEstadoModalComponent implements OnInit {
 
   constructor(public matDialogRef: MatDialogRef<SolicitudCambioEstadoModalComponentData>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudCambioEstadoModalComponentData,
-    private snackBarService: SnackBarService) {
+    private snackBarService: SnackBarService,
+    private readonly translate: TranslateService) {
 
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -65,11 +70,19 @@ export class CambioEstadoModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setupI18N();
     this.formGroup = new FormGroup({
       estadoActual: new FormControl(this.data.estadoActual),
       estadoNuevo: new FormControl(this.data.estadoNuevo),
       comentario: new FormControl('', [Validators.maxLength(2000), Validators.required])
     });
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_CAMBIO_ESTADO_COMENTARIO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
 

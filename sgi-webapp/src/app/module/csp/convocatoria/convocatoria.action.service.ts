@@ -38,7 +38,7 @@ import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocator
 import { ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
 import { ConvocatoriaHitosFragment } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.fragment';
-import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodo-justificacion.fragment';
+import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.fragment';
 import { ConvocatoriaPlazosFasesFragment } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
 import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.fragment';
 import { ConvocatoriaRequisitosIPFragment } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.fragment';
@@ -49,7 +49,7 @@ import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formul
 
 
 
-const MSG_REGISTRAR = marker('csp.convocatoria.registrar.msg');
+const MSG_REGISTRAR = marker('msg.csp.convocatoria.registrar');
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService implements OnDestroy {

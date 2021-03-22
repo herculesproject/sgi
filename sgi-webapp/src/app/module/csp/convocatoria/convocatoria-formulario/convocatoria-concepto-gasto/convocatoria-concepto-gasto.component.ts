@@ -2,24 +2,28 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ROUTE_NAMES } from '@core/route.names';
-import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
+import { DialogService } from '@core/services/dialog.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { IConvocatoriaConceptoGastoState } from '../../../convocatoria-concepto-gasto/convocatoria-concepto-gasto.state';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
-const MSG_DELETE_CODIGO_ECONOMICO = marker('csp.convocatoria.concepto-gasto.listado.codigoEconomico.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.convocatoria-concepto-gasto.listado.codigo-economico.delete');
+const CONVOCATORIA_CONCEPTO_GASTO_PERMITIDO_KEY = marker('csp.convocatoria-concepto-gasto.permitido');
+const CONVOCATORIA_CONCEPTO_GASTO_NO_PERMITIDO_KEY = marker('csp.convocatoria-concepto-gasto.no-permitido');
 
 @Component({
   selector: 'sgi-convocatoria-concepto-gasto',
@@ -41,6 +45,10 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   displayedColumnsPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
   displayedColumnsNoPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
 
+  msgParamEntityPermitido = {};
+  msgParamEntityNoPermitido = {};
+  textoDelete: string;
+
   dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
   dataSourceNoPermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
   @ViewChild('paginatorPermitidos', { static: true }) paginatorPermitidos: MatPaginator;
@@ -53,7 +61,8 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   constructor(
     protected actionService: ConvocatoriaActionService,
     private dialogService: DialogService,
-    private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService
+    private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
+    private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.ELEGIBILIDAD, actionService);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoFragment;
@@ -72,6 +81,7 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
     this.dataSourcePermitidos.paginator = this.paginatorPermitidos;
     this.dataSourcePermitidos.sort = this.sortPermitidos;
@@ -109,6 +119,32 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
       };
   }
 
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_PERMITIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntityPermitido = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_NO_PERMITIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntityNoPermitido = { entity: value });
+
+
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_NO_PERMITIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+  }
+
   createState(wrapper?: StatusWrapper<IConvocatoriaConceptoGasto>, permitido?: boolean): IConvocatoriaConceptoGastoState {
 
     if (wrapper && wrapper.value.permitido) {
@@ -144,7 +180,7 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
         );
       } else {
         this.subscriptions.push(
-          this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+          this.dialogService.showConfirmation(this.textoDelete).subscribe(
             (aceptado: boolean) => {
               if (aceptado) {
                 this.formPart.deleteConvocatoriaConceptoGasto(wrapper);

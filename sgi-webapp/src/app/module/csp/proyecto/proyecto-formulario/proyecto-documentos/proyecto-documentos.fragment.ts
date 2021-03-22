@@ -1,5 +1,6 @@
 
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
@@ -19,16 +20,15 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-const SIN_TIPO_FASE = marker('csp.proyecto.documentos.sinTipoFase.title');
-const SIN_TIPO_DOCUMENTO = marker('csp.proyecto.documentos.sinTipoDocumento.title');
+const SIN_TIPO_FASE = marker('label.csp.documentos.sin-fase');
+const SIN_TIPO_DOCUMENTO = marker('label.csp.documentos.sin-tipo-documento');
 
-const PERIODO_JUSTIFICACION_PERIODO_TITLE = marker('csp.proyecto.documentos.periodoJustificacion.periodo.title');
-const PRORROGA_PERIODO_TITLE = marker('csp.proyecto.documentos.prorroga.periodo.title');
-const SEGUIMIENTO_PERIODO_TITLE = marker('csp.proyecto.documentos.seguimiento.periodo.title');
+const PERIODO_JUSTIFICACION_PERIODO_TITLE = marker('label.csp.documentos.periodo-justificacion.periodo');
+const PRORROGA_PERIODO_TITLE = marker('label.csp.documentos.prorroga');
+const SEGUIMIENTO_PERIODO_TITLE = marker('label.csp.documentos.periodo-seguimiento.periodo');
 
-const PERIODO_JUSTIFICACION_TITLE = marker('csp.proyecto.documentos.periodoJustificacion.title');
-const PRORROGA_TITLE = marker('csp.proyecto.documentos.prorroga.title');
-const SEGUIMIENTO_TITLE = marker('csp.proyecto.documentos.seguimiento.title');
+const PERIODO_JUSTIFICACION_TITLE = marker('label.csp.documentos.periodo-justificacion.socios');
+const SEGUIMIENTO_TITLE = marker('label.csp.documentos.periodo-seguimiento');
 
 enum TIPO_DOCUMENTO {
   PROYECTO = '0',
@@ -158,6 +158,7 @@ export class ProyectoDocumentosFragment extends Fragment {
 
   msgParamSeguimientoTitle: string;
   msgParamPeriodoJustificacionTitle: string;
+  msgParamProrrogaPeriodoTitle: string;
   msgParamProrrogaTitle: string;
 
   constructor(
@@ -238,7 +239,7 @@ export class ProyectoDocumentosFragment extends Fragment {
 
 
         if (!faseNode) {
-          faseNode = new NodeDocumento(keyDocumento, PRORROGA_TITLE, 0);
+          faseNode = new NodeDocumento(keyDocumento, this.msgParamProrrogaTitle, 0);
           this.nodeLookup.set(keyDocumento, faseNode);
           nodes.push(faseNode);
         }
@@ -246,7 +247,7 @@ export class ProyectoDocumentosFragment extends Fragment {
         keyTipoDocumento = `${tipoDocumento}-${documento.proyectoProrroga ? documento.proyectoProrroga.numProrroga : 0}`;
         periodoNode = this.nodeLookup.get(keyTipoDocumento);
         if (!periodoNode) {
-          periodoNode = new NodeDocumento(keyTipoDocumento, this.msgParamProrrogaTitle + ' ' + documento.proyectoProrroga.numProrroga, 1);
+          periodoNode = new NodeDocumento(keyTipoDocumento, this.msgParamProrrogaPeriodoTitle + ' ' + documento.proyectoProrroga.numProrroga, 1);
 
         }
 
@@ -374,7 +375,12 @@ export class ProyectoDocumentosFragment extends Fragment {
       SEGUIMIENTO_PERIODO_TITLE
     ).subscribe((value) => this.msgParamSeguimientoTitle = value);
     this.translate.get(
-      PRORROGA_PERIODO_TITLE
+      PRORROGA_PERIODO_TITLE,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamProrrogaPeriodoTitle = value);
+    this.translate.get(
+      PRORROGA_PERIODO_TITLE,
+      MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamProrrogaTitle = value);
   }
 

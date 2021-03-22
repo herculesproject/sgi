@@ -18,7 +18,7 @@ import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.s
 
 
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_ERROR = marker('eti.peticionEvaluacion.crear.error');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.crear.correcto');
 

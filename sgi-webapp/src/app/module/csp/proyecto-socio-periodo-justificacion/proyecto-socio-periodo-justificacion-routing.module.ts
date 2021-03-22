@@ -12,9 +12,10 @@ import { ProyectoSocioPeriodoJustificacionDocumentosComponent } from './proyecto
 import { ProyectoSocioPeriodoJustificacionDatosGeneralesComponent } from './proyecto-socio-periodo-justificacion-formulario/proyecto-socio-periodo-justificacion-datos-generales/proyecto-socio-periodo-justificacion-datos-generales.component';
 import { ProyectoSocioPeriodoJustificacionEditarComponent } from './proyecto-socio-periodo-justificacion-editar/proyecto-socio-periodo-justificacion-editar.component';
 import { ProyectoSocioPeriodoJustificacionCrearComponent } from './proyecto-socio-periodo-justificacion-crear/proyecto-socio-periodo-justificacion-crear.component';
+import { MSG_PARAMS } from '@core/i18n';
 
-const MSG_NEW_TITLE = marker('csp.proyecto-socio-periodo-justificacion.crear.titulo');
-const MSG_EDIT_TITLE = marker('csp.proyecto-socio-periodo-justificacion.editar.titulo');
+const MSG_NEW_TITLE = marker('title.new.entity');
+const MSG_EDIT_TITLE = marker('title.csp.proyecto-socio-periodo-justificacion');
 
 const routes: SgiRoutes = [
   {
@@ -24,6 +25,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: MSG_EDIT_TITLE, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {

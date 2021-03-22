@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
@@ -20,14 +21,16 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-configuracion-solicitudes.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.configuracionSolicitud.listado.borrar');
-const MSG_ERROR_INIT = marker('csp.convocatoria.configuracionSolicitud.error.cargar');
-
+const MSG_DELETE = marker('msg.delete.entity');
+const MSG_ERROR_INIT = marker('error.load');
+const CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY = marker('csp.convocatoria-configuracion-solicitud-documento-requerido');
+const CONVOCATORIA_CONFIGURACION_SOLICITUD_FASE_PRESENTACION_KEY = marker('csp.convocatoria-configuracion-solicitud.fase-presentacion');
+const CONVOCATORIA_CONFIGURACION_SOLICITUD_KEY = marker('csp.convocatoria-configuracion-solicitud')
 @Component({
   selector: 'sgi-convocatoria-configuracion-solicitudes',
   templateUrl: './convocatoria-configuracion-solicitudes.component.html',
@@ -62,6 +65,11 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
 
   disabledPlazoPresentacion: Observable<boolean>;
 
+  msgParamDocumentoEntity = {};
+  msgParamDocumentoEntities = {};
+  msgParamFasePresentacionEntity = {};
+  textoDelete: string;
+
   constructor(
     private readonly logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
@@ -69,7 +77,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
     private matDialog: MatDialog,
     private convocatoriaService: ConvocatoriaService,
     private dialogService: DialogService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
   ) {
     super(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES, actionService);
 
@@ -95,6 +103,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.loadConvocatoriaFases();
     this.initializeDataSource();
 
@@ -104,6 +113,37 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       this.dataSource.data = elements;
       this.disabledPlazoPresentacion = of(elements.length > 0);
     }));
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDocumentoEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamDocumentoEntities = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_CONFIGURACION_SOLICITUD_FASE_PRESENTACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFasePresentacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+
+    this.translate.get(
+      CONVOCATORIA_CONFIGURACION_SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   private initializeDataSource(): void {
@@ -266,7 +306,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    */
   deactivateDocumento(wrapper: StatusWrapper<IDocumentoRequerido>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteDocumentoRequerido(wrapper);

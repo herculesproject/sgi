@@ -4,7 +4,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -12,9 +14,12 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+const SOLICITUD_MODALIDAD_KEY = marker('csp.solicitud-modalidad');
 export interface SolicitudModalidadEntidadConvocanteModalData {
   entidad: IEmpresaEconomica;
   plan: IPrograma;
@@ -76,6 +81,7 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
   fxFlexPropertiesTree: FxFlexProperties;
 
   isEdit = false;
+  title: string;
 
   checkedNode: NodePrograma;
   rootNode: NodePrograma;
@@ -90,7 +96,8 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
     protected readonly snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudModalidadEntidadConvocanteModalData,
     public readonly matDialogRef: MatDialogRef<SolicitudModalidadEntidadConvocanteModalComponent>,
-    private programaService: ProgramaService
+    private programaService: ProgramaService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
 
@@ -116,6 +123,7 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
 
     const subscription = this.getTreePrograma(this.data.programa, this.data.modalidad?.programa)
       .subscribe((nodePrograma) => {
@@ -124,6 +132,28 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
 
     this.subscriptions.push(subscription);
   }
+
+  private setupI18N(): void {
+    if (this.isEdit) {
+      this.translate.get(
+        SOLICITUD_MODALIDAD_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        SOLICITUD_MODALIDAD_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({

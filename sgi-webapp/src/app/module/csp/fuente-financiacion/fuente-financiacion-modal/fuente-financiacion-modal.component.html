@@ -1,7 +1,7 @@
 <div class="fuente-financiacion-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{ 'csp.fuenteFinanciacion.modal.titulo' | translate}}
+      {{ title}}
     </h3>
   </header>
   <main>
@@ -11,11 +11,11 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.fuenteFinanciacion.nombre' | translate}}</mat-label>
+            <mat-label>{{'csp.fuente-financiacion.nombre' | translate}}</mat-label>
             <input matInput formControlName="nombre" type="text" id="nombre"
-              placeholder="{{'csp.fuenteFinanciacion.nombre' | translate}}" required>
+              placeholder="{{'csp.fuente-financiacion.nombre' | translate}}" required>
             <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
-              {{'csp.fuenteFinanciacion.nombre.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamNombreEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -26,9 +26,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.fuenteFinanciacion.descripcion' | translate}}</mat-label>
+            <mat-label>{{'csp.fuente-financiacion.descripcion' | translate}}</mat-label>
             <textarea matInput formControlName="descripcion" id="descripcion"
-              placeholder="{{'csp.fuenteFinanciacion.descripcion' | translate}}"></textarea>
+              placeholder="{{'csp.fuente-financiacion.descripcion' | translate}}"></textarea>
           </mat-form-field>
         </div>
       </div>
@@ -38,9 +38,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form" fxFill>
-            <mat-label>{{'csp.fuenteFinanciacion.ambito.geografico' | translate}}</mat-label>
+            <mat-label>{{'csp.fuente-financiacion.ambito-geografico' | translate}}</mat-label>
             <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
-              placeholder="{{'csp.fuenteFinanciacion.ambito.geografico' | translate}}" maxlength="100"
+              placeholder="{{'csp.fuente-financiacion.ambito-geografico' | translate}}" maxlength="100"
               [matAutocomplete]="autoAmbitoGeografico" required>
             <mat-autocomplete #autoAmbitoGeografico="matAutocomplete" [displayWith]="getAmbitoGeografico">
 
@@ -50,7 +50,7 @@
 
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
-              {{'csp.fuenteFinanciacion.ambitoGeografico.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamAmbitoEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -61,9 +61,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form" fxFill>
-            <mat-label>{{'csp.fuenteFinanciacion.origen' | translate}}</mat-label>
+            <mat-label>{{'csp.fuente-financiacion.origen' | translate}}</mat-label>
             <input matInput formControlName="origen" type="text" id="origen" required
-              placeholder="{{'csp.fuenteFinanciacion.origen' | translate}}" maxlength="100" [matAutocomplete]="origen">
+              placeholder="{{'csp.fuente-financiacion.origen' | translate}}" maxlength="100" [matAutocomplete]="origen">
             <mat-autocomplete #origen="matAutocomplete" [displayWith]="getOrigen">
 
               <mat-option *ngFor="let origen of origenes | async" [value]="origen">
@@ -72,7 +72,7 @@
 
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.origen.errors?.required">
-              {{'csp.fuenteFinanciacion.origen.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamOrigenEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -83,13 +83,13 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
-            <mat-label>{{'csp.fuenteFinanciacion.fondoEstructural' | translate}}</mat-label>
+            <mat-label>{{'csp.fuente-financiacion.fondo-estructural' | translate}}</mat-label>
             <mat-select matNativeControl formControlName="fondoEstructural" required>
               <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
               <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
             </mat-select>
             <mat-error *ngIf="formGroup.controls.fondoEstructural.errors?.required">
-              {{'csp.fuenteFinanciacion.fondoEstructural.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamFondoEstructuralEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -98,8 +98,7 @@
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
-      type="submit">{{'botones.guardar' | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+      type="submit">{{'btn.save.entity' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' | translate}}</button>
   </div>
 </div>

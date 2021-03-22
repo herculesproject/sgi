@@ -13,7 +13,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-const SIN_TIPO_DOCUMENTO = marker('csp.solicitud.documentos.sinTipoDocumento.title');
+const SIN_TIPO_DOCUMENTO = marker('label.csp.documento.sin-tipo');
 
 export class NodeDocumentoSolicitud {
   parent: NodeDocumentoSolicitud;

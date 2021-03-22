@@ -1,7 +1,6 @@
 <div class="modal-proyecto-entidad-convocante">
   <header mat-dialog-title class="modal-header-material">
-    <h3>
-      {{'title.csp.proyecto.modal.proyecto-entidad-convocante-modal' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <mat-dialog-content>
     <form class="form-inline" [formGroup]="formGroup">
@@ -20,8 +19,8 @@
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
-          <mat-label>{{ 'csp.proyecto-entidad-convocante.plan' | translate }}</mat-label>
-          <input matInput type="text" placeholder="{{ 'csp.proyecto-entidad-convocante.plan' | translate }}"
+          <mat-label>{{ 'csp.proyecto-entidad-convocante.programa.plan' | translate }}</mat-label>
+          <input matInput type="text" placeholder="{{ 'csp.proyecto-entidad-convocante.programa.plan' | translate }}"
             formControlName="plan" [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombrePlan">
             <mat-option *ngFor="let plan of planes$ | async" [value]="plan">
@@ -33,7 +32,7 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <mat-label>{{ 'csp.proyecto-entidad-convocante.programa' | translate }}</mat-label>
+      <mat-label>{{ 'csp.proyecto-entidad-convocante.programa.programa' | translate }}</mat-label>
       <div class="programa" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
         <div class="arbol" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"

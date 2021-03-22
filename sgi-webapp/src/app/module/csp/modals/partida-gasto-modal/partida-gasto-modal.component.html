@@ -1,6 +1,6 @@
 <div class="modal-desglose-presupuesto-global">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.modal.partida-gasto.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <main>
 
@@ -11,9 +11,10 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.modal.partida-gasto.concepto-gasto' | translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
+            </mat-label>
             <input matInput formControlName="conceptoGasto" type="text" id="conceptoGasto"
-              placeholder="{{'csp.modal.partida-gasto.concepto-gasto' | translate}}"
+              placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}"
               [matAutocomplete]="autoConceptoGasto" required>
             <mat-autocomplete #autoConceptoGasto="matAutocomplete" [displayWith]="getNombreConceptoGasto">
               <mat-option *ngFor="let conceptoGasto of conceptosGasto$ | async" [value]="conceptoGasto">
@@ -21,7 +22,7 @@
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.conceptoGasto.errors?.required">
-              {{'csp.modal.partida-gasto.concepto-gasto.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParaConceptoGastoEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -31,14 +32,16 @@
         <div [fxFlex.sm]="fxFlexPropertiesCodigosEconomicos.sm" [fxFlex.md]="fxFlexPropertiesCodigosEconomicos.md"
           [fxFlex.gt-md]="fxFlexPropertiesCodigosEconomicos.gtMd"
           [fxFlexOrder]="fxFlexPropertiesCodigosEconomicos.order">
-          <mat-label>{{'csp.modal.partida-gasto.codigos-economicos-permitidos' | translate}}
+          <mat-label>
+            {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigos-economicos-permitidos' | translate}}
           </mat-label>
           <ul *ngFor="let conceptoGasto of conceptosGastosPermitidos">
             <li>
-              {{'csp.modal.partida-gasto.concepto-gasto-info' | translate:conceptoGasto}}
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto-info' |
+              translate:conceptoGasto}}
               <ul *ngFor="let codigoEconomico of conceptoGasto.codigosEconomicos">
                 <li>
-                  {{'csp.modal.partida-gasto.codigo-economico-info' |
+                  {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico-info' |
                   translate:codigoEconomico}}
                 </li>
               </ul>
@@ -48,15 +51,16 @@
         <div [fxFlex.sm]="fxFlexPropertiesCodigosEconomicos.sm" [fxFlex.md]="fxFlexPropertiesCodigosEconomicos.md"
           [fxFlex.gt-md]="fxFlexPropertiesCodigosEconomicos.gtMd"
           [fxFlexOrder]="fxFlexPropertiesCodigosEconomicos.order">
-          <mat-label>{{'csp.modal.partida-gasto.codigos-economicos-no-permitidos' | translate}}
+          <mat-label>
+            {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigos-economicos-no-permitidos' | translate}}
           </mat-label>
           <ul *ngFor="let conceptoGasto of conceptosGastosNoPermitidos">
             <li>
-              {{'csp.modal.partida-gasto.concepto-gasto-info-sin-importe' |
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto-info-sin-importe' |
               translate:conceptoGasto}}
               <ul *ngFor="let codigoEconomico of conceptoGasto.codigosEconomicos">
                 <li>
-                  {{'csp.modal.partida-gasto.codigo-economico-info' |
+                  {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico-info' |
                   translate:codigoEconomico}}
                 </li>
               </ul>
@@ -70,15 +74,15 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.modal.partida-gasto.anualidad' | translate}}
+            <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad' | translate}}
             </mat-label>
             <input matInput formControlName="anualidad" type="number" id="anualidad" min="0" step="1"
-              placeholder="{{'csp.modal.partida-gasto.anualidad' | translate}}">
+              placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad' | translate}}">
             <mat-error *ngIf="formGroup.controls.anualidad.errors?.min">
-              {{'csp.modal.partida-gasto.anualidad.error.min' | translate}}
+              {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.anualidad.errors?.max">
-              {{'csp.modal.partida-gasto.anualidad.error.max' | translate}}
+              {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad.max' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -89,18 +93,19 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.modal.partida-gasto.importe-solicitado' | translate}}
+            <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}
             </mat-label>
             <input matInput formControlName="importeSolicitado" type="number" id="importeSolicitado" min="0" step="1"
-              placeholder="{{'csp.modal.partida-gasto.importe-solicitado' | translate}}" required>
+              placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}"
+              required>
             <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.required">
-              {{'csp.modal.partida-gasto.importe-solicitado.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamImporteEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.min">
-              {{'csp.modal.partida-gasto.importe-solicitado.error.min' | translate}}
+              {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.min' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.max">
-              {{'csp.modal.partida-gasto.importe-solicitado.error.max' | translate}}
+              {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.max' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -109,12 +114,12 @@
       <!-- Observaciones -->
       <div>
         <mat-form-field fxFill>
-          <mat-label>{{'csp.modal.partida-gasto.observaciones' | translate}}</mat-label>
+          <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones' | translate}}</mat-label>
           <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-            placeholder="{{'csp.modal.partida-gasto.observaciones' | translate}}">
+            placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones' | translate}}">
               </textarea>
           <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
-            {{'csp.modal.partida-gasto.observaciones.error.maxlength' | translate}}
+            {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -126,7 +131,7 @@
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit"
       *ngIf="!this.data.readonly">{{textSaveOrUpdate |
       translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

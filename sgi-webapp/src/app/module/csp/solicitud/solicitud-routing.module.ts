@@ -1,35 +1,30 @@
-import { SgiRoutes } from '@core/route';
-
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-import { SgiAuthGuard } from '@sgi/framework/auth';
-
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-
-import { ROUTE_NAMES } from '@core/route.names';
-import { ActionGuard } from '@core/guards/master-form.guard';
-import { SOLICITUD_ROUTE_NAMES } from './solicitud-route-names';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
-import { SolicitudResolver } from './solicitud.resolver';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
+import { SgiRoutes } from '@core/route';
+import { ROUTE_NAMES } from '@core/route.names';
+import { SgiAuthGuard } from '@sgi/framework/auth';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
-import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
-import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
-import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
-import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
-import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
+import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
+import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
-import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
+import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
+import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
+import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
+import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
+import { SOLICITUD_ROUTE_NAMES } from './solicitud-route-names';
+import { SolicitudResolver } from './solicitud.resolver';
 
-
-const MSG_EDIT_TITLE = marker('csp.solicitud.editar.titulo');
-const MSG_LISTADO_TITLE = marker('csp.solicitud.listado.titulo');
-const MSG_NEW_TITLE = marker('csp.solicitud.crear.titulo');
+const SOLICITUD_KEY = marker('csp.solicitud');
+const MSG_NEW_TITLE = marker('title.new.entity');
 
 const routes: SgiRoutes = [
   {
@@ -37,7 +32,8 @@ const routes: SgiRoutes = [
     component: SolicitudListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_LISTADO_TITLE,
+      title: SOLICITUD_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
     }
   },
   {
@@ -47,6 +43,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: SOLICITUD_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {
@@ -70,7 +69,8 @@ const routes: SgiRoutes = [
       solicitud: SolicitudResolver
     },
     data: {
-      title: MSG_EDIT_TITLE,
+      title: SOLICITUD_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
     },
     children: [
       {

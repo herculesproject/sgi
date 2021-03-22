@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
+import { MSG_PARAMS } from '@core/i18n';
 import { DESTINATARIOS_MAP, ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
@@ -23,16 +24,29 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
 import { AreaTematicaData, ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 
-const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
-const MSG_DELETE = marker('csp.convocatoria.area.tematica.listado.borrar');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_DELETE_AREA_TEMATICA = marker('msg.delete.entity');
+const AREA_KEY = marker('csp.area');
+const AREA_TEMATICA_KEY = marker('csp.area-tematica');
+const CONVOCATORIA_ANIO_KEY = marker('csp.convocatoria.anio');
+const CONVOCATORIA_AMBITO_GEOGRAFICO_KEY = marker('csp.convocatoria.ambito-geografico');
+const CONVOCATORIA_CODIGO_REFERENCIA_KEY = marker('csp.convocatoria.codigo-referencia');
+const CONVOCATORIA_DESCRIPCION_KEY = marker('csp.convocatoria.descripcion');
+const CONVOCATORIA_DURACION_KEY = marker('csp.convocatoria.duracion');
+const CONVOCATORIA_FINALIDAD_KEY = marker('csp.convocatoria.finalidad');
+const CONVOCATORIA_MODELO_EJECUCION_KEY = marker('csp.convocatoria.modelo-ejecucion');
+const CONVOCATORIA_OBSERVACIONES_KEY = marker('csp.convocatoria.observaciones');
+const CONVOCATORIA_TITULO_KEY = marker('csp.convocatoria.titulo');
+const CONVOCATORIA_UNIDAD_GESTION_KEY = marker('csp.convocatoria.unidad-gestion');
 
 @Component({
   selector: 'sgi-convocatoria-datos-generales',
@@ -65,6 +79,21 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
 
   private subscriptions = [] as Subscription[];
 
+  msgParamAnioEntity = {};
+  msgParamAmbitoGeograficoEntity = {};
+  msgParamAreaEntities = {};
+  msgParamAreaTematicaEntity = {};
+  msgParamAreaTematicaEntities = {};
+  msgParamCodigoReferenciaEntity = {};
+  msgParamDescripcionEntity = {};
+  msgParamDuracionEntity = {};
+  msgParamFinalidadEntity = {};
+  msgParamModeloEjecucionEntity = {};
+  msgParamObservacionesEntity = {};
+  msgParamTituloEntity = {};
+  msgParamUnidadGestionEntity = {};
+  textoDeleteAreaTematica: string;
+
   convocatoriaAreaTematicas = new MatTableDataSource<AreaTematicaData>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -92,7 +121,8 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private unidadModeloService: ModeloUnidadService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as ConvocatoriaDatosGeneralesFragment;
@@ -129,6 +159,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
 
   ngOnInit() {
     super.ngOnInit();
+    this.setupI18N();
     if (!this.formPart.readonly) {
       this.loadUnidadesGestion();
       this.loadTipoRegimenConcurrencia();
@@ -157,6 +188,91 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
         }
       )
     );
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      AREA_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAreaEntities = { entity: value });
+
+
+    this.translate.get(
+      AREA_TEMATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAreaTematicaEntity = { entity: value });
+
+    this.translate.get(
+      AREA_TEMATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAreaTematicaEntities = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_CODIGO_REFERENCIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCodigoReferenciaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONVOCATORIA_UNIDAD_GESTION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_ANIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAnioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_TITULO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONVOCATORIA_MODELO_EJECUCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_MODELO_EJECUCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_FINALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFinalidadEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_DURACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDuracionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_AMBITO_GEOGRAFICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAmbitoGeograficoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONVOCATORIA_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    this.translate.get(
+      AREA_TEMATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE_AREA_TEMATICA,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeleteAreaTematica = value);
   }
 
   loadModelosEjecucion(): void {
@@ -404,7 +520,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
 
   deleteAreaTematica(data: AreaTematicaData): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDeleteAreaTematica).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaAreaTematica(data);

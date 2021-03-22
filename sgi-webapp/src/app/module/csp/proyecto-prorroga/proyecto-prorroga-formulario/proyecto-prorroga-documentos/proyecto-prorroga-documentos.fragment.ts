@@ -35,7 +35,7 @@ export class NodeDocumento {
     this.title = title;
     this._level = level;
     if (level === 0 && !title) {
-      this.title = marker('csp.proyecto-prorroga.documentos.sinTipoDocumento.title');
+      this.title = marker('label.csp.documentos.sin-tipo-documento');
     }
 
     this.documento = documento;

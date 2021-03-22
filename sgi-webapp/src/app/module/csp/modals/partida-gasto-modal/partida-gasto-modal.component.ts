@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { IPartidaGasto } from '@core/models/csp/partida-gasto';
@@ -11,10 +12,10 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { map, switchMap } from 'rxjs/operators';
 
 interface CodigoEconomicoInfo {
   codigoEconomicoRef: string;
@@ -38,8 +39,13 @@ export interface PartidaGastoDataModal {
   readonly: boolean;
 }
 
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_CONCEPTO_GASTO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
   templateUrl: './partida-gasto-modal.component.html',
@@ -60,13 +66,19 @@ export class PartidaGastoModalComponent extends
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesCodigosEconomicos: FxFlexProperties;
   textSaveOrUpdate: string;
+  title: string;
+
+  msgParaConceptoGastoEntity = {};
+  msgParamObservacionesEntity = {};
+  msgParamImporteEntity = {};
 
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<PartidaGastoDataModal>,
     @Inject(MAT_DIALOG_DATA) public data: PartidaGastoDataModal,
     private conceptoGastoService: ConceptoGastoService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.partidaGasto);
 
@@ -97,6 +109,8 @@ export class PartidaGastoModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
+
     this.loadConceptosGasto();
 
     if (this.data.convocatoriaId) {
@@ -116,6 +130,47 @@ export class PartidaGastoModalComponent extends
     }
 
     this.textSaveOrUpdate = this.data.partidaGasto?.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
+  }
+
+  private setupI18N(): void {
+    if (this.data.partidaGasto.conceptoGasto) {
+
+      this.translate.get(
+        SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+
+    } else {
+      this.translate.get(
+        SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+
+    }
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_CONCEPTO_GASTO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParaConceptoGastoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamImporteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+
   }
 
   protected getFormGroup(): FormGroup {

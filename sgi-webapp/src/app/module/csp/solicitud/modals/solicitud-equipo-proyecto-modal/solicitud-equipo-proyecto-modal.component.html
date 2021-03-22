@@ -1,7 +1,7 @@
 <div class="solicitud-equipo-proyecto-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{'csp.solicitud.equipo.proyecto.modal.titulo' | translate}}</h3>
+      {{title | translate}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -10,9 +10,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.proyecto.equipo.modal.rol.proyecto' | translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-equipo-proyecto.rol-proyecto.participacion' | translate}}</mat-label>
             <input matInput formControlName="rolProyecto" type="text" id="rolProyecto"
-              placeholder="{{'csp.solicitud.proyecto.equipo.modal.rol.proyecto' | translate}}"
+              placeholder="{{'csp.solicitud-equipo-proyecto.rol-proyecto.participacion' | translate}}"
               [matAutocomplete]="autoRolProyecto" required>
             <mat-autocomplete #autoRolProyecto="matAutocomplete" [displayWith]="getNombreRolProyecto">
               <mat-option *ngFor="let rolProyecto of rolProyectos$ | async" [value]="rolProyecto">
@@ -20,10 +20,10 @@
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.rolProyecto.errors?.required">
-              {{'csp.solicitud.proyecto.equipo.modal.rol.proyecto.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamRolProyectoEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.rolProyecto.errors?.invalid">
-              {{'csp.solicitud.proyecto.equipo.modal.rol.proyecto.error.invalid' | translate}}
+              {{'error.invalid.entity' | translate:msgParamRolProyectoEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -34,15 +34,15 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.proyecto.equipo.modal.persona' | translate}}</mat-label>
-            <sgi-select-persona placeholder="{{'csp.solicitud.proyecto.equipo.modal.persona' | translate}}"
+            <mat-label>{{'csp.solicitud-equipo-proyecto.persona' | translate}}</mat-label>
+            <sgi-select-persona placeholder="{{'csp.solicitud-equipo-proyecto.persona' | translate}}"
               formControlName="persona" required>
             </sgi-select-persona>
             <mat-error *ngIf="formGroup.controls.persona.errors?.required">
-              {{'csp.solicitud.proyecto.equipo.modal.persona.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamPersonaEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.persona.errors?.contains">
-              {{'csp.solicitud.proyecto.equipo.modal.persona.error.contains' | translate}}
+              {{'error.csp.persona-equipo.duplicate' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -53,17 +53,17 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.proyecto.equipo.modal.mesInicio' | translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-equipo-proyecto.mes-inicio' | translate}}</mat-label>
             <input matInput formControlName="mesInicio" type="number" id="mesInicio"
-              placeholder="{{'csp.solicitud.proyecto.equipo.modal.mesInicio' | translate}}">
+              placeholder="{{'csp.solicitud-equipo-proyecto.mes-inicio' | translate}}">
             <mat-error *ngIf="formGroup.controls.mesInicio.errors?.min">
-              {{'csp.solicitud.proyecto.equipo.modal.mesInicio.min' | translate}}
+              {{'error.min.mes-desde' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesInicio.errors?.range">
-              {{'csp.solicitud.proyecto.equipo.modal.mesInicio.range' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesInicio.errors?.max">
-              {{'csp.solicitud.proyecto.equipo.modal.mesInicio.max' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamMesInicio}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -71,20 +71,20 @@
         <div [fxFlex.sm]=" fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.proyecto.equipo.modal.mesFin' | translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-equipo-proyecto.mes-fin' | translate}}</mat-label>
             <input matInput formControlName="mesFin" type="number" id="mesFin"
-              placeholder="{{'csp.solicitud.proyecto.equipo.modal.mesFin' | translate}}">
+              placeholder="{{'error.csp.solicitud-equipo-proyecto.mes-fin.min' | translate}}">
             <mat-error *ngIf="formGroup.controls.mesFin.errors?.min">
-              {{'csp.solicitud.proyecto.equipo.modal.mesFin.min' | translate}}
+              {{'error.min.mes-desde' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFin.errors?.after">
-              {{'csp.solicitud.proyecto.equipo.modal.mesFin.after' | translate}}
+              {{'error.after.mes-final' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFin.errors?.range">
-              {{'csp.solicitud.proyecto.equipo.modal.mesFin.range' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.mesFin.errors?.max">
-              {{'csp.solicitud.proyecto.equipo.modal.mesFin.max' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamMesFin}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -93,9 +93,8 @@
   </main>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
-    *ngIf="!this.data.readonly">{{textSaveOrUpdate |
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()" *ngIf="!this.data.readonly">{{textSaveOrUpdate |
     translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
     translate}}</button>
 </div>

@@ -1,6 +1,9 @@
+import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
@@ -14,19 +17,16 @@ import { BloqueService } from '@core/services/eti/bloque.service';
 import { FormularioService } from '@core/services/eti/formulario.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, of, Subscription } from 'rxjs';
-import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { NGXLogger } from 'ngx-logger';
+import { from, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
+import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
 
 const MSG_ERROR_BLOQUE = marker('eti.comentario.bloque.error.cargar');
 const MSG_ERROR_APARTADO = marker('eti.comentario.apartado.error.cargar');
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 
 export interface ComentarioModalData {
   evaluacion: IEvaluacion;

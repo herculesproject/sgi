@@ -2,12 +2,15 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud-proyecto-presupuesto-totales';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
@@ -20,6 +23,8 @@ export interface ISolicitudProyectoPresupuestoState {
   entidadFinanciadora: IEntidadFinanciadora;
   isEntidadFinanciadoraConvocatoria: boolean;
 }
+
+const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entidad-financiadora');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-presupuesto-entidades',
@@ -44,13 +49,16 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
   ];
   elementsPage = [5, 10, 25, 100];
 
+  msgParamEntidadFinanciadorasEntity = {};
+
   dataSource = new MatTableDataSource<EntidadFinanciadoraDesglosePresupuesto>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     protected logger: NGXLogger,
-    public actionService: SolicitudActionService
+    public actionService: SolicitudActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, actionService);
     this.formPart = this.fragment as SolicitudProyectoPresupuestoEntidadesFragment;
@@ -69,6 +77,8 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
 
   ngOnInit(): void {
     super.ngOnInit();
+
+    this.setupI18N();
 
     this.actionService.existsDatosProyectos();
 
@@ -96,6 +106,14 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
     this.subscriptions.push(subscription);
     this.actionService.hasDesglosePresupuestoEntidades();
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamEntidadFinanciadorasEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+  }
+
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());

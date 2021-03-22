@@ -1,6 +1,6 @@
 <div class="modal-cambio-estado">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.solicitud.cambio-estado.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{'title.csp.solicitud.cambio-estado' | translate}}</h3>
   </header>
   <main>
 
@@ -46,7 +46,7 @@
           <textarea matInput formControlName="comentario" type="text" id="comentario" required>
             </textarea>
           <mat-error *ngIf="formGroup.get('comentario').errors?.maxlength">
-            {{'csp.solicitud.cambio-estado.modal.comentario.maximo' | translate}}
+            {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
           </mat-error>
         </mat-form-field>
 
@@ -56,9 +56,9 @@
   </main>
 
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit">{{'botones.aceptar' |
+    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit">{{'btn.ok' |
       translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

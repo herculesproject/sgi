@@ -9,7 +9,7 @@ import { EVALUADOR_ROUTE_NAMES } from '../evaluador-route-names';
 import { EvaluadorActionService } from '../evaluador.action.service';
 
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_SUCCESS = marker('eti.evaluador.crear.correcto');
 const MSG_ERROR = marker('eti.evaluador.crear.error');
 

@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
@@ -14,8 +15,8 @@ import { PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_NAMES } from './proyecto-periodo-seg
 import { ProyectoPeriodoSeguimientoGuard } from './proyecto-periodo-seguimiento.guard';
 
 
-const MSG_NEW_TITLE = marker('csp.proyecto-periodo-seguimiento.crear.titulo');
-const MSG_EDIT_TITLE = marker('csp.proyecto-periodo-seguimiento.editar.titulo');
+const MSG_NEW_TITLE = marker('title.new.entity');
+const MSG_EDIT_TITLE = marker('title.csp.proyecto-periodo-seguimiento-cientifico.periodo');
 
 const routes: SgiRoutes = [
   {
@@ -25,6 +26,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: MSG_EDIT_TITLE, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {

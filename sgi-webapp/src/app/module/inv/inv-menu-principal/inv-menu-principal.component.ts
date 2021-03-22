@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { MSG_PARAMS } from '@core/i18n';
 import { LayoutService } from '@core/services/layout.service';
 import { Subscription } from 'rxjs';
 import { INV_ROUTE_NAMES } from '../inv-route-names';
@@ -38,6 +39,10 @@ export class InvMenuPrincipalComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subcription.unsubscribe();
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
 }

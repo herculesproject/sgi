@@ -1,6 +1,6 @@
 <div class="modelo-tipo-hito-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.modelo.tipo.hito.modal.titulo' | translate}}
+    <h3 mat-dialog-title>{{title}}
     </h3>
   </header>
   <main>
@@ -10,13 +10,13 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.tipo.hito' | translate}}</mat-label>
+            <mat-label>{{'csp.modelo-ejecucion-tipo-hito.tipo' | translate}}</mat-label>
             <mat-select matNativeControl formControlName="tipoHito" required [compareWith]="equals">
               <mat-option *ngFor="let tipoHito of tipoHitos$ | async" [value]="tipoHito">{{tipoHito.nombre}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="formGroup.controls.tipoHito.errors?.required">
-              {{'csp.tipo.hito.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamTipoEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -26,17 +26,17 @@
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
-          <label>{{'csp.modelo.tipo.hito.disponible' | translate}}</label>
+          <label>{{'csp.modelo-ejecucion-tipo-hito.disponible' | translate}}</label>
           <div class="checkbox-inline" formGroupName="disponible">
             <mat-checkbox color="primary" class="checkbox" formControlName="convocatoria">
-              {{'csp.modelo.tipo.hito.convocatorias' | translate}}
+              {{'csp.modelo-ejecucion-tipo-hito.convocatorias' | translate}}
             </mat-checkbox>
             <mat-checkbox color="primary" class="checkbox" formControlName="solicitud">
-              {{'csp.modelo.tipo.hito.solicitudes' | translate}}</mat-checkbox>
+              {{'csp.modelo-ejecucion-tipo-hito.solicitudes' | translate}}</mat-checkbox>
             <mat-checkbox color="primary" class="checkbox" formControlName="proyecto">
-              {{'csp.modelo.tipo.hito.proyectos' | translate}}</mat-checkbox>
+              {{'csp.modelo-ejecucion-tipo-hito.proyectos' | translate}}</mat-checkbox>
             <mat-error *ngIf="formGroup.controls.disponible.errors?.requiredChecked">
-              {{'csp.tipo.fase.checkbox.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamProyectosEntity}}
             </mat-error>
           </div>
         </div>
@@ -46,7 +46,6 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
       type="submit">{{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' | translate}}</button>
   </div>
 </div>

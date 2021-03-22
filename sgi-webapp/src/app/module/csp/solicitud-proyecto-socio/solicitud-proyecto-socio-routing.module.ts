@@ -2,21 +2,22 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
+import { SgiAuthGuard } from '@sgi/framework/auth';
 import { SolicitudProyectoSocioCrearComponent } from './solicitud-proyecto-socio-crear/solicitud-proyecto-socio-crear.component';
 import { SolicitudProyectoSocioEditarComponent } from './solicitud-proyecto-socio-editar/solicitud-proyecto-socio-editar.component';
-import { SolicitudProyectoSocioDatosGeneralesComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.component';
-import { SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES } from './solicitud-proyecto-socio-route-names';
-import { ActionGuard } from '@core/guards/master-form.guard';
-import { SgiAuthGuard } from '@sgi/framework/auth';
-import { SolicitudProyectoSocioGuard } from './solicitud-proyecto-socio.guard';
-import { SolicitudProyectoSocioPeriodoPagoComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.component';
 import { SolicitudProyectoPeriodoJustificacionesComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-periodo-justificaciones/solicitud-proyecto-periodo-justificaciones.component';
+import { SolicitudProyectoSocioDatosGeneralesComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.component';
 import { SolicitudProyectoSocioEquipoSocioComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-equipo-socio/solicitud-proyecto-socio-equipo-socio.component';
+import { SolicitudProyectoSocioPeriodoPagoComponent } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-periodo-pago/solicitud-proyecto-socio-periodo-pago.component';
+import { SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES } from './solicitud-proyecto-socio-route-names';
+import { SolicitudProyectoSocioGuard } from './solicitud-proyecto-socio.guard';
 
-const MSG_NEW_TITLE = marker('csp.solicitud-proyecto-socio.crear.titulo');
-const MSG_EDIT_TITLE = marker('csp.solicitud-proyecto-socio.editar.titulo');
+const MSG_NEW_TITLE = marker('title.new.entity');
+const MSG_EDIT_TITLE = marker('csp.socio-colaborador');
 
 const routes: SgiRoutes = [
   {
@@ -26,6 +27,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: MSG_EDIT_TITLE, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {

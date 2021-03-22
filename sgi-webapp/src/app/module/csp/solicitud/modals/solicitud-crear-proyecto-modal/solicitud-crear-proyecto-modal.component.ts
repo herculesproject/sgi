@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
@@ -11,14 +12,18 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-const MSG_ACEPTAR = marker('botones.aceptar');
-const MSG_ERROR_INIT = marker('csp.solicitud.crear.proyecto.error.cargar');
+const MSG_ACEPTAR = marker('btn.ok');
+const MSG_ERROR_INIT = marker('error.load');
+const SOLICITUD_PROYECTO_FECHA_INICIO_KEY = marker('csp.solicitud-proyecto.fecha-inicio');
+const SOLICITUD_PROYECTO_FECHA_FIN_KEY = marker('csp.solicitud-proyecto.fecha-fin');
+const SOLICITUD_PROYECTO_MODELO_EJECUCION_KEY = marker('csp.solicitud-proyecto.modelo-ejecucion');
 
 export interface ISolicitudCrearProyectoModalData {
   proyecto: IProyecto;
@@ -38,13 +43,18 @@ export class SolicitudCrearProyectoModalComponent extends
   private modelosEjecucionFiltered = [] as IModeloEjecucion[];
   modelosEjecucion$: Observable<IModeloEjecucion[]>;
 
+  msgParamFechaFinEntity = {};
+  msgParamFechaInicioEntity = {};
+  msgParamModeloEjecucionEntity = {};
+
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudCrearProyectoModalComponent>,
     @Inject(MAT_DIALOG_DATA)
     public solicitudCrearProyectoModalData: ISolicitudCrearProyectoModalData,
     private unidadModeloService: ModeloUnidadService,
-    private logger: NGXLogger
+    private logger: NGXLogger,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, solicitudCrearProyectoModalData.proyecto);
     this.fxFlexProperties = new FxFlexProperties();
@@ -62,6 +72,25 @@ export class SolicitudCrearProyectoModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
+
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_PROYECTO_FECHA_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_FECHA_FIN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_MODELO_EJECUCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   protected getFormGroup(): FormGroup {

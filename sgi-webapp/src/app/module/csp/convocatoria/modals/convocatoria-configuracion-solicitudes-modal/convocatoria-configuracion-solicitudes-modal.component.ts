@@ -3,21 +3,25 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.enlace.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
-
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_CONFIGURACION_SOLICITUD_TIPO_DOCUMENTO_KEY = marker('csp.documento.tipo');
+const CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY = marker('csp.convocatoria-configuracion-solicitud-documento-requerido');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface ConvocatoriaConfiguracionSolicitudesModalData {
   documentoRequerido: IDocumentoRequerido;
   modeloEjecucionId: number;
@@ -37,13 +41,17 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
   documentoRequeridoFiltered: ITipoDocumento[];
   documentoRequerido$: Observable<ITipoDocumento[]>;
   textSaveOrUpdate: string;
+  title: string;
+
+  msgParamTipoDocumentoEntity = {};
 
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaConfiguracionSolicitudesModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaConfiguracionSolicitudesModalData,
-    private modeloEjecucionService: ModeloEjecucionService
+    private modeloEjecucionService: ModeloEjecucionService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -58,9 +66,40 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.loadTipoDocumento();
     this.textSaveOrUpdate = this.data.documentoRequerido.tipoDocumento ? MSG_ACEPTAR : MSG_ANADIR;
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_CONFIGURACION_SOLICITUD_TIPO_DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+
+    if (this.data?.documentoRequerido?.tipoDocumento) {
+      this.translate.get(
+        CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+
+    } else {
+      this.translate.get(
+        CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+
+  }
+
 
   /**
    * Carga todos los tipos de documento

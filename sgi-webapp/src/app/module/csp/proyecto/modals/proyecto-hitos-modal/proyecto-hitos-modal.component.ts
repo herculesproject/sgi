@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
@@ -12,20 +13,23 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const PROYECTO_HITO_FECHA_KEY = marker('csp.proyecto-hito.fecha');
+const PROYECTO_HITO_TIPO_KEY = marker('csp.proyecto-hito.tipo');
+const PROYECTO_HITO_COMENTARIO_KEY = marker('csp.proyecto-hito.comentario');
+const PROYECTO_HITO_KEY = marker('csp.proyecto-hito');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
-
-
-const MSG_ERROR_INIT = marker('csp.proyecto.hitos.error.cargar');
-const MSG_ERROR_TIPOS = marker('csp.proyecto.tipo.hitos.error.cargar');
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ProyectoHitosModalComponentData {
   hitos: IProyectoHito[];
   hito: IProyectoHito;
@@ -54,12 +58,18 @@ export class ProyectoHitosModalComponent implements OnInit {
 
   private suscripciones: Subscription[] = [];
 
+  msgParamFechaEntity = {};
+  msgParamTipoEntity = {};
+  msgParamComentarioEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ProyectoHitosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoHitosModalComponentData,
-    private snackBarService: SnackBarService) {
+    private snackBarService: SnackBarService,
+    private readonly translate: TranslateService) {
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -92,6 +102,9 @@ export class ProyectoHitosModalComponent implements OnInit {
       comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
       aviso: new FormControl(this.data?.hito?.generaAviso)
     });
+
+    this.setupI18N();
+
     if (this.data.readonly) {
       this.formGroup.disable();
     }
@@ -109,6 +122,43 @@ export class ProyectoHitosModalComponent implements OnInit {
     );
     this.validarFecha();
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_HITO_FECHA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PROYECTO_HITO_COMENTARIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    this.translate.get(
+      PROYECTO_HITO_TIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data?.hito?.tipoHito) {
+      this.translate.get(
+        PROYECTO_HITO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        PROYECTO_HITO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
 
   /**
    * Si la fecha actual es inferior - Checkbox disabled
@@ -155,11 +205,7 @@ export class ProyectoHitosModalComponent implements OnInit {
         },
         (error) => {
           this.logger.error(error);
-          if (this.data.idModeloEjecucion) {
-            this.snackBarService.showError(MSG_ERROR_INIT);
-          } else {
-            this.snackBarService.showError(MSG_ERROR_TIPOS);
-          }
+          this.snackBarService.showError(MSG_ERROR_INIT);
         })
     );
   }

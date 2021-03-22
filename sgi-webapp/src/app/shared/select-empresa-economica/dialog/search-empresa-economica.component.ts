@@ -14,8 +14,7 @@ import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-
-const MSG_LISTADO_ERROR = marker('sgp.buscadorEmpresaEconomica.listado.error');
+const MSG_LISTADO_ERROR = marker('error.load');
 
 export interface SearchEmpresaEconomicaModalData {
   filter?: IEmpresaEconomica[];

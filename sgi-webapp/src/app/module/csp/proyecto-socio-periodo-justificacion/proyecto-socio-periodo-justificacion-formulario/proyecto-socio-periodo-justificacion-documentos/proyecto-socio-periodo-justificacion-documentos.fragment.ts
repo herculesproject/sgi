@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, takeLast } from 'rxjs/operators';
 
-const SIN_TIPO_DOCUMENTO = marker('csp.proyecto-socio-periodo-justificacion.documentos.sin-tipo-documento');
+const SIN_TIPO_DOCUMENTO = marker('label.csp.documento.sin-tipo');
 
 export class NodeDocumentoProyecto {
   parent: NodeDocumentoProyecto;

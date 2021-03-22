@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
@@ -20,21 +21,22 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR = marker('csp.proyecto.listado.error');
-const MSG_ERROR_INIT = marker('csp.proyecto.listado.error.cargar');
-const MSG_BUTTON_NEW = marker('footer.csp.proyecto.crear');
-const MSG_DEACTIVATE = marker('csp.proyecto.desactivar');
-const MSG_SUCCESS_DEACTIVATE = marker('csp.proyecto.desactivar.correcto');
-const MSG_ERROR_DEACTIVATE = marker('csp.proyecto.desactivar.error');
-const MSG_REACTIVE = marker('csp.proyecto.reactivar');
-const MSG_SUCCESS_REACTIVE = marker('csp.proyecto.reactivar.correcto');
-const MSG_ERROR_REACTIVE = marker('csp.proyecto.reactivar.error');
+const MSG_ERROR = marker('error.load');
+const MSG_BUTTON_NEW = marker('btn.add.entity');
+const MSG_DEACTIVATE = marker('msg.deactivate.entity');
+const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
+const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
+const MSG_REACTIVE = marker('msg.csp.reactivate');
+const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
+const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
+const PROYECTO_KEY = marker('csp.proyecto');
 
 @Component({
   selector: 'sgi-proyecto-listado',
@@ -44,6 +46,12 @@ const MSG_ERROR_REACTIVE = marker('csp.proyecto.reactivar.error');
 export class ProyectoListadoComponent extends AbstractTablePaginationComponent<IProyecto> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   textoCrear = MSG_BUTTON_NEW;
+  textoDesactivar: string;
+  textoReactivar: string;
+  textoErrorDesactivar: string;
+  textoSuccessDesactivar: string;
+  textoSuccessReactivar: string;
+  textoErrorReactivar: string;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -82,7 +90,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     private unidadGestionService: UnidadGestionService,
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private programaService: ProgramaService,
-    private fuenteFinanciacionService: FuenteFinanciacionService
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -99,6 +108,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.formGroup = new FormGroup({
       titulo: new FormControl(''),
       acronimo: new FormControl(''),
@@ -124,6 +134,94 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.loadPlanInvestigacion();
     this.loadFuenteFinanciacion();
     this.filter = this.createFilter();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_NEW,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DEACTIVATE,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoDesactivar = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorDesactivar = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessDesactivar = value);
+
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoReactivar = value);
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessReactivar = value);
+
+
+    this.translate.get(
+      PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorReactivar = value);
   }
 
   onClearFilters() {
@@ -182,7 +280,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    * @param proyecto proyecto
    */
   deactivateProyecto(proyecto: IProyecto): void {
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
+    const subcription = this.dialogService.showConfirmation(this.textoDesactivar).pipe(
       switchMap((accept) => {
         if (accept) {
           return this.proyectoService.desactivar(proyecto.id);
@@ -191,12 +289,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         }
       })).subscribe(
         () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.snackBarService.showSuccess(this.textoSuccessDesactivar);
           this.loadTable();
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.snackBarService.showError(this.textoErrorDesactivar);
         }
       );
     this.suscripciones.push(subcription);
@@ -207,7 +305,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    * @param proyecto proyecto
    */
   activateProyecto(proyecto: IProyecto): void {
-    const suscription = this.dialogService.showConfirmation(MSG_REACTIVE).pipe(
+    const suscription = this.dialogService.showConfirmation(this.textoReactivar).pipe(
       switchMap((accept) => {
         if (accept) {
           proyecto.activo = true;
@@ -217,13 +315,13 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         }
       })).subscribe(
         () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.snackBarService.showSuccess(this.textoSuccessDesactivar);
           this.loadTable();
         },
         (error) => {
           this.logger.error(error);
           proyecto.activo = false;
-          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.snackBarService.showError(this.textoErrorDesactivar);
         }
       );
     this.suscripciones.push(suscription);
@@ -329,7 +427,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
@@ -351,7 +449,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
@@ -373,7 +471,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
@@ -395,10 +493,14 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
 }

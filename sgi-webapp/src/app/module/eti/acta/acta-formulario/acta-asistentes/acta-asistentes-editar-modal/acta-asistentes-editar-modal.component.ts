@@ -7,7 +7,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 
-const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_ERROR_FORM = marker('error.form-group');
 
 @Component({
   templateUrl: './acta-asistentes-editar-modal.component.html',

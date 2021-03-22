@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
@@ -22,15 +23,15 @@ import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service'
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeAll, startWith, switchMap } from 'rxjs/operators';
 
-
-const MSG_ERROR = marker('csp.convocatoria.listado.error');
-const MSG_ERROR_INIT = marker('csp.convocatoria.listado.error.cargar');
-
+const MSG_ERROR = marker('error.load');
+const MSG_ERROR_INIT = marker('error.load');
+const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
@@ -66,6 +67,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   private areaTematicaFiltered = [] as IAreaTematica[];
   areaTematica$: Observable<IAreaTematica[]>;
 
+  msgParamAreaTematicaEntity = {};
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
@@ -74,7 +77,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     private tipoFinalidadService: TipoFinalidadService,
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
-    private areaTematicaService: AreaTematicaService
+    private areaTematicaService: AreaTematicaService,
+    private translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -91,6 +95,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
       titulo: new FormControl(''),
@@ -109,6 +114,14 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.fuenteFinanciacion();
     this.loadAreasTematica();
     this.filter = this.createFilter();
+
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      AREA_TEMATICA_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAreaTematicaEntity = { entity: value });
   }
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
@@ -399,4 +412,9 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.formGroup.controls.aplicarFiltro.setValue(!this.busquedaAvanzada);
     this.onSearch();
   }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
 }

@@ -1,9 +1,9 @@
 <div class="solicitud-crear-proyecto-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{'csp.solicitud.crear.proyecto.modal.titulo' | translate}}</h3>
+      {{'title.csp.proyecto.new' | translate}}</h3>
   </header>
-  <p>{{'csp.solicitud.crear.proyecto.modal.info'| translate}}</p>
+  <p>{{'info.csp.solicitud-proyecto.new'| translate}}</p>
   <main>
     <form [formGroup]="formGroup">
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -12,16 +12,16 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
-            <mat-label>{{'csp.solicitud.crear.proyecto.modal.fechaInicio'| translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-proyecto.fecha-inicio'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
-              {{'csp.solicitud.crear.proyecto.modal.fechaInicio.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
-              {{'csp.solicitud.crear.proyecto.modal.fechaInicio.error.before' | translate}}
+              {{'error.before.fecha-inicio' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -29,16 +29,16 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
-            <mat-label>{{'csp.solicitud.crear.proyecto.modal.fechaFin'| translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-proyecto.fecha-fin'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
-              {{'csp.solicitud.crear.proyecto.modal.fechaFin.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaFinEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.solicitud.crear.proyecto.modal.fechaFin.error.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -50,20 +50,20 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
-            <mat-label>{{'csp.solicitud.crear.proyecto.modal.modeloEjecucion' | translate}}</mat-label>
-            <input type="text" placeholder="{{'csp.solicitud.crear.proyecto.modal.modeloEjecucion' | translate}}"
-              matInput formControlName="modeloEjecucion" [matAutocomplete]="autoModeloEjecucion"
-              (click)="loadModelosEjecucion()" required>
+            <mat-label>{{'csp.solicitud-proyecto.modelo-ejecucion' | translate}}</mat-label>
+            <input type="text" placeholder="{{'csp.solicitud-proyecto.modelo-ejecucion' | translate}}" matInput
+              formControlName="modeloEjecucion" [matAutocomplete]="autoModeloEjecucion" (click)="loadModelosEjecucion()"
+              required>
             <mat-autocomplete #autoModeloEjecucion="matAutocomplete" [displayWith]="getModeloEjecucion">
               <mat-option *ngFor="let modeloEjecucion of modelosEjecucion$ | async" [value]="modeloEjecucion">
                 {{modeloEjecucion.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
-              {{'csp.solicitud.crear.proyecto.modal.modeloEjecucion.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamModeloEjecucionEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.invalid">
-              {{'csp.solicitud.crear.proyecto.modal.modeloEjecucion.error.invalid' | translate}}
+              {{'error.invalid.entity' | translate:msgParamModeloEjecucionEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -74,6 +74,6 @@
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
   <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()">{{textSaveOrUpdate |
     translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
     translate}}</button>
 </div>

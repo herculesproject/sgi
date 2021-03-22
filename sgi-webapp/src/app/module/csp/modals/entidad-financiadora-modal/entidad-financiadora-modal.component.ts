@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoFinalidad, ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
@@ -12,8 +13,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 export interface EntidadFinanciadoraDataModal {
   title: string;
@@ -22,8 +24,11 @@ export interface EntidadFinanciadoraDataModal {
   readonly: boolean;
 }
 
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const ENTIDAD_FINANCIADORA_KEY = marker('csp.entidad-financiadora');
+const ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY = marker('csp.entidad-financiadora.porcentaje-financiacion');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 @Component({
   templateUrl: './entidad-financiadora-modal.component.html',
   styleUrls: ['./entidad-financiadora-modal.component.scss']
@@ -36,12 +41,16 @@ export class EntidadFinanciadoraModalComponent extends
   textSaveOrUpdate: string;
   title: string;
 
+  msgParamPorcentajeFinanciacionoEntity = {};
+  msgParamEmpresaEconomicaEntity = {};
+
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<EntidadFinanciadoraModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EntidadFinanciadoraDataModal,
     private tipoFinanciacionService: TipoFinanciacionService,
-    private fuenteFinanciacionService: FuenteFinanciacionService
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.entidad);
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -56,9 +65,41 @@ export class EntidadFinanciadoraModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
     this.textSaveOrUpdate = this.data.entidad?.empresa ? MSG_ACEPTAR : MSG_ANADIR;
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      ENTIDAD_FINANCIADORA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEmpresaEconomicaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPorcentajeFinanciacionoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.entidad?.empresa) {
+      this.translate.get(
+        this.data.title,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        this.data.title,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
   }
 
   protected getDatosForm(): IEntidadFinanciadora {

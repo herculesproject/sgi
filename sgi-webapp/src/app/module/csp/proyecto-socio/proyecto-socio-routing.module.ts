@@ -3,21 +3,21 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { ProyectoSocioCrearComponent } from './proyecto-socio-crear/proyecto-socio-crear.component';
 import { ProyectoSocioEditarComponent } from './proyecto-socio-editar/proyecto-socio-editar.component';
 import { ProyectoSocioDatosGeneralesComponent } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.component';
+import { ProyectoSocioEquipoComponent } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.component';
+import { ProyectoSocioPeriodoJustificacionComponent } from './proyecto-socio-formulario/proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion.component';
+import { ProyectoSocioPeriodoPagoComponent } from './proyecto-socio-formulario/proyecto-socio-periodo-pago/proyecto-socio-periodo-pago.component';
 import { PROYECTO_SOCIO_ROUTE_NAMES } from './proyecto-socio-route-names';
 import { ProyectoSocioGuard } from './proyecto-socio.guard';
-import { ProyectoSocioEquipoComponent } from './proyecto-socio-formulario/proyecto-socio-equipo/proyecto-socio-equipo.component';
-import { ProyectoSocioPeriodoPagoComponent } from './proyecto-socio-formulario/proyecto-socio-periodo-pago/proyecto-socio-periodo-pago.component';
-import { ProyectoSocioPeriodoJustificacionComponent } from './proyecto-socio-formulario/proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion.component';
 
-
-const MSG_NEW_TITLE = marker('csp.proyecto.socios.crear.titulo');
-const MSG_EDIT_TITLE = marker('csp.proyecto.socios.editar.titulo');
+const MSG_NEW_TITLE = marker('title.new.entity');
+const SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
 
 const routes: SgiRoutes = [
   {
@@ -27,6 +27,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: SOCIO_COLABORADOR_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {
@@ -62,7 +65,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard, ProyectoSocioGuard],
     canDeactivate: [ActionGuard],
     data: {
-      title: MSG_EDIT_TITLE
+      title: SOCIO_COLABORADOR_KEY
     },
     children: [
       {

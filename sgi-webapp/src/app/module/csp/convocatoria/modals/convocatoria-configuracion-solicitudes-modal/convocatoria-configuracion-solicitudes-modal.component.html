@@ -1,7 +1,7 @@
 <div class="convocatoria-configuracion-solicitudes-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{ 'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.titulo' | translate}}
+      {{ title}}
     </h3>
   </header>
   <main>
@@ -10,21 +10,20 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.configuracionSolicitud.formularioSolicitud.tipoDocumento' | translate}}
+            <mat-label>{{'csp.documento.tipo' | translate}}
             </mat-label>
             <input matInput formControlName="tipoDocumento" type="text" id="tipoDocumento"
-              placeholder="{{'csp.convocatoria.configuracionSolicitud.formularioSolicitud.tipoDocumento' | translate}}"
-              [matAutocomplete]="autoTipoDocumento" required>
+              placeholder="{{'csp.documento.tipo' | translate}}" [matAutocomplete]="autoTipoDocumento" required>
             <mat-autocomplete #autoTipoDocumento="matAutocomplete" [displayWith]="getNombreTipoDocumento">
               <mat-option *ngFor="let tipoDocumento of documentoRequerido$ | async" [value]="tipoDocumento">
                 {{tipoDocumento.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
-              {{'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamTipoDocumentoEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.invalid">
-              {{'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.error.invalido' | translate}}
+              {{'error.invalid.entity' | translate:msgParamTipoDocumentoEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -33,10 +32,10 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.observaciones' | translate}}
+            <mat-label>{{'csp.convocatoria-configuracion-solicitud.documento.observaciones' | translate}}
             </mat-label>
             <input matInput formControlName="observaciones" type="text" id="observaciones"
-              placeholder="{{'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.observaciones' | translate}}">
+              placeholder="{{'csp.convocatoria-configuracion-solicitud.documento.observaciones' | translate}}">
           </mat-form-field>
         </div>
       </div>
@@ -45,7 +44,6 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button *ngIf="!data.readonly"
       type="submit">{{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()"
-      type="button">{{'botones.cancelar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' | translate}}</button>
   </div>
 </div>

@@ -36,7 +36,7 @@ export class NodeDocumento {
     this._level = level;
 
     if (level === 0 && !title) {
-      this.title = marker('csp.proyecto-periodo-seguimiento.documentos.sinTipoDocumento.title');
+      this.title = marker('label.csp.documento.sin-tipo');
     }
     this.documento = documento;
     this._childs = [];

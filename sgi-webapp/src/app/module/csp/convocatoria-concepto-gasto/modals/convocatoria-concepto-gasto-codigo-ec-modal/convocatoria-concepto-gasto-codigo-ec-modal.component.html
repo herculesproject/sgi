@@ -1,9 +1,7 @@
 <div class="convocatoria-concepto-gasto-codigo-ec-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{( data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido ?
-      'csp.convocatoria-concepto-gasto.codigo-ec.modal.titulo.permitido' :
-      'csp.convocatoria-concepto-gasto.codigo-ec.modal.titulo.no-permitido') | translate}}
+      {{( title) | translate}}
     </h3>
   </header>
   <main>
@@ -13,9 +11,9 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.codigoEconomicoRef' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.sge' | translate}}</mat-label>
             <input matInput formControlName="codigoEconomicoRef" type="text" id="codigoEconomicoRef"
-              placeholder="{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.codigoEconomicoRef' | translate}}"
+              placeholder="{{'csp.convocatoria-elegibilidad.codigo-economico.sge' | translate}}"
               [matAutocomplete]="autocompleteCodigoEconomico" required>
             <mat-autocomplete #autocompleteCodigoEconomico="matAutocomplete">
               <mat-option *ngFor="let codigoEconomico of codigosEconomicos$ | async"
@@ -24,15 +22,15 @@
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.codigoEconomicoRef.errors?.required">
-              {{'csp.convocatoria-concepto-gasto.codigo-ec.modal.codigoEconomicoRef.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamCodigoEconomigoSgeEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.codigoEconomicoRef.errors?.invalid">
-              {{'csp.convocatoria-concepto-gasto.codigo-ec.modal.error.invalido' | translate}}
+              {{'error.invalid.entity' | translate:msgParamCodigoEconomigoSgeEntity}}
             </mat-error>
           </mat-form-field>
         </div>
       </div>
-      <h5>{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.vigencia' | translate}}</h5>
+      <h5>{{'label.csp.convocatoria-elegibilidad.codigo-economico.vigencia' | translate}}</h5>
       <mat-divider></mat-divider>
       <!-- Fecha inicio -->
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -40,16 +38,16 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
-            <mat-label>{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.fechaInicio'| translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.fecha-inicio'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio">
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
-              {{'csp.convocatoria-concepto-gasto.codigo-ec.modal.fechaInicio.before' | translate}}
+              {{'error.before.fecha-inicio' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlapped">
-              {{'csp.convocatoria-concepto-gasto.codigo-ec.modal.fechaInicio.error.overlapped' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -58,16 +56,16 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
-            <mat-label>{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.fechaFin'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin">
+            <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.fecha-fin'| translate}}</mat-label>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.convocatoria-concepto-gasto.codigo-ec.modal.fechaFin.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.overlapped">
-              {{'csp.convocatoria-concepto-gasto.codigo-ec.modal.fechaFin.error.overlapped' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -79,10 +77,10 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.observaciones' | translate}}
+            <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.observaciones' | translate}}
             </mat-label>
             <textarea #obs matInput formControlName="observaciones" type="text" id="observaciones"
-              placeholder="{{'csp.convocatoria-concepto-gasto.codigo-ec.modal.observaciones' | translate}}"
+              placeholder="{{'csp.convocatoria-elegibilidad.codigo-economico.observaciones' | translate}}"
               maxlength="250">
                          </textarea>
             <mat-hint>{{obs.value.length}} / 250</mat-hint>
@@ -94,7 +92,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button *ngIf="!data.readonly"
       type="submit">{{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

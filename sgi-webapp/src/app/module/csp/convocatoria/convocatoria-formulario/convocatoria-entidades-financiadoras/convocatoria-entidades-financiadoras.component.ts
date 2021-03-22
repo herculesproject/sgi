@@ -5,20 +5,22 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-entidades-financiadoras.fragment';
 
-
-const MODAL_ENTIDAD_FINANCIADORA_TITLE = marker('csp.convocatoria.entidades-financiadoras.modal.titulo');
-const MSG_DELETE = marker('csp.convocatoria.entidad.financiadora.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const CONVOCATORIA_ENTIDAD_FINANCIADORA_KEY = marker('csp.convocatoria-entidad-financiadora');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
   selector: 'sgi-convocatoria-entidades-financiadoras',
@@ -33,6 +35,11 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     'porcentajeFinanciacion', 'acciones'];
   elementsPage = [5, 10, 25, 100];
 
+  msgParamEntity = {};
+  textoDelete: string;
+  textoTitleModalNew: string;
+  textoTitleModal: string;
+
   dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaEntidadFinanciadora>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -43,7 +50,8 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private empresaEconomicaService: EmpresaEconomicaService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
     this.formPart = this.fragment as ConvocatoriaEntidadesFinanciadorasFragment;
@@ -51,9 +59,46 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.getDataSource();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_FINANCIADORA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_FINANCIADORA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_FINANCIADORA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          TITLE_NEW_ENTITY,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoTitleModalNew = value);
+
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_FINANCIADORA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.textoTitleModal = value);
   }
 
   private getDataSource(): void {
@@ -89,7 +134,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaEntidadFinanciadora>): void {
     const data: EntidadFinanciadoraDataModal = {
-      title: MODAL_ENTIDAD_FINANCIADORA_TITLE,
+      title: wrapper ? this.textoTitleModal : this.textoTitleModalNew,
       entidad: wrapper ? wrapper.value : {} as IConvocatoriaEntidadFinanciadora,
       selectedEmpresas: this.selectedEmpresas,
       readonly: this.formPart.readonly
@@ -113,7 +158,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
 
   deleteConvocatoriaEntidadFinanciadora(wrapper: StatusWrapper<IConvocatoriaEntidadFinanciadora>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             const empresa = wrapper.value.empresa;
@@ -125,5 +170,9 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
         }
       )
     );
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 }

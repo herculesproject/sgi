@@ -1,8 +1,7 @@
 <div class="modal-solicitud-modalidad">
   <header mat-dialog-title class="modal-header-material">
     <h3>
-      {{ (isEdit ? 'csp.solicitud.solicitudModalidad.modal.titulo.editar' :
-      'csp.solicitud.solicitudModalidad.modal.titulo.aniadir') | translate}}
+      {{ title}}
     </h3>
   </header>
   <mat-dialog-content>
@@ -17,9 +16,9 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.solicitudModalidad.modal.entidadConvocante' | translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-modalidad.entidad-convocante' | translate}}</mat-label>
             <input matInput formControlName="entidadConvocante" type="text" id="entidadConvocante"
-              placeholder="{{'csp.solicitud.solicitudModalidad.modal.entidadConvocante' | translate}}" maxlength="100">
+              placeholder="{{'csp.solicitud-modalidad.entidad-convocante' | translate}}" maxlength="100">
           </mat-form-field>
 
         </div>
@@ -29,9 +28,9 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.solicitud.solicitudModalidad.modal.plan' | translate}}</mat-label>
+            <mat-label>{{'csp.solicitud-modalidad.plan' | translate}}</mat-label>
             <input matInput formControlName="plan" type="text" id="plan"
-              placeholder="{{'csp.solicitud.solicitudModalidad.modal.plan' | translate}}" maxlength="100">
+              placeholder="{{'csp.solicitud-modalidad.plan' | translate}}" maxlength="100">
           </mat-form-field>
 
         </div>
@@ -95,8 +94,8 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" md-button mat-raised-button type="submit" (click)="saveOrUpdate()"
       *ngIf="!this.data.readonly">
-      {{'botones.aceptar' | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
+      {{'btn.ok' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

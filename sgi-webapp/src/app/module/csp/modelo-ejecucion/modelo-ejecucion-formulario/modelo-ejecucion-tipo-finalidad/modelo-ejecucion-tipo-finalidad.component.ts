@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -12,12 +13,15 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ModeloEjecucionTipoFinalidadModalComponent, ModeloEjecucionTipoFinalidadModalData } from '../../modals/modelo-ejecucion-tipo-finalidad-modal/modelo-ejecucion-tipo-finalidad-modal.component';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoFinalidadFragment } from './modelo-ejecucion-tipo-finalidad.fragment';
 
-const MSG_DELETE = marker('csp.modelo.ejecucion.tipo.finalidad.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const MODELO_EJECUCION_TIPO_FINALIDAD_KEY = marker('csp.tipo-finalidad');
 
 @Component({
   selector: 'sgi-modelo-ejecucion-tipo-finalidad',
@@ -36,13 +40,17 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   constructor(
     private readonly dialogService: DialogService,
     private matDialog: MatDialog,
-    actionService: ModeloEjecucionActionService
+    actionService: ModeloEjecucionActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TIPO_FINALIDADES, actionService);
     this.fxFlexProperties = new FxFlexProperties();
@@ -61,6 +69,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     const subscription = this.formPart.modeloTipoFinalidad$.subscribe(
       (wrappers: StatusWrapper<IModeloTipoFinalidad>[]) => {
         this.modelosTipoFinalidades.data = wrappers;
@@ -82,6 +91,26 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
       };
     this.modelosTipoFinalidades.sort = this.sort;
     this.subscriptions.push(subscription);
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      MODELO_EJECUCION_TIPO_FINALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      MODELO_EJECUCION_TIPO_FINALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   ngOnDestroy(): void {
@@ -113,7 +142,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
 
   deleteModeloTipoFinalidad(wrapper?: StatusWrapper<IModeloTipoFinalidad>): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteModeloTipoFinalidad(wrapper);
@@ -122,4 +151,9 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
       )
     );
   }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
 }

@@ -11,7 +11,7 @@ import { EvaluacionEvaluadorActionService } from '../evaluacion-evaluador.action
 
 
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
 const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
 

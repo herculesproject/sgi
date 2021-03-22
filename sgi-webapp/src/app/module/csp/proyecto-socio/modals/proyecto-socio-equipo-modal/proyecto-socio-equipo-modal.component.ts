@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -13,14 +14,21 @@ import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { IRange } from '@core/validators/range-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('csp.proyecto.socio-equipo.rol-socio.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const PROYECTO_SOCIO_EQUIPO_FECHA_FIN_KEY = marker('csp.proyecto-socio.equipo.fecha-fin-participacion');
+const PROYECTO_SOCIO_EQUIPO_FECHA_INICIO_KEY = marker('csp.proyecto-socio.equipo.fecha-inicio-participacion');
+const PROYECTO_SOCIO_EQUIPO_PERSONA_KEY = marker('csp.proyecto-socio.equipo.persona');
+const PROYECTO_SOCIO_EQUIPO_ROL_PARTICIPACION_KEY = marker('csp.proyecto-socio.equipo.rol-proyecto.participacion');
+const PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoEquipoSocioModalData {
   proyectoSocioEquipo: IProyectoSocioEquipo;
@@ -40,12 +48,19 @@ export class ProyectoSocioEquipoModalComponent extends
   rolProyectos$: Observable<IRolProyecto[]>;
   textSaveOrUpdate: string;
 
+  msgParamFechaFinEntity = {};
+  msgParamFechaInicioEntity = {};
+  msgParamPersonaEntity = {};
+  msgParamRolParticipacionEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoSocioEquipoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoEquipoSocioModalData,
-    private rolProyectoService: RolProyectoService
+    private rolProyectoService: RolProyectoService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
@@ -62,6 +77,9 @@ export class ProyectoSocioEquipoModalComponent extends
   ngOnInit(): void {
     super.ngOnInit();
     this.loadRolProyectos();
+
+    this.setupI18N();
+
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
     this.subscriptions.push(
       merge(
@@ -71,6 +89,49 @@ export class ProyectoSocioEquipoModalComponent extends
       ).subscribe(() => this.checkRangesDates())
     );
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_FECHA_FIN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_FECHA_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_ROL_PARTICIPACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamRolParticipacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.isEdit) {
+      this.translate.get(
+        PROYECTO_SOCIO_COLABORADOR_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        PROYECTO_SOCIO_COLABORADOR_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
+
 
   private loadRolProyectos(): void {
     const subcription = this.rolProyectoService.findAll().pipe(

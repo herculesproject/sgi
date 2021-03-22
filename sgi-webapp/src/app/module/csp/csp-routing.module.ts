@@ -1,35 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@sgi/framework/auth';
-
+import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 import { CspRootComponent } from './csp-root/csp-root.component';
 import { CSP_ROUTE_NAMES } from './csp-route-names';
-import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
-import { MSG_PARAMS } from '@core/i18n';
+
 
 const MSG_ROOT_TITLE = marker('csp.root.title');
-const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
-const MSG_CONVOCATORIA_CONCEPTO_GASTO_TITLE = marker('menu.principal.csp.convocatoria-concepto-gasto');
-const MSG_SOLICITUD_TITLE = marker('menu.principal.csp.solicitudes');
-const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
-const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
-const MSG_TIPO_FINALIDAD_TITLE = marker('menu.principal.csp.tipo.finalidad');
-const MSG_TIPO_DOCUMENTO_TITLE = marker('menu.principal.csp.tipo.documento');
-const MSG_MODELO_EJECUCION_TITLE = marker('menu.principal.csp.modelo.ejecucion');
-const MSG_PLAN_INVESTIGACION_TITLE = marker('menu.principal.csp.plan.investigacion');
-const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.principal.csp.concepto.gasto');
-const MSG_TIPO_FINANCIACION_TITLE = marker('menu.principal.csp.tipo.financiacion');
+const MSG_CONVOCATORIA_TITLE = marker('csp.convocatoria');
+const MSG_CONVOCATORIA_CONCEPTO_GASTO_TITLE = marker('csp.convocatoria-elegibilidad');
+const MSG_SOLICITUD_TITLE = marker('csp.solicitud');
+const MSG_TIPO_ENLACE_TITLE = marker('csp.tipo-enlace');
+const MSG_TIPO_HITO_TITLE = marker('csp.tipo-hito');
+const MSG_TIPO_FINALIDAD_TITLE = marker('csp.tipo-finalidad');
+const MSG_TIPO_DOCUMENTO_TITLE = marker('csp.tipo-documento');
+const MSG_MODELO_EJECUCION_TITLE = marker('menu.csp.configuraciones.modelos-ejecucion');
+const MSG_PLAN_INVESTIGACION_TITLE = marker('menu.csp.configuraciones.planes-investigacion');
+const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.csp.configuraciones.conceptos-gasto');
+const MSG_TIPO_FINANCIACION_TITLE = marker('menu.csp.configuraciones.tipos-financiacion');
 
-const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.principal.csp.fuenteFinanciacion');
-const MSG_AREA_TEMATICA_TITLE = marker('menu.principal.csp.area.tematica');
-const PROYECTO_KEY = marker('csp.proyecto');
-const MSG_SOLICITUD_PROYECTO_SOCIO = marker('menu.principal.csp.solicitud-proyecto-socio');
-const MSG_PROYECTO_SOCIO_TITLE = marker('menu.principal.csp.proyecto-socio');
-const MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE = marker('menu.principal.csp.proyecto-periodo-seguimiento');
-const MSG_PROYECTO_PRORROGA_TITLE = marker('menu.principal.csp.proyecto-prorroga');
-const MSG_SOLICITUD_PROYECTO_PRESUPUESTO = marker('menu.principal.csp.solicitud-proyecto-presupuesto');
+const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.csp.configuraciones.fuentes-financiacion');
+const MSG_AREA_TEMATICA_TITLE = marker('menu.csp.configuraciones.areas-tematicas');
+const PROYECTO_KEY = marker('csp.proyectos');
+const MSG_SOLICITUD_PROYECTO_SOCIO = marker('csp.socios-colaboradores');
+const MSG_PROYECTO_SOCIO_TITLE = marker('menu.csp.proyectos.socios');
+const MSG_PROYECTO_PERIODO_SEGUIMIENTO_TITLE = marker('menu.csp.proyectos.seguimientos-cientificos');
+const MSG_PROYECTO_PRORROGA_TITLE = marker('menu.csp.proyectos.prorrogas-proyecto');
+const MSG_SOLICITUD_PROYECTO_PRESUPUESTO = marker('menu.csp.proyectos.proyecto-presupuesto');
 
 const routes: SgiRoutes = [
   {
@@ -55,7 +55,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_CONVOCATORIA_TITLE
+          title: MSG_CONVOCATORIA_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {
@@ -77,7 +78,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_SOLICITUD_TITLE
+          title: MSG_SOLICITUD_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {
@@ -133,7 +135,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_DOCUMENTO_TITLE
+          title: MSG_TIPO_DOCUMENTO_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {
@@ -144,7 +147,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_FINALIDAD_TITLE
+          title: MSG_TIPO_FINALIDAD_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {
@@ -166,7 +170,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_ENLACE_TITLE
+          title: MSG_TIPO_ENLACE_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
 
       },
@@ -178,7 +183,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_HITO_TITLE
+          title: MSG_TIPO_HITO_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {
@@ -189,7 +195,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_CONVOCATORIA_TITLE
+          title: MSG_CONVOCATORIA_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
         }
       },
       {

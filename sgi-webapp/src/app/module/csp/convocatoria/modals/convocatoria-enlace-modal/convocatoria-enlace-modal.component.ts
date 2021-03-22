@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
@@ -12,14 +13,20 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { StringValidator } from '@core/validators/string-validator';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('csp.convocatoria.enlace.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const CONVOCATORIA_ENLACE_KEY = marker('csp.convocatoria-enlace');
+const CONVOCATORIA_ENLACE_URL_KEY = marker('csp.convocatoria-enlace.url');
+const CONVOCATORIA_ENLACE_DESCRIPCION_KEY = marker('csp.convocatoria-enlace.descripcion');
+const CONVOCATORIA_ENLACE_TIPO_KEY = marker('csp.convocatoria-enlace.tipo-enlace');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 export interface ConvocatoriaEnlaceModalComponentData {
   enlace: IConvocatoriaEnlace;
   idModeloEjecucion: number;
@@ -39,12 +46,18 @@ export class ConvocatoriaEnlaceModalComponent extends
   private modeloTiposEnlaceFiltered: IModeloTipoEnlace[];
   textSaveOrUpdate: string;
 
+  msgParamUrlEntity = {};
+  msgParamDescripcionEntity = {};
+  msgParamTipoEnlaceEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaEnlaceModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEnlaceModalComponentData,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -59,8 +72,47 @@ export class ConvocatoriaEnlaceModalComponent extends
 
   ngOnInit() {
     super.ngOnInit();
+    this.setupI18N();
     this.loadTiposEnlaces();
     this.textSaveOrUpdate = this.data.enlace.url ? MSG_ACEPTAR : MSG_ANADIR;
+  }
+
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_ENLACE_URL_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamUrlEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONVOCATORIA_ENLACE_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONVOCATORIA_ENLACE_TIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamTipoEnlaceEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.enlace.url) {
+      this.translate.get(
+        CONVOCATORIA_ENLACE_KEY,
+        MSG_PARAMS.CARDINALIRY.PLURAL
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        CONVOCATORIA_ENLACE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+
   }
 
   /**

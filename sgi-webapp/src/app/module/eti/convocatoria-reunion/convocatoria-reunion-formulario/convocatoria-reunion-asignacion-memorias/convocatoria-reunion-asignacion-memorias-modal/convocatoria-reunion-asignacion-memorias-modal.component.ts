@@ -23,7 +23,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
 const MSG_ERROR_CARGAR_EVALUADOR1 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.cargar');
 const MSG_ERROR_CARGAR_EVALUADOR2 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2.error.cargar');

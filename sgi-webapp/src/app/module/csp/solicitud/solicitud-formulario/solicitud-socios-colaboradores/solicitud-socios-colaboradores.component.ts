@@ -3,6 +3,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -11,16 +12,18 @@ import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proy
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-socio/solicitud-proyecto-socio-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-socios-colaboradores.fragment';
 
-const MSG_DELETE = marker('csp.solicitud.socios.colaboradores.borrar');
-const MSG_DELETE_CASCADE = marker('csp.solicitud.socios.colaboradores.borrar.vinculaciones');
-const MSG_ERROR = marker('csp.solicitud.socios.colaboradores.borrar.vinculaciones.error');
+const MSG_DELETE = marker('msg.delete.entity');
+const MSG_DELETE_CASCADE = marker('msg.csp.solicitud-socio-colaborador.relations.delete');
+const MSG_ERROR = marker('error.msg.csp.solicitud-socio-colaborador.relations.delete');
+const SOLICITUD_SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
 
 export interface ISolicitudProyectoSocioState {
   solicitudId: number;
@@ -52,11 +55,15 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
   dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocio>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   constructor(
     public actionService: SolicitudActionService,
     private dialogService: DialogService,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.SOCIOS_COLABORADORES, actionService);
     this.formPart = this.fragment as SolicitudSociosColaboradoresFragment;
@@ -64,6 +71,7 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     const subscription = this.formPart.proyectoSocios$.subscribe(
       (proyectoSocios) => {
         this.dataSource.data = proyectoSocios;
@@ -84,6 +92,25 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
     this.actionService.hasSocioColaborador();
   }
 
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_SOCIO_COLABORADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      SOLICITUD_SOCIO_COLABORADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
@@ -92,7 +119,7 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
     this.subscriptions.push(
       this.solicitudProyectoSocioService.vinculaciones(wrapper.value.id).pipe(
         map(res => {
-          return res ? MSG_DELETE_CASCADE : MSG_DELETE;
+          return res ? MSG_DELETE_CASCADE : this.textoDelete;
         }),
         switchMap(message => {
           return this.dialogService.showConfirmation(message);

@@ -1,6 +1,6 @@
 <div class="modal-proyecto-hitos">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.proyecto.equipos.rol.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -10,19 +10,20 @@
         <div [fxFlex.sm]="fxFlexProperties2.sm" [fxFlex.md]="fxFlexProperties2.md"
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.equipo.rol' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-equipo.rol-participacion' | translate}}</mat-label>
             <input matInput formControlName="rolInv" type="text" id="rolInv"
-              placeholder="{{'csp.proyecto.equipo.rol' | translate}}" [matAutocomplete]="autoRolInv" required>
+              placeholder="{{'csp.proyecto-equipo.rol-participacion' | translate}}" [matAutocomplete]="autoRolInv"
+              required>
             <mat-autocomplete #autoRolInv="matAutocomplete" [displayWith]="getNombreRolEquipo">
               <mat-option *ngFor="let rolInv of rolProyectos$ | async" [value]="rolInv">
                 {{rolInv.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.rolInv.errors?.required">
-              {{'csp.proyecto.equipos.rol.error.required' | translate}}
+              {{'error.required.entity' | translate:msgParamRolParticipacionEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.rolInv.errors?.invalid">
-              {{'csp.proyecto.equipos.rol.error.invalid' | translate}}
+              {{'error.invalid.entity' | translate:msgParamRolParticipacionEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -35,15 +36,15 @@
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.equipos.rol.persona' | translate}}</mat-label>
-            <sgi-select-persona placeholder="{{'csp.proyecto.equipos.rol.persona' | translate}}"
-              formControlName="persona" required>
+            <mat-label>{{'csp.proyecto-equipo.persona' | translate}}</mat-label>
+            <sgi-select-persona placeholder="{{'csp.proyecto-equipo.persona' | translate}}" formControlName="persona"
+              required>
             </sgi-select-persona>
             <mat-error *ngIf="formGroup.controls.persona.errors?.required">
-              {{'csp.proyecto.equipos.rol.error.persona.required' | translate}}
+              {{'error.required.entity' | translate:msgParamPersonaEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.persona.errors?.contains">
-              {{'csp.proyecto.equipos.rol.error.persona.contains' | translate}}
+              {{'error.csp.proyecto.persona.duplicate' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -58,12 +59,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.equipos.rol.horas' | translate}}
+            <mat-label>{{'csp.proyecto-equipo.horas' | translate}}
             </mat-label>
             <input matInput formControlName="horasDedicacion" type="number" id="horasDedicacion"
-              placeholder="{{'csp.proyecto.equipos.rol.horas' | translate}}">
+              placeholder="{{'csp.proyecto-equipo.horas' | translate}}">
             <mat-error *ngIf="formGroup.controls.horasDedicacion.errors?.max">
-              {{'csp.proyecto.equipos.rol.horas.max' | translate}}
+              {{'error.csp.proyecto-equipo.horas.max' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -71,7 +72,7 @@
       </div>
 
       <div class="fieldset-form">
-        {{'csp.proyecto.equipos.rol.titulo' | translate}}
+        {{'title.csp.proyecto-equipo.periodo-participacion' | translate}}
       </div>
 
       <!-- Fechas  -->
@@ -82,15 +83,15 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field color="primary" fxFill>
-            <mat-label>{{'csp.proyecto.equipos.rol.fechaInicio' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-equipo.fecha-inicio' | translate}}</mat-label>
             <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="picker1">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #picker1 showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
-              {{'csp.proyecto.equipos.rol.fechaInicio.range' | translate}}
+              {{'csp.proyecto-equipo.fecha-inicio.range' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.invalid">
-              {{'csp.proyecto.equipos.rol.fechaInicio.error.invalido' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamFechaInicioEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -99,18 +100,18 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field color="primary" fxFill>
-            <mat-label>{{'csp.proyecto.equipos.rol.fechaFin' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-equipo.fecha-fin' | translate}}</mat-label>
             <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="picker2">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #picker2 showSeconds="true" [defaultTime]="[23,59,59]"></ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.proyecto.equipos.rol.fechaFin.error.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
-              {{'csp.proyecto.equipos.rol.fechaFin.range' | translate}}
+              {{'error.overlapping.record.entity' | translate:msgParamFechaFinEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid">
-              {{'csp.proyecto.equipos.rol.fechaFin.error.invalido' | translate}}
+              {{'error.csp.proyecto-equipo.fecha-fin.invalid' | translate}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -124,7 +125,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit">{{textSaveOrUpdate |
       translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

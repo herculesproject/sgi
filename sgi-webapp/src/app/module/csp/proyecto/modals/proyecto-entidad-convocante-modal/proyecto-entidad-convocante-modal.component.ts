@@ -21,13 +21,12 @@ import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, startWith, switchMap, takeLast, tap } from 'rxjs/operators';
 
-
 const PROYECTO_ENTIDAD_CONVOCANTE_KEY = marker('csp.proyecto-entidad-convocante');
-const PROYECTO_ENTIDAD_CONVOCANTE_PLAN_KEY = marker('csp.proyecto-entidad-convocante.plan');
-const PROYECTO_ENTIDAD_CONVOCANTE_PROGRAMA_KEY = marker('csp.proyecto-entidad-convocante.programa');
+const PROYECTO_ENTIDAD_CONVOCANTE_PLAN_KEY = marker('csp.proyecto-entidad-convocante.programa.plan');
+const PROYECTO_ENTIDAD_CONVOCANTE_PROGRAMA_KEY = marker('csp.proyecto-entidad-convocante.programa.programa');
 const MSG_CONTINUE_ENTITY_NOTSET_KEY = marker('msg.continue.entity.not-set');
-
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoEntidadConvocanteModalData {
   proyectoEntidadConvocante: IProyectoEntidadConvocante;
@@ -88,6 +87,7 @@ export class ProyectoEntidadConvocanteModalComponent extends
   msgParamEntity = {};
   msgParamPlanEntity = {};
   msgParamProgramaEntity = {};
+  title: string;
 
   planes$: Observable<IPrograma[]>;
   private programaFiltered = [] as IPrograma[];
@@ -162,13 +162,32 @@ export class ProyectoEntidadConvocanteModalComponent extends
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_PLAN_KEY
     ).subscribe((value) => this.msgParamPlanEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_PROGRAMA_KEY
     ).subscribe((value) => this.msgParamProgramaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (!this.create) {
+      this.translate.get(
+        PROYECTO_ENTIDAD_CONVOCANTE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        PROYECTO_ENTIDAD_CONVOCANTE_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
   }
 
   private updateProgramas(programa: NodePrograma[]) {

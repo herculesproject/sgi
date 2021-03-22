@@ -1,39 +1,35 @@
-import { SgiRoutes } from '@core/route';
-
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-import { SgiAuthGuard } from '@sgi/framework/auth';
-
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-
-import { ConvocatoriaListadoComponent } from './convocatoria-listado/convocatoria-listado.component';
-import { ROUTE_NAMES } from '@core/route.names';
-import { ActionGuard } from '@core/guards/master-form.guard';
-import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
-import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
-import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
-import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.component';
-import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { MSG_PARAMS } from '@core/i18n';
+import { SgiRoutes } from '@core/route';
+import { ROUTE_NAMES } from '@core/route.names';
+import { SgiAuthGuard } from '@sgi/framework/auth';
+import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
+import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
-import { ConvocatoriaResolver } from './convocatoria.resolver';
-import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
-import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.component';
+import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
+import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
+import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
+import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
+import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.component';
 import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.component';
 import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
-import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.component';
-import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
-import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
+import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.component';
+import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
+import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
 import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.component';
-import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
-import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
-import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
+import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
+import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.component';
+import { ConvocatoriaListadoComponent } from './convocatoria-listado/convocatoria-listado.component';
+import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
+import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 
-const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
-const MSG_LISTADO_TITLE = marker('csp.convocatoria.listado.titulo');
-const MSG_NEW_TITLE = marker('csp.convocatoria.crear.titulo');
+const CONVOCATORIA_KEY = marker('csp.convocatoria');
+const MSG_NEW_TITLE = marker('title.new.entity');
 
 const routes: SgiRoutes = [
   {
@@ -41,7 +37,8 @@ const routes: SgiRoutes = [
     component: ConvocatoriaListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_LISTADO_TITLE,
+      title: CONVOCATORIA_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
     }
   },
   {
@@ -51,6 +48,9 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
+      titleParams: {
+        entity: CONVOCATORIA_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+      }
     },
     children: [
       {
@@ -135,7 +135,8 @@ const routes: SgiRoutes = [
       modeloEjecucionId: ModeloEjecucionIdResolver
     },
     data: {
-      title: MSG_EDIT_TITLE
+      title: CONVOCATORIA_KEY,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
     },
     children: [
       {

@@ -6,19 +6,24 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
 import { ConvocatoriaConceptoGastoCodigoEcModalComponent, IConvocatoriaConceptoGastoCodigoEcModalComponent } from '../../modals/convocatoria-concepto-gasto-codigo-ec-modal/convocatoria-concepto-gasto-codigo-ec-modal.component';
 import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.concepto-gasto.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_PERMITIDO = marker('csp.convocatoria-concepto-gasto.codigo-economico.permitido');
+const CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO = marker('csp.convocatoria-concepto-gasto.codigo-economico.no-permitido');
 
 @Component({
   selector: 'sgi-convocatoria-concepto-gasto-codigo-ec',
@@ -44,11 +49,16 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
 
   disableAddCodigoEc = true;
 
+  msgParamCodigoPermitidoEntity = {};
+  msgParamCodigoNoPermitidoEntity = {};
+  textoDelete: string;
+
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly actionService: ConvocatoriaConceptoGastoActionService,
     private matDialog: MatDialog,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.CODIGOS_ECONOMICOS, actionService);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoCodigoEcFragment;
@@ -67,6 +77,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -84,6 +95,31 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
             return wrapper.value[property];
         }
       };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_PERMITIDO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCodigoPermitidoEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCodigoNoPermitidoEntity = { entity: value });
+
+
+    this.translate.get(
+      CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
   }
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
@@ -165,7 +201,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
 
   deleteConvocatoriaConceptoGastoCodigoEc(wrapper: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaConceptoGastoCodigoEc(wrapper);

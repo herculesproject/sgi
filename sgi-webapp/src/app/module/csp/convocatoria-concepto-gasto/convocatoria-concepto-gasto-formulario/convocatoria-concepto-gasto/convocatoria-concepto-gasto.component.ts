@@ -1,22 +1,26 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
-import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
-import { FormFragmentComponent } from '@core/component/fragment.component';
-import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
 import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
+import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
 
-const MSG_ERROR_INIT = marker('csp.convocatoria.concepto-gasto.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+
+const CONVOCATORIA_ELEGIBILIDAD_CONCEPTO_GASTO_KEY = marker('csp.convocatoria-elegibilidad.concepto-gasto.concepto-gasto');
 @Component({
   templateUrl: './convocatoria-concepto-gasto.component.html',
   styleUrls: ['./convocatoria-concepto-gasto.component.scss']
@@ -32,11 +36,14 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
 
   textSaveOrUpdate: string;
 
+  msgParamConceptoGastoEntity = {};
+
   constructor(
     private logger: NGXLogger,
     private snackBarService: SnackBarService,
     private conceptoGastoService: ConceptoGastoService,
-    protected actionService: ConvocatoriaConceptoGastoActionService
+    protected actionService: ConvocatoriaConceptoGastoActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.CONCEPTO_GASTO, actionService);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoFragment;
@@ -52,10 +59,17 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.loadConceptoGastos();
     this.textSaveOrUpdate = this.formPart.convocatoriaConceptoGasto.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_ELEGIBILIDAD_CONCEPTO_GASTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamConceptoGastoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+  }
 
   loadConceptoGastos() {
     this.subscriptions.push(

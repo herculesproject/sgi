@@ -1,14 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
 import { merge, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
 import { ProyectoPeriodoSeguimientoDatosGeneralesFragment } from './proyecto-periodo-seguimiento-datos-generales.fragment';
 
+
+const PERIODO_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico.observaciones');
+const PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico');
 @Component({
   selector: 'sgi-solicitud-proyecto-periodo-seguimiento-datos-generales',
   templateUrl: './proyecto-periodo-seguimiento-datos-generales.component.html',
@@ -24,8 +30,12 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
   periodoSeguimientosSelectedProyecto: IProyectoPeriodoSeguimiento[] = [];
   FormGroupUtil = FormGroupUtil;
 
+  msgParamEntity = {};
+  msgParamObservacionesEntity = {};
+
   constructor(
-    protected actionService: ProyectoPeriodoSeguimientoActionService
+    protected actionService: ProyectoPeriodoSeguimientoActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as ProyectoPeriodoSeguimientoDatosGeneralesFragment;
@@ -51,6 +61,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     super.ngOnInit();
     this.loadPeriodoSeguimientosSelectedProyecto();
 
+    this.setupI18N();
+
     this.subscriptions.push(
       merge(
         this.formGroup.get('fechaInicio').valueChanges,
@@ -60,6 +72,19 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
       ).subscribe()
     );
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PERIODO_SEGUIMIENTO_CIENTIFICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PERIODO_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+  }
+
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());

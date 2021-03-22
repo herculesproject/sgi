@@ -11,12 +11,13 @@ import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { switchMap } from 'rxjs/operators';
 import { ProyectoEntidadConvocanteModalComponent, ProyectoEntidadConvocanteModalData } from '../../modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
 import { ProyectoEntidadConvocantePlanPipe } from '../../pipes/proyecto-entidad-convocante-plan.pipe';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoEntidadesConvocantesFragment } from './proyecto-entidades-convocantes.fragment';
 
-const MSG_ENTITY_DELETE_KEY = marker('msg.entity.delete');
+const MSG_ENTITY_DELETE_KEY = marker('msg.delete.entity');
 const PROYECTO_ENTIDAD_CONVOCANTE_KEY = marker('csp.proyecto-entidad-convocante');
 
 @Component({
@@ -32,7 +33,7 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
   elementsPage = [5, 10, 25, 100];
 
   msgParamEntity = {};
-  msgParamEntities = {};
+  textoDelete: string;
 
   dataSource = new MatTableDataSource<IProyectoEntidadConvocante>();
 
@@ -77,10 +78,18 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
       PROYECTO_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
+
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_KEY,
-      MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamEntities = { entity: value });
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ENTITY_DELETE_KEY,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
   }
 
   ngOnDestroy(): void {
@@ -112,7 +121,7 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
 
   deleteProyectoEntidadConvocante(data: IProyectoEntidadConvocante) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_ENTITY_DELETE_KEY, this.msgParamEntity).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete, this.msgParamEntity).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.proyectoEntidadesConvocantesFragment.deleteProyectoEntidadConvocante(data);

@@ -4,6 +4,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -13,14 +14,21 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IRange } from '@core/validators/range-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
-const MSG_ERROR_INIT = marker('csp.proyecto.equipos.rol.error.cargar');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const MSG_ERROR_INIT = marker('error.load');
+const PROYECTO_FECHA_FIN = marker('csp.proyecto-equipo.fecha-fin');
+const PROYECTO_FECHA_INICIO = marker('csp.proyecto-equipo.fecha-inicio');
+const PROYECTO_EQUIPO_PERSONA = marker('csp.proyecto-equipo.persona');
+const PROYECTO_EQUIPO_ROL_PARTICIPACION = marker('csp.proyecto-equipo.rol-participacion');
+const PROYECTO_EQUIPO_KEY = marker('csp.proyecto-equipo-miembro');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoEquiposModalComponentData {
   equipos: IProyectoEquipo[];
@@ -52,12 +60,19 @@ export class ProyectoEquipoModalComponent extends
   private rolProyectoFiltered: IRolProyecto[] = [];
   rolProyectos$: Observable<IRolProyecto[]>;
 
+  msgParamFechaFinEntity = {};
+  msgParamFechaInicioEntity = {};
+  msgParamPersonaEntity = {};
+  msgParamRolParticipacionEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ProyectoEquipoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoEquiposModalComponentData,
-    private rolProyectoService: RolProyectoService) {
+    private rolProyectoService: RolProyectoService,
+    private readonly translate: TranslateService) {
 
     super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
@@ -81,7 +96,10 @@ export class ProyectoEquipoModalComponent extends
   ngOnInit(): void {
     super.ngOnInit();
     this.loadRolEquipo();
-    this.textSaveOrUpdate = this.data?.equipo?.id ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.setupI18N();
+
+    this.textSaveOrUpdate = this.data?.equipo?.rolProyecto ? MSG_ACEPTAR : MSG_ANADIR;
     this.subscriptions.push(
       merge(
         this.formGroup.get('persona').valueChanges,
@@ -90,6 +108,49 @@ export class ProyectoEquipoModalComponent extends
       ).subscribe(() => this.checkRangesDates())
     );
   }
+
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_EQUIPO_ROL_PARTICIPACION,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamRolParticipacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_EQUIPO_PERSONA,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_FECHA_FIN,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PROYECTO_FECHA_INICIO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    if (this.data?.equipo?.rolProyecto) {
+      this.translate.get(
+        PROYECTO_EQUIPO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        PROYECTO_EQUIPO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup(

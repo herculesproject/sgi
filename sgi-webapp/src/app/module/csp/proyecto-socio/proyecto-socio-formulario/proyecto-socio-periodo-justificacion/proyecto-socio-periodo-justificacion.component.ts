@@ -4,17 +4,21 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE } from '../../../proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-names';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ProyectoSocioPeriodoJustificacionFragment } from './proyecto-socio-periodo-justificacion.fragment';
 
-const MSG_DELETE = marker('csp.proyecto-socio.periodo-justificacion.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY = marker('title.csp.proyecto-socio-periodo-justificacion');
 
 export interface IProyectoSocioPeriodoJustificacionState {
   periodoJustificacion: IProyectoSocioPeriodoJustificacion;
@@ -44,10 +48,14 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoSocioPeriodoJustificacion>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   constructor(
     private actionService: ProyectoSocioActionService,
     private dialogService: DialogService,
-    private router: Router
+    private router: Router,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
     this.formPart = this.fragment as ProyectoSocioPeriodoJustificacionFragment;
@@ -55,6 +63,7 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     const subcription = this.formPart.periodoJustificaciones$.subscribe(
       (periodoJustificaciones) => {
         this.dataSource.data = periodoJustificaciones;
@@ -65,13 +74,33 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
     this.dataSource.sortingDataAccessor = (wrapper, property) => wrapper.value[property];
   }
 
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   deletePeriodoJustificacion(wrapper: StatusWrapper<IProyectoSocioPeriodoJustificacion>): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoJustificacion(wrapper);

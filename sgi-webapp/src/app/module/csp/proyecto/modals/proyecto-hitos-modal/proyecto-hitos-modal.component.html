@@ -1,6 +1,6 @@
 <div class="modal-proyecto-hitos">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.proyecto.hitos.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <main>
 
@@ -11,19 +11,19 @@
         <div [fxFlex.sm]="fxFlexProperties2.sm" [fxFlex.md]="fxFlexProperties2.md"
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
           <mat-form-field>
-            <mat-label>{{'csp.proyecto.hitos.tipo.hito' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-hito.tipo' | translate}}</mat-label>
             <input matInput formControlName="tipoHito" type="text" id="tipoHito"
-              placeholder="{{'csp.proyecto.hitos.tipo.hito' | translate}}" required [matAutocomplete]="auto">
+              placeholder="{{'csp.proyecto-hito.tipo' | translate}}" required [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoHito">
               <mat-option *ngFor="let modeloTipoHito of modeloTiposHito$ | async" [value]="modeloTipoHito.tipoHito">
                 {{modeloTipoHito.tipoHito.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.tipoHito.errors?.required">
-              {{'csp.proyecto.hitos.tipo.hito.error.vacio' | translate}}
+              {{'error.required.entity' | translate:msgParamTipoEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.tipoHito.errors?.invalid">
-              {{'csp.proyecto.hito.modal.error.invalido' | translate}}
+              {{'error.invalid.entity' | translate:msgParamTipoEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -37,16 +37,16 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field color="primary">
-            <mat-label>{{'csp.proyecto.hitos.fecha'| translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-hito.fecha'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFecha" formControlName="fecha" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFecha showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fecha.errors?.required">
-              {{'csp.proyecto.hitos.fecha.error.vacio' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fecha.errors?.notIn">
-              {{'csp.proyecto.hitos.modal.fecha.fechaExistente' | translate}}
+              {{'error.csp.proyecto-hito.duplicate' | translate}}
             </mat-error>
 
           </mat-form-field>
@@ -60,12 +60,12 @@
         <div [fxFlex.sm]="fxFlexProperties3.sm" [fxFlex.md]="fxFlexProperties3.md"
           [fxFlex.gt-md]="fxFlexProperties3.gtMd" [fxFlexOrder]="fxFlexProperties3.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.hitos.comentario' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-hito.comentario' | translate}}</mat-label>
             <textarea matInput formControlName="comentario" type="text" id="comentario"
-              placeholder="{{'csp.proyecto.hitos.comentario' | translate}}">
+              placeholder="{{'csp.proyecto-hito.comentario' | translate}}">
             </textarea>
             <mat-error *ngIf="formGroup.get('comentario').errors?.maxlength">
-              {{'csp.proyecto.hitos.modal.comentario.maximo' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -74,7 +74,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout" class="checkbox">
         <mat-checkbox color="primary" formControlName="aviso" id="aviso">
-          {{'csp.proyecto.hitos.genera.aviso' | translate}}</mat-checkbox>
+          {{'csp.proyecto-hito.aviso' | translate}}</mat-checkbox>
       </div>
 
     </form>
@@ -83,7 +83,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button *ngIf="!data.readonly"
       type="submit">{{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

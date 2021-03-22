@@ -21,7 +21,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_ERROR_FORM = marker('error.form-group');
 const MSG_ERROR = marker('eti.peticionEvaluacion.tareas.personas.no-encontrado');
 
 @Component({

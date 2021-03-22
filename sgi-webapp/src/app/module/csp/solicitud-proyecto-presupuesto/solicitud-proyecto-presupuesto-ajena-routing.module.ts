@@ -17,8 +17,8 @@ import { SolicitudProyectoPresupuestoDatosGeneralesComponent } from './solicitud
 import { SolicitudProyectoPresupuestoPartidasGastoComponent } from './solicitud-proyecto-presupuesto-formulario/solicitud-proyecto-presupuesto-partidas-gasto/solicitud-proyecto-presupuesto-partidas-gasto.component';
 
 
-const MSG_EDIT_TITLE = marker('csp.solicitud-proyecto-presupuesto.ajena.editar.titulo');
-const MSG_NEW_TITLE = marker('csp.solicitud-proyecto-presupuesto.ajena.crear.titulo');
+const MSG_EDIT_TITLE = marker('title.csp.solicitud-proyecto-presupuesto.ajena.edit');
+const MSG_NEW_TITLE = marker('title.csp.solicitud-proyecto-presupuesto.ajena.new');
 
 const routes: SgiRoutes = [
   {

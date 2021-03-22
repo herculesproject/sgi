@@ -5,16 +5,20 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaSeguimientoCientificoModalComponent, IConvocatoriaSeguimientoCientificoModalData } from '../../modals/convocatoria-seguimiento-cientifico-modal/convocatoria-seguimiento-cientifico-modal.component';
 import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-seguimiento-cientifico.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.seguimiento.cientifico.listado.borrar');
+const MSG_DELETE = marker('msg.delete.entity');
+const CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.convocatoria-periodo-seguimiento-cientifico');
 
 @Component({
   selector: 'sgi-convocatoria-seguimiento-cientifico',
@@ -28,6 +32,9 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
   columnas = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaSeguimientoCientifico>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -35,7 +42,8 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
   constructor(
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO, actionService);
     this.formPart = this.fragment as ConvocatoriaSeguimientoCientificoFragment;
@@ -43,6 +51,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaSeguimientoCientifico>, property: string) => {
@@ -66,6 +75,26 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
     this.subscriptions.push(this.formPart.seguimientosCientificos$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   /**
@@ -115,7 +144,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
    */
   deleteSeguimientoCientifico(seguimientoCientifico?: StatusWrapper<IConvocatoriaSeguimientoCientifico>): void {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
           if (aceptado) {
             this.formPart.deleteSeguimientoCientifico(seguimientoCientifico);

@@ -1,6 +1,6 @@
 <div>
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.convocatoria.seguimiento.cientifico.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title | translate}}</h3>
   </header>
   <main>
 
@@ -13,12 +13,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.seguimiento.cientifico.modal.numPeriodo' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-seguimiento-cientifico.numero-periodo' | translate}}</mat-label>
             <input matInput formControlName="numPeriodo" type="text" id="numPeriodo"
-              placeholder="{{'csp.convocatoria.seguimiento.cientifico.modal.numPeriodo' | translate}}" readonly
+              placeholder="{{'csp.convocatoria-seguimiento-cientifico.numero-periodo' | translate}}" readonly
               maxlength="100">
             <mat-error *ngIf="formGroup.controls.numPeriodo.errors?.required">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.numPeriodo.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamNumeroPeriodoEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -26,7 +26,7 @@
       </div>
 
       <div class="fieldset-form">
-        {{'csp.convocatoria.seguimiento.cientifico.modal.periodoJustificar' | translate}}
+        {{'label.csp.convocatoria-seguimiento-cientifico.periodo-justificar' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -36,21 +36,21 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.seguimiento.cientifico.modal.desdeMes' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-seguimiento-cientifico.desde-mes' | translate}}</mat-label>
             <input matInput formControlName="desdeMes" type="number" id="desdeMes"
-              placeholder="{{'csp.convocatoria.seguimiento.cientifico.modal.desdeMes' | translate}}" required
+              placeholder="{{'csp.convocatoria-seguimiento-cientifico.desde-mes' | translate}}" required
               (blur)="recalcularNumPeriodo()">
             <mat-error *ngIf="formGroup.controls.desdeMes.errors?.required">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.desdeMes.requerido' | translate}}
+              {{ 'error.required.entity' | translate:msgParamMesInicioEntity }}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.desdeMes.errors?.min">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.desdeMes.min' | translate}}
+              {{ 'error.min.mes-desde' | translate }}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.desdeMes.errors?.max">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.desdeMes.inicioPeriodoFinal' | translate}}
+              {{ 'error.start.period' | translate }}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.desdeMes.errors?.overlapped">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.desdeMes.rangoSolapado' | translate}}
+              {{ 'error.overlapping.range' | translate }}
             </mat-error>
           </mat-form-field>
 
@@ -60,24 +60,24 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-seguimiento-cientifico.hasta-mes' | translate}}</mat-label>
             <input matInput formControlName="hastaMes" type="number" id="hastaMes"
-              placeholder="{{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes' | translate}}" required
+              placeholder="{{'csp.convocatoria-seguimiento-cientifico.hasta-mes' | translate}}" required
               maxlength="100">
             <mat-error *ngIf="formGroup.controls.hastaMes.errors?.required">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes.requerido' | translate}}
+              {{ 'error.required.entity' | translate:msgParamMesFinEntity }}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.hastaMes.errors?.min">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes.min' | translate}}
+              {{ 'error.min.mes-hasta' | translate }}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.hastaMes.errors?.after">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes.after' | translate}}
+              {{'error.after.param' | translate:msgParamMesInicioEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.hastaMes.errors?.max">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes.duracionConvocatoria' | translate}}
+              {{'error.csp.convocatoria-seguimiento-cientifico.duracion' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.hastaMes.errors?.overlapped">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.hastaMes.rangoSolapado' | translate}}
+              {{ 'error.overlapping.range' | translate }}
             </mat-error>
           </mat-form-field>
 
@@ -86,7 +86,7 @@
       </div>
 
       <div class="fieldset-form">
-        {{'csp.convocatoria.seguimiento.cientifico.modal.periodoEntregaSeguimiento' | translate}}
+        {{'csp.convocatoria-seguimiento-cientifico.periodo-entrega-seguimiento' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -96,7 +96,7 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field color="primary" fxFill>
-            <mat-label>{{'csp.convocatoria.seguimiento.cientifico.modal.fechaInicio' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-seguimiento-cientifico.fecha-inicio' | translate}}</mat-label>
             <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="picker1">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #picker1 showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
@@ -108,12 +108,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field color="primary" fxFill>
-            <mat-label>{{'csp.convocatoria.seguimiento.cientifico.modal.fechaFin' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-seguimiento-cientifico.fecha-fin' | translate}}</mat-label>
             <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="picker2">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #picker2 showSeconds="true" [defaultTime]="[23,59,59]"></ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.fechaFin.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -128,16 +128,14 @@
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.seguimiento.cientifico.modal.observaciones' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria-seguimiento-cientifico.observaciones' | translate}}</mat-label>
             <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-              placeholder="{{'csp.convocatoria.seguimiento.cientifico.modal.observaciones' | translate}}">
+              placeholder="{{'csp.convocatoria-seguimiento-cientifico.observaciones' | translate}}">
                 </textarea>
             <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.observaciones.maxlength' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
             </mat-error>
-            <mat-error *ngIf="formGroup.controls.observaciones.errors?.after">
-              {{'csp.convocatoria.seguimiento.cientifico.modal.observaciones.maxlength' | translate}}
-            </mat-error>
+
           </mat-form-field>
 
         </div>
@@ -149,7 +147,6 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" md-button mat-raised-button type="submit" (click)="saveOrUpdate()" *ngIf="!data.readonly">
       {{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
-      translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' | translate}}</button>
   </div>
 </div>

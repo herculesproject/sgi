@@ -1,6 +1,6 @@
 <div class="modal-proyecto-paquetes-trabajo">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.proyecto.paquete.trabajo.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <main>
 
@@ -14,18 +14,18 @@
 
           <!-- Nombre -->
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.paquete.trabajo.nombre' | translate}}
+            <mat-label>{{'csp.proyecto-paquete-trabajo.nombre' | translate}}
             </mat-label>
             <input matInput formControlName="nombre" type="text" id="nombre" required
-              placeholder="{{'csp.proyecto.paquete.trabajo.nombre' | translate}}">
+              placeholder="{{'csp.proyecto-paquete-trabajo.nombre' | translate}}">
             <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
-              {{'csp.proyecto.paquete.trabajo.nombre.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamNombreEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.nombre.errors?.notAllowed">
-              {{'csp.proyecto.paquete.trabajo.nombre.error.contains' | translate}}
+              {{'error.csp.proyecto-paquete-trabajo.nombre.duplicate' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
-              {{'csp.proyecto.paquete.trabajo.nombre.error.maxLength' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -33,7 +33,7 @@
       </div>
 
       <div class="fieldset-form">
-        {{'csp.proyecto.paquete.trabajo.modal.duracion' | translate}}
+        {{'title.csp.proyecto-paquete-trabajo.duracion' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties2.xs" [fxLayout]="fxLayoutProperties2.layout"
@@ -43,16 +43,16 @@
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
           <!-- fecha inicio -->
           <mat-form-field color="primary">
-            <mat-label>{{'csp.proyecto.paquete.trabajo.fechaInicio'| translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-paquete-trabajo.fecha-inicio'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
-              {{'csp.proyecto.paquete.trabajo.fechaInicio.error.vacio' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.invalid">
-              {{'csp.proyecto.paquete.trabajo.fechaInicio.error.invalido' | translate}}
+              {{'error.invalid.entity' | translate:msgParamFechaInicioEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -62,19 +62,19 @@
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
           <!-- fecha fin -->
           <mat-form-field color="primary">
-            <mat-label>{{'csp.proyecto.paquete.trabajo.fechaFin'| translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-paquete-trabajo.fecha-fin'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
-              {{'csp.proyecto.paquete.trabajo.fechaFin.error.vacio' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaFinEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.invalid">
-              {{'csp.proyecto.paquete.trabajo.fechaFin.error.invalido' | translate}}
+              {{'error.invalid.entity' | translate:msgParamFechaFinEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.proyecto.paquete.trabajo.fechaFin.error.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -89,15 +89,15 @@
 
           <!-- Persona/mes -->
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.paquete.trabajo.personaMes' | translate}}
+            <mat-label>{{'csp.proyecto-paquete-trabajo.persona-mes' | translate}}
             </mat-label>
             <input matInput formControlName="personaMes" type="number" id="personaMes" required
-              placeholder="{{'csp.proyecto.paquete.trabajo.personaMes' | translate}}">
+              placeholder="{{'csp.proyecto-paquete-trabajo.persona-mes' | translate}}">
             <mat-error *ngIf="formGroup.controls.personaMes.errors?.required">
-              {{'csp.proyecto.paquete.trabajo.personaMes.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamPersonaMesEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.personaMes.errors?.max">
-              {{'csp.proyecto.paquete.trabajo.personaMes.error.max' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamPersonaMesEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -110,12 +110,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <!--Descripcion-->
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.paquete.trabajo.descripcion' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto-paquete-trabajo.descripcion' | translate}}</mat-label>
             <textarea matInput formControlName="descripcion" type="text" id="descripcion"
-              placeholder="{{'csp.proyecto.paquete.trabajo.descripcion' | translate}}">
+              placeholder="{{'csp.proyecto-paquete-trabajo.descripcion' | translate}}">
             </textarea>
             <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
-              {{'csp.proyecto.paquete.trabajo.descripcion.maximo' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -128,7 +128,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit">{{textSaveOrUpdate |
       translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

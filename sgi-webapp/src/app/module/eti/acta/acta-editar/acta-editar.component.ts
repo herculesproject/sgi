@@ -11,7 +11,7 @@ import { ActaActionService } from '../acta.action.service';
 
 
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_SUCCESS = marker('eti.acta.editar.correcto');
 const MSG_ERROR = marker('eti.acta.editar.error');
 

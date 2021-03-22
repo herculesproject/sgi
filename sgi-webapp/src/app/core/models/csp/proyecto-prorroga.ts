@@ -20,7 +20,7 @@ export enum Tipo {
 }
 
 export const TIPO_MAP: Map<Tipo, string> = new Map([
-  [Tipo.TIEMPO, marker(`csp.proyecto-prorroga.tipo.TIEMPO`)],
-  [Tipo.IMPORTE, marker(`csp.proyecto-prorroga.tipo.IMPORTE`)],
-  [Tipo.TIEMPO_IMPORTE, marker(`csp.proyecto-prorroga.tipo.TIEMPO_IMPORTE`)]
+  [Tipo.TIEMPO, marker(`csp.prorroga.tipo.TIEMPO`)],
+  [Tipo.IMPORTE, marker(`csp.prorroga.tipo.IMPORTE`)],
+  [Tipo.TIEMPO_IMPORTE, marker(`csp.prorroga.tipo.TIEMPO_IMPORTE`)]
 ]);

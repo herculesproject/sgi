@@ -1,27 +1,27 @@
 <div class="modal-convocatoria-entidad-convocante">
   <header mat-dialog-title class="modal-header-material">
     <h3>
-      {{'csp.convocatoria.entidad.convocante.modal.titulo' | translate}}</h3>
+      {{textoTitle}}</h3>
   </header>
   <mat-dialog-content>
     <form class="form-inline" [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <mat-form-field class="input-form">
-          <mat-label>{{'csp.convocatoria.entidades.convocantes' | translate}}</mat-label>
+          <mat-label>{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
           <sgi-select-empresa-economica formControlName="empresaEconomica"
-            placeholder="{{'csp.convocatoria.entidades.convocantes' | translate}}" [disabled]="data.readonly"
-            [filter]="data.selectedEmpresas" required>
+            placeholder="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
+            [disabled]="data.readonly" [filter]="data.selectedEmpresas" required>
           </sgi-select-empresa-economica>
           <mat-error *ngIf="formGroup.controls.empresaEconomica.errors?.required">
-            {{'csp.convocatoria.entidades.convocantes.error.requerido' | translate}}
+            {{ 'error.required.entity' | translate:msgParamEntity }}
           </mat-error>
         </mat-form-field>
       </div>
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
-          <mat-label>{{'csp.convocatoria.entidades.convocantes.plan' | translate}}</mat-label>
-          <input type="text" placeholder="{{'csp.convocatoria.entidades.convocantes.plan' | translate}}"
+          <mat-label>{{'csp.convocatoria-entidad-convocante.plan' | translate}}</mat-label>
+          <input type="text" placeholder="{{'csp.convocatoria-entidad-convocante.plan' | translate}}"
             arial-label="Number" matInput formControlName="plan" [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombrePlan">
             <mat-option *ngFor="let plan of planes$ | async" [value]="plan">
@@ -29,7 +29,7 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.plan.errors?.invalid">
-            {{'csp.convocatoria.entidades.convocantes.plan.error.invalid' | translate}}
+            {{'error.required.entity' | translate:msgParamPlanEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -74,6 +74,6 @@
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
   <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()" *ngIf="!data.readonly">{{textSaveOrUpdate
     | translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()">{{'btn.cancel' |
     translate}}</button>
 </div>

@@ -1,6 +1,6 @@
 <div class="modelo-tipo-finalidad-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.modelo.tipo.finalidad.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -9,14 +9,14 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.tipo.finalidad' | translate}}</mat-label>
+            <mat-label>{{'csp.modelo-ejecucion-tipo-finalidad.tipo' | translate}}</mat-label>
             <mat-select matNativeControl formControlName="tipoFinalidad" required>
               <mat-option *ngFor="let tipoFinalidad of tipoFinalidad$ | async" [value]="tipoFinalidad">
                 {{tipoFinalidad.nombre}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="formGroup.controls.tipoFinalidad.errors?.required">
-              {{'csp.tipo.finalidad.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamTipoEntiy}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -24,9 +24,9 @@
     </form>
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit">{{'botones.aniadir' |
+    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button type="submit">{{'btn.add' |
       translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

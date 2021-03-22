@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
@@ -11,13 +12,20 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ERROR_INIT = marker('csp.fuenteFinanciacion.datos.generales.error.cargar');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ERROR_INIT = marker('error.load');
+const FUENTE_FINANCIACION_KEY = marker('csp.fuente-financiacion');
+const FUENTE_FINANCIACION_NOMBRE_KEY = marker('csp.fuente-financiacion.nombre');
+const FUENTE_FINANCIACION_AMBITO_GEOGRAFICO_KEY = marker('csp.fuente-financiacion.ambito-geografico');
+const FUENTE_FINANCIACION_ORIGEN_KEY = marker('csp.fuente-financiacion.origen');
+const FUENTE_FINANCIACION_FONDO_ESTRUCTURAL_KEY = marker('csp.fuente-financiacion.fondo-estructural');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
   templateUrl: './fuente-financiacion-modal.component.html',
@@ -36,13 +44,20 @@ export class FuenteFinanciacionModalComponent implements OnInit {
 
   private subscriptions: Subscription[] = [];
 
+  msgParamAmbitoEntity = {};
+  msgParamNombreEntity = {};
+  msgParamOrigenEntity = {};
+  msgParamFondoEstructuralEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<FuenteFinanciacionModalComponent>,
     private ambitoGeograficoService: TipoAmbitoGeograficoService,
     private tipoOrigenFuenteFinanciacionService: TipoOrigenFuenteFinanciacionService,
-    @Inject(MAT_DIALOG_DATA) fuenteFinanciacion: IFuenteFinanciacion
+    @Inject(MAT_DIALOG_DATA) fuenteFinanciacion: IFuenteFinanciacion,
+    private readonly translate: TranslateService
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -60,6 +75,7 @@ export class FuenteFinanciacionModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setupI18N();
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.fuenteFinanciacion?.nombre),
       descripcion: new FormControl(this.fuenteFinanciacion?.descripcion),
@@ -70,6 +86,49 @@ export class FuenteFinanciacionModalComponent implements OnInit {
 
     this.loadAmbitosGeograficos();
     this.loadOrigenes();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      FUENTE_FINANCIACION_NOMBRE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      FUENTE_FINANCIACION_AMBITO_GEOGRAFICO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAmbitoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      FUENTE_FINANCIACION_ORIGEN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamOrigenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      FUENTE_FINANCIACION_FONDO_ESTRUCTURAL_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFondoEstructuralEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.fuenteFinanciacion.nombre) {
+
+      this.translate.get(
+        FUENTE_FINANCIACION_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        FUENTE_FINANCIACION_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+
   }
 
   closeModal(fuenteFinanciacion?: IFuenteFinanciacion): void {

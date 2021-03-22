@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
@@ -18,7 +19,7 @@ import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 
-const MSG_LISTADO_ERROR = marker('csp.buscadorConvocatoria.listado.error');
+const MSG_LISTADO_ERROR = marker('error.load');
 
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
@@ -78,6 +79,7 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
         this.buscarConvocatorias();
       })
     ).subscribe();
+
   }
 
   onNoClick(): void {
@@ -193,5 +195,9 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, convocatoria.abiertoPlazoPresentacionSolicitud?.toString());
   }
 
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
 }

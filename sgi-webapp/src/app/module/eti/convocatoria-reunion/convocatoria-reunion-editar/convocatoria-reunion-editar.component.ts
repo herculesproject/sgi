@@ -8,7 +8,7 @@ import { NGXLogger } from 'ngx-logger';
 import { CONVOCATORIA_REUNION_ROUTE_NAMES } from '../convocatoria-reunion-route-names';
 import { ConvocatoriaReunionActionService } from '../convocatoria-reunion.action.service';
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_SUCCESS = marker('eti.convocatoriaReunion.editar.correcto');
 const MSG_ERROR = marker('eti.convocatoriaReunion.editar.error');
 

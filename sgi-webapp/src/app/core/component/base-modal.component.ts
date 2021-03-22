@@ -1,4 +1,4 @@
-import { Inject, OnDestroy, OnInit, Directive } from '@angular/core';
+import { Directive, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -8,7 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { Subscription } from 'rxjs';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 
 @Directive()
 // tslint:disable-next-line: directive-class-suffix

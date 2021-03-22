@@ -5,14 +5,18 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaEntidadConvocanteModalComponent, ConvocatoriaEntidadConvocanteModalData } from '../../modals/convocatoria-entidad-convocante-modal/convocatoria-entidad-convocante-modal.component';
 import { ConvocatoriaEntidadConvocanteData, ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-entidades-convocantes.fragment';
 
-const MSG_DELETE = marker('csp.convocatoria.entidad.convocante.listado.borrar');
+const MSG_DELETE = marker('msg.deactivate.entity');
+const CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY = marker('csp.convocatoria-entidad-convocante');
 
 @Component({
   selector: 'sgi-convocatoria-entidades-convocantes',
@@ -26,6 +30,9 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
   columns = ['nombre', 'cif', 'plan', 'programa', 'itemPrograma', 'acciones'];
   elementsPage = [5, 10, 25, 100];
 
+  msgParamEntity = {};
+  textoDeactivate: string;
+
   dataSource = new MatTableDataSource<ConvocatoriaEntidadConvocanteData>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -33,7 +40,8 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
   constructor(
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly translate: TranslateService,
   ) {
     super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService);
     this.formPart = this.fragment as ConvocatoriaEntidadesConvocantesFragment;
@@ -41,6 +49,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.data$.subscribe(
@@ -48,6 +57,28 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
         this.dataSource.data = data;
       })
     );
+  }
+
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeactivate = value);
+
+
   }
 
   ngOnDestroy(): void {
@@ -60,6 +91,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
       selectedEmpresas: this.dataSource.data.map((convocanteData) => convocanteData.empresaEconomica),
       readonly: this.formPart.readonly
     };
+
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -79,7 +111,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
 
   deleteConvocatoriaEntidadConvocante(data: ConvocatoriaEntidadConvocanteData) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+      this.dialogService.showConfirmation(this.textoDeactivate).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaEntidadConvocante(data);
@@ -87,5 +119,9 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
         }
       )
     );
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 }

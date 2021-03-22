@@ -1,6 +1,6 @@
 <div class="proyecto-entidad-plazos-fase-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.proyecto.plazos.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -10,17 +10,16 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.plazos.modal.tipoPlazosFases' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto.plazo.tipo-fase' | translate}}</mat-label>
             <input matInput formControlName="tipoFase" type="text" id="tipoPlazosFases" required
-              placeholder="{{'csp.proyecto.plazos.modal.tipoPlazosFases' | translate}}"
-              [matAutocomplete]="autoPlazosFase" required>
+              placeholder="{{'csp.proyecto.plazo.tipo-fase' | translate}}" [matAutocomplete]="autoPlazosFase" required>
             <mat-autocomplete #autoPlazosFase="matAutocomplete" [displayWith]="getTipoPlazosFase">
               <mat-option *ngFor="let modeloTipoFase of modeloTipoFases$ | async" [value]="modeloTipoFase.tipoFase">
                 {{modeloTipoFase.tipoFase.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.tipoFase.errors?.required">
-              {{'csp.proyecto.plazos.modal.tipoPlazosFases.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamTipoFaseEntity}}
             </mat-error>
           </mat-form-field>
         </div>
@@ -35,18 +34,18 @@
 
           <mat-form-field color="primary" fxFill>
             <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="pickerFechaInicio"
-              placeholder="{{'csp.proyecto.plazos.modal.fechaInicio' | translate}}" required>
+              placeholder="{{'csp.proyecto.plazo.fecha-inicio' | translate}}" required>
             <mat-datepicker-toggle matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
-              {{'csp.proyecto.plazos.modal.fechaInicio.error.requerido' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
-              {{'csp.proyecto.plazos.modal.fechaInicio.error' | translate}}
+              {{'error.before.fecha-inicio' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlapped">
-              {{'csp.proyecto.plazos.modal.fechaInicio.rangoSolapado' | translate}}
+              {{'error.csp.proyecto.plazo.overlapping.range' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -57,21 +56,18 @@
 
           <mat-form-field color="primary" fxFill>
             <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="pickerFechaFin"
-              placeholder="{{'csp.proyecto.plazos.modal.fechaFin' | translate}}" required>
+              placeholder="{{'csp.proyecto.plazo.fecha-fin' | translate}}" required>
             <mat-datepicker-toggle matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
-              {{'csp.proyecto.plazos.modal.fechaFin.error.requerido' | translate}}
-            </mat-error>
-            <mat-error *ngIf="formGroup.controls.fechaFin.errors?.before">
-              {{'csp.proyecto.plazos.modal.fechaFin.error' | translate}}
+              {{'error.required.entity' | translate:msgParamFechaFinEntity}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-              {{'csp.proyecto.plazos.modal.fechaFin.error.after' | translate}}
+              {{'error.after.fecha-fin' | translate}}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.overlapped">
-              {{'csp.proyecto.plazos.modal.fechaFin.rangoSolapado' | translate}}
+              {{'error.csp.proyecto.plazo.overlapping.range' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -86,12 +82,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.plazos.modal.observaciones' | translate}}</mat-label>
+            <mat-label>{{'csp.proyecto.plazo.observaciones' | translate}}</mat-label>
             <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-              placeholder="{{'csp.proyecto.plazos.modal.observaciones' | translate}}">
+              placeholder="{{'csp.proyecto.plazo.observaciones' | translate}}">
             </textarea>
             <mat-error *ngIf="formGroup.get('observaciones').errors?.maxlength">
-              {{'csp.proyecto.plazos.modal.observaciones.maximo' | translate}}
+              {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
             </mat-error>
           </mat-form-field>
 
@@ -101,7 +97,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout" class="checkbox">
         <mat-checkbox color="primary" formControlName="generaAviso" id="generaAviso">
-          {{'csp.proyecto.plazos.modal.aviso' | translate}}</mat-checkbox>
+          {{'csp.proyecto.plazo.aviso' | translate}}</mat-checkbox>
       </div>
 
     </form>
@@ -109,7 +105,7 @@
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button *ngIf="!data.readonly"
       type="submit">{{textSaveOrUpdate | translate}}</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'botones.cancelar' |
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>
 </div>

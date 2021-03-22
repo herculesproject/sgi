@@ -10,7 +10,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { Subscription } from 'rxjs';
 
-const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('eti.acta.asistentes.correcto');
+const MSG_ERROR = marker('eti.acta.asistentes.error');
+const MSG_ERROR_FORM = marker('error.form-group');
 const MSG_ERROR_CONFLICTO_REPETIDO = marker('eti.evaluador.conflictoInteres.formulario.listado.personaConflicto.repetida');
 
 @Component({

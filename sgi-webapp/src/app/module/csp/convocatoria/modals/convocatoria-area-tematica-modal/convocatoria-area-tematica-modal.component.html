@@ -1,26 +1,25 @@
 <div class="modal-convocatoria-area-tematica">
   <header mat-dialog-title class="modal-header-material">
-    <h3>
-      {{'csp.convocatoria.area.tematica.modal.titulo' | translate}}</h3>
+    <h3>{{title}}</h3>
   </header>
   <mat-dialog-content>
     <form class="form-inline" [formGroup]="formGroup">
       <div>
         <div>
           <mat-form-field class="input-form">
-            <mat-label>{{'csp.convocatoria.area.tematica.listado.areas.tematicas' | translate}}</mat-label>
-            <input type="text" placeholder="{{'csp.convocatoria.area.tematica.listado.areas.tematicas' | translate}}"
-              arial-label="Number" matInput formControlName="padre" [matAutocomplete]="auto" required>
+            <mat-label>{{'list.entity' | translate:msgParamEntities}}</mat-label>
+            <input type="text" placeholder="{{'list.entity' | translate:msgParamEntities}}" arial-label="Number"
+              matInput formControlName="padre" [matAutocomplete]="auto" required>
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombreAreaTematica">
               <mat-option *ngFor="let areaTematica of areasTematicas$ | async" [value]="areaTematica">
                 {{areaTematica.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.padre.errors?.required">
-              {{'csp.convocatoria.area.tematica.listado.areas.error.required' | translate}}
+              {{ 'error.required.entity' | translate:msgParamEntity }}
             </mat-error>
             <mat-error *ngIf="formGroup.controls.padre.errors?.invalid">
-              {{'csp.convocatoria.area.tematica.listado.areas.error.invalid' | translate}}
+              {{ 'error.invalid.entity' | translate:msgParamEntity }}
             </mat-error>
           </mat-form-field>
         </div>
@@ -63,11 +62,11 @@
       </div>
       <div>
         <mat-form-field class="input-form">
-          <mat-label>{{'csp.convocatoria.area.tematica.observaciones' | translate}}</mat-label>
+          <mat-label>{{'csp.area-tematica.observaciones' | translate}}</mat-label>
           <textarea matInput formControlName="observaciones" id="descripcion"
-            placeholder="{{'csp.convocatoria.area.tematica.observaciones' | translate}}"></textarea>
+            placeholder="{{'csp.area-tematica.observaciones' | translate}}"></textarea>
           <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
-            {{'csp.convocatoria.area.tematica.observaciones.error.maxlength' | translate}}
+            {{ 'error.maxlength.entity' | translate:msgParamObservacionesEntity }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -77,6 +76,6 @@
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
   <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()">{{textSaveOrUpdate |
     translate}}</button>
-  <button class="link-cancelar" mat-button (click)="closeModal()">{{'botones.cancelar' |
+  <button class="link-cancelar" mat-button (click)="closeModal()">{{'btn.cancel' |
     translate}}</button>
 </div>

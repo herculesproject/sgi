@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -13,13 +14,19 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { IRange } from '@core/validators/range-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('csp.solicitud.equipo.socio.equipo.socio.rol.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const PROYECTO_SOCIO_EQUIPO_KEY = marker('csp.proyecto-socio');
+const PROYECTO_SOCIO_EQUIPO_PERSONA_KEY = marker('csp.proyecto-socio.equipo.persona');
+const PROYECTO_SOCIO_EQUIPO_ROL_PROYECTO_KEY = marker('csp.proyecto-socio.equipo.rol-proyecto.participacion');
+const SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface SolicitudProyectoEquipoSocioModalData {
   solicitudProyectoEquipoSocio: ISolicitudProyectoEquipoSocio;
@@ -40,12 +47,18 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
   rolProyectos$: Observable<IRolProyecto[]>;
   textSaveOrUpdate: string;
 
+  msgParamPersonaEntity = {};
+  msgParamRolProyectoEntity = {};
+  msgParamEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudProyectoSocioEquipoSocioModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoEquipoSocioModalData,
-    private rolProyectoService: RolProyectoService
+    private rolProyectoService: RolProyectoService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
     this.fxFlexProperties = new FxFlexProperties();
@@ -62,6 +75,9 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
   ngOnInit(): void {
     super.ngOnInit();
     this.loadRolProyectos();
+
+    this.setupI18N();
+
     this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
     this.subscriptions.push(
       merge(
@@ -73,6 +89,44 @@ export class SolicitudProyectoSocioEquipoSocioModalComponent extends
       )
     );
   }
+
+  private setupI18N(): void {
+
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_EQUIPO_ROL_PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamRolProyectoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.solicitudProyectoEquipoSocio.rolProyecto) {
+      this.translate.get(
+        SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
 
   private loadRolProyectos(): void {
     const subcription = this.rolProyectoService.findAll().pipe(

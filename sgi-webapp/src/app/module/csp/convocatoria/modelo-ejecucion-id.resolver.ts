@@ -8,7 +8,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const MSG_NOT_FOUND = marker('csp.convocatoria.editar.modelo-ejecucion-no-encontrado');
+const MSG_NOT_FOUND = marker('error.load');
 
 @Injectable()
 export class ModeloEjecucionIdResolver extends SgiResolverResolver<number> {

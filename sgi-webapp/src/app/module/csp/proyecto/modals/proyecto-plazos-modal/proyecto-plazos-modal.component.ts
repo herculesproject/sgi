@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
@@ -12,17 +13,23 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ERROR_INIT = marker('csp.proyecto.plazos.fases.error.cargar');
-const MSG_ERROR_TIPOS = marker('csp.proyecto.tipo.fases.error.cargar');
-const MSG_ANADIR = marker('botones.aniadir');
-const MSG_ACEPTAR = marker('botones.aceptar');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const MSG_ERROR_INIT = marker('error.load');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+const PROYECTO_PLAZO_FECHA_INICIO_KEY = marker('csp.proyecto.plazo.fecha-inicio');
+const PROYECTO_PLAZO_FECHA_FIN_KEY = marker('csp.proyecto.plazo.fecha-fin');
+const PROYECTO_PLAZO_TIPO_FASE_KEY = marker('csp.proyecto.plazo.tipo-fase');
+const PROYECTO_PLAZO_OBSERVACIONES_KEY = marker('csp.proyecto.plazo.observaciones');
+const PROYECTO_PLAZO_KEY = marker('csp.proyecto-plazo');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoPlazosModalComponentData {
   plazos: IProyectoPlazos[];
@@ -50,12 +57,20 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
 
   textSaveOrUpdate: string;
 
+  msgParamFechaInicioEntity = {};
+  msgParamFechaFinEntity = {};
+  msgParamTipoFaseEntity = {};
+  msgParamObservacionesEntity = {};
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     private snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoPlazosModalComponentData,
     public matDialogRef: MatDialogRef<ProyectoPlazosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
+    private readonly translate: TranslateService
+
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -83,6 +98,8 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initFormGroup();
 
+    this.setupI18N();
+
     const suscription = this.formGroup.controls.fechaFin.valueChanges.subscribe((value) => this.validatorGeneraAviso(value));
     this.suscripciones.push(suscription);
 
@@ -91,6 +108,48 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
     this.validatorGeneraAviso(this.formGroup.controls.fechaFin.value);
     this.textSaveOrUpdate = this.data.plazo?.tipoFase ? MSG_ACEPTAR : MSG_ANADIR;
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PROYECTO_PLAZO_FECHA_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PROYECTO_PLAZO_FECHA_FIN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PROYECTO_PLAZO_TIPO_FASE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoFaseEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_PLAZO_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    if (this.data.plazo?.tipoFase) {
+      this.translate.get(
+        PROYECTO_PLAZO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        PROYECTO_PLAZO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
+  }
+
 
   /**
    * Validamos fecha para activar o inactivar el checkbox generaAviso
@@ -169,11 +228,7 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.logger.error(error);
-          if (this.data.idModeloEjecucion) {
-            this.snackBarService.showError(MSG_ERROR_INIT);
-          } else {
-            this.snackBarService.showError(MSG_ERROR_TIPOS);
-          }
+          this.snackBarService.showError(MSG_ERROR_INIT);
         })
     );
   }

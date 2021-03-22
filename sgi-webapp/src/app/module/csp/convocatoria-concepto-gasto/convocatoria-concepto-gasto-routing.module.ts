@@ -13,8 +13,8 @@ import { ConvocatoriaConceptoGastoComponent } from './convocatoria-concepto-gast
 import { CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES } from './convocatoria-concepto-gasto-route-names';
 import { ConvocatoriaConceptoGastoGuard } from './convocatoria-concepto-gasto.guard';
 
-const MSG_NEW_TITLE = marker('csp.convocatoria.concepto-gasto.crear.titulo');
-const MSG_EDIT_TITLE = marker('csp.convocatoria.concepto-gasto.editar.titulo');
+const MSG_NEW_TITLE = marker('csp.convocatoria-concepto-gasto.crear.titulo');
+const MSG_EDIT_TITLE = marker('csp.convocatoria-concepto-gasto.editar.titulo');
 
 const routes: SgiRoutes = [
   {

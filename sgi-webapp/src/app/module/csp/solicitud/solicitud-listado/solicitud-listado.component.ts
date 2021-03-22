@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
@@ -20,24 +21,25 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 
-const MSG_BUTTON_NEW = marker('footer.csp.solicitud.crear');
-const MSG_ERROR = marker('csp.solicitud.listado.error');
-const MSG_DEACTIVATE = marker('csp.solicitud.listado.desactivar');
-const MSG_SUCCESS_DEACTIVATE = marker('csp.solicitud.listado.desactivar.correcto');
-const MSG_ERROR_DEACTIVATE = marker('csp.solicitud.listado.desactivar.error');
-const MSG_REACTIVATE = marker('csp.solicitud.listado.reactivar');
-const MSG_SUCCESS_REACTIVATE = marker('csp.solicitud.listado.reactivar.correcto');
-const MSG_ERROR_REACTIVATE = marker('csp.solicitud.listado.reactivar.error');
-const MSG_ERROR_FUENTE_FINANCIACION_INIT = marker('csp.solicitud.listado.fuente.financiacion.error');
-const MSG_ERROR_PLAN_INVESTIGACION_INIT = marker('csp.solicitud.listado.plan.investigacion.error');
-const MSG_SUCCESS_CREAR_PROYECTO = marker('csp.solicitud.listado.crear.proyecto.correcto');
-const MSG_ERROR_CREAR_PROYECTO = marker('csp.solicitud.listado.crear.proyecto.error');
+const MSG_BUTTON_NEW = marker('btn.add.entity');
+const MSG_ERROR = marker('error.load');
+const MSG_DEACTIVATE = marker('msg.deactivate.entity');
+const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
+const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
+const MSG_REACTIVE = marker('msg.csp.reactivate');
+const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
+const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
+const MSG_SUCCESS_CREAR_PROYECTO = marker('msg.csp.solicitud.crear.proyecto');
+const MSG_ERROR_CREAR_PROYECTO = marker('error.csp.solicitud.crear.proyecto');
+const SOLICITUD_KEY = marker('csp.solicitud');
+
 
 @Component({
   selector: 'sgi-solicitud-listado',
@@ -51,8 +53,13 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   solicitudes$: Observable<ISolicitud[]>;
-  textoCrear = MSG_BUTTON_NEW;
-
+  textoCrear: string;
+  textoDesactivar: string;
+  textoReactivar: string;
+  textoErrorDesactivar: string;
+  textoSuccessDesactivar: string;
+  textoSuccessReactivar: string;
+  textoErrorReactivar: string;
 
   busquedaAvanzada = false;
   private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
@@ -62,6 +69,11 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   mapCrearProyecto: Map<number, boolean> = new Map();
   mapModificable: Map<number, boolean> = new Map();
+
+  msgParamConvocatoriaExternaEntity = {};
+  msgParamCodigoExternoEntity = {};
+  msgParamObservacionesEntity = {};
+  msgParamUnidadGestionEntity = {};
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -77,6 +89,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private programaService: ProgramaService,
     private proyectoService: ProyectoService,
     private matDialog: MatDialog,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -93,6 +106,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
 
     this.formGroup = new FormGroup({
       referenciaConvocatoria: new FormControl(''),
@@ -115,6 +129,96 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
     this.getFuentesFinanciacion();
     this.getPlanesInvestigacion();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_NEW,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DEACTIVATE,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoDesactivar = value);
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorDesactivar = value);
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessDesactivar = value);
+
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoReactivar = value);
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoSuccessReactivar = value);
+
+
+    this.translate.get(
+      SOLICITUD_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoErrorReactivar = value);
+
   }
 
   protected createObservable(): Observable<SgiRestListResult<ISolicitud>> {
@@ -207,7 +311,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
    * @param solicitud una solicitud
    */
   activateSolicitud(solicitud: ISolicitud): void {
-    const subcription = this.dialogService.showConfirmation(MSG_REACTIVATE).pipe(
+    const subcription = this.dialogService.showConfirmation(this.textoReactivar).pipe(
       switchMap((accept) => {
         if (accept) {
           return this.solicitudService.reactivar(solicitud.id);
@@ -217,12 +321,12 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     ).subscribe(
       () => {
-        this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVATE);
+        this.snackBarService.showSuccess(this.textoSuccessReactivar);
         this.loadTable();
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_REACTIVATE);
+        this.snackBarService.showError(this.textoErrorReactivar);
       }
     );
     this.suscripciones.push(subcription);
@@ -233,7 +337,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
    * @param solicitud una solicitud
    */
   deactivateSolicitud(solicitud: ISolicitud): void {
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
+    const subcription = this.dialogService.showConfirmation(this.textoDesactivar).pipe(
       switchMap((accept) => {
         if (accept) {
           return this.solicitudService.desactivar(solicitud.id);
@@ -243,12 +347,12 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     ).subscribe(
       () => {
-        this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+        this.snackBarService.showSuccess(this.textoSuccessDesactivar);
         this.loadTable();
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+        this.snackBarService.showError(this.textoErrorDesactivar);
       }
     );
     this.suscripciones.push(subcription);
@@ -290,7 +394,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_FUENTE_FINANCIACION_INIT);
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
@@ -318,7 +422,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_PLAN_INVESTIGACION_INIT);
+          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
@@ -364,5 +468,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         );
       })
     ).subscribe());
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 }
