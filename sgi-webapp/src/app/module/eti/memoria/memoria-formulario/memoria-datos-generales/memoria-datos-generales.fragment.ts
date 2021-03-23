@@ -94,6 +94,10 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       this.memoria.tipoMemoria = form.tipoMemoria;
     }
     this.memoria.titulo = form.titulo;
+    if (!this.memoria.responsable) {
+      this.memoria.responsable = {
+      } as IPersona;
+    }
     this.memoria.responsable.personaRef = form.personaResponsable.personaRef;
     if (this.memoria.comite.comite === 'CEEA') {
       this.memoria.codOrganoCompetente = form.codOrganoCompetente;
