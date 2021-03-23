@@ -26,7 +26,8 @@ class MemoriaConverter extends SgiBaseConverter<IMemoriaBackend, IMemoria> {
       isResponsable: value.isResponsable,
       retrospectiva: RETROSPECTIVA_CONVERTER.toTarget(value.retrospectiva),
       codOrganoCompetente: value.codOrganoCompetente,
-      memoriaOriginal: MEMORIA_CONVERTER.toTarget(value.memoriaOriginal)
+      memoriaOriginal: MEMORIA_CONVERTER.toTarget(value.memoriaOriginal),
+      activo: value.activo
     };
   }
 
@@ -49,7 +50,8 @@ class MemoriaConverter extends SgiBaseConverter<IMemoriaBackend, IMemoria> {
       isResponsable: value.isResponsable,
       retrospectiva: RETROSPECTIVA_CONVERTER.fromTarget(value.retrospectiva),
       codOrganoCompetente: value.codOrganoCompetente,
-      memoriaOriginal: MEMORIA_CONVERTER.fromTarget(value.memoriaOriginal)
+      memoriaOriginal: MEMORIA_CONVERTER.fromTarget(value.memoriaOriginal),
+      activo: value.activo
     };
   }
 }

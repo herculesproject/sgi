@@ -55,4 +55,6 @@ export interface IMemoria {
   codOrganoCompetente: string;
   /** Memoria original */
   memoriaOriginal: IMemoria;
+  /** Activo */
+  activo: boolean;
 }
