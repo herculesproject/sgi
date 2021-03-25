@@ -22,7 +22,7 @@ class ConvocatoriaReunionConverter extends SgiBaseConverter<IConvocatoriaReunion
       numeroActa: value.numeroActa,
       fechaEnvio: LuxonUtils.fromBackend(value.fechaEnvio),
       activo: value.activo,
-      codigo: `ACTA${value.numeroActa}/${value.anio}/${value.comite.comite}`
+      codigo: `ACTA${value.numeroActa}/${LuxonUtils.fromBackend(value.fechaEvaluacion).year}/${value.comite.comite}`
     };
   }
 
