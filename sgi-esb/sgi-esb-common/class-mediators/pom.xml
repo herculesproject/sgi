@@ -7,7 +7,6 @@
    	 <artifactId>sgi-esb</artifactId>
    	 <version>0.0.1-SNAPSHOT</version>
   	</parent>
-	<groupId>org.crue.hercules.sgi.esb</groupId>
 	<artifactId>class-mediators</artifactId>
 	<name>class-mediators</name>
 	<packaging>jar</packaging>
@@ -138,11 +137,11 @@
 	</dependencies>
 	<build>
 		<resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+      <resource>
+         <directory>src/main/resources</directory>
+          <filtering>true</filtering>
+      </resource>
+    </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
