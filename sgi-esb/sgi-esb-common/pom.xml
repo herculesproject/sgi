@@ -38,7 +38,25 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
   </properties>
-
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <id>wso2-nexus</id>
+      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+    </repository>
+    <repository>
+      <id>wso2-maven2-repository-1</id>
+      <url>http://dist.wso2.org/maven2</url>
+    </repository>
+    <repository>
+      <id>wso2-nexus-repository-1</id>
+      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+    </repository>
+  </repositories>
 
   <build>
     <plugins>
