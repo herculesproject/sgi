@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crue.hercules</groupId>
+  <groupId>org.crue.hercules.sgi.esb.sgdoc</groupId>
   <artifactId>sgi-esb-sgdoc</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -15,6 +15,30 @@
     <module>sgdoc-integration-project</module>
     <module>sgdoc-composite-application</module>
   </modules>
+   <!-- ********************************************** -->
+  <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
+  <!-- ********************************************** -->
+
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>${dist.repo.rel.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <url>${dist.repo.snap.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <properties>
+    <!-- Distribution Management URL's -->
+      <dist.repo.rel.url>file:///maven-repositories/releases/</dist.repo.rel.url>
+      <dist.repo.snap.url>file:///maven-repositories/snapshots/</dist.repo.snap.url>
+
+      <!-- Encoding -->
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+  </properties>
+
   <build />
   <profiles>
     <profile>

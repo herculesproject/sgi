@@ -4,11 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.crue.hercules.sgi.esb.sgdoc</groupId>
-    <artifactId>sgdoc-integration-project</artifactId>
+    <artifactId>sgi-esb-sgdoc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../sgdoc-integration-project/pom.xml</relativePath>
   </parent>
-  <groupId>org.crue.hercules.sgi.esb.sgdoc</groupId>
   <artifactId>sgdoc-connector-exporter</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -97,21 +95,6 @@
               <arguments>
                 <argument>clean</argument>
                 <argument>install</argument>
-                <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>mvn</executable>
-              <workingDirectory>${project.build.directory}</workingDirectory>
-              <arguments>
-                <argument>deploy</argument>
                 <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
               </arguments>
             </configuration>

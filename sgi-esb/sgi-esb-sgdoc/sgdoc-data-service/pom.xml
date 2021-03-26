@@ -2,7 +2,11 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crue.hercules.sgi.esb.sgdoc</groupId>
+  <parent>
+    <groupId>org.crue.hercules.sgi.esb.sgdoc</groupId>
+    <artifactId>sgi-esb-sgdoc</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
   <artifactId>sgdoc-data-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -71,21 +75,6 @@
               <arguments>
                 <argument>clean</argument>
                 <argument>install</argument>
-                <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>mvn</executable>
-              <workingDirectory>${project.build.directory}</workingDirectory>
-              <arguments>
-                <argument>deploy</argument>
                 <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
               </arguments>
             </configuration>
