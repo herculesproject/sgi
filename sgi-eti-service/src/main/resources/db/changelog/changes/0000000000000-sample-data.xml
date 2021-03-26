@@ -214,7 +214,7 @@
       <column name="id" valueSequenceNext="estado_memoria_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En secretaría seguimiento anual')" />
-      <column name="fecha_estado" value="2020-10-01T00:00:00Z" />
+      <column name="fecha_estado" value="2020-10-02T00:00:00Z" />
     </insert>
     <insert tableName="estado_memoria">
       <column name="id" valueSequenceNext="estado_memoria_seq" />

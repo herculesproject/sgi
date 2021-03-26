@@ -8,9 +8,11 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.RespuestaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.crue.hercules.sgi.eti.repository.BloqueRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.service.impl.RespuestaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,12 +35,19 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
   @Mock
   private RespuestaRepository respuestaRepository;
+  @Mock
+  private BloqueRepository bloqueRepository;
+  @Mock
+  private MemoriaService memoriaService;
+  @Mock
+  private RetrospectivaService retrospectivaService;
 
   private RespuestaService respuestaService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    respuestaService = new RespuestaServiceImpl(respuestaRepository);
+    respuestaService = new RespuestaServiceImpl(respuestaRepository, bloqueRepository, memoriaService,
+        retrospectivaService);
   }
 
   @Test
@@ -69,7 +78,12 @@ public class RespuestaServiceTest extends BaseServiceTest {
     Respuesta respuesta = generarMockRespuesta(1L);
     respuesta.setValor("{\"valor\":\"ValorNew\"}");
 
+    Memoria memoria = generarMockMemoria(1L);
+
     BDDMockito.given(respuestaRepository.save(respuestaNew)).willReturn(respuesta);
+    BDDMockito.given(memoriaService.findById(1L)).willReturn(memoria);
+    BDDMockito.given(bloqueRepository.findFirstByFormularioIdOrderByOrdenDesc(1L))
+        .willReturn(generarMockBloque(1L, memoria.getComite().getFormulario()));
 
     // when: Creamos el Respuesta
     Respuesta respuestaCreado = respuestaService.create(respuestaNew);
@@ -98,8 +112,13 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
     Respuesta respuesta = generarMockRespuesta(1L);
 
+    Memoria memoria = generarMockMemoria(1L);
+
     BDDMockito.given(respuestaRepository.findById(1L)).willReturn(Optional.of(respuesta));
     BDDMockito.given(respuestaRepository.save(respuesta)).willReturn(respuestaServicioActualizado);
+    BDDMockito.given(memoriaService.findById(1L)).willReturn(memoria);
+    BDDMockito.given(bloqueRepository.findFirstByFormularioIdOrderByOrdenDesc(1L))
+        .willReturn(generarMockBloque(1L, memoria.getComite().getFormulario()));
 
     // when: Actualizamos el Respuesta
     Respuesta RespuestaActualizado = respuestaService.update(respuesta);
@@ -300,5 +319,40 @@ public class RespuestaServiceTest extends BaseServiceTest {
     data.setEsquema("{\"nombre\":\"EsquemaApartado" + txt + "\"}");
 
     return data;
+  }
+
+  /**
+   * Función que devuelve un objeto Memoria
+   * 
+   * @param id id de la Memoria
+   * @return el objeto Memoria
+   */
+
+  public Memoria generarMockMemoria(Long id) {
+    Memoria memoria = new Memoria();
+    memoria.setId(id);
+
+    Formulario formulario = new Formulario();
+    formulario.setId(id);
+    formulario.setNombre("M10");
+
+    Comite comite = new Comite();
+    comite.setId(id);
+    comite.setFormulario(formulario);
+
+    memoria.setComite(comite);
+
+    return memoria;
+  }
+
+  /**
+   * Función que devuelve un objeto Bloque
+   * 
+   * @param id         id del bloque
+   * @param formulario el formulario del bloque
+   * @return el objeto Bloque
+   */
+  public Bloque generarMockBloque(Long id, Formulario formulario) {
+    return new Bloque(id, formulario, "Bloque " + id, id.intValue());
   }
 }

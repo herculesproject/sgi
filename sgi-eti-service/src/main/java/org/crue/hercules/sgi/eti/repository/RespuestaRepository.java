@@ -31,4 +31,24 @@ public interface RespuestaRepository extends JpaRepository<Respuesta, Long>, Jpa
    * @return listado paginado de respuestas.
    */
   Page<Respuesta> findByMemoriaIdAndMemoriaActivoTrue(Long idMemoria, Pageable pageable);
+
+  /**
+   * Indica la existencia o no de un bloque
+   * 
+   * @param id    identificador de la {@link Respuesta}
+   * @param orden orden del bloque
+   * @return boolean true or false
+   */
+  boolean existsByIdAndApartadoBloqueOrden(Long id, Integer orden);
+
+  /**
+   * Obtiene la Respuesta asociada un bloque y apartado
+   * 
+   * @param ordenBloque   El bloque del apartado
+   * @param ordenApartado El apartado del bloque
+   * @param idMemoria     identificador de la {@link Memoria}
+   * @return Respuesta
+   */
+  Respuesta findByApartadoBloqueOrdenAndApartadoOrdenAndMemoriaId(Integer ordenBloque, Integer ordenApartado,
+      Long idMemoria);
 }
