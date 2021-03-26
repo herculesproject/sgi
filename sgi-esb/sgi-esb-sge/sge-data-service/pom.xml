@@ -79,21 +79,6 @@
               </arguments>
             </configuration>
           </execution>
-          <execution>
-            <id>deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>mvn</executable>
-              <workingDirectory>${project.build.directory}</workingDirectory>
-              <arguments>
-                <argument>deploy</argument>
-                <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
-              </arguments>
-            </configuration>
-          </execution>
         </executions>
         <configuration />
       </plugin>
