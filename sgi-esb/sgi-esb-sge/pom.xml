@@ -13,6 +13,29 @@
     <module>sge-integration-project</module>
     <module>sge-composite-application</module>
   </modules>
+  <!-- ********************************************** -->
+  <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
+  <!-- ********************************************** -->
+
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>${dist.repo.rel.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <url>${dist.repo.snap.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <properties>
+    <!-- Distribution Management URL's -->
+      <dist.repo.rel.url>file:///maven-repositories/releases/</dist.repo.rel.url>
+      <dist.repo.snap.url>file:///maven-repositories/snapshots/</dist.repo.snap.url>
+
+      <!-- Encoding -->
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+  </properties>
   <build />
   <profiles>
     <profile>
