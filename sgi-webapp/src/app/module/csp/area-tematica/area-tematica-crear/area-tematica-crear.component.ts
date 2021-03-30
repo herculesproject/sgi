@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -24,7 +24,7 @@ const AREA_KEY = marker('csp.area');
     AreaTematicaActionService
   ]
 })
-export class AreaTematicaCrearComponent extends ActionComponent {
+export class AreaTematicaCrearComponent extends ActionComponent implements OnInit {
   AREA_TEMATICA_ROUTE_NAMES = AREA_TEMATICA_ROUTE_NAMES;
 
   textoCrear: string;
@@ -74,7 +74,7 @@ export class AreaTematicaCrearComponent extends ActionComponent {
       switchMap((value) => {
         return this.translate.get(
           MSG_SUCCESS,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoCrearSuccess = value);
@@ -86,7 +86,7 @@ export class AreaTematicaCrearComponent extends ActionComponent {
       switchMap((value) => {
         return this.translate.get(
           MSG_ERROR,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoCrearError = value);

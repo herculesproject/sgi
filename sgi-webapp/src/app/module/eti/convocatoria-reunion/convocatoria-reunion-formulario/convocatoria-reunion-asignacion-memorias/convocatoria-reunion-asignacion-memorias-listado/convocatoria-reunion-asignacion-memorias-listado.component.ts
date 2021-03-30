@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -12,11 +14,15 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionActionService } from '../../../convocatoria-reunion.action.service';
 import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from '../convocatoria-reunion-asignacion-memorias-modal/convocatoria-reunion-asignacion-memorias-modal.component';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-asignacion-memorias-listado.fragment';
 
+const MSG_DELETE = marker('msg.delete.entity');
+const MEMORIA_KEY = marker('eti.memoria');
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias-listado',
   templateUrl: './convocatoria-reunion-asignacion-memorias-listado.component.html',
@@ -38,13 +44,21 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
   disableAsignarMemorias: boolean;
   private subscriptions: Subscription[] = [];
 
+  msgParamEnity = {};
+  textoDelete: string;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly matDialog: MatDialog,
     protected readonly evaluacionService: EvaluacionService,
     protected readonly dialogService: DialogService,
     protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly snackBarService: SnackBarService,
-    private actionService: ConvocatoriaReunionActionService
+    private actionService: ConvocatoriaReunionActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.ASIGNACION_MEMORIAS, actionService);
     this.listadoFragment = this.fragment as ConvocatoriaReunionAsignacionMemoriasListadoFragment;
@@ -55,6 +69,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.evaluaciones$.subscribe((evaluaciones) => {
       this.datasource.data = evaluaciones;
     });
@@ -82,6 +97,25 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
             return wrapper.value[property];
         }
       };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      MEMORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEnity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      MEMORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
   }
 
   ngOnDestroy() {
@@ -146,7 +180,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    */
   borrar(wrappedEvaluacion: StatusWrapper<IEvaluacionWithIsEliminable>): void {
     const dialogSubscription = this.dialogService.showConfirmation(
-      'eti.convocatoriaReunion.listado.eliminar'
+      this.textoDelete
     ).subscribe((aceptado) => {
       if (aceptado) {
         this.listadoFragment.deleteEvaluacion(wrappedEvaluacion);

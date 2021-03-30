@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -17,16 +18,18 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
-const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
-const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
-const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
+const MSG_BUTTON_SAVE = marker('btn.add.entity');
+const MSG_ERROR = marker('error.load');
+const TEXT_USER_TITLE = marker('eti.solicitante');
+const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
+const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-ges',
@@ -43,7 +46,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   displayedColumns: string[];
   totalElementos: number;
 
-  textoCrear = MSG_BUTTON_SAVE;
+  textoCrear: string;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -68,7 +71,8 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
-    private readonly personaFisicaService: PersonaFisicaService
+    private readonly personaFisicaService: PersonaFisicaService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
 
@@ -89,6 +93,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
 
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
@@ -100,6 +105,20 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
     this.getComites();
     this.getEstadosMemoria();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PETICION_EVALUACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_SAVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
   }
 
   protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacion>> {

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IMemoria } from '@core/models/eti/memoria';
@@ -13,8 +14,6 @@ import {
   EvaluacionListadoAnteriorMemoriaComponent
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion.fragment';
-
-
 
 @Component({
   selector: 'sgi-evaluacion-evaluacion',
@@ -34,6 +33,10 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
   suscriptions: Subscription[] = [];
 
   formPart: EvaluacionEvaluacionFragment;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   constructor(
     private actionService: EvaluacionFormularioActionService,

@@ -2,18 +2,19 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-const MSG_SUCCESS = marker('eti.acta.asistentes.correcto');
-const MSG_ERROR = marker('eti.acta.asistentes.error');
 const MSG_ERROR_FORM = marker('error.form-group');
-const MSG_ERROR_CONFLICTO_REPETIDO = marker('eti.evaluador.conflictoInteres.formulario.listado.personaConflicto.repetida');
+const CONFLICTO_INTERES_KEY = marker('eti.evaluador.conflicto-interes');
+const MSG_ERROR_CONFLICTO_REPETIDO = marker('error.eti.evaluador.conflicto-interes.duplicate');
 
 @Component({
   selector: 'sgi-evaluador-conflictos-interes-modal',
@@ -29,17 +30,27 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
   conflictoInteresSuscripcion: Subscription;
 
   nuevaPersonaConflicto: IPersona;
+  msgParamConflictoInteresEntity = {};
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public conflictos: IConflictoInteres[],
     public readonly matDialogRef: MatDialogRef<EvaluadorConflictosInteresModalComponent>,
-    private readonly snackBarService: SnackBarService) {
+    private readonly snackBarService: SnackBarService,
+    private readonly translate: TranslateService) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'column';
   }
 
   ngOnInit(): void {
     this.initFormGroup();
+    this.setupI18N();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CONFLICTO_INTERES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamConflictoInteresEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
   /**
    * Inicializa el formGroup

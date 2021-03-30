@@ -23,10 +23,9 @@ import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR = marker('eti.evaluacion.listado.error');
-const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
-const TEXT_USER_TITLE = marker('eti.buscarSolicitante.titulo');
-const TEXT_USER_BUTTON = marker('eti.buscarSolicitante.boton.buscar');
+const MSG_ERROR = marker('error.load');
+const TEXT_USER_TITLE = marker('title.eti.search.solicitante');
+const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
 
 @Component({
   selector: 'sgi-evaluacion-listado',
@@ -232,7 +231,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
+        this.snackBarService.showError(MSG_ERROR);
       }
     ));
   }

@@ -1,5 +1,8 @@
 <div class="modal-documentacion-memoria">
-
+  <header class="modal-header-material">
+    <h3 mat-dialog-title>
+      {{title | translate}}</h3>
+  </header>
   <main>
 
     <form [formGroup]="formGroup">
@@ -9,17 +12,16 @@
         <div [fxFlex.sm]="fxFlexProperties2.sm" [fxFlex.md]="fxFlexProperties2.md"
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
           <mat-form-field>
-            <mat-label>{{'eti.memoria.documentacion.tipo.documento' | translate}}</mat-label>
+            <mat-label>{{'eti.memoria.documento.tipo' | translate}}</mat-label>
             <input matInput formControlName="tipoDocumento" type="text" id="tipoDocumento"
-              placeholder="{{'eti.memoria.documentacion.tipo.documento' | translate}}" required
-              [matAutocomplete]="auto">
+              placeholder="{{'eti.memoria.documento.tipo' | translate}}" required [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoDocumento">
               <mat-option *ngFor="let tipoDcoumentacion of tiposDcoumentacion | async" [value]="tipoDcoumentacion">
                 {{tipoDcoumentacion.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
-              {{'eti.memoria.documentacion.tipo.documento.error.vacio' | translate}}
+              {{'error.required.entity' | translate:msgParamTipoEntity}}
             </mat-error>
 
           </mat-form-field>

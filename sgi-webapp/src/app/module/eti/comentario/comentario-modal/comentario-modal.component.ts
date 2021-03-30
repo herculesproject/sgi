@@ -5,6 +5,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
 import { IComentario } from '@core/models/eti/comentario';
@@ -19,14 +20,20 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
 
-const MSG_ERROR_BLOQUE = marker('eti.comentario.bloque.error.cargar');
-const MSG_ERROR_APARTADO = marker('eti.comentario.apartado.error.cargar');
+const MSG_ERROR_BLOQUE = marker('error.load');
+const MSG_ERROR_APARTADO = marker('error.load');
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+const COMENTARIO_KEY = marker('eti.comentario');
+const COMENTARIO_BLOQUE_KEY = marker('eti.comentario.bloque');
+const BTN_ADD = marker('btn.add');
+const BTN_OK = marker('btn.ok');
 
 export interface ComentarioModalData {
   evaluacion: IEvaluacion;
@@ -102,6 +109,15 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
   checkedNode: NodeApartado;
   hasChild = (_: number, node: NodeApartado) => node.childs.length > 0;
 
+  msgParamBloqueEntity = {};
+  msgParamComentarioEntity = {};
+  title: string;
+  textoAceptar: string;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly formularioService: FormularioService,
@@ -110,6 +126,7 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ComentarioModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ComentarioModalData,
+    private readonly translate: TranslateService
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'column';
@@ -118,6 +135,7 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.setupI18N();
     this.suscripciones = [];
     this.formGroup = new FormGroup({
       bloque: new FormControl(this.data?.comentario?.apartado?.bloque, [Validators.required, IsEntityValidator.isValid()]),
@@ -130,6 +148,47 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
     }
     const subscription = this.formGroup.get('bloque').valueChanges.subscribe((value) => this.loadTreeApartados(value.id));
     this.suscripciones.push(subscription);
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      COMENTARIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      COMENTARIO_BLOQUE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamBloqueEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    if (this.data.comentario) {
+      this.translate.get(
+        COMENTARIO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+
+      this.translate.get(
+        BTN_OK,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.textoAceptar = value);
+    } else {
+      this.translate.get(
+        COMENTARIO_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+
+      this.translate.get(
+        BTN_ADD,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.textoAceptar = value);
+    }
   }
 
   /**

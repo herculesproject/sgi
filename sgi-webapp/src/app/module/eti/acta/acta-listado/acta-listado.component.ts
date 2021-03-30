@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IActaWithNumEvaluaciones } from '@core/models/eti/acta-with-num-evaluaciones';
 import { IComite } from '@core/models/eti/comite';
 import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
@@ -15,20 +16,17 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
-import { catchError, map, startWith } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-
-
-
-
-
-const MSG_BUTTON_NEW = marker('footer.eti.acta.crear');
-const MSG_ERROR = marker('eti.acta.listado.error');
-const MSG_FINALIZAR_ERROR = marker('eti.acta.listado.finalizar.error');
-const MSG_FINALIZAR_SUCCESS = marker('eti.acta.listado.finalizar.correcto');
+const MSG_BUTTON_NEW = marker('btn.add.entity');
+const MSG_ERROR = marker('error.load');
+const MSG_FINALIZAR_ERROR = marker('error.eti.acta.finalizar');
+const MSG_FINALIZAR_SUCCESS = marker('msg.eti.acta.finalizar.success');
+const ACTA_KEY = marker('eti.acta');
 
 @Component({
   selector: 'sgi-acta-listado',
@@ -59,14 +57,15 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
 
   finalizarSubscription: Subscription;
 
-  textoCrear = MSG_BUTTON_NEW;
+  textoCrear: string;
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly actasService: ActaService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
-    private readonly tipoEstadoActaService: TipoEstadoActaService
+    private readonly tipoEstadoActaService: TipoEstadoActaService,
+    private readonly translate: TranslateService
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -83,10 +82,10 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     this.fxLayoutProperties.xs = 'column';
   }
 
-
-
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
+
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
       fechaEvaluacionInicio: new FormControl(null, []),
@@ -98,6 +97,20 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     this.getComites();
 
     this.getTipoEstadoActas();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      ACTA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_NEW,
+          { entity: value }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
   }
 
   protected createObservable(): Observable<SgiRestListResult<IActaWithNumEvaluaciones>> {

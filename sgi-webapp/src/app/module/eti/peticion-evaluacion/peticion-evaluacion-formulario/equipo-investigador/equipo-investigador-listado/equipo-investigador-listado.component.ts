@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -16,16 +17,19 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import {
   EquipoInvestigadorCrearModalComponent
 } from '../equipo-investigador-crear-modal/equipo-investigador-crear-modal.component';
 import { EquipoInvestigadorListadoFragment } from './equipo-investigador-listado.fragment';
 
-const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.eliminar');
-const MSG_ERROR_INVESTIGADOR_REPETIDO = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.investigadorRepetido');
+const MSG_CONFIRM_DELETE = marker('msg.delete.entity');
+const MSG_ERROR_INVESTIGADOR_REPETIDO = marker('error.eti.peticion-evaluacion.equipo-investigador.duplicate');
+const PETICION_EVALUACION_EQUIPO_INVESTIGADOR_PERSONA_KEY = marker('eti.peticion-evaluacion.equipo-investigador.persona');
 
 @Component({
   selector: 'sgi-equipo-investigador-listado',
@@ -48,6 +52,9 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   elementosPagina: number[] = [5, 10, 25, 100];
 
+  msgParamEntity = {};
+  textoDelete: string;
+
   constructor(
     protected matDialog: MatDialog,
     protected readonly dialogService: DialogService,
@@ -56,7 +63,8 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly sgiAuthService: SgiAuthService,
     protected readonly snackBarService: SnackBarService,
-    private actionService: PeticionEvaluacionActionService
+    private actionService: PeticionEvaluacionActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.EQUIPO_INVESTIGADOR, actionService);
     this.listadoFragment = this.fragment as EquipoInvestigadorListadoFragment;
@@ -66,6 +74,8 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
+
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sort;
     this.listadoFragment.equiposTrabajo$.subscribe((equiposTrabajo) => {
@@ -84,6 +94,26 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
             return wrapper.value[property];
         }
       };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PETICION_EVALUACION_EQUIPO_INVESTIGADOR_PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      PETICION_EVALUACION_EQUIPO_INVESTIGADOR_PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_CONFIRM_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
   }
 
   /**
@@ -122,7 +152,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
    */
   delete(wrappedEquipoTrabajo: StatusWrapper<IEquipoTrabajoWithIsEliminable>): void {
     const dialogSubscription = this.dialogService.showConfirmation(
-      MSG_CONFIRM_DELETE
+      this.textoDelete
     ).subscribe((aceptado) => {
       if (aceptado) {
         this.listadoFragment.deleteEquipoTrabajo(wrappedEquipoTrabajo);

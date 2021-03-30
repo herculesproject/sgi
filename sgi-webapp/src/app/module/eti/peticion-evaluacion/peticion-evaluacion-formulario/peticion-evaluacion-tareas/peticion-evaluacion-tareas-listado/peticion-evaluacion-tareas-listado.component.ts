@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ITarea } from '@core/models/eti/tarea';
@@ -17,12 +18,15 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionTareasModalComponent } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-listado.fragment';
 
-const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.tareas.listado.eliminar');
+const MSG_CONFIRM_DELETE = marker('msg.delete.entity');
+const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-tareas',
@@ -45,13 +49,21 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  msgParamEntity = {};
+  textoDelete: string;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     protected readonly dialogService: DialogService,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService,
     protected matDialog: MatDialog,
     protected readonly snackBarService: SnackBarService,
-    actionService: PeticionEvaluacionActionService
+    actionService: PeticionEvaluacionActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TAREAS, actionService);
     this.tareas$ = (this.fragment as PeticionEvaluacionTareasFragment).tareas$;
@@ -64,6 +76,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sort;
     this.listadoFragment.tareas$.subscribe((tarea) => {
@@ -86,6 +99,25 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
             return wrapper.value[property];
         }
       };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      TAREA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      TAREA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_CONFIRM_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
   }
 
   /**
@@ -154,7 +186,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
    */
   delete(wrappedTarea: StatusWrapper<ITareaWithIsEliminable>): void {
     const dialogSubscription = this.dialogService.showConfirmation(
-      MSG_CONFIRM_DELETE
+      this.textoDelete
     ).subscribe((aceptado) => {
       if (aceptado) {
         this.listadoFragment.deleteTarea(wrappedTarea);

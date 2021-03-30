@@ -1,14 +1,14 @@
 <div class="modal-comentario">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'eti.comentario.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title | translate}}</h3>
   </header>
   <main>
     <form class="form-inline" [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.comentario.bloque.titulo' | translate}}</mat-label>
+          <mat-label>{{'eti.comentario.bloque' | translate}}</mat-label>
           <input matInput formControlName="bloque" type="text" id="bloque"
-            placeholder="{{'eti.comentario.bloque.titulo' | translate}}" required arial-label="Number"
+            placeholder="{{'eti.comentario.bloque' | translate}}" required arial-label="Number"
             [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombreBloque">
             <mat-option *ngFor="let apartado of apartado$ | async" [value]="apartado">
@@ -16,10 +16,10 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.bloque.errors?.required">
-            {{'eti.comentario.bloque.error.requerido' | translate}}
+            {{'error.required.entity' | translate:msgParamBloqueEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.bloque.errors?.invalid">
-            {{'eti.comentario.bloque.error.invalido' | translate}}
+            {{'error.invalid.entity' | translate:msgParamBloqueEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -64,15 +64,15 @@
 
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.comentario.comentario.titulo' | translate}}</mat-label>
+          <mat-label>{{'eti.comentario' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
           <textarea matInput formControlName="comentario" type="text" id="comentario"
-            placeholder="{{'eti.comentario.comentario.titulo' | translate}}" required>
+            placeholder="{{'eti.comentario' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}" required>
         </textarea>
           <mat-error *ngIf="formGroup.controls.comentario.errors?.required">
-            {{'eti.comentario.comentario.error.requerido' | translate}}
+            {{'error.required.entity' | translate:msgParamComentarioEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.comentario.errors?.maxlength">
-            {{'eti.comentario.comentario.error.maxLength' | translate}}
+            {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -80,7 +80,7 @@
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveComentario()" md-button mat-raised-button type="submit">
-      {{'btn.add' | translate}}</button>
+      {{textoAceptar}}</button>
     <button class="link-cancelar" mat-button (click)="closeModal()" type="button">{{'btn.cancel' |
       translate}}</button>
   </div>

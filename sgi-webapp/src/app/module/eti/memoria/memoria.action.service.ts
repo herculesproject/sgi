@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ActionService } from '@core/services/action-service';
-import { MemoriaDatosGeneralesFragment } from './memoria-formulario/memoria-datos-generales/memoria-datos-generales.fragment';
-import { MemoriaService } from '@core/services/eti/memoria.service';
-import { IMemoria } from '@core/models/eti/memoria';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IComite } from '@core/models/eti/comite';
+import { IMemoria } from '@core/models/eti/memoria';
+import { IRetrospectiva } from '@core/models/eti/retrospectiva';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { ActionService } from '@core/services/action-service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { FormularioService } from '@core/services/eti/formulario.service';
+import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { map, switchMap } from 'rxjs/operators';
+import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
-import { MemoriaDocumentacionFragment } from './memoria-formulario/memoria-documentacion/memoria-documentacion.fragment';
 import { NGXLogger } from 'ngx-logger';
+import { map } from 'rxjs/operators';
+import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
+import { MemoriaDatosGeneralesFragment } from './memoria-formulario/memoria-datos-generales/memoria-datos-generales.fragment';
+import { MemoriaDocumentacionFragment } from './memoria-formulario/memoria-documentacion/memoria-documentacion.fragment';
 import { MemoriaEvaluacionesFragment } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.fragment';
 import { MemoriaFormularioFragment } from './memoria-formulario/memoria-formulario/memoria-formulario.fragment';
 import { MemoriaInformesFragment } from './memoria-formulario/memoria-informes/memoria-informes.fragment';
-import { FormularioService } from '@core/services/eti/formulario.service';
-import { BloqueService } from '@core/services/eti/bloque.service';
-import { RespuestaService } from '@core/services/eti/respuesta.service';
-import { IComite } from '@core/models/eti/comite';
-import { ApartadoService } from '@core/services/eti/apartado.service';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
-import { IRetrospectiva } from '@core/models/eti/retrospectiva';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
-const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
+const MSG_PETICIONES_EVALUACION = marker('eti.peticion-evaluacion');
 
 @Injectable()
 export class MemoriaActionService extends ActionService {

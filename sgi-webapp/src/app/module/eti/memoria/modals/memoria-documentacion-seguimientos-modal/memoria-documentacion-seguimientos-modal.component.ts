@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { IDocumento } from '@core/models/sgdoc/documento';
@@ -12,13 +13,15 @@ import { DocumentoService, FileModel } from '@core/services/sgdoc/documento.serv
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_APORTAR_DOCUMENTACION = marker('eti.memoria.documentacion.error.aportar');
+const MSG_ERROR_APORTAR_DOCUMENTACION = marker('error.eti.memoria.documentacion.aportar');
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
-
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+const DOCUMENTO_KEY = marker('eti.memoria.documento');
 @Component({
   templateUrl: './memoria-documentacion-seguimientos-modal.component.html',
   styleUrls: ['./memoria-documentacion-seguimientos-modal.component.scss']
@@ -40,12 +43,15 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
 
   suscripciones: Subscription[] = [];
 
+  title: string;
+
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<MemoriaDocumentacionSeguimientosModalComponent>,
     private readonly snackBarService: SnackBarService,
     private readonly documentoService: DocumentoService,
-    @Inject(MAT_DIALOG_DATA) public documentacionesMemoria: StatusWrapper<IDocumentacionMemoria>[]) {
+    @Inject(MAT_DIALOG_DATA) public documentacionesMemoria: StatusWrapper<IDocumentacionMemoria>[],
+    private readonly translate: TranslateService) {
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
@@ -73,7 +79,23 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initFormGroup();
+    this.setupI18N();
   }
+
+  private setupI18N(): void {
+    this.translate.get(
+      DOCUMENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          TITLE_NEW_ENTITY,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.title = value);
+  }
+
 
   /**
    * Inicializa formulario de añadir documentació.

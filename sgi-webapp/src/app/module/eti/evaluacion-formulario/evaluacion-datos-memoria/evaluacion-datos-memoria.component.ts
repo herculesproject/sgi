@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IMemoria } from '@core/models/eti/memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -19,6 +20,10 @@ export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemo
   fxFlexPropertiesInline: FxFlexProperties;
 
   @ViewChild('evaluaciones') evaluaciones: EvaluacionListadoAnteriorMemoriaComponent;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   constructor(
     private actionService: EvaluacionFormularioActionService

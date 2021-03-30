@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IAsistente } from '@core/models/eti/asistente';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -28,6 +29,10 @@ export class ActaAsistentesListadoComponent extends FragmentComponent implements
   asistentes$: BehaviorSubject<StatusWrapper<IAsistente>[]>;
 
   readonly: boolean;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   constructor(
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,

@@ -1,5 +1,5 @@
 <section class="memoria-formulario">
-  <h2>{{'eti.memoria.formulario.title' | translate}}</h2>
+  <h2>{{'eti.memoria.formulario' | translate}}</h2>
   <mat-horizontal-stepper [linear]="true" labelPosition="bottom" (selectionChange)="onStepChange($event)">
     <ng-container *ngFor="let block of blocks; let step_index = index; let last = last;">
       <mat-step [stepControl]="block.formlyData.formGroup">

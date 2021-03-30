@@ -1,5 +1,8 @@
 <div class="modal-documentacion-memoria">
-
+  <header class="modal-header-material">
+    <h3 mat-dialog-title>
+      {{title | translate}}</h3>
+  </header>
   <main>
 
     <form [formGroup]="formGroup">
@@ -13,7 +16,7 @@
 
           <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <label>{{'eti.memoria.documentacion.aniadir' | translate}}</label>
+            <label>{{'eti.memoria.documento' | translate}}</label>
             <div class=" mat-form-field-wrapper">
               <button class="icon-foto" mat-icon-button color="primary" title=" {{'btn.explore' | translate}}">
 

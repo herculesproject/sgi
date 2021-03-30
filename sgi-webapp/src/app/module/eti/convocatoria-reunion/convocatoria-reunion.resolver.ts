@@ -8,7 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
-const MSG_NOT_FOUND = marker('eti.convocatoriaReunion.editar.no-encontrado');
+const MSG_NOT_FOUND = marker('error.load');
 
 @Injectable()
 export class ConvocatoriaReunionResolver extends SgiResolverResolver<IConvocatoriaReunion>{

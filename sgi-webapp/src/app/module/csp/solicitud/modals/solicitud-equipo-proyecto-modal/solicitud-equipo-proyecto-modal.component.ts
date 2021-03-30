@@ -55,7 +55,6 @@ export class SolicitudEquipoProyectoModalComponent extends
   msgParamMesFin = {};
   title: string;
 
-
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,

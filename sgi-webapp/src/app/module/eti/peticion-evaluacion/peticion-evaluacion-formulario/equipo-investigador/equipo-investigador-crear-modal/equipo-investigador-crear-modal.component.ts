@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
 
+const PERSONA_KEY = marker('eti.peticion-evaluacion.equipo-investigador.persona');
 @Component({
   selector: 'sgi-equipo-investigador-crear-modal',
   templateUrl: './equipo-investigador-crear-modal.component.html',
@@ -22,8 +26,11 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
 
   nuevaPersonaEquipo: IPersona;
 
+  msgParamEntity = {};
+
   constructor(
-    public readonly matDialogRef: MatDialogRef<EquipoInvestigadorCrearModalComponent>
+    public readonly matDialogRef: MatDialogRef<EquipoInvestigadorCrearModalComponent>,
+    private readonly translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +44,16 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'column';
 
+    this.setupI18N();
+
     this.initFormGroup();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
   }
 
   /**

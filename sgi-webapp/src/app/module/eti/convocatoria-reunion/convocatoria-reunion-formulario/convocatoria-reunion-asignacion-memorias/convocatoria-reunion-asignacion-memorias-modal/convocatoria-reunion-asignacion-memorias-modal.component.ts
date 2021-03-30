@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogData } from '@block/dialog/dialog.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluador } from '@core/models/eti/evaluador';
@@ -17,6 +18,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { NullIdValidador } from '@core/validators/null-id-validador';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
@@ -24,11 +26,12 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
-const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
-const MSG_ERROR_CARGAR_EVALUADOR1 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.cargar');
-const MSG_ERROR_CARGAR_EVALUADOR2 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2.error.cargar');
-const MSG_ERROR_EVALUADOR_REPETIDO = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador.repetido');
-
+const MSG_ERROR_LOAD = marker('error.load');
+const MSG_ERROR_EVALUADOR_REPETIDO = marker('error.eti.convocatoria-reunion.memoria.evaluador.duplicate');
+const MEMORIA_EVALUADOR1_KEY = marker('eti.convocatoria-reunion.memoria.evaludador-1');
+const MEMORIA_EVALUADOR2_KEY = marker('eti.convocatoria-reunion.memoria.evaludador-2');
+const MEMORIA_KEY = marker('eti.memoria');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias-modal',
   templateUrl: './convocatoria-reunion-asignacion-memorias-modal.component.html',
@@ -59,6 +62,15 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
 
   isEdit = false;
 
+  msgParamEvaludador1Entity = {};
+  msgParamEvaludador2Entity = {};
+  msgParamMemoriaEntity = {};
+  title: string;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly dialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,
@@ -66,7 +78,8 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     private readonly memoriaService: MemoriaService,
     private readonly PersonafisicaService: PersonaFisicaService,
     private readonly snackBarService: SnackBarService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private readonly translate: TranslateService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -93,6 +106,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
 
   ngOnInit(): void {
     this.initFormGroup();
+    this.setupI18N();
 
     if (this.idConvocatoria) {
       this.loadMemoriasAsignablesConvocatoria();
@@ -107,6 +121,42 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     this.isEdit = this.evaluacion?.memoria ? true : false;
 
     this.loadEvaluadores();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      MEMORIA_EVALUADOR1_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEvaludador1Entity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      MEMORIA_EVALUADOR2_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEvaludador2Entity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      MEMORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMemoriaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    if (this.evaluacion.memoria) {
+      this.translate.get(
+        MEMORIA_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+    } else {
+      this.translate.get(
+        MEMORIA_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+    }
   }
 
   /**
@@ -180,7 +230,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_CARGAR_MEMORIA);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       ));
   }
@@ -210,7 +260,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_CARGAR_MEMORIA);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       ));
   }
@@ -240,7 +290,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_CARGAR_MEMORIA);
+          this.snackBarService.showError(MSG_ERROR_LOAD);
         }
       ));
   }
@@ -305,7 +355,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_CARGAR_EVALUADOR1);
+        this.snackBarService.showError(MSG_ERROR_LOAD);
       }
     ));
 
@@ -321,7 +371,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_CARGAR_EVALUADOR2);
+        this.snackBarService.showError(MSG_ERROR_LOAD);
       }
     ));
   }

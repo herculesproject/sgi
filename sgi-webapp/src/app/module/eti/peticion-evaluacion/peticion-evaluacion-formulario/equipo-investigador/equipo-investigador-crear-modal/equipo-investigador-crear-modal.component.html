@@ -1,4 +1,7 @@
 <mat-dialog-content align="center">
+  <header class="modal-header-material">
+    <h3>{{'title.new.entity' | translate:msgParamEntity}}</h3>
+  </header>
   <section>
     <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
@@ -8,7 +11,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.peticionEvaluacion.formulario.equipoInvestigador.modal.numDocumento' | translate}}
+          <mat-label>{{'eti.peticion-evaluacion.equipo-investigador.numero-documento' | translate}}
           </mat-label>
           <input matInput formControlName="numDocumento" type="text" id="numDocumentoModal" />
         </mat-form-field>
@@ -16,7 +19,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.peticionEvaluacion.formulario.equipoInvestigador.modal.nombreCompleto' | translate}}
+          <mat-label>{{'eti.peticion-evaluacion.equipo-investigador.nombre-completo' | translate}}
           </mat-label>
           <input matInput formControlName="nombreCompleto" type="text" id="nombreCompletoModal" />
         </mat-form-field>
@@ -24,7 +27,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.peticionEvaluacion.formulario.equipoInvestigador.modal.vinculacion' | translate}}
+          <mat-label>{{'eti.peticion-evaluacion.equipo-investigador.vinculacion' | translate}}
           </mat-label>
           <input matInput formControlName="vinculacion" type="text" id="vinculacionModal" />
         </mat-form-field>
@@ -32,7 +35,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.peticionEvaluacion.formulario.equipoInvestigador.modal.nivelAcademico' | translate}}
+          <mat-label>{{'eti.peticion-evaluacion.equipo-investigador.nivel-academico' | translate}}
           </mat-label>
           <input matInput formControlName="nivelAcademico" type="text" id="nivelAcademicoModal" />
         </mat-form-field>

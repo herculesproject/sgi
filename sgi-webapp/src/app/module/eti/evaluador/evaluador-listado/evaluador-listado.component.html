@@ -20,9 +20,9 @@
         <!-- Comité -->
         <div class="col">
           <mat-form-field class="input-form">
-            <mat-label>{{'eti.evaluador.buscador.comite.titulo' | translate}}</mat-label>
-            <input type="text" [placeholder]="'eti.evaluador.buscador.comite.titulo' | translate" arial-label="Number"
-              matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
+            <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+            <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
+              formControlName="comite" [matAutocomplete]="autocompleteComite">
             <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
               <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
                 {{comite.comite}}
@@ -34,7 +34,7 @@
         <!-- Estado -->
         <div class="col checkbox">
           <mat-checkbox color="primary" formControlName="estado" type="text" id="estado">
-            {{'eti.evaluador.listado.estado.activo' | translate}}</mat-checkbox>
+            {{'label.activo' | translate}}</mat-checkbox>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
 
       <!-- Nombre y apellidos persona -->
       <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.listado.nombreApellidos' | translate}}
+        <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.conflicto-interes.persona' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluador">
           {{evaluador.persona?.nombre}} {{evaluador.persona?.primerApellido}} {{evaluador.persona?.segundoApellido}}
@@ -65,7 +65,7 @@
 
       <ng-container matColumnDef="identificadorNumero">
         <th mat-header-cell *matHeaderCellDef>
-          {{'eti.evaluador.listado.numeroDocumento' | translate}}
+          {{'eti.evaluador.numero-documento' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluador">
           {{evaluador.persona?.identificadorNumero}}{{evaluador.persona?.identificadorLetra}}</td>
@@ -73,49 +73,48 @@
 
       <!-- Comite Column -->
       <ng-container matColumnDef="comite">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.comite' | translate}} </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.eti.comite' | translate}} </th>
         <td mat-cell *matCellDef="let evaluador"> {{evaluador.comite.comite}} </td>
       </ng-container>
 
       <!-- Cargo comite Column -->
       <ng-container matColumnDef="cargoComite">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.cargoComite' | translate}} </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.cargo-comite' | translate}} </th>
         <td mat-cell *matCellDef="let evaluador"> {{evaluador.cargoComite?.nombre}} </td>
       </ng-container>
 
       <!-- Fecha alta Column -->
       <ng-container matColumnDef="fechaAlta">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.fechaAlta' | translate}} </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.fecha-alta' | translate}} </th>
         <td mat-cell *matCellDef="let evaluador"> {{evaluador.fechaAlta | luxon: 'short'}} </td>
       </ng-container>
 
       <!-- Fecha baja Column -->
       <ng-container matColumnDef="fechaBaja">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.fechaBaja' | translate}} </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.fecha-baja' | translate}} </th>
         <td mat-cell *matCellDef="let evaluador"> {{evaluador.fechaBaja | luxon: 'short'}} </td>
       </ng-container>
 
       <!-- Estado activo/inactivo Column -->
       <ng-container matColumnDef="estado">
-        <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.listado.estado.titulo' | translate}}
+        <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.estado' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluador">
-          {{evaluador.activo === true ? ('eti.evaluador.listado.estado.activo' | translate) :
-          ('eti.evaluador.listado.estado.inactivo' | translate)}}
+          {{evaluador.activo === true ? ('label.activo' | translate) :
+          ('eti.evaluador.estado.inactivo' | translate)}}
         </td>
       </ng-container>
 
       <!-- Acciones Column -->
       <ng-container matColumnDef="acciones" class="acciones">
-        <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.listado.acciones' | translate}} </th>
+        <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let evaluador;let i=index;">
           <ng-container *sgiHasAuthorityForAnyUO="'ETI-EVR-E'">
-            <button mat-button [routerLink]="[evaluador.id]"
-              matTooltip="{{'eti.evaluador.listado.editar' | translate}}">
+            <button mat-button [routerLink]="[evaluador.id]" matTooltip="{{'btn.edit' | translate}}">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
-            <button mat-button *sgiHasAuthorityForAnyUO="'ETI-EVR-B'"
-              matTooltip="{{'eti.evaluador.listado.borrar' | translate}}" (click)="borrar(evaluador.id, $event)">
+            <button mat-button *sgiHasAuthorityForAnyUO="'ETI-EVR-B'" matTooltip="{{'btn.delete' | translate}}"
+              (click)="borrar(evaluador.id, $event)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
           </ng-container>

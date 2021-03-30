@@ -1,4 +1,8 @@
 <mat-dialog-content align="center">
+  <header class="modal-header-material">
+    <h3 mat-dialog-title>
+      {{title | translate}}</h3>
+  </header>
   <section>
     <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
@@ -7,16 +11,16 @@
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
-          <mat-label>{{'eti.convocatoriaReunion.formulario.asignacionMemorias.memoria' | translate}}</mat-label>
-          <input type="text" [placeholder]="'eti.convocatoriaReunion.formulario.asignacionMemorias.memoria' | translate"
-            arial-label="Number" matInput formControlName="memoria" [matAutocomplete]="autocompleteMemoria" required>
+          <mat-label>{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <input type="text" [placeholder]="'eti.memoria' | translate" arial-label="Number" matInput
+            formControlName="memoria" [matAutocomplete]="autocompleteMemoria" required>
           <mat-autocomplete #autocompleteMemoria="matAutocomplete" [displayWith]="getMemoria">
             <mat-option *ngFor="let memoria of filteredMemorias | async" [value]="memoria">
               {{memoria.numReferencia}} - {{memoria.titulo}}
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.memoria.errors?.required">
-            {{'eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.vacio' | translate}}
+            {{'error.required.entity' | translate:msgParamMemoriaEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -25,10 +29,9 @@
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
-          <mat-label>{{'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1' | translate}}
+          <mat-label>{{'eti.convocatoria-reunion.memoria.evaludador-1' | translate}}
           </mat-label>
-          <input type="text"
-            [placeholder]="'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1' | translate"
+          <input type="text" [placeholder]="'eti.convocatoria-reunion.memoria.evaludador-1' | translate"
             arial-label="Number" matInput formControlName="evaluador1" [matAutocomplete]="autocompleteEvaluador1"
             required>
           <mat-autocomplete #autocompleteEvaluador1="matAutocomplete" [displayWith]="getEvaluador">
@@ -38,7 +41,7 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.evaluador1.errors?.required">
-            {{'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.vacio' | translate}}
+            {{'error.required.entity' | translate:msgParamEvaludador1Entity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -47,10 +50,9 @@
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
-          <mat-label>{{'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2' | translate}}
+          <mat-label>{{'eti.convocatoria-reunion.memoria.evaludador-2' | translate}}
           </mat-label>
-          <input type="text"
-            [placeholder]="'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2' | translate"
+          <input type="text" [placeholder]="'eti.convocatoria-reunion.memoria.evaludador-2' | translate"
             arial-label="Number" matInput formControlName="evaluador2" [matAutocomplete]="autocompleteEvaluador2"
             required>
           <mat-autocomplete #autocompleteEvaluador2="matAutocomplete" [displayWith]="getEvaluador">
@@ -60,7 +62,7 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.evaluador2.errors?.required">
-            {{'eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2.error.vacio' | translate}}
+            {{'error.required.entity' | translate:msgParamEvaludador2Entity}}
           </mat-error>
         </mat-form-field>
       </div>

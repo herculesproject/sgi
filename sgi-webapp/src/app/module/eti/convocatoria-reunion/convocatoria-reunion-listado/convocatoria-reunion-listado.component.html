@@ -9,9 +9,9 @@
       <!-- Comité -->
       <div class="col">
         <mat-form-field class="input-form">
-          <mat-label>{{'eti.convocatoriaReunion.buscador.comite.titulo' | translate}}</mat-label>
-          <input type="text" [placeholder]="'eti.convocatoriaReunion.buscador.comite.titulo' | translate"
-            arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
+          <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+          <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
+            formControlName="comite" [matAutocomplete]="autocompleteComite">
           <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
             <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
               {{comite.comite}}
@@ -23,9 +23,9 @@
       <!-- Fecha evaluación (desde - hasta)-->
       <div class="col">
         <mat-form-field>
-          <mat-label>{{'eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo' | translate}}</mat-label>
+          <mat-label>{{'eti.convocatoria-reunion.fecha-evaluacion.desde' | translate}}</mat-label>
           <input matInput formControlName="fechaEvaluacionDesde" [ngxMatDatetimePicker]="pickerFechaEvaluacionDesde"
-            [placeholder]="'eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo' | translate">
+            [placeholder]="'eti.convocatoria-reunion.fecha-evaluacion.desde' | translate">
           <mat-datepicker-toggle matSuffix [for]="pickerFechaEvaluacionDesde"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #pickerFechaEvaluacionDesde showSeconds="true" [defaultTime]="[0,0,0]">
           </ngx-mat-datetime-picker>
@@ -34,9 +34,9 @@
 
       <div class="col">
         <mat-form-field>
-          <mat-label>{{'eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo' | translate}}</mat-label>
+          <mat-label>{{'eti.convocatoria-reunion.fecha-evaluacion.hasta' | translate}}</mat-label>
           <input matInput formControlName="fechaEvaluacionHasta" [ngxMatDatetimePicker]="pickerFechaEvaluacionHasta"
-            placeholder="{{'eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo' | translate}}">
+            placeholder="{{'eti.convocatoria-reunion.fecha-evaluacion.hasta' | translate}}">
           <mat-datepicker-toggle matSuffix [for]="pickerFechaEvaluacionHasta"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #pickerFechaEvaluacionHasta showSeconds="true" [defaultTime]="[23,59,59]">
           </ngx-mat-datetime-picker>
@@ -46,11 +46,9 @@
       <!-- Convocatoria -->
       <div class="col">
         <mat-form-field class="input-form">
-          <mat-label>{{'eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo' | translate}}</mat-label>
-          <input type="text"
-            [placeholder]="'eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo' | translate"
-            arial-label="Number" matInput formControlName="tipoConvocatoriaReunion"
-            [matAutocomplete]="autocompleteTipoConvocatoriaReunion">
+          <mat-label>{{'eti.convocatoria-reunion.tipo' | translate}}</mat-label>
+          <input type="text" [placeholder]="'eti.convocatoria-reunion.tipo' | translate" arial-label="Number" matInput
+            formControlName="tipoConvocatoriaReunion" [matAutocomplete]="autocompleteTipoConvocatoriaReunion">
           <mat-autocomplete #autocompleteTipoConvocatoriaReunion="matAutocomplete"
             [displayWith]="getTipoConvocatoriaReunion">
             <mat-option *ngFor="let tipoConvocatoriaReunion of filteredTiposConvocatoriaReunion | async"
@@ -81,7 +79,7 @@
 
     <!-- Comite Column -->
     <ng-container matColumnDef="comite">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoriaReunion.listado.comite' | translate}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.eti.comite' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.comite.comite}} </td>
     </ng-container>
@@ -89,21 +87,21 @@
     <!-- Fecha evaluacion Column -->
     <ng-container matColumnDef="fechaEvaluacion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'eti.convocatoriaReunion.listado.fechaEvaluacion' | translate}} </th>
+        {{'eti.convocatoria-reunion.fecha-evaluacion' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.fechaEvaluacion | luxon:'short'}}
       </td>
     </ng-container>
 
     <!-- Codigo Column -->
     <ng-container matColumnDef="codigo">
-      <th mat-header-cell *matHeaderCellDef> {{'eti.convocatoriaReunion.listado.codigo' | translate}}
+      <th mat-header-cell *matHeaderCellDef> {{'eti.convocatoria-reunion.codigo' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.codigo}} </td>
     </ng-container>
 
     <!-- Hora Column -->
     <ng-container matColumnDef="horaInicio">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoriaReunion.listado.hora' | translate}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoria-reunion.hora' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion">
         {{convocatoriaReunion.horaInicio | number:'2.0'}}:{{convocatoriaReunion.minutoInicio | number:'2.0'}} </td>
@@ -111,7 +109,7 @@
 
     <!-- Lugar Column -->
     <ng-container matColumnDef="lugar">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoriaReunion.listado.lugar' | translate}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoria-reunion.lugar' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.lugar}} </td>
     </ng-container>
@@ -119,7 +117,7 @@
     <!-- Convocatoria Column -->
     <ng-container matColumnDef="tipoConvocatoriaReunion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'eti.convocatoriaReunion.listado.tipoConvocatoriaReunion' | translate}}
+        {{'eti.convocatoria-reunion.tipo' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.tipoConvocatoriaReunion.nombre}} </td>
     </ng-container>
@@ -127,7 +125,7 @@
     <!-- Fecha envio Column -->
     <ng-container matColumnDef="fechaEnvio">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'eti.convocatoriaReunion.listado.fechaEnvio' | translate}}
+        {{'eti.convocatoria-reunion.fecha-envio' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.fechaEnvio | luxon:'short'}} </td>
     </ng-container>

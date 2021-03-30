@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
 import { IMemoria } from '@core/models/eti/memoria';
@@ -17,13 +18,17 @@ import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR_FORM = marker('error.form-group');
-const MSG_ERROR = marker('eti.peticionEvaluacion.tareas.personas.no-encontrado');
-
+const MSG_ERROR = marker('error.load');
+const TITLE_NEW_ENTITY = marker('title.new.entity');
+const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
+const BTN_ADD = marker('btn.add');
+const BTN_OK = marker('btn.ok');
 @Component({
   selector: 'sgi-peticion-evaluacion-tareas-modal',
   templateUrl: './peticion-evaluacion-tareas-modal.component.html',
@@ -67,6 +72,13 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
   tareaYformacionTexto$ = new BehaviorSubject(false);
   tareaYformacionTextoSubscription: Subscription;
 
+  title: string;
+  textoAceptar: string;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<PeticionEvaluacionTareasModalComponent>,
@@ -81,13 +93,15 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     protected readonly memoriaService: MemoriaService,
     protected readonly equipoTrabajoService: EquipoTrabajoService,
     protected readonly personaFisicaService: PersonaFisicaService,
-    protected readonly tipoTareaService: TipoTareaService
+    protected readonly tipoTareaService: TipoTareaService,
+    private readonly translate: TranslateService
   ) {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'column';
   }
 
   ngOnInit(): void {
+    this.setupI18N();
     this.mostrarOrganismoYanioSubscription = this.mostrarOrganismoYanio$.subscribe(mostrar => {
       this.mostrarOrganismoYanio = mostrar;
     });
@@ -99,6 +113,38 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     this.loadMemorias();
     this.loadEquiposTrabajo();
     this.loadTipoTareas();
+  }
+
+  private setupI18N(): void {
+    if (this.data.tarea?.memoria) {
+      this.translate.get(
+        TAREA_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.title = value);
+
+      this.translate.get(
+        BTN_OK,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.textoAceptar = value);
+    } else {
+      this.translate.get(
+        TAREA_KEY,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).pipe(
+        switchMap((value) => {
+          return this.translate.get(
+            TITLE_NEW_ENTITY,
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          );
+        })
+      ).subscribe((value) => this.title = value);
+
+      this.translate.get(
+        BTN_ADD,
+        MSG_PARAMS.CARDINALIRY.SINGULAR
+      ).subscribe((value) => this.textoAceptar = value);
+
+    }
   }
 
   /**

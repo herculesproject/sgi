@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { IPersona } from '@core/models/sgp/persona';
@@ -16,20 +17,21 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { catchError, map, startWith } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
-const MSG_ERROR = marker('eti.evaluador.listado.error');
-const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
-const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
-const MSG_DELETE = marker('eti.evaluador.listado.eliminar');
-const MSG_SUCCESS = marker('eti.evaluador.listado.eliminarConfirmado');
-
+const MSG_BUTTON_SAVE = marker('btn.add.entity');
+const MSG_ERROR = marker('error.load');
+const TEXT_USER_TITLE = marker('title.eti.search.user');
+const TEXT_USER_BUTTON = marker('btn.eti.search.user');
+const MSG_DELETE = marker('msg.delete.entity');
+const MSG_SUCCESS = marker('msg.delete.entity.success');
+const EVALUADOR_KEY = marker('eti.evaluador');
 @Component({
   selector: 'sgi-evaluador-listado',
   templateUrl: './evaluador-listado.component.html',
@@ -53,7 +55,9 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   comiteListado: IComite[];
   filteredComites: Observable<IComite[]>;
 
-  textoCrear = MSG_BUTTON_SAVE;
+  textoCrear: string;
+  textoDelete: string;
+  textoDeleteSuccess: string;
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
@@ -68,7 +72,8 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly personaFisicaService: PersonaFisicaService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -86,6 +91,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
       estado: new FormControl('', []),
@@ -93,6 +99,45 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     });
 
     this.getComites();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      EVALUADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      EVALUADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeleteSuccess = value);
+
+    this.translate.get(
+      EVALUADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_BUTTON_SAVE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
   }
 
   protected createObservable(): Observable<SgiRestListResult<IEvaluador>> {
@@ -249,7 +294,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     $event.stopPropagation();
     $event.preventDefault();
 
-    const dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+    const dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(this.textoDelete).subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
           const evaluadorServiceDeleteSubscription = this.evaluadoresService
@@ -259,7 +304,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService.showSuccess(MSG_SUCCESS);
+              this.snackBarService.showSuccess(this.textoDeleteSuccess);
             });
           this.suscripciones.push(evaluadorServiceDeleteSubscription);
         }

@@ -19,7 +19,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-const MSG_ERROR = marker('eti.seguimiento.listado.error');
+const MSG_ERROR = marker('error.load');
 
 @Component({
   selector: 'sgi-seguimiento-listado',

@@ -23,11 +23,9 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-const TEXT_USER_TITLE = marker('eti.buscarSolicitante.titulo');
-const TEXT_USER_BUTTON = marker('eti.buscarSolicitante.boton.buscar');
-const MSG_ERROR = marker('eti.seguimiento.listado.error');
-const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.seguimiento.listado.buscador.tipoConvocatoria.error');
-
+const TEXT_USER_TITLE = marker('title.eti.search.solicitante');
+const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
+const MSG_ERROR = marker('error.load');
 @Component({
   selector: 'sgi-gestion-seguimiento-listado',
   templateUrl: './gestion-seguimiento-listado.component.html',
@@ -248,7 +246,7 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
       },
       (error) => {
         this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
+        this.snackBarService.showError(MSG_ERROR);
       }
     ));
   }

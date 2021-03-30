@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -14,14 +15,16 @@ import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
-const MSG_FOOTER = marker('eti.peticionEvaluacion.listado.nuevaPeticionEvaluacion');
-const MSG_DELETE = marker('eti.peticionEvaluacion.listado.eliminar');
-const MSG_SUCCESS = marker('eti.peticionEvaluacion.listado.eliminarConfirmado');
+const MSG_ERROR = marker('error.load');
+const MSG_FOOTER = marker('btn.add.entity');
+const MSG_DELETE = marker('msg.delete.entity');
+const MSG_DELETE_SUCCESS = marker('msg.delete.entity.success');
+const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-inv',
@@ -38,7 +41,9 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
 
   displayedColumns: string[];
 
-  textoCrear = MSG_FOOTER;
+  textoCrear: string;
+  textoDelete: string;
+  textoDeleteSuccess: string;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -53,7 +58,8 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     private readonly peticionesEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly translate: TranslateService
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -77,6 +83,7 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
 
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
@@ -85,6 +92,44 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     });
 
     this.getComites();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      PETICION_EVALUACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_FOOTER,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoCrear = value);
+
+    this.translate.get(
+      PETICION_EVALUACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      PETICION_EVALUACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value) => this.textoDeleteSuccess = value);
   }
 
   protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacion>> {
@@ -155,7 +200,7 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     $event.stopPropagation();
     $event.preventDefault();
 
-    const dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+    const dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(this.textoDelete).subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
           const peticionEvaluacionServiceDeleteSubscription = this.peticionesEvaluacionService
@@ -165,7 +210,7 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService.showSuccess(MSG_SUCCESS);
+              this.snackBarService.showSuccess(this.textoDeleteSuccess);
             });
           this.suscripciones.push(peticionEvaluacionServiceDeleteSubscription);
         }

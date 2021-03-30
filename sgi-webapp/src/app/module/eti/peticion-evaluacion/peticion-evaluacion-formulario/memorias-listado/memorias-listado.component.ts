@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -14,6 +15,7 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -21,17 +23,17 @@ import { MEMORIAS_ROUTE } from '../../../memoria/memoria-route-names';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
 import { MemoriasListadoFragment } from './memorias-listado.fragment';
 
-const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.memorias.listado.eliminar');
-const MSG_ESTADO_ANTERIOR_OK = marker('eti.memoria.listado.volverEstadoAnterior.ok');
-const MSG_ESTADO_ANTERIOR_ERROR = marker('eti.memoria.listado.volverEstadoAnterior.error');
-const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.confirmacion');
-
-const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.correcto');
-const MSG_ERROR_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.error');
-const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.confirmar');
-const MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretariaRetrospectiva.correcto');
-const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretariaRetrospectiva.error');
-const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretariaRetrospectiva.confirmar');
+const MSG_CONFIRM_DELETE = marker('msg.delete.entity');
+const MSG_ESTADO_ANTERIOR_OK = marker('msg.eti.memoria.estado-anterior.success');
+const MSG_ESTADO_ANTERIOR_ERROR = marker('error.eti.memoria.estado-anterior');
+const MSG_RECUPERAR_ESTADO = marker('msg.eti.memoria.estado-anterior');
+const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('msg.eti.memoria.enviar-secretaria.success');
+const MSG_ERROR_ENVIAR_SECRETARIA = marker('error.eti.memoria.enviar-secretaria');
+const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('msg.eti.memoria.enviar-secretaria');
+const MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('msg.eti.memoria.enviar-secretaria.retrospectiva.success');
+const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('error.eti.memoria.enviar-secretaria.retrospectiva');
+const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('msg.eti.memoria.enviar-secretaria.retrospectiva');
+const MEMORIA_KEY = marker('eti.memoria');
 
 @Component({
   selector: 'sgi-memorias-listado',
@@ -57,6 +59,13 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  textoDelete: string;
+  msgParamEntity = {};
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected readonly dialogService: DialogService,
@@ -64,7 +73,8 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
-    private actionService: PeticionEvaluacionActionService
+    private actionService: PeticionEvaluacionActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.MEMORIAS, actionService);
     this.listadoFragment = this.fragment as MemoriasListadoFragment;
@@ -72,6 +82,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.setupI18N();
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sort;
     this.subscriptions.push(this.listadoFragment.memorias$.subscribe((memorias) => {
@@ -96,6 +107,25 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       };
   }
 
+  private setupI18N(): void {
+    this.translate.get(
+      MEMORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_CONFIRM_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      MEMORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+  }
+
   /**
    * Elimina la memoria.
    *
@@ -103,7 +133,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
    */
   delete(wrappedMemoria: StatusWrapper<IMemoriaPeticionEvaluacion>): void {
     this.subscriptions.push(this.dialogService.showConfirmation(
-      MSG_CONFIRM_DELETE
+      this.textoDelete
     ).subscribe((aceptado) => {
       if (aceptado) {
         this.listadoFragment.deleteMemoria(wrappedMemoria);

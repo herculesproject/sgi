@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
 import { CargoComite } from '@core/models/eti/cargo-comite';
 import { IComite } from '@core/models/eti/comite';
 import { IEvaluador } from '@core/models/eti/evaluador';
@@ -9,6 +10,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { CargoComiteService } from '@core/services/eti/cargo-comite.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
@@ -16,14 +18,14 @@ import { map, startWith } from 'rxjs/operators';
 import { EvaluadorActionService } from '../../evaluador.action.service';
 import { EvaluadorDatosGeneralesFragment } from './evaluador-datos-generales.fragment';
 
-
-
-
-const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
-const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
-
-const MSG_ERROR_INIT_ = marker('eti.evaluador.datosGenerales.error.init');
-
+const TEXT_USER_BUTTON = marker('btn.eti.search.user');
+const TEXT_USER_TITLE = marker('title.eti.search.user');
+const MSG_ERROR_INIT_ = marker('error.load');
+const EVALUDADOR_COMITE_KEY = marker('label.eti.comite');
+const EVALUADOR_FECHA_ALTA_KEY = marker('eti.evaluador.fecha-alta');
+const EVALUADOR_FECHA_BAJA_KEY = marker('eti.evaluador.fecha-baja');
+const EVALUADOR_CARGO_COMITE_KEY = marker('eti.evaluador.cargo-comite');
+const EVALUADOR_RESUMEN_KEY = marker('eti.evaluador.resumen');
 @Component({
   selector: 'sgi-evaluador-datos-generales',
   templateUrl: './evaluador-datos-generales.component.html',
@@ -44,6 +46,11 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
   datosUsuarioEvaluadorEditado: string;
+  msgParamComiteEntity = {};
+  msgParamFechaAltaEntity = {};
+  msgParamFechaBajaEntity = {};
+  msgParamCargoComiteEntity = {};
+  msgParamResumenEntity = {};
 
   datosGeneralesFragment: EvaluadorDatosGeneralesFragment;
 
@@ -54,7 +61,8 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
     private readonly comiteService: ComiteService,
     private readonly cargoComiteService: CargoComiteService,
     private readonly snackBarService: SnackBarService,
-    actionService: EvaluadorActionService
+    actionService: EvaluadorActionService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.datosGeneralesFragment = this.fragment as EvaluadorDatosGeneralesFragment;
@@ -80,9 +88,37 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
 
   ngOnInit() {
     super.ngOnInit();
+    this.setupI18N();
 
     this.cargarSelectorComites();
     this.cargarSelectorCargosComite();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      EVALUDADOR_COMITE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      EVALUADOR_CARGO_COMITE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCargoComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      EVALUADOR_FECHA_ALTA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaAltaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      EVALUADOR_FECHA_BAJA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaBajaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      EVALUADOR_RESUMEN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamResumenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   cargarSelectorComites() {

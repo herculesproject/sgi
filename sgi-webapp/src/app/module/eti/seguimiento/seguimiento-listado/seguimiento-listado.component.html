@@ -10,9 +10,9 @@
         <!-- Comité -->
         <div class="col">
           <mat-form-field class="input-form">
-            <mat-label>{{'eti.seguimiento.listado.buscador.comite' | translate}}</mat-label>
-            <input type="text" [placeholder]="'eti.seguimiento.listado.buscador.comite' | translate"
-              arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
+            <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+            <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
+              formControlName="comite" [matAutocomplete]="autocompleteComite">
             <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getNombreComite">
               <mat-option *ngFor="let comite of comitesFiltrados | async" [value]="comite">
                 {{comite.comite}}
@@ -24,10 +24,9 @@
         <!-- Tipo Evaluación -->
         <div class="col">
           <mat-form-field class="input-form">
-            <mat-label>{{'eti.seguimiento.listado.buscador.tipoEvaluacion' | translate}}</mat-label>
-            <input type="text" [placeholder]="'eti.seguimiento.listado.buscador.tipoEvaluacion' | translate"
-              arial-label="Number" matInput formControlName="tipoEvaluacion"
-              [matAutocomplete]="autocompleteTipoEvaluacion">
+            <mat-label>{{'eti.seguimiento.tipo-evaluacion' | translate}}</mat-label>
+            <input type="text" [placeholder]="'eti.seguimiento.tipo-evaluacion' | translate" arial-label="Number"
+              matInput formControlName="tipoEvaluacion" [matAutocomplete]="autocompleteTipoEvaluacion">
             <mat-autocomplete #autocompleteTipoEvaluacion="matAutocomplete" [displayWith]="getNombreTipoEvaluacion">
               <mat-option *ngFor="let tipoEvaluacion of tipoEvaluacionFiltrados | async" [value]="tipoEvaluacion">
                 {{tipoEvaluacion.nombre}}
@@ -39,7 +38,7 @@
         <!-- Fecha inicio-->
         <div class="col">
           <mat-form-field color="primary">
-            <mat-label>{{'eti.seguimiento.listado.buscador.fechaEvaluacionInicio'| translate}}</mat-label>
+            <mat-label>{{'eti.seguimiento.datos-memoria.fecha-evaluacion.inicio'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaEvaluacionInicio"
               formControlName="fechaEvaluacionInicio">
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionInicio">
@@ -52,7 +51,7 @@
         <!-- Fecha fin-->
         <div class="col">
           <mat-form-field color="primary">
-            <mat-label>{{'eti.seguimiento.listado.buscador.fechaEvaluacionFin'| translate}}</mat-label>
+            <mat-label>{{'eti.seguimiento.datos-memoria.fecha-evaluacion.fin'| translate}}</mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaEvaluacionFin" formControlName="fechaEvaluacionFin">
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaEvaluacionFin showSeconds="true" [defaultTime]="[23,59,59]">
@@ -63,8 +62,8 @@
         <!-- Referencia memoria -->
         <div class="col">
           <mat-form-field>
-            <mat-label>{{'eti.seguimiento.listado.buscador.memoriaNumReferencia' | translate}}</mat-label>
-            <input matInput placeholder="{{'eti.seguimiento.listado.buscador.memoriaNumReferencia' | translate}}"
+            <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
+            <input matInput placeholder="{{'eti.memoria.referencia' | translate}}"
               formControlName="memoriaNumReferencia">
           </mat-form-field>
         </div>
@@ -89,7 +88,7 @@
       matSortDirection="asc" matSortDisableClear>
       <!-- Comite -->
       <ng-container matColumnDef="memoria.comite.comite">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.seguimiento.listado.comite' | translate}}
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.eti.comite' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria?.comite?.comite}}</td>
       </ng-container>
@@ -97,7 +96,7 @@
       <!-- Tipo de evaluación -->
       <ng-container matColumnDef="tipoEvaluacion.nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'eti.seguimiento.listado.tipoEvaluacion' | translate}}
+          {{'eti.seguimiento.tipo-evaluacion' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">{{evaluacion.tipoEvaluacion.nombre | translate}}
         </td>
@@ -105,7 +104,8 @@
 
       <!-- Fecha de evaluación -->
       <ng-container matColumnDef="convocatoriaReunion.fechaEvaluacion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.seguimiento.listado.fechaEvaluacion' | translate}}
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'eti.seguimiento.datos-memoria.fecha-evaluacion' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">
           {{evaluacion.convocatoriaReunion?.fechaEvaluacion | luxon:'short'}}
@@ -115,14 +115,14 @@
       <!-- Referencia -->
       <ng-container matColumnDef="memoria.numReferencia">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'eti.seguimiento.listado.referenciaMemoria' | translate}}
+          {{'eti.memoria.referencia' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria?.numReferencia}}</td>
       </ng-container>
 
       <!-- Solicitante -->
       <ng-container matColumnDef="solicitante">
-        <th mat-header-cell *matHeaderCellDef> {{'eti.seguimiento.listado.solicitante' | translate}}
+        <th mat-header-cell *matHeaderCellDef> {{'eti.solicitante' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria.peticionEvaluacion.solicitante?.nombre}}
           {{evaluacion.memoria.peticionEvaluacion.solicitante?.primerApellido}}
@@ -131,17 +131,16 @@
 
       <!-- Versión -->
       <ng-container matColumnDef="version">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.seguimiento.listado.version' | translate}}
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.seguimiento.datos-memoria.version' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">{{evaluacion.version}}</td>
       </ng-container>
 
       <!-- Acciones -->
       <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef> {{'eti.seguimiento.listado.acciones' | translate}} </th>
+        <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let evaluacion">
-          <button mat-button [routerLink]="[evaluacion.id]"
-            matTooltip="{{'eti.seguimiento.listado.evaluar' | translate}}"
+          <button mat-button [routerLink]="[evaluacion.id]" matTooltip="{{'btn.eti.evaluar' | translate}}"
             *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV']">
             <mat-icon color="primary">border_color</mat-icon>
           </button>

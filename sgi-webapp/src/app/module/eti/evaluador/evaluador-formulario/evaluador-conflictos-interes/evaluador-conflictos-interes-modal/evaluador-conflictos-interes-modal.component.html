@@ -1,6 +1,6 @@
 <div class="modal-crear-tareas">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'eti.evaluador.conflictosInteres.nuevo.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{'title.new.entity' | translate:msgParamConflictoInteresEntity}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -9,7 +9,7 @@
 
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.evaluador.formulario.conflictoInteres.modal.identificador' | translate}}
+          <mat-label>{{'eti.evaluador.conflicto-interes.identificador' | translate}}
           </mat-label>
           <input matInput formControlName="identificador" type="text" id="identificadorModal" />
         </mat-form-field>

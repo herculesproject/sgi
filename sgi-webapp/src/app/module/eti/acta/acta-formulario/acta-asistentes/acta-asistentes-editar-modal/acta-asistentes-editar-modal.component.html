@@ -1,17 +1,17 @@
 <div class="modal-editar-asistentes">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'eti.acta.asistentes.editar.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{title | translate}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
-          <mat-label>{{'eti.acta.asistentes.editar.modal.asistente' | translate}}</mat-label>
+          <mat-label>{{'eti.acta.asistente' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
           <input matInput formControlName="asistente" type="text" id="asistente" />
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout">
-        <mat-label>{{'eti.acta.asistentes.editar.modal.asistencia' | translate}}</mat-label>
+        <mat-label>{{'eti.acta.asistente.asistencia' | translate}}</mat-label>
 
         <mat-radio-group class="radio-inline" name="opciones" formControlName="asistencia">
           <mat-radio-button (change)="activarMotivo($event.value)" color="primary" class="radio"
@@ -23,11 +23,11 @@
       </div>
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill [ngClass]="ocultarMotivo ? 'ocultarCampo' : ''">
-          <mat-label>{{'eti.acta.asistentes.editar.modal.asistente.motivo' | translate}}</mat-label>
+          <mat-label>{{'eti.acta.asistente.motivo' | translate}}</mat-label>
           <textarea matInput formControlName="motivo" type="text" id="motivo"
-            placeholder="{{'eti.acta.asistentes.editar.modal.asistente.motivo' | translate}}" required></textarea>
+            placeholder="{{'eti.acta.asistente.motivo' | translate}}" required></textarea>
           <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'motivo') && formGroup.get('motivo').errors.required">
-            {{'eti.acta.asistentes.editar.modal.asistente.motivo.error.requerido' | translate}}
+            {{'error.required.entity' | translate:msgParamMotivoEntity}}
           </mat-error>
         </mat-form-field>
       </div>
