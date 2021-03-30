@@ -12,8 +12,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
           <mat-label>{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-          <input type="text" [placeholder]="'eti.memoria' | translate" arial-label="Number" matInput
-            formControlName="memoria" [matAutocomplete]="autocompleteMemoria" required>
+          <input type="text" [placeholder]="'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
+            arial-label="Number" matInput formControlName="memoria" [matAutocomplete]="autocompleteMemoria" required>
           <mat-autocomplete #autocompleteMemoria="matAutocomplete" [displayWith]="getMemoria">
             <mat-option *ngFor="let memoria of filteredMemorias | async" [value]="memoria">
               {{memoria.numReferencia}} - {{memoria.titulo}}
