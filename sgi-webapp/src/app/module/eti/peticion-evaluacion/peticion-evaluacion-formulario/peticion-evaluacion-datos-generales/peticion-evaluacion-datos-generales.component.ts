@@ -91,6 +91,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     super.ngOnInit();
     this.setupI18N();
     this.loadTiposActividad();
+    this.actionService.initializeEquiposInvestigador();
   }
 
   private setupI18N(): void {

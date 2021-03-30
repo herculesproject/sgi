@@ -90,6 +90,10 @@ export class PeticionEvaluacionActionService extends ActionService {
     });
   }
 
+  initializeEquiposInvestigador(): void {
+    this.equipoInvestigadorListado.initialize();
+  }
+
   /**
    * Elimina las tareas asociadas al equipo de trabajo.
    *
