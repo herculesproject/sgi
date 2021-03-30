@@ -71,19 +71,17 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
   }
 
   /** Elimina las memorias asignadas a la convocatoria de reunión
-   * @param evaluacion la Evaluacion a borrar
+   * @param idConvocatoria el identificador de la convocatoria
+   * @param idEvaluacion el identificador de la evaluación
    */
-  deleteEvaluacion(evaluacion: IEvaluacion) {
-    // TODO: Como solo se usa el id, se debería recibir únicamente el id
-    return this.http.delete<void>(`${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`);
+  deleteEvaluacion(idConvocatoria: number, idEvaluacion: number) {
+    return this.http.delete<void>(`${this.endpointUrl}/${idConvocatoria}/evaluacion/${idEvaluacion}`);
   }
 
   /**
    * Devuelve todos las convocatorias que no estén asociadas a un acta.
-   * @param options opciones de búsqueda.
    */
-  findConvocatoriasSinActa(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaReunion>> {
-    // TODO: Revisar si tiene sentido ignorar el options
+  findConvocatoriasSinActa(): Observable<SgiRestListResult<IConvocatoriaReunion>> {
     return this.find<IConvocatoriaReunionBackend, IConvocatoriaReunion>(
       `${this.endpointUrl}/acta-no-asignada`,
       null,

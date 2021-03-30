@@ -57,11 +57,11 @@ export class PeticionEvaluacionService extends SgiMutableRestService<number, IPe
    * @param idPeticionEvaluacion id de la peticion de evaluacion.
    * @return los equipos de trabajo de la PeticionEvaluacion.
    */
-  findEquipoInvestigador(idPeticionEvaluacion: number, options?: SgiRestFindOptions)
+  findEquipoInvestigador(idPeticionEvaluacion: number)
     : Observable<SgiRestListResult<IEquipoTrabajoWithIsEliminable>> {
     return this.find<IEquipoTrabajoWithIsEliminableBackend, IEquipoTrabajoWithIsEliminable>(
       `${this.endpointUrl}/${idPeticionEvaluacion}/equipo-investigador`,
-      options,
+      null,
       EQUIPO_TRABAJO_WITH_IS_ELIMINABLE_CONVERTER
     );
   }
@@ -72,10 +72,10 @@ export class PeticionEvaluacionService extends SgiMutableRestService<number, IPe
    * @param idPeticionEvaluacion id de la peticion de evaluacion.
    * @return las tareas de la PeticionEvaluacion.
    */
-  findTareas(idPeticionEvaluacion: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ITareaWithIsEliminable>> {
+  findTareas(idPeticionEvaluacion: number): Observable<SgiRestListResult<ITareaWithIsEliminable>> {
     return this.find<ITareaWithIsEliminableBackend, ITareaWithIsEliminable>(
       `${this.endpointUrl}/${idPeticionEvaluacion}/tareas`,
-      options,
+      null,
       TAREA_WITH_IS_ELIMINABLE_CONVERTER
     );
   }
@@ -86,10 +86,10 @@ export class PeticionEvaluacionService extends SgiMutableRestService<number, IPe
    * @param idPeticionEvaluacion id de la peticion de evaluacion.
    * @return las memorias de la PeticionEvaluacion.
    */
-  findMemorias(idPeticionEvaluacion: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
+  findMemorias(idPeticionEvaluacion: number): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
     return this.find<IMemoriaPeticionEvaluacionBackend, IMemoriaPeticionEvaluacion>(
       `${this.endpointUrl}/${idPeticionEvaluacion}/memorias`,
-      options,
+      null,
       MEMORIA_PETICION_EVALUACION_CONVERTER
     );
   }

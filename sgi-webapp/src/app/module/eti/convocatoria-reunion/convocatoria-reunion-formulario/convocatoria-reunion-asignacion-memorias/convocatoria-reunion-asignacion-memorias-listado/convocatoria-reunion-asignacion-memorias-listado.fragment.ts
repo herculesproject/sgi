@@ -172,7 +172,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
     return from(this.deleted).pipe(
       mergeMap((wrappedEvaluacion) => {
         return this.convocatoriaReunionService
-          .deleteEvaluacion(wrappedEvaluacion.value).pipe(
+          .deleteEvaluacion(wrappedEvaluacion.value.convocatoriaReunion.id, wrappedEvaluacion.value.id).pipe(
             map(_ => {
               this.deleted = this.deleted.filter(deleted => deleted.value.id !== wrappedEvaluacion.value.id);
             })

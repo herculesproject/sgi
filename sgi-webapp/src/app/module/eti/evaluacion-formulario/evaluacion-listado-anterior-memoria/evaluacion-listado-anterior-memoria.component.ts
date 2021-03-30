@@ -36,7 +36,7 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
   }
 
   protected initColumns(): void {
-    this.columnas = ['evaluacion.memoria.numReferencia', 'evaluacion.version', 'evaluacion.fechaDictamen', 'evaluacion.dictamen.nombre', 'numComentarios', 'pdf'];
+    this.columnas = ['memoria.numReferencia', 'version', 'fechaDictamen', 'dictamen.nombre', 'numComentarios', 'pdf'];
   }
 
   protected loadTable(reset?: boolean): void {

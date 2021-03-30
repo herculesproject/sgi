@@ -64,6 +64,10 @@ export class ConvocatoriaReunionActionService extends ActionService {
     this.addFragment(this.FRAGMENT.ASIGNACION_MEMORIAS, this.asignacionMemorias);
   }
 
+  initializeDatosGenerales(): void {
+    this.datosGenerales.initialize();
+  }
+
   public getDatosAsignacion(): DatosAsignacionEvaluacion {
     // TODO: Arreglar la obtención de esta información cuando el usuario no ha pasado por los datos generales
     const datosAsignacionEvaluacion = {

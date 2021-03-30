@@ -60,14 +60,13 @@ export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBa
    *
    * @param idComite id comite.
    * @param idMemoria id memoria.
-   * @param options opciones de busqueda.
    * @return las memorias asignables a la convocatoria.
    */
-  findAllMemoriasAsignablesConvocatoria(idComite: number, idMemoria: number, options?: SgiRestFindOptions)
+  findAllMemoriasAsignablesConvocatoria(idComite: number, idMemoria: number)
     : Observable<SgiRestListResult<IEvaluador>> {
     return this.find<IEvaluadorBackend, IEvaluador>(
       `${this.endpointUrl}/comite/${idComite}/sinconflictointereses/${idMemoria}`,
-      options,
+      null,
       EVALUADOR_CONVERTER
     );
   }

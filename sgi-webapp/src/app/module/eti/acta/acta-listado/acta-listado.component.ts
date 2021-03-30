@@ -125,7 +125,6 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    // TODO: Revisar buscador en el backend, parece que no filtra correctamente al acotar por la fecha de evaluacion
     const filter = new RSQLSgiRestFilter(
       'convocatoriaReunion.comite.id',
       SgiRestFilterOperator.EQUALS,

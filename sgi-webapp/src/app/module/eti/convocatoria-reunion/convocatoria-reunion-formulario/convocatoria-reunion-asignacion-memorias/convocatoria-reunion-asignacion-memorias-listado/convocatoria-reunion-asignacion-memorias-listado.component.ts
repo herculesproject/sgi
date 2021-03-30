@@ -70,6 +70,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+    this.actionService.initializeDatosGenerales();
     this.evaluaciones$.subscribe((evaluaciones) => {
       this.datasource.data = evaluaciones;
     });
