@@ -182,7 +182,7 @@ public class RetrospectivaIT extends BaseIT {
 
     // then: Se recuperan todos los datos
     Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody()).isEqualTo(response);
+    Assertions.assertThat(result.getBody().size()).isEqualTo(6L);
   }
 
   @Test
