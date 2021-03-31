@@ -9,8 +9,8 @@
   <name>sgi-esb</name>
   <description>sgi-esb</description>
   <modules>
-    <module>class-mediators</module>
-    <module>registry</module>
+    <module>sgi-auth-mediator</module>
+    <module>esb-configs</module>
     <module>esb-composite-application</module>
   </modules>
 

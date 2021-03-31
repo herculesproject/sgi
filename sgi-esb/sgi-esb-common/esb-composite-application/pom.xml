@@ -13,87 +13,44 @@
   <name>esb-composite-application</name>
   <description>esb-composite-application</description>
   <properties>
-    <org.crue.hercules.sgi.esb.resource_._transform-result-object-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._transform-result-object-mediator>
-    <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
-    <org.crue.hercules.sgi.esb.resource_._transform-input-object-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._transform-input-object-mediator>
-    <org.crue.hercules.sgi.esb.resource_._pagination-query-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._pagination-query-mediator>
-    <org.crue.hercules.sgi.esb.resource_._find-all-out-sequence>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._find-all-out-sequence>
-    <org.crue.hercules.sgi.esb.resource_._find-all-by-ids-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._find-all-by-ids-mediator>
-    <org.crue.hercules.sgi.esb.resource_._total-count-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._total-count-mediator>
-    <org.crue.hercules.sgi.esb.resource_._clean-path-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._clean-path-mediator>
-    <org.crue.hercules.sgi.esb.resource_._find-all-in-sequence-template>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._find-all-in-sequence-template>
-    <org.crue.hercules.sgi.esb.resource_._transform-result-list-mediator>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._transform-result-list-mediator>
-    <org.crue.hercules.sgi.esb.resource_._save-in-sequence-template>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._save-in-sequence-template>
-    <org.crue.hercules.sgi.esb.resource_._find-one-out-sequence>capp/EnterpriseIntegrator</org.crue.hercules.sgi.esb.resource_._find-one-out-sequence>
+    <org.crue.hercules.sgi.esb_._sgi-auth-mediator>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb_._sgi-auth-mediator>
+    <org.crue.hercules.sgi.esb.template_._sgi-auth-sequence-template>capp/EnterpriseServiceBus</org.crue.hercules.sgi.esb.template_._sgi-auth-sequence-template>
+    <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>    
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>clean-path-mediator</artifactId>
+      <groupId>org.crue.hercules.sgi.esb</groupId>
+      <artifactId>sgi-auth-mediator</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
     </dependency>
     <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>find-all-by-ids-mediator</artifactId>
+      <groupId>org.crue.hercules.sgi.esb.template</groupId>
+      <artifactId>sgi-auth-sequence-template</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>find-all-in-sequence-template</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>find-all-out-sequence</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>find-one-out-sequence</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>pagination-query-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>save-in-sequence-template</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>total-count-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>transform-input-object-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>transform-result-list-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.crue.hercules.sgi.esb.resource</groupId>
-      <artifactId>transform-result-object-mediator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>zip</type>
+      <type>xml</type>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <id>wso2-nexus</id>
+      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+    </repository>
+    <repository>
+      <id>wso2-maven2-repository-1</id>
+      <url>http://dist.wso2.org/maven2</url>
+    </repository>
+    <repository>
+      <id>wso2-nexus-repository-1</id>
+      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+    </repository>
+  </repositories>
   <pluginRepositories>
     <pluginRepository>
       <releases>
@@ -114,6 +71,12 @@
     </pluginRepository>
   </pluginRepositories>
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
@@ -124,22 +87,6 @@
             <projectnature>org.wso2.developerstudio.eclipse.distribution.project.nature</projectnature>
           </projectnatures>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.wso2.maven</groupId>
-        <artifactId>maven-car-plugin</artifactId>
-        <version>2.1.1</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>car</id>
-            <phase>package</phase>
-            <goals>
-              <goal>car</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration />
       </plugin>
       <plugin>
         <groupId>org.wso2.maven</groupId>
@@ -162,4 +109,71 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <!-- dev profile. This is the default profile -->
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+        <plugin>
+          <groupId>org.wso2.maven</groupId>
+          <artifactId>maven-car-plugin</artifactId>
+          <version>2.1.1</version>
+          <extensions>true</extensions>
+          <executions>
+            <execution>
+              <id>car</id>
+              <phase>package</phase>
+              <goals>
+                <goal>car</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <!-- enable this to re define an archive location other than the default location-->
+            <archiveLocation>/carbonapps</archiveLocation>
+            <!-- enable this to rename the .car file name
+            <archiveName>archive_name</archiveName-->
+            <!-- enable this to rename the carbon application name
+            <cAppName>capp_name</cAppName-->
+          </configuration>
+        </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- CI profile. This is the default profile for CI builds-->
+      <id>ci</id>
+      <build>
+      <plugins>
+       <plugin>
+        <groupId>org.wso2.maven</groupId>
+        <artifactId>maven-car-plugin</artifactId>
+        <version>2.1.1</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>car</id>
+            <phase>package</phase>
+            <goals>
+              <goal>car</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- enable this to re define an archive location other than the default location-->
+          <!--<archiveLocation>/carbonapps</archiveLocation>-->
+          <!-- enable this to rename the .car file name
+          <archiveName>archive_name</archiveName-->
+          <!-- enable this to rename the carbon application name
+          <cAppName>capp_name</cAppName-->
+        </configuration>
+      </plugin>
+      </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
