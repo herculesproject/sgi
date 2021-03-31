@@ -43,15 +43,23 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off
   "classpath:scripts/formulario.sql", 
+  "classpath:scripts/comite.sql", 
+  "classpath:scripts/tipo_evaluacion.sql",
+  "classpath:scripts/dictamen.sql",
   "classpath:scripts/tipo_convocatoria_reunion.sql",
-  "classpath:scripts/tipo_evaluacion.sql", 
   "classpath:scripts/cargo_comite.sql",
   "classpath:scripts/tipo_actividad.sql", 
   "classpath:scripts/tipo_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/tipo_documento.sql",
   "classpath:scripts/tipo_estado_memoria.sql", 
-  "classpath:scripts/memoria.sql"
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/memoria.sql", 
+  "classpath:scripts/documentacion_memoria.sql",
+  "classpath:scripts/evaluador.sql",
+  "classpath:scripts/convocatoria_reunion.sql",
+  "classpath:scripts/evaluacion.sql"
 // @formatter:on  
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -114,15 +122,15 @@ public class MemoriaIT extends BaseIT {
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(headers, null), Memoria.class, 1L);
+        HttpMethod.GET, buildRequest(headers, null), Memoria.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final Memoria tipoMemoria = response.getBody();
 
-    Assertions.assertThat(tipoMemoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria001");
-    Assertions.assertThat(tipoMemoria.getNumReferencia()).isEqualTo("ref-001");
+    Assertions.assertThat(tipoMemoria.getId()).isEqualTo(2L);
+    Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria002");
+    Assertions.assertThat(tipoMemoria.getNumReferencia()).isEqualTo("ref-002");
   }
 
   @Test
@@ -142,7 +150,7 @@ public class MemoriaIT extends BaseIT {
   public void removeMemoria_Success() throws Exception {
 
     // when: Delete con id existente
-    long id = 1L;
+    long id = 3L;
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
@@ -173,13 +181,13 @@ public class MemoriaIT extends BaseIT {
   @Test
   public void replaceMemoria_ReturnsMemoria() throws Exception {
 
-    Memoria replaceMemoria = generarMockMemoria(1L, "ref-5588", "Memoria1", 1);
+    Memoria replaceMemoria = generarMockMemoria(2L, "ref-5588", "Memoria1", 1);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(headers, replaceMemoria), Memoria.class, 1L);
+        HttpMethod.PUT, buildRequest(headers, replaceMemoria), Memoria.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -211,7 +219,7 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(tipoMemorias.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("16");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("15");
 
   }
 
@@ -250,7 +258,6 @@ public class MemoriaIT extends BaseIT {
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
-
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
@@ -265,8 +272,8 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
-    Assertions.assertThat(tipoMemorias.size()).isEqualTo(16);
-    for (int i = 0; i < 16; i++) {
+    Assertions.assertThat(tipoMemorias.size()).isEqualTo(15);
+    for (int i = 1; i < 15; i++) {
       MemoriaPeticionEvaluacion tipoMemoria = tipoMemorias.get(i);
       Assertions.assertThat(tipoMemoria.getId()).isEqualTo(16 - i);
       Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", 16 - i));
@@ -283,7 +290,7 @@ public class MemoriaIT extends BaseIT {
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc
     String sort = "titulo,desc";
-    // when: Filtra por titulo like e id equals
+    // when: Filtra por titulo like
     String filter = "titulo=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
@@ -302,7 +309,7 @@ public class MemoriaIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("9");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("8");
 
     // Contiene titulo='Memoria009' a 'Memoria007'
 
@@ -315,7 +322,7 @@ public class MemoriaIT extends BaseIT {
   public void findAllMemoriasAsignablesConvocatoriaOrdExt_Unlimited_ReturnsMemoriaSubList() throws Exception {
 
     // given: idConvocatoria que es de tipo 1 (ordinaria) o 2 (extraordinaria)
-    Long idConvocatoria = 1L;
+    Long idConvocatoria = 2L;
 
     // when: Obtiene la memorias asignables para esa convocatoria
     HttpHeaders headers = new HttpHeaders();
@@ -329,7 +336,7 @@ public class MemoriaIT extends BaseIT {
     // then: Respuesta OK
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
-    Assertions.assertThat(memorias.size()).isEqualTo(4);
+    Assertions.assertThat(memorias.size()).isEqualTo(2);
 
     // Las memorias 10,11 y 12 tienen estado 3(En Secretaría) y su
     // fecha de envío es menor que la fecha límite por que son asignables.
@@ -341,24 +348,24 @@ public class MemoriaIT extends BaseIT {
     // Memoria 14 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
     // la fecha límite, por lo que no es asignable.
     List<String> titulos = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
       titulos.add(memorias.get(i).getTitulo());
     }
-    Assertions.assertThat(titulos).contains("Memoria010", "Memoria011", "Memoria012", "Memoria013");
+    Assertions.assertThat(titulos).contains("Memoria011", "Memoria012");
   }
 
   @Test
   public void findAllMemoriasAsignablesConvocatoriaOrdExt_WithPaging_ReturnsMemoriaSubList() throws Exception {
 
     // given: idConvocatoria que es de tipo 1 (ordinaria) o 2 (extraordinaria)
-    Long idConvocatoria = 1L;
+    Long idConvocatoria = 2L;
 
     // when: Obtiene la page=1 con pagesize=2 de la memorias asignables para esa
     // convocatoria
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "2");
+    headers.add("X-Page-Size", "1");
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, HttpMethod.GET, buildRequest(headers, null),
@@ -369,10 +376,9 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
-    Assertions.assertThat(memorias.size()).isEqualTo(2);
+    Assertions.assertThat(memorias.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("4");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
 
   }
 
@@ -387,7 +393,7 @@ public class MemoriaIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "2");
+    headers.add("X-Page-Size", "1");
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, HttpMethod.GET, buildRequest(headers, null),
@@ -400,8 +406,7 @@ public class MemoriaIT extends BaseIT {
     final List<Memoria> memorias = response.getBody();
     Assertions.assertThat(memorias.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
 
   }
 
@@ -423,7 +428,7 @@ public class MemoriaIT extends BaseIT {
     // then: Respuesta OK
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
-    Assertions.assertThat(memorias.size()).isEqualTo(3);
+    Assertions.assertThat(memorias.size()).isEqualTo(2);
 
   }
 
@@ -453,21 +458,15 @@ public class MemoriaIT extends BaseIT {
     // retrospectiva en estado "En secretaría".
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
-    Assertions.assertThat(memorias.size()).isEqualTo(4);
+    Assertions.assertThat(memorias.size()).isEqualTo(2);
 
     // Las memorias 10,11 y 12 tienen estado 3(En Secretaría) y su
     // fecha de envío es menor que la fecha límite por que son asignables.
-
-    // Memoria 13 no tiene estado 3(En Secretaría) pero tiene retrospectiva de tipo
-    // 3
-    // (En Secretaría) por lo que sí es asignable.
-
     // Memoria 14 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
     // la fecha límite, por lo que no es asignable.
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria010");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria011");
-    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria012");
-    Assertions.assertThat(memorias.get(3).getTitulo()).isEqualTo("Memoria013");
+    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria011");
+    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria012");
+    // Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria012");
   }
 
   @Test
@@ -521,7 +520,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -545,7 +544,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 2L);
+        }, 4L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -563,7 +562,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -584,7 +583,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 2L);
+        }, 4L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -602,7 +601,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -623,7 +622,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 2L);
+        }, 3L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
@@ -641,16 +640,17 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
-        }, 1L);
+        }, 2L);
 
     // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
-    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(3);
 
     Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-003");
-    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-012");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-008");
+    Assertions.assertThat(documentacionMemoria.get(2).getDocumentoRef()).isEqualTo("doc-012");
   }
 
   @Test
@@ -675,7 +675,7 @@ public class MemoriaIT extends BaseIT {
   public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
 
     DocumentacionMemoria replaceDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
-        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+        generarMockMemoria(2L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
     replaceDocumentacionMemoria.setAportado(Boolean.FALSE);
 
     HttpHeaders headers = new HttpHeaders();
@@ -684,7 +684,7 @@ public class MemoriaIT extends BaseIT {
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
         HttpMethod.PUT, buildRequestDocumentacionMemoria(headers, replaceDocumentacionMemoria),
-        DocumentacionMemoria.class, 1L, 1L);
+        DocumentacionMemoria.class, 3L, 9L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -727,7 +727,7 @@ public class MemoriaIT extends BaseIT {
 
     // given: idMemoria
     Long idMemoria = 2L;
-    // when: Busca las evaluaciones de la memoria 1L
+    // when: Busca las evaluaciones de la memoria 2L
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
@@ -740,12 +740,15 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluacion> evaluaciones = response.getBody();
-    Assertions.assertThat(evaluaciones.size()).isEqualTo(3);
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(6);
 
-    // Contiene las evaluaciones con Id 2', '3' y '4'
+    // Contiene las evaluaciones con Id '2', '3', '4', '5', '6', '12'
     Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(2L);
     Assertions.assertThat(evaluaciones.get(1).getId()).isEqualTo(3L);
     Assertions.assertThat(evaluaciones.get(2).getId()).isEqualTo(4L);
+    Assertions.assertThat(evaluaciones.get(3).getId()).isEqualTo(5L);
+    Assertions.assertThat(evaluaciones.get(4).getId()).isEqualTo(6L);
+    Assertions.assertThat(evaluaciones.get(5).getId()).isEqualTo(12L);
   }
 
   @Test
@@ -797,7 +800,7 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva/{idDocumentacionMemoria}",
-        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 12L);
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 2L, 12L);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -810,7 +813,7 @@ public class MemoriaIT extends BaseIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
-        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 4L);
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 3L, 9L);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -857,7 +860,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretaria_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     // when: Enviar secretaria con id existente
     long id = 9L;
@@ -873,7 +876,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretaria_DoNotGetMemoria() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
@@ -886,7 +889,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretariaRetrospectiva_Success() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     // when: Enviar secretaria con id existente
     long id = 9L;
@@ -902,7 +905,7 @@ public class MemoriaIT extends BaseIT {
   public void enviarSecretariaRetrospectiva_DoNotGetMemoria() throws Exception {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,
@@ -927,7 +930,7 @@ public class MemoriaIT extends BaseIT {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, "codOrganoCompetente", Boolean.TRUE, null);
+        generarMockRetrospectiva(3L), version, "codOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**

@@ -12,3 +12,5 @@ INSERT INTO eti.apartado (id, bloque_id, nombre, padre_id, orden, esquema) VALUE
 INSERT INTO eti.apartado (id, bloque_id, nombre, padre_id, orden, esquema) VALUES(3, 1, 'Apartado03', 1, 3, '{"nombre":"EsquemaApartado03"}');
 INSERT INTO eti.apartado (id, bloque_id, nombre, padre_id, orden, esquema) VALUES(4, 1, 'Apartado4', NULL, 4, '{"nombre":"EsquemaApartado4"}');
 INSERT INTO eti.apartado (id, bloque_id, nombre, padre_id, orden, esquema) VALUES(5, 1, 'Apartado05', 4, 5, '{"nombre":"EsquemaApartado05"}');
+
+ALTER SEQUENCE eti.apartado_seq RESTART WITH 6;

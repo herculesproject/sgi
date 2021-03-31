@@ -29,8 +29,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql", 
   "classpath:scripts/tipo_convocatoria_reunion.sql",
-  "classpath:scripts/cargo_comite.sql", 
+  "classpath:scripts/convocatoria_reunion.sql",
+  "classpath:scripts/cargo_comite.sql",
+  "classpath:scripts/evaluador.sql",  
   "classpath:scripts/asistentes.sql" 
 // @formatter:on
 })
@@ -72,8 +75,8 @@ public class AsistentesIT extends BaseIT {
     Assertions.assertThat(asistente.getId()).isEqualTo(2L);
     Assertions.assertThat(asistente.getMotivo()).isEqualTo("Motivo2");
     Assertions.assertThat(asistente.getAsistencia()).isTrue();
-    Assertions.assertThat(asistente.getConvocatoriaReunion().getId()).isEqualTo(1L);
-    Assertions.assertThat(asistente.getEvaluador().getId()).isEqualTo(1L);
+    Assertions.assertThat(asistente.getConvocatoriaReunion().getId()).isEqualTo(2L);
+    Assertions.assertThat(asistente.getEvaluador().getId()).isEqualTo(2L);
   }
 
   @Test
@@ -83,9 +86,9 @@ public class AsistentesIT extends BaseIT {
     nuevoAsistente.setMotivo("Motivo 1");
     nuevoAsistente.setAsistencia(Boolean.TRUE);
     nuevoAsistente.setConvocatoriaReunion(new ConvocatoriaReunion());
-    nuevoAsistente.getConvocatoriaReunion().setId(1L);
+    nuevoAsistente.getConvocatoriaReunion().setId(2L);
     nuevoAsistente.setEvaluador(new Evaluador());
-    nuevoAsistente.getEvaluador().setId(1L);
+    nuevoAsistente.getEvaluador().setId(2L);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C")));
@@ -135,9 +138,9 @@ public class AsistentesIT extends BaseIT {
     replaceAsistente.setMotivo("Motivo 1");
     replaceAsistente.setAsistencia(Boolean.TRUE);
     replaceAsistente.setConvocatoriaReunion(new ConvocatoriaReunion());
-    replaceAsistente.getConvocatoriaReunion().setId(1L);
+    replaceAsistente.getConvocatoriaReunion().setId(2L);
     replaceAsistente.setEvaluador(new Evaluador());
-    replaceAsistente.getEvaluador().setId(1L);
+    replaceAsistente.getEvaluador().setId(2L);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
@@ -154,8 +157,8 @@ public class AsistentesIT extends BaseIT {
     Assertions.assertThat(asistente.getId()).isEqualTo(2L);
     Assertions.assertThat(asistente.getMotivo()).isEqualTo("Motivo 1");
     Assertions.assertThat(asistente.getAsistencia()).isTrue();
-    Assertions.assertThat(asistente.getConvocatoriaReunion().getId()).isEqualTo(1L);
-    Assertions.assertThat(asistente.getEvaluador().getId()).isEqualTo(1L);
+    Assertions.assertThat(asistente.getConvocatoriaReunion().getId()).isEqualTo(2L);
+    Assertions.assertThat(asistente.getEvaluador().getId()).isEqualTo(2L);
   }
 
   @Test

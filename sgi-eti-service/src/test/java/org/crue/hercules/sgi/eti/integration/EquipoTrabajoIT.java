@@ -30,6 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off      
   "classpath:scripts/tipo_actividad.sql",
+  "classpath:scripts/peticion_evaluacion.sql",
   "classpath:scripts/equipo_trabajo.sql" 
 // @formatter:on
 })
@@ -56,15 +57,15 @@ public class EquipoTrabajoIT extends BaseIT {
   public void getEquipoTrabajo_WithId_ReturnsEquipoTrabajo() throws Exception {
     final ResponseEntity<EquipoTrabajo> response = restTemplate.exchange(
         EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
-        EquipoTrabajo.class, 1L);
+        EquipoTrabajo.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final EquipoTrabajo equipoTrabajo = response.getBody();
 
-    Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(1L);
-    Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion1");
-    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-1");
+    Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(2L);
+    Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion2");
+    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-2");
   }
 
   @Test
@@ -82,16 +83,15 @@ public class EquipoTrabajoIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EquipoTrabajo> equipoTrabajos = response.getBody();
-    Assertions.assertThat(equipoTrabajos.size()).isEqualTo(3);
+    Assertions.assertThat(equipoTrabajos.size()).isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
 
-    // Contiene de peticionEvaluacion.tiutulo='PeticionEvaluacion6' a
+    // Contiene de peticionEvaluacion.tiutulo='PeticionEvaluacion7' a
     // 'PeticionEvaluacion8'
-    Assertions.assertThat(equipoTrabajos.get(0).getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion6");
-    Assertions.assertThat(equipoTrabajos.get(1).getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion7");
-    Assertions.assertThat(equipoTrabajos.get(2).getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion8");
+    Assertions.assertThat(equipoTrabajos.get(0).getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion7");
+    Assertions.assertThat(equipoTrabajos.get(1).getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion8");
   }
 
   @Test
@@ -133,8 +133,8 @@ public class EquipoTrabajoIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EquipoTrabajo> equipoTrabajos = response.getBody();
-    Assertions.assertThat(equipoTrabajos.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
+    Assertions.assertThat(equipoTrabajos.size()).isEqualTo(7);
+    for (int i = 0; i < 7; i++) {
       EquipoTrabajo equipoTrabajo = equipoTrabajos.get(i);
       Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(8 - i);
       Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
@@ -169,7 +169,7 @@ public class EquipoTrabajoIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("7");
 
     // Contiene personaRef desde 'user-1' hasta 'user-8'
     Assertions.assertThat(equipoTrabajos.get(0).getPersonaRef()).isEqualTo("user-" + String.format("%d", 8));

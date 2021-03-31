@@ -31,7 +31,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {
 // @formatter:off  
-  "classpath:scripts/formulario.sql", 
+  "classpath:scripts/formulario.sql",  
+  "classpath:scripts/comite.sql", 
+  "classpath:scripts/cargo_comite.sql", 
   "classpath:scripts/tipo_actividad.sql",
   "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/estado_retrospectiva.sql",
@@ -40,7 +42,15 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/formacion_especifica.sql", 
   "classpath:scripts/tipo_tarea.sql",
   "classpath:scripts/tipo_estado_memoria.sql", 
-  "classpath:scripts/evaluador.sql" 
+  "classpath:scripts/evaluador.sql", 
+  "classpath:scripts/peticion_evaluacion.sql", 
+  "classpath:scripts/equipo_trabajo.sql", 
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/memoria.sql",
+  "classpath:scripts/dictamen.sql",
+  "classpath:scripts/convocatoria_reunion.sql",
+  "classpath:scripts/evaluacion.sql",
+  "classpath:scripts/tarea.sql",
 // @formatter:on  
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -103,7 +113,7 @@ public class EvaluadorIT extends BaseIT {
   public void removeEvaluador_Success() throws Exception {
 
     // when: Delete con id existente
-    long id = 2L;
+    long id = 8L;
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-B", "ETI-EVR-V")));
@@ -308,7 +318,7 @@ public class EvaluadorIT extends BaseIT {
 
   @Test
   public void findEvaluacionesEnSeguimiento_Unlimited_ReturnsEvaluacionList() throws Exception {
-    // when: Obtiene la page=1 con pagesize=5
+    // when: Obtiene la page=0 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");

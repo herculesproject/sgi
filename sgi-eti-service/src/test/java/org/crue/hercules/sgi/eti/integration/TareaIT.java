@@ -31,14 +31,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off
   "classpath:scripts/formulario.sql", 
+  "classpath:scripts/comite.sql", 
   "classpath:scripts/tipo_actividad.sql",
-  "classpath:scripts/equipo_trabajo.sql", 
   "classpath:scripts/tipo_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/retrospectiva.sql",
   "classpath:scripts/formacion_especifica.sql", 
   "classpath:scripts/tipo_tarea.sql",
   "classpath:scripts/tipo_estado_memoria.sql", 
+  "classpath:scripts/peticion_evaluacion.sql", 
+  "classpath:scripts/memoria.sql", 
+  "classpath:scripts/equipo_trabajo.sql", 
   "classpath:scripts/tarea.sql" 
 // @formatter:on
 })
@@ -63,22 +66,22 @@ public class TareaIT extends BaseIT {
   @Test
   public void getTarea_WithId_ReturnsTarea() throws Exception {
     final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), Tarea.class, 1L);
+        HttpMethod.GET, buildRequest(null, null), Tarea.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final Tarea tarea = response.getBody();
 
-    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(2L);
     Assertions.assertThat(tarea.getEquipoTrabajo()).as("equipoTrabajo").isNotNull();
-    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(2L);
     Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
-    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(1L);
-    Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea1");
-    Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion1");
+    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(3L);
+    Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea2");
+    Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion2");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
-    Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo1");
+    Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo2");
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
 
@@ -88,17 +91,17 @@ public class TareaIT extends BaseIT {
     Tarea replaceTarea = generarMockTarea(1L, "Tarea1");
 
     final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, replaceTarea), Tarea.class, 1L);
+        HttpMethod.PUT, buildRequest(null, replaceTarea), Tarea.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final Tarea tarea = response.getBody();
 
-    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(2L);
     Assertions.assertThat(tarea.getEquipoTrabajo()).as("equipoTrabajo").isNotNull();
-    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(2L);
     Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
-    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(2L);
     Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea1");
     Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion1");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
@@ -109,7 +112,7 @@ public class TareaIT extends BaseIT {
 
   @Test
   public void findAll_WithPaging_ReturnsTareaSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=5
+    // when: Obtiene la page=1 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
@@ -124,15 +127,14 @@ public class TareaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Tarea> tareas = response.getBody();
-    Assertions.assertThat(tareas.size()).as("size").isEqualTo(3);
+    Assertions.assertThat(tareas.size()).as("size").isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).as("x-page").isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).as("x-page-size").isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).as("x-total-count").isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).as("x-total-count").isEqualTo("7");
 
-    // Contiene de tarea='Tarea6' a 'Tarea8'
-    Assertions.assertThat(tareas.get(0).getTarea()).as("0.tarea").isEqualTo("Tarea6");
-    Assertions.assertThat(tareas.get(1).getTarea()).as("1.tarea").isEqualTo("Tarea7");
-    Assertions.assertThat(tareas.get(2).getTarea()).as("2.tarea").isEqualTo("Tarea8");
+    // Contiene de tarea='Tarea7' a 'Tarea8'
+    Assertions.assertThat(tareas.get(0).getTarea()).as("1.tarea").isEqualTo("Tarea7");
+    Assertions.assertThat(tareas.get(1).getTarea()).as("2.tarea").isEqualTo("Tarea8");
   }
 
   @Test
@@ -174,8 +176,8 @@ public class TareaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Tarea> tareas = response.getBody();
-    Assertions.assertThat(tareas.size()).as("size").isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
+    Assertions.assertThat(tareas.size()).as("size").isEqualTo(7);
+    for (int i = 0; i < 7; i++) {
       Tarea tarea = tareas.get(i);
       Assertions.assertThat(tarea.getId()).as((8 - i) + ".id").isEqualTo(8 - i);
       Assertions.assertThat(tarea.getTarea()).as((8 - i) + ".tarea").isEqualTo("Tarea" + String.format("%d", 8 - i));
@@ -208,7 +210,7 @@ public class TareaIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("x-page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("x-page-size").isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("8");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("x-total-count").isEqualTo("7");
 
     // Contiene tarea='Tarea8', 'Tarea7', 'Tarea6'
     Assertions.assertThat(tareas.get(0).getTarea()).as("0.tarea").isEqualTo("Tarea" + String.format("%d", 8));
@@ -225,17 +227,17 @@ public class TareaIT extends BaseIT {
    */
   public Tarea generarMockTarea(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
-    equipoTrabajo.setId(1L);
+    equipoTrabajo.setId(2L);
 
     Memoria memoria = new Memoria();
-    memoria.setId(1L);
+    memoria.setId(2L);
 
     FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
     formacionEspecifica.setId(1L);
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Eutanasia");
+    tipoTarea.setNombre("Diseño de proyecto y procedimientos");
     tipoTarea.setActivo(Boolean.TRUE);
 
     Tarea tarea = new Tarea();

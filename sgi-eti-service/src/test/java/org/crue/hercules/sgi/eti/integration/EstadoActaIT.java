@@ -32,6 +32,9 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/formulario.sql",
   "classpath:scripts/tipo_convocatoria_reunion.sql",
   "classpath:scripts/tipo_estado_acta.sql",
+  "classpath:scripts/comite.sql",
+  "classpath:scripts/convocatoria_reunion.sql",
+  "classpath:scripts/acta.sql",
   "classpath:scripts/estado_acta.sql"
 // @formatter:on
 })
@@ -66,7 +69,7 @@ public class EstadoActaIT extends BaseIT {
 
     Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(4L);
     Assertions.assertThat(estadoActa.getActa()).as("acta").isNotNull();
-    Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(1L);
+    Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(2L);
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
     Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
@@ -88,9 +91,9 @@ public class EstadoActaIT extends BaseIT {
 
     Assertions.assertThat(estadoActa.getId()).as("id").isNotNull();
     Assertions.assertThat(estadoActa.getActa()).as("acta").isNotNull();
-    Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(1L);
+    Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(2L);
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
-    Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
+    Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(2L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
         .isEqualTo(Instant.parse("2020-07-14T00:00:00Z"));
   }
@@ -133,9 +136,9 @@ public class EstadoActaIT extends BaseIT {
 
     Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(4L);
     Assertions.assertThat(estadoActa.getActa()).as("acta").isNotNull();
-    Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(1L);
+    Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(2L);
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();
-    Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(1L);
+    Assertions.assertThat(estadoActa.getTipoEstadoActa().getId()).as("tipoEstadoActa.id").isEqualTo(2L);
     Assertions.assertThat(estadoActa.getFechaEstado()).as("fechaEstado")
         .isEqualTo(Instant.parse("2020-07-14T00:00:00Z"));
   }
@@ -248,10 +251,10 @@ public class EstadoActaIT extends BaseIT {
    */
   public EstadoActa generarMockEstadoActa(Long id) {
     Acta acta = new Acta();
-    acta.setId(1L);
+    acta.setId(2L);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
-    tipoEstadoActa.setId(1L);
+    tipoEstadoActa.setId(2L);
 
     EstadoActa estadoActa = new EstadoActa();
     estadoActa.setId(id);

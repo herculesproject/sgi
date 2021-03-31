@@ -32,11 +32,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 // @formatter:off  
   "classpath:scripts/tipo_actividad.sql", 
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql",
   "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/bloque.sql", 
   "classpath:scripts/apartado.sql",
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/memoria.sql",
   "classpath:scripts/respuesta.sql" 
 // @formatter:on  
 })
@@ -108,10 +112,10 @@ public class RespuestaIT extends BaseIT {
   @Test
   public void replaceRespuesta_ReturnsRespuesta() throws Exception {
 
-    Respuesta replaceRespuesta = generarMockRespuesta(1L);
+    Respuesta replaceRespuesta = generarMockRespuesta(2L);
 
     final ResponseEntity<Respuesta> response = restTemplate.exchange(RESPUESTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, replaceRespuesta), Respuesta.class, 2L);
+        HttpMethod.PUT, buildRequest(null, replaceRespuesta), Respuesta.class, 3L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -172,9 +176,9 @@ public class RespuestaIT extends BaseIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedRespuestaList() throws Exception {
     // when: Ordenación por valor desc
-    String query = "valor,desc";
+    String sort = "valor,desc";
 
-    URI uri = UriComponentsBuilder.fromUriString(RESPUESTA_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+    URI uri = UriComponentsBuilder.fromUriString(RESPUESTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
         .toUri();
 
     // when: Búsqueda por query

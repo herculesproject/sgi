@@ -146,7 +146,7 @@ public class RetrospectivaIT extends BaseIT {
   public void findById_WithNotExistingId_Returns404() throws Exception {
 
     // given: No existe entidad con el id indicado
-    Long id = 8L;
+    Long id = 9L;
     // @formatter:off
     final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
@@ -166,11 +166,12 @@ public class RetrospectivaIT extends BaseIT {
 
     // given: Datos existentes
     List<Retrospectiva> response = new LinkedList<>();
-    response.add(getMockData(3L));
-    response.add(getMockData(4L));
-    response.add(getMockData(5L));
-    response.add(getMockData(6L));
-    response.add(getMockData(7L));
+    response.add(getMockData(3L, 1L));
+    response.add(getMockData(4L, 2L));
+    response.add(getMockData(5L, 1L));
+    response.add(getMockData(6L, 2L));
+    response.add(getMockData(7L, 1L));
+    response.add(getMockData(8L, 4L));
 
     final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
@@ -189,7 +190,8 @@ public class RetrospectivaIT extends BaseIT {
 
     // given: Datos existentes
     List<Retrospectiva> response = new LinkedList<>();
-    response.add(getMockData(7L));
+    response.add(getMockData(7L, 1L));
+    response.add(getMockData(8L, 4L));
 
     // página 2 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
@@ -205,13 +207,13 @@ public class RetrospectivaIT extends BaseIT {
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().size()).isEqualTo(1);
+    Assertions.assertThat(result.getBody().size()).isEqualTo(2);
     Assertions.assertThat(result.getBody()).isEqualTo(response);
     Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("2");
     Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("2");
     Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("3");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("6");
   }
 
   @Test
@@ -262,13 +264,13 @@ public class RetrospectivaIT extends BaseIT {
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
     Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().get(0).getId()).isEqualTo(7L);
-    Assertions.assertThat(result.getBody().get(4).getId()).isEqualTo(3L);
+    Assertions.assertThat(result.getBody().get(0).getId()).isEqualTo(8L);
+    Assertions.assertThat(result.getBody().get(4).getId()).isEqualTo(4L);
     Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("6");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("6");
     Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("6");
   }
 
   @Test
@@ -319,6 +321,23 @@ public class RetrospectivaIT extends BaseIT {
     final Retrospectiva data = new Retrospectiva();
     data.setId(id);
     data.setEstadoRetrospectiva(getMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
+
+    return data;
+  }
+
+  /**
+   * Genera un objeto {@link Retrospectiva}
+   * 
+   * @param id
+   * @param estado
+   * @return Retrospectiva
+   */
+  private Retrospectiva getMockData(Long id, Long estado) {
+
+    final Retrospectiva data = new Retrospectiva();
+    data.setId(id);
+    data.setEstadoRetrospectiva(getMockDataEstadoRetrospectiva(estado));
     data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
 
     return data;

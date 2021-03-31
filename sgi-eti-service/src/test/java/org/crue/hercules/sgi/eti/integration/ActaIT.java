@@ -35,8 +35,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql", 
   "classpath:scripts/tipo_convocatoria_reunion.sql",
   "classpath:scripts/tipo_estado_acta.sql",
+  "classpath:scripts/convocatoria_reunion.sql",
   "classpath:scripts/acta.sql"
 // @formatter:on
 })
@@ -74,7 +76,7 @@ public class ActaIT extends BaseIT {
     final Acta acta = response.getBody();
 
     Assertions.assertThat(acta.getId()).as("id").isEqualTo(2L);
-    Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(100L);
+    Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(2L);
     Assertions.assertThat(acta.getHoraInicio()).as("horaInicio").isEqualTo(10);
     Assertions.assertThat(acta.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
     Assertions.assertThat(acta.getHoraFin()).as("horaFin").isEqualTo(12);
@@ -102,8 +104,8 @@ public class ActaIT extends BaseIT {
 
     final Acta acta = response.getBody();
 
-    Assertions.assertThat(acta.getId()).as("id").isEqualTo(1L);
-    Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(100L);
+    Assertions.assertThat(acta.getId()).as("id").isEqualTo(9L);
+    Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(2L);
     Assertions.assertThat(acta.getHoraInicio()).as("horaInicio").isEqualTo(10);
     Assertions.assertThat(acta.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
     Assertions.assertThat(acta.getHoraFin()).as("horaFin").isEqualTo(12);
@@ -120,7 +122,7 @@ public class ActaIT extends BaseIT {
     // Acta creado
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
     final ResponseEntity<Acta> fullDataActa = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(headers, null), Acta.class, 1L);
+        HttpMethod.GET, buildRequest(headers, null), Acta.class, acta.getId());
 
     String query = "acta.id==" + acta.getId();
     URI uri = UriComponentsBuilder.fromUriString(ESTADOACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
@@ -134,7 +136,7 @@ public class ActaIT extends BaseIT {
     // then: Respuesta OK, retorna el EstadoActa inicial del Acta creado
     Assertions.assertThat(responseEstadoActa.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(responseEstadoActa.getBody().size()).as("size").isEqualTo(1);
-    Assertions.assertThat(responseEstadoActa.getBody().get(0).getTipoEstadoActa()).as("tipoEstado")
+    Assertions.assertThat(responseEstadoActa.getBody().get(0).getTipoEstadoActa()).as("tipoEstadoActa")
         .isEqualTo(fullDataActa.getBody().getEstadoActual());
     Assertions.assertThat(responseEstadoActa.getBody().get(0).getActa()).as("acta").isEqualTo(fullDataActa.getBody());
 
@@ -184,7 +186,7 @@ public class ActaIT extends BaseIT {
     final Acta acta = response.getBody();
 
     Assertions.assertThat(acta.getId()).as("id").isEqualTo(2L);
-    Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(100L);
+    Assertions.assertThat(acta.getConvocatoriaReunion().getId()).as("convocatoriaReunion.id").isEqualTo(2L);
     Assertions.assertThat(acta.getHoraInicio()).as("horaInicio").isEqualTo(10);
     Assertions.assertThat(acta.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
     Assertions.assertThat(acta.getHoraFin()).as("horaFin").isEqualTo(12);
@@ -356,7 +358,7 @@ public class ActaIT extends BaseIT {
     comite.setFormulario(formulario);
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
-    convocatoriaReunion.setId(100L);
+    convocatoriaReunion.setId(2L);
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);

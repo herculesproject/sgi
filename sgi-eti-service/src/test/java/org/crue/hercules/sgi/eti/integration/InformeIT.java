@@ -38,12 +38,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off  
   "classpath:scripts/formulario.sql", 
+  "classpath:scripts/comite.sql",
   "classpath:scripts/tipo_actividad.sql",
   "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/retrospectiva.sql",
   "classpath:scripts/tipo_evaluacion.sql", 
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/memoria.sql",
   "classpath:scripts/informe.sql" 
 // @formatter:on  
 })
@@ -120,10 +123,11 @@ public class InformeIT extends BaseIT {
   @Test
   public void replaceInforme_ReturnsInforme() throws Exception {
 
-    Informe replaceInforme = generarMockInforme(1L, "DocumentoFormulario1");
+    long id = 1L;
+    Informe replaceInforme = generarMockInforme(id, "DocumentoFormulario1");
 
     final ResponseEntity<Informe> response = restTemplate.exchange(INFORME_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, replaceInforme), Informe.class, 1L);
+        HttpMethod.PUT, buildRequest(null, replaceInforme), Informe.class, id);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -256,32 +260,32 @@ public class InformeIT extends BaseIT {
     tipoActividad.setActivo(Boolean.TRUE);
 
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
-    peticionEvaluacion.setId(id);
-    peticionEvaluacion.setCodigo("Codigo1");
-    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setId(2L);
+    peticionEvaluacion.setCodigo("Codigo");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico");
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
-    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setPersonaRef("user-001");
+    peticionEvaluacion.setTitulo("PeticionEvaluacion2");
+    peticionEvaluacion.setPersonaRef("user-002");
     peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
     Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(id);
-    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setNombre("TipoMemoria001");
     tipoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + id, "user-00" + id,
+    Memoria memoria = new Memoria(2L, "numRef-002", peticionEvaluacion, comite, "Memoria" + id, "user-00" + id,
         tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), Instant.now()), 3,
         "CodOrganoCompetente", Boolean.TRUE, null);

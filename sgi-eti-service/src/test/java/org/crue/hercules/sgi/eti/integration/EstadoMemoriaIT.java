@@ -39,11 +39,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off      
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql",
   "classpath:scripts/tipo_actividad.sql",
   "classpath:scripts/tipo_memoria.sql",
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql",
   "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/memoria.sql",
   "classpath:scripts/estado_memoria.sql" 
 // @formatter:on  
 })
@@ -77,14 +80,14 @@ public class EstadoMemoriaIT extends BaseIT {
     final EstadoMemoria estadoMemoria = response.getBody();
 
     Assertions.assertThat(estadoMemoria.getId()).isEqualTo(3L);
-    Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria3");
+    Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria003");
     Assertions.assertThat(estadoMemoria.getTipoEstadoMemoria().getNombre()).isEqualTo("En secretaría");
   }
 
   @Test
   public void addEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 1L);
+    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 2L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(ESTADO_MEMORIA_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoEstadoMemoria), EstadoMemoria.class);
@@ -121,7 +124,7 @@ public class EstadoMemoriaIT extends BaseIT {
   @Test
   public void replaceEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 1L);
+    EstadoMemoria replaceEstadoMemoria = generarMockEstadoMemoria(2L, 2L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(
         ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
@@ -159,7 +162,7 @@ public class EstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("6");
 
     // Contiene la 'Memoria8' y tipo estado memoria nombre='No procede evaluar'
-    Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo()).isEqualTo("Memoria8");
+    Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo()).isEqualTo("Memoria008");
     Assertions.assertThat(estadoMemorias.get(0).getTipoEstadoMemoria().getNombre()).isEqualTo("No procede evaluar");
   }
 
@@ -208,7 +211,7 @@ public class EstadoMemoriaIT extends BaseIT {
     for (int i = 0; i < 6; i++) {
       EstadoMemoria estadoMemoria = estadoMemorias.get(i);
       Assertions.assertThat(estadoMemoria.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 8 - i));
+      Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
     }
   }
 
@@ -241,9 +244,12 @@ public class EstadoMemoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("6");
 
     // Contiene titulo='Memoria8', 'Memoria7', 'Memoria6'
-    Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 8));
-    Assertions.assertThat(estadoMemorias.get(1).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 7));
-    Assertions.assertThat(estadoMemorias.get(2).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 6));
+    Assertions.assertThat(estadoMemorias.get(0).getMemoria().getTitulo())
+        .isEqualTo("Memoria" + String.format("%03d", 8));
+    Assertions.assertThat(estadoMemorias.get(1).getMemoria().getTitulo())
+        .isEqualTo("Memoria" + String.format("%03d", 7));
+    Assertions.assertThat(estadoMemorias.get(2).getMemoria().getTitulo())
+        .isEqualTo("Memoria" + String.format("%03d", 6));
 
   }
 

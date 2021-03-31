@@ -30,6 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off  
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql",
   "classpath:scripts/tipo_memoria.sql",
   "classpath:scripts/tipo_memoria_comite.sql" 
 // @formatter:on  
@@ -55,8 +56,8 @@ public class TipoMemoriaComiteIT extends BaseIT {
   @Test
   public void getTipoMemoriaComite_WithId_ReturnsTipoMemoriaComite() throws Exception {
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Comite comite = new Comite(2L, "Comite2", formulario, Boolean.TRUE);
+    Formulario formulario = new Formulario(2L, "M20", "Formulario M20");
+    Comite comite = new Comite(2L, "CEEA", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria001", Boolean.TRUE);
 
     final ResponseEntity<TipoMemoriaComite> response = restTemplate.exchange(

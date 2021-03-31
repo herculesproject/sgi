@@ -56,14 +56,23 @@ import org.springframework.web.util.UriComponentsBuilder;
 // @formatter:off    
   "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_actividad.sql",
-  "classpath:scripts/formulario.sql", 
+  "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql", 
+  "classpath:scripts/peticion_evaluacion.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
+  "classpath:scripts/retrospectiva.sql", 
+  "classpath:scripts/memoria.sql", 
   "classpath:scripts/tipo_evaluacion.sql",
+  "classpath:scripts/dictamen.sql", 
   "classpath:scripts/tipo_convocatoria_reunion.sql", 
   "classpath:scripts/cargo_comite.sql",
+  "classpath:scripts/evaluador.sql", 
   "classpath:scripts/tipo_estado_acta.sql", 
-  "classpath:scripts/convocatoria_reunion.sql"
+  "classpath:scripts/convocatoria_reunion.sql",
+  "classpath:scripts/acta.sql",
+  "classpath:scripts/asistentes.sql",
+  "classpath:scripts/evaluacion.sql"
 // @formatter:on    
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -99,7 +108,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     final ConvocatoriaReunion newConvocatoriaReunion = getMockData(1L, 1L, 1L);
     newConvocatoriaReunion.setAnio(Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR));
     newConvocatoriaReunion.setId(null);
-    newConvocatoriaReunion.setNumeroActa(3L);
+    newConvocatoriaReunion.setNumeroActa(6L);
 
     // when: Se crea la entidad
     final ResponseEntity<ConvocatoriaReunion> response = restTemplate.exchange(
@@ -213,7 +222,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Entidad con un determinado Id
     final ConvocatoriaReunionDatosGenerales convocatoriaReunion = new ConvocatoriaReunionDatosGenerales(
-        getMockData(2L, 1L, 2L), 3L, 1L);
+        getMockData(3L, 1L, 1L), 1L, null);
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<ConvocatoriaReunionDatosGenerales> response = restTemplate.exchange(
@@ -252,9 +261,9 @@ public class ConvocatoriaReunionIT extends BaseIT {
     List<ConvocatoriaReunion> response = new LinkedList<>();
     // response.add(getMockData(1L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
-    response.add(getMockData(3L, 2L, 1L));
-    response.add(getMockData(4L, 2L, 2L));
-    response.add(getMockData(5L, 3L, 1L));
+    response.add(getMockData(3L, 1L, 1L));
+    response.add(getMockData(4L, 1L, 2L));
+    response.add(getMockData(5L, 1L, 1L));
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -276,7 +285,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Datos existentes
     List<ConvocatoriaReunion> response = new LinkedList<>();
-    response.add(getMockData(3L, 2L, 1L));
+    response.add(getMockData(3L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
     // página 2 con 2 elementos por página
@@ -313,7 +322,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Datos existentes
     List<ConvocatoriaReunion> response = new LinkedList<>();
-    response.add(getMockData(3L, 2L, 1L));
+    response.add(getMockData(3L, 1L, 1L));
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -376,7 +385,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     // given: Datos existentes
     List<ConvocatoriaReunion> response = new LinkedList<>();
-    response.add(getMockData(3L, 2L, 1L));
+    response.add(getMockData(3L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
     // página 1 con 2 elementos por página
@@ -424,9 +433,11 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // @formatter:on
 
     List<Asistentes> result = new LinkedList<>();
-    result.add(generarMockAsistentes(1L, 1L, convocatoriaReunionId));
-    result.add(generarMockAsistentes(2L, 1L, convocatoriaReunionId));
-    result.add(generarMockAsistentes(3L, 1L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(2L, 2L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(3L, 2L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(4L, 2L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(5L, 2L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(6L, 2L, convocatoriaReunionId));
 
     // when: Se buscan todos los datos
 
@@ -456,6 +467,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     result.add(generarMockAsistentes(1L, 1L, convocatoriaReunionId));
     result.add(generarMockAsistentes(2L, 1L, convocatoriaReunionId));
     result.add(generarMockAsistentes(3L, 1L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(4L, 2L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(5L, 2L, convocatoriaReunionId));
 
     // página 1 con 2 elementos por página
 
@@ -465,8 +478,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     headers.add("X-Page-Size", "2");
 
     Pageable pageable = PageRequest.of(1, 2);
-    Page<Asistentes> pageResult = new PageImpl<>(result.subList(2, 3), pageable, result.size());
-
+    Page<Asistentes> pageResult = new PageImpl<>(result.subList(3, 5), pageable, result.size());
     // when: Se buscan los datos paginados
     final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(url, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Asistentes>>() {
@@ -486,7 +498,6 @@ public class ConvocatoriaReunionIT extends BaseIT {
         .isEqualTo(String.valueOf(pageResult.getTotalElements()));
     Assertions.assertThat(response.getBody().size()).isEqualTo(pageResult.getContent().size());
     Assertions.assertThat(response.getBody()).isEqualTo(pageResult.getContent());
-
   }
 
   @Test
@@ -501,13 +512,13 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // @formatter:on
 
     List<Evaluacion> result = new ArrayList<>();
-    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
-    evaluacion1.setEsRevMinima(Boolean.FALSE);
-    result.add(evaluacion1);
-    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3));
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1, 7);
     evaluacion3.setEsRevMinima(Boolean.FALSE);
     result.add(evaluacion3);
-    Evaluacion evaluacion5 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5));
+    Evaluacion evaluacion4 = generarMockEvaluacion(Long.valueOf(4), String.format("%03d", 4), 4, 7);
+    evaluacion4.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion4);
+    Evaluacion evaluacion5 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 5, 7);
     evaluacion5.setEsRevMinima(Boolean.FALSE);
     result.add(evaluacion5);
 
@@ -535,13 +546,13 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // @formatter:on
 
     List<Evaluacion> result = new LinkedList<>();
-    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
+    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 3, 7);
     evaluacion1.setEsRevMinima(Boolean.FALSE);
     result.add(evaluacion1);
-    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3));
+    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1, 7);
     evaluacion2.setEsRevMinima(Boolean.FALSE);
     result.add(evaluacion2);
-    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5));
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 5, 7);
     evaluacion3.setEsRevMinima(Boolean.FALSE);
     result.add(evaluacion3);
 
@@ -588,15 +599,15 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // @formatter:on
 
     List<Evaluacion> result = new LinkedList<>();
-    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
-    evaluacion1.setEsRevMinima(Boolean.FALSE);
-    result.add(evaluacion1);
-    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3));
-    evaluacion2.setEsRevMinima(Boolean.FALSE);
-    result.add(evaluacion2);
-    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5));
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1, 7);
     evaluacion3.setEsRevMinima(Boolean.FALSE);
     result.add(evaluacion3);
+    Evaluacion evaluacion4 = generarMockEvaluacion(Long.valueOf(4), String.format("%03d", 4), 4, 7);
+    evaluacion4.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion4);
+    Evaluacion evaluacion5 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 5, 7);
+    evaluacion5.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion5);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
@@ -614,7 +625,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
   @Test
   public void getEvaluaciones_WithPaging_ReturnsEvaluacionSubList() throws Exception {
 
-    Long convocatoriaReunionId = 2L;
+    Long convocatoriaReunionId = 3L;
     // @formatter:off
     final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
@@ -622,24 +633,18 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // @formatter:on
 
     List<Evaluacion> result = new ArrayList<>();
-    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
-    evaluacion1.setEsRevMinima(Boolean.FALSE);
-    result.add(evaluacion1);
-    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3));
-    evaluacion3.setEsRevMinima(Boolean.FALSE);
-    result.add(evaluacion3);
-    Evaluacion evaluacion5 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5));
-    evaluacion5.setEsRevMinima(Boolean.FALSE);
-    result.add(evaluacion5);
+    Evaluacion evaluacion12 = generarMockEvaluacionId(Long.valueOf(12));
+    evaluacion12.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion12);
 
     // página 1 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
-    headers.add("X-Page", "1");
+    headers.add("X-Page", "0");
     headers.add("X-Page-Size", "2");
 
-    Pageable pageable = PageRequest.of(1, 2);
-    Page<Evaluacion> pageResult = new PageImpl<>(result.subList(2, 3), pageable, result.size());
+    Pageable pageable = PageRequest.of(0, 2);
+    Page<Evaluacion> pageResult = new PageImpl<>(result.subList(0, 1), pageable, result.size());
 
     // when: Se buscan los datos paginados
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
@@ -699,7 +704,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
   private ConvocatoriaReunion getMockData(Long id, Long comiteId, Long tipoId) {
 
     Formulario formulario = new Formulario(comiteId, "M" + comiteId + "0", "Formulario M" + comiteId + "0");
-    Comite comite = new Comite(comiteId, "Comite" + comiteId, formulario, Boolean.TRUE);
+    Comite comite = new Comite(comiteId, "CEISH", formulario, Boolean.TRUE);
 
     String tipo_txt = (tipoId == 1L) ? "Ordinaria" : (tipoId == 2L) ? "Extraordinaria" : "Seguimiento";
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(tipoId, tipo_txt, Boolean.TRUE);
@@ -760,7 +765,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     cargoComite.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "CEISH", formulario, Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
@@ -778,16 +783,21 @@ public class ConvocatoriaReunionIT extends BaseIT {
   /**
    * Función que devuelve un objeto Evaluacion
    *
-   * @param id     id del Evaluacion
-   * @param sufijo el sufijo para título y nombre
+   * @param id             id del Evaluacion
+   * @param sufijo         el sufijo para título y nombre
+   * @param version        version evaluación
+   * @param versionMemoria version memoria
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo, Integer version, Integer versionMemoria) {
+
+    TipoEvaluacion tipoEvaluacionDictamen = new TipoEvaluacion(2L, "TipoEvaluacion2", Boolean.TRUE);
 
     Dictamen dictamen = new Dictamen();
     dictamen.setId(1L);
-    dictamen.setNombre("Dictamen1");
+    dictamen.setNombre("Favorable");
+    dictamen.setTipoEvaluacion(tipoEvaluacionDictamen);
     dictamen.setActivo(Boolean.TRUE);
 
     TipoActividad tipoActividad = new TipoActividad();
@@ -796,36 +806,111 @@ public class ConvocatoriaReunionIT extends BaseIT {
     tipoActividad.setActivo(Boolean.TRUE);
 
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
-    peticionEvaluacion.setId(1L);
-    peticionEvaluacion.setCodigo("Codigo1");
-    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setId(2L);
+    peticionEvaluacion.setCodigo("Codigo");
+    peticionEvaluacion.setDisMetodologico("Metodologico");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(Instant.parse("2020-08-01T23:59:59Z"));
-    peticionEvaluacion.setFechaInicio(Instant.parse("2020-08-01T00:00:00Z"));
-    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
-    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setFechaFin(Instant.parse("2021-07-09T23:59:59Z"));
+    peticionEvaluacion.setFechaInicio(Instant.parse("2020-07-09T00:00:00Z"));
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiadora");
+    peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");
-    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Ref solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setPersonaRef("user-001");
-    peticionEvaluacion.setValorSocial("valor social");
+    peticionEvaluacion.setTitulo("PeticionEvaluacion2");
+    peticionEvaluacion.setPersonaRef("user");
+    peticionEvaluacion.setValorSocial(" valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "CEISH", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);
     tipoMemoria.setNombre("TipoMemoria001");
     tipoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria001", "user-001", tipoMemoria,
-        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.parse("2020-08-01T00:00:00Z"), Boolean.FALSE,
-        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "EstadoRetrospectiva01", Boolean.TRUE),
-            Instant.parse("2020-08-01T00:00:00Z")),
-        3, "CodOrganoCompetente", Boolean.TRUE, null);
+    Memoria memoria = new Memoria(2L, "ref-002", peticionEvaluacion, comite, "Memoria002", "userref-002", tipoMemoria,
+        new TipoEstadoMemoria(12L, "En secretaría seguimiento anual", Boolean.TRUE),
+        Instant.parse("2020-08-01T00:00:00Z"), Boolean.FALSE, new Retrospectiva(3L,
+            new EstadoRetrospectiva(1L, "EstadoRetrospectiva01", Boolean.TRUE), Instant.parse("2020-07-03T00:00:00Z")),
+        versionMemoria, null, Boolean.TRUE, null);
+
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(2L);
+    tipoEvaluacion.setNombre("TipoEvaluacion2");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
+    Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(Instant.parse("2020-07-13T00:00:00Z"));
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(getMockData(2L, 1L, 2L));
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setEvaluador1(generarMockEvaluador(2L));
+    evaluacion.setEvaluador2(generarMockEvaluador(3L));
+    evaluacion.setVersion(version);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluacion
+   *
+   * @param id id del Evaluacion
+   * @return el objeto Evaluacion
+   */
+
+  public Evaluacion generarMockEvaluacionId(Long id) {
+
+    TipoEvaluacion tipoEvaluacionDictamen = new TipoEvaluacion(2L, "TipoEvaluacion2", Boolean.TRUE);
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(1L);
+    dictamen.setNombre("Favorable");
+    dictamen.setTipoEvaluacion(tipoEvaluacionDictamen);
+    dictamen.setActivo(Boolean.TRUE);
+
+    TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("Proyecto de investigacion");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(2L);
+    peticionEvaluacion.setCodigo("Codigo");
+    peticionEvaluacion.setDisMetodologico("Metodologico");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(Instant.parse("2021-07-09T23:59:59Z"));
+    peticionEvaluacion.setFechaInicio(Instant.parse("2020-07-09T00:00:00Z"));
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiadora");
+    peticionEvaluacion.setObjetivos("Objetivos");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Ref solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion2");
+    peticionEvaluacion.setPersonaRef("user");
+    peticionEvaluacion.setValorSocial(" valor social");
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Comite comite = new Comite(1L, "CEISH", formulario, Boolean.TRUE);
+
+    TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L);
+    tipoMemoria.setNombre("TipoMemoria001");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    Memoria memoria = new Memoria(2L, "ref-002", peticionEvaluacion, comite, "Memoria002", "userref-002", tipoMemoria,
+        new TipoEstadoMemoria(12L, "En secretaría seguimiento anual", Boolean.TRUE),
+        Instant.parse("2020-08-01T00:00:00Z"), Boolean.FALSE, new Retrospectiva(3L,
+            new EstadoRetrospectiva(1L, "EstadoRetrospectiva01", Boolean.TRUE), Instant.parse("2020-07-03T00:00:00Z")),
+        7, null, Boolean.TRUE, null);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
     tipoEvaluacion.setId(1L);
@@ -836,13 +921,13 @@ public class ConvocatoriaReunionIT extends BaseIT {
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(Instant.parse("2020-08-01T00:00:00Z"));
+    evaluacion.setFechaDictamen(Instant.parse("2020-07-10T00:00:00Z"));
     evaluacion.setMemoria(memoria);
-    evaluacion.setConvocatoriaReunion(getMockData(2L, 1L, 2L));
+    evaluacion.setConvocatoriaReunion(getMockData(3L, 1L, 1L));
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    evaluacion.setEvaluador1(generarMockEvaluador(1L));
-    evaluacion.setEvaluador2(generarMockEvaluador(2L));
-    evaluacion.setVersion(2);
+    evaluacion.setEvaluador1(generarMockEvaluador(2L));
+    evaluacion.setEvaluador2(generarMockEvaluador(3L));
+    evaluacion.setVersion(7);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;

@@ -47,6 +47,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Sql(scripts = {
 // @formatter:off
   "classpath:scripts/formulario.sql", 
+  "classpath:scripts/comite.sql", 
   "classpath:scripts/bloque.sql", 
   "classpath:scripts/apartado.sql",
   "classpath:scripts/tipo_actividad.sql", 
@@ -57,7 +58,14 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/tipo_evaluacion.sql",
   "classpath:scripts/cargo_comite.sql", 
   "classpath:scripts/tipo_comentario.sql", 
-  "classpath:scripts/evaluacion.sql"
+  "classpath:scripts/dictamen.sql", 
+  "classpath:scripts/evaluador.sql", 
+  "classpath:scripts/convocatoria_reunion.sql", 
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/memoria.sql",
+  "classpath:scripts/evaluacion.sql",
+  "classpath:scripts/comentario.sql"
 // @formatter:on
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -110,8 +118,8 @@ public class EvaluacionIT extends BaseIT {
     final Evaluacion evaluacion = response.getBody();
 
     Assertions.assertThat(evaluacion.getId()).isEqualTo(2L);
-    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
+    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria002");
+    Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Favorable");
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
@@ -140,8 +148,9 @@ public class EvaluacionIT extends BaseIT {
 
     // when: Delete
     long id = 9L;
-    final ResponseEntity<Evaluacion> response = restTemplate.exchange("/convocatoriareuniones/3/evaluacion/9",
-        HttpMethod.DELETE, buildRequest(headers, generarMockEvaluacion(1L, null)), Evaluacion.class, id);
+    final ResponseEntity<Evaluacion> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(headers, null),
+        Evaluacion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -189,7 +198,7 @@ public class EvaluacionIT extends BaseIT {
 
   @Test
   public void findAll_WithPaging_ReturnsEvaluacionSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=10
+    // when: Obtiene la page=1 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
@@ -207,19 +216,19 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(evaluaciones.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("10");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("11");
 
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria6");
-    Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria7");
-    Assertions.assertThat(evaluaciones.get(2).getMemoria().getTitulo()).isEqualTo("Memoria8");
-    Assertions.assertThat(evaluaciones.get(3).getMemoria().getTitulo()).isEqualTo("Memoria9");
-    Assertions.assertThat(evaluaciones.get(4).getMemoria().getTitulo()).isEqualTo("Memoria10");
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria014");
+    Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria007");
+    Assertions.assertThat(evaluaciones.get(2).getMemoria().getTitulo()).isEqualTo("Memoria008");
+    Assertions.assertThat(evaluaciones.get(3).getMemoria().getTitulo()).isEqualTo("Memoria009");
+    Assertions.assertThat(evaluaciones.get(4).getMemoria().getTitulo()).isEqualTo("Memoria010");
   }
 
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredEvaluacionList() throws Exception {
     // when: Búsqueda por esRevMinima equals e id equals
-    Long id = 5L;
+    Long id = 6L;
     String query = "esRevMinima==true;id==" + id;
 
     // Authorization
@@ -241,7 +250,7 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
     Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(id);
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).startsWith("Memoria");
-    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).startsWith("Dictamen");
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).startsWith("Favorable");
   }
 
   @Test
@@ -265,16 +274,16 @@ public class EvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluacion> evaluaciones = response.getBody();
-    Assertions.assertThat(evaluaciones.size()).isEqualTo(10);
-    for (int i = 0; i < 10; i++) {
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(11);
+    for (int i = 0; i < 11; i++) {
       Evaluacion evaluacion = evaluaciones.get(i);
-      Assertions.assertThat(evaluacion.getId()).isEqualTo(11 - i);
+      Assertions.assertThat(evaluacion.getId()).isEqualTo(12 - i);
     }
   }
 
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsEvaluacionSubList() throws Exception {
-    // when: Obtiene page=3 con pagesize=10
+    // when: Obtiene page=0 con pagesize=3
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
@@ -302,16 +311,16 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene memoria.titulo='Memoria1'
-    // Contiene dictamen.nombre='Dictamen1'
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 1));
-    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%d", 1));
+    // Contiene memoria.titulo='Memoria002'
+    // Contiene dictamen.nombre='Favorable'
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria002");
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Favorable");
 
   }
 
   @Test
   public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPaging_ReturnsEvaluacionSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=10
+    // when: Obtiene la page=0 con pagesize=3
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
@@ -332,10 +341,11 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene de memoria.titulo='Memoria9'
-    // Contiene de dictamen.nombre='Dictamen6' a 'Dictamen8'
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria9");
-    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen2");
+    // Contiene memoria.titulo='Memoria009'
+    // Contiene dictamen.nombre='Favorable pendiente de revisión mínima'
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria009");
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre())
+        .isEqualTo("Favorable pendiente de revisión mínima");
   }
 
   @Test
@@ -363,8 +373,9 @@ public class EvaluacionIT extends BaseIT {
     final List<Evaluacion> evaluaciones = response.getBody();
     Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
     Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).startsWith("Memoria");
-    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).startsWith("Dictamen");
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria009");
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre())
+        .isEqualTo("Favorable pendiente de revisión mínima");
   }
 
   @Test
@@ -390,14 +401,15 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluacion> evaluaciones = response.getBody();
     Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 9));
-    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%d", 2));
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 9));
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre())
+        .isEqualTo("Favorable pendiente de revisión mínima");
   }
 
   @Test
   public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPagingSortingAndFiltering_ReturnsEvaluacionSubList()
       throws Exception {
-    // when: Obtiene page=3 con pagesize=10
+    // when: Obtiene page=0 con pagesize=3
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
@@ -425,17 +437,17 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene memoria.titulo='Memoria9'
-    // Contiene dictamen.nombre='Dictamen2'
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%d", 9));
-
-    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%d", 2));
+    // Contiene memoria.titulo='Memoria009'
+    // Contiene dictamen.nombre='Favorable pendiente de revisión mínima'
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 9));
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre())
+        .isEqualTo("Favorable pendiente de revisión mínima");
 
   }
 
   @Test
   public void findByEvaluacionesEnSeguimientoFinal_ReturnsEvaluacionList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=5
+    // when: Obtiene la page=0 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
@@ -457,9 +469,9 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene de memoria.titulo='Memoria10'
+    // Contiene de memoria.titulo='Memoria010'
 
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria10");
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria010");
 
   }
 
@@ -496,7 +508,7 @@ public class EvaluacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
 
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVALR")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-002", "ETI-EVC-EVALR")));
 
     final ResponseEntity<List<Comentario>> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentarios-evaluador", HttpMethod.GET,
@@ -527,7 +539,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setBloque(Bloque);
 
     Memoria memoria = new Memoria();
-    memoria.setId(1L);
+    memoria.setId(2L);
 
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
@@ -586,7 +598,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setBloque(Bloque);
 
     Memoria memoria = new Memoria();
-    memoria.setId(1L);
+    memoria.setId(2L);
 
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
@@ -596,7 +608,7 @@ public class EvaluacionIT extends BaseIT {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-002", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador", HttpMethod.POST,
@@ -637,7 +649,7 @@ public class EvaluacionIT extends BaseIT {
   @Test
   public void replaceComentarioGestor_ReturnsComentario() throws Exception {
 
-    Evaluacion evaluacion = generarMockEvaluacion(7L, null);
+    Evaluacion evaluacion = generarMockEvaluacion(8L, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
@@ -661,14 +673,14 @@ public class EvaluacionIT extends BaseIT {
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor" + "/{idComentario}", HttpMethod.PUT,
-        buildRequestComentario(headers, comentarioReplace), Comentario.class, 8L, 7L);
+        buildRequestComentario(headers, comentarioReplace), Comentario.class, 7L, 6L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final Comentario comentario = response.getBody();
 
     Assertions.assertThat(comentario.getId()).isNotNull();
-    Assertions.assertThat(comentario.getEvaluacion().getId()).isEqualTo(7L);
+    Assertions.assertThat(comentario.getEvaluacion().getId()).isEqualTo(8L);
     Assertions.assertThat(comentario.getTexto()).isEqualTo("Actualizado");
   }
 
@@ -696,7 +708,7 @@ public class EvaluacionIT extends BaseIT {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-002", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador" + "/{idComentario}",
@@ -734,7 +746,7 @@ public class EvaluacionIT extends BaseIT {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVAL", "ETI-EVC-EVALR-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-002", "ETI-EVC-EVAL", "ETI-EVC-EVALR-INV")));
 
     // when: Delete con id existente
     final ResponseEntity<Comentario> response = restTemplate.exchange(
@@ -775,7 +787,7 @@ public class EvaluacionIT extends BaseIT {
     tipoActividad.setActivo(Boolean.TRUE);
 
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
-    peticionEvaluacion.setId(1L);
+    peticionEvaluacion.setId(2L);
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
@@ -800,15 +812,15 @@ public class EvaluacionIT extends BaseIT {
     tipoMemoria.setNombre("TipoMemoria001");
     tipoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
+    Memoria memoria = new Memoria(2L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
-        new Retrospectiva(1L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), Instant.now()), 3,
+        new Retrospectiva(3L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), Instant.now()), 3,
         "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
-    convocatoriaReunion.setId(1L);
+    convocatoriaReunion.setId(2L);
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.now());
     convocatoriaReunion.setFechaLimite(Instant.now());
@@ -826,8 +838,8 @@ public class EvaluacionIT extends BaseIT {
     cargoComite.setActivo(Boolean.TRUE);
 
     Evaluador evaluador1 = new Evaluador();
-    evaluador1.setId(1L);
-    evaluador1.setResumen("Evaluador1");
+    evaluador1.setId(2L);
+    evaluador1.setResumen("Evaluador2");
     evaluador1.setComite(comite);
     evaluador1.setCargoComite(cargoComite);
     evaluador1.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));
@@ -836,8 +848,8 @@ public class EvaluacionIT extends BaseIT {
     evaluador1.setActivo(Boolean.TRUE);
 
     Evaluador evaluador2 = new Evaluador();
-    evaluador2.setId(2L);
-    evaluador2.setResumen("Evaluador2");
+    evaluador2.setId(3L);
+    evaluador2.setResumen("Evaluador3");
     evaluador2.setComite(comite);
     evaluador2.setCargoComite(cargoComite);
     evaluador2.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));

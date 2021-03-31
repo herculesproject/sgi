@@ -39,12 +39,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 // @formatter:off
   "classpath:scripts/tipo_actividad.sql", 
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql",
   "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/formacion_especifica.sql",
   "classpath:scripts/tipo_tarea.sql",
-  "classpath:scripts/peticion_evaluacion.sql" 
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/equipo_trabajo.sql",
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/memoria.sql", 
+  "classpath:scripts/tarea.sql"
 // @formatter:on
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -117,8 +122,8 @@ public class PeticionEvaluacionIT extends BaseIT {
   @Test
   public void addPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
 
-    PeticionEvaluacion nuevoPeticionEvaluacion = generarMockPeticionEvaluacion(1L, "titulo");
-    nuevoPeticionEvaluacion.setId(null);
+    PeticionEvaluacion nuevoPeticionEvaluacion = generarMockPeticionEvaluacion(null, "titulo");
+    // nuevoPeticionEvaluacion.setId(null);
 
     final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(PETICION_EVALUACION_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoPeticionEvaluacion), PeticionEvaluacion.class);
@@ -247,9 +252,10 @@ public class PeticionEvaluacionIT extends BaseIT {
     final List<PeticionEvaluacion> peticionEvaluaciones = response.getBody();
     Assertions.assertThat(peticionEvaluaciones.size()).isEqualTo(7);
     for (int i = 0; i < 7; i++) {
-      PeticionEvaluacion tipoActividad = peticionEvaluaciones.get(i);
-      Assertions.assertThat(tipoActividad.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoActividad.getTitulo()).isEqualTo("PeticionEvaluacion" + String.format("%d", 8 - i));
+      PeticionEvaluacion peticionEvaluacion = peticionEvaluaciones.get(i);
+      Assertions.assertThat(peticionEvaluacion.getId()).isEqualTo(8 - i);
+      Assertions.assertThat(peticionEvaluacion.getTitulo())
+          .isEqualTo("PeticionEvaluacion" + String.format("%d", 8 - i));
     }
   }
 
@@ -292,7 +298,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   public void findEquipoInvestigador_WithPaging_ReturnsEquipoInvestigadorSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "1");
+    headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
 
     final ResponseEntity<List<EquipoTrabajoWithIsEliminable>> response = restTemplate.exchange(
@@ -305,14 +311,13 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EquipoTrabajoWithIsEliminable> equiposTrabajo = response.getBody();
-    Assertions.assertThat(equiposTrabajo.size()).isEqualTo(2);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(equiposTrabajo.size()).isEqualTo(1);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene de id='7' a '8'
-    Assertions.assertThat(equiposTrabajo.get(0).getId()).isEqualTo(7);
-    Assertions.assertThat(equiposTrabajo.get(1).getId()).isEqualTo(8);
+    // Contiene id='2'
+    Assertions.assertThat(equiposTrabajo.get(0).getId()).isEqualTo(2);
   }
 
   @Test
@@ -358,17 +363,16 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = response.getBody();
-    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(3);
+    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("15");
 
-    // Contiene de id='6' a '8'
+    // Contiene de id='7' a '8'
     List<Long> ids = new ArrayList<>();
     for (MemoriaPeticionEvaluacion memoria : memoriasPeticionEvaluacion) {
       ids.add(memoria.getId());
     }
-    Assertions.assertThat(ids.contains(6L)).isTrue();
     Assertions.assertThat(ids.contains(7L)).isTrue();
     Assertions.assertThat(ids.contains(8L)).isTrue();
   }
@@ -386,11 +390,11 @@ public class PeticionEvaluacionIT extends BaseIT {
 
     final Tarea tarea = response.getBody();
 
-    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(9L);
     Assertions.assertThat(tarea.getEquipoTrabajo()).as("equipoTrabajo").isNotNull();
     Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(2L);
     Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
-    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(1L);
+    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(2L);
     Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea");
     Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
@@ -577,7 +581,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     equipoTrabajo.setId(2L);
 
     Memoria memoria = new Memoria();
-    memoria.setId(1L);
+    memoria.setId(2L);
 
     FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
     formacionEspecifica.setId(1L);

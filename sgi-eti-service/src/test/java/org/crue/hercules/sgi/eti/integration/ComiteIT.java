@@ -34,7 +34,15 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/tipo_actividad.sql",
   "classpath:scripts/estado_retrospectiva.sql",
   "classpath:scripts/tipo_estado_memoria.sql",
-  "classpath:scripts/comite.sql"
+  "classpath:scripts/comite.sql",
+  "classpath:scripts/tipo_memoria_comite.sql",
+  "classpath:scripts/tipo_convocatoria_reunion.sql",
+  "classpath:scripts/tipo_documento.sql",
+  "classpath:scripts/cargo_comite.sql",
+  "classpath:scripts/tipo_evaluacion.sql",
+  "classpath:scripts/peticion_evaluacion.sql",
+  "classpath:scripts/retrospectiva.sql",
+  "classpath:scripts/memoria.sql"
 // @formatter:on     
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -90,7 +98,7 @@ public class ComiteIT extends BaseIT {
     final Comite comite = response.getBody();
 
     Assertions.assertThat(comite.getId()).isEqualTo(2L);
-    Assertions.assertThat(comite.getComite()).isEqualTo("Comite2");
+    Assertions.assertThat(comite.getComite()).isEqualTo("CEEA");
   }
 
   @Test
@@ -172,14 +180,15 @@ public class ComiteIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Comite> comites = response.getBody();
-    Assertions.assertThat(comites.size()).isEqualTo(2);
+    Assertions.assertThat(comites.size()).isEqualTo(3);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
     // Contiene de comite='Comite7' a 'Comite8'
-    Assertions.assertThat(comites.get(0).getComite()).isEqualTo("Comite7");
-    Assertions.assertThat(comites.get(1).getComite()).isEqualTo("Comite8");
+    Assertions.assertThat(comites.get(0).getComite()).isEqualTo("Comite6");
+    Assertions.assertThat(comites.get(1).getComite()).isEqualTo("Comite7");
+    Assertions.assertThat(comites.get(2).getComite()).isEqualTo("Comite8");
   }
 
   @Test
@@ -210,7 +219,7 @@ public class ComiteIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithSortQuery_ReturnsOrderedTipoFungibleList() throws Exception {
+  public void findAll_WithSortQuery_ReturnsOrderedComiteList() throws Exception {
     // when: Ordenación por comite desc
     String query = "comite,desc";
 
@@ -230,12 +239,17 @@ public class ComiteIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Comite> comites = response.getBody();
-    Assertions.assertThat(comites.size()).isEqualTo(7);
-    for (int i = 0; i < 7; i++) {
-      Comite comite = comites.get(i);
-      Assertions.assertThat(comite.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(comite.getComite()).isEqualTo("Comite" + String.format("%d", 8 - i));
-    }
+    Assertions.assertThat(comites.size()).isEqualTo(8);
+
+    Assertions.assertThat(comites.get(0).getComite()).isEqualTo("Comite8");
+    Assertions.assertThat(comites.get(1).getComite()).isEqualTo("Comite7");
+    Assertions.assertThat(comites.get(2).getComite()).isEqualTo("Comite6");
+    Assertions.assertThat(comites.get(3).getComite()).isEqualTo("Comite5");
+    Assertions.assertThat(comites.get(4).getComite()).isEqualTo("Comite4");
+    Assertions.assertThat(comites.get(5).getComite()).isEqualTo("CEISH");
+    Assertions.assertThat(comites.get(6).getComite()).isEqualTo("CEIAB");
+    Assertions.assertThat(comites.get(7).getComite()).isEqualTo("CEEA");
+
   }
 
   @Test
@@ -266,7 +280,7 @@ public class ComiteIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("7");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("5");
 
     // Contiene comite='Comite8', 'Comite7',
     // 'Comite6'
@@ -287,15 +301,27 @@ public class ComiteIT extends BaseIT {
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", HttpMethod.GET,
         buildRequestMemoria(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
-        }, 2L);
+        }, 1L);
 
     // then: Obtiene las memorias del comité 2.
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memoria = response.getBody();
-    Assertions.assertThat(memoria.size()).isEqualTo(2);
+    Assertions.assertThat(memoria.size()).isEqualTo(14);
 
-    Assertions.assertThat(memoria.get(0).getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(memoria.get(1).getTitulo()).isEqualTo("Memoria2");
+    Assertions.assertThat(memoria.get(0).getTitulo()).isEqualTo("Memoria002");
+    Assertions.assertThat(memoria.get(1).getTitulo()).isEqualTo("Memoria003");
+    Assertions.assertThat(memoria.get(2).getTitulo()).isEqualTo("Memoria004");
+    Assertions.assertThat(memoria.get(3).getTitulo()).isEqualTo("Memoria005");
+    Assertions.assertThat(memoria.get(4).getTitulo()).isEqualTo("Memoria006");
+    Assertions.assertThat(memoria.get(5).getTitulo()).isEqualTo("Memoria007");
+    Assertions.assertThat(memoria.get(6).getTitulo()).isEqualTo("Memoria008");
+    Assertions.assertThat(memoria.get(7).getTitulo()).isEqualTo("Memoria010");
+    Assertions.assertThat(memoria.get(8).getTitulo()).isEqualTo("Memoria011");
+    Assertions.assertThat(memoria.get(9).getTitulo()).isEqualTo("Memoria012");
+    Assertions.assertThat(memoria.get(10).getTitulo()).isEqualTo("Memoria013");
+    Assertions.assertThat(memoria.get(11).getTitulo()).isEqualTo("Memoria014");
+    Assertions.assertThat(memoria.get(12).getTitulo()).isEqualTo("Memoria015");
+    Assertions.assertThat(memoria.get(13).getTitulo()).isEqualTo("Memoria016");
   }
 
   @Test
@@ -332,11 +358,15 @@ public class ComiteIT extends BaseIT {
     // then: Obtiene los tipos de memoria del comité 1
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoMemoria> tipoMemoria = response.getBody();
-    Assertions.assertThat(tipoMemoria.size()).isEqualTo(3);
+    Assertions.assertThat(tipoMemoria.size()).isEqualTo(7);
 
     Assertions.assertThat(tipoMemoria.get(0).getNombre()).isEqualTo("TipoMemoria001");
-    Assertions.assertThat(tipoMemoria.get(1).getNombre()).isEqualTo("TipoMemoria002");
-    Assertions.assertThat(tipoMemoria.get(2).getNombre()).isEqualTo("TipoMemoria003");
+    Assertions.assertThat(tipoMemoria.get(1).getNombre()).isEqualTo("TipoMemoria001");
+    Assertions.assertThat(tipoMemoria.get(2).getNombre()).isEqualTo("TipoMemoria001");
+    Assertions.assertThat(tipoMemoria.get(3).getNombre()).isEqualTo("TipoMemoria001");
+    Assertions.assertThat(tipoMemoria.get(4).getNombre()).isEqualTo("TipoMemoria001");
+    Assertions.assertThat(tipoMemoria.get(5).getNombre()).isEqualTo("TipoMemoria001");
+    Assertions.assertThat(tipoMemoria.get(6).getNombre()).isEqualTo("TipoMemoria001");
 
   }
 

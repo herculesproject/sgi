@@ -28,7 +28,9 @@ import org.springframework.test.context.jdbc.SqlMergeMode.MergeMode;
 @Sql(scripts = {
 // @formatter:off      
   "classpath:scripts/formulario.sql",
+  "classpath:scripts/comite.sql", 
   "classpath:scripts/cargo_comite.sql",
+  "classpath:scripts/evaluador.sql",
   "classpath:scripts/conflicto_interes.sql"
 // @formatter:on    
 })
@@ -58,20 +60,20 @@ public class ConflictoInteresIT extends BaseIT {
 
     final ResponseEntity<ConflictoInteres> response = restTemplate.exchange(
         CONFLICTO_INTERES_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(headers, null),
-        ConflictoInteres.class, 1L);
+        ConflictoInteres.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     final ConflictoInteres conflictoInteres = response.getBody();
 
-    Assertions.assertThat(conflictoInteres.getId()).isEqualTo(1L);
-    Assertions.assertThat(conflictoInteres.getPersonaConflictoRef()).isEqualTo("user-001");
+    Assertions.assertThat(conflictoInteres.getId()).isEqualTo(2L);
+    Assertions.assertThat(conflictoInteres.getPersonaConflictoRef()).isEqualTo("user-002");
   }
 
   @Test
   public void addConflictoInteres_ReturnsConflictoInteres() throws Exception {
 
-    ConflictoInteres nuevoConflictoInteres = generarMockConflictoInteres(1L, null);
+    ConflictoInteres nuevoConflictoInteres = generarMockConflictoInteres(2L, "PersonaConflicto");
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-E", "ETI-EVR-C")));
@@ -86,7 +88,7 @@ public class ConflictoInteresIT extends BaseIT {
   public void removeConflictoInteres_Success() throws Exception {
 
     // when: Delete con id existente
-    long id = 1L;
+    long id = 2L;
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-E", "ETI-EVR-C")));
@@ -120,14 +122,14 @@ public class ConflictoInteresIT extends BaseIT {
   @Test
   public void replaceConflictoInteres_ReturnsConflictoInteres() throws Exception {
 
-    ConflictoInteres replaceConflictoInteres = generarMockConflictoInteres(1L, "ConflictoInteres1");
+    ConflictoInteres replaceConflictoInteres = generarMockConflictoInteres(2L, "ConflictoInteres1");
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-E", "ETI-EVR-C")));
 
     final ResponseEntity<ConflictoInteres> response = restTemplate.exchange(
         CONFLICTO_INTERES_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
-        buildRequest(headers, replaceConflictoInteres), ConflictoInteres.class, 1L);
+        buildRequest(headers, replaceConflictoInteres), ConflictoInteres.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
