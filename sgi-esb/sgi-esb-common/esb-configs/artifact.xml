@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+  <artifact name="sgi-auth-sequence-template" groupId="org.crue.hercules.sgi.esb.template" version="0.0.1-SNAPSHOT" type="synapse/sequenceTemplate" serverRole="EnterpriseServiceBus">
+    <file>src/main/synapse-config/templates/sgi-auth-sequence-template.xml</file>
+  </artifact>
+</artifacts>
