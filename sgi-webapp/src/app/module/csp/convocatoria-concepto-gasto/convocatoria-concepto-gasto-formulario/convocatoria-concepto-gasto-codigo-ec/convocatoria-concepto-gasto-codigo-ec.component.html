@@ -3,11 +3,11 @@
   <h2>{{'title.csp.convocatoria-elegibilidad.codigo-economico' | translate}}</h2>
 
   <h3>
-    {{( formPart.convocatoriaConceptoGasto?.permitido ? 'label.csp.convocatoria-elegibilidad.codigo-economico.permitido' :
+    {{( actionService.permitido ? 'label.csp.convocatoria-elegibilidad.codigo-economico.permitido' :
     'label.csp.convocatoria-elegibilidad.codigo-economico.no-permitido') | translate}}
   </h3>
 
-  <div *ngIf="disableAddCodigoEc" class="info-message">
+  <div *ngIf="actionService.blockAddCodigosEconomicos$ | async" class="info-message">
     {{'info.csp.convocatoria-elegibilidad.codigo-economico' | translate}}
   </div>
 
@@ -69,7 +69,8 @@
             <mat-icon color="primary">visibility</mat-icon>
           </button>
           <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
-            (click)="openModal(convocatoriaConceptoGastoCodigoEc, i)" [disabled]="disableAddCodigoEc">
+            (click)="openModal(convocatoriaConceptoGastoCodigoEc, i)"
+            [disabled]="actionService.blockAddCodigosEconomicos$ | async">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
           <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
@@ -88,16 +89,16 @@
   <mat-paginator #paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
   </mat-paginator>
 
-  <div class="separation-button" *ngIf="!formPart.readonly && formPart.convocatoriaConceptoGasto?.permitido">
+  <div class="separation-button" *ngIf="!formPart.readonly && actionService.permitido">
     <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalCrear(true)"
-      [disabled]="disableAddCodigoEc">
+      [disabled]="actionService.blockAddCodigosEconomicos$ | async">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'btn.add.entity'| translate:msgParamCodigoPermitidoEntity}}
     </button>
   </div>
-  <div class="separation-button" *ngIf="!formPart.readonly && !formPart.convocatoriaConceptoGasto?.permitido">
+  <div class="separation-button" *ngIf="!formPart.readonly && !actionService.permitido">
     <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalCrear(false)"
-      [disabled]="disableAddCodigoEc">
+      [disabled]="actionService.blockAddCodigosEconomicos$ | async">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'btn.add.entity'| translate:msgParamCodigoNoPermitidoEntity}}
     </button>

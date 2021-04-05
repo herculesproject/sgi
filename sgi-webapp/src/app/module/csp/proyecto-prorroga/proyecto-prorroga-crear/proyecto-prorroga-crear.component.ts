@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -24,13 +24,12 @@ const PROYECTO_PRORROGA_KEY = marker('csp.proyecto-prorroga');
     ProyectoProrrogaActionService
   ]
 })
-export class ProyectoProrrogaCrearComponent extends ActionComponent {
+export class ProyectoProrrogaCrearComponent extends ActionComponent implements OnInit {
   PROYECTO_PRORROGA_ROUTE_NAMES = PROYECTO_PRORROGA_ROUTE_NAMES;
 
   textoCrear: string;
   textoCrearSuccess: string;
   textoCrearError: string;
-  private urlFrom: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -42,7 +41,6 @@ export class ProyectoProrrogaCrearComponent extends ActionComponent {
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
@@ -88,9 +86,8 @@ export class ProyectoProrrogaCrearComponent extends ActionComponent {
     ).subscribe((value) => this.textoCrearError = value);
   }
 
-
   saveOrUpdate(): void {
-    this.actionService.saveOrUpdate().subscribe(
+    this.subscriptions.push(this.actionService.saveOrUpdate().subscribe(
       () => { },
       (error) => {
         this.logger.error(error);
@@ -98,12 +95,12 @@ export class ProyectoProrrogaCrearComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigateByUrl(this.urlFrom);
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
-    );
+    ));
   }
 
   cancel(): void {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 }

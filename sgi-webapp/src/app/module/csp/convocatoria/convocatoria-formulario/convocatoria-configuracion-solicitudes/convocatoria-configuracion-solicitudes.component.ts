@@ -9,18 +9,15 @@ import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
+import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
@@ -31,13 +28,14 @@ const MSG_ERROR_INIT = marker('error.load');
 const CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY = marker('csp.convocatoria-configuracion-solicitud-documento-requerido');
 const CONVOCATORIA_CONFIGURACION_SOLICITUD_FASE_PRESENTACION_KEY = marker('csp.convocatoria-configuracion-solicitud.fase-presentacion');
 const CONVOCATORIA_CONFIGURACION_SOLICITUD_KEY = marker('csp.convocatoria-configuracion-solicitud')
+
 @Component({
   selector: 'sgi-convocatoria-configuracion-solicitudes',
   templateUrl: './convocatoria-configuracion-solicitudes.component.html',
   styleUrls: ['./convocatoria-configuracion-solicitudes.component.scss']
 })
-export class ConvocatoriaConfiguracionSolicitudesComponent extends
-  FormFragmentComponent<IConfiguracionSolicitud> implements OnInit, OnDestroy {
+export class ConvocatoriaConfiguracionSolicitudesComponent
+  extends FormFragmentComponent<IConfiguracionSolicitud> implements OnInit, OnDestroy {
   formPart: ConvocatoriaConfiguracionSolicitudesFragment;
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
@@ -51,19 +49,15 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
 
   columns = ['nombre', 'descripcion', 'observaciones', 'acciones'];
   numPage = [5, 10, 25, 100];
-  convocatoriaFase: IConvocatoriaFase;
 
-  dataSource = new MatTableDataSource<StatusWrapper<IDocumentoRequerido>>();
+  dataSource = new MatTableDataSource<StatusWrapper<IDocumentoRequeridoSolicitud>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   private subscriptions: Subscription[] = [];
 
-  private convocatoriaFaseFiltered = [] as IConvocatoriaFase[];
   convocatoriaFase$: Observable<IConvocatoriaFase[]>;
   configuracionSolicitud: IConfiguracionSolicitud;
-
-  disabledPlazoPresentacion: Observable<boolean>;
 
   msgParamDocumentoEntity = {};
   msgParamDocumentoEntities = {};
@@ -71,13 +65,10 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   textoDelete: string;
 
   constructor(
-    private readonly logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
     public translate: TranslateService,
     private matDialog: MatDialog,
-    private convocatoriaService: ConvocatoriaService,
-    private dialogService: DialogService,
-    private snackBarService: SnackBarService,
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES, actionService);
 
@@ -107,12 +98,13 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
     this.loadConvocatoriaFases();
     this.initializeDataSource();
 
-    this.actionService.initializePlazosFases();
-
     this.subscriptions.push(this.formPart.documentosRequeridos$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.disabledPlazoPresentacion = of(elements.length > 0);
     }));
+
+    this.subscriptions.push(this.formPart.convocatoriaFases$.subscribe(
+      () => this.loadConvocatoriaFases()
+    ));
   }
 
   private setupI18N(): void {
@@ -131,7 +123,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamFasePresentacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
-
     this.translate.get(
       CONVOCATORIA_CONFIGURACION_SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -143,13 +134,12 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   private initializeDataSource(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IDocumentoRequerido>, property: string) => {
+      (wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>, property: string) => {
         switch (property) {
           case 'nombre':
             return wrapper.value.tipoDocumento.nombre;
@@ -168,30 +158,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * Cargamos fases asignadas a la convocatoria
    * del fragment
    */
-  loadConvocatoriaFases(): void {
-    if (this.actionService.isPlazosFasesInitialized()) {
-      this.convocatoriaFaseFiltered = [];
-      this.actionService.getPlazosFases().forEach((wrapper) => {
-        this.convocatoriaFaseFiltered.push(wrapper.value);
-      });
-    } else {
-      const id = Number(this.formPart.getKey());
-      if (id && !isNaN(id)) {
-        this.subscriptions.push(
-          this.convocatoriaService.findAllConvocatoriaFases(id).subscribe(
-            res => {
-              this.convocatoriaFaseFiltered = [];
-              this.convocatoriaFaseFiltered = res.items;
-            },
-            (error) => {
-              this.logger.error(error);
-              this.snackBarService.showError(MSG_ERROR_INIT);
-            }
-          )
-        );
-      }
-    }
-
+  private loadConvocatoriaFases(): void {
     this.convocatoriaFase$ = this.formGroup.controls.fasePresentacionSolicitudes.valueChanges
       .pipe(
         startWith(''),
@@ -207,20 +174,9 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    * @param value del input para autocompletar
    */
   private filtroConvocatoriaFase(value: string): IConvocatoriaFase[] {
-    const filterValue = value?.toString().toLowerCase();
-    return this.convocatoriaFaseFiltered.filter(convocatoriaFase =>
+    const filterValue = value ? value?.toString().toLowerCase() : '';
+    return this.formPart.convocatoriaFases$.value.filter(convocatoriaFase =>
       convocatoriaFase.tipoFase.nombre.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Si solicitudes SGI es -SI-
-   * El campo presentación es obligatorio
-   */
-  presentacionSolicitud() {
-    if (!this.formGroup.controls.tramitacionSGI.value) {
-      this.formGroup.controls.fasePresentacionSolicitudes.setErrors(null);
-    }
-    return this.formGroup.controls.tramitacionSGI.value;
   }
 
   /**
@@ -233,45 +189,26 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   }
 
   /**
-   * Filtramos por el ID del seleccionado.
-   * Rellenos los campos FECHA correspondientes
-   */
-  habilitarCampos(): void {
-    const tipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value;
-
-    if (tipoFase) {
-      this.convocatoriaFase = tipoFase;
-      this.formGroup.controls.fechaInicioFase.setValue(tipoFase?.fechaInicio);
-      this.formGroup.controls.fechaFinFase.setValue(tipoFase?.fechaFin);
-    } else {
-      this.formGroup.controls.fechaInicioFase.setValue(null);
-      this.formGroup.controls.fechaFinFase.setValue(null);
-    }
-  }
-
-
-
-  /**
    * Abre modal con el modelo convocatoria enlace seleccionada
    * @param wrapper convocatoria enlace
    */
-  openModal(wrapper?: StatusWrapper<IDocumentoRequerido>): void {
+  openModal(wrapper?: StatusWrapper<IDocumentoRequeridoSolicitud>): void {
     const tipoFase: ITipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value.tipoFase;
     if (this.configuracionSolicitud) {
       this.configuracionSolicitud.fasePresentacionSolicitudes.tipoFase = tipoFase;
     }
-    const documentosRequerido: IDocumentoRequerido = {
-      configuracionSolicitud: this.formPart.getValue(),
+    const documentosRequerido: IDocumentoRequeridoSolicitud = {
+      configuracionSolicitudId: this.fragment.getKey() as number,
       id: undefined,
       observaciones: undefined,
       tipoDocumento: undefined,
     };
 
-    const modeloEjecucionId = documentosRequerido.configuracionSolicitud?.convocatoria?.modeloEjecucion?.id
-      ? documentosRequerido.configuracionSolicitud.convocatoria.modeloEjecucion.id : this.actionService.modeloEjecucionId;
+    const modeloEjecucionId = this.actionService.modeloEjecucionId;
 
     const data: ConvocatoriaConfiguracionSolicitudesModalData = {
       documentoRequerido: wrapper ? wrapper.value : documentosRequerido,
+      tipoFaseId: this.fragment.getFormGroup().controls.fasePresentacionSolicitudes.value.id,
       modeloEjecucionId,
       readonly: this.formPart.readonly
     };
@@ -304,7 +241,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   /**
    * Desactivar documento
    */
-  deactivateDocumento(wrapper: StatusWrapper<IDocumentoRequerido>) {
+  deactivateDocumento(wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>) {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {

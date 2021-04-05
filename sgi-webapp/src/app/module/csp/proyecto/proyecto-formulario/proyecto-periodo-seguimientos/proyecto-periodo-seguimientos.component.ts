@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -16,20 +15,12 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoPeriodoSeguimientosFragment } from './proyecto-periodo-seguimientos.fragment';
-
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_DOCUMENTOS = marker('msg.csp.proyecto-periodo-seguimiento-cientifico.documento.delete');
 const PROYECTO_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico');
-export interface IProyectoPeriodoSeguimientoState {
-  proyecto: IProyecto;
-  proyectoPeriodoSeguimiento: IProyectoPeriodoSeguimiento;
-  selectedProyectoPeriodoSeguimientos: IProyectoPeriodoSeguimiento[];
-  readonly: boolean;
-}
 
 @Component({
   selector: 'sgi-proyecto-periodo-seguimientos',
@@ -37,7 +28,6 @@ export interface IProyectoPeriodoSeguimientoState {
   styleUrls: ['./proyecto-periodo-seguimientos.component.scss']
 })
 export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent implements OnInit, OnDestroy {
-  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
   ROUTE_NAMES = ROUTE_NAMES;
 
   private subscriptions: Subscription[] = [];
@@ -103,7 +93,6 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   ngOnDestroy(): void {
@@ -133,20 +122,7 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
           )
         );
       }
-
-
     });
-  }
-
-
-  createState(wrapper?: StatusWrapper<IProyectoPeriodoSeguimiento>): IProyectoPeriodoSeguimientoState {
-    const state: IProyectoPeriodoSeguimientoState = {
-      proyecto: this.actionService.proyecto as IProyecto,
-      proyectoPeriodoSeguimiento: wrapper ? wrapper.value : {} as IProyectoPeriodoSeguimiento,
-      selectedProyectoPeriodoSeguimientos: this.dataSource.data.map(element => element.value),
-      readonly: this.formPart.readOnly
-    };
-    return state;
   }
 
 }

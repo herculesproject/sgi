@@ -1,11 +1,10 @@
-import { IConvocatoria } from '../convocatoria';
 import { Tipo } from '../convocatoria-periodo-justificacion';
 
 export interface IConvocatoriaPeriodoJustificacionBackend {
   /** Id */
   id: number;
-  /** Convocatoria */
-  convocatoria: IConvocatoria;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
   /** Num Periodo */
   numPeriodo: number;
   /** Mes inicial */

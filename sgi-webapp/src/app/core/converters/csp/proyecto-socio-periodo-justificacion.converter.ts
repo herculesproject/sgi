@@ -2,7 +2,6 @@ import { IProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/back
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_SOCIO_CONVERTER } from './proyecto-socio.converter';
 
 class ProyectoSocioPeriodoJustificacionConverter extends
   SgiBaseConverter<IProyectoSocioPeriodoJustificacionBackend, IProyectoSocioPeriodoJustificacion> {
@@ -13,7 +12,7 @@ class ProyectoSocioPeriodoJustificacionConverter extends
     }
     return {
       id: value.id,
-      proyectoSocio: PROYECTO_SOCIO_CONVERTER.toTarget(value.proyectoSocio),
+      proyectoSocioId: value.proyectoSocioId,
       numPeriodo: value.numPeriodo,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -31,7 +30,7 @@ class ProyectoSocioPeriodoJustificacionConverter extends
     }
     return {
       id: value.id,
-      proyectoSocio: PROYECTO_SOCIO_CONVERTER.fromTarget(value.proyectoSocio),
+      proyectoSocioId: value.proyectoSocioId,
       numPeriodo: value.numPeriodo,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

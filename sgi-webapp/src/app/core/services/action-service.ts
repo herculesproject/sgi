@@ -1,7 +1,7 @@
-import { Observable, BehaviorSubject, Subscription, throwError, from, of } from 'rxjs';
-import { FormGroup, AbstractControl, FormControl } from '@angular/forms';
 import { Directive, OnDestroy } from '@angular/core';
-import { mergeMap, tap, filter, switchMap, takeLast } from 'rxjs/operators';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { BehaviorSubject, from, Observable, of, Subscription, throwError } from 'rxjs';
+import { filter, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface IActionService {
   /**
@@ -242,6 +242,7 @@ export abstract class Fragment implements IFragment {
   private key: number | string;
   private edit: boolean;
   readonly initialized$: BehaviorSubject<boolean>;
+  private initialing = false;
   protected subscriptions: Subscription[] = [];
 
   /**
@@ -260,7 +261,8 @@ export abstract class Fragment implements IFragment {
   }
 
   initialize(): void {
-    if (!this.initialized$.value) {
+    if (!this.initialized$.value && !this.initialing) {
+      this.initialing = true;
       this.onInitialize();
       this.initialized$.next(true);
     }
@@ -346,6 +348,7 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
   private auxiliarStatus: boolean;
   private group: IGroup;
   readonly initialized$: BehaviorSubject<boolean>;
+  private initializing = false;
   protected subscriptions: Subscription[] = [];
   private key: number | string;
   private edit: boolean;
@@ -392,7 +395,8 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
   }
 
   initialize(): void {
-    if (!this.initialized$.value) {
+    if (!this.initialized$.value && !this.initializing) {
+      this.initializing = true;
       this.group.load(this.buildFormGroup());
       if (this.key) {
         this.initializer(this.key).subscribe((initialValue) => {
@@ -402,6 +406,7 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
             this.formStatus = status;
             this.mergeStatus();
           }));
+          this.initialized$.next(true);
         });
       }
       else {
@@ -410,9 +415,8 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
           this.formStatus = status;
           this.mergeStatus();
         }));
+        this.initialized$.next(true);
       }
-
-      this.initialized$.next(true);
     }
   }
 

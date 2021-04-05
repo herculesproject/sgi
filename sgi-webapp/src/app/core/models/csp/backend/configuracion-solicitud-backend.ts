@@ -1,12 +1,11 @@
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
-import { IConvocatoria } from '../convocatoria';
 import { IConvocatoriaFaseBackend } from './convocatoria-fase-backend';
 
 export interface IConfiguracionSolicitudBackend {
   /** Id */
   id: number;
-  /** Convocatoria */
-  convocatoria: IConvocatoria;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
   /** Tramitacion SGI */
   tramitacionSGI: boolean;
   /** Convocatoria Fase */

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -16,8 +17,9 @@ import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.se
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Subscription } from 'rxjs';
-import { map, mergeAll, switchMap, takeLast } from 'rxjs/operators';
+import { map, mergeAll, switchMap, take, takeLast } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
+import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-proyecto-entidades-financiadoras.fragment';
 
@@ -77,6 +79,8 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
 
   constructor(
     private actionService: SolicitudActionService,
+    private router: Router,
+    private route: ActivatedRoute,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private convocatoriaService: ConvocatoriaService,
@@ -89,11 +93,16 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
 
   ngOnInit(): void {
     super.ngOnInit();
-
     this.setupI18N();
-
-    this.actionService.existsDatosProyectos();
-    this.formPart.solicitantePersonaRef = this.actionService.getSolicitantePersonaRef();
+    this.actionService.datosProyectoComplete$.pipe(
+      take(1)
+    ).subscribe(
+      (complete) => {
+        if (!complete) {
+          this.router.navigate(['../', SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS], { relativeTo: this.route });
+        }
+      }
+    );
 
     this.dataSourceEntidadesFinanciadorasConvocatoria.paginator = this.paginatorEntidadesFinanciadorasConvocatoria;
     this.dataSourceEntidadesFinanciadorasConvocatoria.sortingDataAccessor =
@@ -139,7 +148,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       };
     this.dataSourceEntidadesFinanciadorasAjenas.sort = this.sortEntidadesFinanciadorasAjena;
 
-    const convocatoriaId = this.actionService.getDatosGeneralesSolicitud().convocatoria?.id;
+    const convocatoriaId = this.actionService.convocatoriaId;
     if (convocatoriaId) {
       const subscriptionEntidadesFinanciadorasConvocatoria = this.convocatoriaService.findEntidadesFinanciadoras(convocatoriaId)
         .pipe(

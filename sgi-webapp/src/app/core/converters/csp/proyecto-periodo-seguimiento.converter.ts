@@ -2,7 +2,6 @@ import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/pro
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeriodoSeguimientoBackend, IProyectoPeriodoSeguimiento> {
 
@@ -12,7 +11,7 @@ class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeri
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       numPeriodo: value.numPeriodo,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -28,7 +27,7 @@ class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeri
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       numPeriodo: value.numPeriodo,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

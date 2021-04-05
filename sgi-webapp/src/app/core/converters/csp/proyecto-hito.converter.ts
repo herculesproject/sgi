@@ -2,7 +2,6 @@ import { IProyectoHitoBackend } from '@core/models/csp/backend/proyecto-hito-bac
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoHitoConverter extends SgiBaseConverter<IProyectoHitoBackend, IProyectoHito> {
 
@@ -12,7 +11,7 @@ class ProyectoHitoConverter extends SgiBaseConverter<IProyectoHitoBackend, IProy
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       tipoHito: value.tipoHito,
       fecha: LuxonUtils.fromBackend(value.fecha),
       comentario: value.comentario,
@@ -26,7 +25,7 @@ class ProyectoHitoConverter extends SgiBaseConverter<IProyectoHitoBackend, IProy
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       tipoHito: value.tipoHito,
       fecha: LuxonUtils.toBackend(value.fecha),
       comentario: value.comentario,

@@ -1,24 +1,27 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Estado } from '@core/models/csp/estado-proyecto';
+import { Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends FormFragment<IProyectoSocioPeriodoJustificacion> {
+
+  private periodoJustificacion: IProyectoSocioPeriodoJustificacion;
 
   constructor(
     key: number,
     private service: ProyectoSocioPeriodoJustificacionService,
     private proyectoSocio: IProyectoSocio,
-    private periodoJustificacion: IProyectoSocioPeriodoJustificacion,
+    private proyectoEstado: IEstadoProyecto,
     private selectedPeriodosJustificacion: IProyectoSocioPeriodoJustificacion[]
   ) {
     super(key);
+    this.periodoJustificacion = {} as IProyectoSocioPeriodoJustificacion;
   }
 
   protected buildFormGroup(): FormGroup {
@@ -35,7 +38,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
     const form = new FormGroup(
       {
         numPeriodo: new FormControl({
-          value: this.periodoJustificacion.numPeriodo,
+          value: 1,
           disabled: true
         }),
         fechaInicio: new FormControl(null, [
@@ -68,6 +71,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
   }
 
   protected buildPatch(value: IProyectoSocioPeriodoJustificacion): { [key: string]: any; } {
+    this.periodoJustificacion = value;
     const result = {
       documentacionRecibida: value.documentacionRecibida,
       fechaFin: value.fechaFin,
@@ -82,7 +86,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
   }
 
   protected initializer(key: number): Observable<IProyectoSocioPeriodoJustificacion> {
-    return of(this.periodoJustificacion);
+    return this.service.findById(key);
   }
 
   getValue(): IProyectoSocioPeriodoJustificacion {
@@ -100,7 +104,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
 
   saveOrUpdate(): Observable<number> {
     const periodo = this.getValue();
-    periodo.proyectoSocio = this.proyectoSocio;
+    periodo.proyectoSocioId = this.proyectoSocio?.id;
     const observable$ = this.isEdit() ? this.update(periodo) : this.create(periodo);
     return observable$.pipe(
       map(result => {
@@ -121,7 +125,6 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
   }
 
   get isAbierto(): boolean {
-    const proyecto = this.proyectoSocio.proyecto;
-    return proyecto?.estado?.estado === Estado.ABIERTO;
+    return this.proyectoEstado?.estado === Estado.ABIERTO;
   }
 }

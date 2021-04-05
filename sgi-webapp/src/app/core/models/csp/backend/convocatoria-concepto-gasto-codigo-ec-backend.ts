@@ -1,10 +1,8 @@
-import { IConvocatoriaConceptoGasto } from '../convocatoria-concepto-gasto';
-
 export interface IConvocatoriaConceptoGastoCodigoEcBackend {
   /** id */
   id: number;
-  /** ConceptoGasto */
-  convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
+  /** Id de ConvocatoriaConceptoGasto */
+  convocatoriaConceptoGastoId: number;
   /** Referencia código económico */
   codigoEconomicoRef: string;
   /** Fecha inicio */

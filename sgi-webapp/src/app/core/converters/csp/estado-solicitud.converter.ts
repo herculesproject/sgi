@@ -11,7 +11,7 @@ class EstadoSolicitudConverter extends SgiBaseConverter<IEstadoSolicitudBackend,
     }
     return {
       id: value.id,
-      idSolicitud: value.idSolicitud,
+      solicitudId: value.solicitudId,
       estado: value.estado,
       fechaEstado: LuxonUtils.fromBackend(value.fechaEstado),
       comentario: value.comentario
@@ -24,7 +24,7 @@ class EstadoSolicitudConverter extends SgiBaseConverter<IEstadoSolicitudBackend,
     }
     return {
       id: value.id,
-      idSolicitud: value.idSolicitud,
+      solicitudId: value.solicitudId,
       estado: value.estado,
       fechaEstado: LuxonUtils.toBackend(value.fechaEstado),
       comentario: value.comentario

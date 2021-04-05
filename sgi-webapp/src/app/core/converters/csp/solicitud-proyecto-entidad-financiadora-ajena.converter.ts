@@ -2,7 +2,6 @@ import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SOLICITUD_PROYECTO_DATOS_CONVERTER } from './solicitud-proyecto-datos.converter';
 
 class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
   SgiBaseConverter<ISolicitudProyectoEntidadFinanciadoraAjenaBackend, ISolicitudProyectoEntidadFinanciadoraAjena> {
@@ -14,7 +13,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
     return {
       id: value.id,
       empresa: { personaRef: value.entidadRef } as IEmpresaEconomica,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.toTarget(value.solicitudProyectoDatos),
+      solicitudProyectoId: value.solicitudProyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
       porcentajeFinanciacion: value.porcentajeFinanciacion
@@ -28,7 +27,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
     return {
       id: value.id,
       entidadRef: value.empresa.personaRef,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.fromTarget(value.solicitudProyectoDatos),
+      solicitudProyectoId: value.solicitudProyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
       porcentajeFinanciacion: value.porcentajeFinanciacion

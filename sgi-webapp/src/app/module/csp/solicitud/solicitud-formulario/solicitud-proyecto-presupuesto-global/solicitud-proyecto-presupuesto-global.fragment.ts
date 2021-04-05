@@ -1,5 +1,4 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
@@ -13,8 +12,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
   formGroup: FormGroup;
   partidasGastos$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoPresupuesto>[]>([]);
   private partidasGastosEliminadas: StatusWrapper<ISolicitudProyectoPresupuesto>[] = [];
-
-  existsDatosProyecto = false;
 
   constructor(
     key: number,
@@ -171,24 +168,19 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
     if (createdSolicitudProyectoPresupuestos.length === 0) {
       return of(void 0);
     }
-    const id = this.getKey() as number;
 
-    return this.solicitudService.findSolicitudProyectoDatos(id).pipe(
-      switchMap(solicitudProyectoDatos => {
-        return from(createdSolicitudProyectoPresupuestos).pipe(
-          mergeMap((wrapped) => {
-            const solicitudProyectoPresupuesto = wrapped.value;
-            solicitudProyectoPresupuesto.solicitudProyectoDatos = { id: solicitudProyectoDatos.id } as ISolicitudProyectoDatos;
-            return this.solicitudProyectoPresupuestoService.create(solicitudProyectoPresupuesto).pipe(
-              map((updated) => {
-                const index = this.partidasGastos$.value.findIndex((current) => current === wrapped);
-                this.partidasGastos$.value[index] = new StatusWrapper<ISolicitudProyectoPresupuesto>(updated);
-              })
-            );
-          }),
-          takeLast(1)
+    return from(createdSolicitudProyectoPresupuestos).pipe(
+      mergeMap((wrapped) => {
+        const solicitudProyectoPresupuesto = wrapped.value;
+        solicitudProyectoPresupuesto.solicitudProyectoId = this.getKey() as number;
+        return this.solicitudProyectoPresupuestoService.create(solicitudProyectoPresupuesto).pipe(
+          map((updated) => {
+            const index = this.partidasGastos$.value.findIndex((current) => current === wrapped);
+            this.partidasGastos$.value[index] = new StatusWrapper<ISolicitudProyectoPresupuesto>(updated);
+          })
         );
-      })
+      }),
+      takeLast(1)
     );
   }
 

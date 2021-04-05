@@ -5,13 +5,14 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { ProyectoPeriodoSeguimientoCrearComponent } from './proyecto-periodo-seguimiento-crear/proyecto-periodo-seguimiento-crear.component';
+import {
+  ProyectoPeriodoSeguimientoCrearComponent
+} from './proyecto-periodo-seguimiento-crear/proyecto-periodo-seguimiento-crear.component';
+import { ProyectoPeriodoSeguimientoDataResolver } from './proyecto-periodo-seguimiento-data.resolver';
 import { ProyectoPeriodoSeguimientoEditarComponent } from './proyecto-periodo-seguimiento-editar/proyecto-periodo-seguimiento-editar.component';
 import { ProyectoPeriodoSeguimientoDatosGeneralesComponent } from './proyecto-periodo-seguimiento-formulario/proyecto-periodo-seguimiento-datos-generales/proyecto-periodo-seguimiento-datos-generales.component';
 import { ProyectoPeriodoSeguimientoDocumentosComponent } from './proyecto-periodo-seguimiento-formulario/proyecto-periodo-seguimiento-documentos/proyecto-periodo-seguimiento-documentos.component';
 import { ProyectoPeriodoSeguimientoRouting } from './proyecto-periodo-seguimiento-routing.module';
-import { ProyectoPeriodoSeguimientoGuard } from './proyecto-periodo-seguimiento.guard';
-
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { ProyectoPeriodoSeguimientoGuard } from './proyecto-periodo-seguimiento.
     ReactiveFormsModule
   ],
   providers: [
-    ProyectoPeriodoSeguimientoGuard
+    ProyectoPeriodoSeguimientoDataResolver
   ]
 })
 export class ProyectoPeriodoSeguimientoModule { }

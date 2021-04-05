@@ -1,27 +1,26 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
+import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { FormFragment } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
-import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
+import { DocumentoRequeridoSolicitudService } from '@core/services/csp/documento-requerido-solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<IConfiguracionSolicitud> {
-  configuracionSolicitud: IConfiguracionSolicitud;
-  documentosRequeridos$ = new BehaviorSubject<StatusWrapper<IDocumentoRequerido>[]>([]);
-  documentosRequeridosEliminados: StatusWrapper<IDocumentoRequerido>[] = [];
-  private convocatoriaFases: IConvocatoriaFase[] = [];
+  private configuracionSolicitud: IConfiguracionSolicitud;
+  documentosRequeridos$ = new BehaviorSubject<StatusWrapper<IDocumentoRequeridoSolicitud>[]>([]);
+  private documentosRequeridosEliminados: StatusWrapper<IDocumentoRequeridoSolicitud>[] = [];
+  public convocatoriaFases$: BehaviorSubject<IConvocatoriaFase[]> = new BehaviorSubject<IConvocatoriaFase[]>([]);
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
-    private documentoRequeridoService: DocumentoRequeridoService,
+    private documentoRequeridoSolicitudService: DocumentoRequeridoSolicitudService,
     public readonly: boolean
   ) {
     super(key, true);
@@ -33,7 +32,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     const form = new FormGroup({
       tramitacionSGI: new FormControl(false),
       fasePresentacionSolicitudes: new FormControl(''),
-      formularioSolicitud: new FormControl(''),
+      formularioSolicitud: new FormControl(null),
       fechaInicioFase: new FormControl({ value: null, disabled: true }),
       fechaFinFase: new FormControl({ value: null, disabled: true }),
       importeMaximoSolicitud: new FormControl(null, [Validators.maxLength(50)]),
@@ -41,6 +40,31 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     if (this.readonly) {
       form.disable();
     }
+
+    this.subscriptions.push(form.controls.tramitacionSGI.valueChanges.subscribe(
+      (value) => {
+        if (value) {
+          form.controls.fasePresentacionSolicitudes.setValidators(Validators.required);
+        }
+        else {
+          form.controls.fasePresentacionSolicitudes.setValidators([]);
+        }
+        form.controls.fasePresentacionSolicitudes.updateValueAndValidity();
+      }
+    ));
+
+    this.subscriptions.push(form.controls.fasePresentacionSolicitudes.valueChanges.subscribe(
+      (value) => {
+        if (value) {
+          form.controls.fechaInicioFase.setValue(value?.fechaInicio);
+          form.controls.fechaFinFase.setValue(value?.fechaFin);
+        } else {
+          form.controls.fechaInicioFase.setValue(null);
+          form.controls.fechaFinFase.setValue(null);
+        }
+      }
+    ));
+
     return form;
   }
 
@@ -63,9 +87,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           switchMap((documentosRequeridos) => {
             const documentos = documentosRequeridos.items;
             if (documentos.length > 0) {
-              this.configuracionSolicitud = documentosRequeridos.items[0].configuracionSolicitud;
               this.documentosRequeridos$.next(documentosRequeridos.items.map(
-                doc => new StatusWrapper<IDocumentoRequerido>(doc))
+                doc => new StatusWrapper<IDocumentoRequeridoSolicitud>(doc))
               );
             }
             return of(this.configuracionSolicitud);
@@ -80,7 +103,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   }
 
   public setFases(convocatoriaFases: IConvocatoriaFase[]) {
-    this.convocatoriaFases = convocatoriaFases;
+    this.convocatoriaFases$.next(convocatoriaFases);
   }
 
   getValue(): IConfiguracionSolicitud {
@@ -97,8 +120,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     return this.configuracionSolicitud;
   }
 
-  public addDocumentoRequerido(docRequerido: IDocumentoRequerido): void {
-    const wrapped = new StatusWrapper<IDocumentoRequerido>(docRequerido);
+  public addDocumentoRequerido(docRequerido: IDocumentoRequeridoSolicitud): void {
+    const wrapped = new StatusWrapper<IDocumentoRequeridoSolicitud>(docRequerido);
     wrapped.setCreated();
     const current = this.documentosRequeridos$.value;
     current.push(wrapped);
@@ -106,10 +129,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     this.setChanges(true);
   }
 
-  public deleteDocumentoRequerido(wrapper: StatusWrapper<IDocumentoRequerido>): void {
+  public deleteDocumentoRequerido(wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>): void {
     const current = this.documentosRequeridos$.value;
     const index = current.findIndex(
-      (value: StatusWrapper<IDocumentoRequerido>) => value === wrapper
+      (value: StatusWrapper<IDocumentoRequeridoSolicitud>) => value === wrapper
     );
     if (index >= 0) {
       if (!wrapper.created) {
@@ -133,13 +156,10 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   }
 
   private create(configuracion: IConfiguracionSolicitud): Observable<IConfiguracionSolicitud> {
-    configuracion.convocatoria = {
-      id: this.getKey(),
-      activo: true
-    } as IConvocatoria;
+    configuracion.convocatoriaId = this.getKey() as number;
 
     if (configuracion.fasePresentacionSolicitudes != null && !configuracion.fasePresentacionSolicitudes.id) {
-      const fasePresentacionSolicitudes = this.convocatoriaFases.find(plazoFase =>
+      const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
         plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
       configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
     }
@@ -156,7 +176,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     }
 
     if (configuracion.fasePresentacionSolicitudes != null && !configuracion.fasePresentacionSolicitudes.id) {
-      const fasePresentacionSolicitudes = this.convocatoriaFases.find(plazoFase =>
+      const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
         plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
       configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
     }
@@ -189,7 +209,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     }
     return from(this.documentosRequeridosEliminados).pipe(
       mergeMap((wrapped) => {
-        return this.documentoRequeridoService.deleteById(wrapped.value.id)
+        return this.documentoRequeridoSolicitudService.deleteById(wrapped.value.id)
           .pipe(
             tap(() => {
               this.documentosRequeridosEliminados = this.documentosRequeridosEliminados.filter(
@@ -206,13 +226,13 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       return of(void 0);
     }
     editedDocumentos.forEach(documento =>
-      documento.value.configuracionSolicitud = result);
+      documento.value.configuracionSolicitudId = result.id);
     return from(editedDocumentos).pipe(
       mergeMap((wrapped) => {
-        return this.documentoRequeridoService.update(wrapped.value.id, wrapped.value).pipe(
+        return this.documentoRequeridoSolicitudService.update(wrapped.value.id, wrapped.value).pipe(
           map((updatedEntidad) => {
             const index = this.documentosRequeridos$.value.findIndex((currentEntidad) => currentEntidad === wrapped);
-            this.documentosRequeridos$.value[index] = new StatusWrapper<IDocumentoRequerido>(updatedEntidad);
+            this.documentosRequeridos$.value[index] = new StatusWrapper<IDocumentoRequeridoSolicitud>(updatedEntidad);
           })
         );
       })
@@ -225,14 +245,14 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       return of(void 0);
     }
     createdDocumentos.forEach(documento => {
-      documento.value.configuracionSolicitud = configuracion;
+      documento.value.configuracionSolicitudId = configuracion.id;
     });
     return from(createdDocumentos).pipe(
       mergeMap((wrapped) => {
-        return this.documentoRequeridoService.create(wrapped.value).pipe(
+        return this.documentoRequeridoSolicitudService.create(wrapped.value).pipe(
           map((createdEntidad) => {
             const index = this.documentosRequeridos$.value.findIndex((currentEntidad) => currentEntidad === wrapped);
-            this.documentosRequeridos$[index] = new StatusWrapper<IDocumentoRequerido>(createdEntidad);
+            this.documentosRequeridos$[index] = new StatusWrapper<IDocumentoRequeridoSolicitud>(createdEntidad);
           })
         );
       })

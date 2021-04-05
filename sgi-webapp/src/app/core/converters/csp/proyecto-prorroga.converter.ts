@@ -2,7 +2,6 @@ import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-pror
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoProrrogaConverter extends SgiBaseConverter<IProyectoProrrogaBackend, IProyectoProrroga> {
 
@@ -12,7 +11,7 @@ class ProyectoProrrogaConverter extends SgiBaseConverter<IProyectoProrrogaBacken
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       numProrroga: value.numProrroga,
       fechaConcesion: LuxonUtils.fromBackend(value.fechaConcesion),
       tipo: value.tipo,
@@ -28,7 +27,7 @@ class ProyectoProrrogaConverter extends SgiBaseConverter<IProyectoProrrogaBacken
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       numProrroga: value.numProrroga,
       fechaConcesion: LuxonUtils.toBackend(value.fechaConcesion),
       tipo: value.tipo,

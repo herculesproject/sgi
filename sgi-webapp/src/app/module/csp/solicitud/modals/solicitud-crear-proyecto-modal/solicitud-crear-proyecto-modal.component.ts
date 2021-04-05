@@ -4,11 +4,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
+import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
@@ -26,22 +29,24 @@ const SOLICITUD_PROYECTO_FECHA_FIN_KEY = marker('csp.solicitud-proyecto.fecha-fi
 const SOLICITUD_PROYECTO_MODELO_EJECUCION_KEY = marker('csp.solicitud-proyecto.modelo-ejecucion');
 
 export interface ISolicitudCrearProyectoModalData {
-  proyecto: IProyecto;
-  solicitudProyectoDatos: ISolicitudProyectoDatos;
+  solicitud: ISolicitud;
+  solicitudProyecto: ISolicitudProyecto;
 }
 
 @Component({
   templateUrl: './solicitud-crear-proyecto-modal.component.html',
   styleUrls: ['./solicitud-crear-proyecto-modal.component.scss']
 })
-export class SolicitudCrearProyectoModalComponent extends
-  BaseModalComponent<IProyecto, SolicitudCrearProyectoModalComponent> implements OnInit {
+export class SolicitudCrearProyectoModalComponent
+  extends BaseModalComponent<IProyecto, SolicitudCrearProyectoModalComponent> implements OnInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   textSaveOrUpdate: string;
 
   private modelosEjecucionFiltered = [] as IModeloEjecucion[];
   modelosEjecucion$: Observable<IModeloEjecucion[]>;
+
+  private convocatoria: IConvocatoria;
 
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
@@ -51,12 +56,13 @@ export class SolicitudCrearProyectoModalComponent extends
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<SolicitudCrearProyectoModalComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public solicitudCrearProyectoModalData: ISolicitudCrearProyectoModalData,
+    public data: ISolicitudCrearProyectoModalData,
     private unidadModeloService: ModeloUnidadService,
     private logger: NGXLogger,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private convocatoriaService: ConvocatoriaService
   ) {
-    super(snackBarService, matDialogRef, solicitudCrearProyectoModalData.proyecto);
+    super(snackBarService, matDialogRef, { solicitudId: data.solicitud?.id } as IProyecto);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(50%-10px)';
@@ -73,7 +79,11 @@ export class SolicitudCrearProyectoModalComponent extends
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-
+    if (this.data.solicitud.convocatoriaId) {
+      this.subscriptions.push(this.convocatoriaService.findById(this.data.solicitud.convocatoriaId).subscribe(
+        (convocatoria => this.convocatoria = convocatoria)
+      ));
+    }
   }
 
   private setupI18N(): void {
@@ -99,7 +109,7 @@ export class SolicitudCrearProyectoModalComponent extends
         fechaInicio: new FormControl(null, [Validators.required]),
         fechaFin: new FormControl(null, [Validators.required]),
         modeloEjecucion: new FormControl(
-          this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.convocatoria?.modeloEjecucion,
+          this.convocatoria?.modeloEjecucion,
           [Validators.required]
         )
       },
@@ -117,7 +127,7 @@ export class SolicitudCrearProyectoModalComponent extends
       })
     );
 
-    if (this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.convocatoria?.modeloEjecucion) {
+    if (this.convocatoria?.modeloEjecucion) {
       formGroup.controls.modeloEjecucion.disable();
     }
 
@@ -146,7 +156,7 @@ export class SolicitudCrearProyectoModalComponent extends
       filter: new RSQLSgiRestFilter(
         'unidadGestionRef',
         SgiRestFilterOperator.EQUALS,
-        this.solicitudCrearProyectoModalData?.proyecto?.solicitud?.unidadGestion?.acronimo
+        this.data?.solicitud?.unidadGestion?.acronimo
       )
     };
     const subcription = this.unidadModeloService.findAll(options).subscribe(
@@ -177,8 +187,8 @@ export class SolicitudCrearProyectoModalComponent extends
   }
 
   private getFechaFinProyecto(fecha: DateTime): void {
-    if (fecha && this.solicitudCrearProyectoModalData?.solicitudProyectoDatos?.duracion) {
-      const fechaFin = fecha.plus({ months: this.solicitudCrearProyectoModalData?.solicitudProyectoDatos?.duracion });
+    if (fecha && this.data?.solicitudProyecto?.duracion) {
+      const fechaFin = fecha.plus({ months: this.data?.solicitudProyecto?.duracion });
       this.formGroup.controls.fechaFin.setValue(fechaFin);
     }
   }

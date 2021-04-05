@@ -31,7 +31,6 @@ export class ConvocatoriaConceptoGastoEditarComponent extends ActionComponent {
   textoEditar: string;
   textoEditarSuccess: string;
   textoEditarError: string;
-  urlFrom: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -43,17 +42,14 @@ export class ConvocatoriaConceptoGastoEditarComponent extends ActionComponent {
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -108,8 +104,7 @@ export class ConvocatoriaConceptoGastoEditarComponent extends ActionComponent {
     this.returnUrl();
   }
 
-
   private returnUrl() {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 }

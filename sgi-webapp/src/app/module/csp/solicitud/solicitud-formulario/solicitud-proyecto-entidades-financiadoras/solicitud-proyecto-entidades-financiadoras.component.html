@@ -2,12 +2,6 @@
 
   <h2>{{'menu.csp.solicitudes.entidades-financiadoras' | translate}}</h2>
 
-  <!-- Error no ISolicitudProyectoDatos -->
-  <div *ngIf="!formPart.existsDatosProyecto" class="info-message">
-    {{'info.csp.solicitud-entidad-financiadora' | translate}}
-  </div>
-
-
   <!-- Entidades financiadoras convocatoria -->
   <div class="entidades-financiadoras-convocatoria">
     <mat-label>{{'list.entity' | translate:msgParamConvocatoriaEntity}}</mat-label>
@@ -181,7 +175,7 @@
     <mat-paginator #paginatorEntidadesFinanciadorasAjenas [pageSizeOptions]="elementosPagina" showFirstLastButtons>
     </mat-paginator>
 
-    <div class="separation-button" *ngIf="formPart.existsDatosProyecto && !formPart.readonly">
+    <div class="separation-button" *ngIf="!formPart.readonly">
       <button color="three" mat-button mat-raised-button (click)="openModal()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}

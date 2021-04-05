@@ -19,6 +19,7 @@ const MSG_SUCCESS = marker('msg.update.entity.success');
 const MSG_ERROR = marker('error.update.entity');
 const MSG_SUCCESS_REGISTRAR = marker('msg.csp.convocatoria.registrar.success');
 const MSG_ERROR_REGISTRAR = marker('error.csp.convocatoria.registrar');
+
 @Component({
   selector: 'sgi-convocatoria-editar',
   templateUrl: './convocatoria-editar.component.html',
@@ -38,6 +39,10 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   disableRegistrar = true;
   disable = true;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
@@ -48,7 +53,6 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
     private convocatoriaService: ConvocatoriaService,
     private readonly translate: TranslateService
   ) {
-
     super(router, route, actionService, dialogService);
   }
 
@@ -64,7 +68,6 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       CONVOCATORIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -116,7 +119,6 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
     );
   }
 
-
   registrar(): void {
     this.actionService.registrar().subscribe(
       () => { },
@@ -136,7 +138,7 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
    */
   private isDisableRegistrar(): void {
     this.subscriptions.push(
-      this.convocatoriaService.registrable(this.actionService.convocatoriaId).subscribe(
+      this.convocatoriaService.registrable(this.actionService.id).subscribe(
         res => this.disable = !res,
         (error) => {
           this.logger.error(error);
@@ -146,8 +148,5 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
     );
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 
 }

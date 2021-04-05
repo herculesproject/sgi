@@ -1,11 +1,9 @@
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ESTADO_PROYECTO_CONVERTER } from './estado-proyecto.converter';
-import { SOLICITUD_CONVERTER } from './solicitud.converter';
 
 class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
 
@@ -24,9 +22,9 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       modeloEjecucion: value.modeloEjecucion,
       finalidad: value.finalidad,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
-      solicitud: SOLICITUD_CONVERTER.toTarget(value.solicitud),
+      solicitudId: value.solicitudId,
       ambitoGeografico: value.ambitoGeografico,
       confidencial: value.confidencial,
       clasificacionCVN: value.clasificacionCVN,
@@ -34,7 +32,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       coordinadorExterno: value.coordinadorExterno,
       uniSubcontratada: value.uniSubcontratada,
       timesheet: value.timesheet,
-      paquetesTrabajo: value.paquetesTrabajo,
+      permitePaquetesTrabajo: value.permitePaquetesTrabajo,
       costeHora: value.costeHora,
       tipoHorasAnuales: value.tipoHorasAnuales,
       contratos: value.contratos,
@@ -64,9 +62,9 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       unidadGestionRef: value.unidadGestion?.acronimo,
       modeloEjecucion: value.modeloEjecucion,
       finalidad: value.finalidad,
-      convocatoria: value.convocatoria ? { id: value.convocatoria.id } as IConvocatoria : undefined,
+      convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
-      solicitud: SOLICITUD_CONVERTER.fromTarget(value.solicitud),
+      solicitudId: value.solicitudId,
       ambitoGeografico: value.ambitoGeografico,
       confidencial: value.confidencial,
       clasificacionCVN: value.clasificacionCVN,
@@ -74,7 +72,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       coordinadorExterno: value.coordinadorExterno,
       uniSubcontratada: value.uniSubcontratada,
       timesheet: value.timesheet,
-      paquetesTrabajo: value.paquetesTrabajo,
+      permitePaquetesTrabajo: value.permitePaquetesTrabajo,
       costeHora: value.costeHora,
       tipoHorasAnuales: value.tipoHorasAnuales,
       contratos: value.contratos,

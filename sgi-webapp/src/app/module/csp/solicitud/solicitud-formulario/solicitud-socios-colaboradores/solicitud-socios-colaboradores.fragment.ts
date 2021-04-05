@@ -11,9 +11,6 @@ export class SolicitudSociosColaboradoresFragment extends Fragment {
   proyectoSocios$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoSocio>[]>([]);
   private sociosEliminados: StatusWrapper<ISolicitudProyectoSocio>[] = [];
 
-  isSociosColaboradores = false;
-  enableAddSocioColaborador = false;
-
   constructor(
     key: number,
     private solicitudService: SolicitudService,

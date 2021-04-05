@@ -14,7 +14,7 @@
           <mat-form-field color="primary" fxFill>
             <mat-label>{{'csp.convocatoria-plazos-fases.fecha-inicio' | translate}}</mat-label>
             <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="picker1"
-              placeholder="{{'csp.convocatoria-plazos-fases.fecha-inicio' | translate}}" required>
+              placeholder="{{'csp.convocatoria-plazos-fases.fecha-inicio' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #picker1 showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">

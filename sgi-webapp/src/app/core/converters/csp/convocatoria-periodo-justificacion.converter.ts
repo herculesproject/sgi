@@ -12,7 +12,7 @@ class ConvocatoriaPeriodoJustificacionConverter extends
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       numPeriodo: value.numPeriodo,
       mesInicial: value.mesInicial,
       mesFinal: value.mesFinal,
@@ -29,7 +29,7 @@ class ConvocatoriaPeriodoJustificacionConverter extends
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       numPeriodo: value.numPeriodo,
       mesInicial: value.mesInicial,
       mesFinal: value.mesFinal,

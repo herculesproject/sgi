@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DOCUMENTOS_PROYECTO_CONVERTER } from '@core/converters/csp/documentos-proyecto.converter';
 import { ESTADO_PROYECTO_CONVERTER } from '@core/converters/csp/estado-proyecto.converter';
 import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
+import { PROYECTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-documento.converter';
 import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
@@ -14,10 +14,10 @@ import { PROYECTO_PLAZO_CONVERTER } from '@core/converters/csp/proyecto-plazo.co
 import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorroga.converter';
 import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
 import { PROYECTO_CONVERTER } from '@core/converters/csp/proyecto.converter';
-import { IDocumentosProyectoBackend } from '@core/models/csp/backend/documentos-proyecto-backend';
 import { IEstadoProyectoBackend } from '@core/models/csp/backend/estado-proyecto-backend';
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
+import { IProyectoDocumentoBackend } from '@core/models/csp/backend/proyecto-documento-backend';
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
@@ -28,11 +28,11 @@ import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/pro
 import { IProyectoPlazoBackend } from '@core/models/csp/backend/proyecto-plazo-backend';
 import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
 import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-backend';
-import { IDocumentosProyecto } from '@core/models/csp/documentos-proyecto';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
+import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
@@ -318,14 +318,13 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   /**
    * Recupera todos los documentos de un proyecto
    * @param id Identificador del proyecto.
-   * @returns .
+   * @param options opciones de búsqueda
    */
-  findAllDocumentos(idProyecto: number):
-    Observable<IDocumentosProyecto> {
-    return this.http.get<IDocumentosProyectoBackend>(
-      `${this.endpointUrl}/${idProyecto}/documentos`
-    ).pipe(
-      map(response => DOCUMENTOS_PROYECTO_CONVERTER.toTarget(response))
+  findAllProyectoDocumentos(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoDocumento>> {
+    return this.find<IProyectoDocumentoBackend, IProyectoDocumento>(
+      `${this.endpointUrl}/${idProyecto}/documentos`,
+      options,
+      PROYECTO_DOCUMENTO_CONVERTER
     );
   }
 

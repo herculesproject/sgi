@@ -22,7 +22,7 @@ describe('ProyectoSocioEquipoModalComponent', () => {
     fechaInicio: undefined,
     id: undefined,
     persona: undefined,
-    proyectoSocio: undefined,
+    proyectoSocioId: undefined,
     rolProyecto: undefined
   };
 

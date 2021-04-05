@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { CspModalsModule } from '../modals/csp-modals.module';
-import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
 import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
+import { ConvocatoriaDataResolver } from './convocatoria-data.resolver';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
 import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
@@ -24,7 +24,6 @@ import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/con
 import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.component';
 import { ConvocatoriaListadoComponent } from './convocatoria-listado/convocatoria-listado.component';
 import { ConvocatoriaRoutingModule } from './convocatoria-routing.module';
-import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ConvocatoriaAreaTematicaModalComponent } from './modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConvocatoriaEnlaceModalComponent } from './modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
@@ -33,7 +32,6 @@ import { ConvocatoriaHitosModalComponent } from './modals/convocatoria-hitos-mod
 import { ConvocatoriaPeriodosJustificacionModalComponent } from './modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
 import { ConvocatoriaPlazosFaseModalComponent } from './modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
 import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convocatoria-seguimiento-cientifico-modal/convocatoria-seguimiento-cientifico-modal.component';
-import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 
 @NgModule({
   declarations: [
@@ -74,9 +72,7 @@ import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
     CspModalsModule
   ],
   providers: [
-    ConvocatoriaResolver,
-    ConfiguracionSolicitudResolver,
-    ModeloEjecucionIdResolver
+    ConvocatoriaDataResolver
   ]
 })
 export class ConvocatoriaModule { }

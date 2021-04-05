@@ -1,8 +1,6 @@
-import { IProyectoSocioBackend } from './proyecto-socio-backend';
-
 export interface IProyectoSocioPeriodoPagoBackend {
   id: number;
-  proyectoSocio: IProyectoSocioBackend;
+  proyectoSocioId: number;
   numPeriodo: number;
   importe: number;
   fechaPrevistaPago: string;

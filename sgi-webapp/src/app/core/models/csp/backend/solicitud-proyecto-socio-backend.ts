@@ -1,9 +1,8 @@
 import { IRolSocio } from '../rol-socio';
-import { ISolicitudProyectoDatosBackend } from './solicitud-proyecto-datos-backend';
 
 export interface ISolicitudProyectoSocioBackend {
   id: number;
-  solicitudProyectoDatos: ISolicitudProyectoDatosBackend;
+  solicitudProyectoId: number;
   empresaRef: string;
   rolSocio: IRolSocio;
   mesInicio: number;

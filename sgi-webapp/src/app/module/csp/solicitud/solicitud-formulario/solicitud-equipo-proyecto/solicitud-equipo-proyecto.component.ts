@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
-import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -15,8 +15,9 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { EquipoProyectoModalData, SolicitudEquipoProyectoModalComponent } from '../../modals/solicitud-equipo-proyecto-modal/solicitud-equipo-proyecto-modal.component';
+import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudEquipoProyectoFragment } from './solicitud-equipo-proyecto.fragment';
 
@@ -46,6 +47,8 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
 
   constructor(
     private actionService: SolicitudActionService,
+    private router: Router,
+    private route: ActivatedRoute,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -57,11 +60,20 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.actionService.existsDatosProyectos();
-    this.formPart.solicitantePersonaRef = this.actionService.getSolicitantePersonaRef();
+    this.actionService.datosProyectoComplete$.pipe(
+      take(1)
+    ).subscribe(
+      (complete) => {
+        if (!complete) {
+          this.router.navigate(['../', SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS], { relativeTo: this.route });
+        }
+      }
+    );
+
     const subcription = this.formPart.proyectoEquipos$.subscribe(
       (proyectoEquipos) => {
-        if (proyectoEquipos.length === 0 || this.formPart.getIndexSolicitante(proyectoEquipos) >= 0) {
+        if (proyectoEquipos.length === 0 ||
+          proyectoEquipos.filter(equipo => equipo.value.persona?.personaRef === this.actionService.solicitante?.personaRef).length > 0) {
           this.formPart.setErrors(false);
         } else {
           this.formPart.setErrors(true);
@@ -96,26 +108,8 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoEquipo>, position?: number): void {
-    const persona: IPersona = {
-      identificadorLetra: '',
-      identificadorNumero: '',
-      nivelAcademico: '',
-      nombre: '',
-      personaRef: '',
-      primerApellido: '',
-      segundoApellido: '',
-      vinculacion: ''
-    };
-    const solicitudProyectoEquipo: ISolicitudProyectoEquipo = {
-      id: undefined,
-      mesFin: undefined,
-      mesInicio: undefined,
-      persona: null,
-      rolProyecto: undefined,
-      solicitudProyectoDatos: undefined
-    };
     const data: EquipoProyectoModalData = {
-      solicitudProyectoEquipo: wrapper ? wrapper.value : solicitudProyectoEquipo,
+      solicitudProyectoEquipo: wrapper?.value ?? {} as ISolicitudProyectoEquipo,
       selectedProyectoEquipos: this.dataSource.data.map(element => element.value),
       isEdit: Boolean(wrapper),
       readonly: this.formPart.readonly

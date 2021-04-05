@@ -9,8 +9,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.solicitud.estado-solicitud' | translate}}</mat-label>
-        <mat-select formControlName="estado" disabled
-          placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
+        <mat-select formControlName="estado" placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
           <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
             {{ estado.value | translate}}
           </mat-option>
@@ -142,7 +141,7 @@
           <!-- Entidad convocante -->
           <ng-container matColumnDef="entidadConvocante">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-entidad-convocante' | translate}}
+              {{'csp.solicitud-entidad-convocante' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}
             </th>
             <td mat-cell *matCellDef="let entidadConvocanteModalidad">
               {{ entidadConvocanteModalidad.entidadConvocante.entidad?.razonSocial }}

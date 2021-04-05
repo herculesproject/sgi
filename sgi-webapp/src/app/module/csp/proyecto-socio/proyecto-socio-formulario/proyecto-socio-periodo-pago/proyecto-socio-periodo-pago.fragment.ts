@@ -59,6 +59,11 @@ export class ProyectoSocioPeriodoPagoFragment extends Fragment {
 
   saveOrUpdate(): Observable<void> {
     const values = this.periodoPagos$.value.map(wrapper => wrapper.value);
+    values.forEach(value => {
+      if (!value.proyectoSocioId) {
+        value.proyectoSocioId = this.getKey() as number;
+      }
+    });
     const id = this.getKey() as number;
     return this.proyectoSocioPeriodoPagoService.updateList(id, values).pipe(
       takeLast(1),

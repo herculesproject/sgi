@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
+import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -22,8 +22,10 @@ const MSG_ACEPTAR = marker('btn.ok');
 const CONVOCATORIA_CONFIGURACION_SOLICITUD_TIPO_DOCUMENTO_KEY = marker('csp.documento.tipo');
 const CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY = marker('csp.convocatoria-configuracion-solicitud-documento-requerido');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 export interface ConvocatoriaConfiguracionSolicitudesModalData {
-  documentoRequerido: IDocumentoRequerido;
+  documentoRequerido: IDocumentoRequeridoSolicitud;
+  tipoFaseId: number;
   modeloEjecucionId: number;
   readonly: boolean;
 }
@@ -32,8 +34,8 @@ export interface ConvocatoriaConfiguracionSolicitudesModalData {
   templateUrl: './convocatoria-configuracion-solicitudes-modal.component.html',
   styleUrls: ['./convocatoria-configuracion-solicitudes-modal.component.scss']
 })
-export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
-  BaseModalComponent<ConvocatoriaConfiguracionSolicitudesModalData, ConvocatoriaConfiguracionSolicitudesModalComponent>
+export class ConvocatoriaConfiguracionSolicitudesModalComponent
+  extends BaseModalComponent<ConvocatoriaConfiguracionSolicitudesModalData, ConvocatoriaConfiguracionSolicitudesModalComponent>
   implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
@@ -77,13 +79,11 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamTipoDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
-
     if (this.data?.documentoRequerido?.tipoDocumento) {
       this.translate.get(
         CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
-
     } else {
       this.translate.get(
         CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
@@ -97,16 +97,14 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
         })
       ).subscribe((value) => this.title = value);
     }
-
   }
-
 
   /**
    * Carga todos los tipos de documento
    */
   loadTipoDocumento() {
     const modeloEjecucionId = this.data.modeloEjecucionId;
-    const idTipoFase = this.data.documentoRequerido.configuracionSolicitud.fasePresentacionSolicitudes?.tipoFase.id;
+    const idTipoFase = this.data.tipoFaseId;
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('modeloTipoFase.tipoFase.id', SgiRestFilterOperator.EQUALS, idTipoFase ? idTipoFase.toString() : null)
     };

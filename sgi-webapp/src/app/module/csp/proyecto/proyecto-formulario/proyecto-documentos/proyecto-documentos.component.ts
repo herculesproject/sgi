@@ -79,30 +79,30 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  treeControl: FlatTreeControl<NodeDocumento>;
+  private treeFlattener: MatTreeFlattener<NodeDocumento, NodeDocumento>;
+  dataSource: MatTreeFlatDataSource<NodeDocumento, NodeDocumento>;
+  @ViewChild('uploader') private uploader: SgiFileUploadComponent;
+
   private getLevel = (node: NodeDocumento) => node.level;
   private isExpandable = (node: NodeDocumento) => node.childs.length > 0;
   private getChildren = (node: NodeDocumento): NodeDocumento[] => node.childs;
   private transformer = (node: NodeDocumento, level: number) => node;
 
   hasChild = (_: number, node: NodeDocumento) => node.childs.length > 0;
-
-
   compareFase = (option: ITipoFase, value: ITipoFase) => option?.id === value?.id;
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
-  treeControl: FlatTreeControl<NodeDocumento>;
-  private treeFlattener: MatTreeFlattener<NodeDocumento, NodeDocumento>;
-  dataSource: MatTreeFlatDataSource<NodeDocumento, NodeDocumento>;
-  @ViewChild('uploader') private uploader: SgiFileUploadComponent;
 
-
-  constructor(protected logger: NGXLogger,
+  constructor(
+    protected logger: NGXLogger,
     private dialogService: DialogService,
     public actionService: ProyectoActionService,
     private snackBarService: SnackBarService,
     private modeloEjecucionService: ModeloEjecucionService,
     private documentoService: DocumentoService,
-    private readonly translate: TranslateService) {
+    private readonly translate: TranslateService
+  ) {
 
     super(actionService.FRAGMENT.DOCUMENTOS, actionService);
     this.fxFlexProperties = new FxFlexProperties();
@@ -122,7 +122,6 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
     this.treeControl = new FlatTreeControl<NodeDocumento>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
-
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -146,8 +145,7 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
     }));
     this.group.initialize();
 
-
-    const idModeloEjecucion = this.actionService.proyecto?.modeloEjecucion?.id;
+    const idModeloEjecucion = this.actionService.modeloEjecucionId;
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('proyecto', SgiRestFilterOperator.EQUALS, 'true')
     };
@@ -187,7 +185,6 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
-
     this.translate.get(
       PROYECTO_DOCUMENTO_FICHERO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -209,13 +206,11 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
-
 
   deleteDetail(): void {
     this.subscriptions.push(
@@ -235,7 +230,6 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
     this.viewingNode = undefined;
     this.loadDetails(undefined);
   }
-
 
   private loadDetails(node: NodeDocumento) {
     this.formGroup.enable();
@@ -257,7 +251,6 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
       this.formGroup.disable();
     }
   }
-
 
   cancelDetail(): void {
     if (this.viewMode === VIEW_MODE.EDIT) {
@@ -298,7 +291,6 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
         break;
     }
   }
-
 
   downloadFile(node: NodeDocumento): void {
     this.subscriptions.push(this.documentoService.downloadFichero(node.fichero.documentoRef).subscribe(
@@ -346,7 +338,6 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
     this.expandParents(createdNode);
     this.switchToNone();
   }
-
 
   private updateNode(node: NodeDocumento): void {
     this.formPart.updateNode(node);

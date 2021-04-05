@@ -28,8 +28,7 @@
           <mat-label>{{'csp.convocatoria-configuracion-solicitud.fase-presentacion.select' | translate}}</mat-label>
           <input matInput formControlName="fasePresentacionSolicitudes" type="text" id="fasePresentacionSolicitudes"
             placeholder="{{'csp.convocatoria-configuracion-solicitud.fase-presentacion.select' | translate}}"
-            [matAutocomplete]="autoPresentacionSolicitudes" (ngModelChange)="habilitarCampos()"
-            [required]="presentacionSolicitud()" (click)="loadConvocatoriaFases()">
+            [matAutocomplete]="autoPresentacionSolicitudes" [required]="formGroup.controls.tramitacionSGI.value">
           <mat-autocomplete #autoPresentacionSolicitudes="matAutocomplete" [displayWith]="getFormularioSolicitud">
             <mat-option *ngFor="let convocatoriaFase of convocatoriaFase$ | async"
               [value]="convocatoriaFase | translate" [disabled]="this.dataSource.data.length>0">

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_CONVERTER } from '@core/converters/csp/convocatoria-seguimiento-cientifico.converter';
-import { IConvocatoriaSeguimientoCientificoBackend } from '@core/models/csp/backend/convocatoria-seguimiento-cientifico-backend';
-import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
+import { CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER } from '@core/converters/csp/convocatoria-periodo-seguimiento-cientifico.converter';
+import { IConvocatoriaPeriodoSeguimientoCientificoBackend } from '@core/models/csp/backend/convocatoria-periodo-seguimiento-cientifico-backend';
+import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { environment } from '@env';
 import { SgiMutableRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ConvocatoriaSeguimientoCientificoService
-  extends SgiMutableRestService<number, IConvocatoriaSeguimientoCientificoBackend, IConvocatoriaSeguimientoCientifico> {
+  extends SgiMutableRestService<number, IConvocatoriaPeriodoSeguimientoCientificoBackend, IConvocatoriaPeriodoSeguimientoCientifico> {
   private static readonly MAPPING = '/convocatoriaperiodoseguimientocientificos';
 
   constructor(protected http: HttpClient) {
@@ -20,7 +20,7 @@ export class ConvocatoriaSeguimientoCientificoService
       ConvocatoriaSeguimientoCientificoService.name,
       `${environment.serviceServers.csp}${ConvocatoriaSeguimientoCientificoService.MAPPING}`,
       http,
-      CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_CONVERTER
+      CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER
     );
   }
 
@@ -32,9 +32,11 @@ export class ConvocatoriaSeguimientoCientificoService
    * @param periodosJustificacion Lista de IConvocatoriaSeguimientoCientifico
    * @returns Lista de IConvocatoriaSeguimientoCientifico actualizada
    */
-  updateConvocatoriaSeguimientoCientificoConvocatoria(convocatoriaId: number, periodosJustificacion: IConvocatoriaSeguimientoCientifico[]):
-    Observable<IConvocatoriaSeguimientoCientifico[]> {
-    return this.http.patch<IConvocatoriaSeguimientoCientificoBackend[]>(
+  updateConvocatoriaSeguimientoCientificoConvocatoria(
+    convocatoriaId: number,
+    periodosJustificacion: IConvocatoriaPeriodoSeguimientoCientifico[]
+  ): Observable<IConvocatoriaPeriodoSeguimientoCientifico[]> {
+    return this.http.patch<IConvocatoriaPeriodoSeguimientoCientificoBackend[]>(
       `${this.endpointUrl}/${convocatoriaId}`,
       this.converter.fromTargetArray(periodosJustificacion)
     ).pipe(

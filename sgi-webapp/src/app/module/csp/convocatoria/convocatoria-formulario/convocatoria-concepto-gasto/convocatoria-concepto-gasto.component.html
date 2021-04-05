@@ -2,7 +2,7 @@
 <section class="convocatoriaConceptoGasto">
   <h2>{{'csp.convocatoria-elegibilidad' | translate}}</h2>
 
-  <h3>{{'csp.convocatoria-concepto-gasto.permitido' | translate}}</h3>
+  <h3>{{'csp.convocatoria-concepto-gasto-permitido' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
   <table class="mat-elevation-z8 table-convocatoriaConceptoGasto-permitidos" mat-table
     [dataSource]="dataSourcePermitidos" matSort matSortDisableClear #sortPermitidos="matSort">
     <!-- Nombre concepto gasto -->
@@ -59,13 +59,11 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="formPart.readonly"
-          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
-          [state]="createState(wrapper)">
+          [routerLink]="['../', CONVOCATORIA_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO, wrapper.value.id]">
           <mat-icon color="primary">visibility</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
-          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
-          [state]="createState(wrapper)">
+          [routerLink]="['../', CONVOCATORIA_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO, wrapper.value.id]">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
@@ -85,8 +83,7 @@
 
   <div class="separation-button" *ngIf="!formPart.readonly">
     <button color="three" aria-label="Center Align" md-button mat-raised-button
-      [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, ROUTE_NAMES.NEW]"
-      [state]="createState(null,true)">
+      [routerLink]="['../', CONVOCATORIA_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO, ROUTE_NAMES.NEW]">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntityPermitido }}
     </button>
@@ -136,7 +133,7 @@
 </section>
 <mat-divider></mat-divider>
 <section class="convocatoriaConceptoGasto">
-  <h3>{{'csp.convocatoria-concepto-gasto.no-permitido' | translate}}</h3>
+  <h3>{{'csp.convocatoria-concepto-gasto-no-permitido' | translate: MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
   <table class="mat-elevation-z8 table-convocatoriaConceptoGasto-nopermitidos" mat-table
     [dataSource]="dataSourceNoPermitidos" matSort matSortDisableClear #sortNoPermitidos="matSort">
 
@@ -186,13 +183,11 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="formPart.readonly"
-          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
-          [state]="createState(wrapper)">
+          [routerLink]="['../', CONVOCATORIA_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO, wrapper.value.id]">
           <mat-icon color="primary">visibility</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
-          [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, wrapper.value.id]"
-          [state]="createState(wrapper)">
+          [routerLink]="['../', CONVOCATORIA_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO, wrapper.value.id]">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
@@ -212,8 +207,7 @@
 
   <div class="separation-button" *ngIf="!formPart.readonly">
     <button color="three" aria-label="Center Align" md-button mat-raised-button
-      [routerLink]="['../../..', CSP_ROUTE_NAMES.CONVOCATORIA_CONCEPTO_GASTO, ROUTE_NAMES.NEW]"
-      [state]="createState(null,false)">
+      [routerLink]="['../', CONVOCATORIA_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO, ROUTE_NAMES.NEW]">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntityNoPermitido }}
     </button>

@@ -40,6 +40,10 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
   msgParamEntity = {};
   textoDelete: string;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
@@ -99,16 +103,8 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
    * @param wrapper convocatoria enlace
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaEnlace>): void {
-    const enlace: IConvocatoriaEnlace = {
-      activo: true,
-      convocatoria: undefined,
-      descripcion: undefined,
-      id: undefined,
-      tipoEnlace: undefined,
-      url: undefined
-    };
     const data: ConvocatoriaEnlaceModalComponentData = {
-      enlace: wrapper ? wrapper.value : enlace,
+      enlace: wrapper?.value ?? {} as IConvocatoriaEnlace,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
       selectedUrls: this.formPart.getSelectedUrls(),
       readonly: this.formPart.readonly
@@ -154,9 +150,5 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 
 }
-

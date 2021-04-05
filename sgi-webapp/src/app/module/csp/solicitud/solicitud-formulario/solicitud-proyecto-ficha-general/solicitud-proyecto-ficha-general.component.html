@@ -184,7 +184,7 @@
   </form>
 
   <!-- Áreas temáticas -->
-  <div class="separation-button" *ngIf="formPart.solicitudProyectoDatos.solicitud?.convocatoria">
+  <div class="separation-button" *ngIf="formPart.hasConvocatoria">
     <h3>{{'list.entity' | translate:msgParamAreaTematicaEntities}}</h3>
     <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="convocatoriaAreaTematicas" matSort
       matSortActive="id" matSortDirection="asc" matSortDisableClear>

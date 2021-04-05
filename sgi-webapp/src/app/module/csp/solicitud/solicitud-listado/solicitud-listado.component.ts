@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
@@ -12,6 +13,7 @@ import { ISolicitud } from '@core/models/csp/solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -24,8 +26,8 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { merge, Observable, of } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -40,19 +42,21 @@ const MSG_SUCCESS_CREAR_PROYECTO = marker('msg.csp.solicitud.crear.proyecto');
 const MSG_ERROR_CREAR_PROYECTO = marker('error.csp.solicitud.crear.proyecto');
 const SOLICITUD_KEY = marker('csp.solicitud');
 
+interface SolicitudListado extends ISolicitud {
+  convocatoria: IConvocatoria;
+}
 
 @Component({
   selector: 'sgi-solicitud-listado',
   templateUrl: './solicitud-listado.component.html',
   styleUrls: ['./solicitud-listado.component.scss']
 })
-export class SolicitudListadoComponent extends AbstractTablePaginationComponent<ISolicitud> implements OnInit {
+export class SolicitudListadoComponent extends AbstractTablePaginationComponent<SolicitudListado> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
-
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  solicitudes$: Observable<ISolicitud[]>;
+  solicitudes$: Observable<SolicitudListado[]>;
   textoCrear: string;
   textoDesactivar: string;
   textoReactivar: string;
@@ -79,6 +83,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     return ESTADO_MAP;
   }
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private dialogService: DialogService,
@@ -89,7 +97,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private programaService: ProgramaService,
     private proyectoService: ProyectoService,
     private matDialog: MatDialog,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private convocatoriaService: ConvocatoriaService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -144,7 +153,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     ).subscribe((value) => this.textoCrear = value);
 
-
     this.translate.get(
       SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -181,7 +189,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);
 
-
     this.translate.get(
       SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -206,7 +213,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
 
-
     this.translate.get(
       SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -218,11 +224,32 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         );
       })
     ).subscribe((value) => this.textoErrorReactivar = value);
-
   }
 
-  protected createObservable(): Observable<SgiRestListResult<ISolicitud>> {
+  protected createObservable(): Observable<SgiRestListResult<SolicitudListado>> {
     const observable$ = this.solicitudService.findAllTodos(this.getFindOptions()).pipe(
+      map(response => {
+        return response as SgiRestListResult<SolicitudListado>;
+      }),
+      switchMap(response => {
+        const requestsConvocatoria: Observable<SolicitudListado>[] = [];
+        response.items.forEach(solicitud => {
+          if (solicitud.convocatoriaId) {
+            requestsConvocatoria.push(this.convocatoriaService.findById(solicitud.convocatoriaId).pipe(
+              map(convocatoria => {
+                solicitud.convocatoria = convocatoria;
+                return solicitud;
+              })
+            ));
+          }
+          else {
+            requestsConvocatoria.push(of(solicitud));
+          }
+        });
+        return of(response).pipe(
+          tap(() => merge(...requestsConvocatoria).subscribe())
+        );
+      }),
       switchMap((response) => {
         if (response.total === 0) {
           return of(response);
@@ -438,13 +465,12 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   }
 
   crearProyectoModal(solicitud: ISolicitud): void {
-    const proyecto = { solicitud } as IProyecto;
-    this.suscripciones.push(this.solicitudService.findSolicitudProyectoDatos(solicitud.id).pipe(
+    this.suscripciones.push(this.solicitudService.findSolicitudProyecto(solicitud.id).pipe(
       map(solicitudProyectoDatos => {
         const config = {
           width: GLOBAL_CONSTANTS.widthModalCSP,
           maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-          data: { proyecto, solicitudProyectoDatos } as ISolicitudCrearProyectoModalData
+          data: { solicitud, solicitudProyecto: solicitudProyectoDatos } as ISolicitudCrearProyectoModalData
         };
         const dialogRef = this.matDialog.open(SolicitudCrearProyectoModalComponent, config);
         dialogRef.afterClosed().subscribe(
@@ -470,7 +496,4 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     ).subscribe());
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 }

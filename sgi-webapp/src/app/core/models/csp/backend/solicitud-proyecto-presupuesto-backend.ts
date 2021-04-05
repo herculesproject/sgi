@@ -1,9 +1,8 @@
 import { IConceptoGasto } from '../tipos-configuracion';
-import { ISolicitudProyectoDatosBackend } from './solicitud-proyecto-datos-backend';
 
 export interface ISolicitudProyectoPresupuestoBackend {
   id: number;
-  solicitudProyectoDatos: ISolicitudProyectoDatosBackend;
+  solicitudProyectoId: number;
   conceptoGasto: IConceptoGasto;
   entidadRef: string;
   anualidad: number;

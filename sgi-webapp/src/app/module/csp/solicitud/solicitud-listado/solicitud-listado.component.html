@@ -306,7 +306,7 @@
           {{'csp.solicitud.estado-solicitud' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ESTADO_MAP.get(element.estado.estado) | translate}}
+          {{ESTADO_MAP.get(element.estado?.estado) | translate}}
         </td>
       </ng-container>
 

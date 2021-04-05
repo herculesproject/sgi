@@ -2,11 +2,6 @@
 
   <h2>{{'menu.csp.solicitudes.equipos-proyecto' | translate}}</h2>
 
-  <!-- Error no ISolicitudProyectoDatos -->
-  <div *ngIf="!formPart.existsDatosProyecto" class="info-message">
-    {{'info.csp.solicitud-equipo-proyecto' | translate}}
-  </div>
-
   <!-- Error no Solicitante -->
   <div *ngIf="formPart.hasErrors()" class="info-message">
     {{'error.csp.solicitud-equipo-proyecto.solicitante' | translate}}
@@ -70,7 +65,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <div class="separation-button" *ngIf="formPart.existsDatosProyecto && !formPart.readonly">
+  <div class="separation-button" *ngIf="!formPart.readonly">
     <button color="three" mat-button mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}

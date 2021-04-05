@@ -5,7 +5,7 @@ export interface IEstadoProyecto {
   /** Id */
   id: number;
   /** ID del proyecto */
-  idProyecto: number;
+  proyectoId: number;
   /** Estado */
   estado: Estado;
   /** Fecha estado */

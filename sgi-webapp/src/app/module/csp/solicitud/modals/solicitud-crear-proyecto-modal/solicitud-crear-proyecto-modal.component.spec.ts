@@ -6,22 +6,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DialogComponent } from '@block/dialog/dialog.component';
 import { HeaderComponent } from '@block/header/header.component';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
-import { DateTime } from 'luxon';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SolicitudCrearProyectoModalComponent } from './solicitud-crear-proyecto-modal.component';
+import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from './solicitud-crear-proyecto-modal.component';
 
 describe('SolicitudCrearProyectoModalComponent', () => {
   let component: SolicitudCrearProyectoModalComponent;
   let fixture: ComponentFixture<SolicitudCrearProyectoModalComponent>;
 
-  const data: IProyecto = {
-    fechaInicio: DateTime.now()
-  } as IProyecto;
+  const data: ISolicitudCrearProyectoModalData = {
+    solicitud: {
+      convocatoriaId: 1
+    }
+  } as ISolicitudCrearProyectoModalData;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -42,7 +42,7 @@ describe('SolicitudCrearProyectoModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: data },
+        { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: data },
       ]
     })

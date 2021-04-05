@@ -1,19 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SOLICITUD_PROYECTO_EQUIPO_SOCIO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-equipo-socio.converter';
-import {
-  SOLICITUD_PROYECTO_PERIODO_JUSTIFICACION_CONVERTER
-} from '@core/converters/csp/solicitud-proyecto-periodo-justificacion.converter';
-import { SOLICITUD_PROYECTO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-periodo-pago.converter';
+import { SOLICITUD_PROYECTO_SOCIO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-equipo.converter';
+import { SOLICITUD_PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-periodo-justificacion.converter';
+import { SOLICITUD_PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-periodo-pago.converter';
 import { SOLICITUD_PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio.converter';
-import { ISolicitudProyectoEquipoSocioBackend } from '@core/models/csp/backend/solicitud-proyecto-equipo-socio-backend';
-import { ISolicitudProyectoPeriodoJustificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-periodo-justificacion-backend';
-import { ISolicitudProyectoPeriodoPagoBackend } from '@core/models/csp/backend/solicitud-proyecto-periodo-pago-backend';
 import { ISolicitudProyectoSocioBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-backend';
-import { ISolicitudProyectoEquipoSocio } from '@core/models/csp/solicitud-proyecto-equipo-socio';
-import { ISolicitudProyectoPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-periodo-justificacion';
-import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
+import { ISolicitudProyectoSocioEquipoBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-equipo-backend';
+import { ISolicitudProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-periodo-justificacion-backend';
+import { ISolicitudProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-periodo-pago-backend';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
+import { ISolicitudProyectoSocioEquipo } from '@core/models/csp/solicitud-proyecto-socio-equipo';
+import { ISolicitudProyectoSocioPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-socio-periodo-justificacion';
+import { ISolicitudProyectoSocioPeriodoPago } from '@core/models/csp/solicitud-proyecto-socio-periodo-pago';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -53,44 +51,44 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
   }
 
   /**
-   * Devuelve el listado de ISolicitudProyectoPeriodoPago de un ISolicitudProyectoSocio
+   * Devuelve el listado de ISolicitudProyectoSocioPeriodoPago de un ISolicitudProyectoSocio
    *
    * @param id Id del ISolicitudProyectoSocio
    */
-  findAllSolicitudProyectoPeriodoPago(id: number, options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<ISolicitudProyectoPeriodoPago>> {
-    return this.find<ISolicitudProyectoPeriodoPagoBackend, ISolicitudProyectoPeriodoPago>(
-      `${this.endpointUrl}/${id}/solicitudproyectoperiodopago`,
+  findAllSolicitudProyectoSocioPeriodoPago(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoSocioPeriodoPago>> {
+    return this.find<ISolicitudProyectoSocioPeriodoPagoBackend, ISolicitudProyectoSocioPeriodoPago>(
+      `${this.endpointUrl}/${id}/solicitudproyectosocioperiodopago`,
       options,
-      SOLICITUD_PROYECTO_PERIODO_PAGO_CONVERTER
+      SOLICITUD_PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER
     );
   }
 
   /**
-   * Devuelve el listado de ISolicitudProyectoPeriodoPago de un ISolicitudProyectoSocio
+   * Devuelve el listado de ISolicitudProyectoSocioPeriodoPago de un ISolicitudProyectoSocio
    *
    * @param id Id del ISolicitudProyectoSocio
    */
-  findAllSolicitudProyectoPeriodoJustificacion(id: number, options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<ISolicitudProyectoPeriodoJustificacion>> {
-    return this.find<ISolicitudProyectoPeriodoJustificacionBackend, ISolicitudProyectoPeriodoJustificacion>(
-      `${this.endpointUrl}/${id}/solicitudproyectoperiodojustificaciones`,
+  findAllSolicitudProyectoSocioPeriodoJustificacion(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoSocioPeriodoJustificacion>> {
+    return this.find<ISolicitudProyectoSocioPeriodoJustificacionBackend, ISolicitudProyectoSocioPeriodoJustificacion>(
+      `${this.endpointUrl}/${id}/solicitudproyectosocioperiodojustificaciones`,
       options,
-      SOLICITUD_PROYECTO_PERIODO_JUSTIFICACION_CONVERTER
+      SOLICITUD_PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER
     );
   }
 
   /**
-   * Devuelve el listado de ISolicitudProyectoEquipoSocio de un ISolicitudProyectoSocio
+   * Devuelve el listado de ISolicitudProyectoSocioEquipo de un ISolicitudProyectoSocio
    *
    * @param id Id del ISolicitudProyectoSocio
    */
-  findAllSolicitudProyectoEquipoSocio(id: number, options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<ISolicitudProyectoEquipoSocio>> {
-    return this.find<ISolicitudProyectoEquipoSocioBackend, ISolicitudProyectoEquipoSocio>(
-      `${this.endpointUrl}/${id}/solicitudproyectoequiposocio`,
+  findAllSolicitudProyectoSocioEquipo(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoSocioEquipo>> {
+    return this.find<ISolicitudProyectoSocioEquipoBackend, ISolicitudProyectoSocioEquipo>(
+      `${this.endpointUrl}/${id}/solicitudproyectosocioequipo`,
       options,
-      SOLICITUD_PROYECTO_EQUIPO_SOCIO_CONVERTER
+      SOLICITUD_PROYECTO_SOCIO_EQUIPO_CONVERTER
     );
   }
 
@@ -103,6 +101,18 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
    */
   vinculaciones(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/vinculaciones`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si existe la entidad con el identificador facilitadao
+   *
+   * @param id Identificador de la entidad
+   */
+  exists(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );

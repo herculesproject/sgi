@@ -33,7 +33,6 @@ const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_KEY = marker('csp.documento');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_FICHERO_KEY = marker('csp.proyecto-periodo-seguimiento.documento.fichero');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_VISIBLE_KEY = marker('csp.proyecto-periodo-seguimiento.documento.visible');
-const DOCUMENTO_KEY = marker('csp.documento');
 
 enum VIEW_MODE {
   NONE = '',
@@ -128,7 +127,7 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
       comentario: new FormControl('')
     }));
     this.group.initialize();
-    const id = this.formPart.proyecto?.modeloEjecucion?.id;
+    const id = this.actionService.proyectoModeloEjecucionId;
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('tipoDocumento.activo', SgiRestFilterOperator.EQUALS, 'true')
     };

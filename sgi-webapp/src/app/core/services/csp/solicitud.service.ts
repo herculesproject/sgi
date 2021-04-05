@@ -4,18 +4,18 @@ import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitu
 import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
 import { SOLICITUD_HITO_CONVERTER } from '@core/converters/csp/solicitud-hito.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
-import { SOLICITUD_PROYECTO_DATOS_CONVERTER } from '@core/converters/csp/solicitud-proyecto-datos.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { SOLICITUD_PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-equipo.converter';
 import { SOLICITUD_PROYECTO_PRESUPUESTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-presupuesto.converter';
 import { SOLICITUD_PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio.converter';
+import { SOLICITUD_PROYECTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto.converter';
 import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
 import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
 import { ISolicitudHitoBackend } from '@core/models/csp/backend/solicitud-hito-backend';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
-import { ISolicitudProyectoDatosBackend } from '@core/models/csp/backend/solicitud-proyecto-datos-backend';
+import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
 import { ISolicitudProyectoEquipoBackend } from '@core/models/csp/backend/solicitud-proyecto-equipo-backend';
 import { ISolicitudProyectoPresupuestoBackend } from '@core/models/csp/backend/solicitud-proyecto-presupuesto-backend';
@@ -25,7 +25,7 @@ import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
+import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
@@ -162,11 +162,11 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    *
    * @param solicitudId Id de la solicitud
    */
-  findSolicitudProyectoDatos(solicitudId: number): Observable<ISolicitudProyectoDatos> {
-    return this.http.get<ISolicitudProyectoDatosBackend>(
-      `${this.endpointUrl}/${solicitudId}/solicitudproyectodatos`
+  findSolicitudProyecto(solicitudId: number): Observable<ISolicitudProyecto> {
+    return this.http.get<ISolicitudProyectoBackend>(
+      `${this.endpointUrl}/${solicitudId}/solicitudproyecto`
     ).pipe(
-      map(response => SOLICITUD_PROYECTO_DATOS_CONVERTER.toTarget(response))
+      map(response => SOLICITUD_PROYECTO_CONVERTER.toTarget(response))
     );
   }
 
@@ -209,8 +209,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    *
    * @param id Id de la solicitud
    */
-  existsSolictudProyectoDatos(id: number): Observable<boolean> {
-    const url = `${this.endpointUrl}/${id}/solicitudproyectodatos`;
+  existsSolictudProyecto(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/solicitudproyecto`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(x => x.status === 200)
     );

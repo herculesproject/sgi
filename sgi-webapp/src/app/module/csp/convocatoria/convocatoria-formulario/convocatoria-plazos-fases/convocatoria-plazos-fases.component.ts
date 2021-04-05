@@ -34,7 +34,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
 
   displayedColumns = ['fechaInicio', 'fechaFin', 'tipoFase', 'observaciones', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
-  disableAddFase = true;
 
   msgParamEntity = {};
   textoDelete: string;
@@ -47,7 +46,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
 
   constructor(
     protected snackBarService: SnackBarService,
-    private actionService: ConvocatoriaActionService,
+    public actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -63,7 +62,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaFase>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.disableAddFase = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
 
     this.subscriptions.push(this.formPart.plazosFase$.subscribe(elements => {
       this.dataSource.data = elements;
@@ -99,7 +97,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     const datosPlazosFases: ConvocatoriaPlazosFaseModalComponentData = {
       plazos: this.formPart.getConvocatoriasFases(),
       plazo: plazo ? plazo.value : {} as IConvocatoriaFase,
-      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id,
+      idModeloEjecucion: this.actionService.modeloEjecucionId,
       readonly: this.formPart.readonly
     };
 

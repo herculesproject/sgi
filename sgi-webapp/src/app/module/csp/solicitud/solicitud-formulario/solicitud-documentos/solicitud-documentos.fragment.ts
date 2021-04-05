@@ -1,6 +1,5 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
-import { ISolicitud } from '@core/models/csp/solicitud';
+import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { IDocumento } from '@core/models/sgdoc/documento';
@@ -104,10 +103,10 @@ export class SolicitudDocumentosFragment extends Fragment {
   }
 
   protected onInitialize(): void {
-    let convocatoriaDocumentoRequeridoSolicitud$: Observable<IDocumentoRequerido[]>;
+    let convocatoriaDocumentoRequeridoSolicitud$: Observable<IDocumentoRequeridoSolicitud[]>;
     if (this.convocatoriaId) {
-      convocatoriaDocumentoRequeridoSolicitud$ = this.configuracionSolicitudService.findAllConvocatoriaDocumentoRequeridoSolicitud(this.convocatoriaId)
-        .pipe(
+      convocatoriaDocumentoRequeridoSolicitud$ =
+        this.configuracionSolicitudService.findAllConvocatoriaDocumentoRequeridoSolicitud(this.convocatoriaId).pipe(
           map((result) => result.items)
         );
     } else {
@@ -290,9 +289,7 @@ export class SolicitudDocumentosFragment extends Fragment {
     }
     return from(nodes).pipe(
       mergeMap(node => {
-        node.documento.value.solicitud = {
-          id: this.getKey() as number
-        } as ISolicitud;
+        node.documento.value.solicitudId = this.getKey() as number;
         return this.solicitudDocumentoService.create(node.documento.value).pipe(
           map(created => {
             node.documento = new StatusWrapper<ISolicitudDocumento>(created);

@@ -11,7 +11,7 @@ class EstadoProyectoConverter extends SgiBaseConverter<IEstadoProyectoBackend, I
     }
     return {
       id: value.id,
-      idProyecto: value.idProyecto,
+      proyectoId: value.proyectoId,
       estado: value.estado,
       fechaEstado: LuxonUtils.fromBackend(value.fechaEstado),
       comentario: value.comentario
@@ -24,7 +24,7 @@ class EstadoProyectoConverter extends SgiBaseConverter<IEstadoProyectoBackend, I
     }
     return {
       id: value.id,
-      idProyecto: value.idProyecto,
+      proyectoId: value.proyectoId,
       estado: value.estado,
       fechaEstado: LuxonUtils.toBackend(value.fechaEstado),
       comentario: value.comentario

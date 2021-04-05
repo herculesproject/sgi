@@ -2,7 +2,7 @@
   <h2>{{'menu.csp.proyectos.socios' | translate}}</h2>
 
   <!-- Error no proyecto colaborativo -->
-  <div *ngIf="!(actionService.disabledAddSocios$ | async)" class="info-message">
+  <div *ngIf="actionService.disableAddSocios$ | async" class="info-message">
     {{'info.csp.proyecto-socio' | translate}}
   </div>
 
@@ -73,8 +73,7 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <ng-container>
-          <button mat-button matTooltip="{{'btn.edit' | translate}}"
-            [routerLink]="['../../..', PROYECTO_SOCIO_ROUTE, wrapper.value.id]" [state]="createState(wrapper)">
+          <button mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[wrapper.value.id]">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>
@@ -89,9 +88,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <div class="separation-button">
-    <button color="three" mat-button mat-raised-button
-      [routerLink]="['../../..', PROYECTO_SOCIO_ROUTE, ROUTE_NAMES.NEW]" [state]="createState()"
-      [disabled]="!(actionService.disabledAddSocios$ | async)">
+    <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]"
+      [disabled]="actionService.disableAddSocios$ | async">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

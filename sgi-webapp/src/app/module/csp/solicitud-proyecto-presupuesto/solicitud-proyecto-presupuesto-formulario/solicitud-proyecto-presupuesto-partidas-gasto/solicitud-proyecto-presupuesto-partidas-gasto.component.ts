@@ -104,7 +104,6 @@ export class SolicitudProyectoPresupuestoPartidasGastoComponent extends Fragment
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTP_PARTIDA_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -147,11 +146,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoComponent extends Fragment
 
     const dialogRef = this.matDialog.open(PartidaGastoModalComponent, config);
     dialogRef.afterClosed().subscribe((partidaGasto: ISolicitudProyectoPresupuesto) => {
-
       if (partidaGasto) {
-        partidaGasto.empresa = this.formPart.entidadFinanciadora.empresa;
-        partidaGasto.financiacionAjena = !this.formPart.isEntidadFinanciadoraConvocatoria;
-
         if (!wrapper) {
           this.formPart.addPartidaGasto(partidaGasto);
         } else {

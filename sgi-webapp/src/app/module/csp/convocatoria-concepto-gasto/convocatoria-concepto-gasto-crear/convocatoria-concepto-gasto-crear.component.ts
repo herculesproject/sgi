@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -24,11 +24,10 @@ const MSG_CONVOCATORIA_CONCEPTO_GASTO_KEY = marker('csp.convocatoria-elegibilida
     ConvocatoriaConceptoGastoActionService
   ]
 })
-export class ConvocatoriaConceptoGastoCrearComponent extends ActionComponent {
+export class ConvocatoriaConceptoGastoCrearComponent extends ActionComponent implements OnInit {
   CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES = CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES;
 
   textoCrear: string;
-  urlFrom: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -40,17 +39,14 @@ export class ConvocatoriaConceptoGastoCrearComponent extends ActionComponent {
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       MSG_CONVOCATORIA_CONCEPTO_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -72,12 +68,12 @@ export class ConvocatoriaConceptoGastoCrearComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
-        this.router.navigate([this.urlFrom]);
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
 
   cancel(): void {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 }

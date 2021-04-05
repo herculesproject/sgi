@@ -1,9 +1,8 @@
 import { IRolProyecto } from '../rol-proyecto';
-import { IProyectoBackend } from './proyecto-backend';
 
 export interface IProyectoEquipoBackend {
   id: number;
-  proyecto: IProyectoBackend;
+  proyectoId: number;
   rolProyecto: IRolProyecto;
   personaRef: string;
   horasDedicacion: number;

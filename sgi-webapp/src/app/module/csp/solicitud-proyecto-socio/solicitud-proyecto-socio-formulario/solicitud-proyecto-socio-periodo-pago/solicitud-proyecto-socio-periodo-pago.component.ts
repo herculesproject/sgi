@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
+import { ISolicitudProyectoSocioPeriodoPago } from '@core/models/csp/solicitud-proyecto-socio-periodo-pago';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -34,7 +34,7 @@ export class SolicitudProyectoSocioPeriodoPagoComponent extends FragmentComponen
   msgParamEntity = {};
   textoDelete: string;
 
-  dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoPeriodoPago>>();
+  dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocioPeriodoPago>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
@@ -83,19 +83,20 @@ export class SolicitudProyectoSocioPeriodoPagoComponent extends FragmentComponen
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  openModal(wrapper?: StatusWrapper<ISolicitudProyectoPeriodoPago>): void {
-    const solicitudProyectoPeriodoPago: ISolicitudProyectoPeriodoPago = {
+  openModal(wrapper?: StatusWrapper<ISolicitudProyectoSocioPeriodoPago>): void {
+    const solicitudProyectoPeriodoPago: ISolicitudProyectoSocioPeriodoPago = {
       id: undefined,
       importe: undefined,
       mes: undefined,
       numPeriodo: this.dataSource.data.length + 1,
-      solicitudProyectoSocio: undefined
+      solicitudProyectoSocioId: undefined
     };
     const data: SolicitudProyectoSocioPeriodoPagoModalData = {
-      solicitudProyectoPeriodoPago: wrapper ? wrapper.value : solicitudProyectoPeriodoPago,
+      solicitudProyectoPeriodoPago: wrapper?.value ?? solicitudProyectoPeriodoPago,
+      duracion: this.actionService.solicitudProyectoDuracion,
       selectedMeses: this.dataSource.data.map(element => element.value.mes),
-      mesInicioSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesInicio,
-      mesFinSolicitudProyectoSocio: this.actionService.getSolicitudProyectoSocio().mesFin,
+      mesInicioSolicitudProyectoSocio: this.actionService.mesInicio,
+      mesFinSolicitudProyectoSocio: this.actionService.mesFin,
       isEdit: Boolean(wrapper),
       readonly: this.formPart.readonly
     };
@@ -128,7 +129,7 @@ export class SolicitudProyectoSocioPeriodoPagoComponent extends FragmentComponen
     );
   }
 
-  deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoPeriodoPago>): void {
+  deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoSocioPeriodoPago>): void {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {

@@ -2,7 +2,6 @@ import { ISolicitudProyectoPresupuestoBackend } from '@core/models/csp/backend/s
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SOLICITUD_PROYECTO_DATOS_CONVERTER } from './solicitud-proyecto-datos.converter';
 
 class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto> {
 
@@ -12,7 +11,7 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
     }
     return {
       id: value.id,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.toTarget(value.solicitudProyectoDatos),
+      solicitudProyectoId: value.solicitudProyectoId,
       conceptoGasto: value.conceptoGasto,
       empresa: { personaRef: value.entidadRef } as IEmpresaEconomica,
       anualidad: value.anualidad,
@@ -28,7 +27,7 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
     }
     return {
       id: value.id,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.fromTarget(value.solicitudProyectoDatos),
+      solicitudProyectoId: value.solicitudProyectoId,
       conceptoGasto: value.conceptoGasto,
       entidadRef: value.empresa?.personaRef,
       anualidad: value.anualidad,

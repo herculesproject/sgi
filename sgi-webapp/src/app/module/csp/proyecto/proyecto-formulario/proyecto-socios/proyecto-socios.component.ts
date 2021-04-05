@@ -17,7 +17,6 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoSociosFragment } from './proyecto-socios.fragment';
 
@@ -26,22 +25,12 @@ const MSG_DELETE_CASCADE = marker('msg.csp.proyecto-socios.relations.delete');
 const MSG_ERROR = marker('error.csp.proyecto-socios.relations.delete');
 const PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
 
-export interface IProyectoSocioState {
-  proyectoId: number;
-  coordinadorExterno: boolean;
-  proyectoSocio: IProyectoSocio;
-  selectedProyectoSocios: IProyectoSocio[];
-  urlProyecto: string;
-}
-
 @Component({
   selector: 'sgi-proyecto-socios',
   templateUrl: './proyecto-socios.component.html',
   styleUrls: ['./proyecto-socios.component.scss']
 })
 export class ProyectoSociosComponent extends FragmentComponent implements OnInit, OnDestroy {
-  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
-  PROYECTO_SOCIO_ROUTE = CSP_ROUTE_NAMES.PROYECTO_SOCIO;
   ROUTE_NAMES = ROUTE_NAMES;
 
   private subscriptions: Subscription[] = [];
@@ -125,17 +114,6 @@ export class ProyectoSociosComponent extends FragmentComponent implements OnInit
         }
       )
     );
-  }
-
-  createState(wrapper?: StatusWrapper<IProyectoSocio>): IProyectoSocioState {
-    const state: IProyectoSocioState = {
-      proyectoId: this.fragment.getKey() as number,
-      coordinadorExterno: this.actionService.coordinadorExterno,
-      proyectoSocio: wrapper ? wrapper.value : {} as IProyectoSocio,
-      selectedProyectoSocios: this.dataSource.data.map(element => element.value),
-      urlProyecto: this.router.url
-    };
-    return state;
   }
 
 }

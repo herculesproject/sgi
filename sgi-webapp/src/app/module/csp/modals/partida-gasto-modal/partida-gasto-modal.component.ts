@@ -5,17 +5,19 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
-import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IPartidaGasto } from '@core/models/csp/partida-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
+import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
-import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
 interface CodigoEconomicoInfo {
   codigoEconomicoRef: string;
@@ -32,6 +34,14 @@ interface ConceptoGastoInfo {
   codigosEconomicos: CodigoEconomicoInfo[];
 }
 
+export interface ConceptoGastoCodigoEc {
+  id: number;
+  convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
+  codigoEconomicoRef: string;
+  fechaInicio: DateTime;
+  fechaFin: DateTime;
+  observaciones: string;
+}
 
 export interface PartidaGastoDataModal {
   partidaGasto: IPartidaGasto;
@@ -43,8 +53,10 @@ const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_CONCEPTO_GASTO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto');
-const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones');
-const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES =
+  marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO =
+  marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -55,8 +67,8 @@ export class PartidaGastoModalComponent extends
   BaseModalComponent<IPartidaGasto, PartidaGastoDataModal> implements OnInit {
 
   conceptosGasto$: Observable<IConceptoGasto[]>;
-  private conceptosGastoCodigoEcPermitidos = [] as IConvocatoriaConceptoGastoCodigoEc[];
-  private conceptosGastoCodigoEcNoPermitidos = [] as IConvocatoriaConceptoGastoCodigoEc[];
+  private conceptosGastoCodigoEcPermitidos = [] as ConceptoGastoCodigoEc[];
+  private conceptosGastoCodigoEcNoPermitidos = [] as ConceptoGastoCodigoEc[];
 
   conceptosGastosPermitidos: ConceptoGastoInfo[];
   conceptosGastosNoPermitidos: ConceptoGastoInfo[];
@@ -78,6 +90,7 @@ export class PartidaGastoModalComponent extends
     @Inject(MAT_DIALOG_DATA) public data: PartidaGastoDataModal,
     private conceptoGastoService: ConceptoGastoService,
     private convocatoriaService: ConvocatoriaService,
+    private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.partidaGasto);
@@ -100,7 +113,6 @@ export class PartidaGastoModalComponent extends
     this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexPropertiesInline.order = '4';
 
-
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
@@ -114,19 +126,31 @@ export class PartidaGastoModalComponent extends
     this.loadConceptosGasto();
 
     if (this.data.convocatoriaId) {
-      this.loadConvocatoriaConceptoGastoCodigoEcPermitidos(this.data.convocatoriaId);
-      this.loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(this.data.convocatoriaId);
+      this.subscriptions.push(
+        this.getConvocatoriaConceptoGasto(this.data.convocatoriaId).pipe(
+          mergeMap(concovariaGastosMap => merge(
+            this.getConvocatoriaConceptoGastoCodigoEcPermitidos(this.data.convocatoriaId, concovariaGastosMap).pipe(
+              tap(result => this.conceptosGastoCodigoEcPermitidos = result)
+            ),
+            this.getConvocatoriaConceptoGastoCodigoEcNoPermitidos(this.data.convocatoriaId, concovariaGastosMap).pipe(
+              tap(result => this.conceptosGastoCodigoEcNoPermitidos = result)
+            )
+          )
+          )
+        ).subscribe()
+      );
 
-      this.formGroup.controls.conceptoGasto.valueChanges
-        .subscribe((conceptoGasto) => {
+      this.subscriptions.push(this.formGroup.controls.conceptoGasto.valueChanges.subscribe(
+        (conceptoGasto) => {
           this.showCodigosEconomicosInfo = true;
 
           this.conceptosGastosPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcPermitidos
-            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
+            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id));
 
           this.conceptosGastosNoPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcNoPermitidos
-            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.id));
-        });
+            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id));
+        })
+      );
     }
 
     this.textSaveOrUpdate = this.data.partidaGasto?.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
@@ -134,12 +158,10 @@ export class PartidaGastoModalComponent extends
 
   private setupI18N(): void {
     if (this.data.partidaGasto.conceptoGasto) {
-
       this.translate.get(
         SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
-
     } else {
       this.translate.get(
         SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO,
@@ -152,7 +174,6 @@ export class PartidaGastoModalComponent extends
           );
         })
       ).subscribe((value) => this.title = value);
-
     }
 
     this.translate.get(
@@ -169,36 +190,37 @@ export class PartidaGastoModalComponent extends
       SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamImporteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
-
-
   }
 
   protected getFormGroup(): FormGroup {
-    const formGroup = new FormGroup({
-      conceptoGasto: new FormControl(
-        {
-          value: this.data.partidaGasto.conceptoGasto,
-          disabled: this.data.partidaGasto.conceptoGasto || this.data.readonly
-        },
-        [
-          Validators.required
-        ]),
-      anualidad: new FormControl(this.data.partidaGasto.anualidad,
-        [
-          Validators.min(0),
-          Validators.max(2_147_483_647)
-        ]),
-      importeSolicitado: new FormControl(this.data.partidaGasto.importeSolicitado,
-        [
-          Validators.required,
-          Validators.min(0),
-          Validators.max(2_147_483_647)
-        ]),
-      observaciones: new FormControl(this.data.partidaGasto.observaciones,
-        [
-          Validators.maxLength(2000)
-        ])
-    });
+    const formGroup = new FormGroup(
+      {
+        conceptoGasto: new FormControl(
+          {
+            value: this.data.partidaGasto.conceptoGasto,
+            disabled: this.data.partidaGasto.conceptoGasto || this.data.readonly
+          },
+          [
+            Validators.required
+          ]
+        ),
+        anualidad: new FormControl(this.data.partidaGasto.anualidad,
+          [
+            Validators.min(0),
+            Validators.max(2_147_483_647)
+          ]),
+        importeSolicitado: new FormControl(this.data.partidaGasto.importeSolicitado,
+          [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(2_147_483_647)
+          ]),
+        observaciones: new FormControl(this.data.partidaGasto.observaciones,
+          [
+            Validators.maxLength(2000)
+          ])
+      }
+    );
 
     if (this.data.readonly) {
       formGroup.disable();
@@ -219,10 +241,22 @@ export class PartidaGastoModalComponent extends
    * Carga todos los conceptos de gasto
    */
   private loadConceptosGasto(): void {
-    this.conceptosGasto$ = this.conceptoGastoService.findAll()
-      .pipe(
-        map((conceptosGasto) => conceptosGasto.items)
-      );
+    this.conceptosGasto$ = this.conceptoGastoService.findAll().pipe(
+      map((conceptosGasto) => conceptosGasto.items)
+    );
+  }
+
+  private getConvocatoriaConceptoGasto(convocatoriaId: number): Observable<Map<number, IConvocatoriaConceptoGasto>> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, convocatoriaId.toString())
+    };
+    return this.convocatoriaConceptoGastoService.findAll(options).pipe(
+      map(response => {
+        return new Map(
+          response.items.map(value => [value.id, value])
+        );
+      })
+    );
   }
 
   /**
@@ -230,32 +264,58 @@ export class PartidaGastoModalComponent extends
    *
    * @param convocatoriaId Id de la convocatoria
    */
-  private loadConvocatoriaConceptoGastoCodigoEcPermitidos(convocatoriaId: number): void {
-    const subscription = this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(convocatoriaId)
-      .subscribe((conceptosGastoCodigoEc) => {
-        this.conceptosGastoCodigoEcPermitidos = conceptosGastoCodigoEc.items;
-      });
-    this.subscriptions.push(subscription);
+  private getConvocatoriaConceptoGastoCodigoEcPermitidos(
+    convocatoriaId: number,
+    convocatoriaConceptoGastoMap: Map<number, IConvocatoriaConceptoGasto>
+  ): Observable<ConceptoGastoCodigoEc[]> {
+    return this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(convocatoriaId).pipe(
+      map(conceptoGatosCodigoEc => {
+        return conceptoGatosCodigoEc.items.map(conceptoGasto => {
+          const data: ConceptoGastoCodigoEc = {
+            codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
+            convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.id),
+            fechaFin: conceptoGasto.fechaFin,
+            fechaInicio: conceptoGasto.fechaInicio,
+            id: conceptoGasto.id,
+            observaciones: conceptoGasto.observaciones
+          };
+          return data;
+        });
+      })
+    );
   }
 
   /**
    * Carga todos los ConceptoGastoCodigoEc no permitidos de la convocatoria
-   * 
+   *
    * @param convocatoriaId Id de la convocatoria
    */
-  private loadConvocatoriaConceptoGastoCodigoEcNoPermitidos(convocatoriaId: number): void {
-    const subscription = this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsNoPermitidos(convocatoriaId)
-      .subscribe((conceptosGastoCodigoEc) => {
-        this.conceptosGastoCodigoEcNoPermitidos = conceptosGastoCodigoEc.items;
-      });
-    this.subscriptions.push(subscription);
+  private getConvocatoriaConceptoGastoCodigoEcNoPermitidos(
+    convocatoriaId: number,
+    convocatoriaConceptoGastoMap: Map<number, IConvocatoriaConceptoGasto>
+  ): Observable<ConceptoGastoCodigoEc[]> {
+    return this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsNoPermitidos(convocatoriaId).pipe(
+      map(conceptoGatosCodigoEc => {
+        return conceptoGatosCodigoEc.items.map(conceptoGasto => {
+          const data: ConceptoGastoCodigoEc = {
+            codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
+            convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.id),
+            fechaFin: conceptoGasto.fechaFin,
+            fechaInicio: conceptoGasto.fechaInicio,
+            id: conceptoGasto.id,
+            observaciones: conceptoGasto.observaciones
+          };
+          return data;
+        });
+      })
+    );
   }
 
   getNombreConceptoGasto(conceptoGasto: IConceptoGasto): string {
     return conceptoGasto?.nombre;
   }
 
-  private toConceptoGastoInfo(convocatoriaConceptoGastos: IConvocatoriaConceptoGastoCodigoEc[]): ConceptoGastoInfo[] {
+  private toConceptoGastoInfo(convocatoriaConceptoGastos: ConceptoGastoCodigoEc[]): ConceptoGastoInfo[] {
     const conceptosGastosInfo: ConceptoGastoInfo[] = [];
     convocatoriaConceptoGastos.forEach(codigoEconomico => {
       let conceptoGastoInfo = conceptosGastosInfo.find(c => c.id === codigoEconomico.convocatoriaConceptoGasto.id);

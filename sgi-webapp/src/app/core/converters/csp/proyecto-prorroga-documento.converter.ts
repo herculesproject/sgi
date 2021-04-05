@@ -1,7 +1,6 @@
 import { IProyectoProrrogaDocumentoBackend } from '@core/models/csp/backend/proyecto-prorroga-documento-backend';
 import { IProyectoProrrogaDocumento } from '@core/models/csp/proyecto-prorroga-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_PRORROGA_CONVERTER } from './proyecto-prorroga.converter';
 
 class ProyectoProrrogaDocumentoConverter extends SgiBaseConverter<IProyectoProrrogaDocumentoBackend, IProyectoProrrogaDocumento> {
 
@@ -11,7 +10,7 @@ class ProyectoProrrogaDocumentoConverter extends SgiBaseConverter<IProyectoProrr
     }
     return {
       id: value.id,
-      proyectoProrroga: PROYECTO_PRORROGA_CONVERTER.toTarget(value.proyectoProrroga),
+      proyectoProrrogaId: value.proyectoProrrogaId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento,
@@ -26,7 +25,7 @@ class ProyectoProrrogaDocumentoConverter extends SgiBaseConverter<IProyectoProrr
     }
     return {
       id: value.id,
-      proyectoProrroga: PROYECTO_PRORROGA_CONVERTER.fromTarget(value.proyectoProrroga),
+      proyectoProrrogaId: value.proyectoProrrogaId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento,

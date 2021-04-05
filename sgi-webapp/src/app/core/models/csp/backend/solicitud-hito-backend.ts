@@ -1,11 +1,10 @@
 import { ITipoHito } from '../tipos-configuracion';
-import { ISolicitudBackend } from './solicitud-backend';
 
 export interface ISolicitudHitoBackend {
   /** Id */
   id: number;
-  /** Solicitud */
-  solicitud: ISolicitudBackend;
+  /** Id de Solicitud */
+  solicitudId: number;
   /** fecha */
   fecha: string;
   /** Comentario */

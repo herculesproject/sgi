@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -24,14 +24,13 @@ const PROYECTO_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.proyecto-periodo
     ProyectoPeriodoSeguimientoActionService
   ]
 })
-export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent {
+export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent implements OnInit {
 
   PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_NAMES = PROYECTO_PERIODO_SEGUIMIENTO_ROUTE_NAMES;
 
   textoEditar: string;
   textoEditarSuccess: string;
   textoEditarError: string;
-  private urlFrom: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -43,7 +42,6 @@ export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent {
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
@@ -89,7 +87,6 @@ export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent {
     ).subscribe((value) => this.textoEditarError = value);
   }
 
-
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
@@ -108,8 +105,7 @@ export class ProyectoPeriodoSeguimientoEditarComponent extends ActionComponent {
     this.returnUrl();
   }
 
-
   private returnUrl() {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 }

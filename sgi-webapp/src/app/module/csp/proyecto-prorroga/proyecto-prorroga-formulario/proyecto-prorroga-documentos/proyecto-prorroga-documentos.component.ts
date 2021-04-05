@@ -127,7 +127,7 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
       comentario: new FormControl('')
     }));
     this.group.initialize();
-    const id = this.formPart.proyecto?.modeloEjecucion?.id;
+    const id = this.formPart.proyectoModeloEjecucionId;
     this.subscriptions.push(
       this.modeloEjecucionService.findModeloTipoDocumento(id).subscribe(
         (tipos) => {

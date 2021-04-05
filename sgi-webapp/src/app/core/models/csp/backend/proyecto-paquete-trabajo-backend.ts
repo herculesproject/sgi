@@ -1,10 +1,8 @@
-import { IProyectoBackend } from './proyecto-backend';
-
 export interface IProyectoPaqueteTrabajoBackend {
   /** Id */
   id: number;
-  /** Proyecto */
-  proyecto: IProyectoBackend;
+  /** Id de Proyecto */
+  proyectoId: number;
   /** nombre */
   nombre: string;
   /** fechaInicio */

@@ -12,9 +12,9 @@ import { tap } from 'rxjs/operators';
 import { ProyectoPeriodoSeguimientoActionService } from '../../proyecto-periodo-seguimiento.action.service';
 import { ProyectoPeriodoSeguimientoDatosGeneralesFragment } from './proyecto-periodo-seguimiento-datos-generales.fragment';
 
-
 const PERIODO_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico.observaciones');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico');
+
 @Component({
   selector: 'sgi-solicitud-proyecto-periodo-seguimiento-datos-generales',
   templateUrl: './proyecto-periodo-seguimiento-datos-generales.component.html',
@@ -27,7 +27,6 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
   fxFlexProperties: FxFlexProperties;
   fxFlexProperties3: FxFlexProperties;
   private subscriptions: Subscription[] = [];
-  periodoSeguimientosSelectedProyecto: IProyectoPeriodoSeguimiento[] = [];
   FormGroupUtil = FormGroupUtil;
 
   msgParamEntity = {};
@@ -59,7 +58,6 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.loadPeriodoSeguimientosSelectedProyecto();
 
     this.setupI18N();
 
@@ -85,13 +83,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  private loadPeriodoSeguimientosSelectedProyecto(): void {
-    this.periodoSeguimientosSelectedProyecto = this.formPart.selectedProyectoPeriodoSeguimientos;
   }
 
   private checkOverlapsPeriodosSeguimiento(): void {
@@ -101,16 +94,13 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
     const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
 
-    const proyectoPeriodoSeguimientos = this.periodoSeguimientosSelectedProyecto.filter(
-      element => element.id !== this.formPart.proyectoPeriodoSeguimiento.id);
-
-    const ranges = proyectoPeriodoSeguimientos.map(proyectoPeriodoSeguimiento => {
-      return {
-        inicio: proyectoPeriodoSeguimiento.fechaInicio ?
-          proyectoPeriodoSeguimiento.fechaInicio.toMillis() : Number.MIN_VALUE,
-        fin: proyectoPeriodoSeguimiento.fechaFin ? proyectoPeriodoSeguimiento.fechaFin.toMillis() : Number.MAX_VALUE
-      };
-    });
+    const ranges = this.actionService.proyectoPeriodoSeguimiento
+      .map(periodo => {
+        return {
+          inicio: periodo.fechaInicio ? periodo.fechaInicio.toMillis() : Number.MIN_VALUE,
+          fin: periodo.fechaFin ? periodo.fechaFin.toMillis() : Number.MAX_VALUE
+        };
+      });
 
     if (ranges.some(r => fechaInicio <= r.fin && r.inicio <= fechaFin)) {
       if (fechaInicioForm.value) {

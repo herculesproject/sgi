@@ -1,12 +1,11 @@
 import { DateTime } from 'luxon';
-import { ISolicitud } from './solicitud';
 import { ITipoHito } from './tipos-configuracion';
 
 export interface ISolicitudHito {
   /** Id */
   id: number;
-  /** Solicitud */
-  solicitud: ISolicitud;
+  /** Id de Solicitud */
+  solicitudId: number;
   /** fecha */
   fecha: DateTime;
   /** Comentario */

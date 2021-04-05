@@ -3,16 +3,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
+import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { SolicitudAreaTematicaModalComponent } from '../../modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
+import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { AreaTematicaSolicitudData, SolicitudProyectoFichaGeneralFragment } from './solicitud-proyecto-ficha-general.fragment';
 
@@ -29,7 +32,7 @@ const AREA_KEY = marker('csp.area');
   templateUrl: './solicitud-proyecto-ficha-general.component.html',
   styleUrls: ['./solicitud-proyecto-ficha-general.component.scss']
 })
-export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponent<ISolicitudProyectoDatos> implements OnInit, OnDestroy {
+export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponent<ISolicitudProyecto> implements OnInit, OnDestroy {
   formPart: SolicitudProyectoFichaGeneralFragment;
   fxFlexProperties: FxFlexProperties;
   fxFlexProperties100: FxFlexProperties;
@@ -51,6 +54,8 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
 
   constructor(
     protected actionService: SolicitudActionService,
+    private router: Router,
+    private route: ActivatedRoute,
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
@@ -77,15 +82,11 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
 
   ngOnInit(): void {
     super.ngOnInit();
+    if (this.actionService.formularioSolicitud !== FormularioSolicitud.ESTANDAR) {
+      this.router.navigate(['../', SOLICITUD_ROUTE_NAMES.DATOS_GENERALES], { relativeTo: this.route });
+    }
     this.loadAreaTematicas();
-
     this.setupI18N();
-
-    this.subscriptions.push(
-      this.formGroup.controls.presupuestoPorEntidades.valueChanges.subscribe(value => {
-        this.actionService.isPresupuestoPorEntidades = value ? value : false;
-      })
-    );
   }
 
   private setupI18N(): void {
@@ -147,7 +148,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     const dialogRef = this.matDialog.open(SolicitudAreaTematicaModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (result: AreaTematicaSolicitudData) => {
-        this.formPart.solicitudProyectoDatos.areaTematica = result?.areaTematicaSolicitud;
+        this.formPart.solicitudProyecto.areaTematica = result?.areaTematicaSolicitud;
         this.formPart.setChanges(true);
       }
     );

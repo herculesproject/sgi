@@ -2,7 +2,6 @@ import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyect
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoPaqueteTrabajoConverter extends SgiBaseConverter<IProyectoPaqueteTrabajoBackend, IProyectoPaqueteTrabajo> {
 
@@ -12,7 +11,7 @@ class ProyectoPaqueteTrabajoConverter extends SgiBaseConverter<IProyectoPaqueteT
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       nombre: value.nombre,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -27,7 +26,7 @@ class ProyectoPaqueteTrabajoConverter extends SgiBaseConverter<IProyectoPaqueteT
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       nombre: value.nombre,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

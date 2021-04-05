@@ -23,6 +23,7 @@ const PROYECTO_SOCIO_NUMERO_INVESTIGADOR_KEY = marker('csp.proyecto-socio.num-in
 const PROYECTO_SOCIO_ROL_SOCIO_KEY = marker('csp.proyecto-socio.rol-socio');
 const PROYECTO_SOCIO_SOCIO_KEY = marker('csp.proyecto-socio.socio');
 const PROYECTO_SOCIO_PERIODO_PARTICIPACION_KEY = marker('title.csp.proyecto-socio.periodo-participacion');
+
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-datos-generales',
   templateUrl: './proyecto-socio-datos-generales.component.html',
@@ -36,7 +37,6 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
   private subscriptions: Subscription[] = [];
   private rolSocioFiltered: IRolSocio[] = [];
   rolSocios$: Observable<IRolSocio[]>;
-  sociosSelectedProyecto: IProyectoSocio[] = [];
 
   msgParamEntity = {};
   msgParamRolSocioEntity = {};
@@ -45,7 +45,6 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
   msgParamFechaInicioEntity = {};
   msgParamFechaFinEntity = {};
   msgParamPeriodoParticipacionEntity = {};
-
 
   constructor(
     private readonly logger: NGXLogger,
@@ -71,7 +70,6 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
   ngOnInit(): void {
     super.ngOnInit();
     this.loadRolProyectos();
-    this.loadSociosSelectedProyecto();
 
     this.setupI18N();
 
@@ -85,7 +83,6 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
       ).subscribe()
     );
   }
-
 
   private setupI18N(): void {
     this.translate.get(
@@ -162,16 +159,12 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  private loadSociosSelectedProyecto(): void {
-    this.sociosSelectedProyecto = this.actionService.getSelectedProyectoSocios();
-  }
-
   private checkOverlapsPeriodosParticipacion(): void {
     const empresaForm = this.formGroup.get('empresa');
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
-    const proyectoSocios = this.sociosSelectedProyecto.filter(
+    const proyectoSocios = this.actionService.proyectoSocios.filter(
       element => element.empresa.personaRef === empresaForm.value.personaRef
         && element.id !== this.formPart.proyectoSocio.id);
 

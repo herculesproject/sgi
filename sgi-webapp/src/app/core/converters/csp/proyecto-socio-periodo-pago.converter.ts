@@ -2,7 +2,6 @@ import { IProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/proye
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_SOCIO_CONVERTER } from './proyecto-socio.converter';
 
 class ProyectoSocioPeriodoPagoConverter extends SgiBaseConverter<IProyectoSocioPeriodoPagoBackend, IProyectoSocioPeriodoPago> {
 
@@ -12,7 +11,7 @@ class ProyectoSocioPeriodoPagoConverter extends SgiBaseConverter<IProyectoSocioP
     }
     return {
       id: value.id,
-      proyectoSocio: PROYECTO_SOCIO_CONVERTER.toTarget(value.proyectoSocio),
+      proyectoSocioId: value.proyectoSocioId,
       numPeriodo: value.numPeriodo,
       importe: value.importe,
       fechaPrevistaPago: LuxonUtils.fromBackend(value.fechaPrevistaPago),
@@ -26,7 +25,7 @@ class ProyectoSocioPeriodoPagoConverter extends SgiBaseConverter<IProyectoSocioP
     }
     return {
       id: value.id,
-      proyectoSocio: PROYECTO_SOCIO_CONVERTER.fromTarget(value.proyectoSocio),
+      proyectoSocioId: value.proyectoSocioId,
       numPeriodo: value.numPeriodo,
       importe: value.importe,
       fechaPrevistaPago: LuxonUtils.toBackend(value.fechaPrevistaPago),

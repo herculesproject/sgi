@@ -1,11 +1,10 @@
 import { ITipoHito } from '../tipos-configuracion';
-import { IProyectoBackend } from './proyecto-backend';
 
 export interface IProyectoHitoBackend {
   /** Id */
   id: number;
-  /** Proyecto */
-  proyecto: IProyectoBackend;
+  /** Id de Proyecto */
+  proyectoId: number;
   /** Tipo de hito */
   tipoHito: ITipoHito;
   /** Fecha  */

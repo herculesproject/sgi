@@ -1,7 +1,6 @@
 import { IProyectoPeriodoSeguimientoDocumentoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-documento-backend';
 import { IProyectoPeriodoSeguimientoDocumento } from '@core/models/csp/proyecto-periodo-seguimiento-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from './proyecto-periodo-seguimiento.converter';
 
 class ProyectoPeriodoSeguimientoDocumentoConverter extends
   SgiBaseConverter<IProyectoPeriodoSeguimientoDocumentoBackend, IProyectoPeriodoSeguimientoDocumento> {
@@ -12,7 +11,7 @@ class ProyectoPeriodoSeguimientoDocumentoConverter extends
     }
     return {
       id: value.id,
-      proyectoPeriodoSeguimiento: PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER.toTarget(value.proyectoPeriodoSeguimiento),
+      proyectoPeriodoSeguimientoId: value.proyectoPeriodoSeguimientoId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento,
@@ -27,7 +26,7 @@ class ProyectoPeriodoSeguimientoDocumentoConverter extends
     }
     return {
       id: value.id,
-      proyectoPeriodoSeguimiento: PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER.fromTarget(value.proyectoPeriodoSeguimiento),
+      proyectoPeriodoSeguimientoId: value.proyectoPeriodoSeguimientoId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento,

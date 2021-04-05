@@ -2,7 +2,6 @@ import { ISolicitudHitoBackend } from '@core/models/csp/backend/solicitud-hito-b
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SOLICITUD_CONVERTER } from './solicitud.converter';
 
 class SolicitudHitoConverter extends SgiBaseConverter<ISolicitudHitoBackend, ISolicitudHito> {
 
@@ -12,7 +11,7 @@ class SolicitudHitoConverter extends SgiBaseConverter<ISolicitudHitoBackend, ISo
     }
     return {
       id: value.id,
-      solicitud: SOLICITUD_CONVERTER.toTarget(value.solicitud),
+      solicitudId: value.solicitudId,
       fecha: LuxonUtils.fromBackend(value.fecha),
       comentario: value.comentario,
       generaAviso: value.generaAviso,
@@ -26,7 +25,7 @@ class SolicitudHitoConverter extends SgiBaseConverter<ISolicitudHitoBackend, ISo
     }
     return {
       id: value.id,
-      solicitud: SOLICITUD_CONVERTER.fromTarget(value.solicitud),
+      solicitudId: value.solicitudId,
       fecha: LuxonUtils.toBackend(value.fecha),
       comentario: value.comentario,
       generaAviso: value.generaAviso,

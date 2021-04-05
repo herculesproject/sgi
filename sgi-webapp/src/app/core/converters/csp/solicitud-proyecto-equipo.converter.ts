@@ -2,7 +2,6 @@ import { ISolicitudProyectoEquipoBackend } from '@core/models/csp/backend/solici
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { IPersona } from '@core/models/sgp/persona';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SOLICITUD_PROYECTO_DATOS_CONVERTER } from './solicitud-proyecto-datos.converter';
 
 class SolicitudProyectoEquipoConverter extends SgiBaseConverter<ISolicitudProyectoEquipoBackend, ISolicitudProyectoEquipo> {
 
@@ -16,7 +15,7 @@ class SolicitudProyectoEquipoConverter extends SgiBaseConverter<ISolicitudProyec
       mesInicio: value.mesInicio,
       persona: { personaRef: value.personaRef } as IPersona,
       rolProyecto: value.rolProyecto,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.toTarget(value.solicitudProyectoDatos)
+      solicitudProyectoId: value.solicitudProyectoId
     };
   }
 
@@ -30,7 +29,7 @@ class SolicitudProyectoEquipoConverter extends SgiBaseConverter<ISolicitudProyec
       mesInicio: value.mesInicio,
       personaRef: value.persona.personaRef,
       rolProyecto: value.rolProyecto,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.fromTarget(value.solicitudProyectoDatos)
+      solicitudProyectoId: value.solicitudProyectoId
     };
   }
 }

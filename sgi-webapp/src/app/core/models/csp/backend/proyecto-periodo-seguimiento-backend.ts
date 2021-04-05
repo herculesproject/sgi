@@ -1,8 +1,6 @@
-import { IProyectoBackend } from './proyecto-backend';
-
 export interface IProyectoPeriodoSeguimientoBackend {
   id: number;
-  proyecto: IProyectoBackend;
+  proyectoId: number;
   numPeriodo: number;
   fechaInicio: string;
   fechaFin: string;

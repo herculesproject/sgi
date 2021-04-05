@@ -22,6 +22,7 @@ import { SolicitudHitosFragment } from './solicitud-hitos.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SOLICITUD_HITO_KEY = marker('csp.solicitud-hito');
+
 @Component({
   selector: 'sgi-solicitud-hitos',
   templateUrl: './solicitud-hitos.component.html',
@@ -44,6 +45,10 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     protected convocatoriaReunionService: ConvocatoriaService,
     private actionService: SolicitudActionService,
@@ -51,7 +56,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-
     super(actionService.FRAGMENT.HITOS, actionService);
 
     this.formPart = this.fragment as SolicitudHitosFragment;
@@ -102,7 +106,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
     ).subscribe((value) => this.textoDelete = value);
   }
 
-
   /**
    * Apertura de modal de hitos (edición/creación)
    * @param idHito Identificador de hito a editar.
@@ -111,7 +114,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
     const data: SolicitudHitosModalComponentData = {
       hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as ISolicitudHito,
-      idModeloEjecucion: this.formPart.solicitud.convocatoria.modeloEjecucion.id,
+      idModeloEjecucion: this.actionService.modeloEjecucionId,
       readonly: this.formPart.readonly
     };
     const config = {
@@ -135,7 +138,6 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
         }
       }
     );
-
   }
 
   /**
@@ -151,15 +153,10 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
         }
       )
     );
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
   }
 
 }

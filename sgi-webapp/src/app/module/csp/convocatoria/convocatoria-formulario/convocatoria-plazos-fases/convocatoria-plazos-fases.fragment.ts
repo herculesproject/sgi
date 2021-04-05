@@ -1,4 +1,3 @@
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
@@ -94,13 +93,12 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
     }
     return from(this.fasesEliminadas).pipe(
       mergeMap((wrapped) => {
-        return this.convocatoriaFaseService.deleteById(wrapped.value.id)
-          .pipe(
-            tap(() => {
-              this.fasesEliminadas = this.fasesEliminadas.filter(deletedFase =>
-                deletedFase.value.id !== wrapped.value.id);
-            })
-          );
+        return this.convocatoriaFaseService.deleteById(wrapped.value.id).pipe(
+          tap(() => {
+            this.fasesEliminadas = this.fasesEliminadas.filter(deletedFase =>
+              deletedFase.value.id !== wrapped.value.id);
+          })
+        );
       })
     );
   }
@@ -111,10 +109,7 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
       return of(void 0);
     }
     createdFases.forEach(
-      (wrapper: StatusWrapper<IConvocatoriaFase>) => wrapper.value.convocatoria = {
-        id: this.getKey(),
-        activo: true
-      } as IConvocatoria
+      (wrapper: StatusWrapper<IConvocatoriaFase>) => wrapper.value.convocatoriaId = this.getKey() as number
     );
     return from(createdFases).pipe(
       mergeMap((wrappedFase) => {

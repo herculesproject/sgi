@@ -196,7 +196,6 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamAreaEntities = { entity: value });
 
-
     this.translate.get(
       AREA_TEMATICA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -210,7 +209,9 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.translate.get(
       CONVOCATORIA_CODIGO_REFERENCIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodigoReferenciaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe(
+      (value) => this.msgParamCodigoReferenciaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+    );
 
     this.translate.get(
       CONVOCATORIA_UNIDAD_GESTION_KEY,
@@ -403,7 +404,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
    * @param value del input para autocompletar
    */
   private filtroModeloEjecucion(value: string): IModeloEjecucion[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = value?.toString()?.toLowerCase() ?? '';
     return this.modelosEjecucionFiltered.filter(modeloEjecucion => modeloEjecucion.nombre.toLowerCase().includes(filterValue));
   }
 
@@ -488,16 +489,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   }
 
   openModal(data?: AreaTematicaData): void {
-    const convocatoriaAreaTematica: IConvocatoriaAreaTematica = {
-      areaTematica: undefined,
-      convocatoria: undefined,
-      id: undefined,
-      observaciones: undefined
-    };
     const newData: AreaTematicaData = {
       padre: undefined,
       observaciones: '',
-      convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>(convocatoriaAreaTematica)
+      convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>({} as IConvocatoriaAreaTematica)
     };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

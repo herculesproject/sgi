@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -19,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
 import { ConvocatoriaConceptoGastoCodigoEcModalComponent, IConvocatoriaConceptoGastoCodigoEcModalComponent } from '../../modals/convocatoria-concepto-gasto-codigo-ec-modal/convocatoria-concepto-gasto-codigo-ec-modal.component';
-import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
+import { ConvocatoriaConceptoGastoCodigoEc, ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-concepto-gasto-codigo-ec.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_PERMITIDO = marker('csp.convocatoria-concepto-gasto.codigo-economico.permitido');
@@ -42,12 +43,10 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   elementosPagina: number[] = [5, 10, 25, 100];
   displayedColumns: string[] = ['convocatoriaConceptoGasto.conceptoGasto.nombre', 'codigoEconomicoRef', 'fechaInicio', 'fechaFin', 'convocatoriaConceptoGasto.observaciones', 'acciones'];
 
-  dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>> =
-    new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>>();
+  dataSource: MatTableDataSource<StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>> =
+    new MatTableDataSource<StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>>();
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   @ViewChild('sort', { static: true }) sort: MatSort;
-
-  disableAddCodigoEc = true;
 
   msgParamCodigoPermitidoEntity = {};
   msgParamCodigoNoPermitidoEntity = {};
@@ -55,7 +54,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaConceptoGastoActionService,
+    public readonly actionService: ConvocatoriaConceptoGastoActionService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
@@ -78,18 +77,16 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>>();
+    this.dataSource = new MatTableDataSource<StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
-    this.disableAddCodigoEc = !Boolean(this.actionService.getDatosConvocatoriaConceptoGastos()?.conceptoGasto);
 
     this.subscriptions.push(this.formPart?.convocatoriaConceptoGastoCodigoEcs$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
 
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, property: string) => {
+      (wrapper: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, property: string) => {
         switch (property) {
           default:
             return wrapper.value[property];
@@ -108,7 +105,6 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamCodigoNoPermitidoEntity = { entity: value });
 
-
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_ECONOMICO_NO_PERMITIDO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -122,17 +118,15 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     ).subscribe((value) => this.textoDelete = value);
   }
 
-  openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
+  openModal(wrapper?: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
     const convocatoriaConceptoGastoCodigoEcsTabla = this.dataSource.data.map(element => element.value);
 
     convocatoriaConceptoGastoCodigoEcsTabla.splice(numFila, 1);
 
-    const convocatoriaConceptoGastos = this.actionService.getSelectedConvocatoriaConceptoGastos();
-
     const data: IConvocatoriaConceptoGastoCodigoEcModalComponent = {
       convocatoriaConceptoGastoCodigoEc: wrapper.value,
       convocatoriaConceptoGastoCodigoEcsTabla,
-      convocatoriaConceptoGastos,
+      permitido: this.actionService.permitido,
       editModal: true,
       readonly: this.formPart.readonly,
     };
@@ -144,7 +138,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     };
     const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoCodigoEcModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc) => {
+      (convocatoriaConceptoGastoCodigoEc: ConvocatoriaConceptoGastoCodigoEc) => {
         if (convocatoriaConceptoGastoCodigoEc) {
           if (wrapper) {
             if (!wrapper.created) {
@@ -160,15 +154,10 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
   openModalCrear(permitido: boolean): void {
-    const convocatoriaConceptoGastoCodigoEcsTabla = this.dataSource.data.map(
-      wrapper => wrapper.value);
-
-    const convocatoriaConceptoGastos = this.actionService.getSelectedConvocatoriaConceptoGastos();
+    const convocatoriaConceptoGastoCodigoEcsTabla = this.dataSource.data.map(wrapper => wrapper.value);
 
     const convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc = {
-      convocatoriaConceptoGasto:
-        this.formPart.convocatoriaConceptoGasto && this.formPart.convocatoriaConceptoGasto.id
-          ? this.formPart.convocatoriaConceptoGasto : this.actionService.getDatosConvocatoriaConceptoGastos(),
+      convocatoriaConceptoGastoId: this.fragment.getKey() as number,
       codigoEconomicoRef: null,
       fechaFin: null,
       fechaInicio: null,
@@ -179,7 +168,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     const data: IConvocatoriaConceptoGastoCodigoEcModalComponent = {
       convocatoriaConceptoGastoCodigoEc,
       convocatoriaConceptoGastoCodigoEcsTabla,
-      convocatoriaConceptoGastos,
+      permitido,
       editModal: false,
       readonly: this.formPart.readonly,
     };
@@ -191,15 +180,16 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     };
     const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoCodigoEcModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (result) => {
+      (result: ConvocatoriaConceptoGastoCodigoEc) => {
         if (result) {
+          result.convocatoriaConceptoGasto = { conceptoGasto: this.actionService.conceptoGasto } as IConvocatoriaConceptoGasto;
           this.formPart.addConvocatoriaConceptoGastoCodigoEc(result);
         }
       }
     );
   }
 
-  deleteConvocatoriaConceptoGastoCodigoEc(wrapper: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>) {
+  deleteConvocatoriaConceptoGastoCodigoEc(wrapper: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>) {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado: boolean) => {
@@ -216,4 +206,3 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
 }
-

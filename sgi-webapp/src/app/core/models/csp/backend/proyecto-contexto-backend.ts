@@ -1,10 +1,9 @@
 import { IAreaTematica } from '../area-tematica';
 import { PropiedadResultados } from '../proyecto-contexto';
-import { IProyectoBackend } from './proyecto-backend';
 
 export interface IProyectoContextoBackend {
   id: number;
-  proyecto: IProyectoBackend;
+  proyectoId: number;
   objetivos: string;
   intereses: string;
   resultadosPrevistos: string;

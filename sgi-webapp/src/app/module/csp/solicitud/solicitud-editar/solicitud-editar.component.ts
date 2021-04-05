@@ -64,13 +64,19 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   textoExcluirProvisionalmente = MSG_BUTTON_EXCLUIR_PROVISIONALMENTE;
   textoPresentar = MSG_BUTTON_PRESENTAR;
 
-  tipoEstandar = false;
-
   disableCambioEstado = false;
-  isPresentable: Boolean = false;
+  isPresentable = false;
 
   get Estado() {
     return Estado;
+  }
+
+  get FormularioSolicitud() {
+    return FormularioSolicitud;
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
   constructor(
@@ -81,15 +87,14 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
     public actionService: SolicitudActionService,
     dialogService: DialogService,
     private matDialog: MatDialog,
-    private readonly translate: TranslateService) {
+    private readonly translate: TranslateService
+  ) {
     super(router, route, actionService, dialogService);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-
-    this.isTipoEstandar();
 
     this.subscriptions.push(this.actionService.isPresentable$.subscribe(
       isPresentable => {
@@ -105,7 +110,6 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -141,16 +145,6 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         );
       })
     ).subscribe((value) => this.textoEditarError = value);
-
-  }
-
-
-  /**
-   * Comprueba que el tipo de la solcitud sea 'Estándar'
-   */
-  isTipoEstandar(): void {
-    const formularioSolicitud = this.actionService.getDatosGeneralesSolicitud().formularioSolicitud;
-    this.tipoEstandar = formularioSolicitud === FormularioSolicitud.ESTANDAR;
   }
 
   saveOrUpdate(): void {
@@ -167,25 +161,17 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
     );
   }
 
-
-
   hasEstadoCambio(...estadosSolicitud: Estado[]): boolean {
-
-
-    let estadoCorrecto: boolean = false;
-
+    let estadoCorrecto = false;
     estadosSolicitud.forEach((estadoSolicitud) => {
-      if (this.actionService.getDatosGeneralesSolicitud()?.estado?.estado === estadoSolicitud) {
+      if (this.actionService.estado === estadoSolicitud) {
         estadoCorrecto = true;
         return;
       }
-
     });
 
     return estadoCorrecto;
-
   }
-
 
   cambioEstado(accion: string) {
     switch (accion) {
@@ -289,20 +275,19 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         break;
       }
       default: {
-        this.logger.error("Cambio de estado de solicitud no soportado.");
+        this.logger.error('Cambio de estado de solicitud no soportado.');
         break;
       }
     }
   }
 
-
   /**
-  * Apertura de modal cambio de estado para insertar comentario
-  */
+   * Apertura de modal cambio de estado para insertar comentario
+   */
   openModal(estadoNuevo: Estado): void {
     const data: SolicitudCambioEstadoModalComponentData = {
-      estadoActual: this.actionService.getDatosGeneralesSolicitud()?.estado?.estado,
-      estadoNuevo: estadoNuevo,
+      estadoActual: this.actionService.estado,
+      estadoNuevo,
       comentario: null,
     };
     const config = {
@@ -430,14 +415,11 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
       }
 
       default: {
-        this.logger.error("Cambio de estado de solicitud no soportado.");
+        this.logger.error('Cambio de estado de solicitud no soportado.');
         break;
       }
     }
 
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 }

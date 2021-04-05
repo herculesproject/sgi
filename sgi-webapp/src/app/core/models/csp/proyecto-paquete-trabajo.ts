@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon';
-import { IProyecto } from './proyecto';
 
 export interface IProyectoPaqueteTrabajo {
   /** Id */
   id: number;
-  /** Proyecto */
-  proyecto: IProyecto;
+  /** Id de Proyecto */
+  proyectoId: number;
   /** nombre */
   nombre: string;
   /** fechaInicio */

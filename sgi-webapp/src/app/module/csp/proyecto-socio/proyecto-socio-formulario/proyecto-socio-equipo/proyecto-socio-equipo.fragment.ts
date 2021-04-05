@@ -9,13 +9,13 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoSocioEquipoFragment extends Fragment {
-  proyectoEquipoSocios$ = new BehaviorSubject<StatusWrapper<IProyectoSocioEquipo>[]>([]);
+  proyectoSocioEquipos$ = new BehaviorSubject<StatusWrapper<IProyectoSocioEquipo>[]>([]);
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private proyectoSocioService: ProyectoSocioService,
-    private proyectoEquipoSocioService: ProyectoSocioEquipoService,
+    private proyectoSocioEquipoService: ProyectoSocioEquipoService,
     private personaFisicaService: PersonaFisicaService
   ) {
     super(key);
@@ -44,9 +44,9 @@ export class ProyectoSocioEquipoFragment extends Fragment {
           map(response => response.items)
         ).subscribe(
           result => {
-            this.proyectoEquipoSocios$.next(
-              result.map(solicitudProyectoEquipoSocio =>
-                new StatusWrapper<IProyectoSocioEquipo>(solicitudProyectoEquipoSocio)
+            this.proyectoSocioEquipos$.next(
+              result.map(proyectoSocioEquipo =>
+                new StatusWrapper<IProyectoSocioEquipo>(proyectoSocioEquipo)
               )
             );
           },
@@ -61,30 +61,30 @@ export class ProyectoSocioEquipoFragment extends Fragment {
   addProyectoSocioEquipo(element: IProyectoSocioEquipo) {
     const wrapped = new StatusWrapper<IProyectoSocioEquipo>(element);
     wrapped.setCreated();
-    const current = this.proyectoEquipoSocios$.value;
+    const current = this.proyectoSocioEquipos$.value;
     current.push(wrapped);
-    this.proyectoEquipoSocios$.next(current);
+    this.proyectoSocioEquipos$.next(current);
     this.setChanges(true);
   }
 
   deleteProyectoSocioEquipo(wrapper: StatusWrapper<IProyectoSocioEquipo>) {
-    const current = this.proyectoEquipoSocios$.value;
+    const current = this.proyectoSocioEquipos$.value;
     const index = current.findIndex((value) => value === wrapper);
     if (index >= 0) {
       current.splice(index, 1);
-      this.proyectoEquipoSocios$.next(current);
+      this.proyectoSocioEquipos$.next(current);
       this.setChanges(true);
     }
   }
 
   saveOrUpdate(): Observable<void> {
-    const values = this.proyectoEquipoSocios$.value.map(wrapper => wrapper.value);
+    const values = this.proyectoSocioEquipos$.value.map(wrapper => wrapper.value);
     const id = this.getKey() as number;
-    return this.proyectoEquipoSocioService.updateList(id, values)
+    return this.proyectoSocioEquipoService.updateList(id, values)
       .pipe(
         takeLast(1),
         map((results) => {
-          this.proyectoEquipoSocios$.next(
+          this.proyectoSocioEquipos$.next(
             results.map(value => new StatusWrapper<IProyectoSocioEquipo>(value)));
         }),
         tap(() => {
@@ -96,7 +96,7 @@ export class ProyectoSocioEquipoFragment extends Fragment {
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    const hasTouched = this.proyectoEquipoSocios$.value.some((wrapper) => wrapper.touched);
+    const hasTouched = this.proyectoSocioEquipos$.value.some((wrapper) => wrapper.touched);
     return !hasTouched;
   }
 }

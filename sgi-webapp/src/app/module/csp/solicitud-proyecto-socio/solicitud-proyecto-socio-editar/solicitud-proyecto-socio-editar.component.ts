@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -24,15 +24,13 @@ const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.socio-colaborador');
     SolicitudProyectoSocioActionService
   ]
 })
-export class SolicitudProyectoSocioEditarComponent extends ActionComponent {
+export class SolicitudProyectoSocioEditarComponent extends ActionComponent implements OnInit {
 
   SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES = SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES;
 
   textoEditar: string;
   textoEditarSuccess: string;
   textoEditarError: string;
-
-  urlFrom: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -44,7 +42,6 @@ export class SolicitudProyectoSocioEditarComponent extends ActionComponent {
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
@@ -99,12 +96,12 @@ export class SolicitudProyectoSocioEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoEditarSuccess);
-        this.router.navigateByUrl(this.urlFrom);
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
 
   cancel(): void {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 }

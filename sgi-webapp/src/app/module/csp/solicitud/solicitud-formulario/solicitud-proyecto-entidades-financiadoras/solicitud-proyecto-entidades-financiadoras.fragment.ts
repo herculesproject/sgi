@@ -1,4 +1,3 @@
-import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
@@ -11,9 +10,6 @@ import { map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operator
 export class SolicitudProyectoEntidadesFinanciadorasFragment extends Fragment {
   entidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>[]>([]);
   private entidadesFinanciadorasEliminadas: StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>[] = [];
-
-  existsDatosProyecto = false;
-  solicitantePersonaRef: string;
 
   constructor(
     key: number,
@@ -164,24 +160,19 @@ export class SolicitudProyectoEntidadesFinanciadorasFragment extends Fragment {
     if (createdEntidadesFinanciadoras.length === 0) {
       return of(void 0);
     }
-    const id = this.getKey() as number;
 
-    return this.solicitudService.findSolicitudProyectoDatos(id).pipe(
-      switchMap(solicitudProyectoDatos => {
-        return from(createdEntidadesFinanciadoras).pipe(
-          mergeMap((wrapped) => {
-            const entidadFinanciadora = wrapped.value;
-            entidadFinanciadora.solicitudProyectoDatos = { id: solicitudProyectoDatos.id } as ISolicitudProyectoDatos;
-            return this.solicitudProyectoEntidadFinanciadoraService.create(entidadFinanciadora).pipe(
-              map((updated) => {
-                const index = this.entidadesFinanciadoras$.value.findIndex((current) => current === wrapped);
-                this.entidadesFinanciadoras$.value[index] = new StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>(updated);
-              })
-            );
-          }),
-          takeLast(1)
+    return from(createdEntidadesFinanciadoras).pipe(
+      mergeMap((wrapped) => {
+        const entidadFinanciadora = wrapped.value;
+        entidadFinanciadora.solicitudProyectoId = this.getKey() as number;
+        return this.solicitudProyectoEntidadFinanciadoraService.create(entidadFinanciadora).pipe(
+          map((updated) => {
+            const index = this.entidadesFinanciadoras$.value.findIndex((current) => current === wrapped);
+            this.entidadesFinanciadoras$.value[index] = new StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>(updated);
+          })
         );
-      })
+      }),
+      takeLast(1)
     );
   }
 

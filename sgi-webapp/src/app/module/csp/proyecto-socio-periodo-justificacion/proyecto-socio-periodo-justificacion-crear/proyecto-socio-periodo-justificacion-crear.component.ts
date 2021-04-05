@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -8,7 +8,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { switchMap } from 'rxjs/operators';
-import { IProyectoSocioState } from '../../proyecto/proyecto-formulario/proyecto-socios/proyecto-socios.component';
 import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE_NAMES } from '../proyecto-socio-periodo-justificacion-names';
 import { ProyectoSocioPeriodoJustificacionActionService } from '../proyecto-socio-periodo-justificacion.action.service';
 
@@ -25,14 +24,12 @@ const SOLICITUD_PROYECTO_PERIODO_JUSTIFICACION = marker('csp.solicitud-proyecto-
     ProyectoSocioPeriodoJustificacionActionService
   ]
 })
-export class ProyectoSocioPeriodoJustificacionCrearComponent extends ActionComponent {
+export class ProyectoSocioPeriodoJustificacionCrearComponent extends ActionComponent implements OnInit {
   PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE_NAMES = PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE_NAMES;
 
   textoCrear: string;
   textoCrearSuccess: string;
   textoCrearError: string;
-  private urlFrom: string;
-  private state: IProyectoSocioState;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -44,14 +41,6 @@ export class ProyectoSocioPeriodoJustificacionCrearComponent extends ActionCompo
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.urlProyectoSocio;
-    this.state = {
-      proyectoSocio: history.state?.proyectoSocio,
-      proyectoId: history.state?.proyectoId,
-      coordinadorExterno: history.state?.coordiandorExterno,
-      selectedProyectoSocios: history.state?.selectedProyectoSocios,
-      urlProyecto: history.state?.urlProyecto
-    };
   }
 
   ngOnInit(): void {
@@ -106,17 +95,13 @@ export class ProyectoSocioPeriodoJustificacionCrearComponent extends ActionCompo
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigateByUrl(this.urlFrom, {
-          state: this.state
-        });
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
 
   cancel(): void {
-    this.router.navigateByUrl(this.urlFrom, {
-      state: this.state
-    });
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 
 }

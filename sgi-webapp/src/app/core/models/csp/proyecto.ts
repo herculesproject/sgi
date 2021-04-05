@@ -2,9 +2,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { DateTime } from 'luxon';
 import { IUnidadGestion } from '../usr/unidad-gestion';
-import { IConvocatoria } from './convocatoria';
 import { IEstadoProyecto } from './estado-proyecto';
-import { ISolicitud } from './solicitud';
 import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
@@ -33,10 +31,10 @@ export interface IProyecto {
   convocatoriaExterna: string;
   /** finalidad */
   finalidad: ITipoFinalidad;
-  /** convocatoria */
-  convocatoria: IConvocatoria;
-  /** solicitud */
-  solicitud: ISolicitud;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
+  /** Id de Solicitud */
+  solicitudId: number;
   /** ambitoGeografico */
   ambitoGeografico: ITipoAmbitoGeografico;
   /** confidencial */
@@ -51,8 +49,8 @@ export interface IProyecto {
   uniSubcontratada: boolean;
   /** timesheet */
   timesheet: boolean;
-  /** paquetesTrabajo */
-  paquetesTrabajo: boolean;
+  /** permitePaquetesTrabajo */
+  permitePaquetesTrabajo: boolean;
   /** costeHora */
   costeHora: boolean;
   /** tipoHorasAnuales */

@@ -60,7 +60,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   dataSource: MatTreeFlatDataSource<NodeDocumentoSolicitud, NodeDocumentoSolicitud>;
   @ViewChild('uploader') private uploader: SgiFileUploadComponent;
 
-
   viewingNode: NodeDocumentoSolicitud;
   viewMode = VIEW_MODE.NONE;
 
@@ -86,6 +85,10 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
 
   hasChild = (_: number, node: NodeDocumentoSolicitud) => node.childs.length > 0;
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -139,7 +142,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     }
 
     this.group.initialize();
-    const convocatoriaId = this.actionService.getDatosGeneralesSolicitud().convocatoria?.id;
+    const convocatoriaId = this.actionService.convocatoriaId;
     if (convocatoriaId) {
       this.subscriptions.push(
         this.configuracionSolicitudService.findAllTipoDocumentosFasePresentacion(convocatoriaId)
@@ -263,7 +266,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     }
   }
 
-
   downloadFile(node: NodeDocumentoSolicitud): void {
     this.subscriptions.push(this.documentoService.downloadFichero(node.fichero.documentoRef).subscribe(
       (data) => {
@@ -343,7 +345,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.formGroup.get('tipoDocumento').disable();
   }
 
-
   deleteDetail(): void {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
@@ -373,7 +374,4 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.matTree.renderNodeChanges(nodes);
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 }

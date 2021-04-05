@@ -28,6 +28,10 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
   FormGroupUtil = FormGroupUtil;
   msgParamOvservaciones = {};
 
+  get TIPO_MAP() {
+    return TIPO_MAP;
+  }
+
   constructor(
     protected actionService: ProyectoProrrogaActionService,
     private readonly translate: TranslateService
@@ -55,7 +59,6 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.loadProrrogasSelectedProyecto();
   }
 
   private setupI18N(): void {
@@ -69,12 +72,5 @@ export class ProyectoProrrogaDatosGeneralesComponent extends FormFragmentCompone
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  private loadProrrogasSelectedProyecto(): void {
-    this.periodoSeguimientosSelectedProyecto = this.formPart.selectedProyectoProrrogas;
-  }
-
-  get TIPO_MAP() {
-    return TIPO_MAP;
-  }
 
 }

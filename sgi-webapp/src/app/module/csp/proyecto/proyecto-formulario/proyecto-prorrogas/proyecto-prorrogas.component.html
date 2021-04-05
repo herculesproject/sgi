@@ -68,22 +68,18 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <ng-container>
-          <button mat-button matTooltip="{{'btn.view' | translate}}"
-            [routerLink]="['../../..', CSP_ROUTE_NAMES.PROYECTO_PRORROGA, wrapper.value.id]"
-            [state]="createState(wrapper)"
-            *ngIf="lastProyectoProrroga.id !== wrapper.value.id || actionService.readOnly">
+          <button mat-button matTooltip="{{'btn.view' | translate}}" [routerLink]="[wrapper.value.id]"
+            *ngIf="lastProyectoProrroga.id !== wrapper.value.id || actionService.readonly">
             <mat-icon color="primary">visibility</mat-icon>
           </button>
-          <button mat-button matTooltip="{{'btn.edit' | translate}}"
-            [routerLink]="['../../..', CSP_ROUTE_NAMES.PROYECTO_PRORROGA, wrapper.value.id]"
-            [state]="createState(wrapper)"
-            *ngIf="lastProyectoProrroga.id === wrapper.value.id && !actionService.readOnly">
+          <button mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[wrapper.value.id]"
+            *ngIf="lastProyectoProrroga.id === wrapper.value.id && !actionService.readonly">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>
         <ng-container>
           <button mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deleteProyectoProrroga(wrapper)"
-            *ngIf="lastProyectoProrroga.id === wrapper.value.id && !actionService.readOnly">
+            *ngIf="lastProyectoProrroga.id === wrapper.value.id && !actionService.readonly">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </ng-container>
@@ -93,9 +89,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <div class="separation-button">
-    <button color="three" mat-button mat-raised-button
-      [routerLink]="['../../..', CSP_ROUTE_NAMES.PROYECTO_PRORROGA, ROUTE_NAMES.NEW]" [state]="createState()"
-      [disabled]="actionService.readOnly">
+    <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]"
+      [disabled]="actionService.readonly">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -15,6 +15,7 @@ const MSG_BUTTON_SAVE = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.save.entity.success');
 const MSG_ERROR = marker('error.save.entity');
 const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.socio-colaborador');
+
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-crear',
   templateUrl: './solicitud-proyecto-socio-crear.component.html',
@@ -23,13 +24,12 @@ const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.socio-colaborador');
     SolicitudProyectoSocioActionService
   ]
 })
-export class SolicitudProyectoSocioCrearComponent extends ActionComponent {
+export class SolicitudProyectoSocioCrearComponent extends ActionComponent implements OnInit {
   SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES = SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES;
 
   textoCrear: string;
   textoCrearSuccess: string;
   textoCrearError: string;
-  urlFrom: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -41,7 +41,6 @@ export class SolicitudProyectoSocioCrearComponent extends ActionComponent {
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
@@ -87,7 +86,6 @@ export class SolicitudProyectoSocioCrearComponent extends ActionComponent {
     ).subscribe((value) => this.textoCrearError = value);
   }
 
-
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
@@ -97,12 +95,12 @@ export class SolicitudProyectoSocioCrearComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(this.textoCrearSuccess);
-        this.router.navigateByUrl(this.urlFrom);
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }
 
   cancel(): void {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 }

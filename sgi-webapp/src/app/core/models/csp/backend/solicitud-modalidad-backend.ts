@@ -1,11 +1,10 @@
 import { IPrograma } from '../programa';
-import { ISolicitudBackend } from './solicitud-backend';
 
 export interface ISolicitudModalidadBackend {
   /** Id */
   id: number;
-  /** Solicitud */
-  solicitud: ISolicitudBackend;
+  /** Id de Solicitud */
+  solicitudId: number;
   /** EntidadRef */
   entidadRef: string;
   /** Programa */

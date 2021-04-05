@@ -7,14 +7,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { DialogComponent } from '@block/dialog/dialog.component';
 import { HeaderComponent } from '@block/header/header.component';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
+import { IPersona } from '@core/models/sgp/persona';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-
-import { EquipoProyectoModalData, SolicitudEquipoProyectoModalComponent } from './solicitud-equipo-proyecto-modal.component';
-import { IPersona } from '@core/models/sgp/persona';
 import { SharedModule } from '@shared/shared.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { EquipoProyectoModalData, SolicitudEquipoProyectoModalComponent } from './solicitud-equipo-proyecto-modal.component';
 
 describe('SolicitudEquipoProyectoModalComponent', () => {
   let component: SolicitudEquipoProyectoModalComponent;
@@ -37,7 +36,7 @@ describe('SolicitudEquipoProyectoModalComponent', () => {
     mesInicio: undefined,
     persona,
     rolProyecto: undefined,
-    solicitudProyectoDatos: undefined
+    solicitudProyectoId: undefined
   };
 
   const data: EquipoProyectoModalData = {

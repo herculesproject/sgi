@@ -174,13 +174,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     ).subscribe());
 
     this.subscriptions.push(
-      this.formGroup.controls.colaborativo.valueChanges.subscribe(_ => {
-        this.actionService.isProyectoColaborativo = this.formGroup.controls.colaborativo.value ?
-          this.formGroup.controls.colaborativo.value : false;
-      })
-    );
-
-    this.subscriptions.push(
       merge(
         this.formGroup.controls.fechaInicio.valueChanges,
         this.formGroup.controls.fechaFin.valueChanges,

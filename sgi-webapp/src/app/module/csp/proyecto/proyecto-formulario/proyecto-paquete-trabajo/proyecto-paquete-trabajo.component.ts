@@ -47,7 +47,7 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
 
   constructor(
     protected proyectoReunionService: ProyectoService,
-    private actionService: ProyectoActionService,
+    public actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -100,7 +100,6 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   /**
@@ -111,8 +110,8 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
     const dataModal: PaquetesTrabajoModalData = {
       paquetesTrabajo: this.dataSource.data.map(paquetes => paquetes.value),
       paqueteTrabajo: wrapper ? wrapper.value : {} as IProyectoPaqueteTrabajo,
-      fechaInicio: this.actionService.getProyecto.fechaInicio,
-      fechaFin: this.actionService.getProyecto.fechaFin
+      fechaInicio: this.actionService.proyecto.fechaInicio,
+      fechaFin: this.actionService.proyecto.fechaFin
     };
 
     if (wrapper) {
@@ -163,6 +162,4 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
     );
   }
 
-
 }
-

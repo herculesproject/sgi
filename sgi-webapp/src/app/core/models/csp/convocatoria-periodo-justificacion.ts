@@ -1,12 +1,11 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DateTime } from 'luxon';
-import { IConvocatoria } from './convocatoria';
 
 export interface IConvocatoriaPeriodoJustificacion {
   /** Id */
   id: number;
-  /** Convocatoria */
-  convocatoria: IConvocatoria;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
   /** Num Periodo */
   numPeriodo: number;
   /** Mes inicial */

@@ -15,15 +15,14 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { IConvocatoriaConceptoGastoState } from '../../../convocatoria-concepto-gasto/convocatoria-concepto-gasto.state';
-import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { CONVOCATORIA_ROUTE_NAMES } from '../../convocatoria-route-names';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.convocatoria-concepto-gasto.listado.codigo-economico.delete');
-const CONVOCATORIA_CONCEPTO_GASTO_PERMITIDO_KEY = marker('csp.convocatoria-concepto-gasto.permitido');
-const CONVOCATORIA_CONCEPTO_GASTO_NO_PERMITIDO_KEY = marker('csp.convocatoria-concepto-gasto.no-permitido');
+const CONVOCATORIA_CONCEPTO_GASTO_PERMITIDO_KEY = marker('csp.convocatoria-concepto-gasto-permitido');
+const CONVOCATORIA_CONCEPTO_GASTO_NO_PERMITIDO_KEY = marker('csp.convocatoria-concepto-gasto-no-permitido');
 
 @Component({
   selector: 'sgi-convocatoria-concepto-gasto',
@@ -32,8 +31,15 @@ const CONVOCATORIA_CONCEPTO_GASTO_NO_PERMITIDO_KEY = marker('csp.convocatoria-co
 })
 
 export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IConvocatoriaConceptoGasto[]> implements OnInit, OnDestroy {
-  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
   ROUTE_NAMES = ROUTE_NAMES;
+
+  get CONVOCATORIA_ROUTE_NAMES() {
+    return CONVOCATORIA_ROUTE_NAMES;
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -145,27 +151,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
 
   }
 
-  createState(wrapper?: StatusWrapper<IConvocatoriaConceptoGasto>, permitido?: boolean): IConvocatoriaConceptoGastoState {
-
-    if (wrapper && wrapper.value.permitido) {
-      permitido = wrapper.value.permitido;
-    }
-
-    const convocatoria = this.formPart.convocatoria;
-    convocatoria.id = this.formPart.getKey() as number;
-
-    const state: IConvocatoriaConceptoGastoState = {
-      convocatoria,
-      convocatoriaConceptoGasto: wrapper ? wrapper.value : {} as IConvocatoriaConceptoGasto,
-      selectedConvocatoriaConceptoGastos: permitido ? (this.dataSourcePermitidos ? this.dataSourcePermitidos.data.map(element => element.value) : null) : (this.dataSourceNoPermitidos ? this.dataSourceNoPermitidos.data.map(element => element.value) : null),
-      permitido,
-      readonly: this.formPart.readonly
-    };
-
-
-    return state;
-  }
-
   deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
     this.convocatoriaConceptoGastoService.existsCodigosEconomicos(wrapper.value.id).subscribe(res => {
       if (res) {
@@ -223,4 +208,3 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   }
 
 }
-

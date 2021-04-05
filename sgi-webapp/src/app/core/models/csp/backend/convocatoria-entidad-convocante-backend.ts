@@ -1,9 +1,8 @@
-import { IConvocatoria } from '../convocatoria';
 import { IPrograma } from '../programa';
 
 export interface IConvocatoriaEntidadConvocanteBackend {
   id: number;
-  convocatoria: IConvocatoria;
+  convocatoriaId: number;
   entidadRef: string;
   programa: IPrograma;
 }

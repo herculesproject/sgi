@@ -2,7 +2,6 @@ import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyect
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoEntidadGestoraConverter extends SgiBaseConverter<IProyectoEntidadGestoraBackend, IProyectoEntidadGestora> {
 
@@ -12,7 +11,7 @@ class ProyectoEntidadGestoraConverter extends SgiBaseConverter<IProyectoEntidadG
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       empresaEconomica: { personaRef: value.entidadRef } as IEmpresaEconomica
     };
   }
@@ -23,7 +22,7 @@ class ProyectoEntidadGestoraConverter extends SgiBaseConverter<IProyectoEntidadG
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       entidadRef: value.empresaEconomica?.personaRef
     };
   }

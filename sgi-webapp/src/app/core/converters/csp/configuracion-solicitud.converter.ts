@@ -11,7 +11,7 @@ class ConfiguracionSolicitudConverter extends SgiBaseConverter<IConfiguracionSol
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       tramitacionSGI: value.tramitacionSGI,
       fasePresentacionSolicitudes: CONVOCATORIA_FASE_CONVERTER.toTarget(value.fasePresentacionSolicitudes),
       importeMaximoSolicitud: value.importeMaximoSolicitud,
@@ -25,7 +25,7 @@ class ConfiguracionSolicitudConverter extends SgiBaseConverter<IConfiguracionSol
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       tramitacionSGI: value.tramitacionSGI,
       fasePresentacionSolicitudes: CONVOCATORIA_FASE_CONVERTER.fromTarget(value.fasePresentacionSolicitudes),
       importeMaximoSolicitud: value.importeMaximoSolicitud,

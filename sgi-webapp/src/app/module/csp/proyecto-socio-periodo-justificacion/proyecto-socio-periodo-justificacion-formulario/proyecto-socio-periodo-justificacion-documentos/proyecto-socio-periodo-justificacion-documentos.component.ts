@@ -5,7 +5,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ISocioPeriodoJustificacionDocumento } from '@core/models/csp/socio-periodo-justificacion-documento';
+import { IProyectoSocioPeriodoJustificacionDocumento } from '@core/models/csp/proyecto-socio-periodo-justificacion-documento';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -349,7 +349,7 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
   }
 
   switchToNew(): void {
-    const wrapper = new StatusWrapper<ISocioPeriodoJustificacionDocumento>({} as ISocioPeriodoJustificacionDocumento);
+    const wrapper = new StatusWrapper<IProyectoSocioPeriodoJustificacionDocumento>({} as IProyectoSocioPeriodoJustificacionDocumento);
     const newNode: NodeDocumentoProyecto = new NodeDocumentoProyecto(null, undefined, 2, wrapper);
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;

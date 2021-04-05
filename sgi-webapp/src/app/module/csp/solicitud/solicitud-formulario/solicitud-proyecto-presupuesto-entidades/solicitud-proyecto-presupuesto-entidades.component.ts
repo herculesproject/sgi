@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud-proyecto-presupuesto-totales';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -13,16 +13,10 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { take } from 'rxjs/operators';
+import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { EntidadFinanciadoraDesglosePresupuesto, SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-proyecto-presupuesto-entidades.fragment';
-
-export interface ISolicitudProyectoPresupuestoState {
-  solicitudId: number;
-  convocatoriaId: number;
-  entidadFinanciadora: IEntidadFinanciadora;
-  isEntidadFinanciadoraConvocatoria: boolean;
-}
 
 const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entidad-financiadora');
 
@@ -31,8 +25,9 @@ const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entida
   templateUrl: './solicitud-proyecto-presupuesto-entidades.component.html',
   styleUrls: ['./solicitud-proyecto-presupuesto-entidades.component.scss']
 })
-export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragmentComponent<ISolicitudProyectoPresupuestoTotales> implements OnInit, OnDestroy {
-  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
+export class SolicitudProyectoPresupuestoEntidadesComponent
+  extends FormFragmentComponent<ISolicitudProyectoPresupuestoTotales> implements OnInit, OnDestroy {
+  SOLICITUD_ROUTE_NAMES = SOLICITUD_ROUTE_NAMES;
   ROUTE_NAMES = ROUTE_NAMES;
 
   private subscriptions: Subscription[] = [];
@@ -58,6 +53,8 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
   constructor(
     protected logger: NGXLogger,
     public actionService: SolicitudActionService,
+    private router: Router,
+    private route: ActivatedRoute,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, actionService);
@@ -77,10 +74,16 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
 
   ngOnInit(): void {
     super.ngOnInit();
-
     this.setupI18N();
-
-    this.actionService.existsDatosProyectos();
+    this.actionService.datosProyectoComplete$.pipe(
+      take(1)
+    ).subscribe(
+      (complete) => {
+        if (!complete) {
+          this.router.navigate(['../', SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS], { relativeTo: this.route });
+        }
+      }
+    );
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -104,7 +107,6 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
       }
     );
     this.subscriptions.push(subscription);
-    this.actionService.hasDesglosePresupuestoEntidades();
   }
 
   private setupI18N(): void {
@@ -114,22 +116,8 @@ export class SolicitudProyectoPresupuestoEntidadesComponent extends FormFragment
     ).subscribe((value) => this.msgParamEntidadFinanciadorasEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
-
-  createState(entidadFinanciadoraDesglose: EntidadFinanciadoraDesglosePresupuesto): ISolicitudProyectoPresupuestoState {
-    const state: ISolicitudProyectoPresupuestoState = {
-      solicitudId: this.fragment.getKey() as number,
-      convocatoriaId: this.formPart.convocatoriaId,
-      entidadFinanciadora: entidadFinanciadoraDesglose.entidadFinanciadora,
-      isEntidadFinanciadoraConvocatoria: !entidadFinanciadoraDesglose.ajena
-    };
-
-    return state;
-  }
-
-
 
 }

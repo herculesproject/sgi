@@ -1,10 +1,9 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IAreaTematica } from './area-tematica';
-import { IProyecto } from './proyecto';
 
 export interface IProyectoContexto {
   id: number;
-  proyecto: IProyecto;
+  proyectoId: number;
   objetivos: string;
   intereses: string;
   resultadosPrevistos: string;

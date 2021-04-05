@@ -86,28 +86,16 @@ export class ProyectoSocioPeriodoPagoComponent extends FragmentComponent impleme
 
   openModal(wrapper?: StatusWrapper<IProyectoSocioPeriodoPago>): void {
     const proyectoSocioPeriodoPago: IProyectoSocioPeriodoPago = {
-      id: undefined,
-      importe: undefined,
-      fechaPago: undefined,
-      fechaPrevistaPago: undefined,
-      numPeriodo: this.dataSource.data.length + 1,
-      proyectoSocio: undefined
-    };
-    const fechaInicioProyectoSocio = this.actionService.getProyectoSocio()?.fechaInicio;
-    const fechaFinProyectoSocio = this.actionService.getProyectoSocio()?.fechaFin;
+      numPeriodo: this.dataSource.data.length + 1
+    } as IProyectoSocioPeriodoPago;
+    const fechaInicioProyectoSocio = this.actionService.proyectoSocio?.fechaInicio;
+    const fechaFinProyectoSocio = this.actionService.proyectoSocio?.fechaFin;
     const data: ProyectoSocioPeriodoPagoModalData = {
-      proyectoSocioPeriodoPago: wrapper ? wrapper.value : proyectoSocioPeriodoPago,
-      selectedFechaPrevistas: this.dataSource.data.map(element => element.value.fechaPrevistaPago),
+      proyectoSocioPeriodoPago: wrapper?.value ?? proyectoSocioPeriodoPago,
       fechaInicioProyectoSocio,
       fechaFinProyectoSocio,
       isEdit: Boolean(wrapper)
     };
-    if (wrapper) {
-      const index = data.selectedFechaPrevistas.findIndex((element) => element === wrapper.value.fechaPrevistaPago);
-      if (index >= 0) {
-        data.selectedFechaPrevistas.splice(index, 1);
-      }
-    }
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,

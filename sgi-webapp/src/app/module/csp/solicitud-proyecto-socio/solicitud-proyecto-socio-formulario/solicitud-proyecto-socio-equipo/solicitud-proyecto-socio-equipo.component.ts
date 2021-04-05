@@ -1,0 +1,152 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { MSG_PARAMS } from '@core/i18n';
+import { ISolicitudProyectoSocioEquipo } from '@core/models/csp/solicitud-proyecto-socio-equipo';
+import { DialogService } from '@core/services/dialog.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { SolicitudProyectoSocioEquipoModalComponent, SolicitudProyectoSocioEquipoModalData } from '../../modals/solicitud-proyecto-socio-equipo-modal/solicitud-proyecto-socio-equipo-modal.component';
+import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
+import { SolicitudProyectoSocioEquipoFragment } from './solicitud-proyecto-socio-equipo.fragment';
+
+const MSG_DELETE = marker('msg.delete.entity');
+const SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+
+@Component({
+  selector: 'sgi-solicitud-proyecto-socio-equipo',
+  templateUrl: './solicitud-proyecto-socio-equipo.component.html',
+  styleUrls: ['./solicitud-proyecto-socio-equipo.component.scss']
+})
+export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent implements OnInit, OnDestroy {
+  formPart: SolicitudProyectoSocioEquipoFragment;
+  private subscriptions: Subscription[] = [];
+
+  elementosPagina = [5, 10, 25, 100];
+  displayedColumns = ['persona', 'nombre', 'apellidos', 'rolProyecto', 'acciones'];
+
+  msgParamEntity = {};
+  textoDelete: string;
+
+  dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocioEquipo>>();
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  constructor(
+    private actionService: SolicitudProyectoSocioActionService,
+    private matDialog: MatDialog,
+    private dialogService: DialogService,
+    private readonly translate: TranslateService
+  ) {
+    super(actionService.FRAGMENT.EQUIPO, actionService);
+    this.formPart = this.fragment as SolicitudProyectoSocioEquipoFragment;
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.setupI18N();
+    const subcription = this.formPart.solicitudProyectoSocioEquipos$.subscribe(
+      (proyectoEquipos) => {
+        this.dataSource.data = proyectoEquipos;
+      }
+    );
+    this.subscriptions.push(subcription);
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (wrapper, property) => {
+      switch (property) {
+        case 'persona':
+          return wrapper.value.persona.personaRef;
+        case 'nombre':
+          return wrapper.value.persona.nombre;
+        case 'apellidos':
+          const persona = wrapper.value.persona;
+          return `${persona.primerApellido} ${persona.segundoApellido}`;
+        case 'rolProyecto':
+          return wrapper.value.rolProyecto.nombre;
+        default:
+          return wrapper.value[property];
+      }
+    };
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DELETE,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoDelete = value);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  openModal(wrapper?: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {
+    const data: SolicitudProyectoSocioEquipoModalData = {
+      solicitudProyectoSocioEquipo: wrapper?.value ?? {} as ISolicitudProyectoSocioEquipo,
+      duracion: this.actionService.solicitudProyectoDuracion,
+      selectedProyectoSocioEquipo: this.dataSource.data.map(element => element.value),
+      mesInicioSolicitudProyectoSocio: this.actionService.mesInicio,
+      mesFinSolicitudProyectoSocio: this.actionService.mesFin,
+      isEdit: Boolean(wrapper),
+      readonly: this.formPart.readonly
+    };
+
+    if (wrapper) {
+      const index = data.selectedProyectoSocioEquipo.findIndex((element) => element === wrapper.value);
+      if (index >= 0) {
+        data.selectedProyectoSocioEquipo.splice(index, 1);
+      }
+    }
+
+    const config = {
+      width: GLOBAL_CONSTANTS.widthModalCSP,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data,
+      autoFocus: false
+    };
+    const dialogRef = this.matDialog.open(SolicitudProyectoSocioEquipoModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (modalData: SolicitudProyectoSocioEquipoModalData) => {
+        if (modalData) {
+          if (wrapper) {
+            if (!wrapper.created) {
+              wrapper.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+            this.formPart.addProyectoEquipoSocio(modalData.solicitudProyectoSocioEquipo);
+          }
+        }
+      }
+    );
+  }
+
+  deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deleteProyectoEquipoSocio(wrapper);
+          }
+        }
+      )
+    );
+  }
+}

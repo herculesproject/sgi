@@ -25,6 +25,7 @@ const SOLICITUD_PROYECTO_SOCIO_NUMERO_INVESTIGADOR_KEY = marker('csp.proyecto-so
 const SOLICITUD_PROYECTO_SOCIO_ROL_SOCIO_KEY = marker('csp.proyecto-socio.rol-socio');
 const SOLICITUD_PROYECTO_SOCIO_SOCIO_KEY = marker('csp.proyecto-socio.socio');
 const SOLICITUD_SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
+
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-datos-generales',
   templateUrl: './solicitud-proyecto-socio-datos-generales.component.html',
@@ -85,7 +86,6 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
       ).subscribe()
     );
   }
-
 
   private setupI18N(): void {
     this.translate.get(
@@ -169,7 +169,7 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
 
     const mesInicio = mesInicioForm.value ? mesInicioForm.value : Number.MIN_VALUE;
     const mesFin = mesFinForm.value ? mesFinForm.value : Number.MAX_VALUE;
-    const ranges = this.actionService.getSelectedSolicitudProyectoSocios().filter(
+    const ranges = this.actionService.solicitudProyectoSocios.filter(
       element => element.empresa.personaRef === empresaForm.value?.personaRef
         && element.id !== this.formPart.solicitudProyectoSocio.id)
       .map(solicitudProyectoSocio => {

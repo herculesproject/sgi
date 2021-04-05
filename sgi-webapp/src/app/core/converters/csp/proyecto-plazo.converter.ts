@@ -2,7 +2,6 @@ import { IProyectoPlazoBackend } from '@core/models/csp/backend/proyecto-plazo-b
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoPlazoConverter extends SgiBaseConverter<IProyectoPlazoBackend, IProyectoPlazos> {
 
@@ -12,7 +11,7 @@ class ProyectoPlazoConverter extends SgiBaseConverter<IProyectoPlazoBackend, IPr
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       tipoFase: value.tipoFase,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -27,7 +26,7 @@ class ProyectoPlazoConverter extends SgiBaseConverter<IProyectoPlazoBackend, IPr
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       tipoFase: value.tipoFase,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

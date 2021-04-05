@@ -28,10 +28,11 @@ const CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_SGE_KEY = marker('csp.convoca
 const CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_PERMITIDO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico.permitido');
 const CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_NO_PERMITIDO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico.no-permitido');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 export interface IConvocatoriaConceptoGastoCodigoEcModalComponent {
   convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc;
   convocatoriaConceptoGastoCodigoEcsTabla: IConvocatoriaConceptoGastoCodigoEc[];
-  convocatoriaConceptoGastos: IConvocatoriaConceptoGasto[];
+  permitido: boolean;
   editModal: boolean;
   readonly: boolean;
 }
@@ -95,18 +96,17 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
-    if (this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && this.data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido) {
+    if (this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && this.data.permitido) {
       this.translate.get(
         CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_PERMITIDO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
-    } else if (this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && !this.data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido) {
+    } else if (this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && !this.data.permitido) {
       this.translate.get(
         CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_NO_PERMITIDO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
-
-    } else if (!this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && this.data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido) {
+    } else if (!this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef && this.data.permitido) {
       this.translate.get(
         CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_PERMITIDO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -118,7 +118,6 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
           );
         })
       ).subscribe((value) => this.title = value);
-
     } else {
       this.translate.get(
         CONVOCATORIA_ELEGIBILIDAD_CODIGO_ECONOMICO_NO_PERMITIDO_KEY,
@@ -135,19 +134,21 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
   }
 
   private initFormGroup() {
-    this.formGroup = new FormGroup({
-      codigoEconomicoRef: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef),
-      fechaInicio: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaInicio),
-      fechaFin: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaFin),
-      observaciones: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.observaciones),
-    },
+    this.formGroup = new FormGroup(
+      {
+        codigoEconomicoRef: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef),
+        fechaInicio: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaInicio),
+        fechaFin: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaFin),
+        observaciones: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.observaciones),
+      },
       {
         validators: [
           DateValidator.isBefore('fechaFin', 'fechaInicio'),
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
           this.notOverlapsSameCodigoEconomico('fechaInicio', 'fechaFin', 'codigoEconomicoRef')
         ]
-      });
+      }
+    );
     if (this.data.readonly) {
       this.formGroup.disable();
     }
@@ -155,7 +156,6 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
       this.formGroup.controls.codigoEconomicoRef.disable();
       this.formGroup.controls.observaciones.disable();
     }
-
   }
 
   private loadCodigosEconomicos() {
@@ -164,11 +164,10 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
         this.codigosEconomicosFiltered = res.items;
         this.formGroup.controls.codigoEconomicoRef.setValidators(SelectValidator.isSelectOption(
           this.codigosEconomicosFiltered.map(cod => cod.codigoEconomicoRef), true));
-        this.codigosEconomicos$ = this.formGroup.controls.codigoEconomicoRef.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filtroCodigoEconomico(value))
-          );
+        this.codigosEconomicos$ = this.formGroup.controls.codigoEconomicoRef.valueChanges.pipe(
+          startWith(''),
+          map(value => this.filtroCodigoEconomico(value))
+        );
       },
       (error) => {
         this.snackBarService.showError(MSG_ERROR_INIT);
@@ -180,8 +179,8 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
 
   filtroCodigoEconomico(value: string): ICodigoEconomico[] {
     const filterValue = value.toString().toLowerCase();
-    return this.codigosEconomicosFiltered.filter(codigo =>
-      codigo.codigoEconomicoRef.toLowerCase().includes(filterValue));
+    return this.codigosEconomicosFiltered
+      .filter(codigo => codigo.codigoEconomicoRef.toLowerCase().includes(filterValue));
   }
 
   getCodigoEconomico(codigoEconomico?: ICodigoEconomico): string {
@@ -189,8 +188,9 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
       this.formGroup.controls.fechaInicio.setValue(codigoEconomico.fechaInicio);
       this.formGroup.controls.fechaFin.setValue(codigoEconomico.fechaFin);
     }
-    return codigoEconomico && typeof codigoEconomico === 'string' ?
-      codigoEconomico : codigoEconomico?.codigoEconomicoRef;
+    return codigoEconomico && typeof codigoEconomico === 'string'
+      ? codigoEconomico
+      : codigoEconomico?.codigoEconomicoRef;
   }
 
   closeModal(convocatoriaConceptoGasto?: IConvocatoriaConceptoGastoCodigoEc): void {
@@ -245,7 +245,6 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
       const finRangoControl = formGroup.controls[endRangeFieldName];
 
       if (filterFieldControl.value) {
-
         if ((inicioRangoControl.errors && !inicioRangoControl.errors.overlapped)
           || (finRangoControl.errors && !finRangoControl.errors.overlapped)) {
           return;

@@ -11,7 +11,7 @@ class ConvocatoriaFaseConverter extends SgiBaseConverter<IConvocatoriaFaseBacken
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       tipoFase: value.tipoFase,
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
@@ -25,7 +25,7 @@ class ConvocatoriaFaseConverter extends SgiBaseConverter<IConvocatoriaFaseBacken
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       tipoFase: value.tipoFase,
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),

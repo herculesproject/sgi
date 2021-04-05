@@ -1,10 +1,8 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { IConvocatoria } from '../convocatoria';
 import { TipoHorasAnuales } from '../proyecto';
 import { ITipoAmbitoGeografico } from '../tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '../tipos-configuracion';
 import { IEstadoProyectoBackend } from './estado-proyecto-backend';
-import { ISolicitudBackend } from './solicitud-backend';
 
 export interface IProyectoBackend {
   /** Id */
@@ -25,10 +23,10 @@ export interface IProyectoBackend {
   modeloEjecucion: IModeloEjecucion;
   /** finalidad */
   finalidad: ITipoFinalidad;
-  /** convocatoria */
-  convocatoria: IConvocatoria;
-  /** solicitud */
-  solicitud: ISolicitudBackend;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
+  /** Id de Solicitud */
+  solicitudId: number;
   /** ambitoGeografico */
   ambitoGeografico: ITipoAmbitoGeografico;
   /** confidencial */
@@ -45,8 +43,8 @@ export interface IProyectoBackend {
   uniSubcontratada: boolean;
   /** timesheet */
   timesheet: boolean;
-  /** paquetesTrabajo */
-  paquetesTrabajo: boolean;
+  /** permitePaquetesTrabajo */
+  permitePaquetesTrabajo: boolean;
   /** costeHora */
   costeHora: boolean;
   /** tipoHorasAnuales */

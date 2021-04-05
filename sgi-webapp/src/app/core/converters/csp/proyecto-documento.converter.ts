@@ -1,7 +1,6 @@
 import { IProyectoDocumentoBackend } from '@core/models/csp/backend/proyecto-documento-backend';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoDocumentoConverter extends SgiBaseConverter<IProyectoDocumentoBackend, IProyectoDocumento> {
 
@@ -11,7 +10,7 @@ class ProyectoDocumentoConverter extends SgiBaseConverter<IProyectoDocumentoBack
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
       tipoFase: value.tipoFase,
@@ -27,7 +26,7 @@ class ProyectoDocumentoConverter extends SgiBaseConverter<IProyectoDocumentoBack
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
       tipoFase: value.tipoFase,

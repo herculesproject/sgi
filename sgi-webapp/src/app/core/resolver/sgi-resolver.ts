@@ -8,8 +8,7 @@ export abstract class SgiResolverResolver<T> implements Resolve<T> {
 
   private errorMsg: string;
 
-
-  constructor(private logger: NGXLogger, private router: Router, private snackBar: SnackBarService, msgError: string) {
+  constructor(private logger: NGXLogger, protected router: Router, private snackBar: SnackBarService, msgError: string) {
     this.errorMsg = msgError;
   }
 

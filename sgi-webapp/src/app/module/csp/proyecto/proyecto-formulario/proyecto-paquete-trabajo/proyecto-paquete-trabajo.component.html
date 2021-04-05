@@ -44,7 +44,7 @@
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper">
         <ng-container>
-          <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
+          <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!actionService.readonly"
             (click)="openModal(wrapper)">
             <mat-icon color="primary">border_color</mat-icon>
           </button>

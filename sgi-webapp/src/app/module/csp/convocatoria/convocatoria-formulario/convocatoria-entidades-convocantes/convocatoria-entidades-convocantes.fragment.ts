@@ -1,4 +1,3 @@
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
@@ -152,13 +151,12 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
     }
     return from(this.entidadesConvocantesEliminadas).pipe(
       mergeMap((data) => {
-        return this.convocatoriaEntidadConvocanteService.deleteById(data.entidadConvocante.value.id)
-          .pipe(
-            tap(() => {
-              this.entidadesConvocantesEliminadas = this.entidadesConvocantesEliminadas.filter(deleted =>
-                deleted === data);
-            })
-          );
+        return this.convocatoriaEntidadConvocanteService.deleteById(data.entidadConvocante.value.id).pipe(
+          tap(() => {
+            this.entidadesConvocantesEliminadas = this.entidadesConvocantesEliminadas.filter(deleted =>
+              deleted === data);
+          })
+        );
       })
     );
   }
@@ -188,9 +186,7 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
       return of(void 0);
     }
     createdEntidades.forEach(
-      (wrapper) => wrapper.entidadConvocante.value.convocatoria = {
-        id: this.getKey(),
-      } as IConvocatoria
+      (wrapper) => wrapper.entidadConvocante.value.convocatoriaId = this.getKey() as number
     );
     return from(createdEntidades).pipe(
       mergeMap((data) => {

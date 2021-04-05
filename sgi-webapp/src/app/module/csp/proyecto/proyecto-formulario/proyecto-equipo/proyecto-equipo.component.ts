@@ -106,24 +106,15 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
 
   /**
    * Apertura de modal de equipos (edición/creación)
-   * 
+   *
    * @param idEquipo Identificador de equipo a editar.
    */
   openModal(wrapper?: StatusWrapper<IProyectoEquipo>, position?: number): void {
-    const proyectoEquipo: IProyectoEquipo = {
-      id: undefined,
-      fechaFin: undefined,
-      fechaInicio: undefined,
-      persona: undefined,
-      proyecto: undefined,
-      rolProyecto: undefined,
-      horasDedicacion: undefined
-    };
     const data: ProyectoEquiposModalComponentData = {
-      equipo: wrapper ? wrapper.value : proyectoEquipo,
+      equipo: wrapper?.value ?? {} as IProyectoEquipo,
       equipos: this.dataSource.data.map(element => element.value),
-      fechaInicioProyecto: this.actionService.getProyecto.fechaInicio,
-      fechaFinProyecto: this.actionService.getProyecto.fechaFin,
+      fechaInicioProyecto: this.actionService.proyecto.fechaInicio,
+      fechaFinProyecto: this.actionService.proyecto.fechaFin,
       isEdit: Boolean(wrapper)
     };
 

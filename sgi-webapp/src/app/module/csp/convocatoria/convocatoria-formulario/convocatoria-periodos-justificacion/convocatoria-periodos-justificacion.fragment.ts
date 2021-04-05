@@ -73,9 +73,12 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
     this.periodosJustificacion$.next(current);
   }
 
-
   saveOrUpdate(): Observable<void> {
     const periodosJustificacion = this.periodosJustificacion$.value.map(wrapper => wrapper.value);
+    // TODO: Eliminar si el backend deja de validar que convocatoriaId no pueda ser null
+    periodosJustificacion.forEach(periodo => {
+      periodo.convocatoriaId = this.getKey() as number;
+    });
 
     return this.convocatoriaPeriodoJustificacionService
       .updateConvocatoriaPeriodoJustificacionesConvocatoria(this.getKey() as number, periodosJustificacion).pipe(

@@ -10,7 +10,7 @@
           <mat-label>{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
           <sgi-select-empresa-economica formControlName="empresaEconomica"
             placeholder="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
-            [disabled]="data.readonly" [filter]="data.selectedEmpresas" required>
+            [filter]="data.selectedEmpresas" required>
           </sgi-select-empresa-economica>
           <mat-error *ngIf="formGroup.controls.empresaEconomica.errors?.required">
             {{ 'error.required.entity' | translate:msgParamEntity }}

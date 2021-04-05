@@ -5,24 +5,19 @@ import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, of, Observable, merge } from 'rxjs';
-import { switchMap, takeLast, map, mergeAll } from 'rxjs/operators';
-
+import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { map, mergeAll, switchMap, takeLast } from 'rxjs/operators';
 
 export interface EntidadFinanciadoraDesglosePresupuesto {
   entidadFinanciadora: IEntidadFinanciadora;
   ajena: boolean;
 }
 
-
 export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<ISolicitudProyectoPresupuestoTotales> {
 
   entidadesFinanciadoras$ = new BehaviorSubject<EntidadFinanciadoraDesglosePresupuesto[]>([]);
-  existsDatosProyecto = false;
 
   constructor(
-    private logger: NGXLogger,
     key: number,
     public convocatoriaId: number,
     private convocatoriaService: ConvocatoriaService,
@@ -49,7 +44,6 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
 
     return this.solicitudService.getSolicitudProyectoPresupuestoTotales(key);
   }
-
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
@@ -106,7 +100,7 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
               map(() => {
                 return entidadesFinanciadoras.map((entidadFinanciadora) => {
                   const entidadFinanciadoraDesglosePresupuesto: EntidadFinanciadoraDesglosePresupuesto = {
-                    entidadFinanciadora: entidadFinanciadora,
+                    entidadFinanciadora,
                     ajena: true
                   };
 
@@ -147,7 +141,7 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
               map(() => {
                 return entidadesFinanciadoras.map((entidadFinanciadora) => {
                   const entidadFinanciadoraDesglosePresupuesto: EntidadFinanciadoraDesglosePresupuesto = {
-                    entidadFinanciadora: entidadFinanciadora,
+                    entidadFinanciadora,
                     ajena: false
                   };
 

@@ -1,7 +1,6 @@
 import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SOLICITUD_CONVERTER } from './solicitud.converter';
 
 class SolicitudDocumentoConverter extends SgiBaseConverter<ISolicitudDocumentoBackend, ISolicitudDocumento> {
 
@@ -11,7 +10,7 @@ class SolicitudDocumentoConverter extends SgiBaseConverter<ISolicitudDocumentoBa
     }
     return {
       id: value.id,
-      solicitud: SOLICITUD_CONVERTER.toTarget(value.solicitud),
+      solicitudId: value.solicitudId,
       comentario: value.comentario,
       documentoRef: value.documentoRef,
       nombre: value.nombre,
@@ -25,7 +24,7 @@ class SolicitudDocumentoConverter extends SgiBaseConverter<ISolicitudDocumentoBa
     }
     return {
       id: value.id,
-      solicitud: SOLICITUD_CONVERTER.fromTarget(value.solicitud),
+      solicitudId: value.solicitudId,
       comentario: value.comentario,
       documentoRef: value.documentoRef,
       nombre: value.nombre,

@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
@@ -13,21 +11,11 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE } from '../../../proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-names';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ProyectoSocioPeriodoJustificacionFragment } from './proyecto-socio-periodo-justificacion.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY = marker('title.csp.proyecto-socio-periodo-justificacion');
-
-export interface IProyectoSocioPeriodoJustificacionState {
-  periodoJustificacion: IProyectoSocioPeriodoJustificacion;
-  selectedPeriodosJustificacion: IProyectoSocioPeriodoJustificacion[];
-  proyectoId: number;
-  proyectoSocio: IProyectoSocio;
-  urlProyecto: string;
-  urlProyectoSocio: string;
-}
 
 @Component({
   selector: 'sgi-proyecto-socio-periodo-justificacion',
@@ -35,7 +23,6 @@ export interface IProyectoSocioPeriodoJustificacionState {
   styleUrls: ['./proyecto-socio-periodo-justificacion.component.scss']
 })
 export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponent implements OnInit, OnDestroy {
-  PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE = PROYECTO_SOCIO_PERIODO_JUSTIFICACION_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;
 
   formPart: ProyectoSocioPeriodoJustificacionFragment;
@@ -52,9 +39,8 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
   textoDelete: string;
 
   constructor(
-    private actionService: ProyectoSocioActionService,
+    actionService: ProyectoSocioActionService,
     private dialogService: DialogService,
-    private router: Router,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
@@ -110,36 +96,4 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
     );
   }
 
-  createState(wrapper?: StatusWrapper<IProyectoSocioPeriodoJustificacion>): IProyectoSocioPeriodoJustificacionState {
-    const periodoJustificacion: IProyectoSocioPeriodoJustificacion = {
-      documentacionRecibida: false,
-      fechaFin: undefined,
-      fechaFinPresentacion: undefined,
-      fechaInicio: undefined,
-      fechaInicioPresentacion: undefined,
-      fechaRecepcion: undefined,
-      id: undefined,
-      numPeriodo: this.dataSource.data.length + 1,
-      observaciones: undefined,
-      proyectoSocio: this.actionService.getProyectoSocio()
-    };
-
-    const state: IProyectoSocioPeriodoJustificacionState = {
-      periodoJustificacion: wrapper ? wrapper.value : periodoJustificacion,
-      selectedPeriodosJustificacion: this.dataSource.data.map(element => element.value),
-      proyectoId: this.actionService.getProyectoId(),
-      proyectoSocio: this.actionService.getProyectoSocio(),
-      urlProyecto: this.actionService.getUrlProyecto(),
-      urlProyectoSocio: this.router.url
-    };
-
-    if (wrapper) {
-      const index = state.selectedPeriodosJustificacion.findIndex(
-        (element) => element === wrapper.value);
-      if (index >= 0) {
-        state.selectedPeriodosJustificacion.splice(index, 1);
-      }
-    }
-    return state;
-  }
 }

@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon';
-import { IConvocatoriaConceptoGasto } from './convocatoria-concepto-gasto';
 
 export interface IConvocatoriaConceptoGastoCodigoEc {
   /** id */
   id: number;
-  /** ConceptoGasto */
-  convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
+  /** Id de ConvocatoriaConceptoGasto */
+  convocatoriaConceptoGastoId: number;
   /** Referencia código económico */
   codigoEconomicoRef: string;
   /** Fecha inicio */

@@ -1,11 +1,10 @@
 import { ITipoFase } from '../tipos-configuracion';
-import { IProyectoBackend } from './proyecto-backend';
 
 export interface IProyectoPlazoBackend {
   /** Id */
   id: number;
-  /** Proyecto */
-  proyecto: IProyectoBackend;
+  /** Id de Proyecto */
+  proyectoId: number;
   /** Tipo de hito */
   tipoFase: ITipoFase;
   /** Fecha inicio */

@@ -1,12 +1,13 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { IUnidadGestion } from '../usr/unidad-gestion';
 import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
 import { ITipoRegimenConcurrencia } from './tipo-regimen-concurrencia';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
 export interface IConvocatoria {
   id: number;
-  unidadGestionRef: string;
+  unidadGestion: IUnidadGestion;
   modeloEjecucion: IModeloEjecucion;
   codigo: string;
   anio: number;

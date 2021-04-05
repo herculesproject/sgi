@@ -1,4 +1,3 @@
-import { IConvocatoria } from '../convocatoria';
 import { ITipoHito } from '../tipos-configuracion';
 
 export interface IConvocatoriaHitoBackend {
@@ -10,8 +9,8 @@ export interface IConvocatoriaHitoBackend {
   tipoHito: ITipoHito;
   /** Comentario */
   comentario: string;
-  /** convocatoria */
-  convocatoria: IConvocatoria;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
   /** Aviso */
   generaAviso: boolean;
 }

@@ -1,5 +1,4 @@
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
@@ -18,7 +17,7 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       codigoExterno: value.codigoExterno,
       codigoRegistroInterno: value.codigoRegistroInterno,
       estado: ESTADO_SOLICITUD_CONVERTER.toTarget(value.estado),
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       creador: { personaRef: value.creadorRef } as IPersona,
       solicitante: { personaRef: value.solicitanteRef } as IPersona,
@@ -38,7 +37,7 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       codigoExterno: value.codigoExterno,
       codigoRegistroInterno: value.codigoRegistroInterno,
       estado: ESTADO_SOLICITUD_CONVERTER.fromTarget(value.estado),
-      convocatoria: value.convocatoria ? { id: value.convocatoria.id } as IConvocatoria : undefined,
+      convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       creadorRef: value.creador?.personaRef,
       solicitanteRef: value.solicitante?.personaRef,

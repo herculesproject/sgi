@@ -3,7 +3,6 @@ import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_SOCIO_CONVERTER } from './proyecto-socio.converter';
 
 class ProyectoSocioEquipoConverter extends SgiBaseConverter<IProyectoSocioEquipoBackend, IProyectoSocioEquipo> {
 
@@ -17,7 +16,7 @@ class ProyectoSocioEquipoConverter extends SgiBaseConverter<IProyectoSocioEquipo
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       persona: { personaRef: value.personaRef } as IPersona,
       rolProyecto: value.rolProyecto,
-      proyectoSocio: PROYECTO_SOCIO_CONVERTER.toTarget(value.proyectoSocio)
+      proyectoSocioId: value.proyectoSocioId
     };
   }
 
@@ -31,7 +30,7 @@ class ProyectoSocioEquipoConverter extends SgiBaseConverter<IProyectoSocioEquipo
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       personaRef: value.persona?.personaRef,
       rolProyecto: value.rolProyecto,
-      proyectoSocio: PROYECTO_SOCIO_CONVERTER.fromTarget(value.proyectoSocio)
+      proyectoSocioId: value.proyectoSocioId
     };
   }
 }

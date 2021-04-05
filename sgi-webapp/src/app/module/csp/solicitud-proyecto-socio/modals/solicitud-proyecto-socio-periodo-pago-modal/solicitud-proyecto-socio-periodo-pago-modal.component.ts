@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ISolicitudProyectoPeriodoPago } from '@core/models/csp/solicitud-proyecto-periodo-pago';
+import { ISolicitudProyectoSocioPeriodoPago } from '@core/models/csp/solicitud-proyecto-socio-periodo-pago';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -21,7 +21,8 @@ const PROYECTO_SOCIO_PERIODO_PAGO_IMPORTE_KEY = marker('csp.proyecto-socio.perio
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface SolicitudProyectoSocioPeriodoPagoModalData {
-  solicitudProyectoPeriodoPago: ISolicitudProyectoPeriodoPago;
+  solicitudProyectoPeriodoPago: ISolicitudProyectoSocioPeriodoPago;
+  duracion: number;
   selectedMeses: number[];
   mesInicioSolicitudProyectoSocio: number;
   mesFinSolicitudProyectoSocio: number;
@@ -105,8 +106,6 @@ export class SolicitudProyectoSocioPeriodoPagoModalComponent extends
     }
   }
 
-
-
   protected getDatosForm(): SolicitudProyectoSocioPeriodoPagoModalData {
     this.data.solicitudProyectoPeriodoPago.numPeriodo = this.formGroup.get('numPeriodo').value;
     this.data.solicitudProyectoPeriodoPago.mes = this.formGroup.get('mes').value;
@@ -117,7 +116,7 @@ export class SolicitudProyectoSocioPeriodoPagoModalComponent extends
   protected getFormGroup(): FormGroup {
     const mesInicio = this.data.mesInicioSolicitudProyectoSocio;
     const mesFinal = this.data.mesFinSolicitudProyectoSocio;
-    const duracion = this.data.solicitudProyectoPeriodoPago?.solicitudProyectoSocio?.solicitudProyectoDatos?.duracion;
+    const duracion = this.data.duracion;
     const formGroup = new FormGroup(
       {
         numPeriodo: new FormControl({

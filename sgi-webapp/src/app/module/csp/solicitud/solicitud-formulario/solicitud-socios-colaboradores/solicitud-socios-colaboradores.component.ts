@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -14,9 +15,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
-import { SOLICITUD_PROYECTO_SOCIO_ROUTE } from '../../../solicitud-proyecto-socio/solicitud-proyecto-socio-route-names';
+import { map, switchMap, take } from 'rxjs/operators';
+import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudSociosColaboradoresFragment } from './solicitud-socios-colaboradores.fragment';
 
@@ -25,14 +25,6 @@ const MSG_DELETE_CASCADE = marker('msg.csp.solicitud-socio-colaborador.relations
 const MSG_ERROR = marker('error.msg.csp.solicitud-socio-colaborador.relations.delete');
 const SOLICITUD_SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
 
-export interface ISolicitudProyectoSocioState {
-  solicitudId: number;
-  coordinadorExterno: boolean;
-  solicitudProyectoSocio: ISolicitudProyectoSocio;
-  selectedSolicitudProyectoSocios: ISolicitudProyectoSocio[];
-  readonly: boolean;
-}
-
 @Component({
   selector: 'sgi-solicitud-socios-colaboradores',
   templateUrl: './solicitud-socios-colaboradores.component.html',
@@ -40,8 +32,6 @@ export interface ISolicitudProyectoSocioState {
 })
 export class SolicitudSociosColaboradoresComponent extends FragmentComponent implements OnInit, OnDestroy {
 
-  CSP_ROUTE_NAMES = CSP_ROUTE_NAMES;
-  SOLICITUD_PROYECTO_SOCIO_ROUTE = SOLICITUD_PROYECTO_SOCIO_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;
 
   private subscriptions: Subscription[] = [];
@@ -60,6 +50,8 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
 
   constructor(
     public actionService: SolicitudActionService,
+    private router: Router,
+    private route: ActivatedRoute,
     private dialogService: DialogService,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
     private snackBarService: SnackBarService,
@@ -72,6 +64,16 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+    this.actionService.datosProyectoComplete$.pipe(
+      take(1)
+    ).subscribe(
+      (complete) => {
+        if (!complete) {
+          this.router.navigate(['../', SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS], { relativeTo: this.route });
+        }
+      }
+    );
+
     const subscription = this.formPart.proyectoSocios$.subscribe(
       (proyectoSocios) => {
         this.dataSource.data = proyectoSocios;
@@ -89,7 +91,6 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
       }
     };
     this.subscriptions.push(subscription);
-    this.actionService.hasSocioColaborador();
   }
 
   private setupI18N(): void {
@@ -135,26 +136,5 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
         }
       )
     );
-  }
-
-  createState(wrapper?: StatusWrapper<ISolicitudProyectoSocio>): ISolicitudProyectoSocioState {
-    const solicitudProyectoSocio: ISolicitudProyectoSocio = {
-      empresa: undefined,
-      id: undefined,
-      importeSolicitado: undefined,
-      mesFin: undefined,
-      mesInicio: undefined,
-      numInvestigadores: undefined,
-      rolSocio: undefined,
-      solicitudProyectoDatos: undefined
-    };
-    const state: ISolicitudProyectoSocioState = {
-      solicitudId: this.fragment.getKey() as number,
-      coordinadorExterno: this.actionService.coordinadorExterno,
-      solicitudProyectoSocio: wrapper ? wrapper.value : solicitudProyectoSocio,
-      selectedSolicitudProyectoSocios: this.dataSource.data.map(element => element.value),
-      readonly: this.formPart.readonly
-    };
-    return state;
   }
 }

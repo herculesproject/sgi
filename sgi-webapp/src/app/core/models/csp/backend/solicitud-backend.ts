@@ -1,5 +1,4 @@
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
-import { IConvocatoria } from '../convocatoria';
 import { IEstadoSolicitudBackend } from './estado-solicitud-backend';
 
 export interface ISolicitudBackend {
@@ -13,8 +12,8 @@ export interface ISolicitudBackend {
   codigoRegistroInterno: string;
   /** Estado solicitud */
   estado: IEstadoSolicitudBackend;
-  /** Convocatoria */
-  convocatoria: IConvocatoria;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
   /** Convocatoria externa */
   convocatoriaExterna: string;
   /** Creador */

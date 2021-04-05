@@ -1,9 +1,8 @@
 import { ITipoDocumento, ITipoFase } from '../tipos-configuracion';
-import { IProyectoBackend } from './proyecto-backend';
 
 export interface IProyectoDocumentoBackend {
   id: number;
-  proyecto: IProyectoBackend;
+  proyectoId: number;
   nombre: string;
   documentoRef: string;
   tipoFase: ITipoFase;

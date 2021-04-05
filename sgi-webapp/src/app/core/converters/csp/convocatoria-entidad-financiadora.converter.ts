@@ -13,7 +13,7 @@ class ConvocatoriaEntidadFinanciadoraConverter extends
     return {
       id: value.id,
       empresa: { personaRef: value.entidadRef } as IEmpresaEconomica,
-      convocatoria: value?.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
       porcentajeFinanciacion: value.porcentajeFinanciacion
@@ -27,7 +27,7 @@ class ConvocatoriaEntidadFinanciadoraConverter extends
     return {
       id: value.id,
       entidadRef: value.empresa?.personaRef,
-      convocatoria: value?.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
       porcentajeFinanciacion: value.porcentajeFinanciacion

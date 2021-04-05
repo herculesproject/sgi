@@ -12,7 +12,6 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-
 import { ConvocatoriaEntidadConvocanteModalComponent, ConvocatoriaEntidadConvocanteModalData } from './convocatoria-entidad-convocante-modal.component';
 
 describe('ConvocatoriaEntidadConvocanteModalComponent', () => {
@@ -20,7 +19,7 @@ describe('ConvocatoriaEntidadConvocanteModalComponent', () => {
   let fixture: ComponentFixture<ConvocatoriaEntidadConvocanteModalComponent>;
 
   const data: IConvocatoriaEntidadConvocante = {
-    convocatoria: undefined,
+    convocatoriaId: undefined,
     entidad: undefined,
     id: 1,
     programa: undefined
@@ -67,7 +66,7 @@ describe('ConvocatoriaEntidadConvocanteModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: modalData },
+        { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: modalData },
       ]
     })

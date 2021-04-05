@@ -1,14 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { ConvocatoriaResolver } from './convocatoria.resolver';
+import { SharedModule } from '@shared/shared.module';
+import { ConvocatoriaDataResolver } from './convocatoria-data.resolver';
 import { ConvocatoriaListadoInvComponent } from './convocatoria-listado-inv/convocatoria-listado-inv.component';
 import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module';
-import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
-import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
 
 @NgModule({
   declarations: [
@@ -24,9 +22,7 @@ import { ModeloEjecucionIdResolver } from './modelo-ejecucion-id.resolver';
     FormsModule
   ],
   providers: [
-    ConvocatoriaResolver,
-    ConfiguracionSolicitudResolver,
-    ModeloEjecucionIdResolver
+    ConvocatoriaDataResolver
   ]
 })
 export class ConvocatoriaInvModule { }

@@ -46,6 +46,10 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     protected convocatoriaReunionService: ConvocatoriaService,
     private actionService: ConvocatoriaActionService,
@@ -98,7 +102,6 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   /**

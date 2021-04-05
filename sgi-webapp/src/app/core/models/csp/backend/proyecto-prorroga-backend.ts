@@ -1,9 +1,8 @@
 import { Tipo } from '../proyecto-prorroga';
-import { IProyectoBackend } from './proyecto-backend';
 
 export interface IProyectoProrrogaBackend {
   id: number;
-  proyecto: IProyectoBackend;
+  proyectoId: number;
   numProrroga: number;
   fechaConcesion: string;
   tipo: Tipo;

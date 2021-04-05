@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
+import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -35,7 +35,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
   msgParamEntity = {};
   textoDelete: string;
 
-  dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaSeguimientoCientifico>>();
+  dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -54,7 +54,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
     this.setupI18N();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IConvocatoriaSeguimientoCientifico>, property: string) => {
+      (wrapper: StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>, property: string) => {
         switch (property) {
           case 'numPeriodo':
             return wrapper.value.numPeriodo;
@@ -94,7 +94,6 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   /**
@@ -102,11 +101,11 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
    *
    * @param seguimientoCientificoActualizar seguimiento cientifico que se carga en el modal para modificarlo.
    */
-  openModalSeguimientoCientifico(seguimientoCientificoActualizar?: StatusWrapper<IConvocatoriaSeguimientoCientifico>): void {
+  openModalSeguimientoCientifico(seguimientoCientificoActualizar?: StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>): void {
     const modalData: IConvocatoriaSeguimientoCientificoModalData = {
       duracion: this.actionService.duracion,
       convocatoriaSeguimientoCientifico: seguimientoCientificoActualizar
-        ? seguimientoCientificoActualizar.value : {} as IConvocatoriaSeguimientoCientifico,
+        ? seguimientoCientificoActualizar.value : {} as IConvocatoriaPeriodoSeguimientoCientifico,
       convocatoriaSeguimientoCientificoList: this.dataSource.data,
       readonly: this.formPart.readonly
     };
@@ -119,7 +118,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
 
     const dialogRef = this.matDialog.open(ConvocatoriaSeguimientoCientificoModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (periodoJustificacionModal: IConvocatoriaSeguimientoCientifico) => {
+      (periodoJustificacionModal: IConvocatoriaPeriodoSeguimientoCientifico) => {
         if (!periodoJustificacionModal) {
           return;
         }
@@ -134,7 +133,6 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
         this.recalcularNumPeriodos();
       }
     );
-
   }
 
   /**
@@ -142,7 +140,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
    *
    * @param seguimientoCientifico seguimiento cientifico que se quiere eliminar
    */
-  deleteSeguimientoCientifico(seguimientoCientifico?: StatusWrapper<IConvocatoriaSeguimientoCientifico>): void {
+  deleteSeguimientoCientifico(seguimientoCientifico?: StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>): void {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {

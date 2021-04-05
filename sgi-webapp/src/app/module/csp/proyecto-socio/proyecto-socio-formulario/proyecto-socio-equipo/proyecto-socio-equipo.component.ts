@@ -52,7 +52,7 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    const subcription = this.formPart.proyectoEquipoSocios$.subscribe(
+    const subcription = this.formPart.proyectoSocioEquipos$.subscribe(
       (proyectoEquipos) => this.dataSource.data = proyectoEquipos
     );
     this.subscriptions.push(subcription);
@@ -82,18 +82,10 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
   }
 
   openModal(wrapper?: StatusWrapper<IProyectoSocioEquipo>, position?: number): void {
-    const proyectoSocioEquipo: IProyectoSocioEquipo = {
-      id: undefined,
-      fechaFin: undefined,
-      fechaInicio: undefined,
-      persona: null,
-      proyectoSocio: undefined,
-      rolProyecto: undefined
-    };
-    const fechaInicioProyectoSocio = this.actionService.getProyectoSocio()?.fechaInicio;
-    const fechaFinProyectoSocio = this.actionService.getProyectoSocio()?.fechaFin;
+    const fechaInicioProyectoSocio = this.actionService.proyectoSocio?.fechaInicio;
+    const fechaFinProyectoSocio = this.actionService.proyectoSocio?.fechaFin;
     const data: ProyectoEquipoSocioModalData = {
-      proyectoSocioEquipo: wrapper ? wrapper.value : proyectoSocioEquipo,
+      proyectoSocioEquipo: wrapper?.value ?? {} as IProyectoSocioEquipo,
       selectedProyectoSocioEquipos: this.dataSource.data.map(element => element.value),
       fechaInicioProyectoSocio,
       fechaFinProyectoSocio,

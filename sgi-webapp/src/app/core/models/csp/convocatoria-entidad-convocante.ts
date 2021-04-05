@@ -1,10 +1,9 @@
-import { IConvocatoria } from './convocatoria';
-import { IPrograma } from './programa';
 import { IEmpresaEconomica } from '../sgp/empresa-economica';
+import { IPrograma } from './programa';
 
 export interface IConvocatoriaEntidadConvocante {
   id: number;
-  convocatoria: IConvocatoria;
+  convocatoriaId: number;
   entidad: IEmpresaEconomica;
   programa: IPrograma;
 }

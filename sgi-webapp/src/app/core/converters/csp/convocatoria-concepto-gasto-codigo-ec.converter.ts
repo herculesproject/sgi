@@ -12,7 +12,7 @@ class ConvocatoriaConceptoGastoCodigoEcConverter extends
     }
     return {
       id: value.id,
-      convocatoriaConceptoGasto: value.convocatoriaConceptoGasto,
+      convocatoriaConceptoGastoId: value.convocatoriaConceptoGastoId,
       codigoEconomicoRef: value.codigoEconomicoRef,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -26,7 +26,7 @@ class ConvocatoriaConceptoGastoCodigoEcConverter extends
     }
     return {
       id: value.id,
-      convocatoriaConceptoGasto: value.convocatoriaConceptoGasto,
+      convocatoriaConceptoGastoId: value.convocatoriaConceptoGastoId,
       codigoEconomicoRef: value.codigoEconomicoRef,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

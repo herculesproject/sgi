@@ -12,7 +12,7 @@ class ConvocatoriaEntidadConvocanteConverter extends
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
       programa: value.programa
     };
@@ -24,7 +24,7 @@ class ConvocatoriaEntidadConvocanteConverter extends
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       entidadRef: value.entidad?.personaRef,
       programa: value.programa
     };

@@ -44,7 +44,7 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
 
   constructor(
     protected snackBarService: SnackBarService,
-    private actionService: ProyectoActionService,
+    public actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -83,7 +83,6 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   /**
@@ -95,7 +94,7 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
       plazos: this.dataSource.data.map(plazos => plazos.value),
       plazo: plazo ? plazo.value : {} as IProyectoPlazos,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.formPart.readonly
+      readonly: this.actionService.readonly
     };
 
     const config = {

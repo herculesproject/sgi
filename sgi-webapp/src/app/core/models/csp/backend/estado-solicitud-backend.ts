@@ -4,7 +4,7 @@ export interface IEstadoSolicitudBackend {
   /** Id */
   id: number;
   /** ID de la solicitud */
-  idSolicitud: number;
+  solicitudId: number;
   /** Estado */
   estado: Estado;
   /** Fecha estado */

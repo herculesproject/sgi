@@ -23,7 +23,6 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoSocioPeriodoPagoModalData {
   proyectoSocioPeriodoPago: IProyectoSocioPeriodoPago;
-  selectedFechaPrevistas: DateTime[];
   fechaInicioProyectoSocio: DateTime;
   fechaFinProyectoSocio: DateTime;
   isEdit: boolean;
@@ -64,7 +63,6 @@ export class ProyectoSocioPeriodoPagoModalComponent extends
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-
   }
 
   private setupI18N(): void {
@@ -97,8 +95,6 @@ export class ProyectoSocioPeriodoPagoModalComponent extends
       ).subscribe((value) => this.title = value);
     }
   }
-
-
 
   protected getDatosForm(): ProyectoSocioPeriodoPagoModalData {
     this.data.proyectoSocioPeriodoPago.numPeriodo = this.formGroup.get('numPeriodo').value;

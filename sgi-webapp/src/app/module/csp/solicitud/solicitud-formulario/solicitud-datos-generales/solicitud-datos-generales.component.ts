@@ -29,6 +29,7 @@ const SOLICITUD_CONVOCATORIA_EXTERNA_KEY = marker('csp.solicitud.convocatoria-ex
 const SOLICITUD_OBSERVACIONES_KEY = marker('csp.solicitud.observaciones');
 const SOLICITUD_UNIDAD_GESTION_KEY = marker('csp.solicitud.unidad-gestion');
 const SOLICITUD_ENTIDAD_CONVOCANTE_KEY = marker('csp.solicitud-entidad-convocante');
+
 @Component({
   selector: 'sgi-solicitud-datos-generales',
   templateUrl: './solicitud-datos-generales.component.html',
@@ -69,6 +70,10 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
   constructor(
@@ -150,9 +155,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     }));
   }
 
-
   private setupI18N(): void {
-
     this.translate.get(
       SOLICITUD_CODIGO_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -231,7 +234,6 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
         }
       }
     );
-
   }
 
   /**

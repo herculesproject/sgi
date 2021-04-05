@@ -1,5 +1,4 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
@@ -14,16 +13,12 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
 
   constructor(
     key: number,
-    private proyectoId: number,
+    proyectoId: number,
     private service: ProyectoSocioService,
     private empresaEconomicaService: EmpresaEconomicaService
   ) {
     super(key);
-    this.proyectoSocio = {
-      proyecto: {
-        id: this.proyectoId
-      } as IProyecto
-    } as IProyectoSocio;
+    this.proyectoSocio = { proyectoId } as IProyectoSocio;
   }
 
   protected buildFormGroup(): FormGroup {

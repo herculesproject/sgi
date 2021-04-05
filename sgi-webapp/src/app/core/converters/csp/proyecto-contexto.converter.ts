@@ -1,7 +1,6 @@
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoContextoConverter extends SgiBaseConverter<IProyectoContextoBackend, IProyectoContexto> {
 
@@ -11,7 +10,7 @@ class ProyectoContextoConverter extends SgiBaseConverter<IProyectoContextoBacken
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       objetivos: value.objetivos,
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
@@ -27,7 +26,7 @@ class ProyectoContextoConverter extends SgiBaseConverter<IProyectoContextoBacken
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       objetivos: value.objetivos,
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,

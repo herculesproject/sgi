@@ -2,7 +2,6 @@ import { ISolicitudProyectoSocioBackend } from '@core/models/csp/backend/solicit
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { SOLICITUD_PROYECTO_DATOS_CONVERTER } from './solicitud-proyecto-datos.converter';
 
 class SolicitudProyectoSocioConverter extends SgiBaseConverter<ISolicitudProyectoSocioBackend, ISolicitudProyectoSocio> {
 
@@ -18,7 +17,7 @@ class SolicitudProyectoSocioConverter extends SgiBaseConverter<ISolicitudProyect
       mesInicio: value.mesInicio,
       numInvestigadores: value.numInvestigadores,
       rolSocio: value.rolSocio,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.toTarget(value.solicitudProyectoDatos)
+      solicitudProyectoId: value.solicitudProyectoId
     };
   }
 
@@ -34,7 +33,7 @@ class SolicitudProyectoSocioConverter extends SgiBaseConverter<ISolicitudProyect
       mesInicio: value.mesInicio,
       numInvestigadores: value.numInvestigadores,
       rolSocio: value.rolSocio,
-      solicitudProyectoDatos: SOLICITUD_PROYECTO_DATOS_CONVERTER.fromTarget(value.solicitudProyectoDatos)
+      solicitudProyectoId: value.solicitudProyectoId
     };
   }
 }

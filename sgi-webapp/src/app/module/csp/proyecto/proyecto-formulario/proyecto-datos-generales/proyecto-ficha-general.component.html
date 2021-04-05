@@ -11,8 +11,7 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
           <mat-label>{{'csp.proyecto.estado' | translate}}</mat-label>
-          <mat-select formControlName="estado" disabled
-            placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
+          <mat-select formControlName="estado" placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
             <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
               {{ estado.value | translate}}
             </mat-option>
@@ -380,12 +379,12 @@
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
-          <mat-label>{{'csp.proyecto-paquete-trabajo' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-          <mat-select matNativeControl formControlName="paquetesTrabajo" [required]="formPart.abiertoRequired">
+          <mat-label>{{'csp.proyecto.permite-paquetes-trabajo' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <mat-select matNativeControl formControlName="permitePaquetesTrabajo" [required]="formPart.abiertoRequired">
             <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
             <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="formGroup.controls.paquetesTrabajo.errors?.required">
+          <mat-error *ngIf="formGroup.controls.permitePaquetesTrabajo.errors?.required">
             {{'error.required.entity' | translate:msgParamPaqueteTrabajoEntity}}
           </mat-error>
         </mat-form-field>

@@ -14,6 +14,7 @@ import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquete
 import { ProyectoPlazosModalComponent } from './modals/proyecto-plazos-modal/proyecto-plazos-modal.component';
 import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-convocante-plan.pipe';
 import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
+import { ProyectoDataResolver } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
@@ -31,7 +32,6 @@ import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorr
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
 import { ProyectoRoutingModule } from './proyecto-routing.module';
-import { ProyectoResolver } from './proyecto.resolver';
 
 @NgModule({
   declarations: [
@@ -71,7 +71,7 @@ import { ProyectoResolver } from './proyecto.resolver';
     CspModalsModule
   ],
   providers: [
-    ProyectoResolver,
+    ProyectoDataResolver,
     ProyectoEntidadConvocantePlanPipe
   ]
 })

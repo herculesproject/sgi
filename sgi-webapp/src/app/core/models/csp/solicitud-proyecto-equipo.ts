@@ -1,10 +1,9 @@
-import { IRolProyecto } from './rol-proyecto';
-import { ISolicitudProyectoDatos } from './solicitud-proyecto-datos';
 import { IPersona } from '../sgp/persona';
+import { IRolProyecto } from './rol-proyecto';
 
 export interface ISolicitudProyectoEquipo {
   id: number;
-  solicitudProyectoDatos: ISolicitudProyectoDatos;
+  solicitudProyectoId: number;
   persona: IPersona;
   rolProyecto: IRolProyecto;
   mesInicio: number;

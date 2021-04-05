@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { IConvocatoria } from './convocatoria';
 import { ITipoHito } from './tipos-configuracion';
 
 export interface IConvocatoriaHito {
@@ -11,8 +10,8 @@ export interface IConvocatoriaHito {
   tipoHito: ITipoHito;
   /** Comentario */
   comentario: string;
-  /** convocatoria */
-  convocatoria: IConvocatoria;
+  /** Id de Convocatoria */
+  convocatoriaId: number;
   /** Aviso */
   generaAviso: boolean;
 }

@@ -11,7 +11,7 @@ class ConvocatoriaEntidadGestoraConverter extends SgiBaseConverter<IConvocatoria
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       empresaEconomica: { personaRef: value.entidadRef } as IEmpresaEconomica
     };
   }
@@ -22,7 +22,7 @@ class ConvocatoriaEntidadGestoraConverter extends SgiBaseConverter<IConvocatoria
     }
     return {
       id: value.id,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       entidadRef: value.empresaEconomica?.personaRef
     };
   }

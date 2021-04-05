@@ -1,25 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
+import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto.converter';
+import { IConvocatoriaConceptoGastoBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-backend';
 import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { environment } from '@env';
-import { SgiRestListResult, SgiRestService } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaConceptoGastoService extends SgiRestService<number, IConvocatoriaConceptoGasto> {
+export class ConvocatoriaConceptoGastoService
+  extends SgiMutableRestService<number, IConvocatoriaConceptoGastoBackend, IConvocatoriaConceptoGasto> {
   private static readonly MAPPING = '/convocatoriaconceptogastos';
 
   constructor(protected http: HttpClient) {
     super(
       ConvocatoriaConceptoGastoService.name,
       `${environment.serviceServers.csp}${ConvocatoriaConceptoGastoService.MAPPING}`,
-      http
+      http,
+      CONVOCATORIA_CONCEPTO_GASTO_CONVERTER
     );
   }
 
@@ -47,4 +51,15 @@ export class ConvocatoriaConceptoGastoService extends SgiRestService<number, ICo
     );
   }
 
+  /**
+   * Comprueba si existe la entidad con el identificador facilitadao
+   *
+   * @param id Identificador de la entidad
+   */
+  exists(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
 }

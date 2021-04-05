@@ -3,8 +3,8 @@ import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
+import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
@@ -14,7 +14,6 @@ import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.se
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IsYearPlus } from '@core/validators/is-year-plus';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
@@ -30,10 +29,11 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   areasTematicas$ = new BehaviorSubject<AreaTematicaData[]>([]);
   private convocatoriaAreaTematicaEliminadas: StatusWrapper<IConvocatoriaAreaTematica>[] = [];
 
-  convocatoria: IConvocatoria;
+  private convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
-  destinatariosValue$: Subject<Destinatarios> = new Subject<Destinatarios>();
+  destinatariosValue$: Subject<Destinatarios> = new BehaviorSubject<Destinatarios>(null);
+  modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -97,13 +97,21 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       })
     );
 
+    this.subscriptions.push(
+      form.controls.modeloEjecucion.valueChanges.subscribe((value) => {
+        this.modeloEjecucion$.next(value);
+      })
+    );
+
     this.checkEstado(form, this.convocatoria);
     return form;
   }
 
   buildPatch(convocatoria: IConvocatoria): { [key: string]: any } {
+    this.convocatoria = convocatoria;
     const result = {
       modeloEjecucion: convocatoria.modeloEjecucion,
+      unidadGestion: convocatoria.unidadGestion,
       codigo: convocatoria.codigo,
       anio: convocatoria.anio,
       titulo: convocatoria.titulo,
@@ -146,12 +154,11 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   protected initializer(key: number): Observable<IConvocatoria> {
     return this.convocatoriaService.findById(key).pipe(
-      switchMap((value) => {
-        this.convocatoria = value;
-        return this.getUnidadGestion(value.unidadGestionRef).pipe(
+      switchMap((convocatoria) => {
+        return this.unidadGestionService.findByAcronimo(convocatoria.unidadGestion.acronimo).pipe(
           map(unidadGestion => {
-            this.getFormGroup().get('unidadGestion').setValue(unidadGestion);
-            return value;
+            convocatoria.unidadGestion = unidadGestion;
+            return convocatoria;
           })
         );
       }),
@@ -189,22 +196,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
-      })
-    );
-  }
-
-  private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
-    const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, unidadGestionRef)
-    };
-    return this.unidadGestionService.findAll(options).pipe(
-      map(list => {
-        if (list.items.length === 1) {
-          return list.items[0];
-        }
-        else {
-          return undefined;
-        }
       })
     );
   }
@@ -256,7 +247,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   getValue(): IConvocatoria {
     const form = this.getFormGroup().controls;
-    this.convocatoria.unidadGestionRef = form.unidadGestion.value?.acronimo;
+    this.convocatoria.unidadGestion = form.unidadGestion.value;
     if (typeof form.modeloEjecucion.value === 'string') {
       this.convocatoria.modeloEjecucion = undefined;
     } else {
@@ -321,7 +312,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private saveOrUpdateConvocatoriaEntidadGestora(result: IConvocatoria): Observable<IConvocatoria> {
     let observable$: Observable<any>;
     const entidadRef = this.getFormGroup().controls.entidadGestora.value?.personaRef;
-    this.convocatoriaEntidadGestora.convocatoria = result;
+    this.convocatoriaEntidadGestora.convocatoriaId = result.id;
     if (entidadRef !== this.convocatoriaEntidadGestora.empresaEconomica?.personaRef) {
       if (!entidadRef) {
         observable$ = this.deleteConvocatoriaEntidadGestora();
@@ -467,7 +458,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       return of(void 0);
     }
     createdAreas.forEach(
-      (wrapper) => wrapper.convocatoriaAreaTematica.value.convocatoria = this.convocatoria
+      (wrapper) => wrapper.convocatoriaAreaTematica.value.convocatoriaId = this.convocatoria.id
     );
     return from(createdAreas).pipe(
       mergeMap((data) => {

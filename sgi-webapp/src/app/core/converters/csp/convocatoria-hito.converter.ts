@@ -14,7 +14,7 @@ class ConvocatoriaHitoConverter extends SgiBaseConverter<IConvocatoriaHitoBacken
       fecha: LuxonUtils.fromBackend(value.fecha),
       tipoHito: value.tipoHito,
       comentario: value.comentario,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       generaAviso: value.generaAviso
     };
   }
@@ -28,7 +28,7 @@ class ConvocatoriaHitoConverter extends SgiBaseConverter<IConvocatoriaHitoBacken
       fecha: LuxonUtils.toBackend(value.fecha),
       tipoHito: value.tipoHito,
       comentario: value.comentario,
-      convocatoria: value.convocatoria,
+      convocatoriaId: value.convocatoriaId,
       generaAviso: value.generaAviso
     };
   }

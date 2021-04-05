@@ -3,7 +3,6 @@ import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PROYECTO_CONVERTER } from './proyecto.converter';
 
 class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IProyectoSocio> {
 
@@ -13,7 +12,7 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.toTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       empresa: { personaRef: value.empresaRef } as IEmpresaEconomica,
       rolSocio: value.rolSocio,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
@@ -29,7 +28,7 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
     }
     return {
       id: value.id,
-      proyecto: PROYECTO_CONVERTER.fromTarget(value.proyecto),
+      proyectoId: value.proyectoId,
       empresaRef: value.empresa.personaRef,
       rolSocio: value.rolSocio,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),

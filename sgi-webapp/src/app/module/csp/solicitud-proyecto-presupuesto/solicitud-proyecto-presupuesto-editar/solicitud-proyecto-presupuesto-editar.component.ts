@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
@@ -24,13 +24,12 @@ const SOLICITUD_PROYECTO_PRESUPUESTO_KEY = marker('csp.solicitud-proyecto-presup
     SolicitudProyectoPresupuestoActionService
   ]
 })
-export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent {
+export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent implements OnInit {
   SOLICITUD_PROYECTO_PRESUPUESTO_ROUTE_NAMES = SOLICITUD_PROYECTO_PRESUPUESTO_ROUTE_NAMES;
 
   textoEditar = MSG_BUTTON_EDIT;
   textoEditarSuccess: string;
   textoEditarError: string;
-  urlFrom: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -42,7 +41,6 @@ export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
-    this.urlFrom = history.state?.from;
   }
 
   ngOnInit(): void {
@@ -51,7 +49,6 @@ export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent
   }
 
   private setupI18N(): void {
-
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -89,7 +86,6 @@ export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent
     ).subscribe((value) => this.textoEditarError = value);
   }
 
-
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
@@ -107,9 +103,8 @@ export class SolicitudProyectoPresupuestoEditarComponent extends ActionComponent
     this.returnUrl();
   }
 
-
   private returnUrl() {
-    this.router.navigateByUrl(this.urlFrom);
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 
 }

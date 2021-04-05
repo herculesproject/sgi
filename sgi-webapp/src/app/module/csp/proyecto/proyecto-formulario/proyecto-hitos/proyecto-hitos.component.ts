@@ -47,7 +47,7 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
 
   constructor(
     protected proyectoReunionService: ProyectoService,
-    private actionService: ProyectoActionService,
+    public actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -98,7 +98,6 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   /**
@@ -110,7 +109,7 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
       hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as IProyectoHito,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.formPart.readonly
+      readonly: this.actionService.readonly
     };
 
     if (wrapper) {
@@ -159,6 +158,5 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
       )
     );
   }
-
 
 }

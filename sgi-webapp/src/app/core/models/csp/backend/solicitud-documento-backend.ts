@@ -1,9 +1,8 @@
 import { ITipoDocumento } from '../tipos-configuracion';
-import { ISolicitudBackend } from './solicitud-backend';
 
 export interface ISolicitudDocumentoBackend {
   id: number;
-  solicitud: ISolicitudBackend;
+  solicitudId: number;
   comentario: string;
   documentoRef: string;
   nombre: string;
