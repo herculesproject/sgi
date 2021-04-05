@@ -24,19 +24,18 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
   public void findByProyectoId_ReturnsContextoProyecto() throws Exception {
 
     // given: 2 ContextoProyecto de los que 1 coincide con el idProyecto buscado
-    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L);
-    entityManager.persistAndFlush(contextoProyecto1.getProyecto());
+    Proyecto proyecto1 = entityManager.persistAndFlush(generarMockProyecto(1L));
+    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L, proyecto1.getId());
     entityManager.persistAndFlush(contextoProyecto1);
 
-    entityManager.persistAndFlush(contextoProyecto1.getProyecto());
-    ContextoProyecto contextoProyecto2 = generarMockContextoProyecto(2L);
-    entityManager.persistAndFlush(contextoProyecto2.getProyecto());
+    Proyecto proyecto2 = entityManager.persistAndFlush(generarMockProyecto(2L));
+    ContextoProyecto contextoProyecto2 = generarMockContextoProyecto(2L, proyecto2.getId());
     entityManager.persistAndFlush(contextoProyecto2);
 
-    Long convocatoriaIdBuscada = contextoProyecto1.getProyecto().getId();
+    Long proyectoIdBuscado = proyecto1.getId();
 
     // when: se busca el ContextoProyecto por el idProyecto
-    ContextoProyecto contextoProyectoEncontrado = repository.findByProyectoId(convocatoriaIdBuscada).get();
+    ContextoProyecto contextoProyectoEncontrado = repository.findByProyectoId(proyectoIdBuscado).get();
 
     // then: Se recupera el ContextoProyecto con el idProyecto buscado
     Assertions.assertThat(contextoProyectoEncontrado.getId()).as("getId").isNotNull();
@@ -50,29 +49,20 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
   public void findByProyectoNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 ContextoProyecto que no coinciden con el idProyecto buscado
-    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L);
-    entityManager.persistAndFlush(contextoProyecto1.getProyecto());
+    Proyecto proyecto1 = entityManager.persistAndFlush(generarMockProyecto(1L));
+    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L, proyecto1.getId());
     entityManager.persistAndFlush(contextoProyecto1);
 
-    ContextoProyecto contextoProyecto2 = generarMockContextoProyecto(2L);
-
-    Long convocatoriaIdBuscada = contextoProyecto2.getProyecto().getId();
+    Long proyectoIdBuscado = 2L;
 
     // when: se busca el ContextoProyecto por idProyecto que no existe
-    Optional<ContextoProyecto> contextoProyectoEncontrado = repository.findByProyectoId(convocatoriaIdBuscada);
+    Optional<ContextoProyecto> contextoProyectoEncontrado = repository.findByProyectoId(proyectoIdBuscado);
 
-    // then: Se recupera el ContextoProyecto con el idProyecto buscado
+    // then: No se recupera ningún ContextoProyecto
     Assertions.assertThat(contextoProyectoEncontrado).isEqualTo(Optional.empty());
   }
 
-  /**
-   * Función que devuelve un objeto ContextoProyecto
-   * 
-   * @param id identificador
-   * @return el objeto ContextoProyecto
-   */
-  private ContextoProyecto generarMockContextoProyecto(Long id) {
-
+  private Proyecto generarMockProyecto(Long proyectoId) {
     // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre("nombreModeloEjecucion")
@@ -82,14 +72,23 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
 
     Proyecto proyecto = Proyecto.builder()
         .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
-        .titulo("PRO" + (id != null ? id : ""))
+        .titulo("PRO")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.now()).activo(Boolean.TRUE)
         .build();
     // @formatter:on
+    return proyecto;
+  }
 
+  /**
+   * Función que devuelve un objeto ContextoProyecto
+   * 
+   * @param id identificador
+   * @return el objeto ContextoProyecto
+   */
+  private ContextoProyecto generarMockContextoProyecto(Long id, Long proyectoId) {
     ContextoProyecto contextoProyecto = new ContextoProyecto();
-    contextoProyecto.setProyecto(proyecto);
+    contextoProyecto.setProyectoId(proyectoId);
     contextoProyecto.setIntereses("intereses");
     contextoProyecto.setObjetivos("objetivos");
     contextoProyecto.setPropiedadResultados(ContextoProyecto.PropiedadResultados.COMPARTIDA);

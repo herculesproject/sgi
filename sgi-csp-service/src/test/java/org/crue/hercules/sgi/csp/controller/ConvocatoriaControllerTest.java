@@ -1086,7 +1086,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
-    convocatoriaFase.setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    convocatoriaFase.setConvocatoriaId(id);
     convocatoriaFase.setFechaInicio(Instant.now());
     convocatoriaFase.setFechaFin(Instant.now().plus(Period.ofDays(1)));
     convocatoriaFase.setTipoFase(
@@ -1642,13 +1642,12 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     Long convocatoriaId = 1L;
     List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    Convocatoria convocatoria = Convocatoria.builder().id(Long.valueOf(1L)).build();
     for (int i = 1, j = 2; i <= 100; i++, j += 2) {
       // @formatter:off
       listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
           .id(Long.valueOf(i))
-          .convocatoria(convocatoria)
+          .convocatoriaId(convocatoriaId)
           .numPeriodo(i - 1)
           .mesInicial((i * 2) - 1)
           .mesFinal(j * 1)
@@ -1833,8 +1832,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaEntidadGestora generarConvocatoriaEntidadGestora(Long convocatoriaEntidadGestoraId,
       Long convocatoriaId, String entidadRef) {
 
-    return ConvocatoriaEntidadGestora.builder().id(convocatoriaEntidadGestoraId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build()).entidadRef(entidadRef).build();
+    return ConvocatoriaEntidadGestora.builder().id(convocatoriaEntidadGestoraId).convocatoriaId(convocatoriaId)
+        .entidadRef(entidadRef).build();
 
   }
 
@@ -2173,8 +2172,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaAreaTematica generarConvocatoriaAreaTematica(Long convocatoriaAreaTematicaId, Long convocatoriaId,
       Long areaTematicaId) {
 
-    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
+    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId).convocatoriaId(convocatoriaId)
         .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }
@@ -2186,15 +2184,12 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaEntidadConvocante
    */
   private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id);
-
     Programa programa = new Programa();
     programa.setId(id);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
     convocatoriaEntidadConvocante.setId(id);
-    convocatoriaEntidadConvocante.setConvocatoria(convocatoria);
+    convocatoriaEntidadConvocante.setConvocatoriaId((id == null ? 0 : id));
     convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadConvocante.setPrograma(programa);
 
@@ -2208,16 +2203,13 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaHito
    */
   private ConvocatoriaHito generarMockConvocatoriaHito(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
     ConvocatoriaHito convocatoriaHito = new ConvocatoriaHito();
     convocatoriaHito.setId(id);
-    convocatoriaHito.setConvocatoria(convocatoria);
+    convocatoriaHito.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
     convocatoriaHito.setComentario("comentario-" + id);
     convocatoriaHito.setGeneraAviso(true);
@@ -2234,14 +2226,13 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
   private ConvocatoriaDocumento generarMockConvocatoriaDocumento(Long id) {
 
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).build();
     TipoFase tipoFase = TipoFase.builder().id(id).build();
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(id).build();
 
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
-        .convocatoria(convocatoria)
+        .convocatoriaId(1L)
         .tipoFase(tipoFase)
         .tipoDocumento(tipoDocumento)
         .nombre("nombre doc-" + id)
@@ -2262,8 +2253,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     ConvocatoriaEnlace convocatoriaEnlace = new ConvocatoriaEnlace();
     convocatoriaEnlace.setId(id);
-    convocatoriaEnlace
-        .setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    convocatoriaEnlace.setConvocatoriaId(id);
     convocatoriaEnlace.setDescripcion("descripcion-" + id);
     convocatoriaEnlace.setUrl("www.url" + id + ".es");
     convocatoriaEnlace.setTipoEnlace(TipoEnlace.builder().id(id).nombre("tipoEnlace" + id)
@@ -2279,9 +2269,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaEntidadFinanciadora
    */
   private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
     fuenteFinanciacion.setId(id == null ? 1 : id);
     fuenteFinanciacion.setActivo(true);
@@ -2295,7 +2282,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = new ConvocatoriaEntidadFinanciadora();
     convocatoriaEntidadFinanciadora.setId(id);
-    convocatoriaEntidadFinanciadora.setConvocatoria(convocatoria);
+    convocatoriaEntidadFinanciadora.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
     convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);
@@ -2311,12 +2298,9 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaPeriodoJustificacion
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
-    convocatoriaPeriodoJustificacion.setConvocatoria(convocatoria);
+    convocatoriaPeriodoJustificacion.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setMesInicial(1);
     convocatoriaPeriodoJustificacion.setMesFinal(2);
@@ -2335,9 +2319,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaConceptoGasto
    */
   private ConvocatoriaConceptoGasto generarMockConvocatoriaConceptoGasto(Long id, Boolean permitido) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id == null ? 1 : id);
     conceptoGasto.setActivo(true);
@@ -2345,7 +2326,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
     convocatoriaConceptoGasto.setId(id);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
-    convocatoriaConceptoGasto.setConvocatoria(convocatoria);
+    convocatoriaConceptoGasto.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaConceptoGasto.setImporteMaximo(20.0);
     convocatoriaConceptoGasto.setMesInicial(1);
     convocatoriaConceptoGasto.setMesFinal(4);

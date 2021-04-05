@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudModalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.junit.jupiter.api.Test;
@@ -54,7 +53,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
         // then: new SolicitudModalidad is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(solicitudModalidad.getSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(solicitudModalidad.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value(solicitudModalidad.getEntidadRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("programa.id").value(solicitudModalidad.getPrograma().getId()));
   }
@@ -101,8 +100,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
         // then: SolicitudModalidad is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(solicitudModalidadExistente.getId()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("solicitud.id").value(solicitudModalidadExistente.getSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(solicitudModalidadExistente.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value(solicitudModalidadExistente.getEntidadRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("programa.id").value(programa.getId()));
   }
@@ -178,7 +176,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested SolicitudModalidad is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value("entidadRef"))
         .andExpect(MockMvcResultMatchers.jsonPath("programa.id").value(1L));
   }
@@ -207,16 +205,13 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
    * @return el objeto SolicitudModalidad
    */
   private SolicitudModalidad generarMockSolicitudModalidad(Long id) {
-    Solicitud solicitud = new Solicitud();
-    solicitud.setId(1L);
-
     Programa programa = new Programa();
     programa.setId(1L);
 
     SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
     solicitudModalidad.setId(id);
     solicitudModalidad.setEntidadRef("entidadRef");
-    solicitudModalidad.setSolicitud(solicitud);
+    solicitudModalidad.setSolicitudId(1L);
     solicitudModalidad.setPrograma(programa);
 
     return solicitudModalidad;

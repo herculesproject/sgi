@@ -65,7 +65,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
     Assert.isNull(convocatoriaFase.getId(), "Id tiene que ser null para crear ConvocatoriaFase");
 
-    Assert.isTrue(convocatoriaFase.getConvocatoria() != null && convocatoriaFase.getConvocatoria().getId() != null,
+    Assert.isTrue(convocatoriaFase.getConvocatoriaId() != null,
         "Id Convocatoria no puede ser null para crear ConvocatoriaFase");
 
     Assert.isTrue(convocatoriaFase.getTipoFase() != null && convocatoriaFase.getTipoFase().getId() != null,
@@ -79,14 +79,12 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     Assert.isTrue(convocatoriaFase.getFechaFin().compareTo(convocatoriaFase.getFechaInicio()) >= 0,
         "La fecha de fecha de fin debe ser posterior a la fecha de inicio");
 
-    convocatoriaFase.setConvocatoria(convocatoriaRepository.findById(convocatoriaFase.getConvocatoria().getId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaFase.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaFase.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaFase.getConvocatoriaId()));
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-    Long modeloEjecucionId = (convocatoriaFase.getConvocatoria().getModeloEjecucion() != null
-        && convocatoriaFase.getConvocatoria().getModeloEjecucion().getId() != null)
-            ? convocatoriaFase.getConvocatoria().getModeloEjecucion().getId()
-            : null;
+    Long modeloEjecucionId = (convocatoria.getModeloEjecucion() != null
+        && convocatoria.getModeloEjecucion().getId() != null) ? convocatoria.getModeloEjecucion().getId() : null;
 
     // TipoFase
     Optional<ModeloTipoFase> modeloTipoFase = modeloTipoFaseRepository
@@ -95,7 +93,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     // Está asignado al ModeloEjecucion
     Assert.isTrue(modeloTipoFase.isPresent(),
         "TipoFase '" + convocatoriaFase.getTipoFase().getNombre() + "' no disponible para el ModeloEjecucion '"
-            + ((modeloEjecucionId != null) ? convocatoriaFase.getConvocatoria().getModeloEjecucion().getNombre()
+            + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
                 : "Convocatoria sin modelo asignado")
             + "'");
 
@@ -133,9 +131,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     Assert.notNull(convocatoriaFaseActualizar.getId(),
         "ConvocatoriaFase id no puede ser null para actualizar un ConvocatoriaFase");
 
-    Assert.isTrue(
-        convocatoriaFaseActualizar.getConvocatoria() != null
-            && convocatoriaFaseActualizar.getConvocatoria().getId() != null,
+    Assert.isTrue(convocatoriaFaseActualizar.getConvocatoriaId() != null,
         "Id Convocatoria no puede ser null para actualizar ConvocatoriaFase");
 
     Assert.isTrue(
@@ -155,14 +151,14 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
       // Si la fase es la asignada a la ConfiguracionSolicitud comprobar si
       // convocatoria es modificable
-      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoria().getId(), convocatoriaFase.getId()),
+      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoriaId(), convocatoriaFase.getId()),
           "No se puede modificar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
 
       // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-      Long modeloEjecucionId = (convocatoriaFase.getConvocatoria().getModeloEjecucion() != null
-          && convocatoriaFase.getConvocatoria().getModeloEjecucion().getId() != null)
-              ? convocatoriaFase.getConvocatoria().getModeloEjecucion().getId()
-              : null;
+      Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaFase.getConvocatoriaId())
+          .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaFase.getConvocatoriaId()));
+      Long modeloEjecucionId = (convocatoria.getModeloEjecucion() != null
+          && convocatoria.getModeloEjecucion().getId() != null) ? convocatoria.getModeloEjecucion().getId() : null;
 
       // TipoFase
       Optional<ModeloTipoFase> modeloTipoFase = modeloTipoFaseRepository
@@ -172,7 +168,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
       Assert.isTrue(modeloTipoFase.isPresent(),
           "TipoFase '" + convocatoriaFaseActualizar.getTipoFase().getNombre()
               + "' no disponible para el ModeloEjecucion '"
-              + ((modeloEjecucionId != null) ? convocatoriaFase.getConvocatoria().getModeloEjecucion().getNombre()
+              + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
                   : "Convocatoria sin modelo asignado")
               + "'");
 
@@ -223,7 +219,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
       // Si la fase es la asignada a la ConfiguracionSolicitud comprobar si
       // convocatoria es modificable
-      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoria().getId(), convocatoriaFase.getId()),
+      Assert.isTrue(isModificable(convocatoriaFase.getConvocatoriaId(), convocatoriaFase.getId()),
           "No se puede eliminar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaFase;
@@ -293,7 +289,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     Specification<ConvocatoriaFase> specByRangoFechaSolapados = ConvocatoriaFaseSpecifications
         .byRangoFechaSolapados(convocatoriaFase.getFechaInicio(), convocatoriaFase.getFechaFin());
     Specification<ConvocatoriaFase> specByConvocatoria = ConvocatoriaFaseSpecifications
-        .byConvocatoriaId(convocatoriaFase.getConvocatoria().getId());
+        .byConvocatoriaId(convocatoriaFase.getConvocatoriaId());
     Specification<ConvocatoriaFase> specByTipoFase = ConvocatoriaFaseSpecifications
         .byTipoFaseId(convocatoriaFase.getTipoFase().getId());
     Specification<ConvocatoriaFase> specByIdNotEqual = ConvocatoriaFaseSpecifications
@@ -331,8 +327,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
       if (configuraciSolicitud.get().getFasePresentacionSolicitudes() != null
           && configuraciSolicitud.get().getFasePresentacionSolicitudes().getId() == convocatoriaFaseId) {
 
-        returnValue = convocatoriaService.modificable(convocatoriaId,
-            configuraciSolicitud.get().getConvocatoria().getUnidadGestionRef());
+        returnValue = convocatoriaService.modificable(convocatoriaId, null);
       }
     }
     log.debug("Boolean isModificable(Long convocatoriaId, Long convocatoriaFaseId) - end");

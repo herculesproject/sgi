@@ -6,8 +6,8 @@ scripts = {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/programa.sql",
       "classpath:scripts/proyecto_entidad_convocante.sql"
       // @formatter:on

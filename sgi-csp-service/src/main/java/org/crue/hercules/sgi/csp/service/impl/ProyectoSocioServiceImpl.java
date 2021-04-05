@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -7,12 +8,13 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.SocioPeriodoJustificacionDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -36,18 +38,21 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   private final ProyectoSocioRepository repository;
   private final ProyectoSocioEquipoRepository equipoRepository;
   private final ProyectoSocioPeriodoPagoRepository periodoPagoRepository;
-  private final SocioPeriodoJustificacionDocumentoRepository documentoRepository;
+  private final ProyectoSocioPeriodoJustificacionDocumentoRepository documentoRepository;
   private final ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
+  private final ProyectoRepository proyectoRepository;
 
   public ProyectoSocioServiceImpl(ProyectoSocioRepository repository, ProyectoSocioEquipoRepository equipoRepository,
       ProyectoSocioPeriodoPagoRepository periodoPagoRepository,
-      SocioPeriodoJustificacionDocumentoRepository documentoRepository,
-      ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository) {
+      ProyectoSocioPeriodoJustificacionDocumentoRepository documentoRepository,
+      ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository,
+      ProyectoRepository proyectoRepository) {
     this.repository = repository;
     this.equipoRepository = equipoRepository;
     this.periodoPagoRepository = periodoPagoRepository;
     this.documentoRepository = documentoRepository;
     this.periodoJustificacionRepository = periodoJustificacionRepository;
+    this.proyectoRepository = proyectoRepository;
   }
 
   /**
@@ -90,11 +95,12 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
       if (!proyectoSocio.getRolSocio().getCoordinador() && proyectoSocioExistente.getRolSocio().getCoordinador()) {
 
-        if (proyectoSocioExistente.getProyecto().getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO)
-            && proyectoSocioExistente.getProyecto().getColaborativo()
-            && proyectoSocioExistente.getProyecto().getCoordinadorExterno()) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoSocioExistente.getProyectoId())
+            .orElseThrow(() -> new ProyectoNotFoundException(proyectoSocioExistente.getProyectoId()));
+        if (proyecto.getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO) && proyecto.getColaborativo()
+            && proyecto.getCoordinadorExterno()) {
 
-          Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocioExistente.getProyecto().getId()),
+          Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocioExistente.getProyectoId()),
               "Debe existir al menos un socio con TipoRolSocio que tenga el campo coordinador a true");
         }
 
@@ -130,10 +136,12 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
       // Validaciones
       if (proyectoSocio.getRolSocio().getCoordinador()) {
 
-        if (proyectoSocio.getProyecto().getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO)
-            && proyectoSocio.getProyecto().getColaborativo() && proyectoSocio.getProyecto().getCoordinadorExterno()) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoSocio.getProyectoId())
+            .orElseThrow(() -> new ProyectoNotFoundException(proyectoSocio.getProyectoId()));
+        if (proyecto.getEstado().getEstado().equals(EstadoProyecto.Estado.ABIERTO) && proyecto.getColaborativo()
+            && proyecto.getCoordinadorExterno()) {
 
-          Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocio.getProyecto().getId()),
+          Assert.isTrue(existsProyectoSocioCoordinador(proyectoSocio.getProyectoId()),
               "Debe existir al menos un socio con TipoRolSocio que tenga el campo coordinador a true");
         }
 
@@ -190,7 +198,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   @Override
   public Page<ProyectoSocio> findAllByProyecto(Long proyectoId, String query, Pageable paging) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable paging) - start");
-    Specification<ProyectoSocio> specs = ProyectoSocioSpecifications.byProyecto(proyectoId)
+    Specification<ProyectoSocio> specs = ProyectoSocioSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<ProyectoSocio> returnValue = repository.findAll(specs, paging);
@@ -210,7 +218,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   public boolean existsProyectoSocioCoordinador(Long proyectoId) {
     log.debug("existsProyectoSocioCoordinador(Long proyectoId) - start");
 
-    Specification<ProyectoSocio> specByProyecto = ProyectoSocioSpecifications.byProyecto(proyectoId);
+    Specification<ProyectoSocio> specByProyecto = ProyectoSocioSpecifications.byProyectoId(proyectoId);
     Specification<ProyectoSocio> specCoordinadores = ProyectoSocioSpecifications.sociosCoordinadores();
 
     Specification<ProyectoSocio> specs = Specification.where(specByProyecto).and(specCoordinadores);
@@ -231,7 +239,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
     Specification<ProyectoSocio> specByIdNotEqual = ProyectoSocioSpecifications.byIdNotEqual(proyectoSocio.getId());
     Specification<ProyectoSocio> specByProyecto = ProyectoSocioSpecifications
-        .byProyecto(proyectoSocio.getProyecto().getId());
+        .byProyectoId(proyectoSocio.getProyectoId());
     Specification<ProyectoSocio> specByEmpresaRef = ProyectoSocioSpecifications
         .byEmpresaRef(proyectoSocio.getEmpresaRef());
     Specification<ProyectoSocio> specByRangoFechaSolapados = ProyectoSocioSpecifications
@@ -246,13 +254,14 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   /**
    * Indica si {@link ProyectoSocio} tiene {@link ProyectoSocioEquipo},
-   * {@link ProyectoSocioPeriodoPago}, {@link SocioPeriodoJustificacionDocumento}
-   * y/o {@link ProyectoSocioPeriodoJustificacion} relacionadas.
+   * {@link ProyectoSocioPeriodoPago},
+   * {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
+   * {@link ProyectoSocioPeriodoJustificacion} relacionadas.
    *
    * @param id Id de la {@link Proyecto}.
    * @return True si tiene {@link ProyectoSocioEquipo},
    *         {@link ProyectoSocioPeriodoPago},
-   *         {@link SocioPeriodoJustificacionDocumento} y/o
+   *         {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
    *         {@link ProyectoSocioPeriodoJustificacion} relacionadas. En caso
    *         contrario false
    */

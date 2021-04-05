@@ -7,8 +7,8 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
@@ -175,9 +175,9 @@ public class ProyectoSocioController {
   }
 
   /**
-   * Devuelve una lista paginada de {@link SolicitudProyectoPeriodoPago}
+   * Devuelve una lista paginada de {@link SolicitudProyectoSocioPeriodoPago}
    * 
-   * @param id     Identificador de {@link SolicitudProyectoPeriodoPago}.
+   * @param id     Identificador de {@link SolicitudProyectoSocioPeriodoPago}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
@@ -225,13 +225,14 @@ public class ProyectoSocioController {
 
   /**
    * Indica si {@link ProyectoSocio} tiene {@link ProyectoSocioEquipo},
-   * {@link ProyectoSocioPeriodoPago}, {@link SocioPeriodoJustificacionDocumento}
-   * y/o {@link ProyectoSocioPeriodoJustificacion} relacionadas.
+   * {@link ProyectoSocioPeriodoPago},
+   * {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
+   * {@link ProyectoSocioPeriodoJustificacion} relacionadas.
    *
    * @param id Id de la {@link Proyecto}.
    * @return True si tiene {@link ProyectoSocioEquipo},
    *         {@link ProyectoSocioPeriodoPago},
-   *         {@link SocioPeriodoJustificacionDocumento} y/o
+   *         {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
    *         {@link ProyectoSocioPeriodoJustificacion} relacionadas. En caso
    *         contrario false
    */

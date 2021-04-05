@@ -1,12 +1,9 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -38,8 +35,8 @@ public class ContextoProyectoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql" })
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void create_ReturnsContextoProyecto() throws Exception {
@@ -55,8 +52,8 @@ public class ContextoProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ContextoProyecto responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(newContextoProyecto.getProyecto().getId());
+    Assertions.assertThat(responseData.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(newContextoProyecto.getProyectoId());
     Assertions.assertThat(responseData.getIntereses()).as("getIntereses()")
         .isEqualTo(newContextoProyecto.getIntereses());
 
@@ -64,8 +61,8 @@ public class ContextoProyectoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/contexto_proyecto.sql" })
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/contexto_proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void update_ReturnsContextoProyecto() throws Exception {
@@ -79,16 +76,16 @@ public class ContextoProyectoIT extends BaseIT {
 
     ContextoProyecto contextoProyectoActualizado = response.getBody();
     Assertions.assertThat(contextoProyectoActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(contextoProyectoActualizado.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(contextoProyecto.getProyecto().getId());
+    Assertions.assertThat(contextoProyectoActualizado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(contextoProyecto.getProyectoId());
     Assertions.assertThat(contextoProyectoActualizado.getIntereses()).as("getIntereses()")
         .isEqualTo(contextoProyecto.getIntereses());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/contexto_proyecto.sql" })
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/contexto_proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findContextoProyectoProyecto_ReturnsContextoProyecto() throws Exception {
@@ -100,7 +97,7 @@ public class ContextoProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     ContextoProyecto contextoProyecto = response.getBody();
-    Assertions.assertThat(contextoProyecto.getProyecto().getId()).as("getId()").isEqualTo(idProyecto);
+    Assertions.assertThat(contextoProyecto.getProyectoId()).as("getProyectoId()").isEqualTo(idProyecto);
     Assertions.assertThat(contextoProyecto.getIntereses()).as("getIntereses()")
         .isEqualTo(contextoProyecto.getIntereses());
 
@@ -115,26 +112,7 @@ public class ContextoProyectoIT extends BaseIT {
   private ContextoProyecto generarMockContextoProyecto(Long id) {
     ContextoProyecto contextoProyecto = new ContextoProyecto();
     contextoProyecto.setId(id);
-    Long idProyecto = id;
-
-    if (id == null) {
-      idProyecto = 1L;
-    }
-
-    // @formatter:off
-    contextoProyecto.setProyecto(Proyecto.builder()
-        .id(idProyecto)
-        .unidadGestionRef("OPE")
-        .modeloEjecucion(ModeloEjecucion.builder()
-            .nombre("nombreModeloEjecucion")
-            .activo(Boolean.TRUE)
-            .build())
-        .titulo("PRO" + (id != null ? id : ""))
-        .fechaInicio(Instant.now())
-        .fechaFin(Instant.now())
-        .activo(Boolean.TRUE)
-        .build());
-    // @formatter:on
+    contextoProyecto.setProyectoId(id == null ? 1L : id);
     contextoProyecto.setIntereses("intereses");
     return contextoProyecto;
   }

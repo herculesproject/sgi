@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.util.Collections;
+
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -63,8 +63,8 @@ public class RequisitoEquipoIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     RequisitoEquipo responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newRequisitoEquipo.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newRequisitoEquipo.getConvocatoriaId());
     Assertions.assertThat(responseData.getEdadMaxima()).as("getEdadMaxima()")
         .isEqualTo(newRequisitoEquipo.getEdadMaxima());
 
@@ -84,8 +84,8 @@ public class RequisitoEquipoIT {
 
     RequisitoEquipo requisitoEquipoActualizado = response.getBody();
     Assertions.assertThat(requisitoEquipoActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(requisitoEquipoActualizado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(requisitoEquipo.getConvocatoria().getId());
+    Assertions.assertThat(requisitoEquipoActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(requisitoEquipo.getConvocatoriaId());
     Assertions.assertThat(requisitoEquipoActualizado.getEdadMaxima()).as("getEdadMaxima()")
         .isEqualTo(requisitoEquipo.getEdadMaxima());
   }
@@ -102,7 +102,7 @@ public class RequisitoEquipoIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     RequisitoEquipo requisitoEquipo = response.getBody();
-    Assertions.assertThat(requisitoEquipo.getConvocatoria().getId()).as("getId()").isEqualTo(idConvocatoria);
+    Assertions.assertThat(requisitoEquipo.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(idConvocatoria);
     Assertions.assertThat(requisitoEquipo.getEdadMaxima()).as("getEdadMaxima()")
         .isEqualTo(requisitoEquipo.getEdadMaxima());
 
@@ -115,11 +115,8 @@ public class RequisitoEquipoIT {
    * @return el objeto RequisitoEquipo
    */
   private RequisitoEquipo generarMockRequisitoEquipo(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     RequisitoEquipo requisitoEquipo = new RequisitoEquipo();
-    requisitoEquipo.setConvocatoria(convocatoria);
+    requisitoEquipo.setConvocatoriaId(id == null ? 1 : id);
     requisitoEquipo.setEdadMaxima(50);
     return requisitoEquipo;
   }

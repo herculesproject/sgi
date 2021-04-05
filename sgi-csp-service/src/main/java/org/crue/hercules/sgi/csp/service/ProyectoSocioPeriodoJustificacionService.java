@@ -59,6 +59,14 @@ public interface ProyectoSocioPeriodoJustificacionService {
   ProyectoSocioPeriodoJustificacion findById(Long id);
 
   /**
+   * Comprueba la existencia del {@link ProyectoSocioPeriodoJustificacion} por id.
+   *
+   * @param id el id de la entidad {@link ProyectoSocioPeriodoJustificacion}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsById(Long id);
+
+  /**
    * Obtiene las {@link ProyectoSocioPeriodoJustificacion} para una
    * {@link ProyectoSocio}.
    *

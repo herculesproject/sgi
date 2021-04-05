@@ -122,7 +122,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .ambitoGeografico(tipoAmbitoGeografico)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
-        .paquetesTrabajo(Boolean.TRUE)
+        .permitePaquetesTrabajo(Boolean.TRUE)
         .activo(Boolean.TRUE)
         .build();
     // @formatter:on
@@ -142,7 +142,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
 
     // @formatter:off
     ProyectoProrroga proyectoProrroga = ProyectoProrroga.builder()
-        .proyecto(proyecto)
+        .proyectoId(proyecto.getId())
         .numProrroga(1)
         .fechaConcesion(fechaConcesion)
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
@@ -167,7 +167,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
 
     // @formatter:off
     ProrrogaDocumento prorrogaDocumento = ProrrogaDocumento.builder()
-        .proyectoProrroga(proyectoProrroga)
+        .proyectoProrrogaId(proyectoProrroga.getId())
         .nombre("prorroga-documento" + suffix)
         .documentoRef("documentoRef" + suffix)
         .tipoDocumento(tipoDocumento)

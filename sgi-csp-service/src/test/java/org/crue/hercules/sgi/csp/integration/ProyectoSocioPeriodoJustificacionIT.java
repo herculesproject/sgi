@@ -6,9 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.EstadoProyecto;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,8 +54,8 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
       "classpath:scripts/proyecto_socio.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -80,7 +77,7 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ProyectoSocioPeriodoJustificacion responseData = response.getBody();
 
-    Assertions.assertThat(responseData.getProyectoSocio().getId()).as(".getProyectoSocio().getId()")
+    Assertions.assertThat(responseData.getProyectoSocioId()).as(".getProyectoSocioId()")
         .isEqualTo(updateProyectoSocioPeriodoJustificacionId);
     Assertions.assertThat(responseData.getFechaInicio()).as(".getFechaInicio()")
         .isEqualTo(newProyectoSocioPeriodoJustificacion.getFechaInicio());
@@ -119,8 +116,8 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
       "classpath:scripts/proyecto_socio.sql", "classpath:scripts/proyecto_socio_periodo_justificacion.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -140,9 +137,8 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ProyectoSocioPeriodoJustificacion responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyectoSocio()).as("getProyectoSocio()").isNotNull();
-    Assertions.assertThat(responseData.getProyectoSocio().getId()).as("getProyectoSocio().getId()")
-        .isEqualTo(updateProyectoSocioPeriodoJustificacion.getProyectoSocio().getId());
+    Assertions.assertThat(responseData.getProyectoSocioId()).as("getProyectoSocioId()")
+        .isEqualTo(updateProyectoSocioPeriodoJustificacion.getProyectoSocioId());
     Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(updateProyectoSocioPeriodoJustificacion.getFechaInicio());
     Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()")
@@ -158,8 +154,8 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/rol_proyecto.sql",
       "classpath:scripts/proyecto_socio.sql", "classpath:scripts/proyecto_socio_periodo_justificacion.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -175,7 +171,7 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
     ProyectoSocioPeriodoJustificacion convocatoriaPeriodoJustificacion = response.getBody();
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getId()).as("getId()")
         .isEqualTo(idProyectoSocioPeriodoJustificacion);
-    Assertions.assertThat(convocatoriaPeriodoJustificacion.getProyectoSocio().getId()).as("getProyectoSocio().getId()")
+    Assertions.assertThat(convocatoriaPeriodoJustificacion.getProyectoSocioId()).as("getProyectoSocioId()")
         .isEqualTo(1L);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(Instant.parse("2021-01-11T00:00:00Z"));
@@ -199,16 +195,9 @@ public class ProyectoSocioPeriodoJustificacionIT extends BaseIT {
    * @return el objeto ProyectoSocioPeriodoJustificacion
    */
   private ProyectoSocioPeriodoJustificacion generarMockProyectoSocioPeriodoJustificacion(Long id) {
-    ProyectoSocio updateProyectoSocioPeriodoJustificacion = new ProyectoSocio();
-    updateProyectoSocioPeriodoJustificacion.setId(id == null ? 1 : id);
-
-    updateProyectoSocioPeriodoJustificacion.setProyecto(new Proyecto());
-    updateProyectoSocioPeriodoJustificacion.getProyecto().setEstado(new EstadoProyecto());
-    updateProyectoSocioPeriodoJustificacion.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.BORRADOR);
-
     ProyectoSocioPeriodoJustificacion convocatoriaPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
-    convocatoriaPeriodoJustificacion.setProyectoSocio(updateProyectoSocioPeriodoJustificacion);
+    convocatoriaPeriodoJustificacion.setProyectoSocioId(id == null ? 1 : id);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setFechaInicio(Instant.parse("2021-01-11T00:00:00Z"));
     convocatoriaPeriodoJustificacion.setFechaFin(Instant.parse("2021-09-21T23:59:59Z"));

@@ -28,7 +28,7 @@ public class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest
     ConvocatoriaEntidadGestora convocatoriaEntidadGestora1 = generarConvocatoriaEntidadGestora("-001");
     generarConvocatoriaEntidadGestora("-002");
 
-    Long convocatoriaIdBuscado = convocatoriaEntidadGestora1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaEntidadGestora1.getConvocatoriaId();
     String entidadRefBuscado = convocatoriaEntidadGestora1.getEntidadRef();
 
     // when: find by by Convocatoria and EntidadRef
@@ -38,8 +38,7 @@ public class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest
     // then: ConvocatoriaEntidadGestora is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoriaEntidadGestora1.getId());
-    Assertions.assertThat(dataFound.getConvocatoria().getId())
-        .isEqualTo(convocatoriaEntidadGestora1.getConvocatoria().getId());
+    Assertions.assertThat(dataFound.getConvocatoriaId()).isEqualTo(convocatoriaEntidadGestora1.getConvocatoriaId());
     Assertions.assertThat(dataFound.getEntidadRef()).isEqualTo(convocatoriaEntidadGestora1.getEntidadRef());
   }
 
@@ -49,7 +48,7 @@ public class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest
     ConvocatoriaEntidadGestora convocatoriaEntidadGestora1 = generarConvocatoriaEntidadGestora("-001");
     ConvocatoriaEntidadGestora convocatoriaEntidadGestora2 = generarConvocatoriaEntidadGestora("-002");
 
-    Long convocatoriaIdBuscado = convocatoriaEntidadGestora1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaEntidadGestora1.getConvocatoriaId();
     String entidadRefBuscado = convocatoriaEntidadGestora2.getEntidadRef();
 
     // when: find by by Convocatoria and EntidadRef
@@ -121,7 +120,7 @@ public class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest
     entityManager.persistAndFlush(convocatoria);
 
     ConvocatoriaEntidadGestora convocatoriaEntidadGestora = ConvocatoriaEntidadGestora.builder()
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .entidadRef("entidad" + suffix)
         .build();
     // @formatter:on

@@ -32,7 +32,7 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto2 = generarConvocatoriaConceptoGasto("-002", true);
     entityManager.persistAndFlush(convocatoriaConceptoGasto2);
 
-    Long convocatoriaIdBuscado = convocatoriaConceptoGasto1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaConceptoGasto1.getConvocatoriaId();
 
     // when: find by Convocatoria and ConceptoGasto and permitido
     Page<ConvocatoriaConceptoGasto> dataFound = repository
@@ -41,8 +41,8 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
     // then: ConvocatoriaConceptoGasto is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getContent().get(0).getId()).isEqualTo(convocatoriaConceptoGasto1.getId());
-    Assertions.assertThat(dataFound.getContent().get(0).getConvocatoria().getId())
-        .isEqualTo(convocatoriaConceptoGasto1.getConvocatoria().getId());
+    Assertions.assertThat(dataFound.getContent().get(0).getConvocatoriaId())
+        .isEqualTo(convocatoriaConceptoGasto1.getConvocatoriaId());
     Assertions.assertThat(dataFound.getContent().get(0).getConceptoGasto().getId())
         .isEqualTo(convocatoriaConceptoGasto1.getConceptoGasto().getId());
     Assertions.assertThat(dataFound.getContent().get(0).getPermitido())
@@ -59,7 +59,7 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto2 = generarConvocatoriaConceptoGasto("-002", false);
     entityManager.persistAndFlush(convocatoriaConceptoGasto2);
 
-    Long convocatoriaIdBuscado = convocatoriaConceptoGasto1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaConceptoGasto1.getConvocatoriaId();
 
     // when: find by Convocatoria and ConceptoGasto and permitido
     Page<ConvocatoriaConceptoGasto> dataFound = repository
@@ -136,7 +136,7 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
     entityManager.persistAndFlush(conceptoGasto);
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = ConvocatoriaConceptoGasto.builder()
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .conceptoGasto(conceptoGasto)
         .observaciones("obs-1")
         .permitido(permitido).build();

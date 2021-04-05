@@ -2352,64 +2352,12 @@ industries" />
   </changeSet>
 
 
-  <changeSet context="dev" author="master" id="0000000000000-estado_solicitud">
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="1" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="2" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="3" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="4" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="5" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-01T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="6" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-02T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_solicitud">
-      <column name="id" valueSequenceNext="estado_solicitud_seq" />
-      <column name="id_solicitud" value="7" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-02T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-  </changeSet>
-
   <changeSet context="dev" author="master" id="0000000000000-solicitud">
     <insert tableName="solicitud">
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC1202102011617" />
-      <column name="estado_solicitud_id" value="1" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="1" />
       <column name="creador_ref" value="user-010" />
       <column name="solicitante_ref" value="user-001" />
@@ -2423,7 +2371,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC2202102011656" />
-      <column name="estado_solicitud_id" value="2" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="1" />
       <column name="creador_ref" value="user-010" />
       <column name="solicitante_ref" value="user-002" />
@@ -2437,7 +2385,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC3202102011729" />
-      <column name="estado_solicitud_id" value="3" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="2" />
       <column name="creador_ref" value="user-009" />
       <column name="solicitante_ref" value="user-001" />
@@ -2451,7 +2399,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC4202102011741" />
-      <column name="estado_solicitud_id" value="4" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="2" />
       <column name="creador_ref" value="user-009" />
       <column name="solicitante_ref" value="user-003" />
@@ -2465,7 +2413,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC5202102020943" />
-      <column name="estado_solicitud_id" value="5" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="4" />
       <column name="creador_ref" value="user-009" />
       <column name="solicitante_ref" value="user-004" />
@@ -2479,7 +2427,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="llll" />
       <column name="codigo_registro_interno" value="SGI_SLC6202102031256" />
-      <column name="estado_solicitud_id" value="6" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="null" />
       <column name="creador_ref" value="user-009" />
       <column name="solicitante_ref" value="user-001" />
@@ -2493,7 +2441,7 @@ industries" />
       <column name="id" valueSequenceNext="solicitud_seq" />
       <column name="codigo_externo" value="" />
       <column name="codigo_registro_interno" value="SGI_SLC7202102031828" />
-      <column name="estado_solicitud_id" value="7" />
+      <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="2" />
       <column name="creador_ref" value="user-009" />
       <column name="solicitante_ref" value="user-004" />
@@ -2505,6 +2453,88 @@ industries" />
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-estado_solicitud">
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="1" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="2" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="3" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="4" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="5" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-02-01T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="6" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-02-02T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="solicitud_id" value="7" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-02-02T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-solicitud-estado-solicitud">
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="1" />
+      <where>id=1</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="2" />
+      <where>id=2</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="3" />
+      <where>id=3</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="4" />
+      <where>id=4</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="5" />
+      <where>id=5</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="6" />
+      <where>id=5</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" value="7" />
+      <where>id=6</where>
+    </update>
+  </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-solicitud_modalidad">
     <insert tableName="solicitud_modalidad">
@@ -2588,34 +2618,10 @@ industries" />
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-estado_proyecto">
-    <insert tableName="estado_proyecto">
-      <column name="id" valueSequenceNext="estado_proyecto_seq" />
-      <column name="id_proyecto" value="1" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_proyecto">
-      <column name="id" valueSequenceNext="estado_proyecto_seq" />
-      <column name="id_proyecto" value="2" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-    <insert tableName="estado_proyecto">
-      <column name="id" valueSequenceNext="estado_proyecto_seq" />
-      <column name="id_proyecto" value="3" />
-      <column name="estado" value="BORRADOR" />
-      <column name="fecha_estado" value="2021-02-01T23:00:00Z" />
-      <column name="comentario" value="null" />
-    </insert>
-  </changeSet>
-
   <changeSet context="dev" author="master" id="0000000000000-proyecto">
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
-      <column name="estado_proyecto_id" value="1" />
+      <column name="estado_proyecto_id" value="null" />
       <column name="titulo" value="Proyecto 1 CGF/OPE-1" />
       <column name="acronimo" value="PCGFOPE1" />
       <column name="codigo_externo" value="PCGFOPE1" />
@@ -2648,7 +2654,7 @@ industries" />
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
-      <column name="estado_proyecto_id" value="2" />
+      <column name="estado_proyecto_id" value="null" />
       <column name="titulo" value="Título proyecto CGF/OPE2" />
       <column name="acronimo" value="PCGFOPE2" />
       <column name="codigo_externo" value="PCGFOPE2" />
@@ -2681,7 +2687,7 @@ industries" />
     </insert>
     <insert tableName="proyecto">
       <column name="id" valueSequenceNext="proyecto_seq" />
-      <column name="estado_proyecto_id" value="3" />
+      <column name="estado_proyecto_id" value="null" />
       <column name="titulo" value="Proyecto conv CGF/OPE-3" />
       <column name="acronimo" value="PCOPE-3" />
       <column name="codigo_externo" value="PCOPE-3" />
@@ -2714,6 +2720,45 @@ industries" />
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-estado_proyecto">
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="proyecto_id" value="1" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="proyecto_id" value="2" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-01-31T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+    <insert tableName="estado_proyecto">
+      <column name="id" valueSequenceNext="estado_proyecto_seq" />
+      <column name="proyecto_id" value="3" />
+      <column name="estado" value="BORRADOR" />
+      <column name="fecha_estado" value="2021-02-01T23:00:00Z" />
+      <column name="comentario" value="null" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-proyecto-estado-proyecto">
+    <update tableName="proyecto">
+      <column name="estado_proyecto_id" value="1" />
+      <where>id=1</where>
+    </update>
+    <update tableName="proyecto">
+      <column name="estado_proyecto_id" value="2" />
+      <where>id=2</where>
+    </update>
+    <update tableName="proyecto">
+      <column name="estado_proyecto_id" value="3" />
+      <where>id=3</where>
+    </update>
+  </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-proyecto_entidad_financiadora">
     <insert tableName="proyecto_entidad_financiadora">
       <column name="id" valueSequenceNext="proyecto_entidad_financiadora_seq" />
@@ -2744,10 +2789,9 @@ industries" />
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_datos">
-    <insert tableName="solicitud_proyecto_datos">
-      <column name="id" valueSequenceNext="solicitud_proyecto_datos_seq" />
-      <column name="solicitud_id" value="1" />
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto">
+    <insert tableName="solicitud_proyecto">
+      <column name="id" value="1" />
       <column name="titulo" value="Proyecto solicitud 1" />
       <column name="acronimo" value="PS1" />
       <column name="duracion" value="24" />
@@ -2762,9 +2806,8 @@ industries" />
       <column name="envio_etica" value="null" />
       <column name="presupuesto_por_entidades" value="false" />
     </insert>
-    <insert tableName="solicitud_proyecto_datos">
-      <column name="id" valueSequenceNext="solicitud_proyecto_datos_seq" />
-      <column name="solicitud_id" value="2" />
+    <insert tableName="solicitud_proyecto">
+      <column name="id" value="2" />
       <column name="titulo" value="Proyecto solicitud 2" />
       <column name="acronimo" value="PS2" />
       <column name="duracion" value="24" />
@@ -2779,9 +2822,8 @@ industries" />
       <column name="envio_etica" value="null" />
       <column name="presupuesto_por_entidades" value="false" />
     </insert>
-    <insert tableName="solicitud_proyecto_datos">
-      <column name="id" valueSequenceNext="solicitud_proyecto_datos_seq" />
-      <column name="solicitud_id" value="3" />
+    <insert tableName="solicitud_proyecto">
+      <column name="id" value="3" />
       <column name="titulo" value="Proyecto Solicitud 1 conv CGF/OPE-01" />
       <column name="acronimo" value="PS1OPE1" />
       <column name="duracion" value="36" />
@@ -2796,9 +2838,8 @@ industries" />
       <column name="envio_etica" value="null" />
       <column name="presupuesto_por_entidades" value="false" />
     </insert>
-    <insert tableName="solicitud_proyecto_datos">
-      <column name="id" valueSequenceNext="solicitud_proyecto_datos_seq" />
-      <column name="solicitud_id" value="4" />
+    <insert tableName="solicitud_proyecto">
+      <column name="id" value="4" />
       <column name="titulo" value="Proyecto Solicitud 2 conv CGF/OPE-01" />
       <column name="acronimo" value="PS2OPE1" />
       <column name="duracion" value="24" />
@@ -2813,9 +2854,8 @@ industries" />
       <column name="envio_etica" value="null" />
       <column name="presupuesto_por_entidades" value="false" />
     </insert>
-    <insert tableName="solicitud_proyecto_datos">
-      <column name="id" valueSequenceNext="solicitud_proyecto_datos_seq" />
-      <column name="solicitud_id" value="6" />
+    <insert tableName="solicitud_proyecto">
+      <column name="id" value="6" />
       <column name="titulo" value="Life solicitud de proyecto" />
       <column name="acronimo" value="PRopuesta life" />
       <column name="duracion" value="48" />
@@ -2862,7 +2902,7 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_presupuesto">
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
-      <column name="solicitud_proyecto_datos_id" value="1" />
+      <column name="solicitud_proyecto_id" value="1" />
       <column name="concepto_gasto_id" valueComputed="1" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2021" />
@@ -2872,7 +2912,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
-      <column name="solicitud_proyecto_datos_id" value="1" />
+      <column name="solicitud_proyecto_id" value="1" />
       <column name="concepto_gasto_id" valueComputed="1" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2022" />
@@ -2882,7 +2922,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="concepto_gasto_id" valueComputed="1" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2020" />
@@ -2892,7 +2932,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="concepto_gasto_id" valueComputed="1" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2022" />
@@ -2902,7 +2942,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_presupuesto">
       <column name="id" valueSequenceNext="solicitud_proyecto_presupuesto_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="concepto_gasto_id" valueComputed="3" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2021" />
@@ -2916,7 +2956,7 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_equipo">
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
-      <column name="solicitud_proyecto_datos_id" value="1" />
+      <column name="solicitud_proyecto_id" value="1" />
       <column name="persona_ref" value="user-001" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
@@ -2924,7 +2964,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
-      <column name="solicitud_proyecto_datos_id" value="2" />
+      <column name="solicitud_proyecto_id" value="2" />
       <column name="persona_ref" value="user-002" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
@@ -2932,7 +2972,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
-      <column name="solicitud_proyecto_datos_id" value="2" />
+      <column name="solicitud_proyecto_id" value="2" />
       <column name="persona_ref" value="user-004" />
       <column name="rol_proyecto_id" value="2" />
       <column name="mes_inicio" value="1" />
@@ -2940,7 +2980,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="persona_ref" value="user-001" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
@@ -2948,7 +2988,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="persona_ref" value="user-002" />
       <column name="rol_proyecto_id" value="2" />
       <column name="mes_inicio" value="1" />
@@ -2959,7 +2999,7 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_socio">
     <insert tableName="solicitud_proyecto_socio">
       <column name="id" valueSequenceNext="solicitud_proyecto_socio_seq" />
-      <column name="solicitud_proyecto_datos_id" value="2" />
+      <column name="solicitud_proyecto_id" value="2" />
       <column name="rol_socio_id" value="2" />
       <column name="empresa_ref" value="ent-009" />
       <column name="mes_inicio" value="1" />
@@ -2969,7 +3009,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_socio">
       <column name="id" valueSequenceNext="solicitud_proyecto_socio_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="rol_socio_id" value="2" />
       <column name="empresa_ref" value="ent-004" />
       <column name="mes_inicio" value="1" />
@@ -2979,7 +3019,7 @@ industries" />
     </insert>
     <insert tableName="solicitud_proyecto_socio">
       <column name="id" valueSequenceNext="solicitud_proyecto_socio_seq" />
-      <column name="solicitud_proyecto_datos_id" value="3" />
+      <column name="solicitud_proyecto_id" value="3" />
       <column name="rol_socio_id" value="2" />
       <column name="empresa_ref" value="ent-003" />
       <column name="mes_inicio" value="1" />
@@ -2990,8 +3030,8 @@ industries" />
   </changeSet>
 
 
-  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_equipo_socio">
-    <insert tableName="solicitud_proyecto_equipo_socio">
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_socio_equipo">
+    <insert tableName="solicitud_proyecto_socio_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_socio_seq" />
       <column name="solicitud_proyecto_socio_id" value="1" />
       <column name="persona_ref" value="user-003" />
@@ -2999,7 +3039,7 @@ industries" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="24" />
     </insert>
-    <insert tableName="solicitud_proyecto_equipo_socio">
+    <insert tableName="solicitud_proyecto_socio_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_socio_seq" />
       <column name="solicitud_proyecto_socio_id" value="2" />
       <column name="persona_ref" value="user-003" />
@@ -3009,9 +3049,9 @@ industries" />
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_periodo_justificacion">
-    <insert tableName="solicitud_proyecto_periodo_justificacion">
-      <column name="id" valueSequenceNext="solicitud_proyecto_periodo_justificacion_seq" />
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_socio_periodo_justificacion">
+    <insert tableName="solicitud_proyecto_socio_periodo_justificacion">
+      <column name="id" valueSequenceNext="solicitud_proyecto_socio_periodo_justificacion_seq" />
       <column name="solicitud_proyecto_socio_id" value="1" />
       <column name="num_periodo" value="1" />
       <column name="mes_inicial" value="1" />
@@ -3020,8 +3060,8 @@ industries" />
       <column name="fecha_fin" value="null" />
       <column name="observaciones" value="null" />
     </insert>
-    <insert tableName="solicitud_proyecto_periodo_justificacion">
-      <column name="id" valueSequenceNext="solicitud_proyecto_periodo_justificacion_seq" />
+    <insert tableName="solicitud_proyecto_socio_periodo_justificacion">
+      <column name="id" valueSequenceNext="solicitud_proyecto_socio_periodo_justificacion_seq" />
       <column name="solicitud_proyecto_socio_id" value="1" />
       <column name="num_periodo" value="2" />
       <column name="mes_inicial" value="13" />
@@ -3032,23 +3072,23 @@ industries" />
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_periodo_pago">
-    <insert tableName="solicitud_proyecto_periodo_pago">
-      <column name="id" valueSequenceNext="solicitud_proyecto_periodo_pago_seq" />
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_proyecto_socio_periodo_pago">
+    <insert tableName="solicitud_proyecto_socio_periodo_pago">
+      <column name="id" valueSequenceNext="solicitud_proyecto_socio_periodo_pago_seq" />
       <column name="solicitud_proyecto_socio_id" value="1" />
       <column name="num_periodo" value="1" />
       <column name="importe" value="120000.00" />
       <column name="mes" value="12" />
     </insert>
-    <insert tableName="solicitud_proyecto_periodo_pago">
-      <column name="id" valueSequenceNext="solicitud_proyecto_periodo_pago_seq" />
+    <insert tableName="solicitud_proyecto_socio_periodo_pago">
+      <column name="id" valueSequenceNext="solicitud_proyecto_socio_periodo_pago_seq" />
       <column name="solicitud_proyecto_socio_id" value="2" />
       <column name="num_periodo" value="1" />
       <column name="importe" value="25000.00" />
       <column name="mes" value="12" />
     </insert>
-    <insert tableName="solicitud_proyecto_periodo_pago">
-      <column name="id" valueSequenceNext="solicitud_proyecto_periodo_pago_seq" />
+    <insert tableName="solicitud_proyecto_socio_periodo_pago">
+      <column name="id" valueSequenceNext="solicitud_proyecto_socio_periodo_pago_seq" />
       <column name="solicitud_proyecto_socio_id" value="2" />
       <column name="num_periodo" value="2" />
       <column name="importe" value="12000.00" />

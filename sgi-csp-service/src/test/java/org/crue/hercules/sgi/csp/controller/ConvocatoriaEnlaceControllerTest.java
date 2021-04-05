@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
@@ -54,7 +53,7 @@ public class ConvocatoriaEnlaceControllerTest extends BaseControllerTest {
         // then: new ConvocatoriaEnlace is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria").value(convocatoriaEnlace.getConvocatoria()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaEnlace.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(convocatoriaEnlace.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("url").value(convocatoriaEnlace.getUrl()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEnlace").value(convocatoriaEnlace.getTipoEnlace()));
@@ -100,7 +99,8 @@ public class ConvocatoriaEnlaceControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: ConvocatoriaEnlace is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria").value(convocatoriaEnlaceExistente.getConvocatoria()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaEnlaceExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(convocatoriaEnlace.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEnlace").value(convocatoriaEnlaceExistente.getTipoEnlace()));
   }
@@ -211,8 +211,7 @@ public class ConvocatoriaEnlaceControllerTest extends BaseControllerTest {
 
     ConvocatoriaEnlace convocatoriaEnlace = new ConvocatoriaEnlace();
     convocatoriaEnlace.setId(id);
-    convocatoriaEnlace
-        .setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    convocatoriaEnlace.setConvocatoriaId(id);
     convocatoriaEnlace.setDescripcion("descripcion-" + id);
     convocatoriaEnlace.setUrl("www.url" + id + ".es");
     convocatoriaEnlace.setTipoEnlace(TipoEnlace.builder().nombre("tipoEnlace" + id)

@@ -63,7 +63,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     Assert.isNull(convocatoriaConceptoGastoCodigoEc.getId(),
         "Id tiene que ser null para crear ConvocatoriaConceptoGastoCodigoEc");
 
-    Assert.notNull(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId(),
+    Assert.notNull(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId(),
         "ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
 
     Assert.isTrue(StringUtils.isNotBlank(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()),
@@ -77,22 +77,19 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     }
 
     // recuperar ConvocatoriaConceptoGasto
-    convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGastoRepository
-        .findById(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId())
+    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoRepository
+        .findById(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId())
         .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
-            convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId())));
+            convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId()));
 
     // Comprobar si convocatoria es modificable
-    Assert
-        .isTrue(
-            convocatoriaService.modificable(
-                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
-                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria()
-                    .getUnidadGestionRef()),
-            "No se puede crear ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
+    Assert.isTrue(convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null),
+        "No se puede crear ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
 
     // Unicidad código económico y solapamiento de fechas
-    Assert.isTrue(!existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEc),
+    Assert.isTrue(
+        !existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEc,
+            convocatoriaConceptoGasto.getPermitido()),
         "El código económico '" + convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()
             + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
 
@@ -121,7 +118,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getId(),
         "ConvocatoriaConceptoGastoCodigoEc id no puede ser null para actualizar un ConvocatoriaConceptoGastoCodigoEc");
 
-    Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getId(),
+    Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId(),
         "ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
 
     Assert.isTrue(StringUtils.isNotBlank(convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef()),
@@ -136,23 +133,22 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     }
 
     // recuperar ConvocatoriaConceptoGasto
-    convocatoriaConceptoGastoCodigoEcActualizar.setConvocatoriaConceptoGasto(convocatoriaConceptoGastoRepository
-        .findById(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getId())
+    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoRepository
+        .findById(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId())
         .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
-            convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getId())));
+            convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId()));
 
     return repository.findById(convocatoriaConceptoGastoCodigoEcActualizar.getId())
         .map(convocatoriaConceptoGastoCodigoEc -> {
 
           // Si no es modificable solo se permitirá cambiar las fechas
-          boolean esConvocatoriaModificable = convocatoriaService.modificable(
-              convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
-              convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getUnidadGestionRef());
+          boolean esConvocatoriaModificable = convocatoriaService
+              .modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null);
 
           if (!esConvocatoriaModificable) {
             Assert.isTrue(
-                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId()
-                    .equals(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto().getId())
+                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId()
+                    .equals(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId())
                     && StringUtils.equals(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef(),
                         convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef())
                     && StringUtils.equals(convocatoriaConceptoGastoCodigoEc.getObservaciones(),
@@ -162,12 +158,13 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
 
           // Unicidad código económico y solapamiento de fechas
           Assert.isTrue(
-              !existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEcActualizar),
+              !existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEcActualizar,
+                  convocatoriaConceptoGasto.getPermitido()),
               "El código económico '" + convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef()
                   + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
 
-          convocatoriaConceptoGastoCodigoEc
-              .setConvocatoriaConceptoGasto(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGasto());
+          convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGastoId(
+              convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId());
           convocatoriaConceptoGastoCodigoEc
               .setCodigoEconomicoRef(convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef());
           convocatoriaConceptoGastoCodigoEc
@@ -200,13 +197,12 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     repository.findById(id).map(convocatoriaConceptoGastoCodigoEc -> {
 
       // comprobar si convocatoria es modificable
-      Assert
-          .isTrue(
-              convocatoriaService.modificable(
-                  convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria().getId(),
-                  convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getConvocatoria()
-                      .getUnidadGestionRef()),
-              "No se puede eliminar ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
+      ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoRepository
+          .findById(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId())
+          .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
+              convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId()));
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null),
+          "No se puede eliminar ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
 
       return convocatoriaConceptoGastoCodigoEc;
     }).orElseThrow(() -> new ConvocatoriaConceptoGastoCodigoEcNotFoundException(id));
@@ -325,12 +321,12 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
    * @return true validación correcta/ false validacion incorrecta
    */
   private boolean existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(
-      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) {
+      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc, Boolean conceptoGastoPermitido) {
     log.debug(
         "existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc)");
 
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConvocatoriaConceptoGasto = ConvocatoriaConceptoGastoCodigoEcSpecifications
-        .byConvocatoriaConceptoGasto(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId());
+        .byConvocatoriaConceptoGasto(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId());
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConceptoGastoCodigoEcActivo = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byConceptoGastoActivo();
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByCodigoEconomicoRef = ConvocatoriaConceptoGastoCodigoEcSpecifications
@@ -341,8 +337,7 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByIdNotEqual = ConvocatoriaConceptoGastoCodigoEcSpecifications
         .byIdNotEqual(convocatoriaConceptoGastoCodigoEc.getId());
     Specification<ConvocatoriaConceptoGastoCodigoEc> specByConvocatoriaConceptoGastoPermitido = ConvocatoriaConceptoGastoCodigoEcSpecifications
-        .byConvocatoriaConceptoGastoPermitido(
-            convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getPermitido());
+        .byConvocatoriaConceptoGastoPermitido(conceptoGastoPermitido);
 
     Specification<ConvocatoriaConceptoGastoCodigoEc> specs = Specification.where(specByConvocatoriaConceptoGasto)
         .and(specByRangoFechaSolapados).and(specByConceptoGastoCodigoEcActivo).and(specByCodigoEconomicoRef)
@@ -411,12 +406,10 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
                 convocatoriaConceptoGastoCodigoEc.getId()));
 
         Assert.isTrue(
-            convocatoriaConceptoGastoCodigoEcBD.getConvocatoriaConceptoGasto()
-                .getId() == convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGasto().getId(),
+            convocatoriaConceptoGastoCodigoEcBD.getConvocatoriaConceptoGastoId() == convocatoriaConceptoGastoCodigoEc
+                .getConvocatoriaConceptoGastoId(),
             "No se puede modificar el convocatoriaConceptoGasto del ConvocatoriaConceptoGastoCodigoEc");
       }
-
-      convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
 
       if (convocatoriaConceptoGastoCodigoEc.getFechaInicio() != null
           && convocatoriaConceptoGastoCodigoEc.getFechaFin() != null) {
@@ -428,7 +421,9 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
       }
 
       // Unicidad código económico y solapamiento de fechas
-      Assert.isTrue(!existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEc),
+      Assert.isTrue(
+          !existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEc,
+              convocatoriaConceptoGasto.getPermitido()),
           "El código económico '" + convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()
               + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
 

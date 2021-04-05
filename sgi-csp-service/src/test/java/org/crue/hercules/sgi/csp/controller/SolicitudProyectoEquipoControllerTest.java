@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.junit.jupiter.api.Test;
@@ -61,8 +58,8 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
         // then: new SolicitudProyectoEquipo is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id")
-            .value(solicitudProyectoEquipo.getSolicitudProyectoDatos().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId")
+            .value(solicitudProyectoEquipo.getSolicitudProyectoId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("rolProyecto.id").value(solicitudProyectoEquipo.getRolProyecto().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value(solicitudProyectoEquipo.getPersonaRef()))
@@ -114,8 +111,8 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: SolicitudProyectoEquipo is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id")
-            .value(updatedSolicitudProyectoEquipo.getSolicitudProyectoDatos().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId")
+            .value(updatedSolicitudProyectoEquipo.getSolicitudProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("rolProyecto.id")
             .value(updatedSolicitudProyectoEquipo.getRolProyecto().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value(updatedSolicitudProyectoEquipo.getPersonaRef()))
@@ -225,22 +222,17 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
    * Función que devuelve un objeto SolicitudProyectoEquipo
    * 
    * @param solicitudProyectoEquipoId
-   * @param solicitudProyectoDatosId
+   * @param solicitudProyectoId
    * @param tipoDocumentoId
    * @return el objeto SolicitudProyectoEquipo
    */
   private SolicitudProyectoEquipo generarSolicitudProyectoEquipo(Long solicitudProyectoEquipoId,
-      Long solicitudProyectoDatosId, Long rolProyectoId) {
+      Long solicitudProyectoId, Long rolProyectoId) {
 
     SolicitudProyectoEquipo solicitudProyectoEquipo = SolicitudProyectoEquipo.builder().id(solicitudProyectoEquipoId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
-        .personaRef("personaRef-" + solicitudProyectoEquipoId)
+        .solicitudProyectoId(solicitudProyectoId).personaRef("personaRef-" + solicitudProyectoEquipoId)
         .rolProyecto(RolProyecto.builder().id(rolProyectoId).build()).mesInicio(1).mesFin(5).build();
 
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().setSolicitud(new Solicitud());
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudProyectoEquipo;
   }
 

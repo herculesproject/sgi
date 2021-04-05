@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.custom.CustomSolicitudProyectoPresupuestoRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,12 +13,12 @@ public interface SolicitudProyectoPresupuestoRepository extends JpaRepository<So
 
   /**
    * Recupera todos las {@link SolicitudProyectoPresupuesto} asociados a una
-   * {@link SolicitudProyectoDatos}.
+   * {@link SolicitudProyecto}.
    * 
    * @param solicitudProyectoId Identificador de
    *                            {@link SolicitudProyectoPresupuesto}
    * @return listado de {@link SolicitudProyectoPresupuesto}
    */
-  List<SolicitudProyectoPresupuesto> findBySolicitudProyectoDatosId(Long solicitudProyectoId);
+  List<SolicitudProyectoPresupuesto> findBySolicitudProyectoId(Long solicitudProyectoId);
 
 }

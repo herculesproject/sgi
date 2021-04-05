@@ -6,24 +6,30 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "estado_proyecto", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "estado", "id_proyecto" }, name = "UK_ESTADOPROYECTO_ESTADO_PROYECTO") })
+    @UniqueConstraint(columnNames = { "estado", "proyecto_id" }, name = "UK_ESTADOPROYECTO_ESTADO_PROYECTO") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -40,7 +46,6 @@ public class EstadoProyecto extends BaseEntity {
    * Estados del proyecto
    */
   public enum Estado {
-
     /** Borrador */
     BORRADOR,
     /** Provisional */
@@ -60,10 +65,10 @@ public class EstadoProyecto extends BaseEntity {
   @SequenceGenerator(name = "estado_proyecto_seq", sequenceName = "estado_proyecto_seq", allocationSize = 1)
   private Long id;
 
-  /** Proyecto */
-  @Column(name = "id_proyecto", nullable = false)
+  /** Proyecto Id */
+  @Column(name = "proyecto_id", nullable = false)
   @NotNull
-  private Long idProyecto;
+  private Long proyectoId;
 
   /** Tipo estado proyecto */
   @Column(name = "estado", length = 50, nullable = false)
@@ -81,4 +86,10 @@ public class EstadoProyecto extends BaseEntity {
   @Size(max = 2000)
   private String comentario;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_ESTADOPROYECTO_PROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Proyecto proyecto = null;
 }

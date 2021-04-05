@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -61,8 +60,8 @@ public class SolicitudModalidadIT {
 
     SolicitudModalidad solicitudModalidadCreado = response.getBody();
     Assertions.assertThat(solicitudModalidadCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(solicitudModalidadCreado.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(solicitudModalidad.getSolicitud().getId());
+    Assertions.assertThat(solicitudModalidadCreado.getSolicitudId()).as("getSolicitudId()")
+        .isEqualTo(solicitudModalidad.getSolicitudId());
     Assertions.assertThat(solicitudModalidadCreado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(solicitudModalidad.getEntidadRef());
     Assertions.assertThat(solicitudModalidadCreado.getPrograma().getId()).as("getPrograma().getId()")
@@ -117,7 +116,7 @@ public class SolicitudModalidadIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     SolicitudModalidad solicitudModalidad = response.getBody();
     Assertions.assertThat(solicitudModalidad.getId()).as("getId()").isEqualTo(idSolicitudModalidad);
-    Assertions.assertThat(solicitudModalidad.getSolicitud().getId()).as("getSolicitud().getId()").isEqualTo(1);
+    Assertions.assertThat(solicitudModalidad.getSolicitudId()).as("getSolicitudId()").isEqualTo(1);
     Assertions.assertThat(solicitudModalidad.getEntidadRef()).as("getEntidadRef()").isEqualTo("entidad-001");
     Assertions.assertThat(solicitudModalidad.getPrograma().getId()).as("getPrograma().getId()").isEqualTo(2);
   }
@@ -129,16 +128,13 @@ public class SolicitudModalidadIT {
    * @return el objeto SolicitudModalidad
    */
   private SolicitudModalidad generarMockSolicitudModalidad(Long id) {
-    Solicitud solicitud = new Solicitud();
-    solicitud.setId(1L);
-
     Programa programa = new Programa();
     programa.setId(2L);
 
     SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
     solicitudModalidad.setId(id);
     solicitudModalidad.setEntidadRef("entidad-001");
-    solicitudModalidad.setSolicitud(solicitud);
+    solicitudModalidad.setSolicitudId(1L);
     solicitudModalidad.setPrograma(programa);
 
     return solicitudModalidad;

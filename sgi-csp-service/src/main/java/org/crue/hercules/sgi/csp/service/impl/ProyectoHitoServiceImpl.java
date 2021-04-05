@@ -174,7 +174,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
     log.debug("validarProyectoHito(ProyectoHito datosProyectoHito, ProyectoHito datosOriginales) - start");
 
     // Se comprueba la existencia del proyecto
-    Long proyectoId = datosProyectoHito.getProyecto().getId();
+    Long proyectoId = datosProyectoHito.getProyectoId();
     if (!proyectoRepository.existsById(proyectoId)) {
       throw new ProyectoNotFoundException(proyectoId);
     }
@@ -208,9 +208,8 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
       datosProyectoHito.setGeneraAviso(false);
     }
 
-    repository.findByProyectoIdAndFechaAndTipoHitoId(datosProyectoHito.getProyecto().getId(),
-        datosProyectoHito.getFecha(), datosProyectoHito.getTipoHito().getId())
-        .ifPresent((convocatoriaHitoExistente) -> {
+    repository.findByProyectoIdAndFechaAndTipoHitoId(datosProyectoHito.getProyectoId(), datosProyectoHito.getFecha(),
+        datosProyectoHito.getTipoHito().getId()).ifPresent((convocatoriaHitoExistente) -> {
           Assert.isTrue(datosProyectoHito.getId() == convocatoriaHitoExistente.getId(),
               "Ya existe un Hito con el mismo tipo en esa fecha");
         });
@@ -227,7 +226,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
   private void validarRequeridosProyectoHito(ProyectoHito datosProyectoHito) {
     log.debug("validarRequeridosProyectoHito(ProyectoHito datosProyectoHito) - start");
 
-    Assert.isTrue(datosProyectoHito.getProyecto() != null && datosProyectoHito.getProyecto().getId() != null,
+    Assert.isTrue(datosProyectoHito.getProyectoId() != null,
         "Id Proyecto no puede ser null para realizar la acción sobre ProyectoHito");
 
     Assert.isTrue(datosProyectoHito.getTipoHito() != null && datosProyectoHito.getTipoHito().getId() != null,

@@ -16,11 +16,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_entidad_financiadora", uniqueConstraints = { @UniqueConstraint(columnNames = { "proyecto_id",
@@ -44,9 +47,8 @@ public class ProyectoEntidadFinanciadora extends BaseEntity {
   @SequenceGenerator(name = "proyecto_entidad_financiadora_seq", sequenceName = "proyecto_entidad_financiadora_seq", allocationSize = 1)
   private Long id;
 
-  /** Proyecto */
+  /** Proyecto Id */
   @Column(name = "proyecto_id", nullable = false)
-  @JoinColumn(name = "proyecto_id", foreignKey = @ForeignKey(name = "FK_PROYECTOENTIDADFINANCIADORA_PROYECTO"))
   @NotNull
   private Long proyectoId;
 
@@ -74,4 +76,11 @@ public class ProyectoEntidadFinanciadora extends BaseEntity {
   /** Ajena */
   @Column(name = "ajena", nullable = false)
   private Boolean ajena;
+
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOENTIDADFINANCIADORA_PROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Proyecto proyecto = null;
 }

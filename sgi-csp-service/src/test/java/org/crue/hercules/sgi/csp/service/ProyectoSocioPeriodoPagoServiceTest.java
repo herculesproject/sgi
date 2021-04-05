@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoPagoNotFoundException;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -56,6 +54,7 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // given: una lista con uno de los ProyectoSocioPeriodoPago actualizado,
     // otro nuevo y sin el otros existente
     Long proyectoSocioId = 1L;
+    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
 
     List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagoExistentes = new ArrayList<>();
     proyectoSocioPeriodoPagoExistentes.add(generarMockProyectoSocioPeriodoPago(2L));
@@ -70,7 +69,7 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     proyectoSocioPeriodoPagoActualizar.add(updatedProyectoSocioPeriodoPago);
 
     BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newProyectoSocioPeriodoPago.getProyectoSocio()));
+        .willReturn(Optional.of(proyectoSocio));
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoSocioPeriodoPagoExistentes);
@@ -84,7 +83,7 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
             if (periodoPago.getId() == null) {
               periodoPago.setId(6L);
             }
-            periodoPago.getProyectoSocio().setId(proyectoSocioId);
+            periodoPago.setProyectoSocioId(proyectoSocioId);
             return periodoPago;
           }).collect(Collectors.toList());
         });
@@ -98,8 +97,8 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // then: Se crea el nuevo ProyectoSocioPeriodoPago, se actualiza el
     // existe y se elimina el otro
     Assertions.assertThat(periodosPagoActualizados.get(0).getId()).as("get(0).getId()").isEqualTo(6L);
-    Assertions.assertThat(periodosPagoActualizados.get(0).getProyectoSocio().getId())
-        .as("get(0).getProyectoSocio().getId()").isEqualTo(proyectoSocioId);
+    Assertions.assertThat(periodosPagoActualizados.get(0).getProyectoSocioId()).as("get(0).getProyectoSocioId()")
+        .isEqualTo(proyectoSocioId);
     Assertions.assertThat(periodosPagoActualizados.get(0).getImporte()).as("get(0).getImporte()")
         .isEqualTo(newProyectoSocioPeriodoPago.getImporte());
     Assertions.assertThat(periodosPagoActualizados.get(0).getNumPeriodo()).as("get(0).getNumPeriodo()")
@@ -111,8 +110,8 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(periodosPagoActualizados.get(1).getId()).as("get(1).getId()")
         .isEqualTo(updatedProyectoSocioPeriodoPago.getId());
-    Assertions.assertThat(periodosPagoActualizados.get(1).getProyectoSocio().getId())
-        .as("get(1).getSolicitudProyectoSocio().getId()").isEqualTo(proyectoSocioId);
+    Assertions.assertThat(periodosPagoActualizados.get(1).getProyectoSocioId())
+        .as("get(1).getSolicitudProyectoSocioId()").isEqualTo(proyectoSocioId);
     Assertions.assertThat(periodosPagoActualizados.get(1).getImporte()).as("get(1).getImporte()")
         .isEqualTo(updatedProyectoSocioPeriodoPago.getImporte());
     Assertions.assertThat(periodosPagoActualizados.get(1).getNumPeriodo()).as("get(1).getNumPeriodo()")
@@ -148,12 +147,14 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // given: Un ProyectoSocioPeriodoPago actualizado con un id que no existe
     Long solicitudProyectoSocioId = 1L;
     ProyectoSocioPeriodoPago proyectoPeriodoPago = generarMockProyectoSocioPeriodoPago(1L);
+    Long proyectoSocioId = 1L;
+    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
 
     List<ProyectoSocioPeriodoPago> proyectoPeriodoPagoExistentes = new ArrayList<>();
     proyectoPeriodoPagoExistentes.add(generarMockProyectoSocioPeriodoPago(3L));
 
     BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoPeriodoPago.getProyectoSocio()));
+        .willReturn(Optional.of(proyectoSocio));
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoPeriodoPagoExistentes);
@@ -169,14 +170,15 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // given:Se actualiza ProyectoSocio
     Long proyectoSocioId = 1L;
     ProyectoSocioPeriodoPago proyectoPeriodoPago = generarMockProyectoSocioPeriodoPago(1L);
+    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
 
-    proyectoPeriodoPago.getProyectoSocio().setId(2L);
+    proyectoPeriodoPago.setProyectoSocioId(2L);
 
     List<ProyectoSocioPeriodoPago> proyectoPeriodoPagoExistentes = new ArrayList<>();
     proyectoPeriodoPagoExistentes.add(generarMockProyectoSocioPeriodoPago(1L));
 
     BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoPeriodoPago.getProyectoSocio()));
+        .willReturn(Optional.of(proyectoSocio));
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoPeriodoPagoExistentes);
@@ -257,28 +259,8 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     }
   }
 
-  /**
-   * Función que devuelve un objeto ProyectoSocioPeriodoPago
-   * 
-   * @param id id del ProyectoSocioPeriodoPago
-   * 
-   * @return el objeto ProyectoSocioPeriodoPago
-   */
-  private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(id, "nombre-1", "descripcion-1", true);
-
+  private ProyectoSocio generarMockProyectoSocio(Long id) {
     // @formatter:off
-    Proyecto proyecto1 = Proyecto.builder()
-        .id(id)
-        .titulo("proyecto 1")
-        .acronimo("PR1")
-        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
-        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-        .unidadGestionRef("OPE")
-        .modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE)
-        .build();
-
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura("001")
         .nombre("nombre-001")
@@ -287,16 +269,28 @@ public class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
         .activo(Boolean.TRUE)
         .build();
 
-    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder()
         .id(id)
-        .proyecto(proyecto1)
+        .proyectoId(id)
         .empresaRef("empresa-0041")
         .rolSocio(rolSocio)
         .build();
     // @formatter:on
 
-    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago(id, proyectoSocio1, 1,
-        new BigDecimal(3500), Instant.parse("2021-04-10T00:00:00Z"), null);
+    return proyectoSocio;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoSocioPeriodoPago
+   * 
+   * @param id id del ProyectoSocioPeriodoPago
+   * 
+   * @return el objeto ProyectoSocioPeriodoPago
+   */
+  private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
+
+    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago(id, id, 1, new BigDecimal(3500),
+        Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioPeriodoPago;
   }

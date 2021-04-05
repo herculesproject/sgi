@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.service.ProyectoEquipoService;
@@ -58,7 +57,7 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
             if (proyectoEquipo.getId() == null) {
               proyectoEquipo.setId(5L);
             }
-            proyectoEquipo.getProyecto().setId(proyectoId);
+            proyectoEquipo.setProyectoId(proyectoId);
             return proyectoEquipo;
           }).collect(Collectors.toList());
         });
@@ -75,7 +74,7 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(proyectoEquipos.get(0).getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].proyecto.id").value(proyectoId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].proyectoId").value(proyectoId))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].personaRef").value(proyectoEquipos.get(0).getPersonaRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].rolProyecto.id")
             .value(proyectoEquipos.get(0).getRolProyecto().getId()))
@@ -85,8 +84,7 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFin").value("2020-04-15T23:59:59Z"))
 
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(5))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].proyecto.id").value(proyectoId))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].proyecto.id").value(proyectoId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].proyectoId").value(proyectoId))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].personaRef").value(proyectoEquipos.get(0).getPersonaRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].rolProyecto.id")
             .value(proyectoEquipos.get(0).getRolProyecto().getId()))
@@ -173,7 +171,7 @@ public class ProyectoEquipoControllerTest extends BaseControllerTest {
    */
   private ProyectoEquipo generarMockProyectoEquipo(Long id, Instant fechaInicio, Instant fechaFin, Long proyectoId) {
 
-    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyecto(Proyecto.builder().id(proyectoId).build())
+    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyectoId(proyectoId)
         .rolProyecto(RolProyecto.builder().id(1L).build()).fechaInicio(fechaInicio).fechaFin(fechaFin).personaRef("001")
         .horasDedicacion(new Double(2)).build();
 

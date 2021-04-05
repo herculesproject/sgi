@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoFaseNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
@@ -61,7 +60,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
         // then: new ProyectoFase is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoFase.getProyecto().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(proyectoFase.getProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
@@ -106,7 +105,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
         // then: ProyectoFase is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoFaseExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoFaseExistente.getProyecto().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(proyectoFaseExistente.getProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
@@ -220,7 +219,7 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ProyectoFase is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-20T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
@@ -252,16 +251,13 @@ public class ProyectoFaseControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoFase
    */
   private ProyectoFase generarMockProyectoFase(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id == null ? 1 : id);
     tipoFase.setActivo(true);
 
     ProyectoFase proyectoFase = new ProyectoFase();
     proyectoFase.setId(id);
-    proyectoFase.setProyecto(proyecto);
+    proyectoFase.setProyectoId(id == null ? 1 : id);
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));

@@ -195,14 +195,14 @@ public class ProyectoPaqueteTrabajoServiceImpl implements ProyectoPaqueteTrabajo
         "La fecha de fin debe ser posterior a la fecha de inicio");
 
     // Se comprueba la existencia del proyecto
-    Long proyectoId = datosProyectoPaqueteTrabajo.getProyecto().getId();
+    Long proyectoId = datosProyectoPaqueteTrabajo.getProyectoId();
     if (!proyectoRepository.existsById(proyectoId)) {
       throw new ProyectoNotFoundException(proyectoId);
     }
 
     // Solo se podrán crean, modificar o eliminar si en la pantalla "Ficha general"
     // del proyecto, el campo "Paquetes de trabajo" tiene valor afirmativo
-    Optional<Boolean> permiteProyectoPaqueteTrabajo = proyectoRepository.getPaquetesTrabajo(proyectoId);
+    Optional<Boolean> permiteProyectoPaqueteTrabajo = proyectoRepository.getPermitePaquetesTrabajo(proyectoId);
     Assert.isTrue(permiteProyectoPaqueteTrabajo.isPresent() && permiteProyectoPaqueteTrabajo.get(),
         "El proyecto no está configurado para utilizar paquetes de trabajo");
 
@@ -242,8 +242,7 @@ public class ProyectoPaqueteTrabajoServiceImpl implements ProyectoPaqueteTrabajo
   private void validarRequeridosProyectoPaqueteTrabajo(ProyectoPaqueteTrabajo datosProyectoPaqueteTrabajo) {
     log.debug("validarRequeridosProyectoPaqueteTrabajo(ProyectoPaqueteTrabajo datosProyectoPaqueteTrabajo) - start");
 
-    Assert.isTrue(
-        datosProyectoPaqueteTrabajo.getProyecto() != null && datosProyectoPaqueteTrabajo.getProyecto().getId() != null,
+    Assert.isTrue(datosProyectoPaqueteTrabajo.getProyectoId() != null,
         "Id Proyecto no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
 
     Assert.isTrue(StringUtils.isNotBlank(datosProyectoPaqueteTrabajo.getNombre()),

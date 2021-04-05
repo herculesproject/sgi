@@ -44,7 +44,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends Base
     for (int i = 11; i > 1; i--) {
       ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
-          .convocatoria((i % 2 == 0) ? convocatoria2 : convocatoria1)
+          .convocatoriaId((i % 2 == 0) ? convocatoria2.getId() : convocatoria1.getId())
           .numPeriodo(i / 2)
           .mesInicial(i - 1)
           .mesFinal(i)
@@ -102,7 +102,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends Base
       // @formatter:off
       ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
-          .convocatoria((i % 2 == 0) ? convocatoria2 : convocatoria1)
+          .convocatoriaId((i % 2 == 0) ? convocatoria2.getId() : convocatoria1.getId())
           .numPeriodo(i / 2)
           .mesInicial(i - 1)
           .mesFinal(i)

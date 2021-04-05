@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
@@ -67,8 +65,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
     // then: new SolicitudDocumento is created
     Assertions.assertThat(createdSolicitudDocumento).isNotNull();
     Assertions.assertThat(createdSolicitudDocumento.getId()).isNotNull();
-    Assertions.assertThat(createdSolicitudDocumento.getSolicitud().getId())
-        .isEqualTo(newSolicitudDocumento.getSolicitud().getId());
+    Assertions.assertThat(createdSolicitudDocumento.getSolicitudId()).isEqualTo(newSolicitudDocumento.getSolicitudId());
     Assertions.assertThat(createdSolicitudDocumento.getTipoDocumento().getId())
         .isEqualTo(newSolicitudDocumento.getTipoDocumento().getId());
     Assertions.assertThat(createdSolicitudDocumento.getComentario()).isEqualTo(newSolicitudDocumento.getComentario());
@@ -94,7 +91,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
   public void create_WithoutSolicitud_ThrowsNotFoundException() throws Exception {
     // given: solicitud id null
     SolicitudDocumento solicitudDocumento = generarSolicitudDocumento(1L, 1L, 1L);
-    solicitudDocumento.getSolicitud().setId(null);
+    solicitudDocumento.setSolicitudId(null);
 
     Assertions.assertThatThrownBy(
         // when: update non existing SolicitudDocumento
@@ -156,7 +153,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated).isNotNull();
     Assertions.assertThat(updated.getId()).isNotNull();
     Assertions.assertThat(updated.getId()).isEqualTo(solicitudDocumento.getId());
-    Assertions.assertThat(updated.getSolicitud().getId()).isEqualTo(solicitudDocumento.getSolicitud().getId());
+    Assertions.assertThat(updated.getSolicitudId()).isEqualTo(solicitudDocumento.getSolicitudId());
     Assertions.assertThat(updated.getTipoDocumento().getId()).isEqualTo(solicitudDocumento.getTipoDocumento().getId());
     Assertions.assertThat(updated.getComentario()).isEqualTo("comentarios-modificado");
     Assertions.assertThat(updated.getDocumentoRef()).isEqualTo(solicitudDocumento.getDocumentoRef());
@@ -183,7 +180,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
   public void update_WithoutSolicitud_ThrowsNotFoundException() throws Exception {
     // given: solicitud id null
     SolicitudDocumento solicitudDocumento = generarSolicitudDocumento(1L, 1L, 1L);
-    solicitudDocumento.getSolicitud().setId(null);
+    solicitudDocumento.setSolicitudId(null);
 
     Assertions.assertThatThrownBy(
         // when: update non existing SolicitudDocumento
@@ -286,8 +283,7 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitudDocumento).isNotNull();
     Assertions.assertThat(solicitudDocumento.getId()).isNotNull();
     Assertions.assertThat(solicitudDocumento.getId()).isEqualTo(solicitudDocumento.getId());
-    Assertions.assertThat(solicitudDocumento.getSolicitud().getId())
-        .isEqualTo(solicitudDocumento.getSolicitud().getId());
+    Assertions.assertThat(solicitudDocumento.getSolicitudId()).isEqualTo(solicitudDocumento.getSolicitudId());
     Assertions.assertThat(solicitudDocumento.getTipoDocumento().getId())
         .isEqualTo(solicitudDocumento.getTipoDocumento().getId());
     Assertions.assertThat(solicitudDocumento.getComentario()).isEqualTo(solicitudDocumento.getComentario());
@@ -360,12 +356,10 @@ public class SolicitudDocumentoServiceTest extends BaseServiceTest {
       Long tipoDocumentoId) {
 
     SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentarios-" + solicitudDocumentoId)
+        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
         .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombreDocumento-" + solicitudDocumentoId)
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 }

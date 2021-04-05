@@ -1,8 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
@@ -61,7 +59,7 @@ public class SolicitudDocumentoControllerTest extends BaseControllerTest {
         // then: new SolicitudDocumento is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(solicitudDocumento.getSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(solicitudDocumento.getSolicitudId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(solicitudDocumento.getTipoDocumento().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(solicitudDocumento.getComentario()))
@@ -113,8 +111,7 @@ public class SolicitudDocumentoControllerTest extends BaseControllerTest {
         // then: SolicitudDocumento is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(updatedSolicitudDocumento.getId()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("solicitud.id").value(updatedSolicitudDocumento.getSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(updatedSolicitudDocumento.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(updatedSolicitudDocumento.getTipoDocumento().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(updatedSolicitudDocumento.getComentario()))
@@ -231,12 +228,10 @@ public class SolicitudDocumentoControllerTest extends BaseControllerTest {
       Long tipoDocumentoId) {
 
     SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentarios-" + solicitudDocumentoId)
+        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
         .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombre-" + solicitudDocumentoId)
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 

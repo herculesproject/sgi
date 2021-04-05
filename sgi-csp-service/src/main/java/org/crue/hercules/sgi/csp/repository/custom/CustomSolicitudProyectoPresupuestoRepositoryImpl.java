@@ -16,8 +16,8 @@ import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGa
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto_;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
@@ -58,27 +58,27 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
     Subquery<BigDecimal> sqTotalConvocatoria = cq.subquery(BigDecimal.class);
     Root<SolicitudProyectoPresupuesto> rootTotalConvocatoria = sqTotalConvocatoria
         .from(SolicitudProyectoPresupuesto.class);
-    Join<SolicitudProyectoPresupuesto, SolicitudProyectoDatos> joinTotalConvocatoriaSolicitudProyectoDatos = rootTotalConvocatoria
-        .join(SolicitudProyectoPresupuesto_.solicitudProyectoDatos);
-    joinTotalConvocatoriaSolicitudProyectoDatos.join(SolicitudProyectoDatos_.solicitud);
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalConvocatoriaSolicitudProyecto = rootTotalConvocatoria
+        .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
+    joinTotalConvocatoriaSolicitudProyecto.join(SolicitudProyecto_.solicitud);
 
     sqTotalConvocatoria.select(cb.sum(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.importeSolicitado)));
     sqTotalConvocatoria
         .where(cb.and(cb.isTrue(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.financiacionAjena)).not(),
-            cb.equal(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.solicitudProyectoDatos)
-                .get(SolicitudProyectoDatos_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
+            cb.equal(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
+                .get(SolicitudProyecto_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
 
     // Total ajeno
     Subquery<BigDecimal> sqTotalAjeno = cq.subquery(BigDecimal.class);
     Root<SolicitudProyectoPresupuesto> rootTotalAjeno = sqTotalAjeno.from(SolicitudProyectoPresupuesto.class);
-    Join<SolicitudProyectoPresupuesto, SolicitudProyectoDatos> joinTotalAjenoSolicitudProyectoDatos = rootTotalAjeno
-        .join(SolicitudProyectoPresupuesto_.solicitudProyectoDatos);
-    joinTotalAjenoSolicitudProyectoDatos.join(SolicitudProyectoDatos_.solicitud);
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalAjenoSolicitudProyecto = rootTotalAjeno
+        .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
+    joinTotalAjenoSolicitudProyecto.join(SolicitudProyecto_.solicitud);
 
     sqTotalAjeno.select(cb.sum(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.importeSolicitado)));
     sqTotalAjeno.where(cb.and(cb.isTrue(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.financiacionAjena)),
-        cb.equal(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyectoDatos)
-            .get(SolicitudProyectoDatos_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
+        cb.equal(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
+            .get(SolicitudProyecto_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
 
     cq.where(cb.equal(root.get(Solicitud_.id), solicitudId));
 
@@ -121,12 +121,12 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
 
     // Define FROM SolicitudProyectoPresupuesto clause
     Root<SolicitudProyectoPresupuesto> root = cq.from(SolicitudProyectoPresupuesto.class);
-    Join<SolicitudProyectoPresupuesto, SolicitudProyectoDatos> joinSolicitudProyectoDatos = root
-        .join(SolicitudProyectoPresupuesto_.solicitudProyectoDatos);
-    joinSolicitudProyectoDatos.join(SolicitudProyectoDatos_.solicitud);
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinSolicitudProyecto = root
+        .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
+    joinSolicitudProyecto.join(SolicitudProyecto_.solicitud);
 
-    cq.where(cb.equal(root.get(SolicitudProyectoPresupuesto_.solicitudProyectoDatos)
-        .get(SolicitudProyectoDatos_.solicitud).get(Solicitud_.id), solicitudId));
+    cq.where(cb.equal(root.get(SolicitudProyectoPresupuesto_.solicitudProyecto).get(SolicitudProyecto_.solicitud)
+        .get(Solicitud_.id), solicitudId));
     cq.groupBy(root.get(SolicitudProyectoPresupuesto_.conceptoGasto));
 
     // Define DTO projection

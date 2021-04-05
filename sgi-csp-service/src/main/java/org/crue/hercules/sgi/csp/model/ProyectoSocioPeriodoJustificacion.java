@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,16 +11,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_socio_periodo_justificacion")
@@ -42,11 +47,10 @@ public class ProyectoSocioPeriodoJustificacion extends BaseEntity {
   @SequenceGenerator(name = "proyecto_socio_periodo_justificacion_seq", sequenceName = "proyecto_socio_periodo_justificacion_seq", allocationSize = 1)
   private Long id;
 
-  /** Proyecto socio. */
-  @ManyToOne
-  @JoinColumn(name = "proyecto_socio_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOCIO_PERIODO_JUSTIFICACION_PROYECTO"))
+  /** ProyectoSocio Id */
+  @Column(name = "proyecto_socio_id", nullable = false)
   @NotNull
-  private ProyectoSocio proyectoSocio;
+  private Long proyectoSocioId;
 
   /** Número periodo. */
   @Column(name = "num_periodo", nullable = false)
@@ -82,5 +86,17 @@ public class ProyectoSocioPeriodoJustificacion extends BaseEntity {
   /** Fecha Recepcion. */
   @Column(name = "fecha_recepcion", nullable = true)
   private Instant fechaRecepcion;
+
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_socio_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOSOCIOPERIODOJUSTIFICACION_PROYECTOSOCIO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final ProyectoSocio proyectoSocio = null;
+
+  @OneToMany(mappedBy = "proyectoSocioPeriodoJustificacion")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoSocioPeriodoJustificacionDocumento> documentos = null;
 
 }

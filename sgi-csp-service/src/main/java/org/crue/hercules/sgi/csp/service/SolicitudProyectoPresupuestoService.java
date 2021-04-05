@@ -5,7 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -107,11 +107,11 @@ public interface SolicitudProyectoPresupuestoService {
       Long solicitudId);
 
   /**
-   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyecto} de
    * {@link SolicitudProyectoPresupuesto} con el fin de permitir la edición de los
    * campo Desglose de presupuesto por entidades
    *
-   * @param id Id del {@link SolicitudProyectoDatos}.
+   * @param id Id del {@link SolicitudProyecto}.
    * @return true existen datos vinculados/false no existen datos vinculados.
    */
   Boolean hasSolicitudPresupuesto(Long id);

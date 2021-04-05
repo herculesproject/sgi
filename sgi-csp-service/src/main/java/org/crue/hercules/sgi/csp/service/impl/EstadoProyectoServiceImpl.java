@@ -39,7 +39,7 @@ public class EstadoProyectoServiceImpl implements EstadoProyectoService {
 
     Assert.isNull(estadoProyecto.getId(), "EstadoProyecto id tiene que ser null para crear un EstadoProyecto");
 
-    Assert.notNull(estadoProyecto.getIdProyecto(), "idProyecto no puede ser null para crear un EstadoProyecto");
+    Assert.notNull(estadoProyecto.getProyectoId(), "proyectoId no puede ser null para crear un EstadoProyecto");
 
     EstadoProyecto returnValue = repository.save(estadoProyecto);
 
@@ -58,7 +58,7 @@ public class EstadoProyectoServiceImpl implements EstadoProyectoService {
   @Override
   public Page<EstadoProyecto> findAllByProyecto(Long idProyecto, Pageable paging) {
     log.debug("findAllByProyecto(Long idProyecto, Pageable paging) - start");
-    Page<EstadoProyecto> returnValue = repository.findAllByIdProyecto(idProyecto, paging);
+    Page<EstadoProyecto> returnValue = repository.findAllByProyectoId(idProyecto, paging);
     log.debug("findAllByProyecto(Long idProyecto, Pageable paging) - end");
     return returnValue;
   }

@@ -29,7 +29,7 @@ public class CustomProyectoPaqueteTrabajoRepositoryImpl implements CustomProyect
   private EntityManager entityManager;
 
   /**
-   * Obtiene el valor del campo PaqueteTrabajo del {@link Proyecto} asignadaoal
+   * Obtiene el valor del campo PaqueteTrabajo del {@link Proyecto} asignadao al
    * {@link ProyectoPaqueteTrabajo}.
    * 
    * @param id Id de la {@link ProyectoPaqueteTrabajo}.
@@ -45,7 +45,7 @@ public class CustomProyectoPaqueteTrabajoRepositoryImpl implements CustomProyect
     Root<ProyectoPaqueteTrabajo> root = cq.from(ProyectoPaqueteTrabajo.class);
 
     Predicate finalPredicate = cb.equal(root.get(ProyectoPaqueteTrabajo_.id), id);
-    cq.select(root.get(ProyectoPaqueteTrabajo_.proyecto).get(Proyecto_.paquetesTrabajo)).where(finalPredicate);
+    cq.select(root.get(ProyectoPaqueteTrabajo_.proyecto).get(Proyecto_.permitePaquetesTrabajo)).where(finalPredicate);
 
     try {
       returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();

@@ -3,8 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.junit.jupiter.api.Test;
@@ -53,8 +51,8 @@ public class SolicitudDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     SolicitudDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(newSolicitudDocumento.getSolicitud().getId());
+    Assertions.assertThat(responseData.getSolicitudId()).as("getSolicitudId()")
+        .isEqualTo(newSolicitudDocumento.getSolicitudId());
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(newSolicitudDocumento.getDocumentoRef());
     Assertions.assertThat(responseData.getComentario()).as("getComentario()")
@@ -83,8 +81,8 @@ public class SolicitudDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     SolicitudDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(solicitudDocumentoExistente.getSolicitud().getId());
+    Assertions.assertThat(responseData.getSolicitudId()).as("getSolicitudId()")
+        .isEqualTo(solicitudDocumentoExistente.getSolicitudId());
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(solicitudDocumentoExistente.getDocumentoRef());
     Assertions.assertThat(responseData.getComentario()).as("getComentario()").isEqualTo("comentario-modificados");
@@ -122,7 +120,7 @@ public class SolicitudDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     SolicitudDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
-    Assertions.assertThat(responseData.getSolicitud().getId()).as("getSolicitud().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getSolicitudId()).as("getSolicitudId()").isEqualTo(1L);
   }
 
   /**
@@ -137,13 +135,10 @@ public class SolicitudDocumentoIT extends BaseIT {
       Long tipoDocumentoId) {
 
     SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitud(Solicitud.builder().id(solicitudId).activo(Boolean.TRUE).build())
-        .comentario("comentarios-" + solicitudDocumentoId).documentoRef("documentoRef-" + solicitudDocumentoId)
-        .nombre("nombre-" + solicitudDocumentoId).tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
-        .build();
+        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
+        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombre-" + solicitudDocumentoId)
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 }

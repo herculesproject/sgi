@@ -3,10 +3,7 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -64,9 +61,8 @@ public class SolicitudProyectoEquipoIT {
 
     SolicitudProyectoEquipo solicitudProyectoEquipoCreado = response.getBody();
     Assertions.assertThat(solicitudProyectoEquipoCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(solicitudProyectoEquipoCreado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoEquipo.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoEquipoCreado.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(solicitudProyectoEquipo.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoEquipoCreado.getRolProyecto().getId()).as("getRolProyecto().getId()")
         .isEqualTo(solicitudProyectoEquipo.getRolProyecto().getId());
     Assertions.assertThat(solicitudProyectoEquipoCreado.getPersonaRef()).as("getPersonaRef()")
@@ -129,8 +125,7 @@ public class SolicitudProyectoEquipoIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     SolicitudProyectoEquipo solicitudProyectoEquipo = response.getBody();
     Assertions.assertThat(solicitudProyectoEquipo.getId()).as("getId()").isEqualTo(idSolicitudProyectoEquipo);
-    Assertions.assertThat(solicitudProyectoEquipo.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()").isEqualTo(1);
+    Assertions.assertThat(solicitudProyectoEquipo.getSolicitudProyectoId()).as("getSolicitudProyectoId()").isEqualTo(1);
     Assertions.assertThat(solicitudProyectoEquipo.getPersonaRef()).as("getPersonaRef()").isEqualTo("personaRef-001");
   }
 
@@ -138,23 +133,16 @@ public class SolicitudProyectoEquipoIT {
    * Función que devuelve un objeto SolicitudProyectoEquipo
    * 
    * @param solicitudProyectoEquipoId
-   * @param solicitudProyectoDatosId
+   * @param solicitudProyectoId
    * @param tipoDocumentoId
    * @return el objeto SolicitudProyectoEquipo
    */
   private SolicitudProyectoEquipo generarSolicitudProyectoEquipo(Long solicitudProyectoEquipoId,
-      Long solicitudProyectoDatosId, Long rolProyectoId) {
+      Long solicitudProyectoId, Long rolProyectoId) {
 
     SolicitudProyectoEquipo solicitudProyectoEquipo = SolicitudProyectoEquipo.builder().id(solicitudProyectoEquipoId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
-        .personaRef("personaRef-001").rolProyecto(RolProyecto.builder().id(rolProyectoId).build()).mesInicio(1)
-        .mesFin(5).build();
-
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().setSolicitud(new Solicitud());
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setId(solicitudProyectoDatosId);
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(EstadoSolicitud.Estado.BORRADOR);
+        .solicitudProyectoId(solicitudProyectoId).personaRef("personaRef-001")
+        .rolProyecto(RolProyecto.builder().id(rolProyectoId).build()).mesInicio(1).mesFin(5).build();
 
     return solicitudProyectoEquipo;
   }

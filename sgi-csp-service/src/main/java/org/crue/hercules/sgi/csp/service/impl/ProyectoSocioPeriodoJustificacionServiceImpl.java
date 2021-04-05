@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.SocioPeriodoJustificacionDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoJustificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -36,23 +39,27 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
 
   private final ProyectoSocioPeriodoJustificacionRepository repository;
   private final ProyectoSocioRepository proyectoSocioRepository;
+  private final ProyectoRepository proyectoRepository;
 
-  private final SocioPeriodoJustificacionDocumentoRepository socioPeriodoJustificacionDocumentoRepository;
+  private final ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionDocumentoRepository;
 
   /**
    * {@link ProyectoSocioPeriodoJustificacionServiceImpl}.
    * 
-   * @param proyectoSocioPeriodoJustificacionRepository  {@link ProyectoSocioPeriodoJustificacionRepository}.
-   * @param proyectoSocioRepository                      {@link ProyectoSocioRepository}.
-   * @param socioPeriodoJustificacionDocumentoRepository {@link SocioPeriodoJustificacionDocumentoRepository}.
+   * @param proyectoSocioPeriodoJustificacionRepository          {@link ProyectoSocioPeriodoJustificacionRepository}.
+   * @param proyectoSocioRepository                              {@link ProyectoSocioRepository}.
+   * @param proyectoSocioPeriodoJustificacionDocumentoRepository {@link ProyectoSocioPeriodoJustificacionDocumentoRepository}.
+   * @param proyectoRepository                                   {@link ProyectoRepository}.
    */
   public ProyectoSocioPeriodoJustificacionServiceImpl(
       ProyectoSocioPeriodoJustificacionRepository proyectoSocioPeriodoJustificacionRepository,
       ProyectoSocioRepository proyectoSocioRepository,
-      SocioPeriodoJustificacionDocumentoRepository socioPeriodoJustificacionDocumentoRepository) {
+      ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionDocumentoRepository,
+      ProyectoRepository proyectoRepository) {
     this.repository = proyectoSocioPeriodoJustificacionRepository;
     this.proyectoSocioRepository = proyectoSocioRepository;
-    this.socioPeriodoJustificacionDocumentoRepository = socioPeriodoJustificacionDocumentoRepository;
+    this.proyectoSocioPeriodoJustificacionDocumentoRepository = proyectoSocioPeriodoJustificacionDocumentoRepository;
+    this.proyectoRepository = proyectoRepository;
   }
 
   /**
@@ -90,7 +97,7 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
       List<Long> periodoJustificacionId = periodoJustificacionesEliminar.stream()
           .map(ProyectoSocioPeriodoJustificacion::getId).collect(Collectors.toList());
 
-      socioPeriodoJustificacionDocumentoRepository
+      proyectoSocioPeriodoJustificacionDocumentoRepository
           .deleteByProyectoSocioPeriodoJustificacionIdIn(periodoJustificacionId);
       repository.deleteAll(periodoJustificacionesEliminar);
     }
@@ -129,10 +136,8 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
     proyectoSocioPeriodoJustificacion.setId(proyectoSocioPeriodoJustificacionId);
     proyectoSocioPeriodoJustificacionesBD.add(proyectoSocioPeriodoJustificacion);
 
-    Assert.isTrue(
-        proyectoSocioPeriodoJustificacionExistente.getProyectoSocio().getId() == proyectoSocioPeriodoJustificacion
-            .getProyectoSocio().getId(),
-        "No se puede modificar el proyecto socio del ProyectoSocioPeriodoJustificacion");
+    Assert.isTrue(proyectoSocioPeriodoJustificacionExistente.getProyectoSocioId() == proyectoSocioPeriodoJustificacion
+        .getProyectoSocioId(), "No se puede modificar el proyecto socio del ProyectoSocioPeriodoJustificacion");
 
     validateProyectoSocioPeriodoJustificacion(proyectoSocioPeriodoJustificacion);
 
@@ -171,7 +176,7 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
     validateProyectoSocioPeriodoJustificacion(proyectoSocioPeriodoJustificacion);
 
     List<ProyectoSocioPeriodoJustificacion> proyectoSocioPeriodoJustificacionesBD = repository
-        .findAllByProyectoSocioId(proyectoSocioPeriodoJustificacion.getProyectoSocio().getId());
+        .findAllByProyectoSocioId(proyectoSocioPeriodoJustificacion.getProyectoSocioId());
 
     proyectoSocioPeriodoJustificacionesBD.add(proyectoSocioPeriodoJustificacion);
 
@@ -208,6 +213,20 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
   }
 
   /**
+   * Comprueba la existencia del {@link ProyectoSocioPeriodoJustificacion} por id.
+   *
+   * @param id el id de la entidad {@link ProyectoSocioPeriodoJustificacion}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsById(final Long id) {
+    log.debug("existsById(final Long id)  - start", id);
+    final boolean existe = repository.existsById(id);
+    log.debug("existsById(final Long id)  - end", id);
+    return existe;
+  }
+
+  /**
    * Obtiene las {@link ProyectoSocioPeriodoJustificacion} para una
    * {@link ProyectoSocio}.
    *
@@ -231,19 +250,19 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
   private void validateProyectoSocioPeriodoJustificacion(
       ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion) {
 
-    Assert.notNull(proyectoSocioPeriodoJustificacion.getProyectoSocio().getId(),
-        "El id de proyecto socio no puede ser null");
+    Assert.notNull(proyectoSocioPeriodoJustificacion.getProyectoSocioId(), "El id de proyecto socio no puede ser null");
 
-    if (!proyectoSocioRepository.existsById(proyectoSocioPeriodoJustificacion.getProyectoSocio().getId())) {
-      throw new ProyectoSocioNotFoundException(proyectoSocioPeriodoJustificacion.getProyectoSocio().getId());
-    }
+    ProyectoSocio proyectoSocio = proyectoSocioRepository
+        .findById(proyectoSocioPeriodoJustificacion.getProyectoSocioId())
+        .orElseThrow(() -> new ProyectoSocioNotFoundException(proyectoSocioPeriodoJustificacion.getProyectoSocioId()));
 
     Assert.isTrue(
         proyectoSocioPeriodoJustificacion.getFechaInicio().isBefore(proyectoSocioPeriodoJustificacion.getFechaFin()),
         "La fecha final tiene que ser posterior a la fecha inicial");
 
-    if (proyectoSocioPeriodoJustificacion.getProyectoSocio().getProyecto().getEstado()
-        .getEstado() == EstadoProyecto.Estado.ABIERTO) {
+    Proyecto proyecto = proyectoRepository.findById(proyectoSocio.getProyectoId())
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoSocio.getProyectoId()));
+    if (proyecto.getEstado().getEstado() == EstadoProyecto.Estado.ABIERTO) {
       Assert.isTrue(
           proyectoSocioPeriodoJustificacion.getFechaInicioPresentacion() != null
               && proyectoSocioPeriodoJustificacion.getFechaFinPresentacion() != null,
@@ -259,8 +278,8 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
     }
 
     Assert.isTrue(
-        proyectoSocioPeriodoJustificacion.getProyectoSocio().getFechaFin() == null || proyectoSocioPeriodoJustificacion
-            .getFechaFin().isBefore(proyectoSocioPeriodoJustificacion.getProyectoSocio().getFechaFin()),
+        proyectoSocio.getFechaFin() == null
+            || proyectoSocioPeriodoJustificacion.getFechaFin().isBefore(proyectoSocio.getFechaFin()),
         "La fecha fin no puede ser superior a la fecha fin indicada en Proyecto socio");
 
     Assert.isTrue(!isRangoFechasSolapado(proyectoSocioPeriodoJustificacion), "El periodo se solapa con otro existente");
@@ -281,7 +300,7 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
         .byIdNotEqual(proyectoSocioPeriodoJustificacion.getId());
 
     Specification<ProyectoSocioPeriodoJustificacion> specProyectoSocioId = ProyectoSocioPeriodoJustificacionSpecifications
-        .byProyectoSocioId(proyectoSocioPeriodoJustificacion.getProyectoSocio().getId());
+        .byProyectoSocioId(proyectoSocioPeriodoJustificacion.getProyectoSocioId());
 
     Specification<ProyectoSocioPeriodoJustificacion> specByRangoFechaSolapados = ProyectoSocioPeriodoJustificacionSpecifications
         .byRangoFechaSolapados(proyectoSocioPeriodoJustificacion.getFechaInicio(),

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -30,19 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/areatematicas")
 @Slf4j
+@RequiredArgsConstructor
 public class AreaTematicaController {
 
   /** AreaTematica service */
   private final AreaTematicaService service;
-
-  /**
-   * Instancia un nuevo AreaTematicaController.
-   * 
-   * @param service {@link AreaTematicaService}
-   */
-  public AreaTematicaController(AreaTematicaService service) {
-    this.service = service;
-  }
 
   /**
    * Devuelve el {@link AreaTematica} con el id indicado.

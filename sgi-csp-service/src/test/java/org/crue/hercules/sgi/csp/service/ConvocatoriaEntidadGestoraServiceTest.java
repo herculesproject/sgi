@@ -43,11 +43,12 @@ public class ConvocatoriaEntidadGestoraServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsConvocatoriaEntidadGestora() {
     // given: new ConvocatoriaEntidadGestora
-    ConvocatoriaEntidadGestora newConvocatoriaEntidadGestora = generarConvocatoriaEntidadGestora(null, 1L,
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadGestora newConvocatoriaEntidadGestora = generarConvocatoriaEntidadGestora(null, convocatoriaId,
         "entidad-001");
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaEntidadGestora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaEntidadGestoraRepository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyString())).willReturn(Optional.empty());
 
@@ -69,8 +70,8 @@ public class ConvocatoriaEntidadGestoraServiceTest extends BaseServiceTest {
     // then: new ConvocatoriaEntidadGestora is created
     Assertions.assertThat(createdConvocatoriaEntidadGestora).isNotNull();
     Assertions.assertThat(createdConvocatoriaEntidadGestora.getId()).isNotNull();
-    Assertions.assertThat(createdConvocatoriaEntidadGestora.getConvocatoria().getId())
-        .isEqualTo(newConvocatoriaEntidadGestora.getConvocatoria().getId());
+    Assertions.assertThat(createdConvocatoriaEntidadGestora.getConvocatoriaId())
+        .isEqualTo(newConvocatoriaEntidadGestora.getConvocatoriaId());
     Assertions.assertThat(createdConvocatoriaEntidadGestora.getEntidadRef())
         .isEqualTo(newConvocatoriaEntidadGestora.getEntidadRef());
   }
@@ -131,13 +132,14 @@ public class ConvocatoriaEntidadGestoraServiceTest extends BaseServiceTest {
   public void create_WithDuplicatedConvocatoriaIdAndEntidadRef_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadGestora assigned with same
     // Convocatoria And EntidadRef
-    ConvocatoriaEntidadGestora newConvocatoriaEntidadGestora = generarConvocatoriaEntidadGestora(null, 1L,
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadGestora newConvocatoriaEntidadGestora = generarConvocatoriaEntidadGestora(null, convocatoriaId,
         "entidad-001");
-    ConvocatoriaEntidadGestora ConvocatoriaEntidadGestoraExistente = generarConvocatoriaEntidadGestora(1L, 1L,
-        "entidad-001");
+    ConvocatoriaEntidadGestora ConvocatoriaEntidadGestoraExistente = generarConvocatoriaEntidadGestora(1L,
+        convocatoriaId, "entidad-001");
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaEntidadGestora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaEntidadGestoraRepository.findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyString())).willReturn(Optional.of(ConvocatoriaEntidadGestoraExistente));
 
@@ -233,9 +235,13 @@ public class ConvocatoriaEntidadGestoraServiceTest extends BaseServiceTest {
       ConvocatoriaEntidadGestora convocatoriaEntidadGestora = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(convocatoriaEntidadGestora.getId()).isEqualTo(Long.valueOf(i));
-      Assertions.assertThat(convocatoriaEntidadGestora.getConvocatoria().getId()).isEqualTo(convocatoriaId);
+      Assertions.assertThat(convocatoriaEntidadGestora.getConvocatoriaId()).isEqualTo(convocatoriaId);
       Assertions.assertThat(convocatoriaEntidadGestora.getEntidadRef()).isEqualTo("entidad-" + i);
     }
+  }
+
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    return Convocatoria.builder().id(convocatoriaId).build();
   }
 
   /**
@@ -249,8 +255,8 @@ public class ConvocatoriaEntidadGestoraServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadGestora generarConvocatoriaEntidadGestora(Long convocatoriaEntidadGestoraId,
       Long convocatoriaId, String entidadRef) {
 
-    return ConvocatoriaEntidadGestora.builder().id(convocatoriaEntidadGestoraId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build()).entidadRef(entidadRef).build();
+    return ConvocatoriaEntidadGestora.builder().id(convocatoriaEntidadGestoraId).convocatoriaId(convocatoriaId)
+        .entidadRef(entidadRef).build();
 
   }
 }

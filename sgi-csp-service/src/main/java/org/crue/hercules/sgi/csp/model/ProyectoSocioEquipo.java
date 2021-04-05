@@ -15,11 +15,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_socio_equipo")
@@ -42,15 +45,14 @@ public class ProyectoSocioEquipo extends BaseEntity {
   @SequenceGenerator(name = "proyecto_socio_equipo_seq", sequenceName = "proyecto_socio_seq", allocationSize = 1)
   private Long id;
 
-  /** Rol socio. */
-  @ManyToOne
-  @JoinColumn(name = "proyecto_socio_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOCIO_EQUIPO_PROYECTO_SOCIO"))
+  /** ProyectoSocio Id */
+  @Column(name = "proyecto_socio_id", nullable = false)
   @NotNull
-  private ProyectoSocio proyectoSocio;
+  private Long proyectoSocioId;
 
   /** Rol proyecto. */
   @ManyToOne
-  @JoinColumn(name = "rol_proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOCIO_EQUIPO_ROL_PROYECTO"))
+  @JoinColumn(name = "rol_proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOSOCIOEQUIPO_ROLPROYECTO"))
   @NotNull
   private RolProyecto rolProyecto;
 
@@ -68,4 +70,10 @@ public class ProyectoSocioEquipo extends BaseEntity {
   @Column(name = "fecha_fin", nullable = true)
   private Instant fechaFin;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_socio_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOSOCIOEQUIPO_PROYECTOSOCIO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final ProyectoSocio proyectoSocio = null;
 }

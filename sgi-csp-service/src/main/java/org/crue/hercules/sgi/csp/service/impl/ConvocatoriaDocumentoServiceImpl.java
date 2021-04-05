@@ -92,7 +92,7 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
 
     return repository.findById(convocatoriaDocumentoActualizar.getId()).map(convocatoriaDocumento -> {
 
-      convocatoriaDocumentoActualizar.setConvocatoria(convocatoriaDocumento.getConvocatoria());
+      convocatoriaDocumentoActualizar.setConvocatoriaId(convocatoriaDocumento.getConvocatoriaId());
       validarConvocatoriaDcoumento(convocatoriaDocumentoActualizar, convocatoriaDocumento);
 
       convocatoriaDocumento.setTipoFase(convocatoriaDocumentoActualizar.getTipoFase());
@@ -176,15 +176,12 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
     log.debug(
         "validarConvocatoriaDcoumento(ConvocatoriaDocumento convocatoriaDocumento, ConvocatoriaDocumento datosOriginales) - start");
 
-    datosConvocatoriaDocumento.setConvocatoria(
-        convocatoriaRepository.findById(datosConvocatoriaDocumento.getConvocatoria().getId()).orElseThrow(
-            () -> new ConvocatoriaNotFoundException(datosConvocatoriaDocumento.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(datosConvocatoriaDocumento.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(datosConvocatoriaDocumento.getConvocatoriaId()));
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-    Long modeloEjecucionId = (datosConvocatoriaDocumento.getConvocatoria().getModeloEjecucion() != null
-        && datosConvocatoriaDocumento.getConvocatoria().getModeloEjecucion().getId() != null)
-            ? datosConvocatoriaDocumento.getConvocatoria().getModeloEjecucion().getId()
-            : null;
+    Long modeloEjecucionId = (convocatoria.getModeloEjecucion() != null
+        && convocatoria.getModeloEjecucion().getId() != null) ? convocatoria.getModeloEjecucion().getId() : null;
 
     /**
      * El TipoFase no es obligatorio, pero si tiene valor y existe un TipoDocumento,
@@ -202,8 +199,7 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
       Assert.isTrue(modeloTipoFase.isPresent(),
           "TipoFase '" + datosConvocatoriaDocumento.getTipoFase().getNombre()
               + "' no disponible para el ModeloEjecucion '"
-              + ((modeloEjecucionId != null)
-                  ? datosConvocatoriaDocumento.getConvocatoria().getModeloEjecucion().getNombre()
+              + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
                   : "Convocatoria sin modelo asignado")
               + "'");
 
@@ -241,15 +237,16 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
               datosConvocatoriaDocumento.getTipoDocumento().getId());
 
       // Está asignado al ModeloEjecucion y ModeloTipoFase
-      Assert.isTrue(modeloTipoDocumento.isPresent(), "TipoDocumento '"
-          + datosConvocatoriaDocumento.getTipoDocumento().getNombre() + "' no disponible para el ModeloEjecucion '"
-          + ((modeloEjecucionId != null) ? datosConvocatoriaDocumento.getConvocatoria().getModeloEjecucion().getNombre()
-              : "Convocatoria sin modelo asignado")
-          + "' y TipoFase '"
-          + ((convocatoriaDocumentoModeloTipoFase != null)
-              ? convocatoriaDocumentoModeloTipoFase.getTipoFase().getNombre()
-              : "Sin Asignar")
-          + "'");
+      Assert.isTrue(modeloTipoDocumento.isPresent(),
+          "TipoDocumento '" + datosConvocatoriaDocumento.getTipoDocumento().getNombre()
+              + "' no disponible para el ModeloEjecucion '"
+              + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
+                  : "Convocatoria sin modelo asignado")
+              + "' y TipoFase '"
+              + ((convocatoriaDocumentoModeloTipoFase != null)
+                  ? convocatoriaDocumentoModeloTipoFase.getTipoFase().getNombre()
+                  : "Sin Asignar")
+              + "'");
 
       // Comprobar solamente si estamos creando o se ha modificado el documento
       if (datosOriginales == null || datosOriginales.getTipoDocumento() == null
@@ -285,9 +282,7 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
     log.debug("validarRequeridosConvocatoriaDocumento(ConvocatoriaDocumento datosConvocatoriaDocumento) - start");
 
     /** Obligatorios */
-    Assert.isTrue(
-        datosConvocatoriaDocumento.getConvocatoria() != null
-            && datosConvocatoriaDocumento.getConvocatoria().getId() != null,
+    Assert.isTrue(datosConvocatoriaDocumento.getConvocatoriaId() != null,
         "Id Convocatoria no puede ser null en ConvocatoriaDocumento");
 
     Assert.isTrue(StringUtils.isNotBlank(datosConvocatoriaDocumento.getNombre()),

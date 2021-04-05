@@ -13,11 +13,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_entidad_gestora", uniqueConstraints = { @UniqueConstraint(columnNames = { "proyecto_id",
@@ -41,15 +44,20 @@ public class ProyectoEntidadGestora extends BaseEntity {
   @SequenceGenerator(name = "proyecto_entidad_gestora_seq", sequenceName = "proyecto_entidad_gestora_seq", allocationSize = 1)
   private Long id;
 
-  /** Proyecto */
-  @ManyToOne
-  @JoinColumn(name = "proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOENTIDADGESTORA_PROYECTO"))
+  /** Proyecto Id */
+  @Column(name = "proyecto_id", nullable = false)
   @NotNull
-  private Proyecto proyecto;
+  private Long proyectoId;
 
   /** Entidad */
   @Column(name = "entidad_ref", nullable = false)
   @NotNull
   private String entidadRef;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOENTIDADGESTORA_PROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Proyecto proyecto = null;
 }

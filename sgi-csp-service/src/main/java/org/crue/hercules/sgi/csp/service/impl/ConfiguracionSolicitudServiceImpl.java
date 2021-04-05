@@ -63,17 +63,13 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
 
     Assert.isNull(configuracionSolicitud.getId(), "Id tiene que ser null para crear la ConfiguracionSolicitud");
 
-    Assert.isTrue(
-        configuracionSolicitud.getConvocatoria() != null && configuracionSolicitud.getConvocatoria().getId() != null,
+    Assert.isTrue(configuracionSolicitud.getConvocatoriaId() != null,
         "Convocatoria no puede ser null en ConfiguracionSolicitud");
 
-    Assert.isTrue(!repository.findByConvocatoriaId(configuracionSolicitud.getConvocatoria().getId()).isPresent(),
-        "Ya existe ConfiguracionSolicitud para la convocatoria "
-            + configuracionSolicitud.getConvocatoria().getCodigo());
+    Assert.isTrue(!repository.findByConvocatoriaId(configuracionSolicitud.getConvocatoriaId()).isPresent(),
+        "Ya existe ConfiguracionSolicitud para la convocatoria " + configuracionSolicitud.getConvocatoriaId());
 
-    configuracionSolicitud
-        .setConvocatoria(convocatoriaRepository.findById(configuracionSolicitud.getConvocatoria().getId())
-            .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoria().getId())));
+    configuracionSolicitud.setConvocatoriaId(configuracionSolicitud.getConvocatoriaId());
 
     // validar y establecer los datos
     validarConfiguracionSolicitud(configuracionSolicitud, null);
@@ -100,16 +96,15 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
 
     Assert.notNull(convocatoriaId, "Convocatoria no puede ser null en ConfiguracionSolicitud");
 
-    configuracionSolicitud.setConvocatoria(convocatoriaRepository.findById(convocatoriaId)
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId)));
+    Convocatoria convocatoria = convocatoriaRepository.findById(configuracionSolicitud.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoriaId()));
+    configuracionSolicitud.setConvocatoriaId(convocatoriaId);
 
     // comprobar si convocatoria es modificable
-    Assert.isTrue(
-        convocatoriaService.modificable(configuracionSolicitud.getConvocatoria().getId(),
-            configuracionSolicitud.getConvocatoria().getUnidadGestionRef()),
+    Assert.isTrue(convocatoriaService.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef()),
         "No se puede modificar ConfiguracionSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
-    return repository.findByConvocatoriaId(configuracionSolicitud.getConvocatoria().getId()).map((data) -> {
+    return repository.findByConvocatoriaId(configuracionSolicitud.getConvocatoriaId()).map((data) -> {
 
       // validar y establecer los datos
       validarConfiguracionSolicitud(configuracionSolicitud, data);
@@ -158,7 +153,9 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
         "validarConfiguracionSolicitud(ConfiguracionSolicitud datosConfiguracionSolicitud, , ConfiguracionSolicitud datosOriginales) - start");
 
     // obligatorio para pasar al estado Registrada
-    if (datosConfiguracionSolicitud.getConvocatoria().getEstado() == Convocatoria.Estado.REGISTRADA) {
+    Convocatoria convocatoria = convocatoriaRepository.findById(datosConfiguracionSolicitud.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(datosConfiguracionSolicitud.getConvocatoriaId()));
+    if (convocatoria.getEstado() == Convocatoria.Estado.REGISTRADA) {
       Assert.notNull(datosConfiguracionSolicitud.getTramitacionSGI(),
           "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
       Assert.notNull(datosConfiguracionSolicitud.getFormularioSolicitud(),
@@ -178,7 +175,7 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
                 .getFasePresentacionSolicitudes().getId()))) {
 
       Specification<DocumentoRequeridoSolicitud> specByConvocatoria = DocumentoRequeridoSolicitudSpecifications
-          .byConvocatoriaId(datosOriginales.getConvocatoria().getId());
+          .byConvocatoriaId(datosOriginales.getConvocatoriaId());
       Assert.isTrue(documentoRequeridoSolicitudRepository.findAll(specByConvocatoria, Pageable.unpaged()).isEmpty(),
           "Si ya existen documentos requeridos solicitud asociados a la configuración, no se puede cambiar la fase");
     }

@@ -36,14 +36,14 @@ public class ConvocatoriaConceptoGastoCodigoEcRepositoryTest {
     generarConvocatoriaConceptoGastoCodigoEc("-002", true);
 
     // when: find by ConvocatoriaConceptoGasto and permitido
-    List<ConvocatoriaConceptoGastoCodigoEc> dataFound = repository.findAllByConvocatoriaConceptoGastoId(
-        convocatoriaConceptoGastoCodigoEc1.getConvocatoriaConceptoGasto().getId());
+    List<ConvocatoriaConceptoGastoCodigoEc> dataFound = repository
+        .findAllByConvocatoriaConceptoGastoId(convocatoriaConceptoGastoCodigoEc1.getConvocatoriaConceptoGastoId());
 
     // then: ConvocatoriaConceptoGasto is found
     Assertions.assertThat(dataFound.get(0)).isNotNull();
     Assertions.assertThat(dataFound.get(0).getId()).isEqualTo(convocatoriaConceptoGastoCodigoEc1.getId());
-    Assertions.assertThat(dataFound.get(0).getConvocatoriaConceptoGasto().getId())
-        .isEqualTo(convocatoriaConceptoGastoCodigoEc1.getConvocatoriaConceptoGasto().getId());
+    Assertions.assertThat(dataFound.get(0).getConvocatoriaConceptoGastoId())
+        .isEqualTo(convocatoriaConceptoGastoCodigoEc1.getConvocatoriaConceptoGastoId());
   }
 
   @Test
@@ -128,14 +128,14 @@ public class ConvocatoriaConceptoGastoCodigoEcRepositoryTest {
     entityManager.persistAndFlush(conceptoGasto);
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = ConvocatoriaConceptoGasto.builder()
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .conceptoGasto(conceptoGasto)
         .observaciones("obs-1")
         .permitido(permitido).build();
     entityManager.persistAndFlush(convocatoriaConceptoGasto);
 
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = ConvocatoriaConceptoGastoCodigoEc.builder()
-        .convocatoriaConceptoGasto(convocatoriaConceptoGasto)
+        .convocatoriaConceptoGastoId(convocatoriaConceptoGasto.getId())
         .codigoEconomicoRef("cod-" + suffix)
         .build();
     // @formatter:on

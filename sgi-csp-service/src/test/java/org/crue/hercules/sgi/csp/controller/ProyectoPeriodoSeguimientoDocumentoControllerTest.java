@@ -1,10 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.time.Instant;
-
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
@@ -65,8 +61,8 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
         // then: new ProyectoPeriodoSeguimientoDocumento is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("proyectoPeriodoSeguimiento.id")
-            .value(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoPeriodoSeguimientoId")
+            .value(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId()))
         .andExpect(
@@ -125,8 +121,8 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
         // then: ProyectoPeriodoSeguimientoDocumento is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(updatedProyectoPeriodoSeguimientoDocumento.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyectoPeriodoSeguimiento.id")
-            .value(updatedProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoPeriodoSeguimientoId")
+            .value(updatedProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(updatedProyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario")
@@ -241,27 +237,6 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   }
 
   /**
-   * Función que devuelve un objeto ProyectoPeriodoSeguimiento
-   * 
-   * @param id id del ProyectoPeriodoSeguimiento
-   * @return el objeto ProyectoPeriodoSeguimiento
-   */
-  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
-    ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
-    proyectoPeriodoSeguimiento.setId(id);
-    proyectoPeriodoSeguimiento.setProyecto(proyecto);
-    proyectoPeriodoSeguimiento.setNumPeriodo(1);
-    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
-    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
-    proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
-
-    return proyectoPeriodoSeguimiento;
-  }
-
-  /**
    * Función que devuelve un objeto ProyectoPeriodoSeguimientoDocumento
    * 
    * @param id id del ProyectoPeriodoSeguimientoDocumento
@@ -277,8 +252,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
 
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
-    proyectoPeriodoSeguimientoDocumento
-        .setProyectoPeriodoSeguimiento(generarMockProyectoPeriodoSeguimiento(id == null ? 1 : id));
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre("Nombre-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));

@@ -36,7 +36,7 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaFase convocatoriaFase1 = generarConvocatoriaFase("-001");
 
     Long idConvocatoriaFase = 999999L;
-    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoriaId();
     Instant fechaInicioBuscada = Instant.parse("2020-10-11T00:00:00Z");
     Instant fechaFinBuscada = Instant.parse("2020-10-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
@@ -69,7 +69,7 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaFase convocatoriaFase1 = generarConvocatoriaFase("-001");
 
     Long idConvocatoriaFase = 988888888L;
-    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoriaId();
     Instant fechaInicioBuscada = Instant.parse("2020-11-11T00:00:00Z");
     Instant fechaFinBuscada = Instant.parse("2020-11-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
@@ -102,7 +102,7 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaFase convocatoriaFase1 = generarConvocatoriaFase("-001");
 
     Long idConvocatoriaFase = 87999999999L;
-    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoriaId();
     Instant fechaInicioBuscada = Instant.parse("2020-10-11T00:00:00Z");
     Instant fechaFinBuscada = Instant.parse("2020-11-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
@@ -135,7 +135,7 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaFase convocatoriaFase1 = generarConvocatoriaFase("-001");
 
     Long idConvocatoriaFase = 200000000L;
-    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoriaId();
     Instant fechaInicioBuscada = Instant.parse("2020-09-11T00:00:00Z");
     Instant fechaFinBuscada = Instant.parse("2020-10-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
@@ -170,7 +170,7 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaFase convocatoriaFase1 = generarConvocatoriaFase("-001");
 
     Long idConvocatoriaFase = null;
-    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaFase1.getConvocatoriaId();
     Instant fechaInicioBuscada = Instant.parse("2020-09-11T00:00:00Z");
     Instant fechaFinBuscada = Instant.parse("2020-11-20T00:00:00Z");
     Long tipoFaseIdBuscado = convocatoriaFase1.getTipoFase().getId();
@@ -262,7 +262,7 @@ public class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(tipoFase);
 
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-31T00:00:00Z"))

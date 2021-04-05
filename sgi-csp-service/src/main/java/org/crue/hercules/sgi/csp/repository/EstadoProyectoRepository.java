@@ -18,6 +18,6 @@ public interface EstadoProyectoRepository
    * @return la lista de entidades {@link EstadoProyecto} de la {@link Proyecto}
    *         paginadas.
    */
-  Page<EstadoProyecto> findAllByIdProyecto(Long idProyecto, Pageable paging);
+  Page<EstadoProyecto> findAllByProyectoId(Long idProyecto, Pageable paging);
 
 }

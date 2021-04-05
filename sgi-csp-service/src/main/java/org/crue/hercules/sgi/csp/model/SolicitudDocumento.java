@@ -13,11 +13,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "solicitud_documento")
@@ -40,11 +43,10 @@ public class SolicitudDocumento extends BaseEntity {
   @SequenceGenerator(name = "solicitud_documento_seq", sequenceName = "solicitud_documento_seq", allocationSize = 1)
   private Long id;
 
-  /** Solicitud */
-  @ManyToOne
-  @JoinColumn(name = "solicitud_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_DOCUMENTO_SOLICITUD"))
+  /** Solicitud Id */
+  @Column(name = "solicitud_id", nullable = false)
   @NotNull
-  private Solicitud solicitud;
+  private Long solicitudId;
 
   /** Comentarios */
   @Column(name = "comentario", length = 2000, nullable = true)
@@ -65,7 +67,13 @@ public class SolicitudDocumento extends BaseEntity {
 
   /** Tipo documento */
   @ManyToOne
-  @JoinColumn(name = "tipo_documento_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUD_DOCUMENTO_TIPO_DOCUMENTO"))
+  @JoinColumn(name = "tipo_documento_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUDDOCUMENTO_TIPODOCUMENTO"))
   private TipoDocumento tipoDocumento;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "solicitud_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDDOCUMENTO_SOLICITUD"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Solicitud solicitud = null;
 }

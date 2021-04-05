@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,8 +50,8 @@ public class RequisitoIPIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     RequisitoIP responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newRequisitoIP.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newRequisitoIP.getConvocatoriaId());
     Assertions.assertThat(responseData.getSexo()).as("getSexo()").isEqualTo(newRequisitoIP.getSexo());
 
   }
@@ -71,8 +70,8 @@ public class RequisitoIPIT extends BaseIT {
 
     RequisitoIP requisitoIPActualizado = response.getBody();
     Assertions.assertThat(requisitoIPActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(requisitoIPActualizado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(requisitoIP.getConvocatoria().getId());
+    Assertions.assertThat(requisitoIPActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(requisitoIP.getConvocatoriaId());
     Assertions.assertThat(requisitoIPActualizado.getSexo()).as("getSexo()").isEqualTo(requisitoIP.getSexo());
   }
 
@@ -88,7 +87,7 @@ public class RequisitoIPIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     RequisitoIP requisitoIP = response.getBody();
-    Assertions.assertThat(requisitoIP.getConvocatoria().getId()).as("getId()").isEqualTo(idConvocatoria);
+    Assertions.assertThat(requisitoIP.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(idConvocatoria);
     Assertions.assertThat(requisitoIP.getSexo()).as("getSexo()").isEqualTo(requisitoIP.getSexo());
 
   }
@@ -102,14 +101,7 @@ public class RequisitoIPIT extends BaseIT {
   private RequisitoIP generarMockRequisitoIP(Long id) {
     RequisitoIP requisitoIP = new RequisitoIP();
     requisitoIP.setId(id);
-    Long idConvocatoria = id;
-
-    if (id == null) {
-      idConvocatoria = 1L;
-    }
-
-    requisitoIP.setConvocatoria(
-        Convocatoria.builder().id(idConvocatoria).activo(Boolean.TRUE).codigo("codigo" + idConvocatoria).build());
+    requisitoIP.setConvocatoriaId(id != null ? id : 1L);
     requisitoIP.setSexo("Hombre");
     return requisitoIP;
   }

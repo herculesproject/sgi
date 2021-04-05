@@ -205,7 +205,7 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
         "validarProrrogaDcoumento(ProrrogaDocumento prorrogaDocumento, ProrrogaDocumento datosOriginales) - start");
 
     // Se comprueba la existencia del proyecto
-    Long proyectoProrrogaId = datosProrrogaDocumento.getProyectoProrroga().getId();
+    Long proyectoProrrogaId = datosProrrogaDocumento.getProyectoProrrogaId();
     if (!proyectoProrrogaRepository.existsById(proyectoProrrogaId)) {
       throw new ProyectoProrrogaNotFoundException(proyectoProrrogaId);
     }
@@ -243,9 +243,7 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
   private void validarRequeridosProrrogaDocumento(ProrrogaDocumento datosProrrogaDocumento) {
     log.debug("validarRequeridosProrrogaDocumento(ProrrogaDocumento datosProrrogaDocumento) - start");
 
-    Assert.isTrue(
-        datosProrrogaDocumento.getProyectoProrroga() != null
-            && datosProrrogaDocumento.getProyectoProrroga().getId() != null,
+    Assert.isTrue(datosProrrogaDocumento.getProyectoProrrogaId() != null,
         "Id ProyectoProrroga no puede ser null para realizar la acción sobre ProrrogaDocumento");
 
     Assert.isTrue(StringUtils.isNotBlank(datosProrrogaDocumento.getNombre()),

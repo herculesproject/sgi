@@ -9,9 +9,9 @@ import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
-import org.crue.hercules.sgi.csp.service.SocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,22 +43,22 @@ public class ProyectoSocioPeriodoJustificacionController {
   /** ProyectoSocioPeriodoJustificacion service */
   private final ProyectoSocioPeriodoJustificacionService service;
 
-  /** SocioPeriodoJustificacionDocumentoService service */
-  private final SocioPeriodoJustificacionDocumentoService socioPeriodoJustificacionDocumentoService;
+  /** ProyectoSocioPeriodoJustificacionDocumentoService service */
+  private final ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService;
 
   /**
    * {@link ProyectoSocioPeriodoJustificacionController}.
    * 
-   * @param proyectoSocioPeriodoJustificacionService  {@link ProyectoSocioPeriodoJustificacionService}
-   * @param socioPeriodoJustificacionDocumentoService {@link SocioPeriodoJustificacionDocumentoService}
+   * @param proyectoSocioPeriodoJustificacionService          {@link ProyectoSocioPeriodoJustificacionService}
+   * @param proyectoSocioPeriodoJustificacionDocumentoService {@link ProyectoSocioPeriodoJustificacionDocumentoService}
    */
   public ProyectoSocioPeriodoJustificacionController(
       ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService,
-      SocioPeriodoJustificacionDocumentoService socioPeriodoJustificacionDocumentoService) {
+      ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService) {
     log.debug(
         "ProyectoSocioPeriodoJustificacionController(ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService) - start");
     this.service = proyectoSocioPeriodoJustificacionService;
-    this.socioPeriodoJustificacionDocumentoService = socioPeriodoJustificacionDocumentoService;
+    this.proyectoSocioPeriodoJustificacionDocumentoService = proyectoSocioPeriodoJustificacionDocumentoService;
     log.debug(
         "ProyectoSocioPeriodoJustificacionController(ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService) - end");
   }
@@ -75,6 +76,25 @@ public class ProyectoSocioPeriodoJustificacionController {
     ProyectoSocioPeriodoJustificacion returnValue = service.findById(id);
     log.debug("findById(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba la existencia del {@link ProyectoSocioPeriodoJustificacion} con el
+   * id indicado.
+   * 
+   * @param id Identificador de {@link ProyectoSocioPeriodoJustificacion}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ResponseEntity<?> exists(@PathVariable Long id) {
+    log.debug("exists(Long id) - start");
+    if (service.existsById(id)) {
+      log.debug("exists(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("exists(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -149,13 +169,13 @@ public class ProyectoSocioPeriodoJustificacionController {
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
-  @GetMapping("/{id}/socioperiodojustificaciondocumentos")
+  @GetMapping("/{id}/proyectosocioperiodojustificaciondocumentos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
-  ResponseEntity<Page<SocioPeriodoJustificacionDocumento>> findAllProyectoSocioPeriodoJustificacion(
+  ResponseEntity<Page<ProyectoSocioPeriodoJustificacionDocumento>> findAllProyectoSocioPeriodoJustificacion(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioPeriodoJustificacion(Long id, String query, Pageable paging) - start");
-    Page<SocioPeriodoJustificacionDocumento> page = socioPeriodoJustificacionDocumentoService
+    Page<ProyectoSocioPeriodoJustificacionDocumento> page = proyectoSocioPeriodoJustificacionDocumentoService
         .findAllByProyectoSocioPeriodoJustificacion(id, query, paging);
 
     if (page.isEmpty()) {

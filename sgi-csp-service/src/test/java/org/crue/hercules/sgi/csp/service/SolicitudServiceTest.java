@@ -17,11 +17,12 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
@@ -64,7 +65,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
 
   @Mock
-  private SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
+  private SolicitudProyectoRepository solicitudProyectoRepository;
 
   @Mock
   private SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
@@ -75,24 +76,29 @@ public class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoRepository proyectoRepository;
 
+  @Mock
+  private ConvocatoriaRepository convocatoriaRepository;
+
   private SolicitudService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudServiceImpl(repository, estadoSolicitudRepository, configuracionSolicitudRepository,
-        proyectoRepository, solicitudProyectoDatosRepository, documentoRequeridoSolicitudRepository,
+        proyectoRepository, solicitudProyectoRepository, documentoRequeridoSolicitudRepository,
         solicitudDocumentoRepository, convocatoriaEntidadConvocanteRepository, solicitudProyectoEquipoRepository,
-        solicitudProyectoSocioRepository);
+        solicitudProyectoSocioRepository, convocatoriaRepository);
   }
 
   @Test
   public void create_WithConvocatoria_ReturnsSolicitud() {
     // given: Un nuevo Solicitud
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, solicitud.getUnidadGestionRef());
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConfiguracionSolicitud(1L, 1L, solicitud.getUnidadGestionRef())));
-
+        .willReturn(Optional.of(generarMockConfiguracionSolicitud(1L, 1L)));
     BDDMockito.given(repository.save(ArgumentMatchers.<Solicitud>any())).will((InvocationOnMock invocation) -> {
       Solicitud solicitudCreado = invocation.getArgument(0);
       if (solicitudCreado.getId() == null) {
@@ -101,7 +107,6 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
       return solicitudCreado;
     });
-
     BDDMockito.given(estadoSolicitudRepository.save(ArgumentMatchers.<EstadoSolicitud>any()))
         .will((InvocationOnMock invocation) -> {
           EstadoSolicitud estadoSolicitudCreado = invocation.getArgument(0);
@@ -119,8 +124,8 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(solicitud.getCodigoExterno());
     Assertions.assertThat(solicitudCreado.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()").isNotNull();
     Assertions.assertThat(solicitudCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
-    Assertions.assertThat(solicitudCreado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(solicitud.getConvocatoria().getId());
+    Assertions.assertThat(solicitudCreado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(solicitud.getConvocatoriaId());
     Assertions.assertThat(solicitudCreado.getCreadorRef()).as("getCreadorRef()").isNotNull();
     Assertions.assertThat(solicitudCreado.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(solicitud.getSolicitanteRef());
@@ -164,8 +169,8 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(solicitud.getCodigoExterno());
     Assertions.assertThat(solicitudCreado.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()").isNotNull();
     Assertions.assertThat(solicitudCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
-    Assertions.assertThat(solicitudCreado.getConvocatoria()).as("getConvocatoria()")
-        .isEqualTo(solicitud.getConvocatoria());
+    Assertions.assertThat(solicitudCreado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(solicitud.getConvocatoriaId());
     Assertions.assertThat(solicitudCreado.getCreadorRef()).as("getCreadorRef()").isNotNull();
     Assertions.assertThat(solicitudCreado.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(solicitud.getSolicitanteRef());
@@ -234,10 +239,13 @@ public class SolicitudServiceTest extends BaseServiceTest {
   public void create_WithConvocatoriaWithNotAllowedUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que tiene convocatoria con una unidad de gestion no
     // permitida para el usuario
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, "OTRA");
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConfiguracionSolicitud(1L, 1L, "OTRA")));
+        .willReturn(Optional.of(generarMockConfiguracionSolicitud(1L, 1L)));
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque tiene convocatoria con una unidad de gestion
@@ -285,8 +293,8 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .isEqualTo(solicitud.getCodigoExterno());
     Assertions.assertThat(solicitudActualizada.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()").isNotNull();
     Assertions.assertThat(solicitudActualizada.getEstado().getId()).as("getEstado().getId()").isNotNull();
-    Assertions.assertThat(solicitudActualizada.getConvocatoria()).as("getConvocatoria()")
-        .isEqualTo(solicitud.getConvocatoria());
+    Assertions.assertThat(solicitudActualizada.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(solicitud.getConvocatoriaId());
     Assertions.assertThat(solicitudActualizada.getCreadorRef()).as("getCreadorRef()").isNotNull();
     Assertions.assertThat(solicitudActualizada.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(solicitud.getSolicitanteRef());
@@ -317,7 +325,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   public void update_ConvocatoriaNull_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
-    solicitud.setConvocatoria(null);
+    solicitud.setConvocatoriaId(null);
     solicitud.setConvocatoriaExterna(null);
 
     // when: Creamos el Solicitud
@@ -418,7 +426,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitud.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()")
         .isEqualTo("SGI_SLC1202011061027");
     Assertions.assertThat(solicitud.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
-    Assertions.assertThat(solicitud.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1);
+    Assertions.assertThat(solicitud.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1);
     Assertions.assertThat(solicitud.getCreadorRef()).as("getCreadorRef()").isEqualTo("usr-001");
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
     Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
@@ -538,13 +546,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setCodigoExterno(null);
-
-    if (convocatoriaId != null) {
-      Convocatoria convocatoria = new Convocatoria();
-      convocatoria.setId(convocatoriaId);
-      solicitud.setConvocatoria(convocatoria);
-    }
-
+    solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");
     solicitud.setSolicitanteRef("usr-002");
     solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
@@ -585,15 +587,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
    * @param convocatoriaFaseId
    * @return
    */
-  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
-      String unidadGestionRef) {
-
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, unidadGestionRef);
+  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId) {
 
     // @formatter:off
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tramitacionSGI(Boolean.TRUE)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
         .formularioSolicitud(FormularioSolicitud.ESTANDAR)

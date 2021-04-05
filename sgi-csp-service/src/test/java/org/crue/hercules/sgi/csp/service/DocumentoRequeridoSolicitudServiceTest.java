@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
@@ -55,38 +56,42 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   private ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
   @Mock
   private ConvocatoriaService convocatoriaService;
+  @Mock
+  private ConvocatoriaRepository convocatoriaRepository;
 
   private DocumentoRequeridoSolicitudService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new DocumentoRequeridoSolicitudServiceImpl(documentoRequeridoSolicitudRepository,
-        configuracionSolicitudRepository, modeloTipoFaseRepository, modeloTipoDocumentoRepository, convocatoriaService);
+        configuracionSolicitudRepository, modeloTipoFaseRepository, modeloTipoDocumentoRepository, convocatoriaService,
+        convocatoriaRepository);
   }
 
   @Test
   public void create_ReturnsDocumentoRequeridoSolicitud() {
     // given: new DocumentoRequeridoSolicitud
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(
-            newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes())));
-
+        .willReturn(Optional
+            .of(generarMockModeloTipoFase(convocatoria, configuracionSolicitud.getFasePresentacionSolicitudes())));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoDocumento(newDocumentoRequeridoSolicitud)));
-
+        .willReturn(Optional
+            .of(generarMockModeloTipoDocumento(newDocumentoRequeridoSolicitud, convocatoria, configuracionSolicitud)));
     BDDMockito.given(documentoRequeridoSolicitudRepository.save(ArgumentMatchers.<DocumentoRequeridoSolicitud>any()))
         .willAnswer(new Answer<DocumentoRequeridoSolicitud>() {
           @Override
@@ -105,8 +110,8 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     // then: new DocumentoRequeridoSolicitud is created
     Assertions.assertThat(createdDocumentoRequeridoSolicitud).isNotNull();
     Assertions.assertThat(createdDocumentoRequeridoSolicitud.getId()).isNotNull();
-    Assertions.assertThat(createdDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getId())
-        .isEqualTo(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getId());
+    Assertions.assertThat(createdDocumentoRequeridoSolicitud.getConfiguracionSolicitudId())
+        .isEqualTo(newDocumentoRequeridoSolicitud.getConfiguracionSolicitudId());
     Assertions.assertThat(createdDocumentoRequeridoSolicitud.getTipoDocumento().getId())
         .isEqualTo(newDocumentoRequeridoSolicitud.getTipoDocumento().getId());
     Assertions.assertThat(createdDocumentoRequeridoSolicitud.getObservaciones())
@@ -116,7 +121,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with id filled
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
 
     Assertions.assertThatThrownBy(
         // when: create DocumentoRequeridoSolicitud
@@ -129,9 +134,8 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutConfiguracionId_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud without ConfigracionId
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, null);
     newDocumentoRequeridoSolicitud.setId(null);
-    newDocumentoRequeridoSolicitud.setConfiguracionSolicitud(null);
 
     Assertions.assertThatThrownBy(
         // when: create DocumentoRequeridoSolicitud
@@ -142,24 +146,9 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
-    // given: a DocumentoRequeridoSolicitud without ConvocatoriaId
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    newDocumentoRequeridoSolicitud.setId(null);
-    newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().setConvocatoria(null);
-
-    Assertions.assertThatThrownBy(
-        // when: create DocumentoRequeridoSolicitud
-        () -> service.create(newDocumentoRequeridoSolicitud))
-        // then: throw exception as ConvocatoriaId is null
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConfiguracionSolicitud no puede ser null en la DocumentoRequeridoSolicitud");
-  }
-
-  @Test
   public void create_WithoutTipoDocumento_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud without TipoDocumento
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
     newDocumentoRequeridoSolicitud.setTipoDocumento(null);
 
@@ -175,10 +164,10 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void create_WithNoExistingConfiguracionSolicitud_ThrowsNotFoundException() {
     // given: a DocumentoRequeridoSolicitud without No existing
     // ConfiguracionSolicitud
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
@@ -191,12 +180,15 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutFasePresentacionSolicitudes_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud without FasePresentacionSolicitudes
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
-    newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().setFasePresentacionSolicitudes(null);
+    configuracionSolicitud.setFasePresentacionSolicitudes(null);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
@@ -212,15 +204,17 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void create_WithNoExistingModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with FasePresentacionSolicitudes
     // TipoFase not assigned to ModeloEjecucion Convocatoria
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -230,28 +224,27 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes().getTipoFase()
-                .getNombre(),
-            newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion()
-                .getNombre());
+            configuracionSolicitud.getFasePresentacionSolicitudes().getTipoFase().getNombre(),
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void create_WithModeloTipoFaseDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with FasePresentacionSolicitudes
     // TipoFase assigned to disabled ModeloEjecucion
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
     modeloTipoFase.setActivo(Boolean.FALSE);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
 
@@ -261,26 +254,26 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            modeloTipoFase.getTipoFase().getNombre(), newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()
-                .getConvocatoria().getModeloEjecucion().getNombre());
+            modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void create_WithTipoFaseDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with FasePresentacionSolicitudes
     // TipoFase disabled assigned to ModeloEjecucion Convocatoria
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
     modeloTipoFase.getTipoFase().setActivo(Boolean.FALSE);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
 
@@ -296,20 +289,20 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void create_WithNoExistingModeloTipoDocumento_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento nos assigned to
     // ModeloEjecucion or ModeloTipoFase
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
@@ -321,31 +314,31 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoDocumento not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoDocumento '%s' no disponible para el ModeloEjecucion '%s' y TipoFase '%s'",
-            newDocumentoRequeridoSolicitud.getTipoDocumento().getNombre(), newDocumentoRequeridoSolicitud
-                .getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getNombre(),
-            modeloTipoFase.getTipoFase().getNombre());
+            newDocumentoRequeridoSolicitud.getTipoDocumento().getNombre(),
+            convocatoria.getModeloEjecucion().getNombre(), modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
   public void create_WithModeloTipoDocumentoDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento assigned to disabled
     // ModeloEjecucion
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newDocumentoRequeridoSolicitud);
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newDocumentoRequeridoSolicitud,
+        convocatoria, configuracionSolicitud);
     modeloTipoDocumento.setActivo(Boolean.FALSE);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
@@ -357,8 +350,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoDocumento '%s' no está activo para el ModeloEjecucion '%s'",
-            modeloTipoDocumento.getTipoDocumento().getNombre(), newDocumentoRequeridoSolicitud
-                .getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getNombre());
+            modeloTipoDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre());
 
   }
 
@@ -366,22 +358,23 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void create_WithTipoDocumentoDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento disabled assigned to
     // ModeloEjecucion
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        newDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newDocumentoRequeridoSolicitud);
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newDocumentoRequeridoSolicitud,
+        convocatoria, configuracionSolicitud);
     modeloTipoDocumento.getTipoDocumento().setActivo(Boolean.FALSE);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
@@ -398,11 +391,13 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud when modificable returns False
-    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud newDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     newDocumentoRequeridoSolicitud.setId(null);
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
@@ -418,31 +413,30 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_ReturnsDocumentoRequeridoSolicitud() {
     // given: update DocumentoRequeridoSolicitud
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(generarMockTipoDocumento(2L));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(
-            originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes())));
-
+        .willReturn(Optional
+            .of(generarMockModeloTipoFase(convocatoria, configuracionSolicitud.getFasePresentacionSolicitudes())));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud)));
-
+        .willReturn(Optional.of(
+            generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud, convocatoria, configuracionSolicitud)));
     BDDMockito.given(documentoRequeridoSolicitudRepository.save(ArgumentMatchers.<DocumentoRequeridoSolicitud>any()))
         .willReturn(updatedDocumentoRequeridoSolicitud);
 
@@ -452,8 +446,8 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     // then: DocumentoRequeridoSolicitud is updated
     Assertions.assertThat(updated).isNotNull();
     Assertions.assertThat(updated.getId()).isNotNull();
-    Assertions.assertThat(updated.getConfiguracionSolicitud().getId())
-        .isEqualTo(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getId());
+    Assertions.assertThat(updated.getConfiguracionSolicitudId())
+        .isEqualTo(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitudId());
     Assertions.assertThat(updated.getTipoDocumento().getId())
         .isEqualTo(updatedDocumentoRequeridoSolicitud.getTipoDocumento().getId());
     Assertions.assertThat(updated.getObservaciones()).isEqualTo(updatedDocumentoRequeridoSolicitud.getObservaciones());
@@ -462,7 +456,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutId_ThrowsIllegalArgumentException() {
     // given: a updated DocumentoRequeridoSolicitud with id filled
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setId(null);
 
     Assertions.assertThatThrownBy(
@@ -476,7 +470,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WithNoExistingDocumentoRequeridoSolicitud_ThrowsNotFoundException() {
     // given: a DocumentoRequeridoSolicitud with no existing Id
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.empty());
@@ -491,9 +485,8 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutConfiguracionId_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud without ConfigracionId
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    updatedDocumentoRequeridoSolicitud.setConfiguracionSolicitud(null);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, null);
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
@@ -507,28 +500,10 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
-    // given: a DocumentoRequeridoSolicitud without ConvocatoriaId
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    updatedDocumentoRequeridoSolicitud.getConfiguracionSolicitud().setConvocatoria(null);
-
-    BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    Assertions.assertThatThrownBy(
-        // when: update DocumentoRequeridoSolicitud
-        () -> service.update(updatedDocumentoRequeridoSolicitud))
-        // then: throw exception as ConvocatoriaId is null
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConfiguracionSolicitud no puede ser null en la DocumentoRequeridoSolicitud");
-  }
-
-  @Test
   public void update_WithoutTipoDocumento_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud without TipoDocumento
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(null);
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
@@ -545,15 +520,12 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WithNoExistingConfiguracionSolicitud_ThrowsNotFoundException() {
     // given: a DocumentoRequeridoSolicitud with No existing ConfiguracionSolicitud
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: update DocumentoRequeridoSolicitud
@@ -565,17 +537,18 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutFasePresentacionSolicitudes_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud without FasePresentacionSolicitudes
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().setFasePresentacionSolicitudes(null);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    configuracionSolicitud.setFasePresentacionSolicitudes(null);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
@@ -591,19 +564,19 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void update_WithNoExistingModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with FasePresentacionSolicitudes
     // TipoFase not assigned to ModeloEjecucion Convocatoria
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -613,32 +586,30 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            updatedDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes()
-                .getTipoFase().getNombre(),
-            updatedDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion()
-                .getNombre());
+            configuracionSolicitud.getFasePresentacionSolicitudes().getTipoFase().getNombre(),
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithModeloTipoFaseDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with FasePresentacionSolicitudes
     // TipoFase assigned to disabled ModeloEjecucion
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
     modeloTipoFase.setActivo(Boolean.FALSE);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
 
@@ -648,30 +619,29 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            modeloTipoFase.getTipoFase().getNombre(), originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()
-                .getConvocatoria().getModeloEjecucion().getNombre());
+            modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithTipoFaseDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with FasePresentacionSolicitudes
     // TipoFase disabled assigned to ModeloEjecucion Convocatoria
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
     modeloTipoFase.getTipoFase().setActivo(Boolean.FALSE);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
 
@@ -687,24 +657,23 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void update_WithNoExistingModeloTipoDocumento_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento nos assigned to
     // ModeloEjecucion or ModeloTipoFase
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
@@ -716,36 +685,35 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoDocumento not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoDocumento '%s' no disponible para el ModeloEjecucion '%s' y TipoFase '%s'",
-            updatedDocumentoRequeridoSolicitud.getTipoDocumento().getNombre(), originalDocumentoRequeridoSolicitud
-                .getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getNombre(),
-            modeloTipoFase.getTipoFase().getNombre());
+            updatedDocumentoRequeridoSolicitud.getTipoDocumento().getNombre(),
+            convocatoria.getModeloEjecucion().getNombre(), modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
   public void update_TipoDocumentoWithModeloTipoDocumentoDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento assigned to disabled
     // ModeloEjecucion
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(generarMockTipoDocumento(2L));
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud);
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
+        convocatoria, configuracionSolicitud);
     modeloTipoDocumento.setActivo(Boolean.FALSE);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
@@ -757,39 +725,37 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoDocumento '%s' no está activo para el ModeloEjecucion '%s'",
-            modeloTipoDocumento.getTipoDocumento().getNombre(), originalDocumentoRequeridoSolicitud
-                .getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getNombre());
+            modeloTipoDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithModeloTipoDocumentoDisabledAndSameTipoDocumentoId_DoesNotThrowAnyException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento assigned to disabled
     // ModeloEjecucion without updating TipoDocumento
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud);
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
+        convocatoria, configuracionSolicitud);
     modeloTipoDocumento.setActivo(Boolean.FALSE);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(modeloTipoDocumento));
-
     BDDMockito.given(documentoRequeridoSolicitudRepository.save(ArgumentMatchers.<DocumentoRequeridoSolicitud>any()))
         .willReturn(updatedDocumentoRequeridoSolicitud);
 
@@ -804,27 +770,27 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void update_TipoDocumentoWithTipoDocumentoDisabled_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento disabled assigned
     // ModeloEjecucion
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(generarMockTipoDocumento(2L));
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud);
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
+        convocatoria, configuracionSolicitud);
     modeloTipoDocumento.getTipoDocumento().setActivo(Boolean.FALSE);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
@@ -842,31 +808,30 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void update_WithTipoDocumentoDisabledAndSameTipoDocumentoId_DoesNotThrowAnyException() {
     // given: a DocumentoRequeridoSolicitud with TipoDocumento disabled assigned to
     // ModeloEjecucion without updating TipoDocumento
-    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
-    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
+    DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
-    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(
-        originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes());
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud);
+    ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
+        configuracionSolicitud.getFasePresentacionSolicitudes());
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
+        convocatoria, configuracionSolicitud);
     modeloTipoDocumento.getTipoDocumento().setActivo(Boolean.FALSE);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalDocumentoRequeridoSolicitud.getConfiguracionSolicitud()));
-
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFase));
-
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(modeloTipoDocumento));
-
     BDDMockito.given(documentoRequeridoSolicitudRepository.save(ArgumentMatchers.<DocumentoRequeridoSolicitud>any()))
         .willReturn(updatedDocumentoRequeridoSolicitud);
 
@@ -880,13 +845,15 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a DocumentoRequeridoSolicitud when modificable return false
-    DocumentoRequeridoSolicitud documentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
+    DocumentoRequeridoSolicitud documentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(documentoRequeridoSolicitud));
 
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(documentoRequeridoSolicitud.getConfiguracionSolicitud()));
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
@@ -903,9 +870,13 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   public void delete_WithExistingId_DoesNotThrowAnyException() {
     // given: existing DocumentoRequeridoSolicitud
     Long id = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
 
+    BDDMockito.given(configuracionSolicitudRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockDocumentoRequeridoSolicitud(id)));
+        .willReturn(Optional.of(generarMockDocumentoRequeridoSolicitud(id, 1L)));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(documentoRequeridoSolicitudRepository).deleteById(ArgumentMatchers.anyLong());
@@ -948,7 +919,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void findByIdConvocatoria_WithExistingId_ReturnsConfiguracionSolicitud() throws Exception {
     // given: existing ConfiguracionSolicitud
-    DocumentoRequeridoSolicitud documentoRequeridoSolicitudExistente = generarMockDocumentoRequeridoSolicitud(1L);
+    DocumentoRequeridoSolicitud documentoRequeridoSolicitudExistente = generarMockDocumentoRequeridoSolicitud(1L, 1L);
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(documentoRequeridoSolicitudExistente));
@@ -960,11 +931,8 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(found).isNotNull();
     Assertions.assertThat(found.getId()).isNotNull();
     Assertions.assertThat(found.getId()).as("getId()").isEqualTo(documentoRequeridoSolicitudExistente.getId());
-    Assertions.assertThat(found.getConfiguracionSolicitud().getId()).as("getConfiguracionSolicitud().getId()")
-        .isEqualTo(documentoRequeridoSolicitudExistente.getConfiguracionSolicitud().getId());
-    Assertions.assertThat(found.getConfiguracionSolicitud().getConvocatoria().getId())
-        .as("getConfiguracionSolicitud().getConvocatoria().getId()")
-        .isEqualTo(documentoRequeridoSolicitudExistente.getConfiguracionSolicitud().getConvocatoria().getId());
+    Assertions.assertThat(found.getConfiguracionSolicitudId()).as("getConfiguracionSolicitudId()")
+        .isEqualTo(documentoRequeridoSolicitudExistente.getConfiguracionSolicitudId());
     Assertions.assertThat(found.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
         .isEqualTo(documentoRequeridoSolicitudExistente.getTipoDocumento().getId());
     Assertions.assertThat(found.getObservaciones()).as("getObservaciones()")
@@ -990,7 +958,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     Long convocatoriaId = 1L;
     List<DocumentoRequeridoSolicitud> convocatoriasEntidadesGestoras = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      convocatoriasEntidadesGestoras.add(generarMockDocumentoRequeridoSolicitud(i));
+      convocatoriasEntidadesGestoras.add(generarMockDocumentoRequeridoSolicitud(i, 1L));
     }
 
     BDDMockito
@@ -1036,12 +1004,12 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    * @param id id del DocumentoRequeridoSolicitud
    * @return el objeto DocumentoRequeridoSolicitud
    */
-  private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(Long id) {
+  private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(Long id, Long configuracionSolicitudId) {
 
     // @formatter:off
     return DocumentoRequeridoSolicitud.builder()
         .id(id)
-        .configuracionSolicitud(generarMockConfiguracionSolicitud(id, id, id))
+        .configuracionSolicitudId(configuracionSolicitudId)
         .tipoDocumento(generarMockTipoDocumento(id))
         .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
         .build();
@@ -1055,12 +1023,12 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    * @param convocatoriaTipoFase
    * @return el objeto ModeloTipoFase
    */
-  private ModeloTipoFase generarMockModeloTipoFase(ConvocatoriaFase convocatoriaTipoFase) {
+  private ModeloTipoFase generarMockModeloTipoFase(Convocatoria convocatoria, ConvocatoriaFase convocatoriaTipoFase) {
 
     // @formatter:off
     return ModeloTipoFase.builder()
         .id(convocatoriaTipoFase.getId() == null ? 1L : convocatoriaTipoFase.getId())
-        .modeloEjecucion(convocatoriaTipoFase.getConvocatoria().getModeloEjecucion())
+        .modeloEjecucion(convocatoria.getModeloEjecucion())
         .tipoFase(convocatoriaTipoFase.getTipoFase())
         .solicitud(Boolean.TRUE)
         .convocatoria(Boolean.TRUE)
@@ -1077,14 +1045,15 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    * @param documentoRequeridoSolicitud
    * @return el objeto ModeloTipoFase
    */
-  private ModeloTipoDocumento generarMockModeloTipoDocumento(DocumentoRequeridoSolicitud documentoRequeridoSolicitud) {
+  private ModeloTipoDocumento generarMockModeloTipoDocumento(DocumentoRequeridoSolicitud documentoRequeridoSolicitud,
+      Convocatoria convocatoria, ConfiguracionSolicitud configuracionSolicitud) {
 
     // @formatter:off
     return ModeloTipoDocumento.builder()
         .id(documentoRequeridoSolicitud.getId() == null ? 1L : documentoRequeridoSolicitud.getId())
-        .modeloEjecucion(documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion())
+        .modeloEjecucion(convocatoria.getModeloEjecucion())
         .modeloTipoFase(generarMockModeloTipoFase(
-            documentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes()))
+            convocatoria, configuracionSolicitud.getFasePresentacionSolicitudes()))
         .tipoDocumento(documentoRequeridoSolicitud.getTipoDocumento())
         .activo(Boolean.TRUE)
         .build();
@@ -1135,17 +1104,14 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    * @param convocatoriaFaseId
    * @return
    */
-  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
-      Long convocatoriaFaseId) {
-
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-
+  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId,
+      Convocatoria convocatoria, Long convocatoriaFaseId) {
     TipoFase tipoFase = generarMockTipoFase(1L);
 
     // @formatter:off
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
         .id(convocatoriaFaseId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
@@ -1154,7 +1120,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
 
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
@@ -1163,6 +1129,18 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     // @formatter:on
 
     return configuracionSolicitud;
+  }
+
+  private ModeloEjecucion generarMockModeloEjecucion(Long modeloEjecucionId) {
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
+        : ModeloEjecucion.builder()
+            .id(modeloEjecucionId)
+            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .activo(Boolean.TRUE)
+            .build();
+    // @formatter:on
+    return modeloEjecucion;
   }
 
   /**
@@ -1181,12 +1159,7 @@ public class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
 
     // @formatter:off
-    ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
-        : ModeloEjecucion.builder()
-            .id(modeloEjecucionId)
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
-            .activo(Boolean.TRUE)
-            .build();
+    ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(modeloEjecucionId);
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()

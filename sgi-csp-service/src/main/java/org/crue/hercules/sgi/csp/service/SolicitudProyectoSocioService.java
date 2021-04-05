@@ -1,10 +1,10 @@
 package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,24 +70,24 @@ public interface SolicitudProyectoSocioService {
 
   /**
    * Indica si {@link SolicitudProyectoSocio} tiene
-   * {@link SolicitudProyectoPeriodoJustificacion},
-   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
-   * relacionadas.
+   * {@link SolicitudProyectoSocioPeriodoJustificacion},
+   * {@link SolicitudProyectoSocioPeriodoPago} y/o
+   * {@link SolicitudProyectoSocioEquipo} relacionadas.
    *
    * @param id Id de la {@link SolicitudProyectoSocio}.
-   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
-   *         {@link SolicitudProyectoPeriodoPago} y/o
-   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   * @return True si tiene {@link SolicitudProyectoSocioPeriodoJustificacion},
+   *         {@link SolicitudProyectoSocioPeriodoPago} y/o
+   *         {@link SolicitudProyectoSocioEquipo} relacionadas. En caso contrario
    *         false
    */
   public Boolean vinculaciones(Long id);
 
   /**
-   * Comprueba si existen datos vinculados a la {@link SolicitudProyectoDatos} de
+   * Comprueba si existen datos vinculados a la {@link SolicitudProyecto} de
    * {@link SolicitudProyectoSocio} con el fin de permitir la edición de los campo
    * Proyecto colaborativo
    *
-   * @param id Id del {@link SolicitudProyectoDatos}.
+   * @param id Id del {@link SolicitudProyecto}.
    * @return true existen datos vinculados/false no existen datos vinculados.
    */
   Boolean hasSolicitudSocio(Long id);

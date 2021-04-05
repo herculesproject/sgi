@@ -48,25 +48,25 @@ public class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseReposit
     entityManager.persistAndFlush(proyecto);
 
     ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
-        .proyecto(proyecto)
+        .proyectoId(proyecto.getId())
         .empresaRef("codigo-1")
         .rolSocio(rolSocio).build();
     entityManager.persistAndFlush(proyectoSocio1);
 
     ProyectoSocio proyectoSocio2 = ProyectoSocio.builder()
-        .proyecto(proyecto)
+        .proyectoId(proyecto.getId())
         .empresaRef("codigo-1")
         .rolSocio(rolSocio).build();
     entityManager.persistAndFlush(proyectoSocio2);
     // @formatter:on
 
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion1 = new ProyectoSocioPeriodoJustificacion(null,
-        proyectoSocio1, 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+        proyectoSocio1.getId(), 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
         Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1", Boolean.TRUE,
         Instant.parse("2020-11-20T00:00:00Z"));
     entityManager.persistAndFlush(proyectoSocioPeriodoJustificacion1);
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion2 = new ProyectoSocioPeriodoJustificacion(null,
-        proyectoSocio2, 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+        proyectoSocio2.getId(), 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
         Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1", Boolean.TRUE,
         Instant.parse("2020-11-20T00:00:00Z"));
     entityManager.persistAndFlush(proyectoSocioPeriodoJustificacion2);
@@ -81,8 +81,8 @@ public class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseReposit
     // buscado
     Assertions.assertThat(dataFound.size()).isEqualTo(1);
     Assertions.assertThat(dataFound.get(0).getId()).isEqualTo(proyectoSocioPeriodoJustificacion1.getId());
-    Assertions.assertThat(dataFound.get(0).getProyectoSocio().getId())
-        .isEqualTo(proyectoSocioPeriodoJustificacion1.getProyectoSocio().getId());
+    Assertions.assertThat(dataFound.get(0).getProyectoSocioId())
+        .isEqualTo(proyectoSocioPeriodoJustificacion1.getProyectoSocioId());
     Assertions.assertThat(dataFound.get(0).getObservaciones())
         .isEqualTo(proyectoSocioPeriodoJustificacion1.getObservaciones());
   }

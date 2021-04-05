@@ -29,7 +29,7 @@ public class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     ProyectoEntidadGestora proyectoEntidadGestora1 = generarMockProyectoEntidadGestora("-001");
     generarMockProyectoEntidadGestora("-002");
 
-    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyectoId();
     String entidadRefBusqueda = proyectoEntidadGestora1.getEntidadRef();
 
     // when: comprueba la existencia del ProyectoEntidadGestora para un proyecto y
@@ -49,7 +49,7 @@ public class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     ProyectoEntidadGestora proyectoEntidadGestora1 = generarMockProyectoEntidadGestora("-001");
     ProyectoEntidadGestora proyectoEntidadGestora2 = generarMockProyectoEntidadGestora("-002");
 
-    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyectoId();
     String entidadRefBusqueda = proyectoEntidadGestora2.getEntidadRef();
 
     // when: comprueba la existencia del ProyectoEntidadGestora para un proyecto y
@@ -69,7 +69,7 @@ public class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     ProyectoEntidadGestora proyectoEntidadGestora2 = generarMockProyectoEntidadGestora("-002");
 
     Long idProyectoEntidadGestoraExcluidoBusqueda = proyectoEntidadGestora2.getId();
-    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyectoId();
     String entidadRefBusqueda = proyectoEntidadGestora1.getEntidadRef();
 
     // when: comprueba la existencia del ProyectoEntidadGestora para un proyecto y
@@ -90,7 +90,7 @@ public class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     generarMockProyectoEntidadGestora("-002");
 
     Long idProyectoEntidadGestoraExcluidoBusqueda = proyectoEntidadGestora1.getId();
-    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoEntidadGestora1.getProyectoId();
     String entidadRefBusqueda = proyectoEntidadGestora1.getEntidadRef();
 
     // when: comprueba la existencia del ProyectoEntidadGestora para un proyecto y
@@ -146,13 +146,13 @@ public class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .ambitoGeografico(tipoAmbitoGeografico)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
-        .paquetesTrabajo(Boolean.TRUE)
+        .permitePaquetesTrabajo(Boolean.TRUE)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto);
 
     ProyectoEntidadGestora proyectoEntidadGestora = ProyectoEntidadGestora.builder()
-        .proyecto(proyecto)
+        .proyectoId(proyecto.getId())
         .entidadRef("entidadRef-" + suffix)
         .build();
     // @formatter:on

@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
@@ -45,7 +44,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
 
     ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(null);
     convocatoriaHito.getTipoHito().setId(1L);
-    convocatoriaHito.getConvocatoria().setId(1L);
+    convocatoriaHito.setConvocatoriaId(1L);
 
     BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaHito>any()))
         .willAnswer((InvocationOnMock invocation) -> {
@@ -64,7 +63,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
         // then: new ConvocatoriaHito is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(convocatoriaHito.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaHito.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario" + convocatoriaHito.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(convocatoriaHito.getTipoHito().getId()));
@@ -108,8 +107,8 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
         // then: ConvocatoriaHito is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoriaHitoExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaHitoExistente.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaHitoExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario1"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(convocatoriaHito.getTipoHito().getId()));
@@ -188,7 +187,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ConvocatoriaHito is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario1"));
 
@@ -218,16 +217,13 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaHito
    */
   private ConvocatoriaHito generarMockConvocatoriaHito(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
     ConvocatoriaHito convocatoriaHito = new ConvocatoriaHito();
     convocatoriaHito.setId(id);
-    convocatoriaHito.setConvocatoria(convocatoria);
+    convocatoriaHito.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
     convocatoriaHito.setComentario("comentario" + id);
     convocatoriaHito.setGeneraAviso(true);

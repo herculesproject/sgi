@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -64,7 +65,7 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
 
     Assert.isNull(convocatoriaConceptoGasto.getId(), "Id tiene que ser null para crear ConvocatoriaConceptoGasto");
 
-    Assert.notNull(convocatoriaConceptoGasto.getConvocatoria().getId(),
+    Assert.notNull(convocatoriaConceptoGasto.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaConceptoGasto");
 
     if (convocatoriaConceptoGasto.getConceptoGasto() != null) {
@@ -78,30 +79,26 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
       }
     }
 
-    convocatoriaConceptoGasto
-        .setConvocatoria(convocatoriaRepository.findById(convocatoriaConceptoGasto.getConvocatoria().getId())
-            .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaConceptoGasto.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaConceptoGasto.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaConceptoGasto.getConvocatoriaId()));
 
     // comprobar si convocatoria es modificable
     Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoria().getId(),
-            convocatoriaConceptoGasto.getConvocatoria().getUnidadGestionRef()),
+        convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(),
+            convocatoria.getUnidadGestionRef()),
         "No se puede crear ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
-    if (convocatoriaConceptoGasto.getMesInicial() != null
-        && convocatoriaConceptoGasto.getConvocatoria().getDuracion() != null) {
+    if (convocatoriaConceptoGasto.getMesInicial() != null && convocatoria.getDuracion() != null) {
       if (convocatoriaConceptoGasto.getMesFinal() != null) {
         Assert.isTrue(convocatoriaConceptoGasto.getMesInicial() < convocatoriaConceptoGasto.getMesFinal(),
             "El MesInicial debe ser anterior al MesFinal");
-        Assert
-            .isTrue(
-                (convocatoriaConceptoGasto.getMesFinal()
-                    - convocatoriaConceptoGasto.getMesInicial()) <= convocatoriaConceptoGasto.getConvocatoria()
-                        .getDuracion(),
-                "El número de meses no puede ser mayor a la duración de meses de la convocatoria");
+        Assert.isTrue(
+            (convocatoriaConceptoGasto.getMesFinal() - convocatoriaConceptoGasto.getMesInicial()) <= convocatoria
+                .getDuracion(),
+            "El número de meses no puede ser mayor a la duración de meses de la convocatoria");
       } else {
-        Assert.isTrue((12 - convocatoriaConceptoGasto.getMesInicial()) <= convocatoriaConceptoGasto.getConvocatoria()
-            .getDuracion(), "El número de meses no puede ser mayor a la duración de meses de la convocatoria");
+        Assert.isTrue((12 - convocatoriaConceptoGasto.getMesInicial()) <= convocatoria.getDuracion(),
+            "El número de meses no puede ser mayor a la duración de meses de la convocatoria");
       }
     }
 
@@ -134,7 +131,7 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     Assert.notNull(convocatoriaConceptoGastoActualizar.getId(),
         "ConvocatoriaConceptoGasto id no puede ser null para actualizar un ConvocatoriaConceptoGasto");
 
-    Assert.notNull(convocatoriaConceptoGastoActualizar.getConvocatoria().getId(),
+    Assert.notNull(convocatoriaConceptoGastoActualizar.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para actualizar ConvocatoriaConceptoGasto");
 
     if (convocatoriaConceptoGastoActualizar.getConceptoGasto() != null) {
@@ -148,21 +145,20 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
       }
     }
 
-    if (convocatoriaConceptoGastoActualizar.getMesInicial() != null
-        && convocatoriaConceptoGastoActualizar.getConvocatoria().getDuracion() != null) {
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaConceptoGastoActualizar.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaConceptoGastoActualizar.getConvocatoriaId()));
+
+    if (convocatoriaConceptoGastoActualizar.getMesInicial() != null && convocatoria.getDuracion() != null) {
       if (convocatoriaConceptoGastoActualizar.getMesFinal() != null) {
         Assert.isTrue(
             convocatoriaConceptoGastoActualizar.getMesInicial() < convocatoriaConceptoGastoActualizar.getMesFinal(),
             "El MesInicial debe ser anterior al MesFinal");
         Assert.isTrue(
             (convocatoriaConceptoGastoActualizar.getMesFinal()
-                - convocatoriaConceptoGastoActualizar.getMesInicial()) <= convocatoriaConceptoGastoActualizar
-                    .getConvocatoria().getDuracion(),
+                - convocatoriaConceptoGastoActualizar.getMesInicial()) <= convocatoria.getDuracion(),
             "El número de meses no puede ser mayor a la duración de meses de la convocatoria");
       } else {
-        Assert.isTrue(
-            (12 - convocatoriaConceptoGastoActualizar.getMesInicial()) <= convocatoriaConceptoGastoActualizar
-                .getConvocatoria().getDuracion(),
+        Assert.isTrue((12 - convocatoriaConceptoGastoActualizar.getMesInicial()) <= convocatoria.getDuracion(),
             "El número de meses no puede ser mayor a la duración de meses de la convocatoria");
       }
 
@@ -177,13 +173,11 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     return repository.findById(convocatoriaConceptoGastoActualizar.getId()).map(convocatoriaConceptoGasto -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoria().getId(),
-              convocatoriaConceptoGasto.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null),
           "No se puede modificar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       convocatoriaConceptoGasto.setConceptoGasto(convocatoriaConceptoGastoActualizar.getConceptoGasto());
-      convocatoriaConceptoGasto.setConvocatoria(convocatoriaConceptoGastoActualizar.getConvocatoria());
+      convocatoriaConceptoGasto.setConvocatoriaId(convocatoriaConceptoGastoActualizar.getConvocatoriaId());
       convocatoriaConceptoGasto.setImporteMaximo(convocatoriaConceptoGastoActualizar.getImporteMaximo());
       convocatoriaConceptoGasto.setMesInicial(convocatoriaConceptoGastoActualizar.getMesInicial());
       convocatoriaConceptoGasto.setMesFinal(convocatoriaConceptoGastoActualizar.getMesFinal());
@@ -214,9 +208,7 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     repository.findById(id).map(convocatoriaConvocatoriaConceptoGasto -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaConvocatoriaConceptoGasto.getConvocatoria().getId(),
-              convocatoriaConvocatoriaConceptoGasto.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaConvocatoriaConceptoGasto.getConvocatoriaId(), null),
           "No se puede eliminar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaConvocatoriaConceptoGasto;
@@ -247,6 +239,39 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     final ConvocatoriaConceptoGasto returnValue = repository.findById(id)
         .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(id));
     log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba la existencia del {@link ConvocatoriaConceptoGasto} por id.
+   *
+   * @param id el id de la entidad {@link ConvocatoriaConceptoGasto}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsById(final Long id) {
+    log.debug("existsById(final Long id)  - start", id);
+    final boolean existe = repository.existsById(id);
+    log.debug("existsById(final Long id)  - end", id);
+    return existe;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link ConvocatoriaConceptoGasto} paginadas y
+   * filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link ConvocatoriaConceptoGasto} paginadas y
+   *         filtradas.
+   */
+  @Override
+  public Page<ConvocatoriaConceptoGasto> findAll(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Specification<ConvocatoriaConceptoGasto> specs = SgiRSQLJPASupport.toSpecification(query);
+
+    Page<ConvocatoriaConceptoGasto> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -302,7 +327,7 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     log.debug("existsConvocatoriaConceptoGastoConMesesSolapados(ConvocatoriaConceptoGasto convocatoriaConceptoGasto)");
 
     Specification<ConvocatoriaConceptoGasto> specByConvocatoria = ConvocatoriaConceptoGastoSpecifications
-        .byConvocatoria(convocatoriaConceptoGasto.getConvocatoria().getId());
+        .byConvocatoria(convocatoriaConceptoGasto.getConvocatoriaId());
     Specification<ConvocatoriaConceptoGasto> specByConceptoGastoConvocatoriaActiva = ConvocatoriaConceptoGastoSpecifications
         .byConvocatoriaActiva();
     Specification<ConvocatoriaConceptoGasto> specByConceptoGasto = ConvocatoriaConceptoGastoSpecifications

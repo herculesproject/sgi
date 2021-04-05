@@ -6,12 +6,14 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEntidadFinanciadoraAjenaSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
@@ -40,15 +42,17 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
   private final FuenteFinanciacionRepository fuenteFinanciacionRepository;
   private final TipoFinanciacionRepository tipoFinanciacionRepository;
   private final SolicitudService solicitudService;
+  private final SolicitudProyectoRepository solicitudProyectoRepository;
 
   public SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl(
       SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository,
       FuenteFinanciacionRepository fuenteFinanciacionRepository, TipoFinanciacionRepository tipoFinanciacionRepository,
-      SolicitudService solicitudService) {
+      SolicitudService solicitudService, SolicitudProyectoRepository solicitudProyectoRepository) {
     this.repository = solicitudProyectoEntidadFinanciadoraAjenaRepository;
     this.fuenteFinanciacionRepository = fuenteFinanciacionRepository;
     this.tipoFinanciacionRepository = tipoFinanciacionRepository;
     this.solicitudService = solicitudService;
+    this.solicitudProyectoRepository = solicitudProyectoRepository;
   }
 
   /**
@@ -69,8 +73,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
     Assert.isNull(solicitudProyectoEntidadFinanciadoraAjena.getId(),
         "SolicitudProyectoEntidadFinanciadoraAjena id tiene que ser null para crear un nuevo SolicitudProyectoEntidadFinanciadoraAjena");
 
-    Assert.notNull(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoDatos().getId(),
-        "Id SolicitudProyectoDatos no puede ser null para crear SolicitudProyectoEntidadFinanciadoraAjena");
+    Assert.notNull(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId(),
+        "Id SolicitudProyecto no puede ser null para crear SolicitudProyectoEntidadFinanciadoraAjena");
 
     validateData(solicitudProyectoEntidadFinanciadoraAjena, null);
 
@@ -95,15 +99,15 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
       SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizar) {
     log.debug(
         "update(SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizar) - start");
-    Assert.notNull(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoDatos().getSolicitud(),
-        "La solicitud no puede ser null para actualizar la SolicitudModalidad");
+    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
+        .findById(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoId())
+        .orElseThrow(() -> new SolicitudProyectoNotFoundException(
+            solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoId()));
     Assert.notNull(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId(),
         "SolicitudProyectoEntidadFinanciadoraAjena id no puede ser null para actualizar un SolicitudProyectoEntidadFinanciadoraAjena");
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(
-        solicitudService.modificable(
-            solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoDatos().getSolicitud().getId()),
+    Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
         "No se puede modificar SolicitudProyectoEntidadFinanciadoraAjena");
 
     return repository.findById(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId())
@@ -236,16 +240,16 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
 
   /**
    * Obtiene el {@link SolicitudProyectoEntidadFinanciadoraAjena} de la
-   * {@link SolicitudProyectoDatos}.
+   * {@link SolicitudProyecto}.
    * 
-   * @param id {@link SolicitudProyectoDatos}.
+   * @param id {@link SolicitudProyecto}.
    * @return {@link SolicitudProyectoEntidadFinanciadoraAjena}.
    */
   @Override
   public Boolean hasSolicitudEntidadFinanciadora(Long id) {
     log.debug("hasSolicitudEntidadFinanciadora(Long id) - start");
     final List<SolicitudProyectoEntidadFinanciadoraAjena> solicitudProyectoEntidadFinanciadoraAjena = repository
-        .findBySolicitudProyectoDatosId(id);
+        .findBySolicitudProyectoId(id);
     Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoEntidadFinanciadoraAjena);
     log.debug("hasSolicitudEntidadFinanciadora(Long id) - end");
     return returnValue;

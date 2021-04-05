@@ -71,7 +71,7 @@ public class ProyectoSocioPeriodoPagoServiceImpl implements ProyectoSocioPeriodo
       return new ArrayList<>();
     }
 
-    ProyectoSocio proyectoSocio = proyectoSocioRepository.findById(proyectoSocioId)
+    proyectoSocioRepository.findById(proyectoSocioId)
         .orElseThrow(() -> new ProyectoSocioNotFoundException(proyectoSocioId));
 
     List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagosBD = repository.findAllByProyectoSocioId(proyectoSocioId);
@@ -104,13 +104,9 @@ public class ProyectoSocioPeriodoPagoServiceImpl implements ProyectoSocioPeriodo
             .filter(periodo -> periodo.getId() == proyectoSocioPeriodoPago.getId()).findFirst()
             .orElseThrow(() -> new ProyectoSocioPeriodoPagoNotFoundException(proyectoSocioPeriodoPago.getId()));
 
-        Assert.isTrue(proyectoSocioPeriodoPagoBD.getProyectoSocio().getId() == proyectoSocioPeriodoPago
-            .getProyectoSocio().getId(), "No se puede modificar el proyecto socio del ProyectoSocioPeriodoPago");
+        Assert.isTrue(proyectoSocioPeriodoPagoBD.getProyectoSocioId() == proyectoSocioPeriodoPago.getProyectoSocioId(),
+            "No se puede modificar el proyecto socio del ProyectoSocioPeriodoPago");
       }
-
-      // Setea la proyectoSocio recuperada del proyectoSocioId
-      proyectoSocioPeriodoPago.setProyectoSocio(proyectoSocio);
-
     }
 
     List<ProyectoSocioPeriodoPago> returnValue = repository.saveAll(proyectoSocioPeriodoPagos);

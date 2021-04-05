@@ -39,7 +39,7 @@ public class EstadoSolicitudServiceImpl implements EstadoSolicitudService {
 
     Assert.isNull(estadoSolicitud.getId(), "EstadoSolicitud id tiene que ser null para crear un EstadoSolicitud");
 
-    Assert.notNull(estadoSolicitud.getIdSolicitud(), "idSolicitud no puede ser null para crear un EstadoSolicitud");
+    Assert.notNull(estadoSolicitud.getSolicitudId(), "idSolicitud no puede ser null para crear un EstadoSolicitud");
 
     EstadoSolicitud returnValue = repository.save(estadoSolicitud);
 
@@ -58,7 +58,7 @@ public class EstadoSolicitudServiceImpl implements EstadoSolicitudService {
   @Override
   public Page<EstadoSolicitud> findAllBySolicitud(Long idSolicitud, Pageable paging) {
     log.debug("findAllBySolicitud(Long solicitudId, Pageable paging) - start");
-    Page<EstadoSolicitud> returnValue = repository.findAllByidSolicitud(idSolicitud, paging);
+    Page<EstadoSolicitud> returnValue = repository.findAllBySolicitudId(idSolicitud, paging);
     log.debug("findAllBySolicitud(Long solicitudId, Pageable paging) - end");
     return returnValue;
   }

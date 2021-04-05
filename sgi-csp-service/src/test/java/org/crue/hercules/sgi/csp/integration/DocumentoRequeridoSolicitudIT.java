@@ -3,13 +3,8 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
-import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -69,8 +64,8 @@ public class DocumentoRequeridoSolicitudIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     DocumentoRequeridoSolicitud responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConfiguracionSolicitud().getId()).as("getConfiguracionSolicitud().getId()")
-        .isEqualTo(documentoRequeridoSolicitud.getConfiguracionSolicitud().getId());
+    Assertions.assertThat(responseData.getConfiguracionSolicitudId()).as("getConfiguracionSolicitudId()")
+        .isEqualTo(documentoRequeridoSolicitud.getConfiguracionSolicitudId());
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
         .isEqualTo(documentoRequeridoSolicitud.getTipoDocumento().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
@@ -99,8 +94,8 @@ public class DocumentoRequeridoSolicitudIT {
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(documentoRequeridoSolicitud.getId());
-    Assertions.assertThat(responseData.getConfiguracionSolicitud().getId()).as("getConfiguracionSolicitud().getId()")
-        .isEqualTo(documentoRequeridoSolicitud.getConfiguracionSolicitud().getId());
+    Assertions.assertThat(responseData.getConfiguracionSolicitudId()).as("getConfiguracionSolicitudId()")
+        .isEqualTo(documentoRequeridoSolicitud.getConfiguracionSolicitudId());
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
         .isEqualTo(documentoRequeridoSolicitud.getTipoDocumento().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
@@ -139,8 +134,7 @@ public class DocumentoRequeridoSolicitudIT {
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(documentoRequeridoSolicitudId);
-    Assertions.assertThat(responseData.getConfiguracionSolicitud().getId()).as("getConfiguracionSolicitud().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(responseData.getConfiguracionSolicitudId()).as("getConfiguracionSolicitudId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo("Observaciones documento 2");
@@ -154,21 +148,10 @@ public class DocumentoRequeridoSolicitudIT {
    */
   private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(Long id, Long configuracionSolicitudId,
       Long tipoDocumentoId) {
-
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder().id(1L).build();
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).modeloEjecucion(modeloEjecucion).build();
-    TipoFase tipoFase = TipoFase.builder().id(1L).build();
-    ConvocatoriaFase fasePresentacionSolicitudes = ConvocatoriaFase.builder().id(1L).convocatoria(convocatoria)
-        .tipoFase(tipoFase).build();
-
     // @formatter:off
     return DocumentoRequeridoSolicitud.builder()
         .id(id)
-        .configuracionSolicitud(ConfiguracionSolicitud.builder()
-          .id(configuracionSolicitudId)
-          .convocatoria(convocatoria)
-          .fasePresentacionSolicitudes(fasePresentacionSolicitudes)
-          .build())
+        .configuracionSolicitudId(configuracionSolicitudId)
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
         .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
         .build();

@@ -2,13 +2,13 @@ package org.crue.hercules.sgi.csp.controller;
 
 import javax.validation.Valid;
 
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoSocioService;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoJustificacionService;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoPeriodoPagoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioEquipoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioPeriodoJustificacionService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -40,30 +40,30 @@ public class SolicitudProyectoSocioController {
   /** SolicitudProyectoSocioService service */
   private final SolicitudProyectoSocioService service;
 
-  /** SolicitudProyectoPeriodoPagoService service */
-  private final SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService;
-  /** SolicitudProyectoPeriodoJustificacionService service */
-  private final SolicitudProyectoPeriodoJustificacionService solicitudProyectoPeriodoJustificacionService;
+  /** SolicitudProyectoSocioPeriodoPagoService service */
+  private final SolicitudProyectoSocioPeriodoPagoService solicitudProyectoSocioPeriodoPagoService;
+  /** SolicitudProyectoSocioPeriodoJustificacionService service */
+  private final SolicitudProyectoSocioPeriodoJustificacionService solicitudProyectoSocioPeriodoJustificacionService;
 
-  /** SolicitudProyectoEquipoSocio service */
-  private final SolicitudProyectoEquipoSocioService solicitudProyectoEquipoSocioService;
+  /** SolicitudProyectoSocioEquipo service */
+  private final SolicitudProyectoSocioEquipoService solicitudProyectoEquipoSocioService;
 
   /**
    * Instancia un nuevo SolicitudProyectoSocioController.
    * 
-   * @param solicitudProyectoSocioService                {@link SolicitudProyectoSocioService}.
-   * @param solicitudProyectoPeriodoPagoService          {@link SolicitudProyectoPeriodoPagoService}.
-   * @param solicitudProyectoEquipoSocioService          {@link SolicitudProyectoEquipoSocioService}.
-   * @param solicitudProyectoPeriodoJustificacionService {@link SolicitudProyectoPeriodoJustificacionService}.
+   * @param solicitudProyectoSocioService                     {@link SolicitudProyectoSocioService}.
+   * @param solicitudProyectoSocioPeriodoPagoService          {@link SolicitudProyectoSocioPeriodoPagoService}.
+   * @param solicitudProyectoEquipoSocioService               {@link SolicitudProyectoSocioEquipoService}.
+   * @param solicitudProyectoSocioPeriodoJustificacionService {@link SolicitudProyectoSocioPeriodoJustificacionService}.
    */
   public SolicitudProyectoSocioController(SolicitudProyectoSocioService solicitudProyectoSocioService,
-      SolicitudProyectoPeriodoJustificacionService solicitudProyectoPeriodoJustificacionService,
-      SolicitudProyectoPeriodoPagoService solicitudProyectoPeriodoPagoService,
-      SolicitudProyectoEquipoSocioService solicitudProyectoEquipoSocioService) {
+      SolicitudProyectoSocioPeriodoJustificacionService solicitudProyectoSocioPeriodoJustificacionService,
+      SolicitudProyectoSocioPeriodoPagoService solicitudProyectoSocioPeriodoPagoService,
+      SolicitudProyectoSocioEquipoService solicitudProyectoEquipoSocioService) {
     this.service = solicitudProyectoSocioService;
-    this.solicitudProyectoPeriodoPagoService = solicitudProyectoPeriodoPagoService;
+    this.solicitudProyectoSocioPeriodoPagoService = solicitudProyectoSocioPeriodoPagoService;
     this.solicitudProyectoEquipoSocioService = solicitudProyectoEquipoSocioService;
-    this.solicitudProyectoPeriodoJustificacionService = solicitudProyectoPeriodoJustificacionService;
+    this.solicitudProyectoSocioPeriodoJustificacionService = solicitudProyectoSocioPeriodoJustificacionService;
 
   }
 
@@ -154,93 +154,96 @@ public class SolicitudProyectoSocioController {
   }
 
   /**
-   * Devuelve una lista paginada de {@link SolicitudProyectoPeriodoPago}
+   * Devuelve una lista paginada de {@link SolicitudProyectoSocioPeriodoPago}
    * 
-   * @param id     Identificador de {@link SolicitudProyectoPeriodoPago}.
+   * @param id     Identificador de {@link SolicitudProyectoSocioPeriodoPago}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
-  @GetMapping("/{id}/solicitudproyectoperiodopago")
+  @GetMapping("/{id}/solicitudproyectosocioperiodopago")
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
-  ResponseEntity<Page<SolicitudProyectoPeriodoPago>> findAllSolicitudProyectoPeriodoPago(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudProyectoPeriodoPago(Long id, String query, Pageable paging) - start");
-    Page<SolicitudProyectoPeriodoPago> page = solicitudProyectoPeriodoPagoService.findAllBySolicitudProyectoSocio(id,
-        query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllSolicitudProyectoPeriodoPago(Long id, String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllSolicitudProyectoPeriodoPago(Long id, String query, Pageable paging) - end");
-
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /*
-   * Devuelve una lista paginada de {@link SolicitudProyectoEquipoSocio}
-   * 
-   * @param id Identificador de {@link SolicitudProyectoEquipoSocio}.
-   * 
-   * @param query filtro de búsqueda.
-   * 
-   * @param paging pageable.
-   */
-  @GetMapping("/{id}/solicitudproyectoequiposocio")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
-  ResponseEntity<Page<SolicitudProyectoEquipoSocio>> findAllSolicitudProyectoEquipoSocio(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudProyectoEquipoSocio(Long id, String query, Pageable paging) - start");
-    Page<SolicitudProyectoEquipoSocio> page = solicitudProyectoEquipoSocioService.findAllBySolicitudProyectoSocio(id,
-        query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllSolicitudProyectoEquipoSocio(Long id, String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllSolicitudProyectoEquipoSocio(Long id, String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /*
-   * Devuelve una lista paginada de {@link SolicitudProyectoPeriodoJustificacion}
-   * 
-   * @param id Identificador de {@link SolicitudProyectoPeriodoJustificacion}.
-   * 
-   * @param query filtro de búsqueda.
-   * 
-   * @param paging pageable.
-   */
-  @GetMapping("/{id}/solicitudproyectoperiodojustificaciones")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
-  ResponseEntity<Page<SolicitudProyectoPeriodoJustificacion>> findAllSolicitudProyectoPeriodoJustificacion(
+  ResponseEntity<Page<SolicitudProyectoSocioPeriodoPago>> findAllSolicitudProyectoSocioPeriodoPago(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllSolicitudProyectoPeriodoJustificacion(Long id, String query, Pageable paging) - start");
-    Page<SolicitudProyectoPeriodoJustificacion> page = solicitudProyectoPeriodoJustificacionService
+    log.debug("findAllSolicitudProyectoSocioPeriodoPago(Long id, String query, Pageable paging) - start");
+    Page<SolicitudProyectoSocioPeriodoPago> page = solicitudProyectoSocioPeriodoPagoService
         .findAllBySolicitudProyectoSocio(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllSolicitudProyectoPeriodoJustificacion(Long id, String query, Pageable paging) - end");
+      log.debug("findAllSolicitudProyectoSocioPeriodoPago(Long id, String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllSolicitudProyectoPeriodoJustificacion(Long id, String query, Pageable paging) - end");
+    log.debug("findAllSolicitudProyectoSocioPeriodoPago(Long id, String query, Pageable paging) - end");
+
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /*
+   * Devuelve una lista paginada de {@link SolicitudProyectoSocioEquipo}
+   * 
+   * @param id Identificador de {@link SolicitudProyectoSocioEquipo}.
+   * 
+   * @param query filtro de búsqueda.
+   * 
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectosocioequipo")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoSocioEquipo>> findAllSolicitudProyectoSocioEquipo(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoSocioEquipo(Long id, String query, Pageable paging) - start");
+    Page<SolicitudProyectoSocioEquipo> page = solicitudProyectoEquipoSocioService.findAllBySolicitudProyectoSocio(id,
+        query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoSocioEquipo(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoSocioEquipo(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /*
+   * Devuelve una lista paginada de {@link
+   * SolicitudProyectoSocioPeriodoJustificacion}
+   * 
+   * @param id Identificador de {@link
+   * SolicitudProyectoSocioPeriodoJustificacion}.
+   * 
+   * @param query filtro de búsqueda.
+   * 
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudproyectosocioperiodojustificaciones")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudProyectoSocioPeriodoJustificacion>> findAllSolicitudProyectoSocioPeriodoJustificacion(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoSocioPeriodoJustificacion(Long id, String query, Pageable paging) - start");
+    Page<SolicitudProyectoSocioPeriodoJustificacion> page = solicitudProyectoSocioPeriodoJustificacionService
+        .findAllBySolicitudProyectoSocio(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoSocioPeriodoJustificacion(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoSocioPeriodoJustificacion(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
    * Indica si {@link SolicitudProyectoSocio} tiene
-   * {@link SolicitudProyectoPeriodoJustificacion},
-   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
-   * relacionadas.
+   * {@link SolicitudProyectoSocioPeriodoJustificacion},
+   * {@link SolicitudProyectoSocioPeriodoPago} y/o
+   * {@link SolicitudProyectoSocioEquipo} relacionadas.
    *
    * @param id Id de la {@link SolicitudProyectoSocio}.
-   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
-   *         {@link SolicitudProyectoPeriodoPago} y/o
-   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   * @return True si tiene {@link SolicitudProyectoSocioPeriodoJustificacion},
+   *         {@link SolicitudProyectoSocioPeriodoPago} y/o
+   *         {@link SolicitudProyectoSocioEquipo} relacionadas. En caso contrario
    *         false
    */
   @RequestMapping(path = "/{id}/vinculaciones", method = RequestMethod.HEAD)

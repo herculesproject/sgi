@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,6 +66,48 @@ public class ConvocatoriaConceptoGastoController {
     ConvocatoriaConceptoGasto returnValue = service.findById(id);
     log.debug("findById(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba la existencia del {@link ConvocatoriaConceptoGasto} con el id
+   * indicado.
+   * 
+   * @param id Identificador de {@link ConvocatoriaConceptoGasto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ResponseEntity<?> exists(@PathVariable Long id) {
+    log.debug("exists(Long id) - start");
+    if (service.existsById(id)) {
+      log.debug("exists(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("exists(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ConvocatoriaConceptoGasto}.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link ConvocatoriaConceptoGasto} paginadas y
+   *         filtradas.
+   */
+  @GetMapping()
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-V')")
+  ResponseEntity<Page<ConvocatoriaConceptoGasto>> findAll(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(String query,Pageable paging) - start");
+    Page<ConvocatoriaConceptoGasto> page = service.findAll(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(String query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAll(String query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**

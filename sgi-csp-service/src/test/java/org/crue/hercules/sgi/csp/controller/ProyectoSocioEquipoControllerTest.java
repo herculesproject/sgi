@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
@@ -57,7 +55,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
             if (proyectoSocioEquipo.getId() == null) {
               proyectoSocioEquipo.setId(5L);
             }
-            proyectoSocioEquipo.getProyectoSocio().setId(proyectoSocioId);
+            proyectoSocioEquipo.setProyectoSocioId(proyectoSocioId);
             return proyectoSocioEquipo;
           }).collect(Collectors.toList());
         });
@@ -73,7 +71,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(proyectoSocioEquipos.get(0).getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].proyectoSocio.id").value(proyectoSocioId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].proyectoSocioId").value(proyectoSocioId))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].personaRef").value(proyectoSocioEquipos.get(0).getPersonaRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFin").value(proyectoSocioEquipos.get(0).getFechaFin()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicio")
@@ -81,7 +79,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].rolProyecto.id")
             .value(proyectoSocioEquipos.get(0).getRolProyecto().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(5))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].proyectoSocio.id").value(proyectoSocioId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].proyectoSocioId").value(proyectoSocioId))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].personaRef").value(proyectoSocioEquipos.get(1).getPersonaRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFin").value(proyectoSocioEquipos.get(1).getFechaFin()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicio")
@@ -129,7 +127,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
         // and the requested ProyectoSocioEquipo is resturned as JSON
         // object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyectoSocio.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoSocioId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("rolProyecto.id").value(1L));
   }
 
@@ -157,20 +155,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
    * @return el ProyectoSocioEquipo
    */
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
-
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
-
     // @formatter:off
-    Proyecto proyecto1 = Proyecto.builder()
-        .id(id)
-        .titulo("proyecto 1")
-        .acronimo("PR1")
-        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
-        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE)
-        .build();
-
     RolSocio rolSocio = RolSocio.builder()
         .id(id)
         .abreviatura("001")
@@ -192,13 +177,13 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
 
     ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
         .id(id)
-        .proyecto(proyecto1)
+        .proyectoId(id)
         .empresaRef("empresa-0041")
         .rolSocio(rolSocio)
         .build();
     // @formatter:on
 
-    ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1, rolProyecto, "001",
+    ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1.getId(), rolProyecto, "001",
         Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioEquipo;

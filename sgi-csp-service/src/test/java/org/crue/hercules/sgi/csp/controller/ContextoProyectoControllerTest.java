@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ContextoProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.junit.jupiter.api.Test;
@@ -90,7 +89,7 @@ public class ContextoProyectoControllerTest extends BaseControllerTest {
     // when: update ContextoProyecto
     mockMvc
         .perform(MockMvcRequestBuilders
-            .put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, contextoProyectoExistente.getProyecto().getId())
+            .put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, contextoProyectoExistente.getProyectoId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(contextoProyecto)))
         .andDo(MockMvcResultHandlers.print())
@@ -179,7 +178,7 @@ public class ContextoProyectoControllerTest extends BaseControllerTest {
   private ContextoProyecto generarMockContextoProyecto(Long id) {
     ContextoProyecto contextoProyecto = new ContextoProyecto();
     contextoProyecto.setId(id);
-    contextoProyecto.setProyecto(Proyecto.builder().id(id).activo(Boolean.TRUE).build());
+    contextoProyecto.setProyectoId(id);
     contextoProyecto.setIntereses("intereses");
     return contextoProyecto;
   }

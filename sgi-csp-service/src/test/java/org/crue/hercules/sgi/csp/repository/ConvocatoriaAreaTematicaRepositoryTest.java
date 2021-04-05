@@ -30,7 +30,7 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaAreaTematica convocatoriaAreaTematica1 = generarConvocatoriaAreaTematica("-001");
     generarConvocatoriaAreaTematica("-002");
 
-    Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoriaId();
     Long areaTematicaIdBuscado = convocatoriaAreaTematica1.getAreaTematica().getId();
 
     // when: find by Convocatoria and AreaTematicaId
@@ -40,8 +40,7 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     // then: ConvocatoriaAreaTematica is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoriaAreaTematica1.getId());
-    Assertions.assertThat(dataFound.getConvocatoria().getId())
-        .isEqualTo(convocatoriaAreaTematica1.getConvocatoria().getId());
+    Assertions.assertThat(dataFound.getConvocatoriaId()).isEqualTo(convocatoriaAreaTematica1.getConvocatoriaId());
     Assertions.assertThat(dataFound.getAreaTematica().getId())
         .isEqualTo(convocatoriaAreaTematica1.getAreaTematica().getId());
   }
@@ -54,7 +53,7 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaAreaTematica convocatoriaAreaTematica1 = generarConvocatoriaAreaTematica("-001");
     ConvocatoriaAreaTematica convocatoriaAreaTematica2 = generarConvocatoriaAreaTematica("-002");
 
-    Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoriaId();
     Long areaTematicaIdBuscado = convocatoriaAreaTematica2.getAreaTematica().getId();
 
     // when: find by by Convocatoria and AreaTematicaId
@@ -73,7 +72,7 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaAreaTematica convocatoriaAreaTematica1 = generarConvocatoriaAreaTematica("-001");
     generarConvocatoriaAreaTematica("-002");
 
-    Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoriaId();
 
     // when: find by Convocatoria and AreaTematicaId
     ConvocatoriaAreaTematica dataFound = repository.findByConvocatoriaId(convocatoriaIdBuscado).get();
@@ -81,8 +80,7 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     // then: ConvocatoriaAreaTematica is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoriaAreaTematica1.getId());
-    Assertions.assertThat(dataFound.getConvocatoria().getId())
-        .isEqualTo(convocatoriaAreaTematica1.getConvocatoria().getId());
+    Assertions.assertThat(dataFound.getConvocatoriaId()).isEqualTo(convocatoriaAreaTematica1.getConvocatoriaId());
     Assertions.assertThat(dataFound.getAreaTematica().getId())
         .isEqualTo(convocatoriaAreaTematica1.getAreaTematica().getId());
   }
@@ -175,7 +173,7 @@ public class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(areaTematica);
 
     ConvocatoriaAreaTematica convocatoriaAreaTematica = ConvocatoriaAreaTematica.builder()
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .areaTematica(areaTematica)
         .observaciones("observaciones" + suffix)
         .build();

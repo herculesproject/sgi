@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -86,7 +85,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     List<ConvocatoriaPeriodoJustificacion> responseData = response.getBody();
     Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId()")
         .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getId());
-    Assertions.assertThat(responseData.get(0).getConvocatoria().getId()).as("get(0).getConvocatoria().getId()")
+    Assertions.assertThat(responseData.get(0).getConvocatoriaId()).as("get(0).getConvocatoriaId()")
         .isEqualTo(convocatoriaId);
     Assertions.assertThat(responseData.get(0).getMesInicial()).as("get(0).getMesInicial()")
         .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getMesInicial());
@@ -102,7 +101,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     Assertions.assertThat(responseData.get(0).getTipo()).as("get(0).getTipo()")
         .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getTipo());
 
-    Assertions.assertThat(responseData.get(1).getConvocatoria().getId()).as("get(1).getConvocatoria().getId()")
+    Assertions.assertThat(responseData.get(1).getConvocatoriaId()).as("get(1).getConvocatoriaId()")
         .isEqualTo(convocatoriaId);
     Assertions.assertThat(responseData.get(1).getMesInicial()).as("get(1).getMesInicial()")
         .isEqualTo(newConvocatoriaPeriodoJustificacion.getMesInicial());
@@ -158,8 +157,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = response.getBody();
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getId()).as("getId()")
         .isEqualTo(idConvocatoriaPeriodoJustificacion);
-    Assertions.assertThat(convocatoriaPeriodoJustificacion.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(convocatoriaPeriodoJustificacion.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesFinal()).as("getMesFinal()").isEqualTo(2);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion())
@@ -185,12 +183,9 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id, Integer mesInicial,
       Integer mesFinal, ConvocatoriaPeriodoJustificacion.Tipo tipo, Long convocatoriaId) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
-
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
-    convocatoriaPeriodoJustificacion.setConvocatoria(convocatoria);
+    convocatoriaPeriodoJustificacion.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setMesInicial(mesInicial);
     convocatoriaPeriodoJustificacion.setMesFinal(mesFinal);

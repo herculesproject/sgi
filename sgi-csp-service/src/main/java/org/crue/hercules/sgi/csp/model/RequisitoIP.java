@@ -15,10 +15,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "requisito_ip", uniqueConstraints = {
@@ -41,11 +44,10 @@ public class RequisitoIP extends BaseEntity {
   @SequenceGenerator(name = "requisito_ip_seq", sequenceName = "requisito_ip_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @OneToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_REQUISITOIP_CONVOCATORIA"))
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
   @NotNull
-  private Convocatoria convocatoria;
+  private Long convocatoriaId;
 
   /** Número máximo ip */
   @Column(name = "num_maximo_ip", nullable = true)
@@ -111,4 +113,10 @@ public class RequisitoIP extends BaseEntity {
   @Size(max = 250)
   private String otrosRequisitos;
 
+  // Relation mappings for JPA metamodel generation only
+  @OneToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_REQUISITOIP_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
 }

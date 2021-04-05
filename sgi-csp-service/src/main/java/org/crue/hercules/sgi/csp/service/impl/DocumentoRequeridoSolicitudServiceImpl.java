@@ -3,13 +3,16 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.DocumentoRequeridoSolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
@@ -39,16 +42,18 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
   private final ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
   private final ConvocatoriaService convocatoriaService;
+  private final ConvocatoriaRepository convocatoriaRepository;
 
   public DocumentoRequeridoSolicitudServiceImpl(DocumentoRequeridoSolicitudRepository repository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository,
       ModeloTipoFaseRepository modeloTipoFaseRepository, ModeloTipoDocumentoRepository modeloTipoDocumentoRepository,
-      ConvocatoriaService convocatoriaService) {
+      ConvocatoriaService convocatoriaService, ConvocatoriaRepository convocatoriaRepository) {
     this.repository = repository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
     this.modeloTipoDocumentoRepository = modeloTipoDocumentoRepository;
     this.convocatoriaService = convocatoriaService;
+    this.convocatoriaRepository = convocatoriaRepository;
   }
 
   /**
@@ -119,10 +124,11 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
     repository.findById(id).map(convocatoriaAreaTematica -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(
-              convocatoriaAreaTematica.getConfiguracionSolicitud().getConvocatoria().getId(),
-              convocatoriaAreaTematica.getConfiguracionSolicitud().getConvocatoria().getUnidadGestionRef()),
+      ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+          .findById(convocatoriaAreaTematica.getConfiguracionSolicitudId())
+          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(
+              convocatoriaAreaTematica.getConfiguracionSolicitudId()));
+      Assert.isTrue(convocatoriaService.modificable(configuracionSolicitud.getConvocatoriaId(), null),
           "No se puede eliminar DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaAreaTematica;
@@ -182,11 +188,7 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
         "validarDocumentoRequeridoSolicitud(DocumentoRequeridoSolicitud datosDocumentoRequeridoSolicitud, DocumentoRequeridoSolicitud datosOriginales) - start");
 
     /** Obligatoria Configuración Solicitud */
-    Assert.isTrue(
-        documentoRequeridoSolicitud.getConfiguracionSolicitud() != null
-            && documentoRequeridoSolicitud.getConfiguracionSolicitud().getId() != null
-            && documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria() != null
-            && documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId() != null,
+    Assert.isTrue(documentoRequeridoSolicitud.getConfiguracionSolicitudId() != null,
         "ConfiguracionSolicitud no puede ser null en la DocumentoRequeridoSolicitud");
 
     /** Obligatorio TipoDocumento */
@@ -196,36 +198,30 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
         "TipoDocumento no puede ser null en la DocumentoRequeridoSolicitud");
 
     /** Se recupera la Configuración Solicitud para la convocatoria */
-    documentoRequeridoSolicitud.setConfiguracionSolicitud(configuracionSolicitudRepository
-        .findByConvocatoriaId(documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId())
+    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+        .findById(documentoRequeridoSolicitud.getConfiguracionSolicitudId())
         .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(
-            documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId())));
+            documentoRequeridoSolicitud.getConfiguracionSolicitudId()));
 
     // comprobar si convocatoria es modificable
-    Assert.isTrue(
-        convocatoriaService.modificable(
-            documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getId(),
-            documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getUnidadGestionRef()),
-        "No se puede " + ((datosOriginales != null) ? "modificar" : "crear")
-            + " DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+    Assert.isTrue(convocatoriaService.modificable(configuracionSolicitud.getConvocatoriaId(), null), "No se puede "
+        + ((datosOriginales != null) ? "modificar" : "crear")
+        + " DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-    Long modeloEjecucionId = (documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria()
-        .getModeloEjecucion() != null
-        && documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion()
-            .getId() != null)
-                ? documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getId()
-                : null;
+    Convocatoria convocatoria = convocatoriaRepository.findById(configuracionSolicitud.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoriaId()));
+    Long modeloEjecucionId = (convocatoria.getModeloEjecucion() != null
+        && convocatoria.getModeloEjecucion().getId() != null) ? convocatoria.getModeloEjecucion().getId() : null;
     /**
      * La fase no es obligatoria en la configuración, pero si lo es para añadir un
      * documento requerido, es necesario recuperar el ModeloTipoFase para validar el
      * TipoDocumento asignado
      */
 
-    TipoFase configuracionTipoFase = (documentoRequeridoSolicitud.getConfiguracionSolicitud()
-        .getFasePresentacionSolicitudes() != null
-        && documentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes().getId() != null)
-            ? documentoRequeridoSolicitud.getConfiguracionSolicitud().getFasePresentacionSolicitudes().getTipoFase()
+    TipoFase configuracionTipoFase = (configuracionSolicitud.getFasePresentacionSolicitudes() != null
+        && configuracionSolicitud.getFasePresentacionSolicitudes().getId() != null)
+            ? configuracionSolicitud.getFasePresentacionSolicitudes().getTipoFase()
             : null;
     ModeloTipoFase configuracionModeloTipoFase = null;
 
@@ -236,12 +232,11 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
         .findByModeloEjecucionIdAndTipoFaseId(modeloEjecucionId, configuracionTipoFase.getId());
 
     // TipoFase está asignado al ModeloEjecucion
-    Assert.isTrue(modeloTipoFase.isPresent(), "TipoFase '" + configuracionTipoFase.getNombre()
-        + "' no disponible para el ModeloEjecucion '"
-        + ((modeloEjecucionId != null)
-            ? documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getNombre()
-            : "Convocatoria sin modelo asignado")
-        + "'");
+    Assert.isTrue(modeloTipoFase.isPresent(),
+        "TipoFase '" + configuracionTipoFase.getNombre() + "' no disponible para el ModeloEjecucion '"
+            + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
+                : "Convocatoria sin modelo asignado")
+            + "'");
 
     // La asignación al ModeloEjecucion está activa
     Assert.isTrue(modeloTipoFase.get().getActivo(), "ModeloTipoFase '" + modeloTipoFase.get().getTipoFase().getNombre()
@@ -265,12 +260,12 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
             configuracionModeloTipoFase.getId(), documentoRequeridoSolicitud.getTipoDocumento().getId());
 
     // Está asignado al ModeloEjecucion y ModeloTipoFase
-    Assert.isTrue(modeloTipoDocumento.isPresent(), "TipoDocumento '"
-        + documentoRequeridoSolicitud.getTipoDocumento().getNombre() + "' no disponible para el ModeloEjecucion '"
-        + ((modeloEjecucionId != null)
-            ? documentoRequeridoSolicitud.getConfiguracionSolicitud().getConvocatoria().getModeloEjecucion().getNombre()
-            : "Convocatoria sin modelo asignado")
-        + "' y TipoFase '" + configuracionModeloTipoFase.getTipoFase().getNombre() + "'");
+    Assert.isTrue(modeloTipoDocumento.isPresent(),
+        "TipoDocumento '" + documentoRequeridoSolicitud.getTipoDocumento().getNombre()
+            + "' no disponible para el ModeloEjecucion '"
+            + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
+                : "Convocatoria sin modelo asignado")
+            + "' y TipoFase '" + configuracionModeloTipoFase.getTipoFase().getNombre() + "'");
 
     // Comprobar solamente si estamos creando o se ha modificado el documento
     if (datosOriginales == null

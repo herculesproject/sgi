@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,8 +41,8 @@ public class ConvocatoriaEntidadGestoraIT extends BaseIT {
   public void create_ReturnsConvocatoriaEntidadGestora() throws Exception {
 
     // given: new ConvocatoriaEntidadGestora
-    ConvocatoriaEntidadGestora newConvocatoriaEntidadGestora = ConvocatoriaEntidadGestora.builder()
-        .convocatoria(Convocatoria.builder().id(1L).build()).entidadRef("entidad-001").build();
+    ConvocatoriaEntidadGestora newConvocatoriaEntidadGestora = ConvocatoriaEntidadGestora.builder().convocatoriaId(1L)
+        .entidadRef("entidad-001").build();
 
     // when: create ConvocatoriaEntidadGestora
     final ResponseEntity<ConvocatoriaEntidadGestora> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
@@ -53,8 +52,8 @@ public class ConvocatoriaEntidadGestoraIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaEntidadGestora responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaEntidadGestora.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaEntidadGestora.getConvocatoriaId());
     Assertions.assertThat(responseData.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(newConvocatoriaEntidadGestora.getEntidadRef());
   }

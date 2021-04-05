@@ -112,15 +112,13 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
             .orElseThrow(() -> new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(
                 periodoSeguimientoCientifico.getId()));
 
-        Assert
-            .isTrue(
-                periodoSeguimientoCientificoBD.getConvocatoria().getId() == periodoSeguimientoCientifico
-                    .getConvocatoria().getId(),
-                "No se puede modificar la convocatoria del ConvocatoriaPeriodoSeguimientoCientifico");
+        Assert.isTrue(
+            periodoSeguimientoCientificoBD.getConvocatoriaId() == periodoSeguimientoCientifico.getConvocatoriaId(),
+            "No se puede modificar la convocatoria del ConvocatoriaPeriodoSeguimientoCientifico");
       }
 
       // Setea la convocatoria recuperada del convocatoriaId
-      periodoSeguimientoCientifico.setConvocatoria(convocatoria);
+      periodoSeguimientoCientifico.setConvocatoriaId(convocatoria.getId());
 
       // Validaciones
       Assert.isTrue(periodoSeguimientoCientifico.getMesInicial() < periodoSeguimientoCientifico.getMesFinal(),
@@ -134,8 +132,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
             "La fecha de fin tiene que ser posterior a la fecha de inicio");
       }
 
-      Assert.isTrue(periodoSeguimientoCientifico.getConvocatoria().getDuracion() == null
-          || periodoSeguimientoCientifico.getMesFinal() <= periodoSeguimientoCientifico.getConvocatoria().getDuracion(),
+      Assert.isTrue(
+          convocatoria.getDuracion() == null
+              || periodoSeguimientoCientifico.getMesFinal() <= convocatoria.getDuracion(),
           "El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
 
       Assert.isTrue(

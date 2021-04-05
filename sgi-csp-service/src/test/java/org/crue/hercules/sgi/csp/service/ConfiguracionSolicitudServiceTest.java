@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -65,10 +66,11 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_withConvocatoriaRegistrada_ReturnsConfiguracionSolicitud() {
     // given: new ConfiguracionSolicitud
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, convocatoriaId, 1L);
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaFaseRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(configuracionSolicitud.getFasePresentacionSolicitudes()));
@@ -91,8 +93,8 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
     // then: new ConfiguracionSolicitud is created
     Assertions.assertThat(created).isNotNull();
     Assertions.assertThat(created.getId()).isNotNull();
-    Assertions.assertThat(created.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(configuracionSolicitud.getConvocatoria().getId());
+    Assertions.assertThat(created.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(configuracionSolicitud.getConvocatoriaId());
     Assertions.assertThat(created.getTramitacionSGI()).as("getTramitacionSGI()")
         .isEqualTo(configuracionSolicitud.getTramitacionSGI());
     Assertions.assertThat(created.getFasePresentacionSolicitudes().getId())
@@ -107,12 +109,13 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_WithConvocatoriaBorrador_ReturnsConfiguracionSolicitud() {
     // given: new ConfiguracionSolicitud convocatoria estado borrador
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
-        .convocatoria(Convocatoria.builder().id(1L).estado(Convocatoria.Estado.BORRADOR).activo(Boolean.TRUE).build())
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder().convocatoriaId(convocatoriaId)
         .build();
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ConfiguracionSolicitud>any()))
         .willAnswer(new Answer<ConfiguracionSolicitud>() {
@@ -131,8 +134,8 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     // then: new ConfiguracionSolicitud is created with minimum required data
     Assertions.assertThat(created).isNotNull();
-    Assertions.assertThat(created.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(configuracionSolicitud.getConvocatoria().getId());
+    Assertions.assertThat(created.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(configuracionSolicitud.getConvocatoriaId());
     Assertions.assertThat(created.getTramitacionSGI()).as("getTramitacionSGI()").isNull();
     Assertions.assertThat(created.getFasePresentacionSolicitudes()).as("getFasePresentacionSolicitudes()").isNull();
     Assertions.assertThat(created.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()").isNull();
@@ -156,7 +159,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud without convocatoria
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
-    configuracionSolicitud.setConvocatoria(null);
+    configuracionSolicitud.setConvocatoriaId(null);
 
     Assertions.assertThatThrownBy(
         // when: create ConfiguracionSolicitud
@@ -193,20 +196,20 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         // when: create ConfiguracionSolicitud
         () -> service.create(configuracionSolicitud))
         // then: throw exception as Convocatoria already asigned
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe ConfiguracionSolicitud para la convocatoria %s",
-            configuracionSolicitud.getConvocatoria().getCodigo());
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Ya existe ConfiguracionSolicitud para la convocatoria %s", configuracionSolicitud.getConvocatoriaId());
   }
 
   @Test
   public void create_WithConvocatoriaRegistradaAndWithoutTramitacionSGI_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with convocatoria registrada and without
     // Tramitacion SGI
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, convocatoriaId, 1L);
     configuracionSolicitud.setTramitacionSGI(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     Assertions.assertThatThrownBy(
         // when: create ConfiguracionSolicitud
@@ -220,11 +223,12 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void create_WithConvocatoriaRegistradaAndWithoutFormulario_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with convocatoria registrada and without
     // Formulario
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, convocatoriaId, 1L);
     configuracionSolicitud.setFormularioSolicitud(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     Assertions.assertThatThrownBy(
         // when: create ConfiguracionSolicitud
@@ -238,12 +242,13 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void create_WithTramitacionSGITrueAndWithoutFasePresentacion_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with TramitacionSGI = true and without
     // FasePresentacion
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, convocatoriaId, 1L);
     configuracionSolicitud.setTramitacionSGI(Boolean.TRUE);
     configuracionSolicitud.setFasePresentacionSolicitudes(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     Assertions.assertThatThrownBy(
         // when: create ConfiguracionSolicitud
@@ -257,12 +262,13 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void create_WithTramitacionSGIFalseAndWithoutFasePresentacion_DoesNotThrowAnyException() {
     // given: a ConfiguracionSolicitud with TramitationSGI = false and without
     // FasePresentacion
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, convocatoriaId, 1L);
     configuracionSolicitud.setTramitacionSGI(Boolean.FALSE);
     configuracionSolicitud.setFasePresentacionSolicitudes(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     Assertions.assertThatCode(
         // when: create ConfiguracionSolicitud
@@ -274,10 +280,11 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void create_NoExistingFasePresentacion_ThrowsNotFoundException() {
     // given: a ConfiguracionSolicitud with no existing FasePresentacion
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaFaseRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -291,8 +298,10 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_withConvocatoriaRegistrada_ReturnsConfiguracionSolicitud() {
     // given: update existing ConfiguracionSolicitud
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     updatedConfiguracionSolicitud.getFasePresentacionSolicitudes()
         .setFechaInicio(Instant.parse("2020-09-15T00:00:00Z"));
     updatedConfiguracionSolicitud.getFasePresentacionSolicitudes().setFechaFin(Instant.parse("2020-09-30T23:59:59Z"));
@@ -302,8 +311,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
@@ -315,14 +323,13 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .willReturn(updatedConfiguracionSolicitud);
 
     // when: update ConfiguracionSolicitud
-    ConfiguracionSolicitud updated = service.update(updatedConfiguracionSolicitud,
-        originalConfiguracionSolicitud.getConvocatoria().getId());
+    ConfiguracionSolicitud updated = service.update(updatedConfiguracionSolicitud, convocatoriaId);
 
     // then: ConfiguracionSolicitud is updated
     Assertions.assertThat(updated).isNotNull();
     Assertions.assertThat(updated.getId()).isNotNull();
-    Assertions.assertThat(updated.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(originalConfiguracionSolicitud.getConvocatoria().getId());
+    Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(originalConfiguracionSolicitud.getConvocatoriaId());
     Assertions.assertThat(updated.getTramitacionSGI()).as("getTramitacionSGI()")
         .isEqualTo(updatedConfiguracionSolicitud.getTramitacionSGI());
     Assertions.assertThat(updated.getFasePresentacionSolicitudes().getId())
@@ -338,18 +345,18 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithConvocatoriaBorrador_ReturnsConfiguracionSolicitud() {
     // given: update existing ConfiguracionSolicitud with convocatoria estado
     // borrador
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstado(Estado.BORRADOR);
     ConfiguracionSolicitud originalConfiguracionSolicitud = ConfiguracionSolicitud.builder().id(1L)
-        .convocatoria(Convocatoria.builder().id(1L).estado(Convocatoria.Estado.BORRADOR).activo(Boolean.TRUE).build())
-        .build();
+        .convocatoriaId(convocatoriaId).build();
     ConfiguracionSolicitud updatedConfiguracionSolicitud = ConfiguracionSolicitud.builder().id(1L)
-        .convocatoria(Convocatoria.builder().id(1L).estado(Convocatoria.Estado.BORRADOR).activo(Boolean.TRUE).build())
-        .importeMaximoSolicitud(BigDecimal.valueOf(54321)).build();
+        .convocatoriaId(convocatoriaId).importeMaximoSolicitud(BigDecimal.valueOf(54321)).build();
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
@@ -359,12 +366,12 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     // when: create ConfiguracionSolicitud
     ConfiguracionSolicitud updated = service.update(updatedConfiguracionSolicitud,
-        originalConfiguracionSolicitud.getConvocatoria().getId());
+        originalConfiguracionSolicitud.getConvocatoriaId());
 
     // then: ConfiguracionSolicitud with minimum required data is updated
     Assertions.assertThat(updated).isNotNull();
-    Assertions.assertThat(updated.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(originalConfiguracionSolicitud.getConvocatoria().getId());
+    Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(originalConfiguracionSolicitud.getConvocatoriaId());
     Assertions.assertThat(updated.getTramitacionSGI()).as("getTramitacionSGI()").isNull();
     Assertions.assertThat(updated.getFasePresentacionSolicitudes()).as("getFasePresentacionSolicitudes()").isNull();
     Assertions.assertThat(updated.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()")
@@ -376,7 +383,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: update ConfiguracionSolicitud without convocatoria
     ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    updatedConfiguracionSolicitud.setConvocatoria(null);
+    updatedConfiguracionSolicitud.setConvocatoriaId(null);
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
@@ -395,7 +402,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(configuracionSolicitud, configuracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(configuracionSolicitud, configuracionSolicitud.getConvocatoriaId()))
         // then: throw exception as Convocatoria is not found
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
@@ -403,17 +410,18 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_NotFoundByConvocatoria_ThrowsNotFoundException() {
     // given: update ConfiguracionSolicitud not found by Convocatoria
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(configuracionSolicitud, configuracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(configuracionSolicitud, configuracionSolicitud.getConvocatoriaId()))
         // then: throw exception as ConfiguracionSolicitud is not found by Convocatoria
         .isInstanceOf(ConfiguracionSolicitudNotFoundException.class);
   }
@@ -422,21 +430,22 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithConvocatoriaRegistradaAndWithoutTramitacionSGI_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with convocatoria registrada and without
     // Tramitacion SGI
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     updatedConfiguracionSolicitud.setTramitacionSGI(null);
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as Tramitacion SGI can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
@@ -446,21 +455,22 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithConvocatoriaRegistradaAndWithoutFormulario_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with convocatoria registrada and without
     // Formulario
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     updatedConfiguracionSolicitud.setFormularioSolicitud(null);
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as Formulario can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
@@ -470,22 +480,23 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithTramitacionSGITrueAndWithoutFasePresentacion_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with TramitacionSGI = true and without
     // FasePresentacion
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     updatedConfiguracionSolicitud.setTramitacionSGI(Boolean.TRUE);
     updatedConfiguracionSolicitud.setFasePresentacionSolicitudes(null);
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as FasePresentacion can't be provided
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Plazo presentación solicitudes no puede ser null cuando se establece presentacion SGI");
@@ -495,16 +506,17 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_WithTramitacionSGIFalseAndWithoutFasePresentacion_DoesNotThrowAnyException() {
     // given: a ConfiguracionSolicitud with TramitacionSGI = false and without
     // FasePresentacion
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
     updatedConfiguracionSolicitud.setTramitacionSGI(Boolean.FALSE);
     updatedConfiguracionSolicitud.setFasePresentacionSolicitudes(null);
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
@@ -518,7 +530,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThatCode(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: no exception thrown
         .doesNotThrowAnyException();
   }
@@ -526,14 +538,15 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_NoExistingFasePresentacion_ThrowsNotFoundException() {
     // given: a ConfiguracionSolicitud with no existing FasePresentacion
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
@@ -541,7 +554,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as FasePresentacion is not found
         .isInstanceOf(ConvocatoriaFaseNotFoundException.class);
   }
@@ -550,15 +563,16 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_FasePresentacionWithoutDocumentosRequeridos_DoesNotThrowAnyException() {
     // given: a ConfiguracionSolicitud with updated FasePresentacion without
     // DocumentosRequeridos assigned
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 2L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 2L);
     List<DocumentoRequeridoSolicitud> documentoRequeridoSolicitudList = new ArrayList<DocumentoRequeridoSolicitud>();
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
@@ -576,7 +590,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThatCode(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: no exception thrown
         .doesNotThrowAnyException();
   }
@@ -585,16 +599,17 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   public void update_FasePresentacionWithDocumentosRequeridos_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with updated FasePresentacion and
     // DocumentosRequeridos assigned
-    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 2L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud originalConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
+    ConfiguracionSolicitud updatedConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 2L);
     List<DocumentoRequeridoSolicitud> documentoRequeridoSolicitudList = new ArrayList<DocumentoRequeridoSolicitud>();
     documentoRequeridoSolicitudList.add(generarMockDocumentoRequeridoSolicitud(originalConfiguracionSolicitud));
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalConfiguracionSolicitud));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(originalConfiguracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
 
@@ -606,7 +621,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as FasePresentacion has documents
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Si ya existen documentos requeridos solicitud asociados a la configuración, no se puede cambiar la fase");
@@ -615,17 +630,18 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud when modificable return false
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: update ConfiguracionSolicitud
-        () -> service.update(configuracionSolicitud, configuracionSolicitud.getConvocatoria().getId()))
+        () -> service.update(configuracionSolicitud, configuracionSolicitud.getConvocatoriaId()))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede modificar ConfiguracionSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
@@ -634,7 +650,8 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   @Test
   public void findByIdConvocatoria_WithExistingId_ReturnsConfiguracionSolicitud() throws Exception {
     // given: existing ConfiguracionSolicitud
-    ConfiguracionSolicitud configuracionSolicitudExistente = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    ConfiguracionSolicitud configuracionSolicitudExistente = generarMockConfiguracionSolicitud(1L, convocatoriaId, 1L);
 
     BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
@@ -642,14 +659,13 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(configuracionSolicitudExistente));
 
     // when: find ConfiguracionSolicitud Convocatoria
-    ConfiguracionSolicitud found = service
-        .findByConvocatoriaId(configuracionSolicitudExistente.getConvocatoria().getId());
+    ConfiguracionSolicitud found = service.findByConvocatoriaId(configuracionSolicitudExistente.getConvocatoriaId());
 
     // then: ConfiguracionSolicitud is updated
     Assertions.assertThat(found).isNotNull();
     Assertions.assertThat(found.getId()).isNotNull();
-    Assertions.assertThat(found.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(configuracionSolicitudExistente.getConvocatoria().getId());
+    Assertions.assertThat(found.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(configuracionSolicitudExistente.getConvocatoriaId());
     Assertions.assertThat(found.getTramitacionSGI()).as("getTramitacionSGI()")
         .isEqualTo(configuracionSolicitudExistente.getTramitacionSGI());
     Assertions.assertThat(found.getFasePresentacionSolicitudes().getId()).as("getFasePresentacionSolicitudes().getId()")
@@ -682,9 +698,6 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
    */
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
-
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
@@ -694,7 +707,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
         .id(convocatoriaFaseId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
@@ -703,7 +716,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
@@ -802,7 +815,7 @@ public class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
 
     // @formatter:on
     return DocumentoRequeridoSolicitud.builder().id(configuracionSolicitud.getId())
-        .configuracionSolicitud(configuracionSolicitud)
+        .configuracionSolicitudId(configuracionSolicitud.getId())
         .tipoDocumento(generarMockTipoDocumento(configuracionSolicitud.getId()))
         .observaciones("observacionesDocumentoRequeridoSolicitud-" + configuracionSolicitud.getId()).build();
     // @formatter:on

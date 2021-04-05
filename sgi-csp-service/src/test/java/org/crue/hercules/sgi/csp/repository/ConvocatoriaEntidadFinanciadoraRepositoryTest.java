@@ -47,13 +47,13 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     List<ConvocatoriaEntidadFinanciadora> persistList = new ArrayList<>();
     // 5 elements to convocatoria 1
     for (int i = 1; i <= 5; i++) {
-      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria1,
+      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria1.getId(),
           "entidadRef-" + i, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
     // 5 elements to convocatoria 2
     for (int i = 1; i <= 5; i++) {
-      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria2,
+      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria2.getId(),
           "entidadRef-" + i, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
@@ -68,7 +68,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.size()).isEqualTo(5);
     dataFound.stream().forEach((entidad) -> {
-      Assertions.assertThat(entidad.getConvocatoria().getId()).isEqualTo(convocatoriaIdBuscado);
+      Assertions.assertThat(entidad.getConvocatoriaId()).isEqualTo(convocatoriaIdBuscado);
     });
   }
 
@@ -102,13 +102,13 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     List<ConvocatoriaEntidadFinanciadora> persistList = new ArrayList<>();
     // 5 elements to convocatoria 1
     for (int i = 1; i <= 5; i++) {
-      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria1,
+      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria1.getId(),
           "entidadRef-" + i, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
     // 5 elements to convocatoria 2
     for (int i = 1; i <= 5; i++) {
-      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria2,
+      ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria2.getId(),
           "entidadRef-" + i, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }

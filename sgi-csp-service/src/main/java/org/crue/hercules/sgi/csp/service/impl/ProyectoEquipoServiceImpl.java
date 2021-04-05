@@ -94,26 +94,26 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
             .filter(periodo -> periodo.getId() == proyectoEquipo.getId()).findFirst()
             .orElseThrow(() -> new ProyectoEquipoNotFoundException(proyectoEquipo.getId()));
 
-        Assert.isTrue(proyectoEquipoBD.getProyecto().getId() == proyectoEquipo.getProyecto().getId(),
+        Assert.isTrue(proyectoEquipoBD.getProyectoId() == proyectoEquipo.getProyectoId(),
             "No se puede modificar el proyecto del ProyectoEquipo");
       }
 
-      proyectoEquipo.setProyecto(proyecto);
+      proyectoEquipo.setProyectoId(proyectoId);
 
       if (proyectoEquipo.getFechaInicio() != null && proyectoEquipo.getFechaFin() != null) {
         Assert.isTrue(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()),
             "La fecha de inicio no puede ser superior a la fecha de fin");
 
         Assert.isTrue(
-            (proyectoEquipo.getFechaInicio().isAfter(proyectoEquipo.getProyecto().getFechaInicio())
-                || proyectoEquipo.getFechaInicio().equals(proyectoEquipo.getProyecto().getFechaInicio()))
-                && (proyectoEquipo.getFechaFin().isBefore(proyectoEquipo.getProyecto().getFechaFin())
-                    || proyectoEquipo.getFechaFin().equals(proyectoEquipo.getProyecto().getFechaFin())),
+            (proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaInicio())
+                || proyectoEquipo.getFechaInicio().equals(proyecto.getFechaInicio()))
+                && (proyectoEquipo.getFechaFin().isBefore(proyecto.getFechaFin())
+                    || proyectoEquipo.getFechaFin().equals(proyecto.getFechaFin())),
             "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
       }
 
       Specification<ProyectoEquipo> specByProyectoId = ProyectoEquipoSpecifications
-          .byProyectoId(proyectoEquipo.getProyecto().getId());
+          .byProyectoId(proyectoEquipo.getProyectoId());
 
       Specification<ProyectoEquipo> specByIdNotEqual = ProyectoEquipoSpecifications
           .byIdNotEqual(proyectoEquipo.getId());

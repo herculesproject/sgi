@@ -6,11 +6,13 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoPresupuestoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
@@ -34,11 +36,13 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
 
   private final SolicitudProyectoPresupuestoRepository repository;
   private final SolicitudService solicitudService;
+  private final SolicitudProyectoRepository solicitudProyectoRepository;
 
   public SolicitudProyectoPresupuestoServiceImpl(SolicitudProyectoPresupuestoRepository repository,
-      SolicitudService solicitudService) {
+      SolicitudService solicitudService, SolicitudProyectoRepository solicitudProyectoRepository) {
     this.repository = repository;
     this.solicitudService = solicitudService;
+    this.solicitudProyectoRepository = solicitudProyectoRepository;
   }
 
   /**
@@ -81,8 +85,10 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
         "Id no puede ser null para actualizar SolicitudProyectoPresupuesto");
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(
-        solicitudService.modificable(solicitudProyectoPresupuesto.getSolicitudProyectoDatos().getSolicitud().getId()),
+    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
+        .findById(solicitudProyectoPresupuesto.getSolicitudProyectoId()).orElseThrow(
+            () -> new SolicitudProyectoNotFoundException(solicitudProyectoPresupuesto.getSolicitudProyectoId()));
+    Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
         "No se puede modificar SolicitudProyectoPresupuesto");
 
     return repository.findById(solicitudProyectoPresupuesto.getId()).map((solicitudProyectoPresupuestoExistente) -> {
@@ -232,16 +238,15 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
 
   /**
    * Obtiene el {@link SolicitudProyectoPresupuesto} de la
-   * {@link SolicitudProyectoDatos}.
+   * {@link SolicitudProyecto}.
    * 
-   * @param id {@link SolicitudProyectoDatos}.
+   * @param id {@link SolicitudProyecto}.
    * @return {@link SolicitudProyectoPresupuesto}.
    */
   @Override
   public Boolean hasSolicitudPresupuesto(Long id) {
     log.debug("hasSolicitudPresupuesto(Long id) - start");
-    final List<SolicitudProyectoPresupuesto> solicitudProyectoPresupuestos = repository
-        .findBySolicitudProyectoDatosId(id);
+    final List<SolicitudProyectoPresupuesto> solicitudProyectoPresupuestos = repository.findBySolicitudProyectoId(id);
     Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoPresupuestos);
     log.debug("hasSolicitudPresupuesto(Long id) - end");
     return returnValue;

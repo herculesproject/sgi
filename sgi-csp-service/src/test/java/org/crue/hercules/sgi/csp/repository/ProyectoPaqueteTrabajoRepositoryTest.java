@@ -29,7 +29,7 @@ public class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo1 = generarMockProyectoPaqueteTrabajo("-001");
     generarMockProyectoPaqueteTrabajo("-002");
 
-    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyectoId();
     String nombreBusqueda = proyectoPaqueteTrabajo1.getNombre();
 
     // when: comprueba la existencia del ProyectoPaqueteTrabajo para un proyecto y
@@ -49,7 +49,7 @@ public class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo1 = generarMockProyectoPaqueteTrabajo("-001");
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo2 = generarMockProyectoPaqueteTrabajo("-002");
 
-    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyectoId();
     String nombreBusqueda = proyectoPaqueteTrabajo2.getNombre();
 
     // when: comprueba la existencia del ProyectoPaqueteTrabajo para un proyecto y
@@ -69,7 +69,7 @@ public class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo2 = generarMockProyectoPaqueteTrabajo("-002");
 
     Long idProyectoPaqueteTrabajoExcluidoBusqueda = proyectoPaqueteTrabajo2.getId();
-    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyectoId();
     String nombreBusqueda = proyectoPaqueteTrabajo1.getNombre();
 
     // when: comprueba la existencia del ProyectoPaqueteTrabajo para un proyecto y
@@ -90,7 +90,7 @@ public class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
     generarMockProyectoPaqueteTrabajo("-002");
 
     Long idProyectoPaqueteTrabajoExcluidoBusqueda = proyectoPaqueteTrabajo1.getId();
-    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoPaqueteTrabajo1.getProyectoId();
     String nombreBusqueda = proyectoPaqueteTrabajo1.getNombre();
 
     // when: comprueba la existencia del ProyectoPaqueteTrabajo para un proyecto y
@@ -146,13 +146,13 @@ public class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
         .ambitoGeografico(tipoAmbitoGeografico)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
-        .paquetesTrabajo(Boolean.TRUE)
+        .permitePaquetesTrabajo(Boolean.TRUE)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(proyecto);
 
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = ProyectoPaqueteTrabajo.builder()
-        .proyecto(proyecto)
+        .proyectoId(proyecto.getId())
         .nombre("proyectoPaquete" + suffix)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))

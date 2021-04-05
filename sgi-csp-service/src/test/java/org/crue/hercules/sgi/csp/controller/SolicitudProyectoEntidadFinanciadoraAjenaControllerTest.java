@@ -2,8 +2,7 @@ package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
@@ -62,8 +61,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
         // then: new SolicitudProyectoEntidadFinanciadoraAjena is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id")
-            .value(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoDatos().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId")
+            .value(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef")
             .value(solicitudProyectoEntidadFinanciadoraAjena.getEntidadRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("fuenteFinanciacion.id")
@@ -121,8 +120,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(
             MockMvcResultMatchers.jsonPath("id").value(solicitudProyectoEntidadFinanciadoraAjenaExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id")
-            .value(solicitudProyectoEntidadFinanciadoraAjenaExistente.getSolicitudProyectoDatos().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId")
+            .value(solicitudProyectoEntidadFinanciadoraAjenaExistente.getSolicitudProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef")
             .value(solicitudProyectoEntidadFinanciadoraAjenaExistente.getEntidadRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("fuenteFinanciacion.id")
@@ -210,7 +209,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
         // and the requested SolicitudProyectoEntidadFinanciadoraAjena is resturned as
         // JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value("entidad-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("fuenteFinanciacion.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFinanciacion.id").value(1L))
@@ -242,9 +241,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
    */
   private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
     // @formatter:off
-    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder()
         .id(id == null ? 1 : id)
-        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())
         .build();
 
     FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
@@ -260,7 +258,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = SolicitudProyectoEntidadFinanciadoraAjena
         .builder()
         .id(id)
-        .solicitudProyectoDatos(solicitudProyectoDatos)
+        .solicitudProyectoId(solicitudProyecto.getId())
         .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))
         .fuenteFinanciacion(fuenteFinanciacion)
         .tipoFinanciacion(tipoFinanciacion)

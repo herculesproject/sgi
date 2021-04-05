@@ -2,12 +2,12 @@ package org.crue.hercules.sgi.csp.repository.custom;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio_;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion_;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago_;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo_;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,14 +36,14 @@ public class CustomSolicitudProyectoSocioRepositoryImpl implements CustomSolicit
 
   /**
    * Indica si {@link SolicitudProyectoSocio} tiene
-   * {@link SolicitudProyectoPeriodoJustificacion},
-   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
-   * relacionadas.
+   * {@link SolicitudProyectoSocioPeriodoJustificacion},
+   * {@link SolicitudProyectoSocioPeriodoPago} y/o
+   * {@link SolicitudProyectoSocioEquipo} relacionadas.
    *
    * @param id Id de la {@link SolicitudProyectoSocio}.
-   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
-   *         {@link SolicitudProyectoPeriodoPago} y/o
-   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   * @return True si tiene {@link SolicitudProyectoSocioPeriodoJustificacion},
+   *         {@link SolicitudProyectoSocioPeriodoPago} y/o
+   *         {@link SolicitudProyectoSocioEquipo} relacionadas. En caso contrario
    *         false
    */
   @Override
@@ -55,23 +55,23 @@ public class CustomSolicitudProyectoSocioRepositoryImpl implements CustomSolicit
     Root<SolicitudProyectoSocio> root = cq.from(SolicitudProyectoSocio.class);
 
     Subquery<Long> queryJustificacion = cq.subquery(Long.class);
-    Root<SolicitudProyectoPeriodoJustificacion> rootJustificacion = queryJustificacion
-        .from(SolicitudProyectoPeriodoJustificacion.class);
-    Path<Long> pathJustificacion = rootJustificacion.get(SolicitudProyectoPeriodoJustificacion_.solicitudProyectoSocio)
-        .get(SolicitudProyectoSocio_.id);
+    Root<SolicitudProyectoSocioPeriodoJustificacion> rootJustificacion = queryJustificacion
+        .from(SolicitudProyectoSocioPeriodoJustificacion.class);
+    Path<Long> pathJustificacion = rootJustificacion
+        .get(SolicitudProyectoSocioPeriodoJustificacion_.solicitudProyectoSocio).get(SolicitudProyectoSocio_.id);
     Predicate existsQueryJustificacion = cb.exists(queryJustificacion.select(pathJustificacion)
         .where(cb.equal(pathJustificacion, root.get(SolicitudProyectoSocio_.id))));
 
     Subquery<Long> queryPago = cq.subquery(Long.class);
-    Root<SolicitudProyectoPeriodoPago> rootPago = queryPago.from(SolicitudProyectoPeriodoPago.class);
-    Path<Long> pathPago = rootPago.get(SolicitudProyectoPeriodoPago_.solicitudProyectoSocio)
+    Root<SolicitudProyectoSocioPeriodoPago> rootPago = queryPago.from(SolicitudProyectoSocioPeriodoPago.class);
+    Path<Long> pathPago = rootPago.get(SolicitudProyectoSocioPeriodoPago_.solicitudProyectoSocio)
         .get(SolicitudProyectoSocio_.id);
     Predicate existsQueryPago = cb
         .exists(queryPago.select(pathPago).where(cb.equal(pathPago, root.get(SolicitudProyectoSocio_.id))));
 
     Subquery<Long> queryEquipo = cq.subquery(Long.class);
-    Root<SolicitudProyectoEquipoSocio> rootEquipo = queryEquipo.from(SolicitudProyectoEquipoSocio.class);
-    Path<Long> pathEquipo = rootEquipo.get(SolicitudProyectoEquipoSocio_.solicitudProyectoSocio)
+    Root<SolicitudProyectoSocioEquipo> rootEquipo = queryEquipo.from(SolicitudProyectoSocioEquipo.class);
+    Path<Long> pathEquipo = rootEquipo.get(SolicitudProyectoSocioEquipo_.solicitudProyectoSocio)
         .get(SolicitudProyectoSocio_.id);
     Predicate existsQueryEquipo = cb
         .exists(queryEquipo.select(pathEquipo).where(cb.equal(pathEquipo, root.get(SolicitudProyectoSocio_.id))));

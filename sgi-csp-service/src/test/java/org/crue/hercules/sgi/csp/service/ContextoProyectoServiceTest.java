@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ContextoProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ContextoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ContextoProyectoServiceImpl;
@@ -41,9 +38,6 @@ public class ContextoProyectoServiceTest extends BaseServiceTest {
     // given: Un nuevo ContextoProyecto
     ContextoProyecto contextoProyecto = generarMockContextoProyecto(null);
 
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(contextoProyecto.getProyecto()));
-
     BDDMockito.given(repository.save(contextoProyecto)).will((InvocationOnMock invocation) -> {
       ContextoProyecto contextoProyectoCreado = invocation.getArgument(0);
       contextoProyectoCreado.setId(1L);
@@ -75,7 +69,7 @@ public class ContextoProyectoServiceTest extends BaseServiceTest {
   public void create_WithoutProyecto_ThrowsIllegalArgumentException() {
     // given: Un nuevo ContextoProyecto sin proyecto
     ContextoProyecto contextoProyecto = generarMockContextoProyecto(null);
-    contextoProyecto.getProyecto().setId(null);
+    contextoProyecto.setProyectoId(null);
 
     // when: Creamos el ContextoProyecto
     // then: Lanza una excepcion porque la proyecto es null
@@ -86,6 +80,7 @@ public class ContextoProyectoServiceTest extends BaseServiceTest {
   @Test
   public void create_WithDuplicatedProyecto_ThrowsIllegalArgumentException() {
     // given: Un nuevo ContextoProyecto con proyecto ya asignada
+    Long proyectoId = 1L;
     ContextoProyecto contextoProyecto = generarMockContextoProyecto(null);
 
     BDDMockito.given(repository.existsByProyectoId(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -93,7 +88,7 @@ public class ContextoProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el ContextoProyecto
     // then: Lanza una excepcion porque la proyecto ya tiene un ContextoProyecto
     Assertions.assertThatThrownBy(() -> service.create(contextoProyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe ContextoProyecto para el proyecto  " + contextoProyecto.getProyecto().getTitulo());
+        .hasMessage("Ya existe ContextoProyecto para el proyecto " + proyectoId);
   }
 
   @Test
@@ -174,24 +169,7 @@ public class ContextoProyectoServiceTest extends BaseServiceTest {
   private ContextoProyecto generarMockContextoProyecto(Long id) {
     ContextoProyecto contextoProyecto = new ContextoProyecto();
     contextoProyecto.setId(id);
-    Long idProyecto = id;
-    if (idProyecto == null) {
-      idProyecto = 1L;
-    }
-    // @formatter:off
-    contextoProyecto.setProyecto(Proyecto.builder()
-        .id(idProyecto)
-        .unidadGestionRef("OPE")
-        .modeloEjecucion(ModeloEjecucion.builder()
-            .nombre("nombreModeloEjecucion")
-            .activo(Boolean.TRUE)
-            .build())
-        .titulo("PRO" + (id != null ? id : ""))
-        .fechaInicio(Instant.now())
-        .fechaFin(Instant.now())
-        .activo(Boolean.TRUE)
-        .build());
-    // @formatter:on
+    contextoProyecto.setProyectoId(id != null ? id : 1L);
     contextoProyecto.setIntereses("intereses");
     return contextoProyecto;
   }

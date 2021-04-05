@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
@@ -70,8 +67,8 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
     // then: new ProyectoPeriodoSeguimientoDocumento is created
     Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento).isNotNull();
     Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getId()).isNotNull();
-    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId())
-        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId());
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId())
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId())
         .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
     Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getComentario())
@@ -101,7 +98,7 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
     // given: solicitud id null
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
-    proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().setId(null);
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(null);
 
     Assertions.assertThatThrownBy(
         // when: update non existing ProyectoPeriodoSeguimientoDocumento
@@ -167,8 +164,8 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
     Assertions.assertThat(updated).isNotNull();
     Assertions.assertThat(updated.getId()).isNotNull();
     Assertions.assertThat(updated.getId()).isEqualTo(proyectoPeriodoSeguimientoDocumento.getId());
-    Assertions.assertThat(updated.getProyectoPeriodoSeguimiento().getId())
-        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId());
+    Assertions.assertThat(updated.getProyectoPeriodoSeguimientoId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(updated.getTipoDocumento().getId())
         .isEqualTo(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
     Assertions.assertThat(updated.getComentario()).isEqualTo("comentarios-modificado");
@@ -197,7 +194,7 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
     // given: solicitud id null
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
-    proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().setId(null);
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(null);
 
     Assertions.assertThatThrownBy(
         // when: update non existing ProyectoPeriodoSeguimientoDocumento
@@ -308,8 +305,8 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
     Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getId()).isNotNull();
     Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getId())
         .isEqualTo(proyectoPeriodoSeguimientoDocumento.getId());
-    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId())
-        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId());
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId())
         .isEqualTo(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
     Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getComentario())
@@ -382,27 +379,6 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
   }
 
   /**
-   * Función que devuelve un objeto ProyectoPeriodoSeguimiento
-   * 
-   * @param id id del ProyectoPeriodoSeguimiento
-   * @return el objeto ProyectoPeriodoSeguimiento
-   */
-  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
-    ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
-    proyectoPeriodoSeguimiento.setId(id);
-    proyectoPeriodoSeguimiento.setProyecto(proyecto);
-    proyectoPeriodoSeguimiento.setNumPeriodo(1);
-    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
-    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
-    proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
-
-    return proyectoPeriodoSeguimiento;
-  }
-
-  /**
    * Función que devuelve un objeto ProyectoPeriodoSeguimientoDocumento
    * 
    * @param id id del ProyectoPeriodoSeguimientoDocumento
@@ -418,8 +394,7 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceT
 
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
-    proyectoPeriodoSeguimientoDocumento
-        .setProyectoPeriodoSeguimiento(generarMockProyectoPeriodoSeguimiento(id == null ? 1 : id));
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre("Nombre-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));

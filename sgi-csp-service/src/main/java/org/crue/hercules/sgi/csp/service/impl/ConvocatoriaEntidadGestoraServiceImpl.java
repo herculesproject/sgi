@@ -51,18 +51,17 @@ public class ConvocatoriaEntidadGestoraServiceImpl implements ConvocatoriaEntida
 
     Assert.isNull(convocatoriaEntidadGestora.getId(), "Id tiene que ser null para crear ConvocatoriaEntidadGestora");
 
-    Assert.notNull(convocatoriaEntidadGestora.getConvocatoria().getId(),
+    Assert.notNull(convocatoriaEntidadGestora.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
 
     Assert.notNull(convocatoriaEntidadGestora.getEntidadRef(),
         "Entidad no puede ser null para crear ConvocatoriaEntidadGestora");
 
-    convocatoriaEntidadGestora.setConvocatoria(
-        convocatoriaRepository.findById(convocatoriaEntidadGestora.getConvocatoria().getId()).orElseThrow(
-            () -> new ConvocatoriaNotFoundException(convocatoriaEntidadGestora.getConvocatoria().getId())));
+    convocatoriaRepository.findById(convocatoriaEntidadGestora.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEntidadGestora.getConvocatoriaId()));
 
     Assert.isTrue(
-        !repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadGestora.getConvocatoria().getId(),
+        !repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadGestora.getConvocatoriaId(),
             convocatoriaEntidadGestora.getEntidadRef()).isPresent(),
         "Ya existe una asociación activa para esa Convocatoria y Entidad");
 
@@ -86,14 +85,12 @@ public class ConvocatoriaEntidadGestoraServiceImpl implements ConvocatoriaEntida
     log.debug("update(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) - start");
     Long id = convocatoriaEntidadGestora.getId();
     Assert.notNull(id, "Id no puede ser null");
-    Assert.notNull(convocatoriaEntidadGestora.getConvocatoria(),
+    Assert.notNull(convocatoriaEntidadGestora.getConvocatoriaId(),
         "Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
-    Assert.notNull(convocatoriaEntidadGestora.getConvocatoria().getId(),
-        "Id Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
     Assert.notNull(convocatoriaEntidadGestora.getEntidadRef(),
         "Entidad no puede ser null para crear ConvocatoriaEntidadGestora");
     return repository.findById(id).map(entidadGestora -> {
-      entidadGestora.setConvocatoria(convocatoriaEntidadGestora.getConvocatoria());
+      entidadGestora.setConvocatoriaId(convocatoriaEntidadGestora.getConvocatoriaId());
       entidadGestora.setEntidadRef(convocatoriaEntidadGestora.getEntidadRef());
       ConvocatoriaEntidadGestora returnValue = repository.save(entidadGestora);
       log.debug("update(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) - end");

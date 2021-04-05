@@ -7,18 +7,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
-import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
-import org.crue.hercules.sgi.csp.model.TipoFinalidad;
-import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -82,8 +75,8 @@ public class ConfiguracionSolicitudIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConfiguracionSolicitud responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(configuracionSolicitud.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(configuracionSolicitud.getConvocatoriaId());
     Assertions.assertThat(responseData.getTramitacionSGI()).as("getTramitacionSGI()")
         .isEqualTo(configuracionSolicitud.getTramitacionSGI());
     Assertions.assertThat(responseData.getFasePresentacionSolicitudes().getId())
@@ -109,7 +102,7 @@ public class ConfiguracionSolicitudIT {
     // when: update ConfiguracionSolicitud
     final ResponseEntity<ConfiguracionSolicitud> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, configuracionSolicitud),
-        ConfiguracionSolicitud.class, configuracionSolicitud.getConvocatoria().getId());
+        ConfiguracionSolicitud.class, configuracionSolicitud.getConvocatoriaId());
 
     // then: ConfiguracionSolicitud is updated
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -117,8 +110,8 @@ public class ConfiguracionSolicitudIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(configuracionSolicitud.getId());
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(configuracionSolicitud.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(configuracionSolicitud.getConvocatoriaId());
     Assertions.assertThat(responseData.getTramitacionSGI()).as("getTramitacionSGI()").isEqualTo(Boolean.FALSE);
     Assertions.assertThat(responseData.getFasePresentacionSolicitudes().getId())
         .as("getFasePresentacionSolicitudes().getId()").isEqualTo(2L);
@@ -142,7 +135,7 @@ public class ConfiguracionSolicitudIT {
     ConfiguracionSolicitud responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(2L);
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(2L);
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getTramitacionSGI()).as("getTramitacionSGI()").isEqualTo(Boolean.FALSE);
     Assertions.assertThat(responseData.getFasePresentacionSolicitudes().getId())
         .as("getFasePresentacionSolicitudes().getId()").isEqualTo(2L);
@@ -205,9 +198,6 @@ public class ConfiguracionSolicitudIT {
    */
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
-
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
@@ -217,7 +207,7 @@ public class ConfiguracionSolicitudIT {
 
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
         .id(convocatoriaFaseId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
@@ -226,7 +216,7 @@ public class ConfiguracionSolicitudIT {
 
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
@@ -237,79 +227,4 @@ public class ConfiguracionSolicitudIT {
     return configuracionSolicitud;
   }
 
-  /**
-   * Función que genera Convocatoria
-   * 
-   * @param convocatoriaId
-   * @param unidadGestionId
-   * @param modeloEjecucionId
-   * @param modeloTipoFinalidadId
-   * @param tipoRegimenConcurrenciaId
-   * @param tipoAmbitoGeogragicoId
-   * @param activo
-   * @return la convocatoria
-   */
-  private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
-      Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
-
-    // @formatter:off
-    ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
-        : ModeloEjecucion.builder()
-            .id(modeloEjecucionId)
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
-            .activo(Boolean.TRUE)
-            .build();
-
-    TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : TipoFinalidad.builder()
-            .id(modeloTipoFinalidadId)
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
-            .activo(Boolean.TRUE)
-            .build();
-
-    ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : ModeloTipoFinalidad.builder()
-            .id(modeloTipoFinalidadId)
-            .modeloEjecucion(modeloEjecucion)
-            .tipoFinalidad(tipoFinalidad)
-            .activo(Boolean.TRUE)
-            .build();
-
-    TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
-        : TipoRegimenConcurrencia.builder()
-            .id(tipoRegimenConcurrenciaId)
-            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))
-            .activo(Boolean.TRUE)
-            .build();
-
-    TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
-        : TipoAmbitoGeografico.builder()
-            .id(tipoAmbitoGeogragicoId)
-            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))
-            .activo(Boolean.TRUE)
-            .build();
-
-    Convocatoria convocatoria = Convocatoria.builder()
-        .id(convocatoriaId)
-        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
-        .modeloEjecucion(modeloEjecucion)
-        .codigo("codigo-" + String.format("%03d", convocatoriaId))
-        .anio(2020)
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
-        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
-        .regimenConcurrencia(tipoRegimenConcurrencia)
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
-        .colaborativos(Boolean.TRUE)
-        .estado(Convocatoria.Estado.REGISTRADA)
-        .duracion(12)
-        .ambitoGeografico(tipoAmbitoGeografico)
-        .clasificacionCVN(ClasificacionCVN.AYUDAS)
-        .activo(activo)
-        .build();
-    // @formatter:on
-
-    return convocatoria;
-  }
 }

@@ -36,16 +36,16 @@ public class RequisitoEquipoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    RequisitoEquipo requisitoEquipo1 = entityManager.persistAndFlush(
-        new RequisitoEquipo(null, convocatoria1, "na-001", 4, 48, 6, false, "mc-001", 2, 10, 10, 15, 15, "otros"));
+    RequisitoEquipo requisitoEquipo1 = entityManager.persistAndFlush(new RequisitoEquipo(null, convocatoria1.getId(),
+        "na-001", 4, 48, 6, false, "mc-001", 2, 10, 10, 15, 15, "otros"));
 
     // @formatter:on
     Convocatoria convocatoria2 = entityManager
         .persistAndFlush(Convocatoria.builder().estado(Convocatoria.Estado.BORRADOR).codigo("codigo-2")
             .unidadGestionRef("OPE").anio(2020).titulo("titulo").activo(Boolean.TRUE).build());
     // @formatter:on
-    entityManager.persistAndFlush(
-        new RequisitoEquipo(null, convocatoria2, "na-001", 4, 48, 6, false, "mc-001", 2, 10, 10, 15, 15, "otros"));
+    entityManager.persistAndFlush(new RequisitoEquipo(null, convocatoria2.getId(), "na-001", 4, 48, 6, false, "mc-001",
+        2, 10, 10, 15, 15, "otros"));
 
     Long convocatoriaIdBuscada = convocatoria1.getId();
 
@@ -77,8 +77,8 @@ public class RequisitoEquipoRepositoryTest {
         .build());
     // @formatter:on
 
-    entityManager.persistAndFlush(
-        new RequisitoEquipo(null, convocatoria1, "na-001", 4, 48, 6, false, "mc-001", 2, 10, 10, 15, 15, "otros"));
+    entityManager.persistAndFlush(new RequisitoEquipo(null, convocatoria1.getId(), "na-001", 4, 48, 6, false, "mc-001",
+        2, 10, 10, 15, 15, "otros"));
 
     // @formatter:off
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
@@ -90,8 +90,8 @@ public class RequisitoEquipoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(
-        new RequisitoEquipo(null, convocatoria2, "na-001", 4, 48, 6, false, "mc-001", 2, 10, 10, 15, 15, "otros"));
+    entityManager.persistAndFlush(new RequisitoEquipo(null, convocatoria2.getId(), "na-001", 4, 48, 6, false, "mc-001",
+        2, 10, 10, 15, 15, "otros"));
 
     Long convocatoriaIdBuscada = 99999L;
 

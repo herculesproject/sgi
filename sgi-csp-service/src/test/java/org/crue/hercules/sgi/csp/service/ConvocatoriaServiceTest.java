@@ -1933,7 +1933,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
       listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
           .id(Long.valueOf(i - 1))
-          .convocatoria(convocatoriaExistente)
+          .convocatoriaId(convocatoriaExistente.getId())
           .numPeriodo(i - 1)
           .mesInicial((i * 2) - 1)
           .mesFinal(j * 1)
@@ -3404,7 +3404,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
         .id(convocatoriaFaseId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
@@ -3413,7 +3413,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))

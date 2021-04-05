@@ -22,16 +22,15 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
   public void findByConvocatoriaId_ReturnsRequisitoIP() throws Exception {
 
     // given: 2 RequisitoIP de los que 1 coincide con el idConvocatoria buscado
-    RequisitoIP requisitoIP1 = generarMockRequisitoIP(1L);
-    entityManager.persistAndFlush(requisitoIP1.getConvocatoria());
+    Convocatoria convocatoria = entityManager.persistAndFlush(generarMockConvocatoria(1L));
+    RequisitoIP requisitoIP1 = generarMockRequisitoIP(1L, convocatoria.getId());
     entityManager.persistAndFlush(requisitoIP1);
 
-    entityManager.persistAndFlush(requisitoIP1.getConvocatoria());
-    RequisitoIP requisitoIP2 = generarMockRequisitoIP(2L);
-    entityManager.persistAndFlush(requisitoIP2.getConvocatoria());
+    Convocatoria convocatoria2 = entityManager.persistAndFlush(generarMockConvocatoria(2L));
+    RequisitoIP requisitoIP2 = generarMockRequisitoIP(2L, convocatoria2.getId());
     entityManager.persistAndFlush(requisitoIP2);
 
-    Long convocatoriaIdBuscada = requisitoIP1.getConvocatoria().getId();
+    Long convocatoriaIdBuscada = convocatoria.getId();
 
     // when: se busca el RequisitoIP por el idConvocatoria
     RequisitoIP requisitoIPEncontrado = repository.findByConvocatoriaId(convocatoriaIdBuscada).get();
@@ -48,13 +47,13 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
   public void findByConvocatoriaNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 RequisitoIP que no coinciden con el idConvocatoria buscado
-    RequisitoIP requisitoIP1 = generarMockRequisitoIP(1L);
-    entityManager.persistAndFlush(requisitoIP1.getConvocatoria());
+    Convocatoria convocatoria = entityManager.persistAndFlush(generarMockConvocatoria(1L));
+    RequisitoIP requisitoIP1 = generarMockRequisitoIP(1L, convocatoria.getId());
     entityManager.persistAndFlush(requisitoIP1);
 
-    RequisitoIP requisitoIP2 = generarMockRequisitoIP(2L);
+    RequisitoIP requisitoIP2 = generarMockRequisitoIP(2L, 2L);
 
-    Long convocatoriaIdBuscada = requisitoIP2.getConvocatoria().getId();
+    Long convocatoriaIdBuscada = requisitoIP2.getConvocatoriaId();
 
     // when: se busca el RequisitoIP por idConvocatoria que no existe
     Optional<RequisitoIP> requisitoIPEncontrado = repository.findByConvocatoriaId(convocatoriaIdBuscada);
@@ -63,27 +62,29 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
     Assertions.assertThat(requisitoIPEncontrado).isEqualTo(Optional.empty());
   }
 
-  /**
-   * Función que devuelve un objeto RequisitoIP
-   * 
-   * @param id identificador
-   * @return el objeto RequisitoIP
-   */
-  private RequisitoIP generarMockRequisitoIP(Long id) {
-
+  private Convocatoria generarMockConvocatoria(Long index) {
     // @formatter:off
     Convocatoria convocatoria = Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
-        .codigo("codigo-00" + id)
+        .codigo("codigo-00" + index)
         .unidadGestionRef("OPE")
         .anio(2020)
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build();
     // @formatter:on
+    return convocatoria;
+  }
 
+  /**
+   * Función que devuelve un objeto RequisitoIP
+   * 
+   * @param id identificador
+   * @return el objeto RequisitoIP
+   */
+  private RequisitoIP generarMockRequisitoIP(Long id, Long convocatoriaId) {
     RequisitoIP requisitoIP = new RequisitoIP();
-    requisitoIP.setConvocatoria(convocatoria);
+    requisitoIP.setConvocatoriaId(convocatoriaId);
     requisitoIP.setSexo("Hombre");
     requisitoIP.setModalidadContratoRef("modalidad-00" + (id != null ? id : 1L));
     requisitoIP.setNivelAcademicoRef("nivel-00" + (id != null ? id : 1L));

@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoDatosNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -19,17 +20,18 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver;
@@ -65,18 +67,20 @@ public class SolicitudServiceImpl implements SolicitudService {
   private final DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository;
   private final SolicitudDocumentoRepository solicitudDocumentoRepository;
   private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
-  private final SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
+  private final SolicitudProyectoRepository solicitudProyectoRepository;
   private final SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
   private final SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
+  private final ConvocatoriaRepository convocatoriaRepository;
 
   public SolicitudServiceImpl(SolicitudRepository repository, EstadoSolicitudRepository estadoSolicitudRepository,
       ConfiguracionSolicitudRepository configuracionSolicitudRepository, ProyectoRepository proyectoRepository,
-      SolicitudProyectoDatosRepository solicitudProyectoDatosRepository,
+      SolicitudProyectoRepository solicitudProyectoRepository,
       DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository,
       SolicitudDocumentoRepository solicitudDocumentoRepository,
       ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
       SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository,
-      SolicitudProyectoSocioRepository solicitudProyectoSocioRepository) {
+      SolicitudProyectoSocioRepository solicitudProyectoSocioRepository,
+      ConvocatoriaRepository convocatoriaRepository) {
     this.repository = repository;
     this.estadoSolicitudRepository = estadoSolicitudRepository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
@@ -84,9 +88,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     this.documentoRequeridoSolicitudRepository = documentoRequeridoSolicitudRepository;
     this.solicitudDocumentoRepository = solicitudDocumentoRepository;
     this.convocatoriaEntidadConvocanteRepository = convocatoriaEntidadConvocanteRepository;
-    this.solicitudProyectoDatosRepository = solicitudProyectoDatosRepository;
+    this.solicitudProyectoRepository = solicitudProyectoRepository;
     this.solicitudProyectoEquipoRepository = solicitudProyectoEquipoRepository;
     this.solicitudProyectoSocioRepository = solicitudProyectoSocioRepository;
+    this.convocatoriaRepository = convocatoriaRepository;
   }
 
   /**
@@ -105,24 +110,23 @@ public class SolicitudServiceImpl implements SolicitudService {
     Assert.isNull(solicitud.getId(), "Solicitud id tiene que ser null para crear una Solicitud");
     Assert.notNull(solicitud.getCreadorRef(), "CreadorRef no puede ser null para crear una Solicitud");
 
-    Assert.isTrue(
-        (solicitud.getConvocatoria() != null && solicitud.getConvocatoria().getId() != null)
-            || solicitud.getConvocatoriaExterna() != null,
+    Assert.isTrue((solicitud.getConvocatoriaId() != null) || solicitud.getConvocatoriaExterna() != null,
         "Convocatoria o Convocatoria externa tienen que ser distinto de null para crear una Solicitud");
 
-    if (solicitud.getConvocatoria() != null && solicitud.getConvocatoria().getId() != null) {
+    if (solicitud.getConvocatoriaId() != null) {
       ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-          .findByConvocatoriaId(solicitud.getConvocatoria().getId())
-          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(solicitud.getConvocatoria().getId()));
+          .findByConvocatoriaId(solicitud.getConvocatoriaId())
+          .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(solicitud.getConvocatoriaId()));
+
+      Convocatoria convocatoria = convocatoriaRepository.findById(configuracionSolicitud.getConvocatoriaId())
+          .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoriaId()));
 
       Assert.isTrue(
           unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef
-                  .equals(configuracionSolicitud.getConvocatoria().getUnidadGestionRef())),
+              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(convocatoria.getUnidadGestionRef())),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
-      solicitud.setConvocatoria(configuracionSolicitud.getConvocatoria());
-      solicitud.setUnidadGestionRef(configuracionSolicitud.getConvocatoria().getUnidadGestionRef());
+      solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
       solicitud.setFormularioSolicitud(configuracionSolicitud.getFormularioSolicitud());
     } else {
       Assert.isTrue(
@@ -167,7 +171,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
 
     Assert.isTrue(
-        solicitud.getConvocatoria() != null
+        solicitud.getConvocatoriaId() != null
             || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()),
         "Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
 
@@ -186,7 +190,7 @@ public class SolicitudServiceImpl implements SolicitudService {
       data.setCodigoExterno(solicitud.getCodigoExterno());
       data.setObservaciones(solicitud.getObservaciones());
 
-      if (null == data.getConvocatoria()) {
+      if (null == data.getConvocatoriaId()) {
         data.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
         if (data.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR) {
           data.setCodigoExterno(solicitud.getCodigoExterno());
@@ -348,7 +352,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     return repository.findById(id).map(solicitud -> {
 
       log.debug("hasConvocatoriaSgi(Long id) - end");
-      return solicitud.getConvocatoria() != null;
+      return solicitud.getConvocatoriaId() != null;
     }).orElseThrow(() -> new SolicitudNotFoundException(id));
   }
 
@@ -373,14 +377,14 @@ public class SolicitudServiceImpl implements SolicitudService {
         "La solicitud no se encuentra en un estado correcto.");
 
     // Existe una convocatoria asociada a la solicitud
-    if (solicitud.getConvocatoria() != null) {
+    if (solicitud.getConvocatoriaId() != null) {
 
       // Se comprueba que la documentación requerida de la configuración de la
       // convocatoria solicitud ha sido adjuntada.
-      Assert.isTrue(hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoria().getId()),
+      Assert.isTrue(hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId()),
           "La solicitud no tiene la documentación requerida asociada.");
 
-      Assert.isTrue(hasModalidadEntidadesConvocantes(solicitud.getConvocatoria().getId()),
+      Assert.isTrue(hasModalidadEntidadesConvocantes(solicitud.getConvocatoriaId()),
           "Las entidades convocantes de la convocatoria deben tener rellenada la modalidad.");
 
     }
@@ -388,26 +392,25 @@ public class SolicitudServiceImpl implements SolicitudService {
     // Si el formulario es de tipo Estándar
     if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
 
-      SolicitudProyectoDatos solicitudProyectoDatos = solicitudProyectoDatosRepository
-          .findBySolicitudId(solicitud.getId())
-          .orElseThrow(() -> new SolicitudProyectoDatosNotFoundException(solicitud.getId()));
+      SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitud.getId())
+          .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitud.getId()));
 
-      Assert.notNull(solicitudProyectoDatos.getTitulo(), "El título de proyecto datos no puede ser null");
-      Assert.notNull(solicitudProyectoDatos.getColaborativo(),
-          "El campo colaborativo de proyecto datos no puede ser null");
+      Assert.notNull(solicitudProyecto.getTitulo(), "El título de la solicitud de proyecto no puede ser null");
+      Assert.notNull(solicitudProyecto.getColaborativo(),
+          "El campo colaborativo de la solicitud de proyecto no puede ser null");
 
       // En caso de ser colaborativo coordinador externo es obligatorio.
-      if (solicitudProyectoDatos.getColaborativo()) {
-        Assert.notNull(solicitudProyectoDatos.getCoordinadorExterno(),
-            "El campo coordinador externo de proyecto datos no puede ser null");
+      if (solicitudProyecto.getColaborativo()) {
+        Assert.notNull(solicitudProyecto.getCoordinadorExterno(),
+            "El campo coordinador externo de la solicitud de proyecto no puede ser null");
       }
 
-      Assert.isTrue(isSolicitanteMiembroEquipo(solicitudProyectoDatos.getId(), solicitud.getSolicitanteRef()),
+      Assert.isTrue(isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef()),
           "El solicitante debe ser miembro del equipo.");
 
-      if (solicitudProyectoDatos.getColaborativo() && solicitudProyectoDatos.getCoordinadorExterno()) {
+      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
         List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
-            .findAllBySolicitudProyectoDatosIdAndRolSocioCoordinadorTrue(solicitudProyectoDatos.getId());
+            .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
         Assert.isTrue(!CollectionUtils.isEmpty(solicitudProyectoSocios),
             "Al menos debe existir un socio con Rol socio coordinador.");
 
@@ -821,9 +824,9 @@ public class SolicitudServiceImpl implements SolicitudService {
       return Boolean.FALSE;
     }
 
-    if (solicitud.getConvocatoria() != null
-        && (!hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoria().getId())
-            || !hasModalidadEntidadesConvocantes(solicitud.getConvocatoria().getId()))) {
+    if (solicitud.getConvocatoriaId() != null
+        && (!hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId())
+            || !hasModalidadEntidadesConvocantes(solicitud.getConvocatoriaId()))) {
       log.debug("cumpleValidacionesPresentada(Long id) - end");
       return Boolean.FALSE;
     }
@@ -831,26 +834,25 @@ public class SolicitudServiceImpl implements SolicitudService {
     // Si el formulario es de tipo Estándar
     if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
 
-      SolicitudProyectoDatos solicitudProyectoDatos = solicitudProyectoDatosRepository
-          .findBySolicitudId(solicitud.getId())
-          .orElseThrow(() -> new SolicitudProyectoDatosNotFoundException(solicitud.getId()));
+      SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitud.getId())
+          .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitud.getId()));
 
       // En caso de que no tenga titulo o sea colaborativo y no tenga coordinador
       // externo releno
-      if (StringUtils.isEmpty(solicitudProyectoDatos.getTitulo())
-          || (solicitudProyectoDatos.getColaborativo() && solicitudProyectoDatos.getCoordinadorExterno() == null)) {
+      if (StringUtils.isEmpty(solicitudProyecto.getTitulo())
+          || (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null)) {
         log.debug("cumpleValidacionesPresentada(Long id) - end");
         return Boolean.FALSE;
       }
 
-      if (!isSolicitanteMiembroEquipo(solicitudProyectoDatos.getId(), solicitud.getSolicitanteRef())) {
+      if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
         log.debug("cumpleValidacionesPresentada(Long id) - end");
         return Boolean.FALSE;
       }
 
-      if (solicitudProyectoDatos.getColaborativo() && solicitudProyectoDatos.getCoordinadorExterno()) {
+      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
         List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
-            .findAllBySolicitudProyectoDatosIdAndRolSocioCoordinadorTrue(solicitudProyectoDatos.getId());
+            .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
         log.debug("cumpleValidacionesPresentada(Long id) - end");
         return !CollectionUtils.isEmpty(solicitudProyectoSocios);
 
@@ -917,16 +919,15 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Comprueba si el solicitante es miembro del equipo.
    * 
-   * @param idSolicitudProyectoDatos Identificador de
-   *                                 {@link SolicitudProyectoDatos}.
-   * @param solicitanteRef           Solicitante ref.
+   * @param idSolicitudProyecto Identificador de {@link SolicitudProyecto}.
+   * @param solicitanteRef      Solicitante ref.
    * @return <code>true</code> El solicitante es miembro del equipo;
    *         <code>false</code>No pertenece al equipo.
    */
-  private Boolean isSolicitanteMiembroEquipo(Long idSolicitudProyectoDatos, String solicitanteRef) {
+  private Boolean isSolicitanteMiembroEquipo(Long idSolicitudProyecto, String solicitanteRef) {
     // El solicitante debe pertenecer al equipo
     List<SolicitudProyectoEquipo> solicitudProyectoEquipos = solicitudProyectoEquipoRepository
-        .findAllBySolicitudProyectoDatosIdAndPersonaRef(idSolicitudProyectoDatos, solicitanteRef);
+        .findAllBySolicitudProyectoIdAndPersonaRef(idSolicitudProyecto, solicitanteRef);
 
     return !CollectionUtils.isEmpty(solicitudProyectoEquipos);
   }
@@ -963,7 +964,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setEstado(estado);
-    estadoSolicitud.setIdSolicitud(solicitud.getId());
+    estadoSolicitud.setSolicitudId(solicitud.getId());
     estadoSolicitud.setComentario(comentario);
     estadoSolicitud.setFechaEstado(Instant.now());
 
@@ -1005,7 +1006,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     }
 
     // Si no hay datos del proyecto en la solicitud, no se podrá crear el proyecto
-    if (posibleCrearProyecto && !solicitudProyectoDatosRepository.existsBySolicitudId(solicitud.getId())) {
+    if (posibleCrearProyecto && !solicitudProyectoRepository.existsBySolicitudId(solicitud.getId())) {
       posibleCrearProyecto = false;
     }
 

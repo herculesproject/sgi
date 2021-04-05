@@ -1,9 +1,9 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,14 +14,14 @@ public interface CustomSolicitudProyectoSocioRepository {
 
   /**
    * Indica si {@link SolicitudProyectoSocio} tiene
-   * {@link SolicitudProyectoPeriodoJustificacion},
-   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
-   * relacionadas.
+   * {@link SolicitudProyectoSocioPeriodoJustificacion},
+   * {@link SolicitudProyectoSocioPeriodoPago} y/o
+   * {@link SolicitudProyectoSocioEquipo} relacionadas.
    *
    * @param id Id de la {@link SolicitudProyectoSocio}.
-   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
-   *         {@link SolicitudProyectoPeriodoPago} y/o
-   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   * @return True si tiene {@link SolicitudProyectoSocioPeriodoJustificacion},
+   *         {@link SolicitudProyectoSocioPeriodoPago} y/o
+   *         {@link SolicitudProyectoSocioEquipo} relacionadas. En caso contrario
    *         false
    */
   Boolean vinculaciones(Long id);

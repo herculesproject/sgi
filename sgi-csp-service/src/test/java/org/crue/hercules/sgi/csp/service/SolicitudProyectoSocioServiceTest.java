@@ -9,12 +9,10 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacionRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioServiceImpl;
@@ -46,13 +44,13 @@ public class SolicitudProyectoSocioServiceTest {
   private SolicitudRepository solicitudRepository;
 
   @Mock
-  private SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository;
+  private SolicitudProyectoSocioPeriodoPagoRepository solicitudProyectoSocioPeriodoPagoRepository;
 
   @Mock
-  private SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository;
+  private SolicitudProyectoSocioEquipoRepository solicitudProyectoEquipoSocioRepository;
 
   @Mock
-  private SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository;
+  private SolicitudProyectoSocioPeriodoJustificacionRepository solicitudProyectoSocioPeriodoJustificacionRepository;
 
   @Mock
   private SolicitudService solicitudService;
@@ -62,8 +60,8 @@ public class SolicitudProyectoSocioServiceTest {
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudProyectoSocioServiceImpl(repository, solicitudRepository,
-        solicitudProyectoEquipoSocioRepository, solicitudProyectoPeriodoPagoRepository,
-        solicitudProyectoPeriodoJustificacionRepository, solicitudService);
+        solicitudProyectoEquipoSocioRepository, solicitudProyectoSocioPeriodoPagoRepository,
+        solicitudProyectoSocioPeriodoJustificacionRepository, solicitudService);
   }
 
   @Test
@@ -89,9 +87,8 @@ public class SolicitudProyectoSocioServiceTest {
     // then: El SolicitudProyectoSocio se crea correctamente
     Assertions.assertThat(solicitudProyectoSocioCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudProyectoSocioCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(solicitudProyectoSocioCreado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoSocio.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoSocioCreado.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(solicitudProyectoSocio.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoSocioCreado.getRolSocio().getId()).as("getRolSocio().getId()")
         .isEqualTo(solicitudProyectoSocio.getRolSocio().getId());
     Assertions.assertThat(solicitudProyectoSocioCreado.getMesInicio()).as("getMesInicio()")
@@ -117,14 +114,14 @@ public class SolicitudProyectoSocioServiceTest {
   }
 
   @Test
-  public void create_WithoutSolicitudProyectoDatosId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo SolicitudProyectoSocio que no tiene solicitud proyecto datos
+  public void create_WithoutSolicitudProyectoId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo SolicitudProyectoSocio que no tiene solicitud de proyecto
     SolicitudProyectoSocio solicitudProyectoSocio = generarSolicitudProyectoSocio(null, 1L, 1L);
 
-    solicitudProyectoSocio.setSolicitudProyectoDatos(null);
+    solicitudProyectoSocio.setSolicitudProyectoId(null);
 
     // when: Creamos el SolicitudProyectoSocio
-    // then: Lanza una excepcion porque no tiene solicitud proyecto datos
+    // then: Lanza una excepcion porque no tiene solicitud de proyecto
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Proyecto datos no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
@@ -231,15 +228,15 @@ public class SolicitudProyectoSocioServiceTest {
   }
 
   @Test
-  public void update_WithoutSolicitudProyectoDatosId_ThrowsIllegalArgumentException() {
+  public void update_WithoutSolicitudProyectoId_ThrowsIllegalArgumentException() {
     // given: Actualizar SolicitudProyectoSocio que no tiene solicitud proyecto
     // datos
     SolicitudProyectoSocio solicitudProyectoSocio = generarSolicitudProyectoSocio(1L, 1L, 1L);
 
-    solicitudProyectoSocio.setSolicitudProyectoDatos(null);
+    solicitudProyectoSocio.setSolicitudProyectoId(null);
 
     // when: Actualizamos el SolicitudProyectoSocio
-    // then: Lanza una excepcion porque no tiene solicitud proyecto datos
+    // then: Lanza una excepcion porque no tiene solicitud de proyecto
     Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Proyecto datos no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
@@ -388,17 +385,15 @@ public class SolicitudProyectoSocioServiceTest {
    * Función que devuelve un objeto SolicitudProyectoSocio
    * 
    * @param solicitudProyectoSocioId
-   * @param solicitudProyectoDatosId
+   * @param solicitudProyectoId
    * @return el objeto SolicitudProyectoSocio
    */
-  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId,
-      Long solicitudProyectoDatosId, Long rolSocioId) {
+  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId, Long solicitudProyectoId,
+      Long rolSocioId) {
 
     SolicitudProyectoSocio solicitudProyectoSocio = SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
-            .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
-        .rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1).mesFin(3).numInvestigadores(2)
-        .importeSolicitado(new BigDecimal("335")).empresaRef("002").build();
+        .solicitudProyectoId(solicitudProyectoId).rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1)
+        .mesFin(3).numInvestigadores(2).importeSolicitado(new BigDecimal("335")).empresaRef("002").build();
 
     return solicitudProyectoSocio;
   }

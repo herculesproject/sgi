@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.RequisitoIPNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.service.RequisitoIPService;
 import org.junit.jupiter.api.Test;
@@ -88,7 +87,7 @@ public class RequisitoIPControllerTest extends BaseControllerTest {
     // when: update RequisitoIP
     mockMvc
         .perform(MockMvcRequestBuilders
-            .put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, requisitoIPExistente.getConvocatoria().getId())
+            .put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, requisitoIPExistente.getConvocatoriaId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(requisitoIP)))
         .andDo(MockMvcResultHandlers.print())
@@ -177,7 +176,7 @@ public class RequisitoIPControllerTest extends BaseControllerTest {
   private RequisitoIP generarMockRequisitoIP(Long id) {
     RequisitoIP requisitoIP = new RequisitoIP();
     requisitoIP.setId(id);
-    requisitoIP.setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    requisitoIP.setConvocatoriaId(id);
     requisitoIP.setSexo("Hombre");
     return requisitoIP;
   }

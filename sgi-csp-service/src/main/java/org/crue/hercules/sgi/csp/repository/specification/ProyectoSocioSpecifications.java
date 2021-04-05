@@ -7,7 +7,6 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio_;
-import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.RolSocio_;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -30,9 +29,9 @@ public class ProyectoSocioSpecifications {
    * @param proyectoId el id del {@link Proyecto}.
    * @return specification para obtener los {@link ProyectoSocio} del proyecto.
    */
-  public static Specification<ProyectoSocio> byProyecto(Long proyectoId) {
+  public static Specification<ProyectoSocio> byProyectoId(Long proyectoId) {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ProyectoSocio_.proyecto).get(Proyecto_.id), proyectoId);
+      return cb.equal(root.get(ProyectoSocio_.proyectoId), proyectoId);
     };
   }
 

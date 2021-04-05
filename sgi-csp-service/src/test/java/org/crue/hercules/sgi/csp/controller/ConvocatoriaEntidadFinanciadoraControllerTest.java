@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -61,8 +60,8 @@ public class ConvocatoriaEntidadFinanciadoraControllerTest extends BaseControlle
         // then: new ConvocatoriaEntidadFinanciadora is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaEntidadFinanciadora.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaEntidadFinanciadora.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value(convocatoriaEntidadFinanciadora.getEntidadRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("fuenteFinanciacion.id")
             .value(convocatoriaEntidadFinanciadora.getFuenteFinanciacion().getId()))
@@ -115,8 +114,8 @@ public class ConvocatoriaEntidadFinanciadoraControllerTest extends BaseControlle
         // then: ConvocatoriaEntidadFinanciadora is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoriaEntidadFinanciadoraExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaEntidadFinanciadoraExistente.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId")
+            .value(convocatoriaEntidadFinanciadoraExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef")
             .value(convocatoriaEntidadFinanciadoraExistente.getEntidadRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("fuenteFinanciacion.id")
@@ -201,7 +200,7 @@ public class ConvocatoriaEntidadFinanciadoraControllerTest extends BaseControlle
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ConvocatoriaEntidadFinanciadora is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value("entidad-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("fuenteFinanciacion.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFinanciacion.id").value(1L))
@@ -232,9 +231,6 @@ public class ConvocatoriaEntidadFinanciadoraControllerTest extends BaseControlle
    * @return el objeto ConvocatoriaEntidadFinanciadora
    */
   private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
     fuenteFinanciacion.setId(id == null ? 1 : id);
     fuenteFinanciacion.setActivo(true);
@@ -248,7 +244,7 @@ public class ConvocatoriaEntidadFinanciadoraControllerTest extends BaseControlle
 
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = new ConvocatoriaEntidadFinanciadora();
     convocatoriaEntidadFinanciadora.setId(id);
-    convocatoriaEntidadFinanciadora.setConvocatoria(convocatoria);
+    convocatoriaEntidadFinanciadora.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
     convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);

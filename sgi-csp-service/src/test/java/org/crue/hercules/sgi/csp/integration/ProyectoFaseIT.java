@@ -41,7 +41,7 @@ public class ProyectoFaseIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_ejecucion.sql", "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -58,8 +58,8 @@ public class ProyectoFaseIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ProyectoFase responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(newProyectoFase.getProyecto().getId());
+    Assertions.assertThat(responseData.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(newProyectoFase.getProyectoId());
     Assertions.assertThat(responseData.getTipoFase().getId()).as("getTipoFase().getId()")
         .isEqualTo(newProyectoFase.getTipoFase().getId());
 
@@ -68,7 +68,7 @@ public class ProyectoFaseIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_ejecucion.sql", "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -85,8 +85,8 @@ public class ProyectoFaseIT extends BaseIT {
     ProyectoFase proyectoFaseActualizado = response.getBody();
     Assertions.assertThat(proyectoFaseActualizado.getId()).as("getId()").isNotNull();
 
-    Assertions.assertThat(proyectoFaseActualizado.getProyecto().getId()).as("getProyecto()")
-        .isEqualTo(proyectoFase.getProyecto().getId());
+    Assertions.assertThat(proyectoFaseActualizado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoFase.getProyectoId());
     Assertions.assertThat(proyectoFaseActualizado.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(proyectoFase.getFechaInicio());
     Assertions.assertThat(proyectoFaseActualizado.getFechaFin()).as("getFechaFin()")
@@ -101,7 +101,7 @@ public class ProyectoFaseIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_ejecucion.sql", "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -117,7 +117,7 @@ public class ProyectoFaseIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_ejecucion.sql", "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -146,7 +146,7 @@ public class ProyectoFaseIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_ejecucion.sql", "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql", "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto.sql", "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/proyecto_fase.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -161,7 +161,7 @@ public class ProyectoFaseIT extends BaseIT {
     ProyectoFase proyectoFase = response.getBody();
     Assertions.assertThat(proyectoFase.getId()).as("getId()").isNotNull();
     Assertions.assertThat(proyectoFase.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(1L);
-    Assertions.assertThat(proyectoFase.getProyecto().getId()).as("getProyecto().getId()").isEqualTo(1L);
+    Assertions.assertThat(proyectoFase.getProyectoId()).as("getProyectoId()").isEqualTo(1L);
     Assertions.assertThat(proyectoFase.getObservaciones()).as("observaciones")
         .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", idProyectoFase));
     Assertions.assertThat(proyectoFase.getFechaInicio()).as("getFechaInicio()")
@@ -185,7 +185,7 @@ public class ProyectoFaseIT extends BaseIT {
     return ProyectoFase.builder()
         .id(id)
         .tipoFase(TipoFase.builder().id(tipoFaseId).build())
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-20T00:00:00Z"))
         .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))

@@ -51,10 +51,11 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsConvocatoriaAreaTematica() {
     // given: new ConvocatoriaAreaTematica
-    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
@@ -81,8 +82,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     // then: new ConvocatoriaAreaTematica is created
     Assertions.assertThat(createdConvocatoriaAreaTematica).isNotNull();
     Assertions.assertThat(createdConvocatoriaAreaTematica.getId()).isNotNull();
-    Assertions.assertThat(createdConvocatoriaAreaTematica.getConvocatoria().getId())
-        .isEqualTo(newConvocatoriaAreaTematica.getConvocatoria().getId());
+    Assertions.assertThat(createdConvocatoriaAreaTematica.getConvocatoriaId())
+        .isEqualTo(newConvocatoriaAreaTematica.getConvocatoriaId());
     Assertions.assertThat(createdConvocatoriaAreaTematica.getAreaTematica().getId())
         .isEqualTo(newConvocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(createdConvocatoriaAreaTematica.getObservaciones())
@@ -145,10 +146,11 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   @Test
   public void create_WithNoExistingAreaTematica_404() {
     // given: a ConvocatoriaAreaTematica with non existing AreaTematica
-    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
@@ -164,11 +166,13 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   public void create_WithDuplicatedConvocatoriaIdAndAreaTematicaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaAreaTematica assigned with same
     // Convocatoria And EntidadRef
-    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
-    ConvocatoriaAreaTematica ConvocatoriaAreaTematicaExistente = generarConvocatoriaAreaTematica(1L, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
+    ConvocatoriaAreaTematica ConvocatoriaAreaTematicaExistente = generarConvocatoriaAreaTematica(1L, convocatoriaId,
+        1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
@@ -189,10 +193,11 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   @Test
   public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaAreaTematica when modificable returns False
-    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
@@ -231,8 +236,7 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated).isNotNull();
     Assertions.assertThat(updated.getId()).isNotNull();
     Assertions.assertThat(updated.getId()).isEqualTo(convocatoriaAreaTematica.getId());
-    Assertions.assertThat(updated.getConvocatoria().getId())
-        .isEqualTo(convocatoriaAreaTematica.getConvocatoria().getId());
+    Assertions.assertThat(updated.getConvocatoriaId()).isEqualTo(convocatoriaAreaTematica.getConvocatoriaId());
     Assertions.assertThat(updated.getAreaTematica().getId())
         .isEqualTo(convocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(updated.getObservaciones()).isEqualTo("observaciones-modificadas");
@@ -364,8 +368,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaAreaTematica).isNotNull();
     Assertions.assertThat(convocatoriaAreaTematica.getId()).isNotNull();
     Assertions.assertThat(convocatoriaAreaTematica.getId()).isEqualTo(convocatoriaAreaTematica.getId());
-    Assertions.assertThat(convocatoriaAreaTematica.getConvocatoria().getId())
-        .isEqualTo(convocatoriaAreaTematica.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaAreaTematica.getConvocatoriaId())
+        .isEqualTo(convocatoriaAreaTematica.getConvocatoriaId());
     Assertions.assertThat(convocatoriaAreaTematica.getAreaTematica().getId())
         .isEqualTo(convocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(convocatoriaAreaTematica.getObservaciones())
@@ -426,10 +430,14 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
       ConvocatoriaAreaTematica ConvocatoriaAreaTematica = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(ConvocatoriaAreaTematica.getId()).isEqualTo(Long.valueOf(i));
-      Assertions.assertThat(ConvocatoriaAreaTematica.getConvocatoria().getId()).isEqualTo(convocatoriaId);
+      Assertions.assertThat(ConvocatoriaAreaTematica.getConvocatoriaId()).isEqualTo(convocatoriaId);
       Assertions.assertThat(ConvocatoriaAreaTematica.getAreaTematica().getId()).isEqualTo(i);
       Assertions.assertThat(ConvocatoriaAreaTematica.getObservaciones()).isEqualTo("observaciones-" + i);
     }
+  }
+
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    return Convocatoria.builder().id(convocatoriaId).build();
   }
 
   /**
@@ -443,8 +451,7 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   private ConvocatoriaAreaTematica generarConvocatoriaAreaTematica(Long convocatoriaAreaTematicaId, Long convocatoriaId,
       Long areaTematicaId) {
 
-    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
+    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId).convocatoriaId(convocatoriaId)
         .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }

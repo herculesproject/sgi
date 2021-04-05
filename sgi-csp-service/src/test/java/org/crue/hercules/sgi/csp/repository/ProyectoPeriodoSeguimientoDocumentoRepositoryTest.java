@@ -52,13 +52,13 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
     entityManager.persistAndFlush(proyecto2);
 
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento.builder()
-        .proyecto(proyecto1).numPeriodo(1).fechaInicio(Instant.now().plus(Period.ofDays(1)))
+        .proyectoId(proyecto1.getId()).numPeriodo(1).fechaInicio(Instant.now().plus(Period.ofDays(1)))
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1)))).build();
 
     entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
 
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = ProyectoPeriodoSeguimientoDocumento
-        .builder().proyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoCientifico).documentoRef("doc-1")
+        .builder().proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoCientifico.getId()).documentoRef("doc-1")
         .nombre("nombre-1").build();
 
     entityManager.persistAndFlush(proyectoPeriodoSeguimientoDocumento);
@@ -101,7 +101,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
       // @formatter:off
       ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
           .builder()
-          .proyecto((i % 2 == 0) ? proyecto2 : proyecto1)
+          .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
           .fechaInicio(Instant.now().plus(Period.ofDays(i - 1)))
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
@@ -111,7 +111,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
 
       ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = ProyectoPeriodoSeguimientoDocumento
           .builder()
-          .proyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoCientifico)
+          .proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoCientifico.getId())
           .documentoRef("doc-" + i)
           .nombre("nombre-" + i)
           .build();
@@ -161,7 +161,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
       // @formatter:off
       ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
           .builder()
-          .proyecto((i % 2 == 0) ? proyecto2 : proyecto1)
+          .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
           .fechaInicio(Instant.now().plus(Period.ofDays(i - 1)))
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
@@ -171,7 +171,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
 
       ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = ProyectoPeriodoSeguimientoDocumento
           .builder()
-          .proyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoCientifico)
+          .proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoCientifico.getId())
           .documentoRef("doc-" + i)
           .nombre("nombre-" + i)
           .build();

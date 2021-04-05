@@ -1,13 +1,15 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de ConvocatoriaConceptoGasto.
@@ -52,8 +55,8 @@ public class ConvocatoriaConceptoGastoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaConceptoGasto responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaConceptoGasto.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaConceptoGasto.getConvocatoriaId());
     Assertions.assertThat(responseData.getConceptoGasto().getId()).as("getConceptoGasto().getId()")
         .isEqualTo(newConvocatoriaConceptoGasto.getConceptoGasto().getId());
 
@@ -76,8 +79,8 @@ public class ConvocatoriaConceptoGastoIT extends BaseIT {
     ConvocatoriaConceptoGasto convocatoriaConceptoGastoActualizado = response.getBody();
     Assertions.assertThat(convocatoriaConceptoGastoActualizado.getId()).as("getId()").isNotNull();
 
-    Assertions.assertThat(convocatoriaConceptoGastoActualizado.getConvocatoria().getId()).as("getConvocatoria()")
-        .isEqualTo(convocatoriaConceptoGasto.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaConceptoGastoActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaConceptoGasto.getConvocatoriaId());
     Assertions.assertThat(convocatoriaConceptoGastoActualizado.getConceptoGasto().getId())
         .as("getConceptoGasto().getId()").isEqualTo(convocatoriaConceptoGasto.getConceptoGasto().getId());
 
@@ -110,8 +113,43 @@ public class ConvocatoriaConceptoGastoIT extends BaseIT {
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = response.getBody();
     Assertions.assertThat(convocatoriaConceptoGasto.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaConceptoGasto.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(convocatoriaConceptoGasto.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoSubList() throws Exception {
+
+    // given: data for Convocatoria
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,desc";
+    String filter = "permitido==true";
+
+    // when: find Convocatoria
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+    final ResponseEntity<List<ConvocatoriaConceptoGasto>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaConceptoGasto>>() {
+        });
+
+    // given: Convocatoria data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaConceptoGasto> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("4");
+
+    Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId())").isEqualTo(6);
+    Assertions.assertThat(responseData.get(1).getId()).as("get(1).getId())").isEqualTo(4);
+    Assertions.assertThat(responseData.get(2).getId()).as("get(2).getId())").isEqualTo(2);
   }
 
   /**
@@ -122,10 +160,6 @@ public class ConvocatoriaConceptoGastoIT extends BaseIT {
    * @return el objeto ConvocatoriaConceptoGasto
    */
   private ConvocatoriaConceptoGasto generarMockConvocatoriaConceptoGasto(Long id, Boolean permitido) {
-
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id == null ? 1 : id);
     conceptoGasto.setActivo(true);
@@ -134,7 +168,7 @@ public class ConvocatoriaConceptoGastoIT extends BaseIT {
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
     convocatoriaConceptoGasto.setId(id);
-    convocatoriaConceptoGasto.setConvocatoria(convocatoria);
+    convocatoriaConceptoGasto.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
     convocatoriaConceptoGasto.setPermitido(permitido);
 

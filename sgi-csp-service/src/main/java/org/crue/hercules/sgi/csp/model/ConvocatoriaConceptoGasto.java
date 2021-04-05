@@ -1,24 +1,33 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * ConvocatoriaConceptoGasto
@@ -46,11 +55,10 @@ public class ConvocatoriaConceptoGasto extends BaseEntity {
   @SequenceGenerator(name = "convocatoria_concepto_gasto_seq", sequenceName = "convocatoria_concepto_gasto_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA"))
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
   @NotNull
-  private Convocatoria convocatoria;
+  private Long convocatoriaId;
 
   /** ConceptoGasto */
   @ManyToOne
@@ -86,5 +94,18 @@ public class ConvocatoriaConceptoGasto extends BaseEntity {
   @Column(name = "porcentaje_coste_indirecto", nullable = true)
   @Min(0)
   private Integer porcentajeCosteIndirecto;
+
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoriaConceptoGasto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @JsonIgnore
+  private final List<ConvocatoriaConceptoGastoCodigoEc> codigosEc = null;
 
 }

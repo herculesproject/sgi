@@ -6,14 +6,13 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -86,8 +85,8 @@ public class SolicitudIT {
         .isEqualTo(solicitud.getCodigoExterno());
     Assertions.assertThat(solicitudCreado.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()").isNotNull();
     Assertions.assertThat(solicitudCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
-    Assertions.assertThat(solicitudCreado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(solicitud.getConvocatoria().getId());
+    Assertions.assertThat(solicitudCreado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(solicitud.getConvocatoriaId());
     Assertions.assertThat(solicitudCreado.getCreadorRef()).as("getCreadorRef()").isNotNull();
     Assertions.assertThat(solicitudCreado.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(solicitud.getSolicitanteRef());
@@ -121,8 +120,8 @@ public class SolicitudIT {
         .isEqualTo(solicitud.getCodigoRegistroInterno());
     Assertions.assertThat(solicitudActualizado.getEstado().getId()).as("getEstado().getId()")
         .isEqualTo(solicitud.getEstado().getId());
-    Assertions.assertThat(solicitudActualizado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(solicitud.getConvocatoria().getId());
+    Assertions.assertThat(solicitudActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(solicitud.getConvocatoriaId());
     Assertions.assertThat(solicitudActualizado.getCreadorRef()).as("getCreadorRef()")
         .isEqualTo(solicitud.getCreadorRef());
     Assertions.assertThat(solicitudActualizado.getSolicitanteRef()).as("getSolicitanteRef()")
@@ -186,7 +185,7 @@ public class SolicitudIT {
     Assertions.assertThat(solicitud.getCodigoRegistroInterno()).as("getCodigoRegistroInterno()")
         .isEqualTo("SGI_SLC1202011061027");
     Assertions.assertThat(solicitud.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
-    Assertions.assertThat(solicitud.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1);
+    Assertions.assertThat(solicitud.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1);
     Assertions.assertThat(solicitud.getCreadorRef()).as("getCreadorRef()").isEqualTo("usr-001");
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
     Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones 1");
@@ -430,19 +429,16 @@ public class SolicitudIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findSolicitudProyectoDatos_ReturnsSolicitudProyectoDatosSubList() throws Exception {
+  public void findSolicitudProyecto_ReturnsSolicitudProyectoSubList() throws Exception {
     Long idSolicitud = 1L;
 
-    final ResponseEntity<SolicitudProyectoDatos> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", HttpMethod.GET, buildRequest(null, null),
-        SolicitudProyectoDatos.class, idSolicitud);
+    final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.GET, buildRequest(null, null),
+        SolicitudProyecto.class, idSolicitud);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    SolicitudProyectoDatos solicitudProyectoDatos = response.getBody();
-    Assertions.assertThat(solicitudProyectoDatos.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(idSolicitud);
-    Assertions.assertThat(solicitudProyectoDatos.getTitulo()).as("getTitulo()").isEqualTo("titulo-1");
-
+    SolicitudProyecto solicitudProyecto = response.getBody();
+    Assertions.assertThat(solicitudProyecto.getTitulo()).as("getTitulo()").isEqualTo("titulo-1");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -453,9 +449,9 @@ public class SolicitudIT {
     Long id = 1L;
 
     // when: check exist solicitud datos proyecto
-    final ResponseEntity<SolicitudProyectoDatos> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", HttpMethod.HEAD, buildRequest(null, null),
-        SolicitudProyectoDatos.class, id);
+    final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.HEAD, buildRequest(null, null),
+        SolicitudProyecto.class, id);
 
     // then: Response is 200 OK
     Assertions.assertThat(response).isNotNull();
@@ -471,9 +467,9 @@ public class SolicitudIT {
     Long id = 1L;
 
     // when: check exist solicitud datos proyecto
-    final ResponseEntity<SolicitudProyectoDatos> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", HttpMethod.HEAD, buildRequest(null, null),
-        SolicitudProyectoDatos.class, id);
+    final ResponseEntity<SolicitudProyecto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", HttpMethod.HEAD, buildRequest(null, null),
+        SolicitudProyecto.class, id);
 
     // then: Response is 204 No Content
     Assertions.assertThat(response).isNotNull();
@@ -574,9 +570,9 @@ public class SolicitudIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud.sql",
-    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
@@ -632,13 +628,10 @@ public class SolicitudIT {
     Programa programa = new Programa();
     programa.setId(1L);
 
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(1L);
-
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setCodigoExterno(null);
-    solicitud.setConvocatoria(convocatoria);
+    solicitud.setConvocatoriaId(1L);
     solicitud.setSolicitanteRef("usr-002");
     solicitud.setObservaciones("observaciones");
     solicitud.setConvocatoriaExterna(null);

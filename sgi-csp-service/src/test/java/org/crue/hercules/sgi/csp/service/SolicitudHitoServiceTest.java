@@ -61,10 +61,9 @@ public class SolicitudHitoServiceTest {
   public void create_WithConvocatoria_ReturnsSolicitudHito() {
     // given: Un nuevo SolicitudHito
     SolicitudHito solicitudHito = generarSolicitudHito(null, 1L, 1L);
-    ;
+    Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudHito.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(tipoHitoRepository.findById(1L)).willReturn(Optional.of(solicitudHito.getTipoHito()));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudHito>any())).will((InvocationOnMock invocation) -> {
@@ -106,8 +105,7 @@ public class SolicitudHitoServiceTest {
     // given: Un nuevo SolicitudHito que no tiene solicitud
     SolicitudHito solicitudHito = generarSolicitudHito(null, 1L, 1L);
 
-    solicitudHito.setSolicitud(null);
-    ;
+    solicitudHito.setSolicitudId(null);
 
     // when: Creamos el SolicitudHito
     // then: Lanza una excepcion porque no tiene solicitud
@@ -157,9 +155,9 @@ public class SolicitudHitoServiceTest {
   public void create_WithNoExistingTipoHito_ThrowsTipoHitoNotFoundException() {
     // given: Un nuevo SolicitudHito que tiene un tipo hito que no existe
     SolicitudHito solicitudHito = generarSolicitudHito(null, 1L, 1L);
+    Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudHito.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(tipoHitoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     // when: Creamos el SolicitudHito
@@ -190,13 +188,13 @@ public class SolicitudHitoServiceTest {
   public void update_ReturnsSolicitudHito() {
     // given: Un nuevo SolicitudHito con los comentarios actualizados
     SolicitudHito solicitudHito = generarSolicitudHito(3L, 1L, 1L);
+    Solicitud solicitud = generarMockSolicitud(1L);
 
     SolicitudHito solicitudComentarioActualizado = generarSolicitudHito(3L, 1L, 1L);
 
     solicitudComentarioActualizado.setComentario("comentario-actualizado");
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudComentarioActualizado.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(tipoHitoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudHito.getTipoHito()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitudHito));
@@ -234,9 +232,9 @@ public class SolicitudHitoServiceTest {
   public void update_WithTipoHitoNotExist_ThrowsTipoHitoNotFoundException() {
     // given: Un SolicitudHito actualizado con un tipo hito que no existe
     SolicitudHito solicitudHito = generarSolicitudHito(1L, 1L, 1L);
+    Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudHito.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(tipoHitoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     // when: Actualizamos el SolicitudHito
@@ -249,9 +247,9 @@ public class SolicitudHitoServiceTest {
   public void update_WithIdNotExist_ThrowsSolicitudHitoNotFoundException() {
     // given: Un SolicitudHito actualizado con un id que no existe
     SolicitudHito solicitudHito = generarSolicitudHito(1L, 1L, 1L);
+    Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudHito.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(tipoHitoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudHito.getTipoHito()));
 
@@ -375,6 +373,13 @@ public class SolicitudHitoServiceTest {
     }
   }
 
+  private Solicitud generarMockSolicitud(Long solicitudId) {
+    Solicitud solicitud = Solicitud.builder().id(solicitudId).build();
+    solicitud.setEstado(new EstadoSolicitud());
+    solicitud.getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
+    return solicitud;
+  }
+
   /**
    * Función que devuelve un objeto SolicitudHito
    * 
@@ -385,13 +390,10 @@ public class SolicitudHitoServiceTest {
    */
   private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
 
-    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
-        .build();
+    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId).solicitudId(solicitudId)
+        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now()).generaAviso(Boolean.TRUE)
+        .tipoHito(TipoHito.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 

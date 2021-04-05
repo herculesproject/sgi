@@ -42,13 +42,15 @@ INSERT INTO csp.programa (id, nombre, descripcion, programa_padre_id, activo) VA
 INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (1, 1, 'entidad-001', 1);
 INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (2, 1, 'entidad-002', 1);
 
-
--- ESTADO SOLICITUD
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
-
 -- SOLICITUD
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (1, null, 'SGI_SLC1202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'ESTANDAR', true);
+ VALUES (1, null, 'SGI_SLC1202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'ESTANDAR', true);
+
+-- ESTADO SOLICITUD
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
+
+-- UPDATE SOLICITUD
+UPDATE csp.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
 
 -- TIPO HITO
 INSERT INTO csp.tipo_Hito (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);

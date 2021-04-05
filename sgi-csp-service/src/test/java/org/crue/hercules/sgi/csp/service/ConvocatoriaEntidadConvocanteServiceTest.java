@@ -52,10 +52,12 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsConvocatoriaEntidadConvocante() {
     // given: Un nuevo ConvocatoriaEntidadConvocante
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null,
+        convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(programaRepository.findById(ArgumentMatchers.anyLong()))
@@ -76,8 +78,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     // then: El ConvocatoriaEntidadConvocante se crea correctamente
     Assertions.assertThat(convocatoriaEntidadConvocanteCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEntidadConvocanteCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaEntidadConvocanteCreado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaEntidadConvocante.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEntidadConvocanteCreado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEntidadConvocante.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEntidadConvocanteCreado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(convocatoriaEntidadConvocante.getEntidadRef());
     Assertions.assertThat(convocatoriaEntidadConvocanteCreado.getPrograma().getId()).as("getPrograma().getId()")
@@ -87,7 +89,9 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEntidadConvocante que ya tiene id
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
 
     // when: Creamos el ConvocatoriaEntidadConvocante
     // then: Lanza una excepcion porque el ConvocatoriaEntidadConvocante ya tiene id
@@ -99,8 +103,7 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante without ConvocatoriaId
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null);
-    convocatoriaEntidadConvocante.getConvocatoria().setId(null);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null, null);
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaEntidadGestora
@@ -113,7 +116,9 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
     // given: a ConvocatoriaEntidadGestora with non existing Convocatoria
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null,
+        convocatoriaId);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -128,11 +133,14 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   public void create_WithDuplicatedConvocatoriaIdAndEntidadRef_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante assigned with same Convocatoria And
     // EntidadRef
-    ConvocatoriaEntidadConvocante newConvocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null);
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteExistente = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadConvocante newConvocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null,
+        convocatoriaId);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteExistente = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito
@@ -151,10 +159,12 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_WithNoExistingPrograma_404() {
     // given: a ConvocatoriaEntidadGestora with non existing Programa
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null,
+        convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito
@@ -172,11 +182,13 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_WithProgramaActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadGestora with non existing Programa
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(null,
+        convocatoriaId);
     convocatoriaEntidadConvocante.getPrograma().setActivo(false);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito
@@ -195,12 +207,14 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante when modificable returns false
-    ConvocatoriaEntidadConvocante newConvocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadConvocante newConvocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
     newConvocatoriaEntidadConvocante.setId(null);
-    newConvocatoriaEntidadConvocante.getConvocatoria().setEstado(Convocatoria.Estado.REGISTRADA);
+    convocatoria.setEstado(Convocatoria.Estado.REGISTRADA);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaEntidadConvocante.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
@@ -216,9 +230,11 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void update_ReturnsConvocatoriaEntidadConvocante() {
     // given: Un nuevo ConvocatoriaEntidadConvocante con el nombre actualizado
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteProgramaActualizado = generarMockConvocatoriaEntidadConvocante(
-        1L);
+        1L, convocatoriaId);
     convocatoriaEntidadConvocanteProgramaActualizado.setPrograma(new Programa(2L, null, null, null, null));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -244,8 +260,8 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaEntidadConvocanteActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getId()).as("getId()")
         .isEqualTo(convocatoriaEntidadConvocante.getId());
-    Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaEntidadConvocante.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEntidadConvocante.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(convocatoriaEntidadConvocante.getEntidadRef());
     Assertions.assertThat(convocatoriaEntidadConvocanteProgramaActualizado.getPrograma().getId())
@@ -255,7 +271,9 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void update_WithIdNotExist_ThrowsConvocatoriaEntidadConvocanteNotFoundException() {
     // given: Un ConvocatoriaEntidadConvocante a actualizar con un id que no existe
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
@@ -269,8 +287,11 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   public void update_WithDuplicatedConvocatoriaIdAndEntidadRef_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante assigned with same Convocatoria And
     // EntidadRef
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteExistente = generarMockConvocatoriaEntidadConvocante(2L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteExistente = generarMockConvocatoriaEntidadConvocante(2L,
+        convocatoriaId);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
@@ -292,7 +313,9 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void update_WithNoExistingPrograma_404() {
     // given: a ConvocatoriaEntidadConvocante with non existing Programa
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
@@ -313,10 +336,12 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void update_WithProgramaActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante with non existing Programa
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteActualizado = generarMockConvocatoriaEntidadConvocante(
-        1L);
+        1L, convocatoriaId);
     convocatoriaEntidadConvocanteActualizado.getPrograma().setId(2L);
     convocatoriaEntidadConvocanteActualizado.getPrograma().setActivo(false);
 
@@ -343,8 +368,11 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   @Test
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadConvocante when modificable returns false
-    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
-    convocatoriaEntidadConvocante.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L,
+        convocatoriaId);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));
@@ -365,9 +393,10 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   public void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing ConvocatoriaEntidadConvocante
     Long id = 1L;
+    Long convocatoriaId = 1L;
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(id)));
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(id, convocatoriaId)));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
@@ -397,9 +426,10 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   public void delete_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: existing ConvocatoriaEntidadConvocante when modificable returns false
     Long id = 1L;
+    Long convocatoriaId = 1L;
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(id)));
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(id, convocatoriaId)));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
 
@@ -417,7 +447,7 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     Long convocatoriaId = 1L;
     List<ConvocatoriaEntidadConvocante> convocatoriasEntidadesConvocantes = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      convocatoriasEntidadesConvocantes.add(generarMockConvocatoriaEntidadConvocante(i));
+      convocatoriasEntidadesConvocantes.add(generarMockConvocatoriaEntidadConvocante(i, convocatoriaId));
     }
 
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaEntidadConvocante>>any(),
@@ -457,8 +487,9 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   public void findById_ReturnsConvocatoriaEntidadConvocante() {
     // given: Un ConvocatoriaEntidadConvocante con el id buscado
     Long idBuscado = 1L;
+    Long convocatoriaId = 1L;
     BDDMockito.given(repository.findById(idBuscado))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(idBuscado)));
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(idBuscado, convocatoriaId)));
 
     // when: Buscamos el ConvocatoriaEntidadConvocante por su id
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = service.findById(idBuscado);
@@ -480,23 +511,24 @@ public class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         .isInstanceOf(ConvocatoriaEntidadConvocanteNotFoundException.class);
   }
 
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    return Convocatoria.builder().id(convocatoriaId).build();
+  }
+
   /**
    * Función que devuelve un objeto ConvocatoriaEntidadConvocante
    * 
    * @param id id del ConvocatoriaEntidadConvocante
    * @return el objeto ConvocatoriaEntidadConvocante
    */
-  private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
+  private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id, Long convocatoriaId) {
     Programa programa = new Programa();
     programa.setId(id == null ? 1 : id);
     programa.setActivo(true);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
     convocatoriaEntidadConvocante.setId(id);
-    convocatoriaEntidadConvocante.setConvocatoria(convocatoria);
+    convocatoriaEntidadConvocante.setConvocatoriaId(convocatoriaId);
     convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 1 : id));
     convocatoriaEntidadConvocante.setPrograma(programa);
 

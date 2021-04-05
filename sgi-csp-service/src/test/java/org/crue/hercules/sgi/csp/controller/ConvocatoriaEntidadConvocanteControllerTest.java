@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadConvocanteNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
@@ -59,8 +58,8 @@ public class ConvocatoriaEntidadConvocanteControllerTest extends BaseControllerT
         // then: new ConvocatoriaEntidadConvocante is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaEntidadConvocante.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaEntidadConvocante.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value(convocatoriaEntidadConvocante.getEntidadRef()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("programa.id").value(convocatoriaEntidadConvocante.getPrograma().getId()));
@@ -107,8 +106,8 @@ public class ConvocatoriaEntidadConvocanteControllerTest extends BaseControllerT
         // then: ConvocatoriaEntidadConvocante is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoriaEntidadConvocanteExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaEntidadConvocanteExistente.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId")
+            .value(convocatoriaEntidadConvocanteExistente.getConvocatoriaId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("entidadRef").value(convocatoriaEntidadConvocanteExistente.getEntidadRef()))
         .andExpect(
@@ -189,7 +188,7 @@ public class ConvocatoriaEntidadConvocanteControllerTest extends BaseControllerT
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ConvocatoriaEntidadConvocante is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value("entidad-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("programa.id").value(1L));
   }
@@ -218,15 +217,12 @@ public class ConvocatoriaEntidadConvocanteControllerTest extends BaseControllerT
    * @return el objeto ConvocatoriaEntidadConvocante
    */
   private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     Programa programa = new Programa();
     programa.setId(id == null ? 1 : id);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
     convocatoriaEntidadConvocante.setId(id);
-    convocatoriaEntidadConvocante.setConvocatoria(convocatoria);
+    convocatoriaEntidadConvocante.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 1 : id));
     convocatoriaEntidadConvocante.setPrograma(programa);
 

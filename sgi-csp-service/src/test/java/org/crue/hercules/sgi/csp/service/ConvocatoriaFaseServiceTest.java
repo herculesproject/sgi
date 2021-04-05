@@ -66,6 +66,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsConvocatoriaFase() {
     // given: Un nuevo ConvocatoriaFase
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
 
     BDDMockito.given(
@@ -76,12 +77,11 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
           return page;
 
         });
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoriaFase, Boolean.TRUE)));
+        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE)));
 
     BDDMockito.given(repository.save(convocatoriaFase)).will((InvocationOnMock invocation) -> {
       ConvocatoriaFase convocatoriaFaseCreado = invocation.getArgument(0);
@@ -95,8 +95,8 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     // then: El ConvocatoriaFase se crea correctamente
     Assertions.assertThat(convocatoriaFaseCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaFaseCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaFaseCreado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaFase.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaFaseCreado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaFase.getConvocatoriaId());
     Assertions.assertThat(convocatoriaFaseCreado.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(convocatoriaFase.getFechaInicio());
     Assertions.assertThat(convocatoriaFaseCreado.getFechaFin()).as("getFechaFin()")
@@ -120,7 +120,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase without ConvocatoriaId
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
-    convocatoriaFase.getConvocatoria().setId(null);
+    convocatoriaFase.setConvocatoriaId(null);
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
@@ -161,12 +161,12 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
-    convocatoriaFase.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
+    convocatoria.setModeloEjecucion(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
@@ -181,10 +181,10 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void create_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con TipoFase no asignado al Modelo de Ejecucion de la
     // convocatoria
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -192,23 +192,23 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // when: create ConvocatoriaFase
         () -> service.create(convocatoriaFase))
         // then: throw exception as ModeloTipoFase not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "TipoFase '%s' no disponible para el ModeloEjecucion '%s'", convocatoriaFase.getTipoFase().getNombre(),
-            convocatoriaFase.getConvocatoria().getModeloEjecucion().getNombre());
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la convocatoria inactiva
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoriaFase, Boolean.FALSE)));
+        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.FALSE)));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
@@ -216,22 +216,21 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            convocatoriaFase.getTipoFase().getNombre(),
-            convocatoriaFase.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase TipoFase disabled
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
     convocatoriaFase.getTipoFase().setActivo(Boolean.FALSE);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoriaFase, Boolean.TRUE)));
+        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE)));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
@@ -245,14 +244,14 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void create_WithRangoFechasSopalado_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase with fechas solapadas con una convocatoria
     // existente
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoriaFase, Boolean.TRUE)));
+        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE)));
 
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
@@ -273,20 +272,18 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   @Test
   public void update_ReturnsConvocatoriaFase() {
     // given: Un nuevo ConvocatoriaFase con el nombre actualizado
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
-
-    BDDMockito
-        .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoriaFaseActualizado, Boolean.TRUE)));
-
+    BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong())).willReturn(
+            Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFaseActualizado, Boolean.TRUE)));
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaFase>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
@@ -302,8 +299,8 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     // then: El ConvocatoriaFase se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(convocatoriaFase.getId());
-    Assertions.assertThat(updated.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaFase.getConvocatoria().getId());
+    Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaFase.getConvocatoriaId());
     Assertions.assertThat(updated.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(convocatoriaFaseActualizado.getFechaInicio());
     Assertions.assertThat(updated.getTipoFase().getId()).as("getTipoFase().getId()")
@@ -326,14 +323,14 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
-    convocatoriaFase.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
-    convocatoriaFase.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
+    convocatoria.setModeloEjecucion(null);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
 
     Assertions.assertThatThrownBy(
@@ -349,12 +346,13 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void update_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con TipoFase no asignado al Modelo de Ejecucion de la
     // convocatoria
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
-
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -364,24 +362,23 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaFaseActualizado.getTipoFase().getNombre(),
-            convocatoriaFaseActualizado.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaFaseActualizado.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la convocatoria inactiva
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
-
-    BDDMockito
-        .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(2L, convocatoriaFaseActualizado, Boolean.FALSE)));
+    BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong())).willReturn(
+            Optional.of(generarMockModeloTipoFase(2L, convocatoria, convocatoriaFaseActualizado, Boolean.FALSE)));
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
@@ -389,23 +386,22 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            convocatoriaFaseActualizado.getTipoFase().getNombre(),
-            convocatoriaFaseActualizado.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaFaseActualizado.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase TipoFase disabled
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.FALSE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
-
-    BDDMockito
-        .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(2L, convocatoriaFaseActualizado, Boolean.TRUE)));
+    BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong())).willReturn(
+            Optional.of(generarMockModeloTipoFase(2L, convocatoria, convocatoriaFaseActualizado, Boolean.TRUE)));
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
@@ -419,17 +415,16 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   public void update_WithRangoFechasSopalado_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaFase with fechas solapadas con una convocatoria
     // existente
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
     convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
-
-    BDDMockito
-        .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoFase(2L, convocatoriaFaseActualizado, Boolean.TRUE)));
-
+    BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong())).willReturn(
+            Optional.of(generarMockModeloTipoFase(2L, convocatoria, convocatoriaFaseActualizado, Boolean.TRUE)));
     BDDMockito.given(
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
@@ -452,7 +447,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     // modificable return false
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
-        .fasePresentacionSolicitudes(convocatoriaFase).convocatoria(convocatoriaFase.getConvocatoria()).build();
+        .fasePresentacionSolicitudes(convocatoriaFase).convocatoriaId(convocatoriaFase.getConvocatoriaId()).build();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
@@ -508,7 +503,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     Long id = 1L;
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(id);
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
-        .fasePresentacionSolicitudes(convocatoriaFase).convocatoria(convocatoriaFase.getConvocatoria()).build();
+        .fasePresentacionSolicitudes(convocatoriaFase).convocatoriaId(convocatoriaFase.getConvocatoriaId()).build();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoriaFase(id)));
@@ -694,12 +689,13 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
    * @param activo
    * @return
    */
-  private ModeloTipoFase generarMockModeloTipoFase(Long id, ConvocatoriaFase convocatoriaFase, Boolean activo) {
+  private ModeloTipoFase generarMockModeloTipoFase(Long id, Convocatoria convocatoria,
+      ConvocatoriaFase convocatoriaFase, Boolean activo) {
 
     // @formatter:off
     return ModeloTipoFase.builder()
         .id(id)
-        .modeloEjecucion(convocatoriaFase.getConvocatoria().getModeloEjecucion())
+        .modeloEjecucion(convocatoria.getModeloEjecucion())
         .tipoFase(convocatoriaFase.getTipoFase())
         .activo(activo)
         .build();
@@ -717,7 +713,7 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     // @formatter:off
     return ConvocatoriaFase.builder()
         .id(id)
-        .convocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE))
+        .convocatoriaId(1L)
         .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-28T00:00:00Z"))
         .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))

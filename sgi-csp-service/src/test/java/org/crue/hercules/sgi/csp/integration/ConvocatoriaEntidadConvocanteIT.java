@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.junit.jupiter.api.Test;
@@ -53,8 +52,8 @@ public class ConvocatoriaEntidadConvocanteIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaEntidadConvocante responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaEntidadConvocante.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaEntidadConvocante.getConvocatoriaId());
     Assertions.assertThat(responseData.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(newConvocatoriaEntidadConvocante.getEntidadRef());
     Assertions.assertThat(responseData.getPrograma().getId()).as("getPrograma().getId()")
@@ -78,8 +77,8 @@ public class ConvocatoriaEntidadConvocanteIT extends BaseIT {
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteActualizado = response.getBody();
     Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaEntidadConvocante.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEntidadConvocante.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(convocatoriaEntidadConvocante.getEntidadRef());
     Assertions.assertThat(convocatoriaEntidadConvocanteActualizado.getPrograma().getId()).as("getPrograma().getId()")
@@ -118,8 +117,7 @@ public class ConvocatoriaEntidadConvocanteIT extends BaseIT {
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = response.getBody();
     Assertions.assertThat(convocatoriaEntidadConvocante.getId()).as("getId()")
         .isEqualTo(idConvocatoriaEntidadConvocante);
-    Assertions.assertThat(convocatoriaEntidadConvocante.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(convocatoriaEntidadConvocante.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaEntidadConvocante.getEntidadRef()).as("getEntidadRef()").isEqualTo("entidad-001");
     Assertions.assertThat(convocatoriaEntidadConvocante.getPrograma().getId()).as("getPrograma().getId()")
         .isEqualTo(1L);
@@ -133,15 +131,12 @@ public class ConvocatoriaEntidadConvocanteIT extends BaseIT {
    * @return el objeto ConvocatoriaEntidadConvocante
    */
   private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     Programa programa = new Programa();
     programa.setId(id == null ? 1 : id);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
     convocatoriaEntidadConvocante.setId(id);
-    convocatoriaEntidadConvocante.setConvocatoria(convocatoria);
+    convocatoriaEntidadConvocante.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 1 : id));
     convocatoriaEntidadConvocante.setPrograma(programa);
 

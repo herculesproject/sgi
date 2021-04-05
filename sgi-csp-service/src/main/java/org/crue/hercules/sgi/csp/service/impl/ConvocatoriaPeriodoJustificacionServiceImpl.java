@@ -105,13 +105,9 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
             .filter(periodo -> periodo.getId() == periodoJustificacion.getId()).findFirst()
             .orElseThrow(() -> new ConvocatoriaPeriodoJustificacionNotFoundException(periodoJustificacion.getId()));
 
-        Assert.isTrue(
-            periodoJustificacionBD.getConvocatoria().getId() == periodoJustificacion.getConvocatoria().getId(),
+        Assert.isTrue(periodoJustificacionBD.getConvocatoriaId() == periodoJustificacion.getConvocatoriaId(),
             "No se puede modificar la convocatoria del ConvocatoriaPeriodoJustificacion");
       }
-
-      // Setea la convocatoria recuperada del convocatoriaId
-      periodoJustificacion.setConvocatoria(convocatoria);
 
       // Validaciones
       Assert.isTrue(periodoJustificacion.getMesInicial() < periodoJustificacion.getMesFinal(),
@@ -125,8 +121,7 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
       }
 
       Assert.isTrue(
-          periodoJustificacion.getConvocatoria().getDuracion() == null
-              || periodoJustificacion.getMesFinal() <= periodoJustificacion.getConvocatoria().getDuracion(),
+          convocatoria.getDuracion() == null || periodoJustificacion.getMesFinal() <= convocatoria.getDuracion(),
           "El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
 
       Assert.isTrue(

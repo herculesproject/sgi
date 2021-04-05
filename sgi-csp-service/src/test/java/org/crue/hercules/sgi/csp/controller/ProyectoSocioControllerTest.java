@@ -9,9 +9,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
-import org.crue.hercules.sgi.csp.model.EstadoProyecto;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
@@ -88,7 +85,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
         // then: new ProyectoSocio is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoSocio.getProyecto().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(proyectoSocio.getProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("empresaRef").value(proyectoSocio.getEmpresaRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("rolSocio.id").value(proyectoSocio.getRolSocio().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value(proyectoSocio.getFechaInicio().toString()))
@@ -139,7 +136,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
         // then: ProyectoSocio is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoSocioExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoSocioExistente.getProyecto().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(proyectoSocioExistente.getProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("empresaRef").value(proyectoSocioExistente.getEmpresaRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("rolSocio.id").value(proyectoSocioExistente.getRolSocio().getId()))
         .andExpect(
@@ -581,14 +578,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
     // @formatter:off
     ProyectoSocio proyectoSocio = ProyectoSocio.builder()
         .id(proyectoSocioId)
-        .proyecto(Proyecto.builder()
-            .id(1L)
-            .estado(
-                EstadoProyecto.builder()
-                    .id(1L)
-                    .estado(EstadoProyecto.Estado.BORRADOR)
-                    .build())
-            .build())
+        .proyectoId(1L)
         .empresaRef("empresa-" + suffix)
         .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())
         .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
@@ -609,20 +599,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoSocioPeriodoPago
    */
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(id, "nombre-1", "descripcion-1", true);
-
     // @formatter:off
-    Proyecto proyecto1 = Proyecto.builder()
-        .id(id)
-        .titulo("proyecto 1")
-        .acronimo("PR1")
-        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
-        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-        .unidadGestionRef("OPE")
-        .modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE)
-        .build();
-
     RolSocio rolSocio = RolSocio.builder()
         .id(id)
         .abreviatura("001")
@@ -634,13 +611,13 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
         .id(id)
-        .proyecto(proyecto1)
+        .proyectoId(id)
         .empresaRef("empresa-0041")
         .rolSocio(rolSocio)
         .build();
     // @formatter:on
 
-    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago(id, proyectoSocio1, 1,
+    ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = new ProyectoSocioPeriodoPago(id, proyectoSocio1.getId(), 1,
         new BigDecimal(3500), Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioPeriodoPago;
@@ -653,19 +630,7 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el ProyectoSocioEquipo
    */
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
-
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
-
     // @formatter:off
-    Proyecto proyecto1 = Proyecto.builder()
-        .id(id).titulo("proyecto 1")
-        .acronimo("PR1")
-        .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
-        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE)
-        .build();
-
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura("001")
         .nombre("nombre-001")
@@ -684,13 +649,13 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
 
     ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
         .id(id)
-        .proyecto(proyecto1)
+        .proyectoId(id)
         .empresaRef("empresa-0041")
         .rolSocio(rolSocio)
         .build();
     // @formatter:on
 
-    ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1, rolProyecto, "001",
+    ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1.getId(), rolProyecto, "001",
         Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioEquipo;
@@ -703,12 +668,9 @@ public class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoSocioPeriodoJustificacion
    */
   private ProyectoSocioPeriodoJustificacion generarMockProyectoSocioPeriodoJustificacion(Long id) {
-    ProyectoSocio convocatoria = new ProyectoSocio();
-    convocatoria.setId(id == null ? 1 : id);
-
     ProyectoSocioPeriodoJustificacion convocatoriaPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
-    convocatoriaPeriodoJustificacion.setProyectoSocio(convocatoria);
+    convocatoriaPeriodoJustificacion.setProyectoSocioId(id == null ? 1 : id);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
     convocatoriaPeriodoJustificacion.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));

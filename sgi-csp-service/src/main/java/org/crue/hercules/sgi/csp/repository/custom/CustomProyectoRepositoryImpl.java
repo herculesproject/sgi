@@ -61,8 +61,8 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
    * @return true si se permiten {@link ProyectoPaqueteTrabajo}, false si no se
    *         permiten {@link ProyectoPaqueteTrabajo}
    */
-  public Optional<Boolean> getPaquetesTrabajo(Long id) {
-    log.debug("getpaquetesTrabajo(Long id) - start");
+  public Optional<Boolean> getPermitePaquetesTrabajo(Long id) {
+    log.debug("getPermitePaquetesTrabajo(Long id) - start");
     Optional<Boolean> returnValue = Optional.empty();
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -70,14 +70,14 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     Root<Proyecto> root = cq.from(Proyecto.class);
 
     Predicate finalPredicate = cb.equal(root.get(Proyecto_.id), id);
-    cq.select(root.get(Proyecto_.paquetesTrabajo)).where(finalPredicate);
+    cq.select(root.get(Proyecto_.permitePaquetesTrabajo)).where(finalPredicate);
 
     try {
       returnValue = entityManager.createQuery(cq).getResultList().stream().findFirst();
     } catch (NullPointerException e) {
     }
 
-    log.debug("getpaquetesTrabajo(Long id) - stop");
+    log.debug("getPermitePaquetesTrabajo(Long id) - stop");
     return returnValue;
   }
 }

@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.junit.jupiter.api.Test;
@@ -53,8 +52,8 @@ public class ConvocatoriaFaseIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaFase responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaFase.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaFase.getConvocatoriaId());
     Assertions.assertThat(responseData.getFechaInicio()).as("getFechaIncio()")
         .isEqualTo(newConvocatoriaFase.getFechaInicio());
     Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()").isEqualTo(newConvocatoriaFase.getFechaFin());
@@ -77,8 +76,8 @@ public class ConvocatoriaFaseIT extends BaseIT {
 
     ConvocatoriaFase convocatoriaFaseActualizado = response.getBody();
     Assertions.assertThat(convocatoriaFaseActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaFaseActualizado.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaFase.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaFaseActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaFase.getConvocatoriaId());
     Assertions.assertThat(convocatoriaFaseActualizado.getObservaciones()).as("getObservacion()")
         .isEqualTo(convocatoriaFase.getObservaciones());
     Assertions.assertThat(convocatoriaFaseActualizado.getTipoFase().getId()).as("getTipoFase().getId()")
@@ -114,7 +113,7 @@ public class ConvocatoriaFaseIT extends BaseIT {
 
     ConvocatoriaFase convocatoriaFase = response.getBody();
     Assertions.assertThat(convocatoriaFase.getId()).as("getId()").isEqualTo(idConvocatoriaFase);
-    Assertions.assertThat(convocatoriaFase.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
+    Assertions.assertThat(convocatoriaFase.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaFase.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(Instant.parse("2020-10-18T00:00:00Z"));
     Assertions.assertThat(convocatoriaFase.getFechaFin()).as("getFechaFin()")
@@ -130,16 +129,13 @@ public class ConvocatoriaFaseIT extends BaseIT {
    * @return el objeto ConvocatoriaFase
    */
   private ConvocatoriaFase generarMockConvocatoriaFase(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id == null ? 1 : id);
     tipoFase.setActivo(true);
 
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
-    convocatoriaFase.setConvocatoria(convocatoria);
+    convocatoriaFase.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     convocatoriaFase.setFechaFin(Instant.parse("2020-10-28T23:59:59Z"));
     convocatoriaFase.setTipoFase(tipoFase);

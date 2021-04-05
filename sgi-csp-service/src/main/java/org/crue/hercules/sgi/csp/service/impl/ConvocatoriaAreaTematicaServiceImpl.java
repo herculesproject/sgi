@@ -58,20 +58,19 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
 
     Assert.isNull(convocatoriaAreaTematica.getId(), "Id tiene que ser null para crear ConvocatoriaAreaTematica");
 
-    Assert.notNull(convocatoriaAreaTematica.getConvocatoria().getId(),
+    Assert.notNull(convocatoriaAreaTematica.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaAreaTematica");
 
     Assert.notNull(convocatoriaAreaTematica.getAreaTematica().getId(),
         "Id AreaTematica no puede ser null para crear ConvocatoriaAreaTematica");
 
-    convocatoriaAreaTematica
-        .setConvocatoria(convocatoriaRepository.findById(convocatoriaAreaTematica.getConvocatoria().getId())
-            .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaAreaTematica.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaAreaTematica.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaAreaTematica.getConvocatoriaId()));
 
     // comprobar si convocatoria es modificable
     Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoria().getId(),
-            convocatoriaAreaTematica.getConvocatoria().getUnidadGestionRef()),
+        convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(),
+            convocatoria.getUnidadGestionRef()),
         "No se puede crear ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     convocatoriaAreaTematica
@@ -79,7 +78,7 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
             .orElseThrow(() -> new AreaTematicaNotFoundException(convocatoriaAreaTematica.getAreaTematica().getId())));
 
     Assert.isTrue(
-        !repository.findByConvocatoriaIdAndAreaTematicaId(convocatoriaAreaTematica.getConvocatoria().getId(),
+        !repository.findByConvocatoriaIdAndAreaTematicaId(convocatoriaAreaTematica.getConvocatoriaId(),
             convocatoriaAreaTematica.getAreaTematica().getId()).isPresent(),
         "Ya existe una asociación activa para esa Convocatoria y AreaTematica");
 
@@ -108,9 +107,7 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
     return repository.findById(convocatoriaAreaTematicaActualizar.getId()).map(convocatoriaAreaTematica -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoria().getId(),
-              convocatoriaAreaTematica.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null),
           "No se puede modificar ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       convocatoriaAreaTematica.setObservaciones(convocatoriaAreaTematicaActualizar.getObservaciones());
@@ -135,9 +132,7 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
     repository.findById(id).map(convocatoriaAreaTematica -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoria().getId(),
-              convocatoriaAreaTematica.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null),
           "No se puede eliminar ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaAreaTematica;

@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,8 +52,8 @@ public class ConvocatoriaAreaTematicaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaAreaTematica responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaAreaTematica.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaAreaTematica.getConvocatoriaId());
     Assertions.assertThat(responseData.getAreaTematica().getId()).as("getAreaTematica().getId()")
         .isEqualTo(newConvocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones().getId()")
@@ -80,8 +79,8 @@ public class ConvocatoriaAreaTematicaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ConvocatoriaAreaTematica responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaAreaTematicaExistente.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaAreaTematicaExistente.getConvocatoriaId());
     Assertions.assertThat(responseData.getAreaTematica().getId()).as("getAreaTematica().getId()")
         .isEqualTo(convocatoriaAreaTematicaExistente.getAreaTematica().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
@@ -118,7 +117,7 @@ public class ConvocatoriaAreaTematicaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ConvocatoriaAreaTematica responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getAreaTematica().getId()).as("getAreaTematica().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
   }
@@ -134,8 +133,7 @@ public class ConvocatoriaAreaTematicaIT extends BaseIT {
   private ConvocatoriaAreaTematica generarConvocatoriaAreaTematica(Long convocatoriaAreaTematicaId, Long convocatoriaId,
       Long areaTematicaId) {
 
-    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
+    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId).convocatoriaId(convocatoriaId)
         .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }

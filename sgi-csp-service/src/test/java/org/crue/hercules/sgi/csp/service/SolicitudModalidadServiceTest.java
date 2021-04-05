@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudModalidadNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -62,10 +61,11 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   @Test
   public void create_WithConvocatoria_ReturnsSolicitudModalidad() {
     // given: Un nuevo SolicitudModalidad
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(programaRepository.findById(1L))
         .willReturn(Optional.of(solicitudModalidad.getPrograma().getPadre()));
@@ -93,8 +93,8 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
         .isEqualTo(solicitudModalidad.getEntidadRef());
     Assertions.assertThat(solicitudModalidadCreado.getPrograma().getId()).as("getPrograma().getId()")
         .isEqualTo(solicitudModalidad.getPrograma().getId());
-    Assertions.assertThat(solicitudModalidadCreado.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(solicitudModalidad.getSolicitud().getId());
+    Assertions.assertThat(solicitudModalidadCreado.getSolicitudId()).as("getSolicitudId()")
+        .isEqualTo(solicitudModalidad.getSolicitudId());
   }
 
   @Test
@@ -112,7 +112,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   public void create_WithoutSolicitudId_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudModalidad que no tiene solicitud
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
-    solicitudModalidad.getSolicitud().setId(null);
+    solicitudModalidad.setSolicitudId(null);
 
     // when: Creamos el SolicitudModalidad
     // then: Lanza una excepcion porque no tiene solicitud
@@ -148,10 +148,11 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   @Test
   public void create_WithNoExistingPrograma_ThrowsProgramaNotFoundException() {
     // given: Un nuevo SolicitudModalidad que tiene un programa que no existe
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     // when: Creamos el SolicitudModalidad
@@ -164,10 +165,11 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   public void create_WithNoValidEntidadRef_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudModalidad que tiene una entidadRef y la convocatoria
     // no tiene una convocatoriaEntidadConvocante con ese entidadRef
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
@@ -185,14 +187,15 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   public void create_WithNoValidPrograma_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudModalidad y la modalidad seleccionada no pertenece
     // al arbol del programa de la convocatoria
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
 
     Programa padre = new Programa();
     padre.setId(3L);
     solicitudModalidad.getPrograma().setPadre(padre);
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
@@ -208,11 +211,12 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   public void create_WithProgramaNodoRaiz_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudModalidad y la modalidad seleccionada es el nodo
     // raiz
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
     solicitudModalidad.setPrograma(solicitudModalidad.getPrograma().getPadre());
 
-    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(1L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
@@ -227,10 +231,13 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   @Test
   public void update_ReturnsSolicitudModalidad() {
     // given: Un nuevo SolicitudModalidad con las observaciones actualizadas
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(3L);
     SolicitudModalidad solicitudModalidadProgramaActualizado = generarMockSolicitudModalidad(3L);
     solicitudModalidadProgramaActualizado.getPrograma().setId(4L);
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(4L))
         .willReturn(Optional.of(solicitudModalidadProgramaActualizado.getPrograma()));
     BDDMockito.given(programaRepository.findById(1L))
@@ -254,8 +261,8 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
         .isEqualTo(solicitudModalidad.getEntidadRef());
     Assertions.assertThat(solicitudModalidadActualizada.getPrograma().getId()).as("getPrograma().getId()")
         .isEqualTo(solicitudModalidadProgramaActualizado.getPrograma().getId());
-    Assertions.assertThat(solicitudModalidadActualizada.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(solicitudModalidad.getSolicitud().getId());
+    Assertions.assertThat(solicitudModalidadActualizada.getSolicitudId()).as("getSolicitudId()")
+        .isEqualTo(solicitudModalidad.getSolicitudId());
   }
 
   @Test
@@ -291,12 +298,15 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   public void update_WithNoValidPrograma_ThrowsIllegalArgumentException() {
     // given: Un SolicitudModalidad actualizadoy la modalidad seleccionada no
     // pertenece al arbol del programa de la convocatoria
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
 
     Programa padre = new Programa();
     padre.setId(3L);
     solicitudModalidad.getPrograma().setPadre(padre);
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitudModalidad));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
@@ -314,9 +324,12 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
   public void update_WithProgramaNodoRaiz_ThrowsIllegalArgumentException() {
     // given: Un SolicitudModalidad actualizado y la modalidad seleccionada es el
     // nodo raiz
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
     solicitudModalidad.setPrograma(solicitudModalidad.getPrograma().getPadre());
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(programaRepository.findById(1L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitudModalidad));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
@@ -426,6 +439,15 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
     }
   }
 
+  private Solicitud generarMockSolicitud(Long solicitudId) {
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(solicitudId);
+    solicitud.setConvocatoriaId(1L);
+    solicitud.setUnidadGestionRef("OPE");
+
+    return solicitud;
+  }
+
   /**
    * Función que devuelve un objeto SolicitudModalidad
    * 
@@ -433,15 +455,6 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
    * @return el objeto SolicitudModalidad
    */
   private SolicitudModalidad generarMockSolicitudModalidad(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(1L);
-    convocatoria.setUnidadGestionRef("OPE");
-
-    Solicitud solicitud = new Solicitud();
-    solicitud.setId(1L);
-    solicitud.setConvocatoria(convocatoria);
-    solicitud.setUnidadGestionRef("OPE");
-
     Programa programa = new Programa();
     programa.setId(1L);
 
@@ -452,7 +465,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
     SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
     solicitudModalidad.setId(id);
     solicitudModalidad.setEntidadRef("entidadRef");
-    solicitudModalidad.setSolicitud(solicitud);
+    solicitudModalidad.setSolicitudId(1L);
     solicitudModalidad.setPrograma(modalidad);
 
     return solicitudModalidad;
@@ -465,16 +478,13 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
    * @return el objeto ConvocatoriaEntidadConvocante
    */
   private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     Programa programa = new Programa();
     programa.setId(id == null ? 1 : id);
     programa.setActivo(true);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
     convocatoriaEntidadConvocante.setId(id);
-    convocatoriaEntidadConvocante.setConvocatoria(convocatoria);
+    convocatoriaEntidadConvocante.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 1 : id));
     convocatoriaEntidadConvocante.setPrograma(programa);
 

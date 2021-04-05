@@ -59,7 +59,7 @@ public class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
 
     ProyectoEquipo proyectoEquipo1 = entityManager.persistAndFlush(
         ProyectoEquipo.builder()
-          .proyecto(proyecto1)
+          .proyectoId(proyecto1.getId())
           .rolProyecto(rolProyecto)
           .fechaInicio(Instant.now())
           .fechaFin(Instant.now())
@@ -68,7 +68,7 @@ public class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
           .build());
 
     entityManager.persistAndFlush(ProyectoEquipo.builder()
-      .proyecto(proyecto2)
+      .proyectoId(proyecto2.getId())
       .rolProyecto(rolProyecto)
       .fechaInicio(Instant.now())
       .fechaFin(Instant.now())
@@ -77,7 +77,7 @@ public class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
       .build());
 
     entityManager.persistAndFlush(ProyectoEquipo.builder()
-      .proyecto(proyecto2)
+      .proyectoId(proyecto2.getId())
       .rolProyecto(rolProyecto)
       .fechaInicio(Instant.now())
       .fechaFin(Instant.now())

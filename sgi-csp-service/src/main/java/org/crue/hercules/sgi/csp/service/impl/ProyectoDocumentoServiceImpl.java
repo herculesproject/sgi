@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoDocumentoNotFoundException;
@@ -15,6 +14,9 @@ import org.crue.hercules.sgi.csp.repository.ProyectoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
+import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,7 +97,7 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
 
     return repository.findById(proyectoDocumentoActualizar.getId()).map(proyectoDocumento -> {
 
-      proyectoDocumentoActualizar.setProyecto(proyectoDocumento.getProyecto());
+      proyectoDocumentoActualizar.setProyectoId(proyectoDocumento.getProyectoId());
       validarProyectoDocumento(proyectoDocumentoActualizar, proyectoDocumento);
 
       proyectoDocumento.setTipoFase(proyectoDocumentoActualizar.getTipoFase());
@@ -149,17 +151,18 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
    * Obtiene las {@link ProyectoDocumento} para una {@link Proyecto}.
    *
    * @param proyectoId el id de la {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
    * @return la lista de entidades {@link ProyectoDocumento} de la
-   *         {@link Proyecto}.
+   *         {@link Proyecto} paginadas.
    */
-  public List<ProyectoDocumento> findAllByProyecto(Long proyectoId) {
-    log.debug("findAllByProyecto(Long proyectoIde) - start");
-    Specification<ProyectoDocumento> specByProyecto = ProyectoDocumentoSpecifications.byProyectoId(proyectoId);
+  public Page<ProyectoDocumento> findAllByProyectoId(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    Specification<ProyectoDocumento> specs = ProyectoDocumentoSpecifications.byProyectoId(proyectoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
 
-    Specification<ProyectoDocumento> specs = Specification.where(specByProyecto);
-
-    List<ProyectoDocumento> returnValue = repository.findAll(specs);
-    log.debug("findAllByProyecto(Long proyectoId) - end");
+    Page<ProyectoDocumento> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }
 
@@ -172,8 +175,7 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
     log.debug("validarRequeridosProyectoDocumento(ProyectoDocumento datosProyectoDocumento) - start");
 
     /** Obligatorios */
-    Assert.isTrue(datosProyectoDocumento.getProyecto() != null && datosProyectoDocumento.getProyecto().getId() != null,
-        "Id Proyecto no puede ser null en ProyectoDocumento");
+    Assert.isTrue(datosProyectoDocumento.getProyectoId() != null, "Id Proyecto no puede ser null en ProyectoDocumento");
 
     Assert.isTrue(!StringUtils.isEmpty(datosProyectoDocumento.getNombre()),
         "Es necesario indicar el nombre del documento");
@@ -197,14 +199,13 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
     log.debug(
         "validarProyectoDcoumento(ProyectoDocumento proyectoDocumento, ProyectoDocumento datosOriginales) - start");
 
-    datosProyectoDocumento.setProyecto(proyectoRepository.findById(datosProyectoDocumento.getProyecto().getId())
-        .orElseThrow(() -> new ProyectoNotFoundException(datosProyectoDocumento.getProyecto().getId())));
+    Proyecto proyecto = proyectoRepository.findById(datosProyectoDocumento.getProyectoId())
+        .orElseThrow(() -> new ProyectoNotFoundException(datosProyectoDocumento.getProyectoId()));
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-    Long modeloEjecucionId = (datosProyectoDocumento.getProyecto().getModeloEjecucion() != null
-        && datosProyectoDocumento.getProyecto().getModeloEjecucion().getId() != null)
-            ? datosProyectoDocumento.getProyecto().getModeloEjecucion().getId()
-            : null;
+    Long modeloEjecucionId = (proyecto.getModeloEjecucion() != null && proyecto.getModeloEjecucion().getId() != null)
+        ? proyecto.getModeloEjecucion().getId()
+        : null;
 
     /**
      * El TipoFase no es obligatorio, pero si tiene valor y existe un TipoDocumento,
@@ -219,11 +220,10 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
           .findByModeloEjecucionIdAndTipoFaseId(modeloEjecucionId, datosProyectoDocumento.getTipoFase().getId());
 
       // TipoFase está asignado al ModeloEjecucion
-      Assert.isTrue(modeloTipoFase.isPresent(),
-          "TipoFase '" + datosProyectoDocumento.getTipoFase().getNombre() + "' no disponible para el ModeloEjecucion '"
-              + ((modeloEjecucionId != null) ? datosProyectoDocumento.getProyecto().getModeloEjecucion().getNombre()
-                  : "Proyecto sin modelo asignado")
-              + "'");
+      Assert.isTrue(modeloTipoFase.isPresent(), "TipoFase '" + datosProyectoDocumento.getTipoFase().getNombre()
+          + "' no disponible para el ModeloEjecucion '"
+          + ((modeloEjecucionId != null) ? proyecto.getModeloEjecucion().getNombre() : "Proyecto sin modelo asignado")
+          + "'");
 
       // Comprobar solamente si estamos creando o se ha modificado el TipoFase
       if (datosOriginales == null || datosOriginales.getTipoFase() == null
@@ -262,7 +262,7 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
       Assert.isTrue(modeloTipoDocumento.isPresent(),
           "TipoDocumento '" + datosProyectoDocumento.getTipoDocumento().getNombre()
               + "' no disponible para el ModeloEjecucion '"
-              + ((modeloEjecucionId != null) ? datosProyectoDocumento.getProyecto().getModeloEjecucion().getNombre()
+              + ((modeloEjecucionId != null) ? proyecto.getModeloEjecucion().getNombre()
                   : "Proyecto sin modelo asignado")
               + "' y TipoFase '"
               + ((proyectoDocumentoModeloTipoFase != null) ? proyectoDocumentoModeloTipoFase.getTipoFase().getNombre()

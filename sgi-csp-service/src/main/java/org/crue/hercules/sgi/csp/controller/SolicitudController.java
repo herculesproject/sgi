@@ -14,7 +14,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
@@ -23,7 +23,7 @@ import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
@@ -71,8 +71,8 @@ public class SolicitudController {
   /** SolicitudHito service */
   private final SolicitudHitoService solicitudHitoService;
 
-  /** SolicitudProyectoDatosService service */
-  private final SolicitudProyectoDatosService solicitudProyectoDatosService;
+  /** SolicitudProyectoService service */
+  private final SolicitudProyectoService solicitudProyectoService;
 
   /** SolicitudProyectoSocioService service */
   private final SolicitudProyectoSocioService solicitudProyectoSocioService;
@@ -94,7 +94,7 @@ public class SolicitudController {
    * @param solicitudDocumentoService                        {@link SolicitudDocumentoService}
    * @param estadoSolicitudService                           {@link EstadoSolicitudService}.
    * @param solicitudHitoService                             {@link SolicitudHitoService}.
-   * @param solicitudProyectoDatosService                    {@link SolicitudProyectoDatosService}
+   * @param solicitudProyectoService                         {@link SolicitudProyectoService}
    * @param solicitudProyectoSocioService                    {@link SolicitudProyectoSocioService}
    * @param solicitudProyectoEquipoService                   {@link SolicitudProyectoEquipoService}
    * @param solicitudProyectoEntidadFinanciadoraAjenaService {@link SolicitudProyectoEntidadFinanciadoraAjenaService}.
@@ -102,7 +102,7 @@ public class SolicitudController {
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
-      SolicitudHitoService solicitudHitoService, SolicitudProyectoDatosService solicitudProyectoDatosService,
+      SolicitudHitoService solicitudHitoService, SolicitudProyectoService solicitudProyectoService,
       SolicitudProyectoSocioService solicitudProyectoSocioService,
       SolicitudProyectoEquipoService solicitudProyectoEquipoService,
       SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService,
@@ -112,7 +112,7 @@ public class SolicitudController {
     this.estadoSolicitudService = estadoSolicitudService;
     this.solicitudDocumentoService = solicitudDocumentoService;
     this.solicitudHitoService = solicitudHitoService;
-    this.solicitudProyectoDatosService = solicitudProyectoDatosService;
+    this.solicitudProyectoService = solicitudProyectoService;
     this.solicitudProyectoSocioService = solicitudProyectoSocioService;
     this.solicitudProyectoEquipoService = solicitudProyectoEquipoService;
     this.solicitudProyectoEntidadFinanciadoraAjenaService = solicitudProyectoEntidadFinanciadoraAjenaService;
@@ -417,23 +417,23 @@ public class SolicitudController {
   }
 
   /**
-   * Recupera un {@link SolicitudProyectoDatos} de una solicitud
+   * Recupera un {@link SolicitudProyecto} de una solicitud
    * 
    * @param id Identificador de {@link Solicitud}.
-   * @return {@link SolicitudProyectoDatos}
+   * @return {@link SolicitudProyecto}
    */
-  @RequestMapping(path = "/{id}/solicitudproyectodatos", method = RequestMethod.GET)
+  @RequestMapping(path = "/{id}/solicitudproyecto", method = RequestMethod.GET)
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
-  public ResponseEntity<SolicitudProyectoDatos> findSolictudProyectoDatos(@PathVariable Long id) {
+  public ResponseEntity<SolicitudProyecto> findSolictudProyectoDatos(@PathVariable Long id) {
     log.debug("findSolictudProyectoDatos(Long id) - start");
-    SolicitudProyectoDatos returnValue = solicitudProyectoDatosService.findBySolicitud(id);
+    SolicitudProyecto returnValue = solicitudProyectoService.findBySolicitud(id);
 
     if (returnValue == null) {
-      log.debug("SolicitudProyectoDatos findSolictudProyectoDatos(Long id) - end");
+      log.debug("SolicitudProyecto findSolictudProyectoDatos(Long id) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("SolicitudProyectoDatos findSolictudProyectoDatos(Long id) - end");
+    log.debug("SolicitudProyecto findSolictudProyectoDatos(Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
@@ -463,7 +463,7 @@ public class SolicitudController {
   /**
    * Devuelve una lista paginada de {@link SolicitudProyectoEquipo}
    * 
-   * @param id     Identificador de {@link SolicitudProyectoDatos}.
+   * @param id     Identificador de {@link SolicitudProyecto}.
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
@@ -510,18 +510,18 @@ public class SolicitudController {
   }
 
   /**
-   * Recupera un {@link SolicitudProyectoDatos} de una solicitud
+   * Recupera un {@link SolicitudProyecto} de una solicitud
    * 
    * @param id Identificador de {@link Solicitud}.
-   * @return {@link SolicitudProyectoDatos}
+   * @return {@link SolicitudProyecto}
    */
-  @RequestMapping(path = "/{id}/solicitudproyectodatos", method = RequestMethod.HEAD)
+  @RequestMapping(path = "/{id}/solicitudproyecto", method = RequestMethod.HEAD)
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   public ResponseEntity<?> existSolictudProyectoDatos(@PathVariable Long id) {
     log.debug("existSolictudProyectoDatos(Long id) - start");
-    boolean returnValue = solicitudProyectoDatosService.existsBySolicitudId(id);
+    boolean returnValue = solicitudProyectoService.existsBySolicitudId(id);
 
-    log.debug("SolicitudProyectoDatos existSolictudProyectoDatos(Long id) - end");
+    log.debug("SolicitudProyecto existSolictudProyectoDatos(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
@@ -605,17 +605,17 @@ public class SolicitudController {
   }
 
   /**
-   * Comprueba si el {@link SolicitudProyectoDatos} de una solicitud tiene
-   * presupuesto por entidades.
+   * Comprueba si el {@link SolicitudProyecto} de una solicitud tiene presupuesto
+   * por entidades.
    * 
    * @param id Identificador de {@link Solicitud}.
-   * @return {@link SolicitudProyectoDatos}
+   * @return {@link SolicitudProyecto}
    */
   @RequestMapping(path = "/{id}/presupuestoporentidades", method = RequestMethod.HEAD)
   // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
   public ResponseEntity<?> hasPresupuestoPorEntidades(@PathVariable Long id) {
     log.debug("hasPresupuestoPorEntidades(Long id) - start");
-    boolean returnValue = solicitudProyectoDatosService.hasPresupuestoPorEntidades(id);
+    boolean returnValue = solicitudProyectoService.hasPresupuestoPorEntidades(id);
 
     log.debug("hasPresupuestoPorEntidades(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);

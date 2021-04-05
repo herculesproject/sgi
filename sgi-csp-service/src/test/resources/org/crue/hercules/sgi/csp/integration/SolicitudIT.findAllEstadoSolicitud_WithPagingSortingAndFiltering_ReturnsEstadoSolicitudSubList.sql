@@ -44,18 +44,18 @@ INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_r
 INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (3, 1, 'entidad-003', 3);
 INSERT INTO csp.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (4, 1, 'entidad-014', 1);
 
-
--- ESTADO SOLICITUD
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (2, 1, 'PRESENTADA', '2020-11-17T00:00:00Z', 'comentario presentada');
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (3, 1, 'EXCLUIDA', '2020-11-17T00:00:00Z', 'comentario excluida');
-INSERT INTO csp.estado_solicitud (id, id_solicitud, estado, fecha_estado, comentario) VALUES (4, 2, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
-
-
-
-
 -- SOLICITUD
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (1, null, 'SGI_SLC1202011061027', 1, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'ESTANDAR', true);
+ VALUES (1, null, 'SGI_SLC1202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones 1', null, 'OPE', 'ESTANDAR', true);
 INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (2, null, 'SGI_SLC2202011061027', 1, 1, 'usr-002', 'usr-003', 'observaciones 2', null, 'OPE', 'ESTANDAR', true);
+ VALUES (2, null, 'SGI_SLC2202011061027', null, 1, 'usr-002', 'usr-003', 'observaciones 2', null, 'OPE', 'ESTANDAR', true);
+
+-- ESTADO SOLICITUD
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (2, 1, 'PRESENTADA', '2020-11-17T00:00:00Z', 'comentario presentada');
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (3, 1, 'EXCLUIDA', '2020-11-17T00:00:00Z', 'comentario excluida');
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (4, 2, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
+
+-- UPDATE SOLICITUD
+UPDATE csp.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
+UPDATE csp.solicitud SET estado_solicitud_id = 4 WHERE id = 2;

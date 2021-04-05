@@ -5,7 +5,6 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +39,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/modelo_tipo_documento.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -59,8 +58,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ProrrogaDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyectoProrroga().getId()).as("getProyectoProrroga().getId()")
-        .isEqualTo(newProrrogaDocumento.getProyectoProrroga().getId());
+    Assertions.assertThat(responseData.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
+        .isEqualTo(newProrrogaDocumento.getProyectoProrrogaId());
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(newProrrogaDocumento.getNombre());
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(newProrrogaDocumento.getDocumentoRef());
@@ -74,8 +73,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/modelo_tipo_documento.sql",
       "classpath:scripts/prorroga_documento.sql" })
@@ -93,8 +92,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
 
     ProrrogaDocumento prorrogaDocumentoActualizado = response.getBody();
     Assertions.assertThat(prorrogaDocumentoActualizado.getId()).as("getId()").isEqualTo(idProrrogaDocumento);
-    Assertions.assertThat(prorrogaDocumentoActualizado.getProyectoProrroga().getId())
-        .as("getProyectoProrroga().getId()").isEqualTo(1L);
+    Assertions.assertThat(prorrogaDocumentoActualizado.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
+        .isEqualTo(1L);
     Assertions.assertThat(prorrogaDocumentoActualizado.getNombre()).as("getNombre()")
         .isEqualTo("prorroga-documento-001");
     Assertions.assertThat(prorrogaDocumentoActualizado.getDocumentoRef()).as("getDocumentoRef()")
@@ -109,8 +108,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/modelo_tipo_documento.sql",
       "classpath:scripts/prorroga_documento.sql" })
@@ -127,8 +126,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/modelo_tipo_documento.sql",
       "classpath:scripts/prorroga_documento.sql" })
@@ -158,8 +157,8 @@ public class ProrrogaDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_prorroga.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/tipo_fase.sql",
       "classpath:scripts/modelo_tipo_fase.sql", "classpath:scripts/modelo_tipo_documento.sql",
       "classpath:scripts/prorroga_documento.sql" })
@@ -176,8 +175,7 @@ public class ProrrogaDocumentoIT extends BaseIT {
     ProrrogaDocumento prorrogaDocumento = response.getBody();
     Assertions.assertThat(prorrogaDocumento.getId()).as("getId()").isNotNull();
     Assertions.assertThat(prorrogaDocumento.getId()).as("getId()").isEqualTo(idProrrogaDocumento);
-    Assertions.assertThat(prorrogaDocumento.getProyectoProrroga().getId()).as("getProyectoProrroga().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(prorrogaDocumento.getProyectoProrrogaId()).as("getProyectoProrrogaId()").isEqualTo(1L);
     Assertions.assertThat(prorrogaDocumento.getNombre()).as("getNombre()").isEqualTo("prorroga-documento-001");
     Assertions.assertThat(prorrogaDocumento.getDocumentoRef()).as("getDocumentoRef()").isEqualTo("documentoRef-001");
     Assertions.assertThat(prorrogaDocumento.getTipoDocumento().getId()).as("getTipoDocumento().getId()()")
@@ -200,7 +198,7 @@ public class ProrrogaDocumentoIT extends BaseIT {
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
-        .proyectoProrroga(ProyectoProrroga.builder().id(proyectoProrrogaId).build())
+        .proyectoProrrogaId(proyectoProrrogaId)
         .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())

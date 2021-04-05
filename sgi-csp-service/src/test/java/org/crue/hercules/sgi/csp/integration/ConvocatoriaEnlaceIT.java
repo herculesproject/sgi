@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.junit.jupiter.api.Test;
@@ -51,8 +50,8 @@ public class ConvocatoriaEnlaceIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaEnlace responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaEnlace.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaEnlace.getConvocatoriaId());
     Assertions.assertThat(responseData.getTipoEnlace().getId()).as("getTipoEnlace().getId()")
         .isEqualTo(newConvocatoriaEnlace.getTipoEnlace().getId());
 
@@ -73,8 +72,8 @@ public class ConvocatoriaEnlaceIT extends BaseIT {
     ConvocatoriaEnlace convocatoriaEnlaceActualizado = response.getBody();
     Assertions.assertThat(convocatoriaEnlaceActualizado.getId()).as("getId()").isNotNull();
 
-    Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoria().getId()).as("getConvocatoria()")
-        .isEqualTo(convocatoriaEnlace.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEnlace.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(convocatoriaEnlace.getDescripcion());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getTipoEnlace().getId()).as("getTipoEnlace().getId()")
@@ -108,7 +107,7 @@ public class ConvocatoriaEnlaceIT extends BaseIT {
 
     ConvocatoriaEnlace convocatoriaEnlace = response.getBody();
     Assertions.assertThat(convocatoriaEnlace.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaEnlace.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
+    Assertions.assertThat(convocatoriaEnlace.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaEnlace.getDescripcion()).as("descripcion")
         .isEqualTo(convocatoriaEnlace.getDescripcion());
     Assertions.assertThat(convocatoriaEnlace.getUrl()).as("getUrl()").isEqualTo("www.url1.com");
@@ -123,16 +122,12 @@ public class ConvocatoriaEnlaceIT extends BaseIT {
    * @return el objeto ConvocatoriaEnlace
    */
   private ConvocatoriaEnlace generarMockConvocatoriaEnlace(Long id) {
-
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     TipoEnlace tipoEnlace = new TipoEnlace();
     tipoEnlace.setId(id == null ? 1 : id);
 
     ConvocatoriaEnlace convocatoriaEnlace = new ConvocatoriaEnlace();
     convocatoriaEnlace.setId(id);
-    convocatoriaEnlace.setConvocatoria(convocatoria);
+    convocatoriaEnlace.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEnlace.setUrl("www.url" + id + ".es");
     convocatoriaEnlace.setDescripcion("descripcion-" + id);
     convocatoriaEnlace.setTipoEnlace(tipoEnlace);

@@ -1,16 +1,8 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-
-import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.DocumentoRequeridoSolicitudNotFoundException;
-import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
-import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
 import org.junit.jupiter.api.Test;
@@ -67,8 +59,8 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
         // then: new DocumentoRequeridoSolicitud is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("configuracionSolicitud.id")
-            .value(documentoRequeridoSolicitud.getConfiguracionSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("configuracionSolicitudId")
+            .value(documentoRequeridoSolicitud.getConfiguracionSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(documentoRequeridoSolicitud.getTipoDocumento().getId()))
         .andExpect(
@@ -116,8 +108,8 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
         // then: DocumentoRequeridoSolicitud is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(documentoRequeridoSolicitudExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("configuracionSolicitud.id")
-            .value(documentoRequeridoSolicitudExistente.getConfiguracionSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("configuracionSolicitudId")
+            .value(documentoRequeridoSolicitudExistente.getConfiguracionSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(documentoRequeridoSolicitudExistente.getTipoDocumento().getId()))
         .andExpect(
@@ -200,8 +192,8 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
         // and the requested DocumentoRequeridoSolicitud is resturned as JSON
         // object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(documentoRequeridoSolicitud.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("configuracionSolicitud.id")
-            .value(documentoRequeridoSolicitud.getConfiguracionSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("configuracionSolicitudId")
+            .value(documentoRequeridoSolicitud.getConfiguracionSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(documentoRequeridoSolicitud.getTipoDocumento().getId()))
         .andExpect(
@@ -223,53 +215,6 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
         .andDo(MockMvcResultHandlers.print()).
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  /**
-   * Genera un objeto ConfiguracionSolicitud
-   * 
-   * @param configuracionSolicitudId
-   * @param convocatoriaId
-   * @param convocatoriaFaseId
-   * @return
-   */
-  private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
-      Long convocatoriaFaseId) {
-
-    // @formatter:off
-    Convocatoria convocatoria = Convocatoria.builder()
-        .id(convocatoriaId)
-        .estado(Convocatoria.Estado.BORRADOR)
-        .activo(Boolean.TRUE)
-        .build();
-
-    TipoFase tipoFase = TipoFase.builder()
-        .id(convocatoriaFaseId)
-        .nombre("nombre-1")
-        .activo(Boolean.TRUE)
-        .build();
-
-    ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
-        .id(convocatoriaFaseId)
-        .convocatoria(convocatoria)
-        .tipoFase(tipoFase)
-        .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
-        .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
-        .observaciones("observaciones")
-        .build();
-
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
-        .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
-        .tramitacionSGI(Boolean.TRUE)
-        .fasePresentacionSolicitudes(convocatoriaFase)
-        .importeMaximoSolicitud(BigDecimal.valueOf(12345))
-        .formularioSolicitud(FormularioSolicitud.ESTANDAR)
-        .build();
-    // @formatter:on
-
-    return configuracionSolicitud;
-
   }
 
   /**
@@ -301,7 +246,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
     // @formatter:off
     return DocumentoRequeridoSolicitud.builder()
         .id(id)
-        .configuracionSolicitud(generarMockConfiguracionSolicitud(id, id, id))
+        .configuracionSolicitudId(id)
         .tipoDocumento(generarMockTipoDocumento(id))
         .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
         .build();

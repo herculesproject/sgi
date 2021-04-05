@@ -49,14 +49,13 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
 
     Assert.isNull(requisitoIP.getId(), "Id tiene que ser null para crear RequisitoIP");
 
-    Assert.isTrue(requisitoIP.getConvocatoria() != null && requisitoIP.getConvocatoria().getId() != null,
-        "Convocatoria no puede ser null para crear RequisitoIP");
+    Assert.isTrue(requisitoIP.getConvocatoriaId() != null, "Convocatoria no puede ser null para crear RequisitoIP");
 
-    Assert.isTrue(!repository.findByConvocatoriaId(requisitoIP.getConvocatoria().getId()).isPresent(),
-        "Ya existe RequisitoIP para la convocatoria " + requisitoIP.getConvocatoria().getCodigo());
+    Assert.isTrue(!repository.findByConvocatoriaId(requisitoIP.getConvocatoriaId()).isPresent(),
+        "Ya existe RequisitoIP para la convocatoria " + requisitoIP.getConvocatoriaId());
 
-    requisitoIP.setConvocatoria(convocatoriaRepository.findById(requisitoIP.getConvocatoria().getId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoIP.getConvocatoria().getId())));
+    convocatoriaRepository.findById(requisitoIP.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoIP.getConvocatoriaId()));
 
     RequisitoIP returnValue = repository.save(requisitoIP);
 
@@ -82,9 +81,7 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
     return repository.findByConvocatoriaId(idConvocatoria).map(requisitoIP -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(requisitoIP.getConvocatoria().getId(),
-              requisitoIP.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(requisitoIP.getConvocatoriaId(), null),
           "No se puede modificar RequisitoIP. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       requisitoIP.setAniosNivelAcademico(requisitoIPActualizar.getAniosNivelAcademico());

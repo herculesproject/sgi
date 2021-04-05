@@ -46,19 +46,19 @@ public class ProyectoSocioPeriodoPagoRepositoryTest {
         .descripcion("descripcion-001").coordinador(Boolean.FALSE).activo(Boolean.TRUE).build());
 
     ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(
-        ProyectoSocio.builder().proyecto(proyecto1).empresaRef("empresa-0041").rolSocio(rolSocio).build());
+        ProyectoSocio.builder().proyectoId(proyecto1.getId()).empresaRef("empresa-0041").rolSocio(rolSocio).build());
 
     ProyectoSocio proyectoSocio2 = entityManager.persistAndFlush(
-        ProyectoSocio.builder().proyecto(proyecto1).empresaRef("empresa-0025").rolSocio(rolSocio).build());
+        ProyectoSocio.builder().proyectoId(proyecto1.getId()).empresaRef("empresa-0025").rolSocio(rolSocio).build());
     // @formatter:on
 
     ProyectoSocioPeriodoPago proyectoSocioPeriodoPago1 = entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(
-        null, proyectoSocio1, 1, new BigDecimal(3500), Instant.parse("2021-04-10T00:00:00Z"), null));
+        null, proyectoSocio1.getId(), 1, new BigDecimal(3500), Instant.parse("2021-04-10T00:00:00Z"), null));
 
-    entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(null, proyectoSocio2, 1, new BigDecimal(2750),
+    entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(null, proyectoSocio2.getId(), 1, new BigDecimal(2750),
         Instant.parse("2021-01-10T00:00:00Z"), null));
 
-    entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(null, proyectoSocio2, 1, new BigDecimal(1500),
+    entityManager.persistAndFlush(new ProyectoSocioPeriodoPago(null, proyectoSocio2.getId(), 1, new BigDecimal(1500),
         Instant.parse("2021-02-10T00:00:00Z"), null));
 
     Long proyectoSocioId = proyectoSocio1.getId();

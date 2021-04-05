@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.junit.jupiter.api.Test;
@@ -52,8 +51,8 @@ public class ConvocatoriaHitoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaHito responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaHito.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaHito.getConvocatoriaId());
     Assertions.assertThat(responseData.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(newConvocatoriaHito.getTipoHito().getId());
 
@@ -74,8 +73,8 @@ public class ConvocatoriaHitoIT extends BaseIT {
     ConvocatoriaHito convocatoriaHitoActualizado = response.getBody();
     Assertions.assertThat(convocatoriaHitoActualizado.getId()).as("getId()").isNotNull();
 
-    Assertions.assertThat(convocatoriaHitoActualizado.getConvocatoria().getId()).as("getConvocatoria()")
-        .isEqualTo(convocatoriaHito.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaHitoActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaHito.getConvocatoriaId());
     Assertions.assertThat(convocatoriaHitoActualizado.getFecha()).as("getFecha()")
         .isEqualTo(convocatoriaHito.getFecha());
     Assertions.assertThat(convocatoriaHitoActualizado.getTipoHito().getId()).as("getTipoHito().getId()")
@@ -110,7 +109,7 @@ public class ConvocatoriaHitoIT extends BaseIT {
 
     ConvocatoriaHito convocatoriaHito = response.getBody();
     Assertions.assertThat(convocatoriaHito.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaHito.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
+    Assertions.assertThat(convocatoriaHito.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaHito.getComentario()).as("comentario")
         .isEqualTo(convocatoriaHito.getComentario());
     Assertions.assertThat(convocatoriaHito.getFecha()).as("getFecha()").isEqualTo("2021-10-22T00:00:00Z");
@@ -124,16 +123,13 @@ public class ConvocatoriaHitoIT extends BaseIT {
    * @return el objeto ConvocatoriaHito
    */
   private ConvocatoriaHito generarMockConvocatoriaHito(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
     ConvocatoriaHito convocatoriaHito = new ConvocatoriaHito();
     convocatoriaHito.setId(id);
-    convocatoriaHito.setConvocatoria(convocatoria);
+    convocatoriaHito.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
     convocatoriaHito.setComentario("comentario" + id);
     convocatoriaHito.setGeneraAviso(true);

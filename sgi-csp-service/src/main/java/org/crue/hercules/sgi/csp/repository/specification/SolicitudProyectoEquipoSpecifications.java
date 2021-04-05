@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto_;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
@@ -15,12 +15,13 @@ public class SolicitudProyectoEquipoSpecifications {
    * 
    * @param id identificador de la {@link Solicitud}.
    * @return specification para obtener los {@link SolicitudProyectoEquipo} de la
-   *         {@link SolicitudProyectoDatos} con el id indicado.
+   *         {@link SolicitudProyecto} con el id indicado.
    */
   public static Specification<SolicitudProyectoEquipo> bySolicitudId(Long id) {
     return (root, query, cb) -> {
-      return cb.equal(root.get(SolicitudProyectoEquipo_.solicitudProyectoDatos).get(SolicitudProyectoDatos_.solicitud)
-          .get(Solicitud_.id), id);
+      return cb.equal(
+          root.get(SolicitudProyectoEquipo_.solicitudProyecto).get(SolicitudProyecto_.solicitud).get(Solicitud_.id),
+          id);
     };
   }
 
@@ -102,7 +103,7 @@ public class SolicitudProyectoEquipoSpecifications {
   public static Specification<SolicitudProyectoEquipo> bySolicitanteRef(String solicitanteRef) {
     return (root, query, cb) -> {
 
-      return cb.equal(root.get(SolicitudProyectoEquipo_.solicitudProyectoDatos).get(SolicitudProyectoDatos_.solicitud)
+      return cb.equal(root.get(SolicitudProyectoEquipo_.solicitudProyecto).get(SolicitudProyecto_.solicitud)
           .get(Solicitud_.solicitanteRef), solicitanteRef);
     };
   }

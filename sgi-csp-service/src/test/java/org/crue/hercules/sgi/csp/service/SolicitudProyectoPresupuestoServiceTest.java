@@ -8,10 +8,10 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoPresupuestoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,11 +39,14 @@ public class SolicitudProyectoPresupuestoServiceTest {
   @Mock
   private SolicitudService solicitudService;
 
+  @Mock
+  private SolicitudProyectoRepository solicitudProyectoRepository;
+
   private SolicitudProyectoPresupuestoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudProyectoPresupuestoServiceImpl(repository, solicitudService);
+    service = new SolicitudProyectoPresupuestoServiceImpl(repository, solicitudService, solicitudProyectoRepository);
   }
 
   @Test
@@ -67,9 +70,8 @@ public class SolicitudProyectoPresupuestoServiceTest {
     // then: El SolicitudProyectoPresupuesto se crea correctamente
     Assertions.assertThat(solicitudProyectoPresupuestoCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudProyectoPresupuestoCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(solicitudProyectoPresupuestoCreado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoPresupuesto.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoPresupuestoCreado.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(solicitudProyectoPresupuesto.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoPresupuestoCreado.getConceptoGasto().getId())
         .as("getConceptoGasto().getId()").isEqualTo(solicitudProyectoPresupuesto.getConceptoGasto().getId());
     Assertions.assertThat(solicitudProyectoPresupuestoCreado.getEntidadRef()).as("getEntidadRef()")
@@ -99,18 +101,21 @@ public class SolicitudProyectoPresupuestoServiceTest {
   @Test
   public void update_ReturnsSolicitudProyectoPresupuesto() {
     // given: Un nuevo SolicitudProyectoPresupuesto con el titulo actualizado
+    Long solicitudId = 1L;
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(3L, 1L, 1L);
 
     SolicitudProyectoPresupuesto solicitudProyectoPresupuestoActualizar = generarSolicitudProyectoPresupuesto(3L, 1L,
         1L);
     solicitudProyectoPresupuestoActualizar.setObservaciones("actualizado");
 
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoPresupuesto));
-
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoPresupuesto>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPresupuesto
@@ -121,9 +126,8 @@ public class SolicitudProyectoPresupuestoServiceTest {
     Assertions.assertThat(solicitudProyectoPresupuestoActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudProyectoPresupuestoActualizado.getId()).as("getId()")
         .isEqualTo(solicitudProyectoPresupuesto.getId());
-    Assertions.assertThat(solicitudProyectoPresupuestoActualizado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoPresupuesto.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoPresupuestoActualizado.getSolicitudProyectoId())
+        .as("getSolicitudProyectoId()").isEqualTo(solicitudProyectoPresupuesto.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoPresupuestoActualizado.getConceptoGasto().getId())
         .as("getConceptoGasto().getId()").isEqualTo(solicitudProyectoPresupuesto.getConceptoGasto().getId());
     Assertions.assertThat(solicitudProyectoPresupuestoActualizado.getEntidadRef()).as("getEntidadRef()")
@@ -142,10 +146,14 @@ public class SolicitudProyectoPresupuestoServiceTest {
   @Test
   public void update_WithIdNotExist_ThrowsSolicitudProyectoPresupuestoNotFoundException() {
     // given: Un SolicitudProyectoPresupuesto actualizado con un id que no existe
+    Long solicitudId = 1L;
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(1L, 1L, 1L);
 
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoPresupuesto
@@ -249,15 +257,19 @@ public class SolicitudProyectoPresupuestoServiceTest {
     }
   }
 
+  private SolicitudProyecto generarMockSolicitudProyecto(Long solicitudProyectoId, Long solicitudId) {
+    return SolicitudProyecto.builder().id(solicitudProyectoId).build();
+  }
+
   /**
    * Función que devuelve un objeto SolicitudProyectoPresupuesto
    * 
-   * @param id                       Id {@link SolicitudProyectoPresupuesto}.
-   * @param solicitudProyectoDatosId Id {@link SolicitudProyectoDatos}.
-   * @param conceptoGastoId          Id {@link ConceptoGasto}.
+   * @param id                  Id {@link SolicitudProyectoPresupuesto}.
+   * @param solicitudProyectoId Id {@link SolicitudProyecto}.
+   * @param conceptoGastoId     Id {@link ConceptoGasto}.
    * @return el objeto {@link SolicitudProyectoPresupuesto}.
    */
-  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoDatosId,
+  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoId,
       Long conceptoGastoId) {
 
     String suffix = String.format("%03d", id);
@@ -265,7 +277,7 @@ public class SolicitudProyectoPresupuestoServiceTest {
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
+        .solicitudProyectoId(solicitudProyectoId)
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .entidadRef(null)
         .anualidad(1000)

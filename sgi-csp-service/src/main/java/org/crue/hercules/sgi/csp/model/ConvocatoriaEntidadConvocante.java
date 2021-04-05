@@ -14,10 +14,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "convocatoria_entidad_convocante")
@@ -39,11 +42,10 @@ public class ConvocatoriaEntidadConvocante extends BaseEntity {
   @SequenceGenerator(name = "convocatoria_entidad_convocante_seq", sequenceName = "convocatoria_entidad_convocante_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENTIDADCONVOCANTE_CONVOCATORIA"))
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
   @NotNull
-  private Convocatoria convocatoria;
+  private Long convocatoriaId;
 
   /** Nombre. */
   @Column(name = "entidad_ref", length = 50, nullable = false)
@@ -56,4 +58,10 @@ public class ConvocatoriaEntidadConvocante extends BaseEntity {
   @JoinColumn(name = "programa_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENTIDADCONVOCANTE_PROGRAMA"))
   private Programa programa;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENTIDADCONVOCANTE_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
 }

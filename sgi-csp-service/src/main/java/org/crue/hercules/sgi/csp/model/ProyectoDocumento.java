@@ -13,11 +13,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_documento")
@@ -40,11 +43,10 @@ public class ProyectoDocumento extends BaseEntity {
   @SequenceGenerator(name = "proyecto_documento_seq", sequenceName = "proyecto_documento_seq", allocationSize = 1)
   private Long id;
 
-  /** Proyecto socio. */
-  @ManyToOne
-  @JoinColumn(name = "proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_DOCUMENTO_PROYECTO"))
+  /** Proyecto Id */
+  @Column(name = "proyecto_id", nullable = false)
   @NotNull
-  private Proyecto proyecto;
+  private Long proyectoId;
 
   /** Nombre. */
   @Column(name = "nombre", length = 250, nullable = false)
@@ -60,12 +62,12 @@ public class ProyectoDocumento extends BaseEntity {
 
   /** Tipo fase */
   @ManyToOne
-  @JoinColumn(name = "tipo_fase_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_DOCUMENTO_TIPOFASE"))
+  @JoinColumn(name = "tipo_fase_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTODOCUMENTO_TIPOFASE"))
   private TipoFase tipoFase;
 
   /** Tipo Documento */
   @ManyToOne
-  @JoinColumn(name = "tipo_documento_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_DOCUMENTO_TIPODOCUMENTO"))
+  @JoinColumn(name = "tipo_documento_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTODOCUMENTO_TIPODOCUMENTO"))
   private TipoDocumento tipoDocumento;
 
   /** Comentario. */
@@ -78,4 +80,10 @@ public class ProyectoDocumento extends BaseEntity {
   @NotNull
   private Boolean visible;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTODOCUMENTO_PROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Proyecto proyecto = null;
 }

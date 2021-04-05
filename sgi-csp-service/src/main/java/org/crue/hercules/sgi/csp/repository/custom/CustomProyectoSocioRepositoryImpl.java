@@ -18,8 +18,8 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago_;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio_;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
-import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
-import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento_;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento_;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -39,13 +39,14 @@ public class CustomProyectoSocioRepositoryImpl implements CustomProyectoSocioRep
 
   /**
    * Indica si {@link ProyectoSocio} tiene {@link ProyectoSocioEquipo},
-   * {@link ProyectoSocioPeriodoPago}, {@link SocioPeriodoJustificacionDocumento}
-   * y/o {@link ProyectoSocioPeriodoJustificacion} relacionadas.
+   * {@link ProyectoSocioPeriodoPago},
+   * {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
+   * {@link ProyectoSocioPeriodoJustificacion} relacionadas.
    *
    * @param id Id de la {@link ProyectoSocio}.
    * @return True si tiene {@link ProyectoSocioEquipo},
    *         {@link ProyectoSocioPeriodoPago},
-   *         {@link SocioPeriodoJustificacionDocumento} y/o
+   *         {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
    *         {@link ProyectoSocioPeriodoJustificacion} relacionadas. En caso
    *         contrario false
    */
@@ -70,9 +71,10 @@ public class CustomProyectoSocioRepositoryImpl implements CustomProyectoSocioRep
         .exists(queryPeriodoPago.select(pathPeriodoPago).where(cb.equal(pathPeriodoPago, root.get(ProyectoSocio_.id))));
 
     Subquery<Long> queryDocumento = cq.subquery(Long.class);
-    Root<SocioPeriodoJustificacionDocumento> documentoRoot = queryDocumento
-        .from(SocioPeriodoJustificacionDocumento.class);
-    Path<Long> pathDocumento = documentoRoot.get(SocioPeriodoJustificacionDocumento_.proyectoSocioPeriodoJustificacion)
+    Root<ProyectoSocioPeriodoJustificacionDocumento> documentoRoot = queryDocumento
+        .from(ProyectoSocioPeriodoJustificacionDocumento.class);
+    Path<Long> pathDocumento = documentoRoot
+        .get(ProyectoSocioPeriodoJustificacionDocumento_.proyectoSocioPeriodoJustificacion)
         .get(ProyectoSocioPeriodoJustificacion_.proyectoSocio).get(ProyectoSocio_.id);
     Predicate existsQueryDocumento = cb
         .exists(queryDocumento.select(pathDocumento).where(cb.equal(pathDocumento, root.get(ProyectoSocio_.id))));

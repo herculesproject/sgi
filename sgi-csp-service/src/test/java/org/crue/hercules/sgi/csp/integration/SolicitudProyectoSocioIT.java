@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -73,9 +71,8 @@ public class SolicitudProyectoSocioIT {
     Assertions.assertThat(solicitudProyectoSocioCreado.getId()).as("getId()").isNotNull();
     Assertions.assertThat(solicitudProyectoSocioCreado.getRolSocio().getId()).as("getRolSocio().getId()")
         .isEqualTo(solicitudProyectoSocio.getRolSocio().getId());
-    Assertions.assertThat(solicitudProyectoSocioCreado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoSocio.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoSocioCreado.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(solicitudProyectoSocio.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoSocioCreado.getImporteSolicitado()).as("getImporteSolicitado()")
         .isEqualTo(solicitudProyectoSocio.getImporteSolicitado());
     Assertions.assertThat(solicitudProyectoSocioCreado.getNumInvestigadores()).as("getNumInvestigadores()")
@@ -138,8 +135,7 @@ public class SolicitudProyectoSocioIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     SolicitudProyectoSocio solicitudProyectoSocio = response.getBody();
     Assertions.assertThat(solicitudProyectoSocio.getId()).as("getId()").isEqualTo(idSolicitudProyectoSocio);
-    Assertions.assertThat(solicitudProyectoSocio.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()").isEqualTo(1);
+    Assertions.assertThat(solicitudProyectoSocio.getSolicitudProyectoId()).as("getSolicitudProyectoId()").isEqualTo(1);
     Assertions.assertThat(solicitudProyectoSocio.getRolSocio().getId()).as("getRolSocio().getId()")
         .isEqualTo(solicitudProyectoSocio.getRolSocio().getId());
     Assertions.assertThat(solicitudProyectoSocio.getMesFin()).as("getMesFin()")
@@ -161,7 +157,7 @@ public class SolicitudProyectoSocioIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudProyectoPeriodoPago_WithPagingSortingAndFiltering_ReturnsSolicitudPeriodoPagoSubList()
+  public void findAllSolicitudProyectoSocioPeriodoPago_WithPagingSortingAndFiltering_ReturnsSolicitudPeriodoPagoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -173,16 +169,16 @@ public class SolicitudProyectoSocioIT {
     Long solicitudId = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoperiodopago").queryParam("s", sort)
-        .queryParam("q", filter).buildAndExpand(solicitudId).toUri();
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectosocioperiodopago")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
-    final ResponseEntity<List<SolicitudProyectoPeriodoPago>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudProyectoPeriodoPago>>() {
+    final ResponseEntity<List<SolicitudProyectoSocioPeriodoPago>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudProyectoSocioPeriodoPago>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<SolicitudProyectoPeriodoPago> solicitudProyectoPeriodoPago = response.getBody();
-    Assertions.assertThat(solicitudProyectoPeriodoPago.size()).isEqualTo(1);
+    final List<SolicitudProyectoSocioPeriodoPago> solicitudProyectoSocioPeriodoPago = response.getBody();
+    Assertions.assertThat(solicitudProyectoSocioPeriodoPago.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -197,7 +193,7 @@ public class SolicitudProyectoSocioIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudProyectoEquipoSocio_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoSocioSubList()
+  public void findAllSolicitudProyectoSocioEquipo_WithPagingSortingAndFiltering_ReturnsSolicitudProyectoSocioSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -209,16 +205,16 @@ public class SolicitudProyectoSocioIT {
     Long solicitudProyectoSocioId = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoequiposocio").queryParam("s", sort)
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectosocioequipo").queryParam("s", sort)
         .queryParam("q", filter).buildAndExpand(solicitudProyectoSocioId).toUri();
 
-    final ResponseEntity<List<SolicitudProyectoEquipoSocio>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudProyectoEquipoSocio>>() {
+    final ResponseEntity<List<SolicitudProyectoSocioEquipo>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudProyectoSocioEquipo>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<SolicitudProyectoEquipoSocio> solicitudProyectoEquipoSocio = response.getBody();
-    Assertions.assertThat(solicitudProyectoEquipoSocio.size()).isEqualTo(1);
+    final List<SolicitudProyectoSocioEquipo> solicitudProyectoSocioEquipo = response.getBody();
+    Assertions.assertThat(solicitudProyectoSocioEquipo.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -233,7 +229,7 @@ public class SolicitudProyectoSocioIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllSolicitudProyectoPeriodoJustificacion_WithPagingSortingAndFiltering_ReturnsSolicitudPeriodoJustificacionSubList()
+  public void findAllSolicitudProyectoSocioPeriodoJustificacion_WithPagingSortingAndFiltering_ReturnsSolicitudPeriodoJustificacionSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
@@ -245,17 +241,18 @@ public class SolicitudProyectoSocioIT {
     Long solicitudId = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectoperiodojustificaciones")
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectosocioperiodojustificaciones")
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
 
-    final ResponseEntity<List<SolicitudProyectoPeriodoJustificacion>> response = restTemplate.exchange(uri,
+    final ResponseEntity<List<SolicitudProyectoSocioPeriodoJustificacion>> response = restTemplate.exchange(uri,
         HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<SolicitudProyectoPeriodoJustificacion>>() {
+        new ParameterizedTypeReference<List<SolicitudProyectoSocioPeriodoJustificacion>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<SolicitudProyectoPeriodoJustificacion> solicitudProyectoPeriodoJustificacion = response.getBody();
-    Assertions.assertThat(solicitudProyectoPeriodoJustificacion.size()).isEqualTo(1);
+    final List<SolicitudProyectoSocioPeriodoJustificacion> solicitudProyectoSocioPeriodoJustificacion = response
+        .getBody();
+    Assertions.assertThat(solicitudProyectoSocioPeriodoJustificacion.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
@@ -264,19 +261,17 @@ public class SolicitudProyectoSocioIT {
   /**
    * Función que devuelve un objeto SolicitudProyectoSocio
    * 
-   * @param solicitudProyectoSocioId Id de solicitud proyecto socio
-   * @param solicitudProyectoDatosId Id de solicitud proyecto datos
+   * @param solicitudProyectoSocioId Id de solicitud de proyecto socio
+   * @param solicitudProyectoId      Id de solicitud de proyecto
    * @param rolSocioId               Id de solicitud rol socio
    * @return el objeto SolicitudProyectoSocio
    */
-  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId,
-      Long solicitudProyectoDatosId, Long rolSocioId) {
+  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId, Long solicitudProyectoId,
+      Long rolSocioId) {
 
     SolicitudProyectoSocio solicitudProyectoSocio = SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
-            .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
-        .rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1).mesFin(5).numInvestigadores(7)
-        .importeSolicitado(new BigDecimal(1000)).empresaRef("002").build();
+        .solicitudProyectoId(solicitudProyectoId).rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1)
+        .mesFin(5).numInvestigadores(7).importeSolicitado(new BigDecimal(1000)).empresaRef("002").build();
 
     return solicitudProyectoSocio;
   }

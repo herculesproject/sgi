@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
@@ -54,6 +52,7 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
     // given: una lista con uno de los ProyectoSocioEquipo actualizado,
     // otro nuevo y sin el otros existente
     Long proyectoSocioId = 1L;
+    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
 
     List<ProyectoSocioEquipo> proyectoSocioEquipoExistentes = new ArrayList<>();
     proyectoSocioEquipoExistentes.add(generarMockProyectoSocioEquipo(2L));
@@ -69,7 +68,7 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
     proyectoSocioEquipoActualizar.add(updatedProyectoSocioEquipo);
 
     BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newProyectoSocioEquipo.getProyectoSocio()));
+        .willReturn(Optional.of(proyectoSocio));
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoSocioEquipoExistentes);
@@ -83,7 +82,7 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
             if (periodoPago.getId() == null) {
               periodoPago.setId(6L);
             }
-            periodoPago.getProyectoSocio().setId(proyectoSocioId);
+            periodoPago.setProyectoSocioId(proyectoSocioId);
             return periodoPago;
           }).collect(Collectors.toList());
         });
@@ -96,8 +95,8 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
     // existe y se elimina el otro
     Assertions.assertThat(periodosPagoActualizados.get(0).getId()).as("get(0).getId()")
         .isEqualTo(updatedProyectoSocioEquipo.getId());
-    Assertions.assertThat(periodosPagoActualizados.get(0).getProyectoSocio().getId())
-        .as("get(0).getProyectoSocio().getId()").isEqualTo(proyectoSocioId);
+    Assertions.assertThat(periodosPagoActualizados.get(0).getProyectoSocioId()).as("get(0).getProyectoSocio().getId()")
+        .isEqualTo(proyectoSocioId);
     Assertions.assertThat(periodosPagoActualizados.get(0).getPersonaRef()).as("get(0).getPersonaRef()")
         .isEqualTo(updatedProyectoSocioEquipo.getPersonaRef());
     Assertions.assertThat(periodosPagoActualizados.get(0).getRolProyecto().getId())
@@ -108,7 +107,7 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
         .isEqualTo(updatedProyectoSocioEquipo.getFechaFin());
 
     Assertions.assertThat(periodosPagoActualizados.get(1).getId()).as("get(1).getId()").isEqualTo(6L);
-    Assertions.assertThat(periodosPagoActualizados.get(1).getProyectoSocio().getId())
+    Assertions.assertThat(periodosPagoActualizados.get(1).getProyectoSocioId())
         .as("get(1).getSolicitudProyectoSocio().getId()").isEqualTo(proyectoSocioId);
     Assertions.assertThat(periodosPagoActualizados.get(1).getPersonaRef()).as("get(1).getPersonaRef()")
         .isEqualTo(newProyectoSocioEquipo.getPersonaRef());
@@ -143,6 +142,8 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   @Test
   public void update_WithIdNotExist_ThrowsProyectoSocioEquipoNotFoundException() {
     // given: Un ProyectoSocioEquipo actualizado con un id que no existe
+    Long proyectoSocioId = 1L;
+    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
     Long solicitudProyectoSocioId = 1L;
     ProyectoSocioEquipo proyectoPeriodoPago = generarMockProyectoSocioEquipo(1L);
 
@@ -150,7 +151,7 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
     proyectoPeriodoPagoExistentes.add(generarMockProyectoSocioEquipo(3L));
 
     BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoPeriodoPago.getProyectoSocio()));
+        .willReturn(Optional.of(proyectoSocio));
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoPeriodoPagoExistentes);
@@ -165,15 +166,16 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   public void update_WithProyectoSocioChange_ThrowsIllegalArgumentException() {
     // given:Se actualiza ProyectoSocio
     Long proyectoSocioId = 1L;
+    ProyectoSocio proyectoSocio = generarMockProyectoSocio(proyectoSocioId);
     ProyectoSocioEquipo proyectoPeriodoPago = generarMockProyectoSocioEquipo(1L);
 
-    proyectoPeriodoPago.getProyectoSocio().setId(2L);
+    proyectoPeriodoPago.setProyectoSocioId(2L);
 
     List<ProyectoSocioEquipo> proyectoPeriodoPagoExistentes = new ArrayList<>();
     proyectoPeriodoPagoExistentes.add(generarMockProyectoSocioEquipo(1L));
 
     BDDMockito.given(proyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoPeriodoPago.getProyectoSocio()));
+        .willReturn(Optional.of(proyectoSocio));
 
     BDDMockito.given(repository.findAllByProyectoSocioId(ArgumentMatchers.anyLong()))
         .willReturn(proyectoPeriodoPagoExistentes);
@@ -253,22 +255,8 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
     }
   }
 
-  /**
-   * Función que genera un ProyectoSocioEquipo
-   * 
-   * @param id Identificador
-   * @return el ProyectoSocioEquipo
-   */
-  private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
-
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
-
+  private ProyectoSocio generarMockProyectoSocio(Long id) {
     // @formatter:off
-    Proyecto proyecto1 = Proyecto.builder()
-        .id(id).titulo("proyecto 1").acronimo("PR1").fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
-        .fechaFin(Instant.parse("2021-11-20T23:59:59Z")).unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
-        .activo(Boolean.TRUE).build();
-
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura("001")
         .nombre("nombre-001")
@@ -277,6 +265,25 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
         .activo(Boolean.TRUE)
         .build();
 
+    ProyectoSocio proyectoSocio = ProyectoSocio.builder()
+        .id(id)
+        .proyectoId(id)
+        .empresaRef("empresa-0041")
+        .rolSocio(rolSocio)
+        .build();
+    // @formatter:on
+    return proyectoSocio;
+  }
+
+  /**
+   * Función que genera un ProyectoSocioEquipo
+   * 
+   * @param id Identificador
+   * @return el ProyectoSocioEquipo
+   */
+  private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
+
+    // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(id).abreviatura("001")
         .nombre("nombre-001")
@@ -285,16 +292,14 @@ public class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
         .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)
         .build();
 
-    ProyectoSocio proyectoSocio1 = ProyectoSocio.builder()
-        .id(id)
-        .proyecto(proyecto1)
-        .empresaRef("empresa-0041")
-        .rolSocio(rolSocio)
-        .build();
+    ProyectoSocioEquipo proyectoSocioEquipo = ProyectoSocioEquipo.builder()
+      .id(id)
+      .proyectoSocioId(id)
+      .rolProyecto(rolProyecto)
+      .personaRef("001")
+      .fechaInicio(Instant.parse("2021-04-10T00:00:00Z"))
+    .build();
     // @formatter:on
-
-    ProyectoSocioEquipo proyectoSocioEquipo = new ProyectoSocioEquipo(id, proyectoSocio1, rolProyecto, "001",
-        Instant.parse("2021-04-10T00:00:00Z"), null);
 
     return proyectoSocioEquipo;
   }

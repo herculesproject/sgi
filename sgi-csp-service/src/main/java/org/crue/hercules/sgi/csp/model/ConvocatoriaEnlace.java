@@ -13,11 +13,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "convocatoria_enlace")
@@ -41,11 +44,10 @@ public class ConvocatoriaEnlace extends BaseEntity {
   @SequenceGenerator(name = "convocatoria_enlace_seq", sequenceName = "convocatoria_enlace_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENLACE_CONVOCATORIA"))
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
   @NotNull
-  private Convocatoria convocatoria;
+  private Long convocatoriaId;
 
   /** Url */
   @Column(name = "url", length = 250, nullable = false)
@@ -62,4 +64,10 @@ public class ConvocatoriaEnlace extends BaseEntity {
   @JoinColumn(name = "tipo_enlace_id", foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENLACE_TIPOENLACE"))
   private TipoEnlace tipoEnlace;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENLACE_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
 }

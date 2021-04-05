@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.repository;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,22 +13,20 @@ public interface SolicitudProyectoEquipoRepository
 
   /**
    * Recupera los {@link SolicitudProyectoEquipo} asociados a un
-   * {@link SolicitudProyectoDatos} cuya persona ref sea la recibida por
-   * parámetro.
+   * {@link SolicitudProyecto} cuya persona ref sea la recibida por parámetro.
    * 
-   * @param idSolicitudProyectoDatos Id {@link SolicitudProyectoDatos}
-   * @param personaRef               persona ref
+   * @param idSolicitudProyecto Id {@link SolicitudProyecto}
+   * @param personaRef          persona ref
    * @return listado {@link SolicitudProyectoEquipo}
    */
-  List<SolicitudProyectoEquipo> findAllBySolicitudProyectoDatosIdAndPersonaRef(Long idSolicitudProyectoDatos,
-      String personaRef);
+  List<SolicitudProyectoEquipo> findAllBySolicitudProyectoIdAndPersonaRef(Long idSolicitudProyecto, String personaRef);
 
   /**
    * Obtiene las {@link SolicitudProyectoEquipo} asociadas a una {@link Solicitud}
    * 
-   * @param solicitudProyectoDatosId Identificador de la {@link Solicitud}
+   * @param solicitudProyectoId Identificador de la {@link Solicitud}
    * @return Listado de solicitudes modalidad
    */
-  List<SolicitudProyectoEquipo> findAllBySolicitudProyectoDatosId(Long solicitudProyectoDatosId);
+  List<SolicitudProyectoEquipo> findAllBySolicitudProyectoId(Long solicitudProyectoId);
 
 }

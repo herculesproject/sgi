@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.service.RequisitoEquipoService;
 import org.junit.jupiter.api.Test;
@@ -182,7 +181,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   private RequisitoEquipo generarMockRequisitoEquipo(Long id) {
     RequisitoEquipo requisitoEquipo = new RequisitoEquipo();
     requisitoEquipo.setId(id);
-    requisitoEquipo.setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    requisitoEquipo.setConvocatoriaId(id);
     requisitoEquipo.setEdadMaxima(50);
     return requisitoEquipo;
   }

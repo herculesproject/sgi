@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -88,8 +87,8 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
         // then: new ConfiguracionSolicitud is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(newConfiguracionSolicitud.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(newConfiguracionSolicitud.getConvocatoriaId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tramitacionSGI").value(newConfiguracionSolicitud.getTramitacionSGI()))
         .andExpect(MockMvcResultMatchers.jsonPath("fasePresentacionSolicitudes.id")
@@ -143,8 +142,8 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
         // then: ConfiguracionSolicitud is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(configuracionSolicitudExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(configuracionSolicitudExistente.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(configuracionSolicitudExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tramitacionSGI").value(configuracionSolicitud.getTramitacionSGI()))
         .andExpect(MockMvcResultMatchers.jsonPath("fasePresentacionSolicitudes.id")
             .value(configuracionSolicitud.getFasePresentacionSolicitudes().getId()))
@@ -192,7 +191,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ConfiguracionSolicitud is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(2L))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L));
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L));
   }
 
   @Test
@@ -321,6 +320,19 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  private ModeloEjecucion generarMockModeloEjecucion(Long modeloEjecucionId) {
+    // @formatter:off
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .id(modeloEjecucionId)
+        .nombre("nombreModeloEjecucion-1")
+        .descripcion("descripcionModeloEjecucion-1")
+        .activo(Boolean.TRUE)
+        .build();
+    // @formatter:on
+
+    return modeloEjecucion;
+  }
+
   /**
    * Genera un objeto ConfiguracionSolicitud
    * 
@@ -333,21 +345,6 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
       Long convocatoriaFaseId) {
 
     // @formatter:off
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
-        .id(1L)
-        .nombre("nombreModeloEjecucion-1")
-        .descripcion("descripcionModeloEjecucion-1")
-        .activo(Boolean.TRUE)
-        .build();
-
-    Convocatoria convocatoria = Convocatoria.builder()
-        .id(convocatoriaId)
-        .modeloEjecucion(modeloEjecucion)
-        .estado(Convocatoria.Estado.BORRADOR)
-
-        .activo(Boolean.TRUE)
-        .build();
-
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
         .nombre("nombre-1")
@@ -356,7 +353,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
         .id(convocatoriaFaseId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-15T00:00:00Z"))
@@ -365,7 +362,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoriaId)
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
@@ -383,9 +380,6 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
    * @return
    */
   private DocumentoRequeridoSolicitud generarDocumentoRequeridoSolicitud(Long documentoRequeridoSolicitudId) {
-
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
-
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(1L)
@@ -395,7 +389,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     ModeloTipoFase.builder()
         .id(1L)
-        .modeloEjecucion(configuracionSolicitud.getConvocatoria().getModeloEjecucion())
+        .modeloEjecucion(generarMockModeloEjecucion(1L))
         .tipoFase(tipoFase)
         .solicitud(Boolean.TRUE)
         .convocatoria(Boolean.TRUE)
@@ -411,7 +405,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     return DocumentoRequeridoSolicitud.builder()
         .id(documentoRequeridoSolicitudId)
-        .configuracionSolicitud(configuracionSolicitud)
+        .configuracionSolicitudId(1L)
         .tipoDocumento(tipoDocumento)
         .observaciones("observaciones-" + documentoRequeridoSolicitudId)
         .build();

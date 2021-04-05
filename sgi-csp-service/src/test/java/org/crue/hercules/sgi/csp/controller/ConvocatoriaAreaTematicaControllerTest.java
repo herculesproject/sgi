@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaAreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.junit.jupiter.api.Test;
@@ -60,8 +59,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
         // then: new ConvocatoriaAreaTematica is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("convocatoria.id").value(convocatoriaAreaTematica.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaAreaTematica.getConvocatoriaId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("areaTematica.id").value(convocatoriaAreaTematica.getAreaTematica().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(convocatoriaAreaTematica.getObservaciones()));
@@ -112,8 +110,8 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
         // then: ConvocatoriaAreaTematica is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(updatedConvocatoriaAreaTematica.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(updatedConvocatoriaAreaTematica.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(updatedConvocatoriaAreaTematica.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("areaTematica.id")
             .value(updatedConvocatoriaAreaTematica.getAreaTematica().getId()))
         .andExpect(
@@ -229,8 +227,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   private ConvocatoriaAreaTematica generarConvocatoriaAreaTematica(Long convocatoriaAreaTematicaId, Long convocatoriaId,
       Long areaTematicaId) {
 
-    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
+    return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId).convocatoriaId(convocatoriaId)
         .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }

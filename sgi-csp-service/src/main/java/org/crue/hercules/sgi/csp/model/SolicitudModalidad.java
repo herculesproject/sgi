@@ -13,11 +13,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "solicitud_modalidad")
@@ -40,11 +43,10 @@ public class SolicitudModalidad extends BaseEntity {
   @SequenceGenerator(name = "solicitud_modalidad_seq", sequenceName = "solicitud_modalidad_seq", allocationSize = 1)
   private Long id;
 
-  /** Solicitud */
-  @ManyToOne
-  @JoinColumn(name = "solicitud_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_MODALIDAD_SOLICITUD"))
+  /** Solicitud Id */
+  @Column(name = "solicitud_id", nullable = false)
   @NotNull
-  private Solicitud solicitud;
+  private Long solicitudId;
 
   /** EntidadRef */
   @Column(name = "entidad_ref", length = 50, nullable = false)
@@ -54,8 +56,14 @@ public class SolicitudModalidad extends BaseEntity {
 
   /** Programa */
   @ManyToOne
-  @JoinColumn(name = "programa_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_MODALIDAD_PROGRAMA"))
+  @JoinColumn(name = "programa_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDMODALIDAD_PROGRAMA"))
   @NotNull
   private Programa programa;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "solicitud_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDMODALIDAD_SOLICITUD"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Solicitud solicitud = null;
 }

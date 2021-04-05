@@ -8,17 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "solicitud_proyecto_equipo")
@@ -41,11 +43,10 @@ public class SolicitudProyectoEquipo extends BaseEntity {
   @SequenceGenerator(name = "solicitud_proyecto_equipo_seq", sequenceName = "solicitud_proyecto_equipo_seq", allocationSize = 1)
   private Long id;
 
-  /** Solicitud proyecto datos */
-  @OneToOne
-  @JoinColumn(name = "solicitud_proyecto_datos_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_PROYECTO_EQUIPO_PROYECTO_DATOS"))
+  /** SolicitudProyecto Id */
+  @Column(name = "solicitud_proyecto_id", nullable = false)
   @NotNull
-  private SolicitudProyectoDatos solicitudProyectoDatos;
+  private Long solicitudProyectoId;
 
   /** Persona ref */
   @Column(name = "persona_ref", length = 50, nullable = false)
@@ -55,7 +56,7 @@ public class SolicitudProyectoEquipo extends BaseEntity {
 
   /** Rol Proyecto */
   @ManyToOne
-  @JoinColumn(name = "rol_proyecto_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUD_PROYECTO_EQUIPO_ROL_PROYECTO"))
+  @JoinColumn(name = "rol_proyecto_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOEQUIPO_ROLPROYECTO"))
   @NotNull
   private RolProyecto rolProyecto;
 
@@ -67,4 +68,10 @@ public class SolicitudProyectoEquipo extends BaseEntity {
   @Column(name = "mes_fin", nullable = true)
   private Integer mesFin;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "solicitud_proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOEQUIPO_SOLICITUDPROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final SolicitudProyecto solicitudProyecto = null;
 }

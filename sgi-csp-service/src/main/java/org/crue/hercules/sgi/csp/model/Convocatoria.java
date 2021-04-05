@@ -25,8 +25,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 
 import lombok.AccessLevel;
@@ -168,24 +166,80 @@ public class Convocatoria extends BaseEntity {
   @OneToOne(mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
   private final ConfiguracionSolicitud configuracionSolicitud = null;
+
+  @OneToOne(mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final RequisitoEquipo requisitoEquipo = null;
+
+  @OneToOne(mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final RequisitoIP requisitoIP = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
   private final List<ConvocatoriaAreaTematica> areasTematicas = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
+  private final List<ConvocatoriaConceptoGasto> conceptosGasto = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaDocumento> documentos = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaEnlace> enlaces = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
   private final List<ConvocatoriaEntidadConvocante> entidadesConvocantes = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
   private final List<ConvocatoriaEntidadFinanciadora> entidadesFinanciadoras = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaEntidadGestora> entidadesGestoras = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaFase> fases = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaHito> hitos = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaPeriodoJustificacion> periodosJustificacion = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ConvocatoriaPeriodoSeguimientoCientifico> periodosSeguimiento = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<Proyecto> proyectos = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<Solicitud> solicitudes = null;
 }

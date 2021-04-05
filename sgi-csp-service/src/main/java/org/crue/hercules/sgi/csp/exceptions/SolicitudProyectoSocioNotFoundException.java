@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.exceptions;
 
 /**
- * SolicitudProyectoDatosNotFoundException
+ * SolicitudProyectoSocioNotFoundException
  */
 public class SolicitudProyectoSocioNotFoundException extends CspNotFoundException {
 

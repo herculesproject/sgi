@@ -15,11 +15,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_socio_periodo_pago")
@@ -42,11 +45,10 @@ public class ProyectoSocioPeriodoPago extends BaseEntity {
   @SequenceGenerator(name = "proyecto_socio_periodo_pago_seq", sequenceName = "proyecto_socio_periodo_pago_seq", allocationSize = 1)
   private Long id;
 
-  /** Solicitud */
-  @ManyToOne
-  @JoinColumn(name = "proyecto_socio_id", nullable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOCIO_PERIODO_PAGO_PROYECTO_SOCIO"))
+  /** ProyectoSocio Id */
+  @Column(name = "proyecto_socio_id", nullable = false)
   @NotNull
-  private ProyectoSocio proyectoSocio;
+  private Long proyectoSocioId;
 
   /** Número de periodo */
   @Column(name = "num_periodo", nullable = false)
@@ -66,4 +68,10 @@ public class ProyectoSocioPeriodoPago extends BaseEntity {
   @Column(name = "fecha_pago", nullable = true)
   private Instant fechaPago;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_socio_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOSOCIOPERIODOPAGO_PROYECTOSOCIO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final ProyectoSocio proyectoSocio = null;
 }

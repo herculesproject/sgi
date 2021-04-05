@@ -1,9 +1,9 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface para gestionar {@link ProyectoDocumento}.
@@ -46,9 +46,10 @@ public interface ProyectoDocumentoService {
    * Obtiene las {@link ProyectoDocumento} para una {@link Proyecto}.
    *
    * @param proyectoId el id de la {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
    * @return la lista de entidades {@link ProyectoDocumento} de la
    *         {@link Proyecto} paginadas.
    */
-  List<ProyectoDocumento> findAllByProyecto(Long proyectoId);
-
+  Page<ProyectoDocumento> findAllByProyectoId(Long proyectoId, String query, Pageable pageable);
 }

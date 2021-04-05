@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.repository;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.custom.CustomSolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -14,20 +14,19 @@ public interface SolicitudProyectoSocioRepository extends JpaRepository<Solicitu
 
   /**
    * Recupera los {@link SolicitudProyectoSocio} asociados a un
-   * {@link SolicitudProyectoDatos} cuya rol socio sea coordinador.
+   * {@link SolicitudProyecto} cuya rol socio sea coordinador.
    * 
-   * @param idSolicitudProyectoDatos Id {@link SolicitudProyectoDatos}
+   * @param idSolicitudProyecto Id {@link SolicitudProyecto}
    * @return listado {@link SolicitudProyectoSocio}
    */
-  List<SolicitudProyectoSocio> findAllBySolicitudProyectoDatosIdAndRolSocioCoordinadorTrue(
-      Long idSolicitudProyectoDatos);
+  List<SolicitudProyectoSocio> findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(Long idSolicitudProyecto);
 
   /**
    * Obtiene los {@link SolicitudProyectoSocio} asociados a una {@link Solicitud}
    * 
-   * @param solicitudProyectoDatosId Identificador de la {@link Solicitud}
+   * @param solicitudProyectoId Identificador de la {@link Solicitud}
    * @return Listado de solicitudes modalidad
    */
-  List<SolicitudProyectoSocio> findAllBySolicitudProyectoDatosId(Long solicitudProyectoDatosId);
+  List<SolicitudProyectoSocio> findAllBySolicitudProyectoId(Long solicitudProyectoId);
 
 }

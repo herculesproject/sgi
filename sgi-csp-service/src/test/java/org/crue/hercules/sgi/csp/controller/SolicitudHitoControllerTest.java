@@ -3,8 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
@@ -61,7 +59,7 @@ public class SolicitudHitoControllerTest extends BaseControllerTest {
         // then: new SolicitudHito is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(solicitudHito.getSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(solicitudHito.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(solicitudHito.getTipoHito().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(solicitudHito.getComentario()))
         .andExpect(MockMvcResultMatchers.jsonPath("generaAviso").value(solicitudHito.getGeneraAviso()));
@@ -110,7 +108,7 @@ public class SolicitudHitoControllerTest extends BaseControllerTest {
         // then: SolicitudHito is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(updatedSolicitudHito.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(updatedSolicitudHito.getSolicitud().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(updatedSolicitudHito.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(updatedSolicitudHito.getTipoHito().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(updatedSolicitudHito.getComentario()))
         .andExpect(MockMvcResultMatchers.jsonPath("generaAviso").value(updatedSolicitudHito.getGeneraAviso()));
@@ -222,13 +220,10 @@ public class SolicitudHitoControllerTest extends BaseControllerTest {
    */
   private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
 
-    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
-        .build();
+    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId).solicitudId(solicitudId)
+        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now()).generaAviso(Boolean.TRUE)
+        .tipoHito(TipoHito.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 

@@ -6,8 +6,7 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,9 +47,9 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud.sql",
-    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql"
     // @formatter:on
   })
@@ -69,8 +68,8 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     SolicitudProyectoPresupuesto responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getSolicitudProyectoDatos().getId()).as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(newSolicitudProyectoPresupuesto.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(responseData.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(newSolicitudProyectoPresupuesto.getSolicitudProyectoId());
     Assertions.assertThat(responseData.getConceptoGasto().getId()).as("getConceptoGasto().getId()")
         .isEqualTo(newSolicitudProyectoPresupuesto.getConceptoGasto().getId());
     Assertions.assertThat(responseData.getEntidadRef()).as("getEntidadRef()")
@@ -93,9 +92,9 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud.sql",
-    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
@@ -115,8 +114,8 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
 
     SolicitudProyectoPresupuesto responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getSolicitudProyectoDatos().getId()).as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoPresupuesto.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(responseData.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(solicitudProyectoPresupuesto.getSolicitudProyectoId());
     Assertions.assertThat(responseData.getConceptoGasto().getId()).as("getConceptoGasto().getId()")
         .isEqualTo(solicitudProyectoPresupuesto.getConceptoGasto().getId());
     Assertions.assertThat(responseData.getEntidadRef()).as("getEntidadRef()")
@@ -139,9 +138,9 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud.sql",
-    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
@@ -165,9 +164,9 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud.sql",
-    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
@@ -191,9 +190,9 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/estado_solicitud.sql",
     "classpath:scripts/solicitud.sql",
-    "classpath:scripts/solicitud_proyecto_datos.sql",
+    "classpath:scripts/estado_solicitud.sql",
+    "classpath:scripts/solicitud_proyecto.sql",
     "classpath:scripts/concepto_gasto.sql",
     "classpath:scripts/solicitud_proyecto_presupuesto.sql"
     // @formatter:on
@@ -211,8 +210,7 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
 
     SolicitudProyectoPresupuesto responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(idSolicitudProyectoPresupuesto);
-    Assertions.assertThat(responseData.getSolicitudProyectoDatos().getId()).as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(responseData.getSolicitudProyectoId()).as("getSolicitudProyectoId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getConceptoGasto().getId()).as("getConceptoGasto().getId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getEntidadRef()).as("getEntidadRef()").isNull();
     Assertions.assertThat(responseData.getAnualidad()).as("getAnualidad()").isEqualTo(2020);
@@ -226,12 +224,12 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
   /**
    * Función que devuelve un objeto SolicitudProyectoPresupuesto
    * 
-   * @param id                       Id {@link SolicitudProyectoPresupuesto}.
-   * @param solicitudProyectoDatosId Id {@link SolicitudProyectoDatos}.
-   * @param conceptoGastoId          Id {@link ConceptoGasto}.
+   * @param id                  Id {@link SolicitudProyectoPresupuesto}.
+   * @param solicitudProyectoId Id {@link SolicitudProyecto}.
+   * @param conceptoGastoId     Id {@link ConceptoGasto}.
    * @return el objeto {@link SolicitudProyectoPresupuesto}.
    */
-  private SolicitudProyectoPresupuesto generarMockSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoDatosId,
+  private SolicitudProyectoPresupuesto generarMockSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoId,
       Long conceptoGastoId) {
 
     String suffix = String.format("%03d", id);
@@ -239,7 +237,7 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
+        .solicitudProyectoId(solicitudProyectoId)
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .entidadRef(null)
         .anualidad(2020)

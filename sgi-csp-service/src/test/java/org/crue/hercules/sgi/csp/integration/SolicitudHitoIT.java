@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -63,8 +61,8 @@ public class SolicitudHitoIT {
 
     SolicitudHito solicitudHitoCreado = response.getBody();
     Assertions.assertThat(solicitudHitoCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(solicitudHitoCreado.getSolicitud().getId()).as("getSolicitud().getId()")
-        .isEqualTo(solicitudHito.getSolicitud().getId());
+    Assertions.assertThat(solicitudHitoCreado.getSolicitudId()).as("getSolicitudId()")
+        .isEqualTo(solicitudHito.getSolicitudId());
     Assertions.assertThat(solicitudHitoCreado.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(solicitudHito.getTipoHito().getId());
     Assertions.assertThat(solicitudHitoCreado.getComentario()).as("getComentario()")
@@ -119,7 +117,7 @@ public class SolicitudHitoIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     SolicitudHito solicitudHito = response.getBody();
     Assertions.assertThat(solicitudHito.getId()).as("getId()").isEqualTo(idSolicitudHito);
-    Assertions.assertThat(solicitudHito.getSolicitud().getId()).as("getSolicitud().getId()").isEqualTo(1);
+    Assertions.assertThat(solicitudHito.getSolicitudId()).as("getSolicitudId()").isEqualTo(1);
     Assertions.assertThat(solicitudHito.getComentario()).as("getComentario()").isEqualTo("comentario-001");
   }
 
@@ -133,13 +131,10 @@ public class SolicitudHitoIT {
    */
   private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
 
-    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
-        .build();
+    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId).solicitudId(solicitudId)
+        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now()).generaAviso(Boolean.TRUE)
+        .tipoHito(TipoHito.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 

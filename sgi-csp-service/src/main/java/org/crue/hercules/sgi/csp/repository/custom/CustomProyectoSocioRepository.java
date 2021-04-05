@@ -5,7 +5,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,13 +16,14 @@ public interface CustomProyectoSocioRepository {
 
   /**
    * Indica si {@link ProyectoSocio} tiene {@link ProyectoSocioEquipo},
-   * {@link ProyectoSocioPeriodoPago}, {@link SocioPeriodoJustificacionDocumento}
-   * y/o {@link ProyectoSocioPeriodoJustificacion} relacionadas.
+   * {@link ProyectoSocioPeriodoPago},
+   * {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
+   * {@link ProyectoSocioPeriodoJustificacion} relacionadas.
    *
    * @param id Id de la {@link Proyecto}.
    * @return True si tiene {@link ProyectoSocioEquipo},
    *         {@link ProyectoSocioPeriodoPago},
-   *         {@link SocioPeriodoJustificacionDocumento} y/o
+   *         {@link ProyectoSocioPeriodoJustificacionDocumento} y/o
    *         {@link ProyectoSocioPeriodoJustificacion} relacionadas. En caso
    *         contrario false
    */

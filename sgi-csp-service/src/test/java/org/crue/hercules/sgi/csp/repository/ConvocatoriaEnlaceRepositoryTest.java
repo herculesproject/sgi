@@ -31,7 +31,7 @@ public class ConvocatoriaEnlaceRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaEnlace convocatoriaEnlace2 = generarConvocatoriaEnlace("-002");
     entityManager.persistAndFlush(convocatoriaEnlace2);
 
-    Long convocatoriaIdBuscado = convocatoriaEnlace1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaEnlace1.getConvocatoriaId();
     String urlBuscada = "www.url1.com";
 
     // when: find by by Convocatoria and url
@@ -40,7 +40,7 @@ public class ConvocatoriaEnlaceRepositoryTest extends BaseRepositoryTest {
     // then: ConvocatoriaEnlace is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoriaEnlace1.getId());
-    Assertions.assertThat(dataFound.getConvocatoria().getId()).isEqualTo(convocatoriaEnlace1.getConvocatoria().getId());
+    Assertions.assertThat(dataFound.getConvocatoriaId()).isEqualTo(convocatoriaEnlace1.getConvocatoriaId());
     Assertions.assertThat(dataFound.getUrl()).isEqualTo(convocatoriaEnlace1.getUrl());
   }
 
@@ -54,7 +54,7 @@ public class ConvocatoriaEnlaceRepositoryTest extends BaseRepositoryTest {
     ConvocatoriaEnlace convocatoriaEnlace2 = generarConvocatoriaEnlace("-002");
     entityManager.persistAndFlush(convocatoriaEnlace2);
 
-    Long convocatoriaIdBuscado = convocatoriaEnlace1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = convocatoriaEnlace1.getConvocatoriaId();
     String urlBuscada = "www.url3.com";
 
     // when: find by by Convocatoria and url
@@ -131,7 +131,7 @@ public class ConvocatoriaEnlaceRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(tipoEnlace);
 
     ConvocatoriaEnlace convocatoriaEnlace = ConvocatoriaEnlace.builder()
-        .convocatoria(convocatoria)
+        .convocatoriaId(convocatoria.getId())
         .tipoEnlace(tipoEnlace)
         .descripcion("descripcion-1")
         .url("www.url1.com")

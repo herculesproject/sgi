@@ -12,7 +12,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -21,7 +20,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -32,10 +31,10 @@ import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.hamcrest.Matchers;
@@ -83,7 +82,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   private SolicitudProyectoSocioService solicitudProyectoSocioService;
 
   @MockBean
-  private SolicitudProyectoDatosService solicitudProyectoDatosService;
+  private SolicitudProyectoService solicitudProyectoService;
 
   @MockBean
   private SolicitudProyectoEquipoService solicitudProyectoEquipoService;
@@ -129,7 +128,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(solicitud.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(solicitud.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value(solicitud.getSolicitanteRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(solicitud.getObservaciones()))
@@ -178,8 +177,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno")
             .value(solicitudExistente.getCodigoRegistroInterno()))
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(solicitudExistente.getEstado().getId()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("convocatoria.id").value(solicitudExistente.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(solicitudExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value(solicitudExistente.getCreadorRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value(solicitudExistente.getSolicitanteRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(solicitud.getObservaciones()))
@@ -314,7 +312,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno").value("SGI_SLC1202011061027"))
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value("usr-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value("usr-002"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-001"))
@@ -844,16 +842,16 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
-  public void findSolicitudProyectoDatos_ReturnsSolicitudProyectoDatos() throws Exception {
+  public void findSolicitudProyecto_ReturnsSolicitudProyecto() throws Exception {
     // given: existing id
-    BDDMockito.given(solicitudProyectoDatosService.findBySolicitud(ArgumentMatchers.anyLong()))
+    BDDMockito.given(solicitudProyectoService.findBySolicitud(ArgumentMatchers.anyLong()))
         .willAnswer((InvocationOnMock invocation) -> {
-          return generarSolicitudProyectoDatos(invocation.getArgument(0), invocation.getArgument(0));
+          return generarSolicitudProyecto(invocation.getArgument(0), invocation.getArgument(0));
         });
 
     // when: find by not existing solicitud id
     mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", 1L)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: response is OK
@@ -861,23 +859,22 @@ public class SolicitudControllerTest extends BaseControllerTest {
         // and the requested Solicitud is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("titulo-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("colaborativo").value(Boolean.TRUE))
         .andExpect(MockMvcResultMatchers.jsonPath("presupuestoPorEntidades").value(Boolean.TRUE));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
-  public void findSolicitudProyectoDatos_Returns404() throws Exception {
+  public void findSolicitudProyecto_Returns404() throws Exception {
     // given: existing id
-    BDDMockito.given(solicitudProyectoDatosService.findBySolicitud(ArgumentMatchers.anyLong()))
+    BDDMockito.given(solicitudProyectoService.findBySolicitud(ArgumentMatchers.anyLong()))
         .willAnswer((InvocationOnMock invocation) -> {
           throw new SolicitudNotFoundException(1L);
         });
 
     // when: find by existing solicitud id
     mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", 2L)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", 2L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
@@ -889,12 +886,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
   public void existSolictudProyectoDatos_ReturnsOK() throws Exception {
     // given: Existing solicitud datos proyecto by solicitud
     Long id = 1L;
-    BDDMockito.given(solicitudProyectoDatosService.existsBySolicitudId(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(solicitudProyectoService.existsBySolicitudId(ArgumentMatchers.<Long>any()))
         .willReturn(Boolean.TRUE);
 
     // when: check exist solicitud datos proyecto by solicitud
     mockMvc
-        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", id)
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
         // then: 204 No Content
@@ -906,11 +903,11 @@ public class SolicitudControllerTest extends BaseControllerTest {
   public void existSolictudProyectoDatos_Returns204() throws Exception {
     // given: not Existing solicitud datos proyecto by solicitud
     Long id = 1L;
-    BDDMockito.given(solicitudProyectoDatosService.findBySolicitud(ArgumentMatchers.<Long>any())).willReturn(null);
+    BDDMockito.given(solicitudProyectoService.findBySolicitud(ArgumentMatchers.<Long>any())).willReturn(null);
 
     // when: check exist solicitud datos proyecto by solicitud
     mockMvc
-        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", id)
+        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyecto", id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
         // then: 204 No Content
@@ -1191,13 +1188,10 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Programa programa = new Programa();
     programa.setId(1L);
 
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(1L);
-
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setCodigoExterno(null);
-    solicitud.setConvocatoria(convocatoria);
+    solicitud.setConvocatoriaId(1L);
     solicitud.setSolicitanteRef("usr-002");
     solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
     solicitud.setConvocatoriaExterna(null);
@@ -1221,16 +1215,13 @@ public class SolicitudControllerTest extends BaseControllerTest {
    * @return el objeto SolicitudModalidad
    */
   private SolicitudModalidad generarMockSolicitudModalidad(Long id) {
-    Solicitud solicitud = new Solicitud();
-    solicitud.setId(1L);
-
     Programa programa = new Programa();
     programa.setId(1L);
 
     SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
     solicitudModalidad.setId(id);
     solicitudModalidad.setEntidadRef("entidad-" + String.format("%03d", id));
-    solicitudModalidad.setSolicitud(solicitud);
+    solicitudModalidad.setSolicitudId(1L);
     solicitudModalidad.setPrograma(programa);
 
     return solicitudModalidad;
@@ -1248,12 +1239,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
       Long tipoDocumentoId) {
 
     SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentarios-" + solicitudDocumentoId)
+        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
         .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombreDocumento-" + solicitudDocumentoId)
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
-
-    solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudDocumento.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudDocumento;
   }
 
@@ -1269,7 +1257,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     estadoSolicitud.setComentario("Estado-" + id);
     estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
     estadoSolicitud.setFechaEstado(Instant.now());
-    estadoSolicitud.setIdSolicitud(1L);
+    estadoSolicitud.setSolicitudId(1L);
 
     return estadoSolicitud;
   }
@@ -1284,49 +1272,43 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
   private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
 
-    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
-        .fecha(Instant.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
-        .build();
+    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId).solicitudId(solicitudId)
+        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now()).generaAviso(Boolean.TRUE)
+        .tipoHito(TipoHito.builder().id(tipoDocumentoId).build()).build();
 
-    solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudHito.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
     return solicitudHito;
   }
 
   /**
-   * Función que devuelve un objeto SolicitudProyectoDatos
+   * Función que devuelve un objeto SolicitudProyecto
    * 
-   * @param solicitudProyectoDatosId
+   * @param solicitudProyectoId
    * @param solicitudId
-   * @return el objeto SolicitudProyectoDatos
+   * @return el objeto SolicitudProyecto
    */
-  private SolicitudProyectoDatos generarSolicitudProyectoDatos(Long solicitudProyectoDatosId, Long solicitudId) {
+  private SolicitudProyecto generarSolicitudProyecto(Long solicitudProyectoId, Long solicitudId) {
 
-    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
-        .solicitud(Solicitud.builder().id(solicitudId).build()).titulo("titulo-" + solicitudProyectoDatosId)
-        .acronimo("acronimo-" + solicitudProyectoDatosId).colaborativo(Boolean.TRUE)
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
+        .titulo("titulo-" + solicitudProyectoId).acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE)
         .presupuestoPorEntidades(Boolean.TRUE).build();
 
-    solicitudProyectoDatos.getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudProyectoDatos.getSolicitud().getEstado().setEstado(EstadoSolicitud.Estado.BORRADOR);
-    return solicitudProyectoDatos;
+    return solicitudProyecto;
   }
 
   /**
    * Función que devuelve un objeto SolicitudProyectoSocio
    * 
    * @param solicitudProyectoSocioId
-   * @param solicitudProyectoDatosId
+   * @param solicitudProyectoId
    * @return el objeto SolicitudProyectoSocio
    */
-  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId,
-      Long solicitudProyectoDatosId, Long rolSocioId) {
+  private SolicitudProyectoSocio generarSolicitudProyectoSocio(Long solicitudProyectoSocioId, Long solicitudProyectoId,
+      Long rolSocioId) {
 
     SolicitudProyectoSocio solicitudProyectoSocio = SolicitudProyectoSocio.builder().id(solicitudProyectoSocioId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
-        .rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1).mesFin(3).numInvestigadores(2)
-        .importeSolicitado(new BigDecimal(solicitudProyectoSocioId)).empresaRef("002").build();
+        .solicitudProyectoId(solicitudProyectoId).rolSocio(RolSocio.builder().id(rolSocioId).build()).mesInicio(1)
+        .mesFin(3).numInvestigadores(2).importeSolicitado(new BigDecimal(solicitudProyectoSocioId)).empresaRef("002")
+        .build();
 
     return solicitudProyectoSocio;
   }
@@ -1339,9 +1321,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
   private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
     // @formatter:off
-    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder()
         .id(id == null ? 1 : id)
-        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())
         .build();
 
     FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
@@ -1357,7 +1338,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = SolicitudProyectoEntidadFinanciadoraAjena
         .builder()
         .id(id)
-        .solicitudProyectoDatos(solicitudProyectoDatos)
+        .solicitudProyectoId(solicitudProyecto.getId())
         .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))
         .fuenteFinanciacion(fuenteFinanciacion)
         .tipoFinanciacion(tipoFinanciacion)
@@ -1371,12 +1352,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
   /**
    * Función que devuelve un objeto SolicitudProyectoPresupuesto
    * 
-   * @param id                       Id {@link SolicitudProyectoPresupuesto}.
-   * @param solicitudProyectoDatosId Id {@link SolicitudProyectoDatos}.
-   * @param conceptoGastoId          Id {@link ConceptoGasto}.
+   * @param id                  Id {@link SolicitudProyectoPresupuesto}.
+   * @param solicitudProyectoId Id {@link SolicitudProyecto}.
+   * @param conceptoGastoId     Id {@link ConceptoGasto}.
    * @return el objeto {@link SolicitudProyectoPresupuesto}.
    */
-  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoDatosId,
+  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoId,
       Long conceptoGastoId) {
 
     String suffix = String.format("%03d", id);
@@ -1384,7 +1365,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoId(solicitudProyectoId)
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .entidadRef(null)
         .anualidad(1000)

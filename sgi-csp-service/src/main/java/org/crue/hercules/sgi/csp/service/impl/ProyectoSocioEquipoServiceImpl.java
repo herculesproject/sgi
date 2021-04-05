@@ -9,7 +9,6 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioEquipoNotFoundException
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioEquipoSpecifications;
@@ -45,7 +44,7 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
   /**
    * Actualiza los datos del {@link ProyectoSocioEquipo}.
    * 
-   * @param proyectoSocioId      Id de la {@link SolicitudProyectoSocio}.
+   * @param proyectoSocioId      Id de la {@link ProyectoSocio}.
    * @param proyectoSocioEquipos lista con los nuevos {@link ProyectoSocioEquipo}
    *                             a guardar.
    * @return ProyectoSocioEquipo {@link ProyectoSocioEquipo} actualizado.
@@ -100,13 +99,12 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
             .filter(equipoSocio -> equipoSocio.getId() == proyectoSocioEquipo.getId()).findFirst()
             .orElseThrow(() -> new ProyectoSocioEquipoNotFoundException(proyectoSocioEquipo.getId()));
 
-        Assert.isTrue(
-            periodoJustificacionBD.getProyectoSocio().getId() == proyectoSocioEquipo.getProyectoSocio().getId(),
+        Assert.isTrue(periodoJustificacionBD.getProyectoSocioId() == proyectoSocioEquipo.getProyectoSocioId(),
             "No se puede modificar el proyecto socio del ProyectoSocioEquipo");
       }
 
-      // Setea la proyecto socio recuperada del proyectoSocioId
-      proyectoSocioEquipo.setProyectoSocio(proyectoSocio);
+      // Setea el proyecto socio recuperado del proyectoSocioId
+      proyectoSocioEquipo.setProyectoSocioId(proyectoSocio.getId());
 
       // Validaciones
       Assert.notNull(proyectoSocioEquipo.getRolProyecto(),
@@ -167,8 +165,8 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
   }
 
   /**
-   * Obtiene la {@link ProyectoSocioEquipo} para una
-   * {@link SolicitudProyectoSocio}.
+   * Obtiene la lisata de {@link ProyectoSocioEquipo} para un
+   * {@link ProyectoSocio}.
    *
    * @param proyectoSocioId el id de la {@link ProyectoSocio}.
    * @return la lista de entidades {@link ProyectoSocioEquipo} de la

@@ -9,7 +9,6 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
@@ -47,10 +46,11 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     ProrrogaDocumento newProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     newProrrogaDocumento.setId(null);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newProrrogaDocumento);
+    Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(newProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -68,8 +68,8 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // then: new ProrrogaDocumento is created
     Assertions.assertThat(created).as("isNotNull()").isNotNull();
     Assertions.assertThat(created.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(created.getProyectoProrroga().getId()).as("getProyectoProrroga().getId()")
-        .isEqualTo(newProrrogaDocumento.getProyectoProrroga().getId());
+    Assertions.assertThat(created.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
+        .isEqualTo(newProrrogaDocumento.getProyectoProrrogaId());
     Assertions.assertThat(created.getNombre()).as("getNombre()").isEqualTo(newProrrogaDocumento.getNombre());
     Assertions.assertThat(created.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(newProrrogaDocumento.getDocumentoRef());
@@ -98,7 +98,7 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: new ProrrogaDocumento without ProyectoProrroga
     ProrrogaDocumento newProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     newProrrogaDocumento.setId(null);
-    newProrrogaDocumento.setProyectoProrroga(null);
+    newProrrogaDocumento.setProyectoProrrogaId(null);
 
     Assertions.assertThatThrownBy(
         // when: Create ProrrogaDocumento
@@ -189,11 +189,12 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: new ProrrogaDocumento with disabled ModeloEjecucion
     ProrrogaDocumento newProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     newProrrogaDocumento.setId(null);
-    newProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion().setActivo(Boolean.FALSE);
+    Proyecto proyecto = generarMockProyecto();
+    proyecto.getModeloEjecucion().setActivo(Boolean.FALSE);
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(newProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
 
     Assertions.assertThatThrownBy(
         // when: Create ProrrogaDocumento
@@ -208,10 +209,11 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: new ProrrogaDocumento without ModeloTipoDocumento
     ProrrogaDocumento newProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     newProrrogaDocumento.setId(null);
+    Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(newProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -232,10 +234,11 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     newProrrogaDocumento.setId(null);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newProrrogaDocumento);
     modeloTipoDocumento.getTipoDocumento().setActivo(Boolean.FALSE);
+    Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(newProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -255,10 +258,11 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     newProrrogaDocumento.setId(null);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(newProrrogaDocumento);
     modeloTipoDocumento.setActivo(Boolean.FALSE);
+    Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(newProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -279,13 +283,14 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     updatedProrrogaDocumento.setComentario("comentario-modificado");
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(originalProrrogaDocumento);
+    Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(originalProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -300,8 +305,8 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // then: ProrrogaDocumento is updated
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(originalProrrogaDocumento.getId());
-    Assertions.assertThat(updated.getProyectoProrroga().getId()).as("getProyectoProrroga().getId()")
-        .isEqualTo(originalProrrogaDocumento.getProyectoProrroga().getId());
+    Assertions.assertThat(updated.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
+        .isEqualTo(originalProrrogaDocumento.getProyectoProrrogaId());
     Assertions.assertThat(updated.getNombre()).as("getNombre()").isEqualTo(updatedProrrogaDocumento.getNombre());
     Assertions.assertThat(updated.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(updatedProrrogaDocumento.getDocumentoRef());
@@ -330,7 +335,7 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   public void update_WithoutProyectoProrroga_ThrowsIllegalArgumentException() {
     // given: a updated ProrrogaDocumento without ProyectoProrroga
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setProyectoProrroga(null);
+    updatedProrrogaDocumento.setProyectoProrrogaId(null);
 
     Assertions.assertThatThrownBy(
         // when: update ProrrogaDocumento
@@ -438,14 +443,16 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     updatedProrrogaDocumento.setComentario("comentario-modificado");
-    originalProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion().setActivo(Boolean.FALSE);
+    Proyecto proyecto = generarMockProyecto();
+
+    proyecto.getModeloEjecucion().setActivo(Boolean.FALSE);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(originalProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
 
     Assertions.assertThatThrownBy(
         // when: update ProrrogaDocumento
@@ -461,13 +468,14 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(originalProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -491,12 +499,14 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(originalProrrogaDocumento);
     modeloTipoDocumento.getTipoDocumento().setActivo(Boolean.FALSE);
 
+    Proyecto proyecto = generarMockProyecto();
+
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(originalProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -519,12 +529,14 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(originalProrrogaDocumento);
     modeloTipoDocumento.setActivo(Boolean.FALSE);
 
+    Proyecto proyecto = generarMockProyecto();
+
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
 
     BDDMockito.given(proyectoProrrogaRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoProrrogaRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(originalProrrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
             ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
@@ -620,8 +632,8 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // then: ProrrogaDocumento is found
     Assertions.assertThat(prorrogaDocumento).as("isNotNull()").isNotNull();
     Assertions.assertThat(prorrogaDocumento.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(prorrogaDocumento.getProyectoProrroga().getId()).as("getProyectoProrroga().getId()")
-        .isEqualTo(prorrogaDocumento.getProyectoProrroga().getId());
+    Assertions.assertThat(prorrogaDocumento.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
+        .isEqualTo(prorrogaDocumento.getProyectoProrrogaId());
     Assertions.assertThat(prorrogaDocumento.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo("documentoRef-" + String.format("%03d", idBuscado));
     Assertions.assertThat(prorrogaDocumento.getNombre()).as("getNombre()")
@@ -644,6 +656,19 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
         .isInstanceOf(ProrrogaDocumentoNotFoundException.class);
   }
 
+  private Proyecto generarMockProyecto() {
+    // @formatter:off
+    return Proyecto.builder()
+        .id(1L)
+        .modeloEjecucion(ModeloEjecucion.builder()
+            .id(1L)
+            .activo(Boolean.TRUE)
+            .build())
+        .activo(Boolean.TRUE)
+        .build();
+    // @formatter:on
+  }
+
   /**
    * Función que devuelve un objeto ProrrogaDocumento
    * 
@@ -656,17 +681,7 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
-        .proyectoProrroga(ProyectoProrroga.builder()
-            .id(proyectoProrrogaId)
-            .proyecto(Proyecto.builder()
-                .id(1L)
-                .modeloEjecucion(ModeloEjecucion.builder()
-                    .id(1L)
-                    .activo(Boolean.TRUE)
-                    .build())
-                .activo(Boolean.TRUE)
-                .build())
-            .build())
+        .proyectoProrrogaId(proyectoProrrogaId)
         .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder()
@@ -691,7 +706,7 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // @formatter:off
     return ModeloTipoDocumento.builder()
         .id(prorrogaDocumento.getId() == null ? 1L : prorrogaDocumento.getId())
-        .modeloEjecucion(prorrogaDocumento.getProyectoProrroga().getProyecto().getModeloEjecucion())
+        .modeloEjecucion(generarMockProyecto().getModeloEjecucion())
         .modeloTipoFase(null)
         .tipoDocumento(prorrogaDocumento.getTipoDocumento())
         .activo(Boolean.TRUE)

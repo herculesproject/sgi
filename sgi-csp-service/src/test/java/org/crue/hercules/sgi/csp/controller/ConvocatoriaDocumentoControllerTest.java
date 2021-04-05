@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaDocumentoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
@@ -56,8 +55,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
         // then: new ConvocatoriaDocumento is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("convocatoria.id").value(convocatoriaDocumento.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaDocumento.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFase.id").value(convocatoriaDocumento.getTipoFase().getId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(convocatoriaDocumento.getTipoDocumento().getId()))
@@ -110,8 +108,8 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
         // then: ConvocatoriaDocumento is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoriaDocumentoExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaDocumentoExistente.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaDocumentoExistente.getConvocatoriaId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoFase.id").value(convocatoriaDocumentoExistente.getTipoFase().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
@@ -225,14 +223,13 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
    */
   private ConvocatoriaDocumento generarMockConvocatoriaDocumento(Long id) {
 
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).build();
     TipoFase tipoFase = TipoFase.builder().id(id).build();
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(id).build();
 
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
-        .convocatoria(convocatoria)
+        .convocatoriaId(1L)
         .tipoFase(tipoFase)
         .tipoDocumento(tipoDocumento)
         .nombre("nombre doc-" + id)

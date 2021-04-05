@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
@@ -183,6 +182,58 @@ public class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest 
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAll_WithPaging_ReturnsConvocatoriaConceptoGastoSubList() throws Exception {
+    // given: One hundred ConvocatoriaConceptoGasto
+    List<ConvocatoriaConceptoGasto> conceptosGasto = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      if (i % 2 == 0) {
+        conceptosGasto.add(generarMockConvocatoriaConceptoGasto(Long.valueOf(i)));
+      }
+    }
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaConceptoGasto>>() {
+          @Override
+          public Page<ConvocatoriaConceptoGasto> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<ConvocatoriaConceptoGasto> content = conceptosGasto.subList(fromIndex, toIndex);
+            Page<ConvocatoriaConceptoGasto> page = new PageImpl<>(content, pageable, conceptosGasto.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked Convocatoria are returned with the right page information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "50"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<ConvocatoriaConceptoGasto> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ConvocatoriaConceptoGasto>>() {
+        });
+
+    // containing id 62 to 80
+    for (int i = 0, j = 62; i < 10; i++, j += 2) {
+      ConvocatoriaConceptoGasto item = actual.get(i);
+      Assertions.assertThat(item.getId()).isEqualTo(j);
+    }
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
@@ -234,7 +285,7 @@ public class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest 
 
     List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastoCodigoEcs = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      convocatoriaConceptoGastoCodigoEcs.add(generarMockConvocatoriaConceptoGastoCodigoEc(i, true));
+      convocatoriaConceptoGastoCodigoEcs.add(generarMockConvocatoriaConceptoGastoCodigoEc(i));
     }
 
     BDDMockito.given(convocatoriaConceptoGastoCodigoEcService
@@ -311,8 +362,7 @@ public class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest 
     convocatoriaConceptoGasto.setId(id);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
     convocatoriaConceptoGasto.setPermitido(permitido);
-    convocatoriaConceptoGasto
-        .setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    convocatoriaConceptoGasto.setConvocatoriaId((id != null ? id : 1));
     convocatoriaConceptoGasto.setObservaciones("Obs-" + (id != null ? id : 1));
 
     return convocatoriaConceptoGasto;
@@ -324,15 +374,12 @@ public class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest 
    * @param id id del ConvocatoriaConceptoGastoCodigoEc
    * @return el objeto ConvocatoriaConceptoGastoCodigoEc
    */
-  private ConvocatoriaConceptoGastoCodigoEc generarMockConvocatoriaConceptoGastoCodigoEc(Long id, Boolean permitido) {
-
-    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(id == null ? 1 : id,
-        permitido);
+  private ConvocatoriaConceptoGastoCodigoEc generarMockConvocatoriaConceptoGastoCodigoEc(Long id) {
 
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = new ConvocatoriaConceptoGastoCodigoEc();
     convocatoriaConceptoGastoCodigoEc.setId(id);
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("cod-" + id);
-    convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
+    convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGastoId(id == null ? 1 : id);
     convocatoriaConceptoGastoCodigoEc.setFechaInicio(Instant.now());
     convocatoriaConceptoGastoCodigoEc.setFechaFin(Instant.now());
 

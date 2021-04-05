@@ -15,10 +15,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "requisito_equipo", uniqueConstraints = {
@@ -41,11 +44,10 @@ public class RequisitoEquipo extends BaseEntity {
   @SequenceGenerator(name = "requisito_equipo_seq", sequenceName = "requisito_equipo_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @OneToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_REQUISITOEQUIPO_CONVOCATORIA"))
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
   @NotNull
-  private Convocatoria convocatoria;
+  private Long convocatoriaId;
 
   /** Nivel académico */
   @Column(name = "nivel_academico_ref", length = 50)
@@ -106,4 +108,10 @@ public class RequisitoEquipo extends BaseEntity {
   @Size(max = 2000)
   private String otrosRequisitos;
 
+  // Relation mappings for JPA metamodel generation only
+  @OneToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_REQUISITOEQUIPO_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
 }

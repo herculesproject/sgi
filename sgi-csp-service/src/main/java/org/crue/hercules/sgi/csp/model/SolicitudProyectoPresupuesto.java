@@ -16,11 +16,14 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "solicitud_proyecto_presupuesto")
@@ -43,15 +46,14 @@ public class SolicitudProyectoPresupuesto extends BaseEntity {
   @SequenceGenerator(name = "solicitud_proyecto_presupuesto_seq", sequenceName = "solicitud_proyecto_presupuesto_seq", allocationSize = 1)
   private Long id;
 
-  /** Solicitud proyecto datos */
-  @ManyToOne
-  @JoinColumn(name = "solicitud_proyecto_datos_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_PROYECTO_PRESUPUESTO_SOLICITUD_PROYECTO_DATOS"))
+  /** SolicitudProyecto Id */
+  @Column(name = "solicitud_proyecto_id", nullable = false)
   @NotNull
-  private SolicitudProyectoDatos solicitudProyectoDatos;
+  private Long solicitudProyectoId;
 
   /** Concepto gasto */
   @ManyToOne
-  @JoinColumn(name = "concepto_gasto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_PROYECTO_PRESUPUESTO_CONCEPTO_GASTO"))
+  @JoinColumn(name = "concepto_gasto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOPRESUPUESTO_CONCEPTOGASTO"))
   @NotNull
   private ConceptoGasto conceptoGasto;
 
@@ -79,4 +81,10 @@ public class SolicitudProyectoPresupuesto extends BaseEntity {
   @NotNull
   private Boolean financiacionAjena;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "solicitud_proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOPRESUPUESTO_SOLICITUDPROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final SolicitudProyecto solicitudProyecto = null;
 }

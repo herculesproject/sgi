@@ -47,10 +47,11 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsConvocatoriaEnlace() {
     // given: Un nuevo ConvocatoriaEnlace
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
@@ -58,7 +59,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     BDDMockito
         .given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlace, Boolean.TRUE)));
+        .willReturn(Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlace, Boolean.TRUE, convocatoria)));
 
     BDDMockito.given(repository.save(convocatoriaEnlace)).will((InvocationOnMock invocation) -> {
       ConvocatoriaEnlace convocatoriaEnlaceCreado = invocation.getArgument(0);
@@ -82,7 +83,8 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEnlace que ya tiene id
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
 
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque el ConvocatoriaEnlace ya tiene id
@@ -93,7 +95,8 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutUrl_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEnlace sin url
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, convocatoriaId);
     convocatoriaEnlace.setUrl(null);
 
     // when: Creamos el ConvocatoriaEnlace
@@ -105,8 +108,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEnlace sin convocatoria
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
-    convocatoriaEnlace.getConvocatoria().setId(null);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, null);
 
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque la convocatoria es null
@@ -117,13 +119,14 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void create_WithUrlDuplicada_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEnlace con el enlace inactivo
-    ConvocatoriaEnlace convocatoriaEnlace1 = generarMockConvocatoriaEnlace(3L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace1 = generarMockConvocatoriaEnlace(3L, convocatoriaId);
     convocatoriaEnlace1.setUrl("www.duplicada.com");
-    ConvocatoriaEnlace convocatoriaEnlace2 = generarMockConvocatoriaEnlace(null);
+    ConvocatoriaEnlace convocatoriaEnlace2 = generarMockConvocatoriaEnlace(null, convocatoriaId);
     convocatoriaEnlace1.setUrl("www.duplicada.com");
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace1.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(convocatoriaEnlace1));
@@ -137,12 +140,13 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace con Convocatoria sin Modelo de Ejecucion
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
-    convocatoriaEnlace.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, convocatoriaId);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
+    convocatoria.setModeloEjecucion(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaEnlace
@@ -158,10 +162,11 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // given: ConvocatoriaEnlace con TipoEnlace no asignado al Modelo de Ejecucion
     // de la
     // convocatoria
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -171,8 +176,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoEnlace not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaEnlace.getTipoEnlace().getNombre(),
-            convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaEnlace.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -180,14 +184,15 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // given: ConvocatoriaEnlace con la asignación de TipoEnlace al Modelo de
     // Ejecucion
     // de la convocatoria inactiva
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlace, Boolean.FALSE)));
+        .willReturn(Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlace, Boolean.FALSE, convocatoria)));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaEnlace
@@ -195,22 +200,22 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoEnlace is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoEnlace '%s' no está activo para el ModeloEjecucion '%s'",
-            convocatoriaEnlace.getTipoEnlace().getNombre(),
-            convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaEnlace.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void create_WithDisabledTipoEnlace_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace TipoEnlace disabled
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null, convocatoriaId);
     convocatoriaEnlace.getTipoEnlace().setActivo(Boolean.FALSE);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
         .given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlace, Boolean.TRUE)));
+        .willReturn(Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlace, Boolean.TRUE, convocatoria)));
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaEnlace
@@ -223,16 +228,22 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void update_ReturnsConvocatoriaEnlace() {
     // given: Un nuevo ConvocatoriaEnlace con el nombre actualizado
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    ConvocatoriaEnlace convocatoriaEnlaceDescripcionActualizada = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceDescripcionActualizada = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceDescripcionActualizada.setDescripcion("nuevaDescripcion");
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
     BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.empty());
-    BDDMockito.given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(
-            Optional.of(generarMockModeloTipoEnlace(1L, convocatoriaEnlaceDescripcionActualizada, Boolean.TRUE)));
+    BDDMockito
+        .given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong()))
+        .willReturn(Optional
+            .of(generarMockModeloTipoEnlace(1L, convocatoriaEnlaceDescripcionActualizada, Boolean.TRUE, convocatoria)));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaEnlace>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -248,14 +259,15 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaEnlaceActualizado.getTipoEnlace()).as("getTipoEnlace()")
         .isEqualTo(convocatoriaEnlace.getTipoEnlace());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getUrl()).as("getUrl()").isEqualTo(convocatoriaEnlace.getUrl());
-    Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoria()).as("getConvocatoria()")
-        .isEqualTo(convocatoriaEnlace.getConvocatoria());
+    Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEnlace.getConvocatoriaId());
   }
 
   @Test
   public void update_WithIdNotExist_ThrowsConvocatoriaEnlaceNotFoundException() {
     // given: Un ConvocatoriaEnlace actualizado con un id que no existe
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
@@ -268,7 +280,8 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutUrl_ThrowsIllegalArgumentException() {
     // given: Un ConvocatoriaEnlace actualizado con sin url
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlace.setUrl(null);
 
     // when: Actualizamos el ConvocatoriaEnlace
@@ -280,13 +293,16 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutTipoEnlace_ReturnsConvocatoriaEnlace() {
     // given: Un nuevo ConvocatoriaEnlace con el nombre actualizado
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    ConvocatoriaEnlace convocatoriaEnlaceDescripcionActualizada = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceDescripcionActualizada = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceDescripcionActualizada.getTipoEnlace().setId(null);
     convocatoriaEnlaceDescripcionActualizada.setDescripcion("nuevaDescripcion");
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
-
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaEnlace>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -300,15 +316,16 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         .isEqualTo(convocatoriaEnlaceDescripcionActualizada.getDescripcion());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getTipoEnlace()).as("getTipoEnlace()").isNull();
     Assertions.assertThat(convocatoriaEnlaceActualizado.getUrl()).as("getUrl()").isEqualTo(convocatoriaEnlace.getUrl());
-    Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoria()).as("getConvocatoria()")
-        .isEqualTo(convocatoriaEnlace.getConvocatoria());
+    Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEnlace.getConvocatoriaId());
   }
 
   @Test
   public void update_WithDuplicatedUrl_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEnlace con la url duplicada
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    ConvocatoriaEnlace convocatoriaEnlaceExistente = generarMockConvocatoriaEnlace(2L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceExistente = generarMockConvocatoriaEnlace(2L, convocatoriaId);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
     BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
@@ -324,14 +341,16 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace con Convocatoria sin Modelo de Ejecucion
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    convocatoriaEnlace.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
-    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.TRUE));
-    convocatoriaEnlace.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
+    convocatoria.setModeloEjecucion(null);
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
 
     Assertions.assertThatThrownBy(
@@ -348,12 +367,15 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // given: ConvocatoriaEnlace con TipoEnlace no asignado al Modelo de Ejecucion
     // de la
     // convocatoria
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.TRUE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
-
     BDDMockito.given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -363,8 +385,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoEnlace not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(),
-            convocatoriaEnlaceActualizado.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -372,16 +393,20 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // given: ConvocatoriaEnlace con la asignación de TipoEnlace al Modelo de
     // Ejecucion
     // de la convocatoria inactiva
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.FALSE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
-
     BDDMockito
         .given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoEnlace(2L, convocatoriaEnlaceActualizado, Boolean.FALSE)));
+        .willReturn(
+            Optional.of(generarMockModeloTipoEnlace(2L, convocatoriaEnlaceActualizado, Boolean.FALSE, convocatoria)));
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaEnlace
@@ -389,23 +414,26 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoEnlace is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoEnlace '%s' no está activo para el ModeloEjecucion '%s'",
-            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(),
-            convocatoriaEnlaceActualizado.getConvocatoria().getModeloEjecucion().getNombre());
+            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithDisabledTipoEnlace_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace TipoEnlace disabled
-    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
+    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.FALSE));
 
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
-
     BDDMockito
         .given(modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockModeloTipoEnlace(2L, convocatoriaEnlaceActualizado, Boolean.TRUE)));
+        .willReturn(
+            Optional.of(generarMockModeloTipoEnlace(2L, convocatoriaEnlaceActualizado, Boolean.TRUE, convocatoria)));
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaEnlace
@@ -460,7 +488,9 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   public void findById_ReturnsConvocatoriaEnlace() {
     // given: Un ConvocatoriaEnlace con el id buscado
     Long idBuscado = 1L;
-    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockConvocatoriaEnlace(idBuscado)));
+    Long convocatoriaId = 1L;
+    BDDMockito.given(repository.findById(idBuscado))
+        .willReturn(Optional.of(generarMockConvocatoriaEnlace(idBuscado, convocatoriaId)));
 
     // when: Buscamos el ConvocatoriaEnlace por su id
     ConvocatoriaEnlace convocatoriaEnlace = service.findById(idBuscado);
@@ -469,7 +499,7 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaEnlace).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEnlace.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(convocatoriaEnlace.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
-    Assertions.assertThat(convocatoriaEnlace.getConvocatoria().getId()).as("getConvocatoria()").isEqualTo(1L);
+    Assertions.assertThat(convocatoriaEnlace.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(convocatoriaId);
 
   }
 
@@ -587,12 +617,13 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
    * @param activo
    * @return
    */
-  private ModeloTipoEnlace generarMockModeloTipoEnlace(Long id, ConvocatoriaEnlace convocatoriaEnlace, Boolean activo) {
+  private ModeloTipoEnlace generarMockModeloTipoEnlace(Long id, ConvocatoriaEnlace convocatoriaEnlace, Boolean activo,
+      Convocatoria convocatoria) {
 
     // @formatter:off
     return ModeloTipoEnlace.builder()
         .id(id)
-        .modeloEjecucion(convocatoriaEnlace.getConvocatoria().getModeloEjecucion())
+        .modeloEjecucion(convocatoria.getModeloEjecucion())
         .tipoEnlace(convocatoriaEnlace.getTipoEnlace())
         .activo(activo)
         .build();
@@ -605,12 +636,12 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
    * @param id id del ConvocatoriaEnlace
    * @return el objeto ConvocatoriaEnlace
    */
-  private ConvocatoriaEnlace generarMockConvocatoriaEnlace(Long id) {
+  private ConvocatoriaEnlace generarMockConvocatoriaEnlace(Long id, Long convocatoriaId) {
 
     // @formatter:off
     return ConvocatoriaEnlace.builder()
         .id(id)
-        .convocatoria(generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE))
+        .convocatoriaId(convocatoriaId)
         .descripcion("descripcion-" + id)
         .url("www.url" + id + ".es")
         .tipoEnlace(generarMockTipoEnlace(1L, Boolean.TRUE))

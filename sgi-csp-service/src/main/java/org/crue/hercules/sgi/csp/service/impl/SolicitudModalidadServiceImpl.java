@@ -64,13 +64,13 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
 
     Assert.isNull(solicitudModalidad.getId(),
         "SolicitudModalidad id tiene que ser null para crear una SolicitudModalidad");
-    Assert.notNull(solicitudModalidad.getSolicitud().getId(),
+    Assert.notNull(solicitudModalidad.getSolicitudId(),
         "Solicitud id no puede ser null para crear una SolicitudModalidad");
     Assert.notNull(solicitudModalidad.getPrograma().getId(),
         "Programa id no puede ser null para crear una SolicitudModalidad");
 
-    solicitudModalidad.setSolicitud(solicitudRepository.findById(solicitudModalidad.getSolicitud().getId())
-        .orElseThrow(() -> new SolicitudNotFoundException(solicitudModalidad.getSolicitud().getId())));
+    Solicitud solicitud = solicitudRepository.findById(solicitudModalidad.getSolicitudId())
+        .orElseThrow(() -> new SolicitudNotFoundException(solicitudModalidad.getSolicitudId()));
 
     solicitudModalidad.setPrograma(programaRepository.findById(solicitudModalidad.getPrograma().getId())
         .orElseThrow(() -> new ProgramaNotFoundException(solicitudModalidad.getPrograma().getId())));
@@ -78,8 +78,7 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
     // Comprobar que la modalidad seleccionada esta en el arbol que tiene como nodo
     // raiz el programa seleccionado en la ConvocatoriaEntidadConvocante
     Optional<ConvocatoriaEntidadConvocante> convocatoriaEntidadConvocante = convocatoriaEntidadConvocanteRepository
-        .findByConvocatoriaIdAndEntidadRef(solicitudModalidad.getSolicitud().getConvocatoria().getId(),
-            solicitudModalidad.getEntidadRef());
+        .findByConvocatoriaIdAndEntidadRef(solicitud.getConvocatoriaId(), solicitudModalidad.getEntidadRef());
 
     Assert.isTrue(convocatoriaEntidadConvocante.isPresent(),
         "No existe ninguna ConvocatoriaEntidadConvocante con el entidadRef para la convocatoria seleccionada");
@@ -113,7 +112,7 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
     log.debug("update(SolicitudModalidad solicitudModalidad) - start");
 
     Assert.notNull(solicitudModalidad.getId(), "Id no puede ser null para actualizar SolicitudModalidad");
-    Assert.notNull(solicitudModalidad.getSolicitud(),
+    Assert.notNull(solicitudModalidad.getSolicitudId(),
         "La solicitud no puede ser null para actualizar la SolicitudModalidad");
     Assert.notNull(solicitudModalidad.getPrograma().getId(),
         "Id Programa no puede ser null para crear la SolicitudModalidad");
@@ -122,15 +121,18 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
         .orElseThrow(() -> new ProgramaNotFoundException(solicitudModalidad.getPrograma().getId())));
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(solicitudService.modificable(solicitudModalidad.getSolicitud().getId()),
+    Assert.isTrue(solicitudService.modificable(solicitudModalidad.getSolicitudId()),
         "No se puede modificar SolicitudModalidad");
 
     return repository.findById(solicitudModalidad.getId()).map((data) -> {
 
+      Solicitud solicitud = solicitudRepository.findById(data.getSolicitudId())
+          .orElseThrow(() -> new SolicitudNotFoundException(data.getSolicitudId()));
+
       // Comprobar que la modalidad seleccionada esta en el arbol que tiene como nodo
       // raiz el programa seleccionado en la ConvocatoriaEntidadConvocante
       Optional<ConvocatoriaEntidadConvocante> convocatoriaEntidadConvocante = convocatoriaEntidadConvocanteRepository
-          .findByConvocatoriaIdAndEntidadRef(data.getSolicitud().getConvocatoria().getId(), data.getEntidadRef());
+          .findByConvocatoriaIdAndEntidadRef(solicitud.getConvocatoriaId(), data.getEntidadRef());
 
       // Comprobar que la modalidad seleccionada no es el nodo raiz del arbol
       Assert.isTrue(

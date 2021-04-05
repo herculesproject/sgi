@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
@@ -61,7 +60,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
         // then: new ConvocatoriaFase is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(convocatoriaFase.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaFase.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-28T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFase.id").value(convocatoriaFase.getTipoFase().getId()));
@@ -107,8 +106,8 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
         // then: ConvocatoriaFase is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoriaFaseExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaFaseExistente.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaFaseExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-28T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFase.id").value(convocatoriaFase.getTipoFase().getId()));
@@ -187,7 +186,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ConvocatoriaFase is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-28T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoFase.id").value(1L));
@@ -217,15 +216,12 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaFase
    */
   private ConvocatoriaFase generarMockConvocatoriaFase(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id == null ? 1 : id);
 
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
-    convocatoriaFase.setConvocatoria(convocatoria);
+    convocatoriaFase.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     convocatoriaFase.setFechaFin(Instant.parse("2020-10-28T23:59:59Z"));
     convocatoriaFase.setTipoFase(tipoFase);

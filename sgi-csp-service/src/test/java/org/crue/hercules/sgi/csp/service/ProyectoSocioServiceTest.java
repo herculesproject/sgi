@@ -12,11 +12,12 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.SocioPeriodoJustificacionDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,16 +41,18 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoSocioPeriodoPagoRepository periodoPagoRepository;
   @Mock
-  private SocioPeriodoJustificacionDocumentoRepository documentoRepository;
+  private ProyectoSocioPeriodoJustificacionDocumentoRepository documentoRepository;
   @Mock
   private ProyectoSocioPeriodoJustificacionRepository periodoJustificacionRepository;
+  @Mock
+  private ProyectoRepository proyectoRepository;
 
   private ProyectoSocioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ProyectoSocioServiceImpl(repository, equipoRepository, periodoPagoRepository, documentoRepository,
-        periodoJustificacionRepository);
+        periodoJustificacionRepository, proyectoRepository);
   }
 
   @Test
@@ -73,9 +76,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     // then: new ProyectoSocio is created
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto()).as("getProyecto()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoSocio.getProyecto().getId());
+    Assertions.assertThat(responseData.getProyectoId()).as("getProyectoId()").isEqualTo(proyectoSocio.getProyectoId());
     Assertions.assertThat(responseData.getEmpresaRef()).as("getEmpresaRef()").isEqualTo(proyectoSocio.getEmpresaRef());
     Assertions.assertThat(responseData.getRolSocio()).as("getRolSocio()").isNotNull();
     Assertions.assertThat(responseData.getRolSocio().getId()).as("getRolSocio().getId()")
@@ -123,9 +124,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     // then: ProyectoSocio is updated
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto()).as("getProyecto()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoSocio.getProyecto().getId());
+    Assertions.assertThat(responseData.getProyectoId()).as("getProyectoId()").isEqualTo(proyectoSocio.getProyectoId());
     Assertions.assertThat(responseData.getEmpresaRef()).as("getEmpresaRef()").isEqualTo(proyectoSocio.getEmpresaRef());
     Assertions.assertThat(responseData.getRolSocio()).as("getRolSocio()").isNotNull();
     Assertions.assertThat(responseData.getRolSocio().getId()).as("getRolSocio().getId()")
@@ -170,17 +169,17 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
   public void update_RolSocioNoCoordinador_WithProyectoAbiertoCoordinadorExterno_ThrowsIllegalArgumentException()
       throws Exception {
     // given: a ProyectoSocio with RolSocio with coordinador false
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoSocio proyectoSocioExistente = generarMockProyectoSocio(1L);
-    proyectoSocioExistente.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
-    proyectoSocioExistente.getProyecto().setColaborativo(true);
-    proyectoSocioExistente.getProyecto().setCoordinadorExterno(true);
+    proyecto.getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
+    proyecto.setColaborativo(true);
+    proyecto.setCoordinadorExterno(true);
 
     ProyectoSocio proyectoSocio = generarMockProyectoSocio(1L);
-    proyectoSocio.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
-    proyectoSocio.getProyecto().setColaborativo(true);
-    proyectoSocio.getProyecto().setCoordinadorExterno(true);
     proyectoSocio.setRolSocio(RolSocio.builder().id(2L).coordinador(false).build());
 
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyectoSocioExistente));
     BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProyectoSocio>>any())).willReturn(0L);
 
@@ -197,6 +196,8 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     // given: existing ProyectoSocio
     Long id = 1L;
 
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockProyecto(id)));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockProyectoSocio(id)));
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
@@ -226,12 +227,15 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
   public void delete_LastRolSocioCoordinador_WithProyectoAbiertoCoordinadorExterno__ThrowsIllegalArgumentException()
       throws Exception {
     // given: no existing id
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     Long id = 1L;
     ProyectoSocio proyectoSocio = generarMockProyectoSocio(1L);
-    proyectoSocio.getProyecto().getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
-    proyectoSocio.getProyecto().setColaborativo(true);
-    proyectoSocio.getProyecto().setCoordinadorExterno(true);
+    proyecto.getEstado().setEstado(EstadoProyecto.Estado.ABIERTO);
+    proyecto.setColaborativo(true);
+    proyecto.setCoordinadorExterno(true);
 
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyectoSocio));
     BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProyectoSocio>>any())).willReturn(0L);
 
@@ -284,9 +288,8 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     // then: returns ProyectoSocio
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto()).as("getProyecto()").isNotNull();
-    Assertions.assertThat(responseData.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoSocioExistente.getProyecto().getId());
+    Assertions.assertThat(responseData.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoSocioExistente.getProyectoId());
     Assertions.assertThat(responseData.getEmpresaRef()).as("getEmpresaRef()")
         .isEqualTo(proyectoSocioExistente.getEmpresaRef());
     Assertions.assertThat(responseData.getRolSocio()).as("getRolSocio()").isNotNull();
@@ -384,6 +387,19 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     Assertions.assertThat(responseData).isFalse();
   }
 
+  private Proyecto generarMockProyecto(Long proyectoId) {
+    // @formatter:off
+    return Proyecto.builder()
+            .id(proyectoId)
+            .estado(
+                EstadoProyecto.builder()
+                    .id(1L)
+                    .estado(EstadoProyecto.Estado.BORRADOR)
+                    .build())
+            .build();
+    // @formatter:on
+  }
+
   /**
    * Función que genera un ProyectoSocio
    * 
@@ -397,14 +413,7 @@ public class ProyectoSocioServiceTest extends BaseServiceTest {
     // @formatter:off
     ProyectoSocio proyectoSocio = ProyectoSocio.builder()
         .id(proyectoSocioId)
-        .proyecto(Proyecto.builder()
-            .id(1L)
-            .estado(
-                EstadoProyecto.builder()
-                    .id(1L)
-                    .estado(EstadoProyecto.Estado.BORRADOR)
-                    .build())
-            .build())
+        .proyectoId(1L)
         .empresaRef("empresa-" + suffix)
         .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())
         .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))

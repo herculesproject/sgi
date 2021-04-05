@@ -45,14 +45,10 @@ public class ContextoProyectoServiceImpl implements ContextoProyectoService {
 
     Assert.isNull(contextoProyecto.getId(), "Id tiene que ser null para crear ContextoProyecto");
 
-    Assert.isTrue(contextoProyecto.getProyecto() != null && contextoProyecto.getProyecto().getId() != null,
-        "Proyecto no puede ser null para crear ContextoProyecto");
+    Assert.isTrue(contextoProyecto.getProyectoId() != null, "Proyecto no puede ser null para crear ContextoProyecto");
 
-    Assert.isTrue(!repository.existsByProyectoId(contextoProyecto.getProyecto().getId()),
-        "Ya existe ContextoProyecto para el proyecto  " + contextoProyecto.getProyecto().getTitulo());
-
-    contextoProyecto.setProyecto(proyectoRepository.findById(contextoProyecto.getProyecto().getId())
-        .orElseThrow(() -> new ProyectoNotFoundException(contextoProyecto.getProyecto().getId())));
+    Assert.isTrue(!repository.existsByProyectoId(contextoProyecto.getProyectoId()),
+        "Ya existe ContextoProyecto para el proyecto " + contextoProyecto.getProyectoId());
 
     ContextoProyecto returnValue = repository.save(contextoProyecto);
 

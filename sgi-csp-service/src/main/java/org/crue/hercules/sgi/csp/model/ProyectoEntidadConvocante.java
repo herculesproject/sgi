@@ -15,11 +15,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "proyecto_entidad_convocante", uniqueConstraints = { @UniqueConstraint(columnNames = { "proyecto_id",
@@ -49,7 +52,7 @@ public class ProyectoEntidadConvocante extends BaseEntity {
   @Size(max = 50)
   private String entidadRef;
 
-  /** Proyecto */
+  /** Proyecto Id */
   @Column(name = "proyecto_id", nullable = false)
   @NotNull
   private Long proyectoId;
@@ -64,4 +67,10 @@ public class ProyectoEntidadConvocante extends BaseEntity {
   @JoinColumn(name = "programa_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTOENTIDADCONVOCANTE_PROGRAMA"))
   private Programa programa;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOENTIDADCONVOCANTE_PROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Proyecto proyecto = null;
 }

@@ -7,12 +7,12 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,12 +44,15 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   @Mock
   private SolicitudService solicitudService;
 
+  @Mock
+  private SolicitudProyectoRepository solicitudProyectoRepository;
+
   private SolicitudProyectoEntidadFinanciadoraAjenaService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl(repository, fuenteFinanciacionRepository,
-        tipoFinanciacionRepository, solicitudService);
+        tipoFinanciacionRepository, solicitudService, solicitudProyectoRepository);
   }
 
   @Test
@@ -77,9 +80,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
     // then: El SolicitudProyectoEntidadFinanciadoraAjena se crea correctamente
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaCreado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaCreado.getSolicitudProyectoId())
+        .as("getSolicitudProyectoId()").isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaCreado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getEntidadRef());
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaCreado.getFuenteFinanciacion().getId())
@@ -108,19 +110,19 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   }
 
   @Test
-  public void create_WithoutSolicitudProyectoDatosId_ThrowsIllegalArgumentException() {
+  public void create_WithoutSolicitudProyectoId_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena without
-    // SolicitudProyectoDatosId
+    // SolicitudProyectoId
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
         null);
-    solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoDatos().setId(null);
+    solicitudProyectoEntidadFinanciadoraAjena.setSolicitudProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: create SolicitudProyectoEntidadFinanciadoraAjena
         () -> service.create(solicitudProyectoEntidadFinanciadoraAjena))
-        // then: throw exception as SolicitudProyectoDatosId is null
+        // then: throw exception as SolicitudProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id SolicitudProyectoDatos no puede ser null para crear SolicitudProyectoEntidadFinanciadoraAjena");
+        .hasMessage("Id SolicitudProyecto no puede ser null para crear SolicitudProyectoEntidadFinanciadoraAjena");
   }
 
   @Test
@@ -165,23 +167,24 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   public void update_ReturnsSolicitudProyectoEntidadFinanciadoraAjena() {
     // given: Un nuevo SolicitudProyectoEntidadFinanciadoraAjena con el nombre
     // actualizado
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
         1L);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaPorcentajeActualizado = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
         1L);
     solicitudProyectoEntidadFinanciadoraAjenaPorcentajeActualizado.setPorcentajeFinanciacion(1);
 
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getTipoFinanciacion()));
-
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
-
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoEntidadFinanciadoraAjena>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoEntidadFinanciadoraAjena
@@ -193,9 +196,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaActualizado.getId()).as("getId()")
         .isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getId());
-    Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaActualizado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaActualizado.getSolicitudProyectoId())
+        .as("getSolicitudProyectoId()").isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaActualizado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(solicitudProyectoEntidadFinanciadoraAjena.getEntidadRef());
     Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjenaActualizado.getFuenteFinanciacion().getId())
@@ -212,13 +214,15 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   @Test
   public void update_WithIdNotExist_ThrowsSolicitudProyectoEntidadFinanciadoraAjenaNotFoundException() {
     // given: Un SolicitudProyectoEntidadFinanciadoraAjena a actualizar con un id
-    // que no
-    // existe
+    // que no existe
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
         1L);
 
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
-
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el SolicitudProyectoEntidadFinanciadoraAjena
@@ -232,6 +236,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   public void update_WithFuenteFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with FuenteFinanciacion
     // activo=false
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
         1L);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizada = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
@@ -239,12 +245,12 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
     solicitudProyectoEntidadFinanciadoraAjenaActualizada.getFuenteFinanciacion().setId(2L);
     solicitudProyectoEntidadFinanciadoraAjenaActualizada.getFuenteFinanciacion().setActivo(false);
 
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjenaActualizada.getFuenteFinanciacion()));
-
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
-
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
@@ -258,6 +264,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
   public void update_WithTipoFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with TipoFinanciacion
     // activo=false
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
         1L);
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizada = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
@@ -265,14 +273,14 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
     solicitudProyectoEntidadFinanciadoraAjenaActualizada.getTipoFinanciacion().setId(2L);
     solicitudProyectoEntidadFinanciadoraAjenaActualizada.getTipoFinanciacion().setActivo(false);
 
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjenaActualizada.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjenaActualizada.getTipoFinanciacion()));
-
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
-
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
 
     Assertions.assertThatThrownBy(
@@ -389,6 +397,10 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
         .isInstanceOf(SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException.class);
   }
 
+  private SolicitudProyecto generarMockSolicitudProyecto(Long solicitudProyectoId) {
+    return SolicitudProyecto.builder().id(solicitudProyectoId).build();
+  }
+
   /**
    * Función que devuelve un objeto SolicitudProyectoEntidadFinanciadoraAjena
    * 
@@ -397,11 +409,6 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
    */
   private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
     // @formatter:off
-    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder()
-        .id(id == null ? 1 : id)
-        .solicitud(Solicitud.builder().id(id == null ? 1 : id).build())
-        .build();
-
     FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
         .id(id == null ? 1 : id)
         .activo(true)
@@ -415,7 +422,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseSe
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = SolicitudProyectoEntidadFinanciadoraAjena
         .builder()
         .id(id)
-        .solicitudProyectoDatos(solicitudProyectoDatos)
+        .solicitudProyectoId(id == null ? 1 : id)
         .entidadRef("entidad-" + (id == null ? 0 : String.format("%03d", id)))
         .fuenteFinanciacion(fuenteFinanciacion)
         .tipoFinanciacion(tipoFinanciacion)

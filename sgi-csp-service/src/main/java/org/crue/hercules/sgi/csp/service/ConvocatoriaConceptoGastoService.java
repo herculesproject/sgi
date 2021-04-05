@@ -48,6 +48,25 @@ public interface ConvocatoriaConceptoGastoService {
   ConvocatoriaConceptoGasto findById(Long id);
 
   /**
+   * Comprueba la existencia del {@link ConvocatoriaConceptoGasto} por id.
+   *
+   * @param id el id de la entidad {@link ConvocatoriaConceptoGasto}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsById(Long id);
+
+  /**
+   * Obtiene todas las entidades {@link ConvocatoriaConceptoGasto} paginadas y
+   * filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link ConvocatoriaConceptoGasto} paginadas y
+   *         filtradas.
+   */
+  Page<ConvocatoriaConceptoGasto> findAll(String query, Pageable paging);
+
+  /**
    * Obtiene las {@link ConvocatoriaConceptoGasto} permitidos para una
    * {@link Convocatoria}
    *

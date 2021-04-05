@@ -1,11 +1,8 @@
 package org.crue.hercules.sgi.csp.integration;
 
-import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.junit.jupiter.api.Test;
@@ -41,8 +38,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
       "classpath:scripts/tipo_documento.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -61,9 +58,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ProyectoPeriodoSeguimientoDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyectoPeriodoSeguimiento().getId())
-        .as("getProyectoPeriodoSeguimiento().getId()")
-        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId());
+    Assertions.assertThat(responseData.getProyectoPeriodoSeguimientoId()).as("getProyectoPeriodoSeguimientoId()")
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getDocumentoRef());
     Assertions.assertThat(responseData.getComentario()).as("getComentario()")
@@ -76,8 +72,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/proyecto_periodo_seguimiento_documento.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -98,9 +94,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ProyectoPeriodoSeguimientoDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getProyectoPeriodoSeguimiento().getId())
-        .as("getProyectoPeriodoSeguimiento().getId()")
-        .isEqualTo(proyectoPeriodoSeguimientoExistente.getProyectoPeriodoSeguimiento().getId());
+    Assertions.assertThat(responseData.getProyectoPeriodoSeguimientoId()).as("getProyectoPeriodoSeguimientoId()")
+        .isEqualTo(proyectoPeriodoSeguimientoExistente.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(proyectoPeriodoSeguimientoExistente.getDocumentoRef());
     Assertions.assertThat(responseData.getComentario()).as("getComentario()").isEqualTo("comentario-modificados");
@@ -112,8 +107,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/proyecto_periodo_seguimiento_documento.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -133,8 +128,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/proyecto_periodo_seguimiento.sql",
       "classpath:scripts/tipo_documento.sql", "classpath:scripts/proyecto_periodo_seguimiento_documento.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -148,29 +143,8 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ProyectoPeriodoSeguimientoDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
-    Assertions.assertThat(responseData.getProyectoPeriodoSeguimiento().getId())
-        .as("getProyectoPeriodoSeguimiento().getId()").isEqualTo(1L);
-  }
-
-  /**
-   * Función que devuelve un objeto ProyectoPeriodoSeguimiento
-   * 
-   * @param id id del ProyectoPeriodoSeguimiento
-   * @return el objeto ProyectoPeriodoSeguimiento
-   */
-  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
-    ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
-    proyectoPeriodoSeguimiento.setId(id);
-    proyectoPeriodoSeguimiento.setProyecto(proyecto);
-    proyectoPeriodoSeguimiento.setNumPeriodo(1);
-    proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
-    proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
-    proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
-
-    return proyectoPeriodoSeguimiento;
+    Assertions.assertThat(responseData.getProyectoPeriodoSeguimientoId()).as("getProyectoPeriodoSeguimientoId()")
+        .isEqualTo(1L);
   }
 
   /**
@@ -189,8 +163,7 @@ public class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
 
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
-    proyectoPeriodoSeguimientoDocumento
-        .setProyectoPeriodoSeguimiento(generarMockProyectoPeriodoSeguimiento(id == null ? 1 : id));
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre("Nombre-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));

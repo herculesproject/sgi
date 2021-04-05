@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPaqueteTrabajoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPaqueteTrabajoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -52,7 +51,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     proyectoPaqueteTrabajo.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.TRUE));
     BDDMockito.given(repository.existsProyectoPaqueteTrabajoByProyectoIdAndNombre(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
@@ -73,8 +72,8 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // then: El ProyectoPaqueteTrabajo se crea correctamente
     Assertions.assertThat(proyectoPaqueteTrabajoCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoPaqueteTrabajoCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoPaqueteTrabajoCreado.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoPaqueteTrabajo.getProyecto().getId());
+    Assertions.assertThat(proyectoPaqueteTrabajoCreado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoPaqueteTrabajo.getProyectoId());
     Assertions.assertThat(proyectoPaqueteTrabajoCreado.getNombre()).as("getNombre()")
         .isEqualTo(proyectoPaqueteTrabajo.getNombre());
     Assertions.assertThat(proyectoPaqueteTrabajoCreado.getFechaInicio()).as("getFechaInicio()")
@@ -103,7 +102,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // given: a ProyectoPaqueteTrabajo without ProyectoId
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setId(null);
-    proyectoPaqueteTrabajo.setProyecto(null);
+    proyectoPaqueteTrabajo.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPaqueteTrabajo
@@ -203,13 +202,13 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithProyectoWithPaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
-    // given: Proyecto with field PaquetesTrabajo = FALSE or NULL
+  public void create_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
+    // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.FALSE));
 
     Assertions.assertThatThrownBy(
@@ -227,7 +226,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     proyectoPaqueteTrabajo.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.TRUE));
     BDDMockito.given(repository.existsProyectoPaqueteTrabajoByProyectoIdAndNombre(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<String>any())).willReturn(Boolean.TRUE);
@@ -248,7 +247,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     proyectoPaqueteTrabajo.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.TRUE));
     BDDMockito.given(repository.existsProyectoPaqueteTrabajoByProyectoIdAndNombre(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
@@ -275,7 +274,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoPaqueteTrabajo));
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.TRUE));
     BDDMockito.given(repository.existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
@@ -293,8 +292,8 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // then: El ProyectoPaqueteTrabajo se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoPaqueteTrabajo.getId());
-    Assertions.assertThat(updated.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoPaqueteTrabajo.getProyecto().getId());
+    Assertions.assertThat(updated.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoPaqueteTrabajo.getProyectoId());
     Assertions.assertThat(updated.getNombre()).as("getNombre()").isEqualTo(proyectoPaqueteTrabajo.getNombre());
     Assertions.assertThat(updated.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(proyectoPaqueteTrabajo.getFechaInicio());
@@ -323,7 +322,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // given: a ProyectoPaqueteTrabajo without ProyectoId
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
-    proyectoPaqueteTrabajo.setProyecto(null);
+    proyectoPaqueteTrabajo.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoPaqueteTrabajo
@@ -431,8 +430,8 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithProyectoWithPaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
-    // given: Proyecto with field PaquetesTrabajo = FALSE or NULL
+  public void update_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
+    // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
@@ -440,7 +439,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.FALSE));
 
     Assertions.assertThatThrownBy(
@@ -461,7 +460,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.TRUE));
     BDDMockito.given(repository.existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any())).willReturn(Boolean.TRUE);
@@ -485,7 +484,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(proyectoRepository.getPaquetesTrabajo(ArgumentMatchers.<Long>any()))
+    BDDMockito.given(proyectoRepository.getPermitePaquetesTrabajo(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(Boolean.TRUE));
     BDDMockito.given(repository.existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any())).willReturn(Boolean.FALSE);
@@ -534,8 +533,8 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void delete_WithProyectoWithPaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
-    // given: Proyecto with field PaquetesTrabajo = FALSE or NULL
+  public void delete_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
+    // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
     Long id = 1L;
 
     BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -659,7 +658,7 @@ public class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // @formatter:off
     return ProyectoPaqueteTrabajo.builder()
         .id(id)
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))

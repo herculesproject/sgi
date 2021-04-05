@@ -42,7 +42,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
-import org.crue.hercules.sgi.csp.service.SocioPeriodoJustificacionDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -97,7 +97,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private ProyectoDocumentoService proyectoDocumentoService;
 
   @MockBean
-  private SocioPeriodoJustificacionDocumentoService socioPeriodoJustificacionDocumentoService;
+  private ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService;
 
   @MockBean
   private ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService;
@@ -1337,7 +1337,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     estadoProyecto.setComentario("Estado-" + id);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
     return estadoProyecto;
   }
@@ -1349,16 +1349,13 @@ public class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoHito
    */
   private ProyectoHito generarMockProyectoHito(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
     ProyectoHito proyectoHito = new ProyectoHito();
     proyectoHito.setId(id);
-    proyectoHito.setProyecto(proyecto);
+    proyectoHito.setProyectoId(id == null ? 1 : id);
     proyectoHito.setFecha(Instant.parse("2020-10-19T23:59:59Z"));
     proyectoHito.setComentario("comentario-proyecto-hito-" + String.format("%03d", id));
     proyectoHito.setGeneraAviso(true);
@@ -1374,16 +1371,13 @@ public class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoFase
    */
   private ProyectoFase generarMockProyectoFase(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id == null ? 1 : id);
     tipoFase.setActivo(true);
 
     ProyectoFase proyectoFase = new ProyectoFase();
     proyectoFase.setId(id);
-    proyectoFase.setProyecto(proyecto);
+    proyectoFase.setProyectoId(id == null ? 1 : id);
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
@@ -1405,7 +1399,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // @formatter:off
     return ProyectoPaqueteTrabajo.builder()
         .id(id)
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
@@ -1428,7 +1422,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // @formatter:off
     ProyectoSocio proyectoSocio = ProyectoSocio.builder()
         .id(proyectoSocioId)
-        .proyecto(Proyecto.builder().id(1L).build())
+        .proyectoId(1L)
         .empresaRef("empresa-" + suffix)
         .rolSocio(RolSocio.builder().id(1L).build())
         .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
@@ -1449,9 +1443,9 @@ public class ProyectoControllerTest extends BaseControllerTest {
    */
   private ProyectoEquipo generarMockProyectoEquipo(Long proyectoEquipoId) {
 
-    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(proyectoEquipoId)
-        .proyecto(Proyecto.builder().id(1L).build()).rolProyecto(RolProyecto.builder().id(1L).build())
-        .fechaInicio(Instant.now()).fechaFin(Instant.now()).personaRef("001").horasDedicacion(new Double(2)).build();
+    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(proyectoEquipoId).proyectoId(1L)
+        .rolProyecto(RolProyecto.builder().id(1L).build()).fechaInicio(Instant.now()).fechaFin(Instant.now())
+        .personaRef("001").horasDedicacion(new Double(2)).build();
 
     return proyectoEquipo;
 
@@ -1465,12 +1459,9 @@ public class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoPeriodoSeguimiento
    */
   private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
-    Proyecto proyecto = new Proyecto();
-    proyecto.setId(id == null ? 1 : id);
-
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
     proyectoPeriodoSeguimiento.setId(id);
-    proyectoPeriodoSeguimiento.setProyecto(proyecto);
+    proyectoPeriodoSeguimiento.setProyectoId(id == null ? 1 : id);
     proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
     proyectoPeriodoSeguimiento.setObservaciones("obs-" + id);
@@ -1489,7 +1480,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // @formatter:off
     return ProyectoEntidadGestora.builder()
         .id(id)
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))
         .build();
     // @formatter:on
@@ -1507,7 +1498,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
     // @formatter:off
     return ProyectoProrroga.builder()
         .id(id)
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .numProrroga(1)
         .fechaConcesion(Instant.parse("2020-01-01T00:00:00Z"))
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)

@@ -61,21 +61,20 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     Assert.isNull(convocatoriaEntidadConvocante.getId(),
         "ConvocatoriaEntidadConvocante id tiene que ser null para crear un nuevo ConvocatoriaEntidadConvocante");
 
-    Assert.notNull(convocatoriaEntidadConvocante.getConvocatoria().getId(),
+    Assert.notNull(convocatoriaEntidadConvocante.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
 
-    convocatoriaEntidadConvocante.setConvocatoria(
-        convocatoriaRepository.findById(convocatoriaEntidadConvocante.getConvocatoria().getId()).orElseThrow(
-            () -> new ConvocatoriaNotFoundException(convocatoriaEntidadConvocante.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaEntidadConvocante.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEntidadConvocante.getConvocatoriaId()));
 
     // comprobar si convocatoria es modificable
     Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoria().getId(),
-            convocatoriaEntidadConvocante.getConvocatoria().getUnidadGestionRef()),
+        convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(),
+            convocatoria.getUnidadGestionRef()),
         "No se puede crear ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     Assert.isTrue(
-        !repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocante.getConvocatoria().getId(),
+        !repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocante.getConvocatoriaId(),
             convocatoriaEntidadConvocante.getEntidadRef()).isPresent(),
         "Ya existe una asociación activa para esa Convocatoria y Entidad");
 
@@ -115,12 +114,10 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     return repository.findById(convocatoriaEntidadConvocanteActualizar.getId()).map(convocatoriaEntidadConvocante -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoria().getId(),
-              convocatoriaEntidadConvocante.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(), null),
           "No se puede modificar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
-      repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocanteActualizar.getConvocatoria().getId(),
+      repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocanteActualizar.getConvocatoriaId(),
           convocatoriaEntidadConvocanteActualizar.getEntidadRef()).ifPresent(convocatoriaR -> {
             Assert.isTrue(convocatoriaEntidadConvocante.getId() == convocatoriaR.getId(),
                 "Ya existe una asociación activa para esa Convocatoria y Entidad");
@@ -163,9 +160,7 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     repository.findById(id).map(convocatoriaEntidadConvocante -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoria().getId(),
-              convocatoriaEntidadConvocante.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(), null),
           "No se puede eliminar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaEntidadConvocante;

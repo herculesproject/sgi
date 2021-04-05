@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -88,7 +87,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     List<ConvocatoriaPeriodoSeguimientoCientifico> responseData = response.getBody();
     Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getId());
-    Assertions.assertThat(responseData.get(0).getConvocatoria().getId()).as("get(0).getConvocatoria().getId()")
+    Assertions.assertThat(responseData.get(0).getConvocatoriaId()).as("get(0).getConvocatoriaId()")
         .isEqualTo(convocatoriaId);
     Assertions.assertThat(responseData.get(0).getMesInicial()).as("get(0).getMesInicial()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
@@ -102,7 +101,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getObservaciones());
 
-    Assertions.assertThat(responseData.get(1).getConvocatoria().getId()).as("get(1).getConvocatoria().getId()")
+    Assertions.assertThat(responseData.get(1).getConvocatoriaId()).as("get(1).getConvocatoriaId()")
         .isEqualTo(convocatoriaId);
     Assertions.assertThat(responseData.get(1).getMesInicial()).as("get(1).getMesInicial()")
         .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
@@ -156,7 +155,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ConvocatoriaPeriodoSeguimientoCientifico responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1);
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1);
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1);
     Assertions.assertThat(responseData.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(responseData.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()").isEqualTo(2);
@@ -180,12 +179,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
    */
   private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
       Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
-
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
     convocatoriaPeriodoSeguimientoCientifico.setId(id);
-    convocatoriaPeriodoSeguimientoCientifico.setConvocatoria(convocatoria);
+    convocatoriaPeriodoSeguimientoCientifico.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
     convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
     convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
     convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);

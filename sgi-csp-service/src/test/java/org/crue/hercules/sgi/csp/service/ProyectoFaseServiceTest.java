@@ -59,12 +59,14 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsProyectoFase() {
     // given: Un nuevo ProyectoFase
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -90,8 +92,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // then: El ProyectoFase se crea correctamente
     Assertions.assertThat(proyectoFaseCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoFaseCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoFaseCreado.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoFase.getProyecto().getId());
+    Assertions.assertThat(proyectoFaseCreado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoFase.getProyectoId());
     Assertions.assertThat(proyectoFaseCreado.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(proyectoFase.getFechaInicio());
     Assertions.assertThat(proyectoFaseCreado.getFechaFin()).as("getFechaFin()").isEqualTo(proyectoFase.getFechaFin());
@@ -106,6 +108,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void create_WithRangoFechasAnterior_ReturnsProyectoFaseWithGeneraAvisoFalse() {
     // given: Un nuevo ProyectoFase con rango de fechas pasado
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
     proyectoFase.setFechaInicio(Instant.now().minus(Period.ofDays(2)));
@@ -114,7 +118,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -140,8 +144,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // then: El ProyectoFase se crea correctamente
     Assertions.assertThat(proyectoFaseCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoFaseCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoFaseCreado.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoFase.getProyecto().getId());
+    Assertions.assertThat(proyectoFaseCreado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoFase.getProyectoId());
     Assertions.assertThat(proyectoFaseCreado.getFechaInicio()).as("getFechaInicio()")
         .isEqualTo(proyectoFase.getFechaInicio());
     Assertions.assertThat(proyectoFaseCreado.getFechaFin()).as("getFechaFin()").isEqualTo(proyectoFase.getFechaFin());
@@ -167,7 +171,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // given: a ProyectoFase without ProyectoId
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
-    proyectoFase.setProyecto(null);
+    proyectoFase.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoFase
@@ -239,9 +243,11 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con Proyecto sin Modelo de Ejecucion
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
-    proyectoFase.getProyecto().setModeloEjecucion(null);
+    proyecto.setModeloEjecucion(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
 
@@ -277,12 +283,14 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   public void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la proyecto inactiva
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -294,19 +302,21 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            proyectoFase.getTipoFase().getNombre(), proyectoFase.getProyecto().getModeloEjecucion().getNombre());
+            proyectoFase.getTipoFase().getNombre(), proyecto.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase TipoFase disabled
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setId(null);
     proyectoFase.getTipoFase().setActivo(Boolean.FALSE);
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -323,6 +333,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void create_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
     // given: a existing ProyectoFase with date ranges overlapping
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFaseExistente = generarMockProyectoFase(2L);
     proyectoFaseExistente.setFechaInicio(Instant.parse("2020-10-18T00:00:00Z"));
     proyectoFaseExistente.setFechaFin(Instant.parse("2020-10-22T23:59:59Z"));
@@ -332,7 +344,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -357,6 +369,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void update_ReturnsProyectoFase() {
     // given: Un nuevo ProyectoFase con el tipoFase actualizado
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     ProyectoFase proyectoFaseActualizado = generarMockProyectoFase(1L);
     proyectoFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
@@ -365,7 +379,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -388,8 +402,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // then: El ProyectoFase se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoFase.getId());
-    Assertions.assertThat(updated.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoFase.getProyecto().getId());
+    Assertions.assertThat(updated.getProyectoId()).as("getProyectoId()").isEqualTo(proyectoFase.getProyectoId());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
         .isEqualTo(proyectoFaseActualizado.getObservaciones());
     Assertions.assertThat(updated.getTipoFase().getId()).as("getTipoFase().getId()")
@@ -404,6 +417,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void update_WithRangoFechasAnterior_ReturnsProyectoFaseWithGeneraAvisoFalse() {
     // given: Un nuevo ProyectoFase con el tipoFase actualizado
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     ProyectoFase proyectoFaseActualizado = generarMockProyectoFase(1L);
     proyectoFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
@@ -415,7 +430,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
 
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -438,8 +453,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // then: El ProyectoFase se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoFase.getId());
-    Assertions.assertThat(updated.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoFase.getProyecto().getId());
+    Assertions.assertThat(updated.getProyectoId()).as("getProyectoId()").isEqualTo(proyectoFase.getProyectoId());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
         .isEqualTo(proyectoFaseActualizado.getObservaciones());
     Assertions.assertThat(updated.getTipoFase().getId()).as("getTipoFase().getId()")
@@ -467,7 +481,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // given: a ProyectoFase without ProyectoId
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
-    proyectoFase.setProyecto(null);
+    proyectoFase.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoFase
@@ -546,10 +560,12 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con Proyecto sin Modelo de Ejecucion
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
-    proyectoFase.getProyecto().setModeloEjecucion(null);
+    proyecto.setModeloEjecucion(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFaseOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -588,6 +604,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   public void update_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase con la asignación de TipoFase al Modelo de Ejecucion
     // de la proyecto inactiva
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
@@ -595,7 +613,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFaseOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -607,12 +625,14 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            proyectoFase.getTipoFase().getNombre(), proyectoFase.getProyecto().getModeloEjecucion().getNombre());
+            proyectoFase.getTipoFase().getNombre(), proyecto.getModeloEjecucion().getNombre());
   }
 
   @Test
   public void update_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
     // given: ProyectoFase TipoFase disabled
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFaseOriginal = generarMockProyectoFase(1L);
     ProyectoFase proyectoFase = generarMockProyectoFase(1L);
     proyectoFase.setObservaciones("observaciones modificado");
@@ -621,7 +641,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFaseOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -638,6 +658,8 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
   @Test
   public void update_WithExistingDateOverlap_ThrowsIllegalArgumentException() {
     // given: a existing ProyectoFase with date ranges overlapping
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFaseExistente = generarMockProyectoFase(2L);
     proyectoFaseExistente.setFechaInicio(Instant.parse("2020-10-18T00:00:00Z"));
     proyectoFaseExistente.setFechaFin(Instant.parse("2020-10-22T23:59:59Z"));
@@ -649,7 +671,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFaseOriginal));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoFase.getProyecto().getModeloEjecucion()));
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
     BDDMockito
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<Long>any()))
@@ -845,7 +867,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id));
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
     return estadoProyecto;
   }
@@ -881,7 +903,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // @formatter:off
     return ModeloTipoFase.builder()
         .id(id)
-        .modeloEjecucion(proyectoFase.getProyecto().getModeloEjecucion())
+        .modeloEjecucion(generarMockProyecto(proyectoFase.getProyectoId()).getModeloEjecucion())
         .tipoFase(proyectoFase.getTipoFase())
         .activo(activo)
         .build();
@@ -899,7 +921,7 @@ public class ProyectoFaseServiceTest extends BaseServiceTest {
     // @formatter:off
     return ProyectoFase.builder()
         .id(id)
-        .proyecto(generarMockProyecto(1L))
+        .proyectoId(1L)
         .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-20T00:00:00Z"))
         .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))

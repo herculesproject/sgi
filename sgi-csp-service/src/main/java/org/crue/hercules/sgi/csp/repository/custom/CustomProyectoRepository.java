@@ -28,5 +28,5 @@ public interface CustomProyectoRepository {
    * @return true si se permiten {@link ProyectoPaqueteTrabajo}, false si no se
    *         permiten {@link ProyectoPaqueteTrabajo}
    */
-  Optional<Boolean> getPaquetesTrabajo(Long id);
+  Optional<Boolean> getPermitePaquetesTrabajo(Long id);
 }

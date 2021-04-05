@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ProrrogaDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
-import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.junit.jupiter.api.Test;
@@ -56,8 +55,8 @@ public class ProrrogaDocumentoControllerTest extends BaseControllerTest {
         // then: new ProrrogaDocumento is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("proyectoProrroga.id")
-            .value(prorrogaDocumento.getProyectoProrroga().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("proyectoProrrogaId").value(prorrogaDocumento.getProyectoProrrogaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(prorrogaDocumento.getNombre()))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value(prorrogaDocumento.getDocumentoRef()))
         .andExpect(
@@ -106,8 +105,8 @@ public class ProrrogaDocumentoControllerTest extends BaseControllerTest {
         // then: ProrrogaDocumento is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(prorrogaDocumentoExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyectoProrroga.id")
-            .value(prorrogaDocumentoExistente.getProyectoProrroga().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoProrrogaId")
+            .value(prorrogaDocumentoExistente.getProyectoProrrogaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(prorrogaDocumentoExistente.getNombre()))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value(prorrogaDocumentoExistente.getDocumentoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
@@ -223,7 +222,7 @@ public class ProrrogaDocumentoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ProrrogaDocumento is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyectoProrroga.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoProrrogaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("prorroga-documento-" + String.format("%03d", id)))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value("documentoRef-" + String.format("%03d", id)))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(1L))
@@ -261,7 +260,7 @@ public class ProrrogaDocumentoControllerTest extends BaseControllerTest {
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
-        .proyectoProrroga(ProyectoProrroga.builder().id(proyectoProrrogaId).build())
+        .proyectoProrrogaId(proyectoProrrogaId)
         .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())

@@ -70,7 +70,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     Assert.isNull(convocatoriaEntidadFinanciadora.getId(),
         "ConvocatoriaEntidadFinanciadora id tiene que ser null para crear un nuevo ConvocatoriaEntidadFinanciadora");
 
-    Assert.notNull(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
+    Assert.notNull(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaEntidadFinanciadora");
 
     Assert.isTrue(
@@ -78,14 +78,13 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
             || convocatoriaEntidadFinanciadora.getPorcentajeFinanciacion() >= 0,
         "PorcentajeFinanciacion no puede ser negativo");
 
-    convocatoriaEntidadFinanciadora.setConvocatoria(
-        convocatoriaRepository.findById(convocatoriaEntidadFinanciadora.getConvocatoria().getId()).orElseThrow(
-            () -> new ConvocatoriaNotFoundException(convocatoriaEntidadFinanciadora.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaEntidadFinanciadora.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEntidadFinanciadora.getConvocatoriaId()));
 
     // comprobar si convocatoria es modificable
     Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
-            convocatoriaEntidadFinanciadora.getConvocatoria().getUnidadGestionRef()),
+        convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
+            convocatoria.getUnidadGestionRef()),
         "No se puede crear ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     if (convocatoriaEntidadFinanciadora.getFuenteFinanciacion() != null) {
@@ -185,9 +184,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
           }
 
           // comprobar si convocatoria es modificable
-          Assert.isTrue(
-              convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
-                  convocatoriaEntidadFinanciadora.getConvocatoria().getUnidadGestionRef()),
+          Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null),
               "No se puede modificar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
           convocatoriaEntidadFinanciadora
@@ -220,9 +217,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     repository.findById(id).map(convocatoriaEntidadFinanciadora -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoria().getId(),
-              convocatoriaEntidadFinanciadora.getConvocatoria().getUnidadGestionRef()),
+      Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null),
           "No se puede eliminar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaEntidadFinanciadora;

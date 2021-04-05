@@ -48,8 +48,8 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql"
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql"
       // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -79,8 +79,8 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/programa.sql",
       "classpath:scripts/proyecto_entidad_convocante.sql"
       // @formatter:on
@@ -116,8 +116,8 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/programa.sql",
       "classpath:scripts/proyecto_entidad_convocante.sql"
       // @formatter:on
@@ -146,8 +146,8 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
       "classpath:scripts/modelo_unidad.sql",
       "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
       "classpath:scripts/programa.sql",
       "classpath:scripts/proyecto_entidad_convocante.sql"
       // @formatter:on

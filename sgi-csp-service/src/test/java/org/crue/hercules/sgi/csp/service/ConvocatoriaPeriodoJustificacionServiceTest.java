@@ -89,7 +89,7 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
             if (periodoJustificacion.getId() == null) {
               periodoJustificacion.setId(6L);
             }
-            periodoJustificacion.getConvocatoria().setId(convocatoriaId);
+            periodoJustificacion.setConvocatoriaId(convocatoriaId);
             return periodoJustificacion;
           }).collect(Collectors.toList());
         });
@@ -101,8 +101,8 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
     // then: Se crea el nuevo ConvocatoriaPeriodoJustificacion, se actualiza el
     // existe y se elimina el otro
     Assertions.assertThat(periodosJustificacionActualizados.get(0).getId()).as("get(0).getId()").isEqualTo(6L);
-    Assertions.assertThat(periodosJustificacionActualizados.get(0).getConvocatoria().getId())
-        .as("get(0).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getConvocatoriaId()).as("get(0).getConvocatoriaId()")
+        .isEqualTo(convocatoriaId);
     Assertions.assertThat(periodosJustificacionActualizados.get(0).getMesInicial()).as("get(0).getMesInicial()")
         .isEqualTo(newConvocatoriaPeriodoJustificacion.getMesInicial());
     Assertions.assertThat(periodosJustificacionActualizados.get(0).getMesFinal()).as("get(0).getMesFinal()")
@@ -122,8 +122,8 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
 
     Assertions.assertThat(periodosJustificacionActualizados.get(1).getId()).as("get(1).getId()")
         .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getId());
-    Assertions.assertThat(periodosJustificacionActualizados.get(1).getConvocatoria().getId())
-        .as("get(1).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getConvocatoriaId()).as("get(1).getConvocatoriaId()")
+        .isEqualTo(convocatoriaId);
     Assertions.assertThat(periodosJustificacionActualizados.get(1).getMesInicial()).as("get(1).getMesInicial()")
         .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getMesInicial());
     Assertions.assertThat(periodosJustificacionActualizados.get(1).getMesFinal()).as("get(1).getMesFinal()")
@@ -443,12 +443,9 @@ public class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id, Integer mesInicial,
       Integer mesFinal, ConvocatoriaPeriodoJustificacion.Tipo tipo, Long convocatoriaId) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
-
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
-    convocatoriaPeriodoJustificacion.setConvocatoria(convocatoria);
+    convocatoriaPeriodoJustificacion.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
     convocatoriaPeriodoJustificacion.setNumPeriodo(1);
     convocatoriaPeriodoJustificacion.setMesInicial(mesInicial);
     convocatoriaPeriodoJustificacion.setMesFinal(mesFinal);

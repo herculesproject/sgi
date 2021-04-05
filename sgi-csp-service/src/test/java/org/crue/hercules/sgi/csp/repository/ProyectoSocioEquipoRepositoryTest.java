@@ -57,25 +57,25 @@ public class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         .build());
 
     ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(ProyectoSocio.builder()
-        .proyecto(proyecto1)
+        .proyectoId(proyecto1.getId())
         .empresaRef("empresa-0041")
         .rolSocio(rolSocio)
         .build());
 
     ProyectoSocio proyectoSocio2 = entityManager.persistAndFlush(ProyectoSocio.builder()
-        .proyecto(proyecto1)
+        .proyectoId(proyecto1.getId())
         .empresaRef("empresa-0025")
         .rolSocio(rolSocio)
         .build());
     // @formatter:on
 
-    ProyectoSocioEquipo proyectoSocioEquipo1 = entityManager.persistAndFlush(
-        new ProyectoSocioEquipo(null, proyectoSocio1, rolProyecto, "001", Instant.parse("2021-04-10T00:00:00Z"), null));
+    ProyectoSocioEquipo proyectoSocioEquipo1 = entityManager.persistAndFlush(new ProyectoSocioEquipo(null,
+        proyectoSocio1.getId(), rolProyecto, "001", Instant.parse("2021-04-10T00:00:00Z"), null));
 
-    entityManager.persistAndFlush(
-        new ProyectoSocioEquipo(null, proyectoSocio2, rolProyecto, "003", Instant.parse("2021-04-10T00:00:00Z"), null));
-    entityManager.persistAndFlush(
-        new ProyectoSocioEquipo(null, proyectoSocio2, rolProyecto, "004", Instant.parse("2021-04-10T00:00:00Z"), null));
+    entityManager.persistAndFlush(new ProyectoSocioEquipo(null, proyectoSocio2.getId(), rolProyecto, "003",
+        Instant.parse("2021-04-10T00:00:00Z"), null));
+    entityManager.persistAndFlush(new ProyectoSocioEquipo(null, proyectoSocio2.getId(), rolProyecto, "004",
+        Instant.parse("2021-04-10T00:00:00Z"), null));
 
     Long proyectoSocioId = proyectoSocio1.getId();
 

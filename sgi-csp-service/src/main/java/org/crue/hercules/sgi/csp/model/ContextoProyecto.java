@@ -16,10 +16,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "contexto_proyecto", uniqueConstraints = {
@@ -54,11 +57,10 @@ public class ContextoProyecto extends BaseEntity {
   @SequenceGenerator(name = "contexto_proyecto_seq", sequenceName = "contexto_proyecto_seq", allocationSize = 1)
   private Long id;
 
-  /** Proyecto */
-  @OneToOne
-  @JoinColumn(name = "proyecto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTO_PROYECTO"))
+  /** Proyecto Id */
+  @Column(name = "proyecto_id", nullable = false)
   @NotNull
-  private Proyecto proyecto;
+  private Long proyectoId;
 
   /** Objetivos */
   @Column(name = "objetivos", length = 2000, nullable = true)
@@ -79,12 +81,18 @@ public class ContextoProyecto extends BaseEntity {
 
   /** AreaTematica convocatoria */
   @ManyToOne
-  @JoinColumn(name = "area_tematica_convocatoria_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTOAREATEMATICACONVOCATORIA_AREATEMATICA"))
+  @JoinColumn(name = "area_tematica_convocatoria_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTO_AREATEMATICACONVOCATORIA"))
   private AreaTematica areaTematicaConvocatoria;
 
   /** AreaTematica */
   @ManyToOne
-  @JoinColumn(name = "area_tematica_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTOAREATEMATICA_AREATEMATICA"))
+  @JoinColumn(name = "area_tematica_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTO_AREATEMATICA"))
   private AreaTematica areaTematica;
 
+  // Relation mappings for JPA metamodel generation only
+  @OneToOne
+  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONTEXTOPROYECTO_PROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Proyecto proyecto = null;
 }

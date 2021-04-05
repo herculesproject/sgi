@@ -33,7 +33,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .build());
     // @formatter:on
     ConfiguracionSolicitud configuracionSolicitud1 = entityManager
-        .persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria1).build());
+        .persistAndFlush(ConfiguracionSolicitud.builder().convocatoriaId(convocatoria1.getId()).build());
 
     // @formatter:off
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
@@ -45,9 +45,9 @@ public class ConfiguracionSolicitudRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria2).build());
+    entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoriaId(convocatoria2.getId()).build());
 
-    Long convocatoriaIdBuscado = configuracionSolicitud1.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = configuracionSolicitud1.getConvocatoriaId();
 
     // when: find by by Convocatoria
     ConfiguracionSolicitud dataFound = repository.findByConvocatoriaId(convocatoriaIdBuscado).get();
@@ -55,8 +55,7 @@ public class ConfiguracionSolicitudRepositoryTest {
     // then: ConfiguracionSolicitud is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(configuracionSolicitud1.getId());
-    Assertions.assertThat(dataFound.getConvocatoria().getId())
-        .isEqualTo(configuracionSolicitud1.getConvocatoria().getId());
+    Assertions.assertThat(dataFound.getConvocatoriaId()).isEqualTo(configuracionSolicitud1.getConvocatoriaId());
   }
 
   @Test
@@ -72,7 +71,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoria(convocatoria1).build());
+    entityManager.persistAndFlush(ConfiguracionSolicitud.builder().convocatoriaId(convocatoria1.getId()).build());
 
     // @formatter:off
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
@@ -84,10 +83,10 @@ public class ConfiguracionSolicitudRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    ConfiguracionSolicitud configuracionSolicitud2 = ConfiguracionSolicitud.builder().convocatoria(convocatoria2)
-        .build();
+    ConfiguracionSolicitud configuracionSolicitud2 = ConfiguracionSolicitud.builder()
+        .convocatoriaId(convocatoria2.getId()).build();
 
-    Long convocatoriaIdBuscado = configuracionSolicitud2.getConvocatoria().getId();
+    Long convocatoriaIdBuscado = configuracionSolicitud2.getConvocatoriaId();
 
     // when: find by by Convocatoria
     Optional<ConfiguracionSolicitud> dataFound = repository.findByConvocatoriaId(convocatoriaIdBuscado);

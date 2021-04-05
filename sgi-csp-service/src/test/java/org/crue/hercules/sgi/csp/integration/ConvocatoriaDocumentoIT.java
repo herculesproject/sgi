@@ -3,9 +3,7 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -67,8 +65,8 @@ public class ConvocatoriaDocumentoIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaDocumento responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaDocumento.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaDocumento.getConvocatoriaId());
     Assertions.assertThat(responseData.getTipoFase().getId()).as("getTipoFase().getId()")
         .isEqualTo(convocatoriaDocumento.getTipoFase().getId());
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
@@ -103,7 +101,7 @@ public class ConvocatoriaDocumentoIT {
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo("nombre-modificado");
@@ -145,7 +143,7 @@ public class ConvocatoriaDocumentoIT {
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(convocatoriaDocumentoId);
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo("nombre doc-2");
@@ -165,15 +163,13 @@ public class ConvocatoriaDocumentoIT {
    */
   private ConvocatoriaDocumento generarMockConvocatoriaDocumento(Long id, Long tipoFaseId, Long tipoDocumentoId) {
 
-    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder().id(1L).build();
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).modeloEjecucion(modeloEjecucion).build();
     TipoFase tipoFase = TipoFase.builder().id(1L).build();
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(tipoDocumentoId).build();
 
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
-        .convocatoria(convocatoria)
+        .convocatoriaId(1L)
         .tipoFase(tipoFase)
         .tipoDocumento(tipoDocumento)
         .nombre("nombre doc-" + id)

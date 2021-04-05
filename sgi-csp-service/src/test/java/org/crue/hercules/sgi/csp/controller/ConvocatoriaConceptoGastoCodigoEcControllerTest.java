@@ -3,9 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoCodigoEcNotFoundException;
-import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.junit.jupiter.api.Test;
@@ -221,21 +218,9 @@ public class ConvocatoriaConceptoGastoCodigoEcControllerTest extends BaseControl
    * @return el objeto ConvocatoriaConceptoGastoCodigoEc
    */
   private ConvocatoriaConceptoGastoCodigoEc generarMockConvocatoriaConceptoGastoCodigoEc(Long id, String nombre) {
-    ConceptoGasto conceptoGasto = new ConceptoGasto();
-    conceptoGasto.setDescripcion("Descripcion");
-    conceptoGasto.setNombre("nombre-" + (id != null ? id : 1));
-    conceptoGasto.setActivo(true);
-
-    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
-    convocatoriaConceptoGasto.setId(id);
-    convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
-    convocatoriaConceptoGasto
-        .setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
-    convocatoriaConceptoGasto.setObservaciones("Obs-" + (id != null ? id : 1));
-
     ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = new ConvocatoriaConceptoGastoCodigoEc();
     convocatoriaConceptoGastoCodigoEc.setId(id);
-    convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
+    convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGastoId((id != null ? id : 1));
     convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("cod-" + (id != null ? id : 1));
     convocatoriaConceptoGastoCodigoEc.setFechaInicio(Instant.now());
     convocatoriaConceptoGastoCodigoEc.setFechaFin(Instant.now());

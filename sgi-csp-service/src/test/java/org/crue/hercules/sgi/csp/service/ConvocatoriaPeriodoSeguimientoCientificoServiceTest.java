@@ -87,7 +87,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
             if (periodoSeguimientoCientifico.getId() == null) {
               periodoSeguimientoCientifico.setId(6L);
             }
-            periodoSeguimientoCientifico.getConvocatoria().setId(convocatoriaId);
+            periodoSeguimientoCientifico.setConvocatoriaId(convocatoriaId);
             return periodoSeguimientoCientifico;
           }).collect(Collectors.toList());
         });
@@ -99,8 +99,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     // then: Se crea el nuevo ConvocatoriaPeriodoSeguimientoCientifico, se actualiza
     // el existe y se elimina el otro
     Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getId()).as("get(0).getId()").isEqualTo(6L);
-    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getConvocatoria().getId())
-        .as("get(0).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getConvocatoriaId())
+        .as("get(0).getConvocatoriaId()").isEqualTo(convocatoriaId);
     Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getMesInicial()).as("get(0).getMesInicial()")
         .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getMesFinal()).as("get(0).getMesFinal()")
@@ -118,8 +118,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
 
     Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getId()).as("get(1).getId()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getId());
-    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getConvocatoria().getId())
-        .as("get(1).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getConvocatoriaId())
+        .as("get(1).getConvocatoriaId()").isEqualTo(convocatoriaId);
     Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getMesInicial()).as("get(1).getMesInicial()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getMesFinal()).as("get(1).getMesFinal()")
@@ -318,12 +318,11 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
   @Test
   public void findById_WithExistingId_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
     // given: existing ConvocatoriaPeriodoSeguimientoCientifico
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
     // @formatter:off
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
         .builder()
         .id(1L)
-        .convocatoria(convocatoria)
+        .convocatoriaId(1L)
         .mesInicial(1)
         .mesFinal(2)
         .fechaInicioPresentacion(Instant.parse("2020-02-01T00:00:00Z"))
@@ -341,8 +340,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     Assertions.assertThat(data).isNotNull();
     Assertions.assertThat(data.getId()).isNotNull();
     Assertions.assertThat(data.getId()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getId());
-    Assertions.assertThat(data.getConvocatoria().getId())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId());
+    Assertions.assertThat(data.getConvocatoriaId())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getConvocatoriaId());
     Assertions.assertThat(data.getNumPeriodo()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getNumPeriodo());
     Assertions.assertThat(data.getMesInicial()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(data.getMesFinal()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
@@ -372,13 +371,12 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     // given: One hundred ConvocatoriaPeriodoSeguimientoCientifico
     Long convocatoriaId = 1L;
     List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    Convocatoria convocatoria = Convocatoria.builder().id(Long.valueOf(1L)).build();
     for (int i = 1, j = 2; i <= 100; i++, j += 2) {
       // @formatter:off
       listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
           .id(Long.valueOf(i))
-          .convocatoria(convocatoria)
+          .convocatoriaId(convocatoriaId)
           .numPeriodo(i - 1)
           .mesInicial((i * 2) - 1)
           .mesFinal(j * 1)
@@ -445,12 +443,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
    */
   private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
       Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
-
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
     convocatoriaPeriodoSeguimientoCientifico.setId(id);
-    convocatoriaPeriodoSeguimientoCientifico.setConvocatoria(convocatoria);
+    convocatoriaPeriodoSeguimientoCientifico.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
     convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
     convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
     convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);

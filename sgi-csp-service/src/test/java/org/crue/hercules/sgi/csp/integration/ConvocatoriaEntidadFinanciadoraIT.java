@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -56,8 +55,8 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     ConvocatoriaEntidadFinanciadora responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(newConvocatoriaEntidadFinanciadora.getConvocatoria().getId());
+    Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(newConvocatoriaEntidadFinanciadora.getConvocatoriaId());
     Assertions.assertThat(responseData.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(newConvocatoriaEntidadFinanciadora.getEntidadRef());
     Assertions.assertThat(responseData.getFuenteFinanciacion().getId()).as("getFuenteFinanciacion().getId()")
@@ -84,8 +83,8 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
 
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadoraActualizado = response.getBody();
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaEntidadFinanciadora.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEntidadFinanciadora.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(convocatoriaEntidadFinanciadora.getEntidadRef());
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getFuenteFinanciacion().getId())
@@ -129,8 +128,7 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = response.getBody();
     Assertions.assertThat(convocatoriaEntidadFinanciadora.getId()).as("getId()")
         .isEqualTo(idConvocatoriaEntidadFinanciadora);
-    Assertions.assertThat(convocatoriaEntidadFinanciadora.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(1L);
+    Assertions.assertThat(convocatoriaEntidadFinanciadora.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaEntidadFinanciadora.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo("entidad-001");
     Assertions.assertThat(convocatoriaEntidadFinanciadora.getFuenteFinanciacion().getId())
@@ -148,9 +146,6 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
    * @return el objeto ConvocatoriaEntidadFinanciadora
    */
   private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
     fuenteFinanciacion.setId(id == null ? 1 : id);
     fuenteFinanciacion.setActivo(true);
@@ -164,7 +159,7 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
 
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = new ConvocatoriaEntidadFinanciadora();
     convocatoriaEntidadFinanciadora.setId(id);
-    convocatoriaEntidadFinanciadora.setConvocatoria(convocatoria);
+    convocatoriaEntidadFinanciadora.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
     convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);

@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -18,6 +20,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * ConvocatoriaConceptoGastoServiceTest
@@ -59,7 +68,7 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaConceptoGasto sin convocatoria
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(null);
-    convocatoriaConceptoGasto.getConvocatoria().setId(null);
+    convocatoriaConceptoGasto.setConvocatoriaId(null);
 
     // when: Creamos el ConvocatoriaConceptoGasto
     // then: Lanza una excepcion porque la convocatoria es null
@@ -86,11 +95,12 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   @Test
   public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaConceptoGasto when modificable returns False
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaConceptoGasto newConvocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(1L);
     newConvocatoriaConceptoGasto.setId(null);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(conceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConceptoGasto()));
 
@@ -193,7 +203,7 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaConceptoGasto).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaConceptoGasto.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(convocatoriaConceptoGasto.getObservaciones()).as("getObservaciones()").isEqualTo("Obs-1");
-    Assertions.assertThat(convocatoriaConceptoGasto.getConvocatoria().getId()).as("getConvocatoria()").isEqualTo(1L);
+    Assertions.assertThat(convocatoriaConceptoGasto.getConvocatoriaId()).as("getConvocatoria()").isEqualTo(1L);
 
   }
 
@@ -209,6 +219,50 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
         .isInstanceOf(ConvocatoriaConceptoGastoNotFoundException.class);
   }
 
+  @Test
+  public void findAll_WithPaging_ReturnsPage() {
+    // given: One hundred ConvocatoriaConceptoGasto
+    List<ConvocatoriaConceptoGasto> conceptosGasto = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      conceptosGasto.add(generarMockConvocatoriaConceptoGasto(Long.valueOf(i)));
+    }
+
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaConceptoGasto>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ConvocatoriaConceptoGasto>>() {
+          @Override
+          public Page<ConvocatoriaConceptoGasto> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<ConvocatoriaConceptoGasto> content = conceptosGasto.subList(fromIndex, toIndex);
+            Page<ConvocatoriaConceptoGasto> page = new PageImpl<>(content, pageable, conceptosGasto.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ConvocatoriaConceptoGasto> page = service.findAll(null, paging);
+
+    // then: A Page with ten ConvocatoriaConceptoGasto are returned
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      ConvocatoriaConceptoGasto item = page.getContent().get(i);
+      Assertions.assertThat(item.getId()).isEqualTo(j);
+    }
+  }
+
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
+    return convocatoria;
+  }
+
   /**
    * Función que devuelve un objeto ConvocatoriaConceptoGasto
    * 
@@ -217,10 +271,6 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
    * @return el objeto ConvocatoriaConceptoGasto
    */
   private ConvocatoriaConceptoGasto generarMockConvocatoriaConceptoGasto(Long id) {
-
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id == null ? 1 : id);
 
@@ -228,7 +278,7 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
     convocatoriaConceptoGasto.setId(id);
-    convocatoriaConceptoGasto.setConvocatoria(convocatoria);
+    convocatoriaConceptoGasto.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaConceptoGasto.setObservaciones("Obs-" + id);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
     convocatoriaConceptoGasto.setImporteMaximo(400.0);

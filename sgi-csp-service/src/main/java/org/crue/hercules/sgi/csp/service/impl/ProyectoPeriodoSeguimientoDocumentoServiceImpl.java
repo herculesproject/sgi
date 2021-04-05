@@ -52,7 +52,7 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
     Assert.isNull(proyectoPeriodoSeguimientoDocumento.getId(),
         "Id tiene que ser null para crear la ProyectoPeriodoSeguimientoDocumento");
 
-    Assert.notNull(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId(),
+    Assert.notNull(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId(),
         "ProyectoPeriodoSeguimiento id no puede ser null para crear una ProyectoPeriodoSeguimientoModalidad");
 
     Assert.notNull(proyectoPeriodoSeguimientoDocumento.getNombre(),
@@ -83,7 +83,7 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
     Assert.notNull(proyectoPeriodoSeguimientoDocumento.getId(),
         "Id no puede ser null para actualizar ProyectoPeriodoSeguimientoDocumento");
 
-    Assert.notNull(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimiento().getId(),
+    Assert.notNull(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId(),
         "ProyectoPeriodoSeguimiento id no puede ser null para crear una ProyectoPeriodoSeguimientoModalidad");
 
     Assert.notNull(proyectoPeriodoSeguimientoDocumento.getNombre(),

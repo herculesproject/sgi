@@ -18,6 +18,6 @@ public interface EstadoSolicitudRepository
    * @return la lista de entidades {@link EstadoSolicitud} de la {@link Solicitud}
    *         paginadas.
    */
-  Page<EstadoSolicitud> findAllByidSolicitud(Long idSolicitud, Pageable paging);
+  Page<EstadoSolicitud> findAllBySolicitudId(Long idSolicitud, Pageable paging);
 
 }

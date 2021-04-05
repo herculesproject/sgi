@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.junit.jupiter.api.Test;
@@ -58,8 +58,8 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
         // then: new SolicitudProyectoPresupuesto is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id")
-            .value(solicitudProyectoPresupuesto.getSolicitudProyectoDatos().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId")
+            .value(solicitudProyectoPresupuesto.getSolicitudProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.id")
             .value(solicitudProyectoPresupuesto.getConceptoGasto().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value(solicitudProyectoPresupuesto.getEntidadRef()))
@@ -114,8 +114,8 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
         // then: SolicitudProyectoPresupuesto is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoDatos.id")
-            .value(updatedSolicitudProyectoPresupuesto.getSolicitudProyectoDatos().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitudProyectoId")
+            .value(updatedSolicitudProyectoPresupuesto.getSolicitudProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.id")
             .value(updatedSolicitudProyectoPresupuesto.getConceptoGasto().getId()))
         .andExpect(
@@ -234,12 +234,12 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   /**
    * Función que devuelve un objeto SolicitudProyectoPresupuesto
    * 
-   * @param id                       Id {@link SolicitudProyectoPresupuesto}.
-   * @param solicitudProyectoDatosId Id {@link SolicitudProyectoDatos}.
-   * @param conceptoGastoId          Id {@link ConceptoGasto}.
+   * @param id                  Id {@link SolicitudProyectoPresupuesto}.
+   * @param solicitudProyectoId Id {@link SolicitudProyecto}.
+   * @param conceptoGastoId     Id {@link ConceptoGasto}.
    * @return el objeto {@link SolicitudProyectoPresupuesto}.
    */
-  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoDatosId,
+  private SolicitudProyectoPresupuesto generarSolicitudProyectoPresupuesto(Long id, Long solicitudProyectoId,
       Long conceptoGastoId) {
 
     String suffix = String.format("%03d", id);
@@ -247,7 +247,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId).build())
+        .solicitudProyectoId(solicitudProyectoId)
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .entidadRef(null)
         .anualidad(1000)

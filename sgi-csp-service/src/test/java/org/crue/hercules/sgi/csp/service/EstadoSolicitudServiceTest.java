@@ -75,7 +75,7 @@ public class EstadoSolicitudServiceTest {
   public void create_WithoutSolicitudId_ThrowsIllegalArgumentException() {
     // given: Un nuevo EstadoSolicitud que no tiene solicitud
     EstadoSolicitud estadoSolicitud = generarMockEstadoSolicitud(null);
-    estadoSolicitud.setIdSolicitud(null);
+    estadoSolicitud.setSolicitudId(null);
 
     // when: Creamos el EstadoSolicitud
     // then: Lanza una excepcion porque no tiene solicitud
@@ -92,7 +92,7 @@ public class EstadoSolicitudServiceTest {
       estadosSolicitud.add(generarMockEstadoSolicitud(i));
     }
 
-    BDDMockito.given(repository.findAllByidSolicitud(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(repository.findAllBySolicitudId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<EstadoSolicitud>>() {
           @Override
           public Page<EstadoSolicitud> answer(InvocationOnMock invocation) throws Throwable {
@@ -132,7 +132,7 @@ public class EstadoSolicitudServiceTest {
   private EstadoSolicitud generarMockEstadoSolicitud(Long id) {
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(id);
-    estadoSolicitud.setIdSolicitud(1L);
+    estadoSolicitud.setSolicitudId(1L);
     estadoSolicitud.setComentario("Comentario");
     estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
     estadoSolicitud.setFechaEstado(Instant.now());

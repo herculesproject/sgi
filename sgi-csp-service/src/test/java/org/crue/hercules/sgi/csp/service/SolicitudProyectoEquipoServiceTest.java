@@ -7,14 +7,14 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoDatosRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoEquipoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class SolicitudProyectoEquipoServiceTest {
   private SolicitudProyectoEquipoRepository repository;
 
   @Mock
-  private SolicitudProyectoDatosRepository solicitudProyectoDatosRepository;
+  private SolicitudProyectoRepository solicitudProyectoRepository;
 
   @Mock
   private RolProyectoRepository rolProyectoRepository;
@@ -49,21 +49,29 @@ public class SolicitudProyectoEquipoServiceTest {
   @Mock
   private SolicitudService solicitudService;
 
+  @Mock
+  private SolicitudRepository solicitudRepository;
+
   private SolicitudProyectoEquipoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new SolicitudProyectoEquipoServiceImpl(repository, solicitudProyectoDatosRepository,
-        rolProyectoRepository, solicitudService);
+    service = new SolicitudProyectoEquipoServiceImpl(repository, solicitudProyectoRepository, rolProyectoRepository,
+        solicitudService, solicitudRepository);
   }
 
   @Test
   public void create_ReturnsSolicitudProyectoEquipo() {
     // given: Un nuevo SolicitudProyectoEquipo
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(null, 1L, 1L);
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     List<SolicitudProyectoEquipo> listSolicitudProyectoEquipo = new ArrayList<>();
     listSolicitudProyectoEquipo.add(generarSolicitudProyectoEquipo(2L, 1L, 1L));
@@ -89,9 +97,8 @@ public class SolicitudProyectoEquipoServiceTest {
     // then: El SolicitudProyectoEquipo se crea correctamente
     Assertions.assertThat(solicitudProyectoEquipoCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudProyectoEquipoCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(solicitudProyectoEquipoCreado.getSolicitudProyectoDatos().getId())
-        .as("getSolicitudProyectoDatos().getId()")
-        .isEqualTo(solicitudProyectoEquipo.getSolicitudProyectoDatos().getId());
+    Assertions.assertThat(solicitudProyectoEquipoCreado.getSolicitudProyectoId()).as("getSolicitudProyectoId()")
+        .isEqualTo(solicitudProyectoEquipo.getSolicitudProyectoId());
     Assertions.assertThat(solicitudProyectoEquipoCreado.getRolProyecto().getId()).as("getRolProyecto().getId()")
         .isEqualTo(solicitudProyectoEquipo.getRolProyecto().getId());
     Assertions.assertThat(solicitudProyectoEquipoCreado.getPersonaRef()).as("getPersonaRef()")
@@ -115,14 +122,14 @@ public class SolicitudProyectoEquipoServiceTest {
   }
 
   @Test
-  public void create_WithoutSolicitudProyectoDatosId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo SolicitudProyectoEquipo que no tiene solicitud proyecto datos
+  public void create_WithoutSolicitudProyectoId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo SolicitudProyectoEquipo que no tiene solicitud de proyecto
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(null, 1L, 1L);
 
-    solicitudProyectoEquipo.setSolicitudProyectoDatos(null);
+    solicitudProyectoEquipo.setSolicitudProyectoId(null);
 
     // when: Creamos el SolicitudProyectoEquipo
-    // then: Lanza una excepcion porque no tiene solicitud proyecto datos
+    // then: Lanza una excepcion porque no tiene solicitud de proyecto
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Los datos de proyecto no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
@@ -162,8 +169,14 @@ public class SolicitudProyectoEquipoServiceTest {
     // que no existe
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(null, 1L, 1L);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
+
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     List<SolicitudProyectoEquipo> listSolicitudProyectoEquipo = new ArrayList<>();
     listSolicitudProyectoEquipo.add(generarSolicitudProyectoEquipo(2L, 1L, 1L));
@@ -183,14 +196,19 @@ public class SolicitudProyectoEquipoServiceTest {
   public void create_WithOutSolicitante_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudProyectoEquipo cuyo solicitante no se encuentra en
     // el equipo
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(null, 1L, 1L);
     solicitudProyectoEquipo.setPersonaRef("personaRef-005");
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoEquipo>>any()))
         .willReturn(new ArrayList<>());
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoEquipo>>any()))
         .willReturn(new ArrayList<>());
@@ -207,9 +225,12 @@ public class SolicitudProyectoEquipoServiceTest {
     // given: Se crea SolicitudProyectoEquipo cque se encuentra en mismo rango
     // de meses que otro
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(null, 1L, 1L);
+    Long solicitudId = 1L;
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     List<SolicitudProyectoEquipo> listSolicitudProyectoEquipo = new ArrayList<>();
     listSolicitudProyectoEquipo.add(generarSolicitudProyectoEquipo(2L, 1L, 1L));
@@ -232,8 +253,14 @@ public class SolicitudProyectoEquipoServiceTest {
 
     solicitudProyectoEquipoMesFinActualizado.setMesFin(10);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
+
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     List<SolicitudProyectoEquipo> listSolicitudProyectoEquipo = new ArrayList<>();
     listSolicitudProyectoEquipo.add(generarSolicitudProyectoEquipo(2L, 1L, 1L));
@@ -264,14 +291,14 @@ public class SolicitudProyectoEquipoServiceTest {
   }
 
   @Test
-  public void update_WithoutSolicitudProyectoDatosId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo SolicitudProyectoEquipo que no tiene solicitud proyecto datos
+  public void update_WithoutSolicitudProyectoId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo SolicitudProyectoEquipo que no tiene solicitud de proyecto
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(2L, 1L, 1L);
 
-    solicitudProyectoEquipo.setSolicitudProyectoDatos(null);
+    solicitudProyectoEquipo.setSolicitudProyectoId(null);
 
     // when: Creamos el SolicitudProyectoEquipo
-    // then: Lanza una excepcion porque no tiene solicitud proyecto datos
+    // then: Lanza una excepcion porque no tiene solicitud de proyecto
     Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoEquipo))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Los datos de proyecto no puede ser null para realizar la acción sobre el SolicitudProyectoEquipo");
@@ -312,9 +339,14 @@ public class SolicitudProyectoEquipoServiceTest {
     // given: Se actualiza SolicitudProyectoEquipo que tiene un rol proyecto
     // que no existe
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(2L, 1L, 1L);
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     List<SolicitudProyectoEquipo> listSolicitudProyectoEquipo = new ArrayList<>();
     listSolicitudProyectoEquipo.add(generarSolicitudProyectoEquipo(2L, 1L, 1L));
@@ -332,12 +364,16 @@ public class SolicitudProyectoEquipoServiceTest {
   @Test
   public void update_WithOutSolicitante_ThrowsIllegalArgumentException() {
     // given: Se actualiza SolicitudProyectoEquipo cuyo solicitante no se encuentra
-    // en
-    // el equipo
+    // en el equipo
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(1L, 1L, 1L);
+    Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId);
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoEquipo>>any()))
         .willReturn(new ArrayList<>());
@@ -356,9 +392,12 @@ public class SolicitudProyectoEquipoServiceTest {
     // given: Se actualiza SolicitudProyectoEquipo cque se encuentra en mismo rango
     // de meses que otro
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(1L, 1L, 1L);
+    Long solicitudId = 1L;
+    Long solicitudProyectoId = 1L;
+    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId, solicitudId);
 
-    BDDMockito.given(solicitudProyectoDatosRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyectoEquipo.getSolicitudProyectoDatos()));
+    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyecto));
 
     List<SolicitudProyectoEquipo> listSolicitudProyectoEquipo = new ArrayList<>();
     listSolicitudProyectoEquipo.add(generarSolicitudProyectoEquipo(2L, 1L, 1L));
@@ -454,28 +493,29 @@ public class SolicitudProyectoEquipoServiceTest {
     }
   }
 
+  private SolicitudProyecto generarMockSolicitudProyecto(Long solicitudProyectoId, Long solicitudId) {
+    return SolicitudProyecto.builder().id(solicitudProyectoId).build();
+  }
+
   /**
    * Función que devuelve un objeto SolicitudProyectoEquipo
    * 
    * @param solicitudProyectoEquipoId
-   * @param solicitudProyectoDatosId
+   * @param solicitudProyectoId
    * @param tipoDocumentoId
    * @return el objeto SolicitudProyectoEquipo
    */
   private SolicitudProyectoEquipo generarSolicitudProyectoEquipo(Long solicitudProyectoEquipoId,
-      Long solicitudProyectoDatosId, Long rolProyectoId) {
+      Long solicitudProyectoId, Long rolProyectoId) {
 
     SolicitudProyectoEquipo solicitudProyectoEquipo = SolicitudProyectoEquipo.builder().id(solicitudProyectoEquipoId)
-        .solicitudProyectoDatos(SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
-            .solicitud(Solicitud.builder().id(1L).activo(Boolean.TRUE).build()).build())
-        .personaRef("personaRef-" + solicitudProyectoEquipoId)
+        .solicitudProyectoId(1L).personaRef("personaRef-" + solicitudProyectoEquipoId)
         .rolProyecto(RolProyecto.builder().id(rolProyectoId).build()).mesInicio(1).mesFin(5).build();
 
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setEstado(new EstadoSolicitud());
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().getEstado()
-        .setEstado(EstadoSolicitud.Estado.BORRADOR);
-    solicitudProyectoEquipo.getSolicitudProyectoDatos().getSolicitud().setSolicitanteRef("personaRef-001");
     return solicitudProyectoEquipo;
   }
 
+  private Solicitud generarMockSolicitud(Long solicitudId) {
+    return Solicitud.builder().id(1L).activo(Boolean.TRUE).build();
+  }
 }

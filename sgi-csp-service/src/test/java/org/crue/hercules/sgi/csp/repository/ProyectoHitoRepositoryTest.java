@@ -33,7 +33,7 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
     ProyectoHito proyectoHito1 = generarMockProyectoHito("-001");
     ProyectoHito proyectoHito2 = generarMockProyectoHito("-002");
 
-    Long idProyectoBusqueda = proyectoHito1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoHito1.getProyectoId();
     Instant fechaBusqueda = proyectoHito2.getFecha();
     Long idTipoHitoBusqueda = proyectoHito1.getTipoHito().getId();
 
@@ -44,7 +44,7 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
     // then: Recupera el ProyectoHito buscado
     Assertions.assertThat(proyectoHitoEncontrado.isPresent()).as("isPresent()").isTrue();
     Assertions.assertThat(proyectoHitoEncontrado.get().getId()).as("getId()").isEqualTo(proyectoHito1.getId());
-    Assertions.assertThat(proyectoHitoEncontrado.get().getProyecto().getId()).as("getProyecto().getId()")
+    Assertions.assertThat(proyectoHitoEncontrado.get().getProyectoId()).as("getProyecto().getId()")
         .isEqualTo(idProyectoBusqueda);
     Assertions.assertThat(proyectoHitoEncontrado.get().getFecha()).as("getFecha()").isEqualTo(fechaBusqueda);
     Assertions.assertThat(proyectoHitoEncontrado.get().getTipoHito().getId()).as("getTipoHito().getId()")
@@ -59,7 +59,7 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
     ProyectoHito proyectoHito1 = generarMockProyectoHito("-001");
     ProyectoHito proyectoHito2 = generarMockProyectoHito("-002");
 
-    Long idProyectoBusqueda = proyectoHito1.getProyecto().getId();
+    Long idProyectoBusqueda = proyectoHito1.getProyectoId();
     Instant fechaBusqueda = proyectoHito1.getFecha();
     Long idTipoHitoBusqueda = proyectoHito2.getTipoHito().getId();
 
@@ -137,7 +137,7 @@ public class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
 
     ProyectoHito proyectoHito = ProyectoHito.builder()
         .tipoHito(tipoHito)
-        .proyecto(proyecto)
+        .proyectoId(proyecto.getId())
         .fecha(Instant.parse("2020-10-01T00:00:00Z"))
         .comentario("comentarioProyectoHito-" + suffix)
         .generaAviso(Boolean.TRUE)

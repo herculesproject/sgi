@@ -8,11 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.EstadoProyecto;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
-import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -59,9 +55,9 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/proyecto_socio.sql",
-      "classpath:scripts/proyecto_socio_periodo_pago.sql" })
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/rol_socio.sql",
+      "classpath:scripts/proyecto_socio.sql", "classpath:scripts/proyecto_socio_periodo_pago.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void update_ReturnsProyectoSocioPeriodoPago() throws Exception {
@@ -111,9 +107,9 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
       "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/proyecto.sql", "classpath:scripts/rol_socio.sql", "classpath:scripts/proyecto_socio.sql",
-      "classpath:scripts/proyecto_socio_periodo_pago.sql" })
+      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/rol_socio.sql",
+      "classpath:scripts/proyecto_socio.sql", "classpath:scripts/proyecto_socio_periodo_pago.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findById_ReturnsProyectoSocioPeriodoPago() throws Exception {
@@ -126,8 +122,7 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = response.getBody();
     Assertions.assertThat(proyectoSocioPeriodoPago.getId()).as("getId()").isEqualTo(idProyectoSocioPeriodoPago);
-    Assertions.assertThat(proyectoSocioPeriodoPago.getProyectoSocio().getId()).as("getProyectoSocio().getId()")
-        .isEqualTo(1);
+    Assertions.assertThat(proyectoSocioPeriodoPago.getProyectoSocioId()).as("getProyectoSocioId()").isEqualTo(1);
     Assertions.assertThat(proyectoSocioPeriodoPago.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
   }
 
@@ -141,26 +136,10 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
 
     // @formatter:off
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder().id(1L)
-        .proyecto(Proyecto.builder()
-            .id(1L)
-            .estado(
-                EstadoProyecto.builder()
-                    .id(1L)
-                    .estado(EstadoProyecto.Estado.BORRADOR)
-                    .build())
-            .build())
-        .empresaRef("empresa-001")
-        .rolSocio(RolSocio.builder().id(1L).coordinador(true).build())
-        .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
-        .fechaFin(Instant.parse("2022-01-11T23:59:59Z"))
-        .numInvestigadores(5)
-        .importeConcedido(BigDecimal.valueOf(1000)).build();
-
     ProyectoSocioPeriodoPago proyectoSocioPeriodoPago = ProyectoSocioPeriodoPago.builder()
       .id(id)
       .numPeriodo(1)
-      .proyectoSocio(proyectoSocio)
+      .proyectoSocioId(1L)
       .fechaPrevistaPago(Instant.parse("2022-01-05T00:00:00Z"))
       .importe(new BigDecimal(25811)).build();
     // @formatter:on

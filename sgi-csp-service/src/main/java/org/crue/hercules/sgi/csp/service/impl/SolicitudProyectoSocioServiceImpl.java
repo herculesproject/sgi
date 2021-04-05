@@ -7,14 +7,14 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoJustificacionRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPeriodoPagoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioSpecifications;
@@ -40,11 +40,11 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   private final SolicitudProyectoSocioRepository repository;
 
-  private final SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository;
+  private final SolicitudProyectoSocioEquipoRepository solicitudProyectoEquipoSocioRepository;
 
-  private final SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository;
+  private final SolicitudProyectoSocioPeriodoPagoRepository solicitudProyectoSocioPeriodoPagoRepository;
 
-  private final SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository;
+  private final SolicitudProyectoSocioPeriodoJustificacionRepository solicitudProyectoSocioPeriodoJustificacionRepository;
 
   private final SolicitudRepository solicitudRepository;
 
@@ -52,15 +52,15 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   public SolicitudProyectoSocioServiceImpl(SolicitudProyectoSocioRepository repository,
       SolicitudRepository solicitudRepository,
-      SolicitudProyectoEquipoSocioRepository solicitudProyectoEquipoSocioRepository,
-      SolicitudProyectoPeriodoPagoRepository solicitudProyectoPeriodoPagoRepository,
-      SolicitudProyectoPeriodoJustificacionRepository solicitudProyectoPeriodoJustificacionRepository,
+      SolicitudProyectoSocioEquipoRepository solicitudProyectoEquipoSocioRepository,
+      SolicitudProyectoSocioPeriodoPagoRepository solicitudProyectoSocioPeriodoPagoRepository,
+      SolicitudProyectoSocioPeriodoJustificacionRepository solicitudProyectoSocioPeriodoJustificacionRepository,
       SolicitudService solicitudService) {
     this.repository = repository;
     this.solicitudRepository = solicitudRepository;
     this.solicitudProyectoEquipoSocioRepository = solicitudProyectoEquipoSocioRepository;
-    this.solicitudProyectoPeriodoPagoRepository = solicitudProyectoPeriodoPagoRepository;
-    this.solicitudProyectoPeriodoJustificacionRepository = solicitudProyectoPeriodoJustificacionRepository;
+    this.solicitudProyectoSocioPeriodoPagoRepository = solicitudProyectoSocioPeriodoPagoRepository;
+    this.solicitudProyectoSocioPeriodoJustificacionRepository = solicitudProyectoSocioPeriodoJustificacionRepository;
     this.solicitudService = solicitudService;
 
   }
@@ -105,8 +105,7 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
     validateSolicitudProyectoSocio(solicitudProyectoSocio);
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(
-        solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoDatos().getSolicitud().getId()),
+    Assert.isTrue(solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoId()),
         "No se puede modificar SolicitudProyectoSocio");
 
     return repository.findById(solicitudProyectoSocio.getId()).map((solicitudProyectoSocioExistente) -> {
@@ -154,7 +153,8 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   /**
    * Elimina la {@link SolicitudProyectoSocio} y sus entidades relacionadas:
-   * {@link SolicitudProyectoEquipoSocio}, {@link SolicitudProyectoPeriodoPago}
+   * {@link SolicitudProyectoSocioEquipo},
+   * {@link SolicitudProyectoSocioPeriodoPago}
    *
    * @param id Id del {@link SolicitudProyectoSocio}.
    */
@@ -168,9 +168,9 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
       throw new SolicitudProyectoSocioNotFoundException(id);
     }
 
-    solicitudProyectoPeriodoPagoRepository.deleteBySolicitudProyectoSocioId(id);
+    solicitudProyectoSocioPeriodoPagoRepository.deleteBySolicitudProyectoSocioId(id);
     solicitudProyectoEquipoSocioRepository.deleteBySolicitudProyectoSocioId(id);
-    solicitudProyectoPeriodoJustificacionRepository.deleteBySolicitudProyectoSocioId(id);
+    solicitudProyectoSocioPeriodoJustificacionRepository.deleteBySolicitudProyectoSocioId(id);
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
 
@@ -187,13 +187,13 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
    */
   @Override
   public Page<SolicitudProyectoSocio> findAllBySolicitud(Long solicitudID, String query, Pageable paging) {
-    log.debug("findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, String query, Pageable paging) - start");
+    log.debug("findAllBySolicitudProyecto(Long solicitudProyectoId, String query, Pageable paging) - start");
 
     Specification<SolicitudProyectoSocio> specs = SolicitudProyectoSocioSpecifications.bySolicitudId(solicitudID)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoSocio> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllBySolicitudProyectoDatos(Long solicitudDatosProyectoId, String query, Pageable paging) - end");
+    log.debug("findAllBySolicitudProyecto(Long solicitudProyectoId, String query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -206,7 +206,7 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
   private void validateSolicitudProyectoSocio(SolicitudProyectoSocio solicitudProyectoSocio) {
     log.debug("validateSolicitudProyectoSocio(SolicitudProyectoSocio solicitudProyectoSocio) - start");
 
-    Assert.notNull(solicitudProyectoSocio.getSolicitudProyectoDatos(),
+    Assert.notNull(solicitudProyectoSocio.getSolicitudProyectoId(),
         "Proyecto datos no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
 
     Assert.notNull(solicitudProyectoSocio.getRolSocio(),
@@ -215,8 +215,8 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
     Assert.notNull(solicitudProyectoSocio.getEmpresaRef(),
         "Empresa ref no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
 
-    if (!solicitudRepository.existsById(solicitudProyectoSocio.getSolicitudProyectoDatos().getId())) {
-      throw new SolicitudNotFoundException(solicitudProyectoSocio.getSolicitudProyectoDatos().getId());
+    if (!solicitudRepository.existsById(solicitudProyectoSocio.getSolicitudProyectoId())) {
+      throw new SolicitudNotFoundException(solicitudProyectoSocio.getSolicitudProyectoId());
     }
 
     log.debug("validateSolicitudProyectoSocio(SolicitudProyectoSocio solicitudProyectoSocio) - end");
@@ -224,14 +224,14 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
 
   /**
    * Indica si {@link SolicitudProyectoSocio} tiene
-   * {@link SolicitudProyectoPeriodoJustificacion},
-   * {@link SolicitudProyectoPeriodoPago} y/o {@link SolicitudProyectoEquipoSocio}
-   * relacionadas.
+   * {@link SolicitudProyectoSocioPeriodoJustificacion},
+   * {@link SolicitudProyectoSocioPeriodoPago} y/o
+   * {@link SolicitudProyectoSocioEquipo} relacionadas.
    *
    * @param id Id de la {@link SolicitudProyectoSocio}.
-   * @return True si tiene {@link SolicitudProyectoPeriodoJustificacion},
-   *         {@link SolicitudProyectoPeriodoPago} y/o
-   *         {@link SolicitudProyectoEquipoSocio} relacionadas. En caso contrario
+   * @return True si tiene {@link SolicitudProyectoSocioPeriodoJustificacion},
+   *         {@link SolicitudProyectoSocioPeriodoPago} y/o
+   *         {@link SolicitudProyectoSocioEquipo} relacionadas. En caso contrario
    *         false
    */
   public Boolean vinculaciones(Long id) {
@@ -242,16 +242,15 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
   }
 
   /**
-   * Obtiene el {@link SolicitudProyectoSocio} de la
-   * {@link SolicitudProyectoDatos}.
+   * Obtiene el {@link SolicitudProyectoSocio} de la {@link SolicitudProyecto}.
    * 
-   * @param id {@link SolicitudProyectoDatos}.
+   * @param id {@link SolicitudProyecto}.
    * @return {@link SolicitudProyectoSocio}.
    */
   @Override
   public Boolean hasSolicitudSocio(Long id) {
     log.debug("hasSolicitudSocio(Long id) - start");
-    final List<SolicitudProyectoSocio> solicitudProyectoSocios = repository.findAllBySolicitudProyectoDatosId(id);
+    final List<SolicitudProyectoSocio> solicitudProyectoSocios = repository.findAllBySolicitudProyectoId(id);
     Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoSocios);
     log.debug("hasSolicitudSocio(Long id) - end");
     return returnValue;

@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,12 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 
@@ -64,14 +62,23 @@ public class Proyecto extends BaseEntity {
   @SequenceGenerator(name = "proyecto_seq", sequenceName = "proyecto_seq", allocationSize = 1)
   private Long id;
 
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = true)
+  private Long convocatoriaId;
+
+  /** Solicitud Id */
+  @Column(name = "solicitud_id", nullable = true)
+  private Long solicitudId;
+
   /** Estado proyecto */
   @ManyToOne
-  @JoinColumn(name = "estado_proyecto_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_ESTADO_PROYECTO"))
+  @JoinColumn(name = "estado_proyecto_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_ESTADOPROYECTO"))
   private EstadoProyecto estado;
 
   /** Titulo */
   @Column(name = "titulo", length = 250, nullable = false)
   @Size(max = 250)
+  @NotNull
   private String titulo;
 
   /** Acrónimo */
@@ -86,10 +93,12 @@ public class Proyecto extends BaseEntity {
 
   /** Fecha Inicio. */
   @Column(name = "fecha_inicio", nullable = false)
+  @NotNull
   private Instant fechaInicio;
 
   /** Fecha Fin. */
   @Column(name = "fecha_fin", nullable = false)
+  @NotNull
   private Instant fechaFin;
 
   /** Unidad gestion ref */
@@ -109,20 +118,10 @@ public class Proyecto extends BaseEntity {
   @JoinColumn(name = "tipo_finalidad_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_FINALIDAD"))
   private TipoFinalidad finalidad;
 
-  /** Convocatoria */
-  @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_CONVOCATORIA"))
-  private Convocatoria convocatoria;
-
   /** Codigo externo */
   @Column(name = "convocatoria_externa", length = 50, nullable = true)
   @Size(max = 50)
   private String convocatoriaExterna;
-
-  /** Solicitud */
-  @ManyToOne
-  @JoinColumn(name = "solicitud_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOLICITUD"))
-  private Solicitud solicitud;
 
   /** Ambito Geografico */
   @ManyToOne
@@ -154,9 +153,9 @@ public class Proyecto extends BaseEntity {
   @Column(name = "timesheet", nullable = true)
   private Boolean timesheet;
 
-  /** Paquetes de trabajo */
+  /** Permite paquetes de trabajo */
   @Column(name = "paquetes_trabajo", nullable = true)
-  private Boolean paquetesTrabajo;
+  private Boolean permitePaquetesTrabajo;
 
   /** Coste hora */
   @Column(name = "coste_hora", nullable = true)
@@ -198,30 +197,85 @@ public class Proyecto extends BaseEntity {
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
+  @NotNull
   private Boolean activo;
 
-  // Relations mapping, only for JPA metamodel generation
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+  // Relation mappings for JPA metamodel generation only
+  @OneToOne(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
-  private final List<ProyectoEquipo> equipos = null;
+  private final ContextoProyecto contexto = null;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+  @ManyToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_CONVOCATORIA"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
-  private final List<ProyectoSocio> socios = null;
+  private final Convocatoria convocatoria = null;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoId")
+  @ManyToOne
+  @JoinColumn(name = "solicitud_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOLICITUD"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
+  private final Solicitud solicitud = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoDocumento> documentos = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoEntidadConvocante> entidadesConvocantes = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
   private final List<ProyectoEntidadFinanciadora> entidadesFinanciadoras = null;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoId")
+  @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
-  @JsonIgnore
-  private final List<ProyectoEntidadConvocante> entidadesConvocantes = null;
+  private final List<ProyectoEntidadGestora> entidadesGestoras = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<EstadoProyecto> estados = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoEquipo> equipo = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoFase> fases = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoHito> hitos = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoPaqueteTrabajo> paquetesTrabajo = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoPeriodoSeguimiento> periodosSeguimiento = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoProrroga> prorrogas = null;
+
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ProyectoSocio> socios = null;
+
 }

@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEntidadGestoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.repository.ProyectoEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -65,8 +64,8 @@ public class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
     // then: El ProyectoEntidadGestora se crea correctamente
     Assertions.assertThat(proyectoEntidadGestoraCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoEntidadGestoraCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoEntidadGestoraCreado.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoEntidadGestora.getProyecto().getId());
+    Assertions.assertThat(proyectoEntidadGestoraCreado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoEntidadGestora.getProyectoId());
     Assertions.assertThat(proyectoEntidadGestoraCreado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(proyectoEntidadGestora.getEntidadRef());
   }
@@ -87,7 +86,7 @@ public class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
     // given: a ProyectoEntidadGestora without ProyectoId
     ProyectoEntidadGestora proyectoEntidadGestora = generarMockProyectoEntidadGestora(1L, 1L);
     proyectoEntidadGestora.setId(null);
-    proyectoEntidadGestora.setProyecto(null);
+    proyectoEntidadGestora.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoEntidadGestora
@@ -169,8 +168,8 @@ public class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
     // then: El ProyectoEntidadGestora se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoEntidadGestora.getId());
-    Assertions.assertThat(updated.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoEntidadGestora.getProyecto().getId());
+    Assertions.assertThat(updated.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoEntidadGestora.getProyectoId());
     Assertions.assertThat(updated.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(proyectoEntidadGestora.getEntidadRef());
   }
@@ -180,7 +179,7 @@ public class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
     // given: a ProyectoEntidadGestora without ProyectoId
     ProyectoEntidadGestora proyectoEntidadGestora = generarMockProyectoEntidadGestora(1L, 1L);
     proyectoEntidadGestora.setEntidadRef("entidad-modificada");
-    proyectoEntidadGestora.setProyecto(null);
+    proyectoEntidadGestora.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoEntidadGestora
@@ -326,7 +325,7 @@ public class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
     // @formatter:off
     return ProyectoEntidadGestora.builder()
         .id(id)
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .entidadRef("entidad-" + (id == null ? "" : String.format("%03d", id)))
         .build();
     // @formatter:on

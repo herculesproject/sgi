@@ -106,7 +106,7 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     }
 
     String personaRef = node.getArguments().get(0);
-    ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipos, JoinType.LEFT);
+    ListJoin<Proyecto, ProyectoEquipo> joinEquipos = root.join(Proyecto_.equipo, JoinType.LEFT);
 
     return cb.and(cb.equal(joinEquipos.get(ProyectoEquipo_.personaRef), personaRef),
         cb.equal(joinEquipos.get(ProyectoEquipo_.rolProyecto).get(RolProyecto_.rolPrincipal), true));
@@ -122,12 +122,12 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
   public Predicate toPredicate(ComparisonNode node, Root<Proyecto> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
     switch (Property.fromCode(node.getSelector())) {
-      case PLAN_INVESTIGACION:
-        return buildByPlanInvestigacion(node, root, query, criteriaBuilder);
-      case RESPONSABLE_PROYECTO:
-        return buildByResponsableEquipo(node, root, query, criteriaBuilder);
-      default:
-        return null;
+    case PLAN_INVESTIGACION:
+      return buildByPlanInvestigacion(node, root, query, criteriaBuilder);
+    case RESPONSABLE_PROYECTO:
+      return buildByResponsableEquipo(node, root, query, criteriaBuilder);
+    default:
+      return null;
     }
   }
 }

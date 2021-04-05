@@ -1,17 +1,20 @@
 package org.crue.hercules.sgi.csp.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,11 +23,14 @@ import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "configuracion_solicitud", uniqueConstraints = {
@@ -48,11 +54,10 @@ public class ConfiguracionSolicitud extends BaseEntity {
   @SequenceGenerator(name = "configuracion_solicitud_seq", sequenceName = "configuracion_solicitud_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @OneToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONFIGURACIONSOLICITUD_CONVOCATORIA"))
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
   @NotNull
-  private Convocatoria convocatoria;
+  private Long convocatoriaId;
 
   /** Tramitacion SGI */
   @Column(name = "tramitacion_sgi", columnDefinition = "boolean default false", nullable = true)
@@ -72,4 +77,15 @@ public class ConfiguracionSolicitud extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private FormularioSolicitud formularioSolicitud;
 
+  // Relation mappings for JPA metamodel generation only
+  @OneToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONFIGURACIONSOLICITUD_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "configuracionSolicitud")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<DocumentoRequeridoSolicitud> documentosRequeridos = null;
 }

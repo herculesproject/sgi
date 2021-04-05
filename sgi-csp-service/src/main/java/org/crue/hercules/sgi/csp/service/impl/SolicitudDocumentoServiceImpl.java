@@ -46,7 +46,7 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
 
     Assert.isNull(solicitudDocumento.getId(), "Id tiene que ser null para crear la SolicitudDocumento");
 
-    Assert.notNull(solicitudDocumento.getSolicitud().getId(),
+    Assert.notNull(solicitudDocumento.getSolicitudId(),
         "Solicitud id no puede ser null para crear una SolicitudModalidad");
 
     Assert.notNull(solicitudDocumento.getNombre(),
@@ -74,7 +74,7 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
 
     Assert.notNull(solicitudDocumento.getId(), "Id no puede ser null para actualizar SolicitudDocumento");
 
-    Assert.notNull(solicitudDocumento.getSolicitud().getId(),
+    Assert.notNull(solicitudDocumento.getSolicitudId(),
         "Solicitud id no puede ser null para crear una SolicitudModalidad");
 
     Assert.notNull(solicitudDocumento.getNombre(),
@@ -83,7 +83,7 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
         "La referencia del documento no puede ser null para actualizar la SolicitudDocumento");
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(solicitudService.modificable(solicitudDocumento.getSolicitud().getId()),
+    Assert.isTrue(solicitudService.modificable(solicitudDocumento.getSolicitudId()),
         "No se puede modificar SolicitudDocumento");
 
     return repository.findById(solicitudDocumento.getId()).map((solicitudDocumentoExistente) -> {

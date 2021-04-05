@@ -141,7 +141,7 @@ public class ProyectoEntidadGestoraServiceImpl implements ProyectoEntidadGestora
         "validarProyectoEntidadGestora(ProyectoEntidadGestora datosProyectoEntidadGestora, ProyectoEntidadGestora datosOriginales) - start");
 
     // Se comprueba la existencia del proyecto
-    Long proyectoId = datosProyectoEntidadGestora.getProyecto().getId();
+    Long proyectoId = datosProyectoEntidadGestora.getProyectoId();
     if (!proyectoRepository.existsById(proyectoId)) {
       throw new ProyectoNotFoundException(proyectoId);
     }
@@ -174,8 +174,7 @@ public class ProyectoEntidadGestoraServiceImpl implements ProyectoEntidadGestora
   private void validarRequeridosProyectoEntidadGestora(ProyectoEntidadGestora datosProyectoEntidadGestora) {
     log.debug("validarRequeridosProyectoEntidadGestora(ProyectoEntidadGestora datosProyectoEntidadGestora) - start");
 
-    Assert.isTrue(
-        datosProyectoEntidadGestora.getProyecto() != null && datosProyectoEntidadGestora.getProyecto().getId() != null,
+    Assert.isTrue(datosProyectoEntidadGestora.getProyectoId() != null,
         "Id Proyecto no puede ser null para realizar la acción sobre ProyectoEntidadGestora");
 
     Assert.isTrue(StringUtils.isNotBlank(datosProyectoEntidadGestora.getEntidadRef()),

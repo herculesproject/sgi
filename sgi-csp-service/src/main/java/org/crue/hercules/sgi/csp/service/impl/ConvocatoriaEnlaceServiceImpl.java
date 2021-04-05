@@ -56,24 +56,22 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
     Assert.isNull(convocatoriaEnlace.getId(),
         "ConvocatoriaEnlace id tiene que ser null para crear un nuevo ConvocatoriaEnlace");
 
-    Assert.isTrue(convocatoriaEnlace.getConvocatoria() != null && convocatoriaEnlace.getConvocatoria().getId() != null,
+    Assert.isTrue(convocatoriaEnlace.getConvocatoriaId() != null,
         "Id Convocatoria no puede ser null para crear ConvocatoriaEnlace");
 
     Assert.notNull(convocatoriaEnlace.getUrl(),
         "ConvocatoriaEnlace url no puede ser null para crear una nueva ConvocatoriaEnlace");
 
-    convocatoriaEnlace.setConvocatoria(convocatoriaRepository.findById(convocatoriaEnlace.getConvocatoria().getId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEnlace.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaEnlace.getConvocatoriaId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEnlace.getConvocatoriaId()));
 
     Assert.isTrue(!repository
-        .findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(), convocatoriaEnlace.getUrl())
-        .isPresent(), "Ya existe esa url para esta Convocatoria");
+        .findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoriaId(), convocatoriaEnlace.getUrl()).isPresent(),
+        "Ya existe esa url para esta Convocatoria");
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-    Long modeloEjecucionId = (convocatoriaEnlace.getConvocatoria().getModeloEjecucion() != null
-        && convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId() != null)
-            ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId()
-            : null;
+    Long modeloEjecucionId = (convocatoria.getModeloEjecucion() != null
+        && convocatoria.getModeloEjecucion().getId() != null) ? convocatoria.getModeloEjecucion().getId() : null;
 
     if (convocatoriaEnlace.getTipoEnlace() != null) {
       if (convocatoriaEnlace.getTipoEnlace().getId() != null) {
@@ -86,7 +84,7 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
         Assert.isTrue(modeloTipoEnlace.isPresent(),
             "TipoEnlace '" + convocatoriaEnlace.getTipoEnlace().getNombre()
                 + "' no disponible para el ModeloEjecucion '"
-                + ((modeloEjecucionId != null) ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre()
+                + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
                     : "Convocatoria sin modelo asignado")
                 + "'");
 
@@ -129,16 +127,14 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
     Assert.notNull(convocatoriaEnlaceActualizar.getId(),
         "ConvocatoriaEnlace id no puede ser null para actualizar un ConvocatoriaEnlace");
 
-    Assert.isTrue(
-        convocatoriaEnlaceActualizar.getConvocatoria() != null
-            && convocatoriaEnlaceActualizar.getConvocatoria().getId() != null,
+    Assert.isTrue(convocatoriaEnlaceActualizar.getConvocatoriaId() != null,
         "Id Convocatoria no puede ser null para actualizar ConvocatoriaEnlace");
 
     Assert.notNull(convocatoriaEnlaceActualizar.getUrl(),
         "ConvocatoriaEnlace url no puede ser null para actualizar un nuevo ConvocatoriaEnlace");
 
     return repository.findById(convocatoriaEnlaceActualizar.getId()).map(convocatoriaEnlace -> {
-      Long convocatoriaId = convocatoriaEnlace.getConvocatoria().getId();
+      Long convocatoriaId = convocatoriaEnlace.getConvocatoriaId();
       String url = convocatoriaEnlaceActualizar.getUrl();
       Optional<ConvocatoriaEnlace> optional = repository.findByConvocatoriaIdAndUrl(convocatoriaId, url);
       if (optional.isPresent()) {
@@ -146,11 +142,11 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
             "Ya existe esa url para esta Convocatoria");
       }
 
+      Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaEnlace.getConvocatoriaId())
+          .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEnlace.getConvocatoriaId()));
       // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
-      Long modeloEjecucionId = (convocatoriaEnlace.getConvocatoria().getModeloEjecucion() != null
-          && convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId() != null)
-              ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId()
-              : null;
+      Long modeloEjecucionId = (convocatoria.getModeloEjecucion() != null
+          && convocatoria.getModeloEjecucion().getId() != null) ? convocatoria.getModeloEjecucion().getId() : null;
 
       if (convocatoriaEnlaceActualizar.getTipoEnlace() != null) {
         if (convocatoriaEnlaceActualizar.getTipoEnlace().getId() != null) {
@@ -164,7 +160,7 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
           Assert.isTrue(modeloTipoEnlace.isPresent(),
               "TipoEnlace '" + convocatoriaEnlaceActualizar.getTipoEnlace().getNombre()
                   + "' no disponible para el ModeloEjecucion '"
-                  + ((modeloEjecucionId != null) ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre()
+                  + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
                       : "Convocatoria sin modelo asignado")
                   + "'");
 

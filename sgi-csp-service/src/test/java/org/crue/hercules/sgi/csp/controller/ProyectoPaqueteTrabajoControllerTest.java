@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPaqueteTrabajoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.junit.jupiter.api.Test;
@@ -57,7 +56,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
         // then: new ProyectoPaqueteTrabajo is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoPaqueteTrabajo.getProyecto().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(proyectoPaqueteTrabajo.getProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(proyectoPaqueteTrabajo.getNombre()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("fechaInicio").value(proyectoPaqueteTrabajo.getFechaInicio().toString()))
@@ -106,8 +105,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
         // then: ProyectoPaqueteTrabajo is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoPaqueteTrabajoExistente.getId()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("proyecto.id").value(proyectoPaqueteTrabajoExistente.getProyecto().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(proyectoPaqueteTrabajoExistente.getProyectoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(proyectoPaqueteTrabajoExistente.getNombre()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio")
             .value(proyectoPaqueteTrabajoExistente.getFechaInicio().toString()))
@@ -224,7 +222,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested ProyectoPaqueteTrabajo is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
-        .andExpect(MockMvcResultMatchers.jsonPath("proyecto.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("proyectoId").value(1L))
         .andExpect(
             MockMvcResultMatchers.jsonPath("nombre").value("proyecto-paquete-trabajo-" + String.format("%03d", id)))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-01-01T00:00:00Z"))
@@ -263,7 +261,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
     // @formatter:off
     return ProyectoPaqueteTrabajo.builder()
         .id(id)
-        .proyecto(Proyecto.builder().id(proyectoId).build())
+        .proyectoId(proyectoId)
         .nombre("proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))

@@ -17,16 +17,19 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "solicitud_proyecto_entidad_financiadora_ajena", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "solicitud_proyecto_datos_id",
-        "entidad_ref" }, name = "UK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTODATOS_ENTIDAD") })
+    @UniqueConstraint(columnNames = { "solicitud_proyecto_id",
+        "entidad_ref" }, name = "UK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTO_ENTIDAD") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -46,11 +49,10 @@ public class SolicitudProyectoEntidadFinanciadoraAjena extends BaseEntity {
   @SequenceGenerator(name = "solicitud_proyecto_entidad_financiadora_ajena_seq", sequenceName = "solicitud_proyecto_entidad_financiadora_ajena_seq", allocationSize = 1)
   private Long id;
 
-  /** Convocatoria */
-  @ManyToOne
-  @JoinColumn(name = "solicitud_proyecto_datos_id", nullable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTODATOS"))
+  /** SolicitudProyecto Id */
+  @Column(name = "solicitud_proyecto_id", nullable = false)
   @NotNull
-  private SolicitudProyectoDatos solicitudProyectoDatos;
+  private Long solicitudProyectoId;
 
   /** Entidad Financiadora */
   @Column(name = "entidad_ref", length = 50, nullable = false)
@@ -74,4 +76,10 @@ public class SolicitudProyectoEntidadFinanciadoraAjena extends BaseEntity {
   @Max(100)
   private Integer porcentajeFinanciacion;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "solicitud_proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOENTIDADFINANCIADORAAJENA_SOLICITUDPROYECTO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final SolicitudProyecto solicitudProyecto = null;
 }

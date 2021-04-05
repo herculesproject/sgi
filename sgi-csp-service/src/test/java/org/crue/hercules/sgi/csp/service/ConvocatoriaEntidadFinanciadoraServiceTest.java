@@ -58,10 +58,12 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_ReturnsConvocatoriaEntidadFinanciadora() {
     // given: Un nuevo ConvocatoriaEntidadFinanciadora
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -82,8 +84,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     // then: El ConvocatoriaEntidadFinanciadora se crea correctamente
     Assertions.assertThat(convocatoriaEntidadFinanciadoraCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEntidadFinanciadoraCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaEntidadFinanciadoraCreado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaEntidadFinanciadora.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEntidadFinanciadoraCreado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEntidadFinanciadora.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEntidadFinanciadoraCreado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(convocatoriaEntidadFinanciadora.getEntidadRef());
     Assertions.assertThat(convocatoriaEntidadFinanciadoraCreado.getFuenteFinanciacion().getId())
@@ -98,7 +100,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEntidadFinanciadora que ya tiene id
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
 
     // when: Creamos el ConvocatoriaEntidadFinanciadora
     // then: Lanza una excepcion porque el ConvocatoriaEntidadFinanciadora ya tiene
@@ -111,7 +115,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithNegativePorcentajeFinanciacion_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEntidadFinanciadora con porcentaje negativo
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
     convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(-10);
 
     // when: Creamos el ConvocatoriaEntidadFinanciadora
@@ -123,8 +129,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora without ConvocatoriaId
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
-    convocatoriaEntidadFinanciadora.getConvocatoria().setId(null);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        null);
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaEntidadFinanciadora
@@ -137,7 +143,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
     // given: a ConvocatoriaEntidadFinanciadora with non existing Convocatoria
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -151,10 +159,12 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithNoExistingFuenteFinanciacion_ThrowsFuenteFinanciacionNotFoundException() {
     // given: a ConvocatoriaEntidadFinanciadora with non existing FuenteFinanciacion
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
@@ -169,11 +179,13 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithFuenteFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora with FuenteFinanciacion activo=false
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
     convocatoriaEntidadFinanciadora.getFuenteFinanciacion().setActivo(false);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -189,10 +201,12 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithNoExistingTipoFinanciacion_ThrowsFuenteFinanciacionNotFoundException() {
     // given: a ConvocatoriaEntidadFinanciadora with non existing TipoFinanciacion
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -209,11 +223,13 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WithTipoFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora with TipoFinanciacion activo=false
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(null,
+        convocatoriaId);
     convocatoriaEntidadFinanciadora.getTipoFinanciacion().setActivo(false);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getConvocatoria()));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -231,13 +247,14 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora when modificable returns False
-    ConvocatoriaEntidadFinanciadora newConvocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora newConvocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
     newConvocatoriaEntidadFinanciadora.setId(null);
-    newConvocatoriaEntidadFinanciadora.getConvocatoria().setEstado(Convocatoria.Estado.REGISTRADA);
+    convocatoria.setEstado(Convocatoria.Estado.REGISTRADA);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaEntidadFinanciadora.getConvocatoria()));
-
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
 
@@ -252,9 +269,11 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_ReturnsConvocatoriaEntidadFinanciadora() {
     // given: Un nuevo ConvocatoriaEntidadFinanciadora con el nombre actualizado
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadoraPorcentajeActualizado = generarMockConvocatoriaEntidadFinanciadora(
-        1L);
+        1L, convocatoriaId);
     convocatoriaEntidadFinanciadoraPorcentajeActualizado.setPorcentajeFinanciacion(1);
 
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
@@ -278,8 +297,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getId()).as("getId()")
         .isEqualTo(convocatoriaEntidadFinanciadora.getId());
-    Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaEntidadFinanciadora.getConvocatoria().getId());
+    Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
+        .isEqualTo(convocatoriaEntidadFinanciadora.getConvocatoriaId());
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(convocatoriaEntidadFinanciadora.getEntidadRef());
     Assertions.assertThat(convocatoriaEntidadFinanciadoraActualizado.getFuenteFinanciacion().getId())
@@ -295,7 +314,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_WithNegativePorcentajeFinanciacion_ThrowsIllegalArgumentException() {
     // given: Un ConvocatoriaEntidadFinanciadora con porcentaje negativo
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
     convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(-10);
 
     // when: Actualizamos el ConvocatoriaEntidadFinanciadora
@@ -308,7 +329,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   public void update_WithIdNotExist_ThrowsConvocatoriaEntidadFinanciadoraNotFoundException() {
     // given: Un ConvocatoriaEntidadFinanciadora a actualizar con un id que no
     // existe
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
 
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
@@ -326,7 +349,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_WithNoExistingFuenteFinanciacion_ThrowsFuenteFinanciacionNotFoundException() {
     // given: a ConvocatoriaEntidadFinanciadora with non existing FuenteFinanciacion
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
 
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -340,7 +365,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_WithNoExistingTipoFinanciacion_ThrowsTipoFinanciacionNotFoundException() {
     // given: a ConvocatoriaEntidadFinanciadora with non existing TipoFinanciacion
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
 
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora.getFuenteFinanciacion()));
@@ -356,9 +383,11 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_WithFuenteFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora with FuenteFinanciacion activo=false
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadoraActualizada = generarMockConvocatoriaEntidadFinanciadora(
-        1L);
+        1L, convocatoriaId);
     convocatoriaEntidadFinanciadoraActualizada.getFuenteFinanciacion().setId(2L);
     convocatoriaEntidadFinanciadoraActualizada.getFuenteFinanciacion().setActivo(false);
 
@@ -380,9 +409,11 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_WithTipoFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora with TipoFinanciacion activo=false
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
+    Long convocatoriaId = 1L;
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadoraActualizada = generarMockConvocatoriaEntidadFinanciadora(
-        1L);
+        1L, convocatoriaId);
     convocatoriaEntidadFinanciadoraActualizada.getTipoFinanciacion().setId(2L);
     convocatoriaEntidadFinanciadoraActualizada.getTipoFinanciacion().setActivo(false);
 
@@ -404,8 +435,11 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   @Test
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaEntidadFinanciadora when modificable return false
-    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L);
-    convocatoriaEntidadFinanciadora.getConvocatoria().setEstado(Convocatoria.Estado.BORRADOR);
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = generarMockConvocatoriaEntidadFinanciadora(1L,
+        convocatoriaId);
+    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEntidadFinanciadora));
@@ -429,9 +463,10 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   public void delete_WithExistingId_ReturnsConvocatoriaEntidadFinanciadora() {
     // given: existing ConvocatoriaEntidadFinanciadora
     Long id = 1L;
+    Long convocatoriaId = 1L;
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(id)));
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(id, convocatoriaId)));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
@@ -462,9 +497,10 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     // given: existing ConvocatoriaEntidadFinanciadora when modificable returns
     // false
     Long id = 1L;
+    Long convocatoriaId = 1L;
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(1L)));
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(1L, convocatoriaId)));
     BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willReturn(Boolean.FALSE);
 
@@ -482,7 +518,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
     Long convocatoriaId = 1L;
     List<ConvocatoriaEntidadFinanciadora> convocatoriasEntidadesFinanciadoras = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      convocatoriasEntidadesFinanciadoras.add(generarMockConvocatoriaEntidadFinanciadora(i));
+      convocatoriasEntidadesFinanciadoras.add(generarMockConvocatoriaEntidadFinanciadora(i, convocatoriaId));
     }
 
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaEntidadFinanciadora>>any(),
@@ -524,8 +560,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
   public void findById_ReturnsConvocatoriaEntidadFinanciadora() {
     // given: Un ConvocatoriaEntidadFinanciadora con el id buscado
     Long idBuscado = 1L;
+    Long convocatoriaId = 1L;
     BDDMockito.given(repository.findById(idBuscado))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(idBuscado)));
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadFinanciadora(idBuscado, convocatoriaId)));
 
     // when: Buscamos el ConvocatoriaEntidadFinanciadora por su id
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = service.findById(idBuscado);
@@ -547,16 +584,17 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
         .isInstanceOf(ConvocatoriaEntidadFinanciadoraNotFoundException.class);
   }
 
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
+    return Convocatoria.builder().id(convocatoriaId).build();
+  }
+
   /**
    * Función que devuelve un objeto ConvocatoriaEntidadFinanciadora
    * 
    * @param id id del ConvocatoriaEntidadFinanciadora
    * @return el objeto ConvocatoriaEntidadFinanciadora
    */
-  private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
-
+  private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id, Long convocatoriaId) {
     FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
     fuenteFinanciacion.setId(id == null ? 1 : id);
     fuenteFinanciacion.setActivo(true);
@@ -570,7 +608,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest 
 
     ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = new ConvocatoriaEntidadFinanciadora();
     convocatoriaEntidadFinanciadora.setId(id);
-    convocatoriaEntidadFinanciadora.setConvocatoria(convocatoria);
+    convocatoriaEntidadFinanciadora.setConvocatoriaId(convocatoriaId);
     convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
     convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
     convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);

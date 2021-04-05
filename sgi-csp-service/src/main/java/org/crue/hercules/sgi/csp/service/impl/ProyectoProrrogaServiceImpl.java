@@ -69,7 +69,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
     // Se recalcula el número de prórroga en función de la ordenación de la fecha de
     // concesión
-    this.recalcularNumProrroga(returnValue.getProyecto().getId());
+    this.recalcularNumProrroga(returnValue.getProyectoId());
 
     log.debug("create(ProyectoProrroga ProyectoProrroga) - end");
     return returnValue;
@@ -138,7 +138,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
       // Se recupera el ProyectoProrroga con la última fecha de concesión
       Optional<ProyectoProrroga> ultimoProyectoProrroga = repository
-          .findFirstByProyectoIdOrderByFechaConcesionDesc(proyectoProrroga.getProyecto().getId());
+          .findFirstByProyectoIdOrderByFechaConcesionDesc(proyectoProrroga.getProyectoId());
 
       // Solamente se puede modificar la última prórroga
       if (ultimoProyectoProrroga.isPresent()) {
@@ -155,7 +155,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
     // Se recalcula el número de prórroga en función de la ordenación de la fecha de
     // concesión
-    this.recalcularNumProrroga(returnValue.getProyecto().getId());
+    this.recalcularNumProrroga(returnValue.getProyectoId());
 
     log.debug("delete(Long id) - end");
 
@@ -261,7 +261,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     }
 
     // Se comprueba la existencia del proyecto
-    Long proyectoId = datosProyectoProrroga.getProyecto().getId();
+    Long proyectoId = datosProyectoProrroga.getProyectoId();
     if (!proyectoRepository.existsById(proyectoId)) {
       throw new ProyectoNotFoundException(proyectoId);
     }
@@ -316,7 +316,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   private void validarRequeridosProyectoProrroga(ProyectoProrroga datosProyectoProrroga) {
     log.debug("validarRequeridosProyectoProrroga(ProyectoProrroga datosProyectoProrroga) - start");
 
-    Assert.isTrue(datosProyectoProrroga.getProyecto() != null && datosProyectoProrroga.getProyecto().getId() != null,
+    Assert.isTrue(datosProyectoProrroga.getProyectoId() != null,
         "Id Proyecto no puede ser null para realizar la acción sobre ProyectoProrroga");
 
     Assert.notNull(datosProyectoProrroga.getNumProrroga(),

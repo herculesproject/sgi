@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadGestoraNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.junit.jupiter.api.Test;
@@ -59,8 +58,8 @@ public class ConvocatoriaEntidadGestoraControllerTest extends BaseControllerTest
         // then: new ConvocatoriaEntidadGestora is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaEntidadGestora.getConvocatoria().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoriaId").value(convocatoriaEntidadGestora.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("entidadRef").value(convocatoriaEntidadGestora.getEntidadRef()));
   }
 
@@ -128,8 +127,8 @@ public class ConvocatoriaEntidadGestoraControllerTest extends BaseControllerTest
   private ConvocatoriaEntidadGestora generarConvocatoriaEntidadGestora(Long convocatoriaEntidadGestoraId,
       Long convocatoriaId, String entidadRef) {
 
-    return ConvocatoriaEntidadGestora.builder().id(convocatoriaEntidadGestoraId)
-        .convocatoria(Convocatoria.builder().id(convocatoriaId).build()).entidadRef(entidadRef).build();
+    return ConvocatoriaEntidadGestora.builder().id(convocatoriaEntidadGestoraId).convocatoriaId(convocatoriaId)
+        .entidadRef(entidadRef).build();
 
   }
 

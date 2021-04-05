@@ -58,7 +58,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setId(null);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     BDDMockito.given(repository.save(proyectoPeriodoSeguimiento)).will((InvocationOnMock invocation) -> {
       ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCreado = invocation.getArgument(0);
@@ -72,8 +72,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // then: El ProyectoPeriodoSeguimiento se crea correctamente
     Assertions.assertThat(proyectoPeriodoSeguimientoCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoPeriodoSeguimientoCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoPeriodoSeguimientoCreado.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoPeriodoSeguimiento.getProyecto().getId());
+    Assertions.assertThat(proyectoPeriodoSeguimientoCreado.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoPeriodoSeguimiento.getProyectoId());
     Assertions.assertThat(proyectoPeriodoSeguimientoCreado.getObservaciones()).as("getObservaciones()")
         .isEqualTo(proyectoPeriodoSeguimiento.getObservaciones());
   }
@@ -94,7 +94,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento without ProyectoId
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
-    proyectoPeriodoSeguimiento.setProyecto(null);
+    proyectoPeriodoSeguimiento.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -141,17 +141,18 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setId(null);
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.now());
 
+    Proyecto proyecto = generarMockProyecto(1L);
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
-    proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+    proyecto.setEstado(estadoProyecto);
 
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -168,17 +169,18 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setId(null);
     proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.now());
 
+    Proyecto proyecto = generarMockProyecto(1L);
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
-    proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+    proyecto.setEstado(estadoProyecto);
 
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -210,7 +212,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -230,7 +232,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoPeriodoSeguimiento
@@ -249,7 +251,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimientoActualizado.setObservaciones("obs actualizadas");
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+        .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimiento));
 
@@ -262,8 +264,8 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // then: El ProyectoPeriodoSeguimiento se actualiza correctamente.
     Assertions.assertThat(updated).as("isNotNull()").isNotNull();
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoPeriodoSeguimiento.getId());
-    Assertions.assertThat(updated.getProyecto().getId()).as("getProyecto().getId()")
-        .isEqualTo(proyectoPeriodoSeguimiento.getProyecto().getId());
+    Assertions.assertThat(updated.getProyectoId()).as("getProyectoId()")
+        .isEqualTo(proyectoPeriodoSeguimiento.getProyectoId());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
         .isEqualTo(proyectoPeriodoSeguimientoActualizado.getObservaciones());
   }
@@ -287,7 +289,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
-    proyectoPeriodoSeguimiento.setProyecto(null);
+    proyectoPeriodoSeguimiento.setProyectoId(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -346,17 +348,18 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.now());
 
+    Proyecto proyecto = generarMockProyecto(1L);
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
-    proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+    proyecto.setEstado(estadoProyecto);
 
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -377,17 +380,18 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
     proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.now());
 
+    Proyecto proyecto = generarMockProyecto(1L);
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
     estadoProyecto.setEstado(EstadoProyecto.Estado.ABIERTO);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
-    proyectoPeriodoSeguimiento.getProyecto().setEstado(estadoProyecto);
+    proyecto.setEstado(estadoProyecto);
 
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -427,7 +431,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -451,7 +455,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.parse("2020-10-10T23:59:59Z"));
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoPeriodoSeguimiento.getProyecto()));
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -594,20 +598,13 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     }
   }
 
-  /**
-   * Función que devuelve un objeto ProyectoPeriodoSeguimiento
-   * 
-   * @param id id del ProyectoPeriodoSeguimiento
-   * @return el objeto ProyectoPeriodoSeguimiento
-   */
-  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
-
+  private Proyecto generarMockProyecto(Long id) {
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id == null ? 1 : id);
     estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id == null ? 1 : id));
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
-    estadoProyecto.setIdProyecto(1L);
+    estadoProyecto.setProyectoId(1L);
 
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
@@ -636,9 +633,19 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyecto.setActivo(true);
     proyecto.setEstado(estadoProyecto);
 
+    return proyecto;
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoPeriodoSeguimiento
+   * 
+   * @param id id del ProyectoPeriodoSeguimiento
+   * @return el objeto ProyectoPeriodoSeguimiento
+   */
+  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
     proyectoPeriodoSeguimiento.setId(id);
-    proyectoPeriodoSeguimiento.setProyecto(proyecto);
+    proyectoPeriodoSeguimiento.setProyectoId(id == null ? 1 : id);
     proyectoPeriodoSeguimiento.setNumPeriodo(1);
     proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
