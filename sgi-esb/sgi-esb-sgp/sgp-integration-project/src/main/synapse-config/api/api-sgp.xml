@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sgp" name="api-sgp" xmlns="http://ws.apache.org/ns/synapse">
+
+  <!-- categorias-profesionales -->
+  <resource methods="GET" url-mapping="/categorias-profesionales">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/categorias-profesionales/{id}/subcategorias-profesionales">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- colectivos -->
+  <resource methods="GET" url-mapping="/colectivos">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- datos-academicos -->
+  <resource methods="POST" url-mapping="/datos-academicos">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" url-mapping="/datos-academicos/formly/create">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/datos-academicos/persona/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  
+  <!-- datos-contacto -->
+  <resource methods="POST" url-mapping="/datos-contacto">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" url-mapping="/datos-contacto/formly/create">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/datos-contacto/persona/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- datos-personales -->
+  <resource methods="POST" url-mapping="/datos-personales">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" url-mapping="/datos-personales/formly/create">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/datos-personales/persona/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- niveles-academicos -->
+  <resource methods="GET" url-mapping="/niveles-academicos">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- personas -->
+  <resource methods="GET" url-mapping="/personas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="POST" url-mapping="/personas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" url-mapping="/personas/formly/create">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/personas/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/personas/{id}/fotografia">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- tipos-documento -->
+  <resource methods="GET" url-mapping="/tipos-documento">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+
+  <!-- vinculaciones -->
+  <resource methods="POST" url-mapping="/vinculaciones">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" url-mapping="/vinculaciones/formly/create">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+  <resource methods="GET" uri-template="/vinculaciones/persona/{id}">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sgp-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence/>
+  </resource>
+
+</api>

@@ -10,7 +10,6 @@
   <description>sgi-esb-sgp</description>
   <modules>
     <module>sgp-integration-project</module>
-    <module>sgp-data-service</module>
     <module>sgp-composite-application</module>
   </modules>
 
