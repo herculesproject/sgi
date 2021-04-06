@@ -135,7 +135,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     const evaluacion: IEvaluacion = {
       activo: true,
       comite: null,
-      convocatoriaReunion: null,
+      convocatoriaReunion: this.actionService.getDatosGeneralesConvocatoriaReunion(),
       dictamen: null,
       esRevMinima: null,
       evaluador1: null,

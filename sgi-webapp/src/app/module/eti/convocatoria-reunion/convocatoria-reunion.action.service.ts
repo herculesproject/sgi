@@ -68,6 +68,16 @@ export class ConvocatoriaReunionActionService extends ActionService {
     this.datosGenerales.initialize();
   }
 
+  /**
+   * Recupera los datos de la convocatoria de reunión del formulario de datos generales,
+   * si no se ha cargado el formulario de datos generales se recuperan los datos de la convocatoria que se esta editando.
+   *
+   * @returns los datos de la convocatoria de reunión.
+   */
+  getDatosGeneralesConvocatoriaReunion(): IConvocatoriaReunion {
+    return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : {} as IConvocatoriaReunion;
+  }
+
   public getDatosAsignacion(): DatosAsignacionEvaluacion {
     // TODO: Arreglar la obtención de esta información cuando el usuario no ha pasado por los datos generales
     const datosAsignacionEvaluacion = {

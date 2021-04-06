@@ -18,6 +18,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { NullIdValidador } from '@core/validators/null-id-validador';
+import { StringValidator } from '@core/validators/string-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
@@ -299,49 +300,20 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * Recupera un listado de los evaluadores que hay en el sistema.
    */
   private loadEvaluadores(): void {
-    const evaluadoresMemoriaSeleccionada$ =
-      this.formGroup.controls.memoria.valueChanges.pipe(
-        switchMap((memoria: IMemoria | string) => {
-          if (typeof memoria === 'string' || !memoria.id) {
-            return of([]);
-          }
-
-          return this.evaluadorService
-            .findAllMemoriasAsignablesConvocatoria(memoria.comite.id, memoria.id)
-            .pipe(
-              switchMap((response) => {
-
-                if (response.items) {
-                  const evaluadores = response.items;
-
-                  const personaRefsEvaluadores = evaluadores.map((convocante: IEvaluador) => convocante.persona.personaRef);
-
-                  if (personaRefsEvaluadores.length === 0) {
-                    return of([]);
-                  }
-
-                  const evaluadoresWithDatosPersona$ = this.PersonafisicaService.findByPersonasRefs(personaRefsEvaluadores).pipe(
-                    map((result: SgiRestListResult<IPersona>) => {
-                      const personas = result.items;
-
-                      evaluadores.forEach((evaluador: IEvaluador) => {
-                        const datosPersonaEvaluador = personas.find(
-                          (persona: IPersona) => evaluador.persona.personaRef === persona.personaRef
-                        );
-                        evaluador.persona = datosPersonaEvaluador;
-                      });
-
-                      return evaluadores;
-                    }));
-
-                  return evaluadoresWithDatosPersona$;
-                } else {
-                  return of([]);
-                }
-              })
-            );
-        }),
-        shareReplay(1));
+    let evaluadoresMemoriaSeleccionada$ = null;
+    if (this.isEdit) {
+      evaluadoresMemoriaSeleccionada$ = this.getEvaluadoresMemoria(this.evaluacion?.memoria);
+    } else {
+      evaluadoresMemoriaSeleccionada$ =
+        this.formGroup.controls.memoria.valueChanges.pipe(
+          switchMap((memoria: IMemoria | string) => {
+            if (typeof memoria === 'string' || !memoria.id) {
+              return of([]);
+            }
+            return this.getEvaluadoresMemoria(memoria);
+          }),
+          shareReplay(1));
+    }
 
     this.subscriptions.push(evaluadoresMemoriaSeleccionada$.subscribe(
       (evaluadores: IEvaluador[]) => {
@@ -374,6 +346,42 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
         this.snackBarService.showError(MSG_ERROR_LOAD);
       }
     ));
+  }
+
+  private getEvaluadoresMemoria(memoria: IMemoria): Observable<IEvaluador[]> {
+    return this.evaluadorService.findAllMemoriasAsignablesConvocatoria(memoria.comite.id, memoria.id)
+      .pipe(
+        switchMap((response) => {
+
+          if (response.items) {
+            const evaluadores = response.items;
+
+            const personaRefsEvaluadores = evaluadores.map((convocante: IEvaluador) => convocante.persona.personaRef);
+
+            if (personaRefsEvaluadores.length === 0) {
+              return of([]);
+            }
+
+            const evaluadoresWithDatosPersona$ = this.PersonafisicaService.findByPersonasRefs(personaRefsEvaluadores).pipe(
+              map((result: SgiRestListResult<IPersona>) => {
+                const personas = result.items;
+
+                evaluadores.forEach((evaluador: IEvaluador) => {
+                  const datosPersonaEvaluador = personas.find(
+                    (persona: IPersona) => evaluador.persona.personaRef === persona.personaRef
+                  );
+                  evaluador.persona = datosPersonaEvaluador;
+                });
+
+                return evaluadores;
+              }));
+
+            return evaluadoresWithDatosPersona$;
+          } else {
+            return of([]);
+          }
+        })
+      );
   }
 
   /**
@@ -441,25 +449,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   }
 
   getDatosForm(): IEvaluacion {
-    const convocatoriaReunion: IConvocatoriaReunion = {
-      activo: null,
-      anio: null,
-      codigo: null,
-      comite: null,
-      fechaEnvio: null,
-      fechaEvaluacion: null,
-      fechaLimite: null,
-      horaInicio: null,
-      id: null,
-      lugar: null,
-      minutoInicio: null,
-      numeroActa: null,
-      ordenDia: null,
-      tipoConvocatoriaReunion: null
-    };
-
     this.evaluacion.memoria = FormGroupUtil.getValue(this.formGroup, 'memoria');
-    this.evaluacion.convocatoriaReunion = convocatoriaReunion;
     this.evaluacion.evaluador1 = FormGroupUtil.getValue(this.formGroup, 'evaluador1');
     this.evaluacion.evaluador2 = FormGroupUtil.getValue(this.formGroup, 'evaluador2');
 
@@ -472,7 +462,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   onAsignarmemoria(): void {
     const evaluacion: IEvaluacion = this.getDatosForm();
 
-    if (evaluacion.evaluador1 === evaluacion.evaluador2) {
+    if (evaluacion.evaluador1?.persona?.personaRef === evaluacion.evaluador2?.persona?.personaRef) {
       this.snackBarService.showError(MSG_ERROR_EVALUADOR_REPETIDO);
       return;
     }
