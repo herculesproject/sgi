@@ -296,8 +296,10 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
       Predicate predicatePersonaRefMemoria = cb.equal(root.get(Memoria_.personaRef), personaRefConsulta);
       Predicate predicatePersonaRefMemoriaCount = cb.equal(rootCount.get(Memoria_.personaRef), personaRefConsulta);
       predicates.add(cb.or(cb.or(predicatePersonaRefPeticion, predicatePersonaRefMemoria), predicateMemoria));
+      predicates.add(cb.isTrue(root.get(Memoria_.activo)));
       predicatesCount
           .add(cb.or(cb.or(predicatePersonaRefPeticionCount, predicatePersonaRefMemoriaCount), predicateMemoriaCount));
+      predicatesCount.add(cb.isTrue(rootCount.get(Memoria_.activo)));
     }
 
     // Where
