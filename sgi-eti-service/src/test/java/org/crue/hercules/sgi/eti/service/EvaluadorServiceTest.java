@@ -408,22 +408,18 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     Long idComite = 1L;
     Long idMemoria = 1L;
     List<Evaluador> evaluadores = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       evaluadores.add(generarMockEvaluador(Long.valueOf(i), "Evaluador" + String.format("%03d", i)));
     }
 
     BDDMockito.given(evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluadores));
+        ArgumentMatchers.anyLong())).willReturn(evaluadores);
 
     // when: find unlimited
-    Page<Evaluador> page = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria,
-        Pageable.unpaged());
+    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
 
     // then: Get a page with one hundred Evaluadores
-    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
-    Assertions.assertThat(page.getNumber()).isEqualTo(0);
-    Assertions.assertThat(page.getSize()).isEqualTo(100);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    Assertions.assertThat(result.size()).isEqualTo(10);
   }
 
   @Test
@@ -432,37 +428,20 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     Long idComite = 1L;
     Long idMemoria = 1L;
     List<Evaluador> evaluadores = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       evaluadores.add(generarMockEvaluador(Long.valueOf(i), "Evaluador" + String.format("%03d", i)));
     }
 
     BDDMockito.given(evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Evaluador>>() {
-          @Override
-          public Page<Evaluador> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<Evaluador> content = evaluadores.subList(fromIndex, toIndex);
-            Page<Evaluador> page = new PageImpl<>(content, pageable, evaluadores.size());
-            return page;
-          }
-        });
+        ArgumentMatchers.anyLong())).willReturn(evaluadores);
 
     // when: Get page=3 with pagesize=10
-    Pageable paging = PageRequest.of(3, 10);
-    Page<Evaluador> page = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria, paging);
+    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
 
-    // then: A Page with ten Evaluadores are returned containing
-    // resumen='Evaluador031' to 'Evaluador040'
-    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
-    Assertions.assertThat(page.getNumber()).isEqualTo(3);
-    Assertions.assertThat(page.getSize()).isEqualTo(10);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
-    for (int i = 0, j = 31; i < 10; i++, j++) {
-      Evaluador evaluador = page.getContent().get(i);
+    // then: A List with ten Evaluadores are returned containing
+    Assertions.assertThat(result.size()).isEqualTo(10);
+    for (int i = 0, j = 1; i < 10; i++, j++) {
+      Evaluador evaluador = result.get(i);
       Assertions.assertThat(evaluador.getResumen()).isEqualTo("Evaluador" + String.format("%03d", j));
     }
   }

@@ -157,15 +157,13 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * 
    * @param idComite  Identificador del {@link Comite}
    * @param idMemoria Identificador de la {@link Memoria}
-   * @param pageable  la información de paginación.
    * @return lista de evaluadores sin conflictos de intereses
    */
   @Override
-  public Page<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) {
-    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) - start");
-    Page<Evaluador> returnValue = evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria,
-        pageable);
-    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) - end");
+  public List<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) {
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - start");
+    List<Evaluador> returnValue = evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - end");
     return returnValue;
   }
 

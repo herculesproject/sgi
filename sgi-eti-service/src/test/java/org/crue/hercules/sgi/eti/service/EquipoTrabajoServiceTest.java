@@ -152,7 +152,7 @@ public class EquipoTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllByPeticionEvaluacionId_WithPaging_ReturnsPage() {
+  public void findAllByPeticionEvaluacionId_ReturnsList() {
     // given: 10 EquipoTrabajos por PeticionEvaluacion
     List<EquipoTrabajoWithIsEliminable> equipoTrabajos = new ArrayList<>();
     for (int i = 1, j = 1; i <= 10; i++, j++) {
@@ -160,33 +160,15 @@ public class EquipoTrabajoServiceTest extends BaseServiceTest {
           generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i))));
     }
 
-    BDDMockito.given(equipoTrabajoRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajoWithIsEliminable>>() {
-          @Override
-          public Page<EquipoTrabajoWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<EquipoTrabajoWithIsEliminable> content = equipoTrabajos.subList(fromIndex, toIndex);
-            Page<EquipoTrabajoWithIsEliminable> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
-            return page;
-          }
-        });
+    BDDMockito.given(equipoTrabajoRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any()))
+        .willReturn(equipoTrabajos);
 
-    // when: Get page=1 with pagesize=5
-    Pageable paging = PageRequest.of(1, 5);
-    Page<EquipoTrabajoWithIsEliminable> page = equipoTrabajoService.findAllByPeticionEvaluacionId(1L, paging);
+    List<EquipoTrabajoWithIsEliminable> result = equipoTrabajoService.findAllByPeticionEvaluacionId(1L);
 
-    // then: A Page with ten EquipoTrabajos are returned containing
-    // descripcion='EquipoTrabajo006' to 'EquipoTrabajo010'
-    Assertions.assertThat(page.getContent().size()).as("page.content.size").isEqualTo(5);
-    Assertions.assertThat(page.getNumber()).as("page.number").isEqualTo(1);
-    Assertions.assertThat(page.getSize()).as("page.size").isEqualTo(5);
-    Assertions.assertThat(page.getTotalElements()).as("page.totalElements").isEqualTo(10);
-    for (int i = 0, j = 6; i < 10 && j <= 10; i++, j++) {
-      EquipoTrabajoWithIsEliminable equipoTrabajo = page.getContent().get(i);
+    // then: A List with ten EquipoTrabajos are returned containing
+    Assertions.assertThat(result.size()).isEqualTo(10);
+    for (int i = 0, j = 1; i < 10 && j <= 10; i++, j++) {
+      EquipoTrabajoWithIsEliminable equipoTrabajo = result.get(i);
       Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
           .as("equipoTrabajo[" + j + "].peticionEvaluacion.titulo")
           .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));

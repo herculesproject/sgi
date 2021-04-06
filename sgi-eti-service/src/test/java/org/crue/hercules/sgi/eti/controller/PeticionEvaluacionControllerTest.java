@@ -336,36 +336,20 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
           generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i))));
     }
 
-    BDDMockito.given(equipoTrabajoService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajoWithIsEliminable>>() {
-          @Override
-          public Page<EquipoTrabajoWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<EquipoTrabajoWithIsEliminable> content = equipoTrabajos.subList(fromIndex, toIndex);
-            Page<EquipoTrabajoWithIsEliminable> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
-            return page;
-          }
-        });
+    BDDMockito.given(equipoTrabajoService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any()))
+        .willReturn(equipoTrabajos);
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders
             .get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "1").header("X-Page-Size", "5")
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked EquipoTrabajos are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "1"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "5"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "10"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(5))).andReturn();
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
 
     // this uses a TypeReference to inform Jackson about the Lists's generic type
     List<EquipoTrabajo> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
@@ -374,7 +358,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     // containing peticionEvaluacion.titulo='PeticionEvaluacion006' to
     // 'PeticionEvaluacion010'
-    for (int i = 0, j = 6; i < 10 & j <= 10; i++, j++) {
+    for (int i = 0, j = 1; i < 10 & j <= 10; i++, j++) {
       EquipoTrabajo equipoTrabajo = actual.get(i);
       Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
           .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
@@ -388,14 +372,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     // given: EquipoTrabajos empty
     List<EquipoTrabajoWithIsEliminable> equipoTrabajos = new ArrayList<>();
 
-    BDDMockito.given(equipoTrabajoService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajoWithIsEliminable>>() {
-          @Override
-          public Page<EquipoTrabajoWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
-            Page<EquipoTrabajoWithIsEliminable> page = new PageImpl<>(equipoTrabajos);
-            return page;
-          }
-        });
+    BDDMockito.given(equipoTrabajoService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any()))
+        .willReturn(equipoTrabajos);
 
     mockMvc
         .perform(MockMvcRequestBuilders
@@ -409,41 +387,21 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   public void findTareas_ReturnsTareaSubList() throws Exception {
     // given: One hundred tareas
     List<TareaWithIsEliminable> tareas = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       tareas.add(generarMockTareaWithIsEliminable(Long.valueOf(i), "Tarea" + String.format("%03d", i)));
     }
 
-    BDDMockito
-        .given(
-            tareaService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<TareaWithIsEliminable>>() {
-          @Override
-          public Page<TareaWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<TareaWithIsEliminable> content = tareas.subList(fromIndex, toIndex);
-            Page<TareaWithIsEliminable> page = new PageImpl<>(content, pageable, tareas.size());
-            return page;
-          }
-        });
+    BDDMockito.given(tareaService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any())).willReturn(tareas);
 
-    // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tareas", 1L)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked tareas are returned with the right page information in
         // headers
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
 
     // this uses a TypeReference to inform Jackson about the Lists's generic type
@@ -451,8 +409,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         new TypeReference<List<TareaWithIsEliminable>>() {
         });
 
-    // containing tarea='Tarea031' to 'Tarea040'
-    for (int i = 0, j = 31; i < 10; i++, j++) {
+    for (int i = 0, j = 1; i < 10; i++, j++) {
       TareaWithIsEliminable tarea = actual.get(i);
       Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
     }
@@ -464,16 +421,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     // given: Tareas empty
     List<TareaWithIsEliminable> tareas = new ArrayList<>();
 
-    BDDMockito
-        .given(
-            tareaService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<TareaWithIsEliminable>>() {
-          @Override
-          public Page<TareaWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
-            Page<TareaWithIsEliminable> page = new PageImpl<>(tareas);
-            return page;
-          }
-        });
+    BDDMockito.given(tareaService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any())).willReturn(tareas);
 
     mockMvc
         .perform(
@@ -487,8 +435,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void findMemorias_NotFound_Returns404() throws Exception {
 
-    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).will((InvocationOnMock invocation) -> {
+    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong()))
+        .will((InvocationOnMock invocation) -> {
           throw new PeticionEvaluacionNotFoundException(invocation.getArgument(0));
         });
     mockMvc
@@ -508,8 +456,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
       listMemoriaPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i * 10 + j - 10)));
     }
 
-    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(listMemoriaPeticionEvaluacion));
+    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong()))
+        .willReturn(listMemoriaPeticionEvaluacion);
     mockMvc
         .perform(
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
@@ -523,8 +471,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     List<MemoriaPeticionEvaluacion> listMemoriaPeticionEvaluacion = new ArrayList<MemoriaPeticionEvaluacion>();
 
-    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(listMemoriaPeticionEvaluacion));
+    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong()))
+        .willReturn(listMemoriaPeticionEvaluacion);
 
     mockMvc
         .perform(

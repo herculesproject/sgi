@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
+import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
@@ -202,19 +203,17 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
 
   /**
    * Devuelve una lista de convocatorias de reunión que no tengan acta
-   * 
-   * @param pageable pageable
    *
    * @return la lista de convocatorias de reunión
    */
 
   @Override
-  public Page<ConvocatoriaReunion> findConvocatoriasSinActa(Pageable pageable) {
-    log.debug("findConvocatoriasSinActa(Pageable pageable) - start");
+  public List<ConvocatoriaReunion> findConvocatoriasSinActa() {
+    log.debug("findConvocatoriasSinActa() - start");
 
-    Page<ConvocatoriaReunion> convocatoriaReunion = repository.findConvocatoriasReunionSinActa(pageable);
+    List<ConvocatoriaReunion> convocatoriaReunion = repository.findConvocatoriasReunionSinActa();
 
-    log.debug("findConvocatoriasSinActa(Pageable pageable) - end");
+    log.debug("findConvocatoriasSinActa() - end");
 
     return convocatoriaReunion;
 

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
@@ -10,9 +11,6 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
@@ -42,19 +40,12 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
     EquipoTrabajo equipoTrabajo3 = generarMockEquipoTrabajo(peticionEvaluacion2Creada);
     entityManager.persistFlushFind(equipoTrabajo3);
 
-    // página 0 con 5 elementos por página
-    Pageable pageable = PageRequest.of(0, 5);
-
-    // when: Se buscan los datos paginados
-    Page<EquipoTrabajoWithIsEliminable> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion1.getId(),
-        pageable);
+    // when: Se buscan los datos
+    List<EquipoTrabajoWithIsEliminable> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion1.getId());
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
-    Assertions.assertThat(result.getNumber()).as("Number").isEqualTo(0);
-    Assertions.assertThat(result.getSize()).as("Size").isEqualTo(5);
-    Assertions.assertThat(result.getTotalElements()).as("TotalElements").isEqualTo(2);
-    Assertions.assertThat(result.getContent()).as("Content").isNotEmpty();
-    Assertions.assertThat(result.getContent().size()).as("Content.size").isEqualTo(2);
+    Assertions.assertThat(result).isNotEmpty();
+    Assertions.assertThat(result.size()).isEqualTo(2);
   }
 
   @Test
@@ -76,18 +67,11 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
     EquipoTrabajo equipoTrabajo2 = generarMockEquipoTrabajo(peticionEvaluacion1Creada);
     entityManager.persistFlushFind(equipoTrabajo2);
 
-    // página 0 con 5 elementos por página
-    Pageable pageable = PageRequest.of(0, 5);
+    // when: Se buscan los datos
+    List<EquipoTrabajoWithIsEliminable> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion2.getId());
 
-    // when: Se buscan los datos paginados
-    Page<EquipoTrabajoWithIsEliminable> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion2.getId(),
-        pageable);
-
-    // then: Se recuperan los datos correctamente según la paginación solicitada
-    Assertions.assertThat(result.getNumber()).isEqualTo(0);
-    Assertions.assertThat(result.getSize()).isEqualTo(5);
-    Assertions.assertThat(result.getTotalElements()).isEqualTo(0);
-    Assertions.assertThat(result.getContent()).isEmpty();
+    // then: Se recuperan los datos correctamente
+    Assertions.assertThat(result).isEmpty();
   }
 
   /**

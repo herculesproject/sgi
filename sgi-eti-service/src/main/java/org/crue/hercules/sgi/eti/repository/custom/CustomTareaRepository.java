@@ -1,11 +1,11 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,9 +24,8 @@ public interface CustomTareaRepository {
    * Pendiente de correcciones y No procede evaluar.
    * 
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @param pageable             la información de paginación.
    * @return lista de tareas con la informacion de si son eliminables.
    */
-  Page<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable);
+  List<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion);
 
 }

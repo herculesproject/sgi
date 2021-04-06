@@ -1,10 +1,10 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,9 +20,8 @@ public interface CustomEvaluadorRepository {
    * 
    * @param idComite  Identificador del {@link Comite}
    * @param idMemoria Identificador de la {@link Memoria}
-   * @param pageable  la información de paginación.
    * @return lista de evaluadores sin conflictos de intereses
    */
-  Page<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable);
+  List<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria);
 
 }

@@ -955,8 +955,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     response.add(getMockData(1L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
-    BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa(ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa()).willReturn(response);
 
     // when: Se buscan todos los datos
     MvcResult result = mockMvc
@@ -982,8 +981,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
 
-    BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa(ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa()).willReturn(response);
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())

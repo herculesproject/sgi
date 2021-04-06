@@ -8,7 +8,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -24,10 +23,6 @@ import org.crue.hercules.sgi.eti.model.Evaluador_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,14 +45,11 @@ public class CustomEvaluadorRepositoryImpl implements CustomEvaluadorRepository 
    * 
    * @param idComite  Identificador del {@link Comite}
    * @param idMemoria Identificador de la {@link Memoria}
-   * @param pageable  la información de paginación.
    * @return lista de evaluadores sin conflictos de intereses
    */
   @Override
-  public Page<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) {
-    // TODO: Revisar uso pageable. Aunque se está paginando, no se está haciendo el
-    // total count.
-    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) - start");
+  public List<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) {
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - start");
     final List<Predicate> predicates = new ArrayList<>();
 
     // Crete query
@@ -104,23 +96,13 @@ public class CustomEvaluadorRepositoryImpl implements CustomEvaluadorRepository 
     // Join all restrictions
     cq.where(cb.and(predicates.toArray(new Predicate[] {})));
 
-    // Execute query
-
-    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
-    cq.orderBy(orders);
-
     TypedQuery<Evaluador> typedQuery = entityManager.createQuery(cq);
-    if (pageable != null && pageable.isPaged()) {
-      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-      typedQuery.setMaxResults(pageable.getPageSize());
-    }
 
     List<Evaluador> result = typedQuery.getResultList();
-    Page<Evaluador> returnValue = new PageImpl<Evaluador>(result, pageable, result.size());
 
-    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) - end");
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - end");
 
-    return returnValue;
+    return result;
   }
 
 }

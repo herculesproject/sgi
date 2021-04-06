@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
@@ -276,21 +278,20 @@ public class ConvocatoriaReunionController {
    * Devuelve una lista de entidad {@link ConvocatoriaReunion} que no tengan acta
    * asociada y se encuentren activas
    * 
-   * @param pageable pageable
    * @return la lista de {@link ConvocatoriaReunion}
    */
   @GetMapping("/acta-no-asignada")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
-  ResponseEntity<Page<ConvocatoriaReunion>> findConvocatoriasSinActa(@RequestPageable Pageable pageable) {
-    log.debug("findConvocatoriasSinActa(Pageable pageable) - start");
-    Page<ConvocatoriaReunion> page = convocatoriaReunionService.findConvocatoriasSinActa(pageable);
+  ResponseEntity<List<ConvocatoriaReunion>> findConvocatoriasSinActa() {
+    log.debug("findConvocatoriasSinActa() - start");
+    List<ConvocatoriaReunion> result = convocatoriaReunionService.findConvocatoriasSinActa();
 
-    if (page.isEmpty()) {
-      log.debug("findConvocatoriasSinActa(Pageable pageable) - end");
+    if (result.isEmpty()) {
+      log.debug("findConvocatoriasSinActa() - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findConvocatoriasSinActa(Pageable pageable) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findConvocatoriasSinActa() - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
 }

@@ -39,6 +39,7 @@ import org.crue.hercules.sgi.eti.util.Constantes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
@@ -68,14 +69,11 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    * retrospectiva en estado "En secretaría".
    * 
    * @param idConvocatoriaReunion Identificador del {@link ConvocatoriaReunion}
-   * @param pageable              la información de paginación.
    * @return lista de memorias asignables a la convocatoria.
    */
   @Override
-  public Page<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) {
-    // TODO: Revisar uso pageable. Se está haciendo consulta páginada pero ne está
-    // obteniendo el count total.
-    log.debug("findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) - start");
+  public List<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion) {
+    log.debug("findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion) - start");
     final List<Predicate> predicates = new ArrayList<>();
 
     // Crete query
@@ -162,22 +160,16 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     cq.where(cb.and(predicates.toArray(new Predicate[] {})));
 
     // Execute query
-
-    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
+    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.ASC, Memoria_.TITULO), root, cb);
     cq.orderBy(orders);
 
     TypedQuery<Memoria> typedQuery = entityManager.createQuery(cq);
-    if (pageable != null && pageable.isPaged()) {
-      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-      typedQuery.setMaxResults(pageable.getPageSize());
-    }
 
     List<Memoria> result = typedQuery.getResultList();
-    Page<Memoria> returnValue = new PageImpl<Memoria>(result, pageable, result.size());
 
-    log.debug("findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) - end");
+    log.debug("findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion) - end");
 
-    return returnValue;
+    return result;
   }
 
   /**
@@ -185,23 +177,17 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    * evaluación.
    * 
    * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
-   * @param pageable             información de paginación
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override
-  public Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable,
-      String personaRefConsulta) {
-    log.debug("findMemoriasEvaluacion( Pageable pageable) - start");
+  public List<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, String personaRefConsulta) {
+    log.debug("findMemoriasEvaluacion(Long idPeticionEvaluacion, String personaRefConsulta) - start");
 
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
     Root<Memoria> root = cq.from(Memoria.class);
     root.join(Memoria_.retrospectiva, JoinType.LEFT);
-
-    // Count query
-    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-    Root<Memoria> rootCount = countQuery.from(Memoria.class);
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual), root.get(Memoria_.requiereRetrospectiva),
@@ -212,26 +198,12 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
         cb.isTrue(root.get(Memoria_.activo)));
 
-    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
-    cq.orderBy(orders);
-
-    // Número de registros totales para la paginación
-    countQuery
-        .where(cb.equal(rootCount.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
-    countQuery.select(cb.count(rootCount));
-    Long count = entityManager.createQuery(countQuery).getSingleResult();
-
     TypedQuery<MemoriaPeticionEvaluacion> typedQuery = entityManager.createQuery(cq);
-    if (pageable != null && pageable.isPaged()) {
-      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-      typedQuery.setMaxResults(pageable.getPageSize());
-    }
 
     List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList();
-    Page<MemoriaPeticionEvaluacion> returnValue = new PageImpl<MemoriaPeticionEvaluacion>(result, pageable, count);
 
-    log.debug("findMemoriasEvaluacion( Pageable pageable) - end");
-    return returnValue;
+    log.debug("findMemoriasEvaluacion(Long idPeticionEvaluacion, String personaRefConsulta) - end");
+    return result;
   }
 
   /**

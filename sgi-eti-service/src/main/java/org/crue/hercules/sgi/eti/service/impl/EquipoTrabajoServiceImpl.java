@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
@@ -133,17 +135,15 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
    * siguiente estados: En elaboración, Completada, Favorable, Pendiente de
    * Modificaciones Mínimas, Pendiente de correcciones y No procede evaluar.
    *
-   * @param id       Id de {@link PeticionEvaluacion}.
-   * @param pageable la información de la paginación.
+   * @param id Id de {@link PeticionEvaluacion}.
    * @return la lista de entidades {@link EquipoTrabajo} paginadas.
    */
   @Override
-  public Page<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id, Pageable pageable) {
+  public List<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id) {
     log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - start");
     Assert.notNull(id, "PeticionEvaluacion id no puede ser null para buscar su equipo de trabajo");
 
-    Page<EquipoTrabajoWithIsEliminable> returnValue = equipoTrabajoRepository.findAllByPeticionEvaluacionId(id,
-        pageable);
+    List<EquipoTrabajoWithIsEliminable> returnValue = equipoTrabajoRepository.findAllByPeticionEvaluacionId(id);
     log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - end");
     return returnValue;
   }

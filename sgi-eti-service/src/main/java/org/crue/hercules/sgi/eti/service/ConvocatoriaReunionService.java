@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -93,12 +95,10 @@ public interface ConvocatoriaReunionService {
 
   /**
    * Devuelve una lista de convocatorias de reunión que no tengan acta
-   * 
-   * @param pageable pageable
    *
    * @return la lista de convocatorias de reunión
    */
 
-  Page<ConvocatoriaReunion> findConvocatoriasSinActa(Pageable pageable);
+  List<ConvocatoriaReunion> findConvocatoriasSinActa();
 
 }

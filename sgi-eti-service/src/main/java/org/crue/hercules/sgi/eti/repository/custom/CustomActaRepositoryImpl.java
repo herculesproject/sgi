@@ -50,13 +50,10 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
    * @return la lista de {@link ActaWithNumEvaluaciones} paginadas y/o filtradas.
    */
   public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(String query, Pageable pageable) {
-    // TODO: Revisar la consulta cuando se filtra por número de acta, ya que busca
-    // restando 1 al valor introducido
     log.debug("findAllActaWithNumEvaluaciones(String query, Pageable paging) - start");
 
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-    // CriteriaQuery<Acta> cq = cb.createQuery(Acta.class);
     CriteriaQuery<ActaWithNumEvaluaciones> cq = cb.createQuery(ActaWithNumEvaluaciones.class);
 
     // Define FROM clause

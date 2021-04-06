@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -53,10 +55,9 @@ public interface MemoriaService {
    * retrospectiva en estado "En secretaría".
    * 
    * @param idConvocatoriaReunion Identificador del {@link ConvocatoriaReunion}
-   * @param pageable              la información de paginación.
    * @return lista de memorias asignables a la convocatoria.
    */
-  Page<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable);
+  List<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion);
 
   /**
    * Devuelve una lista paginada y filtrada con las entidades {@link Memoria}
@@ -114,11 +115,9 @@ public interface MemoriaService {
    * evaluación.
    * 
    * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
-   * @param pageable             información de paginación
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
-  Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion,
-      Pageable pageable);
+  List<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion);
 
   /**
    * 

@@ -292,17 +292,14 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
     response.add(getMockData(1L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
-    BDDMockito.given(repository.findConvocatoriasReunionSinActa(ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(repository.findConvocatoriasReunionSinActa()).willReturn(response);
 
     // when: Se buscan todos las datos
-    Page<ConvocatoriaReunion> result = service.findConvocatoriasSinActa(Pageable.unpaged());
+    List<ConvocatoriaReunion> result = service.findConvocatoriasSinActa();
 
     // then: Se recuperan todos los datos
-    Assertions.assertThat(result.getContent()).isEqualTo(response);
-    Assertions.assertThat(result.getNumber()).isEqualTo(0);
-    Assertions.assertThat(result.getSize()).isEqualTo(response.size());
-    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+    Assertions.assertThat(result).isEqualTo(response);
+    Assertions.assertThat(result.size()).isEqualTo(response.size());
   }
 
   /**

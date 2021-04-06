@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
@@ -85,22 +87,21 @@ public class EvaluadorController {
    * Devuelve una lista paginada de {@link Evaluador} de un comite sin conflictos
    * de intereses con una memoria.
    * 
-   * @param query  filtro de búsqueda.
-   * @param paging pageable
+   * @param query filtro de búsqueda.
    */
   @GetMapping("comite/{idComite}/sinconflictointereses/{idMemoria}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
-  ResponseEntity<Page<Evaluador>> findAllByComiteSinconflictoInteresesMemoria(@PathVariable Long idComite,
-      @PathVariable Long idMemoria, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable paging) - start");
-    Page<Evaluador> page = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria, paging);
+  ResponseEntity<List<Evaluador>> findAllByComiteSinconflictoInteresesMemoria(@PathVariable Long idComite,
+      @PathVariable Long idMemoria) {
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - start");
+    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
 
-    if (page.isEmpty()) {
-      log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable paging) ) - end");
+    if (result.isEmpty()) {
+      log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) ) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable paging)  - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria)  - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   /**

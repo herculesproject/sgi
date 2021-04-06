@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
@@ -71,10 +73,9 @@ public interface TareaService {
    * Pendiente de correcciones y No procede evaluar.
    *
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @param pageable             la información de paginación.
    * @return la lista de entidades {@link Tarea} paginadas y/o filtradas.
    */
-  Page<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable);
+  List<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion);
 
   /**
    * Busca las tareas de una petición de evaluación

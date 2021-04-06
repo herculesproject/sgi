@@ -296,15 +296,10 @@ public class PeticionEvaluacionIT extends BaseIT {
 
   @Test
   public void findEquipoInvestigador_WithPaging_ReturnsEquipoInvestigadorSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=10
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "5");
 
     final ResponseEntity<List<EquipoTrabajoWithIsEliminable>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", HttpMethod.GET,
-        buildRequestEquipoTrabajo(headers, null),
-        new ParameterizedTypeReference<List<EquipoTrabajoWithIsEliminable>>() {
+        buildRequestEquipoTrabajo(null, null), new ParameterizedTypeReference<List<EquipoTrabajoWithIsEliminable>>() {
         }, 2L);
 
     // then: Respuesta OK, PeticionEvaluaciones retorna la información de la página
@@ -312,50 +307,29 @@ public class PeticionEvaluacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EquipoTrabajoWithIsEliminable> equiposTrabajo = response.getBody();
     Assertions.assertThat(equiposTrabajo.size()).isEqualTo(1);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
-
-    // Contiene id='2'
-    Assertions.assertThat(equiposTrabajo.get(0).getId()).isEqualTo(2);
   }
 
   @Test
   public void findTareas_WithPaging_ReturnsTareasSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=10
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
 
     final ResponseEntity<List<TareaWithIsEliminable>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tareas", HttpMethod.GET,
-        buildRequestEquipoTrabajo(headers, null), new ParameterizedTypeReference<List<TareaWithIsEliminable>>() {
+        buildRequestEquipoTrabajo(null, null), new ParameterizedTypeReference<List<TareaWithIsEliminable>>() {
         }, 2L);
 
     // then: Respuesta OK, PeticionEvaluaciones retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TareaWithIsEliminable> tareas = response.getBody();
-    Assertions.assertThat(tareas.size()).isEqualTo(2);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
-
-    // Contiene de id='7' a '8'
-    Assertions.assertThat(tareas.get(0).getId()).isEqualTo(7);
-    Assertions.assertThat(tareas.get(1).getId()).isEqualTo(8);
+    Assertions.assertThat(tareas.size()).isEqualTo(7);
   }
 
   @Test
   public void findMemorias_WithPaging_ReturnsMemoriaPeticionEvaluacionSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=10
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
 
     final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", HttpMethod.GET,
-        buildRequestMemoriaPeticionEvaluacion(headers, null),
+        buildRequestMemoriaPeticionEvaluacion(null, null),
         new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
         }, 2L);
 
@@ -363,10 +337,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = response.getBody();
-    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(5);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("15");
+    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(15);
 
     // Contiene de id='7' a '8'
     List<Long> ids = new ArrayList<>();

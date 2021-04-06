@@ -671,8 +671,6 @@ public class ConvocatoriaReunionIT extends BaseIT {
   public void findConvocatoriasSinActa() throws Exception {
     // when: Obtiene page=1 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "5");
 
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
@@ -687,10 +685,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // then: Respuesta OK
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(response.getBody().size()).isEqualTo(3);
   }
 
   /**

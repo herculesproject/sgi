@@ -376,8 +376,6 @@ public class EvaluadorIT extends BaseIT {
     // partician en tareas de la memoria 100L
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "2");
 
     final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(
         EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_SINCONFLICTOINTERES, HttpMethod.GET,
@@ -388,13 +386,7 @@ public class EvaluadorIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluador> evaluadores = response.getBody();
-    Assertions.assertThat(evaluadores.size()).isEqualTo(2);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("4");
-
-    // Contiene de resumen='Evaluador005'
-    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador4");
+    Assertions.assertThat(evaluadores.size()).isEqualTo(7);
   }
 
   /**

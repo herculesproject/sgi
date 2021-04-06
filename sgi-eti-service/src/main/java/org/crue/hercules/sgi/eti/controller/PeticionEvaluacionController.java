@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
@@ -171,75 +173,69 @@ public class PeticionEvaluacionController {
    * Obtener todas las entidades paginadas {@link EquipoTrabajo} para una
    * determinada {@link PeticionEvaluacion}.
    *
-   * @param id       Id de {@link PeticionEvaluacion}.
-   * @param pageable la información de la paginación.
+   * @param id Id de {@link PeticionEvaluacion}.
    * @return la lista de entidades {@link EquipoTrabajo} paginadas.
    */
   @GetMapping("/{id}/equipo-investigador")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-V', 'ETI-PEV-VR-INV', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
-  ResponseEntity<Page<EquipoTrabajoWithIsEliminable>> findEquipoInvestigador(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findEquipoInvestigador(Long id, Pageable pageable) - start");
+  ResponseEntity<List<EquipoTrabajoWithIsEliminable>> findEquipoInvestigador(@PathVariable Long id) {
+    log.debug("findEquipoInvestigador(Long id) - start");
 
-    Page<EquipoTrabajoWithIsEliminable> page = equipoTrabajoService.findAllByPeticionEvaluacionId(id, pageable);
+    List<EquipoTrabajoWithIsEliminable> result = equipoTrabajoService.findAllByPeticionEvaluacionId(id);
 
-    if (page.isEmpty()) {
-      log.debug("findEquipoInvestigador(Long id, Pageable pageable) - end");
+    if (result.isEmpty()) {
+      log.debug("findEquipoInvestigador(Long id) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findEquipoInvestigador(Long id, Pageable pageable) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findEquipoInvestigador(Long id) - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   /**
    * Obtener todas las entidades paginadas {@link TareaWithIsEliminable} para una
    * determinada {@link PeticionEvaluacion}.
    *
-   * @param id       Id de {@link PeticionEvaluacion}.
-   * @param pageable la información de la paginación.
+   * @param id Id de {@link PeticionEvaluacion}.
    * @return la lista de entidades {@link TareaWithIsEliminable} paginadas.
    */
   @GetMapping("/{id}/tareas")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-V')")
-  ResponseEntity<Page<TareaWithIsEliminable>> findTareas(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findTareas(Long id, Pageable pageable) - start");
+  ResponseEntity<List<TareaWithIsEliminable>> findTareas(@PathVariable Long id) {
+    log.debug("findTareas(Long id) - start");
 
-    Page<TareaWithIsEliminable> page = tareaService.findAllByPeticionEvaluacionId(id, pageable);
+    List<TareaWithIsEliminable> result = tareaService.findAllByPeticionEvaluacionId(id);
 
-    if (page.isEmpty()) {
-      log.debug("findTareas(Long id, Pageable pageable) - end");
+    if (result.isEmpty()) {
+      log.debug("findTareas(Long id) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findTareas(Long id, Pageable pageable) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findTareas(Long id) - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   /**
    * Obtener todas las entidades paginadas {@link EquipoTrabajo} para una
    * determinada {@link PeticionEvaluacion}.
    *
-   * @param id       Id de {@link PeticionEvaluacion}.
-   * @param pageable la información de la paginación.
+   * @param id Id de {@link PeticionEvaluacion}.
    * @return la lista de entidades {@link Memoria} paginadas.
    */
   @GetMapping("/{id}/memorias")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-V')")
-  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findMemorias(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findMemorias(Long id, Pageable pageable) - start");
+  ResponseEntity<List<MemoriaPeticionEvaluacion>> findMemorias(@PathVariable Long id) {
+    log.debug("findMemorias(Long id) - start");
 
-    Page<MemoriaPeticionEvaluacion> page = memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(id, pageable);
+    List<MemoriaPeticionEvaluacion> result = memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(id);
 
-    if (page.isEmpty()) {
-      log.debug("findMemorias(Long id, Pageable pageable) - end");
+    if (result.isEmpty()) {
+      log.debug("findMemorias(Long id) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findMemorias(Long id, Pageable pageable) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findMemorias(Long id) - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   /**

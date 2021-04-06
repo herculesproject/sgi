@@ -226,15 +226,13 @@ public class MemoriaServiceImpl implements MemoriaService {
    * retrospectiva en estado "En secretaría".
    * 
    * @param idConvocatoriaReunion Identificador del {@link ConvocatoriaReunion}
-   * @param pageable              la información de paginación.
    * @return lista de memorias asignables a la convocatoria.
    */
   @Override
-  public Page<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) {
-    log.debug("findAllMemoriasAsignables(Long idConvocatoriaReunion, Pageable pageable) - start");
-    Page<Memoria> returnValue = memoriaRepository.findAllMemoriasAsignablesConvocatoria(idConvocatoriaReunion,
-        pageable);
-    log.debug("findAllMemoriasAsignables(Long idConvocatoriaReunion, Pageable pageable) - end");
+  public List<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion) {
+    log.debug("findAllMemoriasAsignables(Long idConvocatoriaReunion) - start");
+    List<Memoria> returnValue = memoriaRepository.findAllMemoriasAsignablesConvocatoria(idConvocatoriaReunion);
+    log.debug("findAllMemoriasAsignables(Long idConvocatoriaReunion) - end");
     return returnValue;
   }
 
@@ -385,14 +383,11 @@ public class MemoriaServiceImpl implements MemoriaService {
    * evaluación.
    * 
    * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
-   * @param pageable             información de paginación
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override
-  public Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion,
-      Pageable pageable) {
-    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(idPeticionEvaluacion,
-        pageable, null);
+  public List<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion) {
+    List<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(idPeticionEvaluacion, null);
     return returnValue;
   }
 
@@ -753,65 +748,65 @@ public class MemoriaServiceImpl implements MemoriaService {
     String numMemoria = "001";
 
     switch (idTipoMemoria.intValue()) {
-      case 1: {
-        // NUEVA
-        // Se recupera la última memoria para el comité seleccionado
-        Memoria ultimaMemoriaComite = memoriaRepository
-            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
-                String.valueOf(anioActual), 2L, comite.getId());
+    case 1: {
+      // NUEVA
+      // Se recupera la última memoria para el comité seleccionado
+      Memoria ultimaMemoriaComite = memoriaRepository
+          .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+              String.valueOf(anioActual), 2L, comite.getId());
 
-        // Se incrementa el número de la memoria para el comité
-        if (ultimaMemoriaComite != null) {
-          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
-          numeroUltimaMemoria++;
-          numMemoria = String.format("%03d", numeroUltimaMemoria);
-        }
-
-        break;
+      // Se incrementa el número de la memoria para el comité
+      if (ultimaMemoriaComite != null) {
+        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+        numeroUltimaMemoria++;
+        numMemoria = String.format("%03d", numeroUltimaMemoria);
       }
-      case 2: {
-        // MODIFICACIÓN
 
-        // Se recupera la última memoria modificada de la memoria de la que se realiza
-        // la copia y del comité de la memoria.
-        Memoria ultimaMemoriaComite = memoriaRepository
-            .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
+      break;
+    }
+    case 2: {
+      // MODIFICACIÓN
+
+      // Se recupera la última memoria modificada de la memoria de la que se realiza
+      // la copia y del comité de la memoria.
+      Memoria ultimaMemoriaComite = memoriaRepository
+          .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
+
+      StringBuilder sbReferencia = new StringBuilder();
+      sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
+          .append("MR");
+      if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
+        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
+        numeroUltimaMemoria++;
+        sbReferencia.append(numeroUltimaMemoria);
+
+      } else {
+        sbReferencia.append("1");
+      }
+
+      numMemoria = sbReferencia.toString();
+
+      break;
+    }
+    case 3: {
+      // RATIFICACIÓN
+      // Se recupera la última memoria para el comité seleccionado
+      Memoria ultimaMemoriaComite = memoriaRepository
+          .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+              String.valueOf(anioActual), 2L, comite.getId());
+
+      // Se incrementa el número de la memoria para el comité
+      if (ultimaMemoriaComite != null) {
+        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+        numeroUltimaMemoria++;
 
         StringBuilder sbReferencia = new StringBuilder();
-        sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
-            .append("MR");
-        if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
-          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
-          numeroUltimaMemoria++;
-          sbReferencia.append(numeroUltimaMemoria);
-
-        } else {
-          sbReferencia.append("1");
-        }
-
+        sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
         numMemoria = sbReferencia.toString();
-
-        break;
       }
-      case 3: {
-        // RATIFICACIÓN
-        // Se recupera la última memoria para el comité seleccionado
-        Memoria ultimaMemoriaComite = memoriaRepository
-            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
-                String.valueOf(anioActual), 2L, comite.getId());
 
-        // Se incrementa el número de la memoria para el comité
-        if (ultimaMemoriaComite != null) {
-          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
-          numeroUltimaMemoria++;
-
-          StringBuilder sbReferencia = new StringBuilder();
-          sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
-          numMemoria = sbReferencia.toString();
-        }
-
-        break;
-      }
+      break;
+    }
     }
     ;
 

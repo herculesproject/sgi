@@ -395,16 +395,16 @@ public class EvaluadorControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
   public void findAllByComiteSinconflictoInteresesMemoria_Unlimited_ReturnsFullEvaluadorList() throws Exception {
-    // given: idComite, idMemoria, 100 evaluadores
+    // given: idComite, idMemoria, 10 evaluadores
     Long idComite = 1L;
     Long idMemoria = 1L;
     List<Evaluador> evaluadores = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       evaluadores.add(generarMockEvaluador(Long.valueOf(i), "Evaluador" + String.format("%03d", i)));
     }
 
     BDDMockito.given(evaluadorService.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluadores));
+        ArgumentMatchers.anyLong())).willReturn(evaluadores);
 
     // when: find unlimited
     mockMvc
@@ -414,7 +414,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Evaluador
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10)));
   }
 
   @Test
@@ -424,40 +424,24 @@ public class EvaluadorControllerTest extends BaseControllerTest {
     Long idComite = 1L;
     Long idMemoria = 1L;
     List<Evaluador> evaluadores = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       evaluadores.add(generarMockEvaluador(Long.valueOf(i), "Evaluador" + String.format("%03d", i)));
     }
 
     BDDMockito.given(evaluadorService.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Evaluador>>() {
-          @Override
-          public Page<Evaluador> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<Evaluador> content = evaluadores.subList(fromIndex, toIndex);
-            Page<Evaluador> page = new PageImpl<>(content, pageable, evaluadores.size());
-            return page;
-          }
-        });
+        ArgumentMatchers.anyLong())).willReturn(evaluadores);
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders
             .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_SINCONFLICTOINTERES, idComite, idMemoria)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
-            .accept(MediaType.APPLICATION_JSON))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Evaluadors are returned with the right page
         // information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
 
     // this uses a TypeReference to inform Jackson about the Lists's generic type
@@ -465,8 +449,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
         new TypeReference<List<Evaluador>>() {
         });
 
-    // containing resumen='Evaluador031' to 'Evaluador040'
-    for (int i = 0, j = 31; i < 10; i++, j++) {
+    for (int i = 0, j = 1; i < 10; i++, j++) {
       Evaluador evaluador = actual.get(i);
       Assertions.assertThat(evaluador.getResumen()).isEqualTo("Evaluador" + String.format("%03d", j));
     }
@@ -481,7 +464,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
     List<Evaluador> evaluadores = new ArrayList<>();
 
     BDDMockito.given(evaluadorService.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluadores));
+        ArgumentMatchers.anyLong())).willReturn(evaluadores);
     // when: find unlimited
     mockMvc
         .perform(MockMvcRequestBuilders

@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -43,10 +45,9 @@ public interface EvaluadorService {
    * 
    * @param idComite  Identificador del {@link Comite}
    * @param idMemoria Identificador de la {@link Memoria}
-   * @param pageable  la información de paginación.
    * @return lista de evaluadores sin conflictos de intereses
    */
-  Page<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable);
+  List<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria);
 
   /**
    * Obtiene {@link Evaluador} por id.

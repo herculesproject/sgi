@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
@@ -56,10 +58,9 @@ public interface EquipoTrabajoService {
    * siguiente estados: En elaboración, Completada, Favorable, Pendiente de
    * Modificaciones Mínimas, Pendiente de correcciones y No procede evaluar.
    *
-   * @param id       Id de {@link PeticionEvaluacion}.
-   * @param pageable la información de la paginación.
+   * @param id Id de {@link PeticionEvaluacion}.
    * @return la lista de entidades {@link EquipoTrabajo} paginadas.
    */
-  Page<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id, Pageable pageable);
+  List<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id);
 
 }

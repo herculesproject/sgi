@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
@@ -113,21 +115,19 @@ public class MemoriaController {
    * retrospectiva en estado "En secretaría".
    * 
    * @param idConvocatoria identificador de la {@link ConvocatoriaReunion}.
-   * @param paging         pageable
    */
   @GetMapping("/asignables/{idConvocatoria}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-E')")
-  ResponseEntity<Page<Memoria>> findAllMemoriasAsignablesConvocatoria(@PathVariable Long idConvocatoria,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(Long idConvocatoria, Pageable paging) - start");
-    Page<Memoria> page = service.findAllMemoriasAsignablesConvocatoria(idConvocatoria, paging);
+  ResponseEntity<List<Memoria>> findAllMemoriasAsignablesConvocatoria(@PathVariable Long idConvocatoria) {
+    log.debug("findAll(Long idConvocatoria) - start");
+    List<Memoria> result = service.findAllMemoriasAsignablesConvocatoria(idConvocatoria);
 
-    if (page.isEmpty()) {
-      log.debug("findAll(String query,Pageable paging) - end");
+    if (result.isEmpty()) {
+      log.debug("findAll(String query) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(String query,Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findAll(String query) - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   /**

@@ -21,9 +21,6 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.Tarea_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,15 +46,11 @@ public class CustomEquipoTrabajoRepositoryImpl implements CustomEquipoTrabajoRep
    * Modificaciones Mínimas, Pendiente de correcciones y No procede evaluar.
    * 
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @param pageable             la información de paginación.
    * @return lista de {@link EquipoTrabajo} con la informacion de si son
    *         eliminables.
    */
   @Override
-  public Page<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion,
-      Pageable pageable) {
-    // TODO: Revisar uso pageable, porque aunque se pagina no se está sacando el
-    // totalCount.
+  public List<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion) {
     log.debug("findAllByPeticionEvaluacionId : {} - start");
 
     // Crete query
@@ -75,18 +68,11 @@ public class CustomEquipoTrabajoRepositoryImpl implements CustomEquipoTrabajoRep
     cq.where(cb.equal(root.get(EquipoTrabajo_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
 
     TypedQuery<EquipoTrabajoWithIsEliminable> typedQuery = entityManager.createQuery(cq);
-    if (pageable != null && pageable.isPaged()) {
-      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-      typedQuery.setMaxResults(pageable.getPageSize());
-    }
 
     List<EquipoTrabajoWithIsEliminable> result = typedQuery.getResultList();
 
-    Page<EquipoTrabajoWithIsEliminable> returnValue = new PageImpl<EquipoTrabajoWithIsEliminable>(result, pageable,
-        result.size());
-
     log.debug("findAllByPeticionEvaluacionId : {} - end");
-    return returnValue;
+    return result;
   }
 
   /**

@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -31,22 +33,19 @@ public interface CustomMemoriaRepository {
    * retrospectiva en estado "En secretaría".
    * 
    * @param idConvocatoriaReunion Identificador del {@link ConvocatoriaReunion}
-   * @param pageable              la información de paginación.
    * @return lista de memorias asignables a la convocatoria.
    */
-  Page<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable);
+  List<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion);
 
   /**
    * Devuelve las memorias de una petición evaluación con su fecha límite y de
    * evaluación.
    * 
    * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
-   * @param pageable             información de paginación
    * @param personaRefConsulta   Referencia persona consulta
    * @return lista de memorias de {@link MemoriaPeticionEvaluacion}
    */
-  Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable,
-      String personaRefConsulta);
+  List<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, String personaRefConsulta);
 
   /**
    * Recupera todas las memorias de una evaluación.

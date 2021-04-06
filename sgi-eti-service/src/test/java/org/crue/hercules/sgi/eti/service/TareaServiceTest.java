@@ -243,38 +243,18 @@ public class TareaServiceTest extends BaseServiceTest {
   public void findAllByPeticionEvaluacionId_WithPaging_ReturnsPage() {
     // given: One hundred tareas
     List<TareaWithIsEliminable> tareas = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       tareas.add(generarMockTareaWithIsEliminable(Long.valueOf(i), "Tarea" + String.format("%03d", i)));
     }
 
-    BDDMockito.given(
-        tareaRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<TareaWithIsEliminable>>() {
-          @Override
-          public Page<TareaWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<TareaWithIsEliminable> content = tareas.subList(fromIndex, toIndex);
-            Page<TareaWithIsEliminable> page = new PageImpl<>(content, pageable, tareas.size());
-            return page;
-          }
-        });
+    BDDMockito.given(tareaRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any())).willReturn(tareas);
 
-    // when: Get page=3 with pagesize=10
-    Pageable paging = PageRequest.of(3, 10);
-    Page<TareaWithIsEliminable> page = tareaService.findAllByPeticionEvaluacionId(1L, paging);
+    List<TareaWithIsEliminable> result = tareaService.findAllByPeticionEvaluacionId(1L);
 
-    // then: A Page with ten tareas are returned containing descripcion='Tarea031'
-    // to 'Tarea040'
-    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
-    Assertions.assertThat(page.getNumber()).isEqualTo(3);
-    Assertions.assertThat(page.getSize()).isEqualTo(10);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
-    for (int i = 0, j = 31; i < 10; i++, j++) {
-      TareaWithIsEliminable tarea = page.getContent().get(i);
+    // then: A list with tareas
+    Assertions.assertThat(result.size()).isEqualTo(10);
+    for (int i = 0, j = 1; i < 10; i++, j++) {
+      TareaWithIsEliminable tarea = result.get(i);
       Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
     }
   }

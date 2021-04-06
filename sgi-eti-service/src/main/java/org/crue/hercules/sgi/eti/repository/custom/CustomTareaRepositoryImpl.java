@@ -26,9 +26,6 @@ import org.crue.hercules.sgi.eti.model.Tarea_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.model.TipoTarea_;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,13 +52,10 @@ public class CustomTareaRepositoryImpl implements CustomTareaRepository {
    * 
    * 
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @param pageable             la información de paginación.
    * @return lista de tareas con la informacion de si son eliminables.
    */
   @Override
-  public Page<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable) {
-    // TODO: Revisar uso de pageable. Se pagina pero no se tienen en cuenta la
-    // ordenación ni se realiza el count total.
+  public List<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion) {
     log.debug("findAllByPeticionEvaluacionId : {} - start");
 
     // Crete query
@@ -87,17 +81,11 @@ public class CustomTareaRepositoryImpl implements CustomTareaRepository {
         idPeticionEvaluacion));
 
     TypedQuery<TareaWithIsEliminable> typedQuery = entityManager.createQuery(cq);
-    if (pageable != null && pageable.isPaged()) {
-      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-      typedQuery.setMaxResults(pageable.getPageSize());
-    }
 
     List<TareaWithIsEliminable> result = typedQuery.getResultList();
 
-    Page<TareaWithIsEliminable> returnValue = new PageImpl<TareaWithIsEliminable>(result, pageable, result.size());
-
     log.debug("findAllByPeticionEvaluacionId : {} - end");
-    return returnValue;
+    return result;
   }
 
   /**

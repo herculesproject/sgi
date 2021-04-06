@@ -364,8 +364,6 @@ public class MemoriaIT extends BaseIT {
     // convocatoria
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "1");
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, HttpMethod.GET, buildRequest(headers, null),
@@ -376,9 +374,7 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
-    Assertions.assertThat(memorias.size()).isEqualTo(1);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
+    Assertions.assertThat(memorias.size()).isEqualTo(2);
 
   }
 
@@ -392,8 +388,6 @@ public class MemoriaIT extends BaseIT {
     // convocatoria
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "1");
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, HttpMethod.GET, buildRequest(headers, null),
@@ -404,9 +398,7 @@ public class MemoriaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
-    Assertions.assertThat(memorias.size()).isEqualTo(1);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
+    Assertions.assertThat(memorias.size()).isEqualTo(2);
 
   }
 

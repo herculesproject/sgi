@@ -163,14 +163,12 @@ public class TareaServiceImpl implements TareaService {
    * Pendiente de correcciones y No procede evaluar.
    *
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @param pageable             la información de paginación.
    * @return el listado de entidades {@link Tarea} paginadas y filtradas.
    */
-  public Page<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable) {
-    log.debug("findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable paging) - start");
-    Page<TareaWithIsEliminable> returnValue = tareaRepository.findAllByPeticionEvaluacionId(idPeticionEvaluacion,
-        pageable);
-    log.debug("findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable paging) - end");
+  public List<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion) {
+    log.debug("findAllByPeticionEvaluacionId(Long idPeticionEvaluacion) - start");
+    List<TareaWithIsEliminable> returnValue = tareaRepository.findAllByPeticionEvaluacionId(idPeticionEvaluacion);
+    log.debug("findAllByPeticionEvaluacionId(Long idPeticionEvaluacion) - end");
     return returnValue;
   }
 

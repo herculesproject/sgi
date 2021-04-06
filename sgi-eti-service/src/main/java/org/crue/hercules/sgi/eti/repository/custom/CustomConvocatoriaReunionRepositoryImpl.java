@@ -21,9 +21,6 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -85,19 +82,14 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
 
   /**
    * Devuelve una lista de convocatorias de reunión que no tengan acta
-   * 
-   * @param pageable la información de la paginación.
    *
    * @return la lista de convocatorias de reunión
    */
   @Override
-  public Page<ConvocatoriaReunion> findConvocatoriasReunionSinActa(Pageable pageable) {
-    // TODO: Revisar. Se recibe un pageable pero no se usa ni para paginar ni para
-    // el criterio de ordenación.
-    log.debug("findConvocatoriasReunionSinActa(Pageable pageable) - start");
+  public List<ConvocatoriaReunion> findConvocatoriasReunionSinActa() {
+    log.debug("findConvocatoriasReunionSinActa() - start");
 
     // Create Query
-
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<ConvocatoriaReunion> cq = cb.createQuery(ConvocatoriaReunion.class);
 
@@ -114,11 +106,10 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
 
     TypedQuery<ConvocatoriaReunion> typedQuery = entityManager.createQuery(cq);
     List<ConvocatoriaReunion> result = typedQuery.getResultList();
-    Page<ConvocatoriaReunion> returnValue = new PageImpl<ConvocatoriaReunion>(result, pageable, result.size());
 
-    log.debug("findConvocatoriasReunionSinActa(Pageable pageable) - end");
+    log.debug("findConvocatoriasReunionSinActa() - end");
 
-    return returnValue;
+    return result;
 
   }
 

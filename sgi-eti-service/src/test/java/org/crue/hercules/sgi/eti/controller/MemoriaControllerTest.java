@@ -554,13 +554,13 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: idConvocatoria, One hundred Memoria
     Long idConvocatoria = 1L;
     List<Memoria> memorias = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
           "Memoria" + String.format("%03d", i), i));
     }
 
-    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong()))
+        .willReturn(memorias);
 
     // when: find unlimited asignables by convocatoria
     mockMvc
@@ -569,7 +569,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Memoria
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10)));
   }
 
   @Test
@@ -578,39 +578,23 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: idConvocatoria, One hundred Memoria
     Long idConvocatoria = 1L;
     List<Memoria> memorias = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
           "Memoria" + String.format("%03d", i), i));
     }
 
-    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Memoria>>() {
-          @Override
-          public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<Memoria> content = memorias.subList(fromIndex, toIndex);
-            Page<Memoria> page = new PageImpl<>(content, pageable, memorias.size());
-            return page;
-          }
-        });
+    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong()))
+        .willReturn(memorias);
 
     // when: get page=3 with pagesize=10 asignables by convocatoria
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Memorias are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
 
     // this uses a TypeReference to inform Jackson about the Lists's generic type
@@ -618,8 +602,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         new TypeReference<List<Memoria>>() {
         });
 
-    // containing titulo='Memoria031' to 'Memoria040'
-    for (int i = 0, j = 31; i < 10; i++, j++) {
+    for (int i = 0, j = 1; i < 10; i++, j++) {
       Memoria memoria = actual.get(i);
       Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
     }
@@ -632,8 +615,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     Long idConvocatoria = 1L;
     List<Memoria> memorias = new ArrayList<>();
 
-    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong()))
+        .willReturn(memorias);
 
     // when: find unlimited asignables by convocatoria
     mockMvc

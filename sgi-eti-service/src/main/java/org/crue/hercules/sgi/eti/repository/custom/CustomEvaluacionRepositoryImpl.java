@@ -64,8 +64,6 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    */
   public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
       Pageable pageable) {
-    // TODO: Revisar uso de pageable, porque se página pero no se tiene en cuenta la
-    // ordenación y se está paginando pero sin hacer la count del query
     log.debug("findEvaluacionesAnterioresByMemoria : {} - start");
 
     // Crete query
@@ -76,10 +74,23 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     // Define FROM clause
     Root<Evaluacion> root = cq.from(Evaluacion.class);
 
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    countQuery.select(cb.count(rootCount));
+
     cq.multiselect(root.alias("evaluacion"), getNumComentarios(root, cb, cq).alias("numComentarios"));
 
     cq.where(cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
         cb.notEqual(root.get(Evaluacion_.id), idEvaluacion), cb.isTrue(root.get(Evaluacion_.activo)));
+
+    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
+    cq.orderBy(orders);
+
+    // Número de registros totales para la paginación
+    countQuery.where(cb.equal(rootCount.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
+        cb.notEqual(rootCount.get(Evaluacion_.id), idEvaluacion), cb.isTrue(rootCount.get(Evaluacion_.activo)));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     TypedQuery<EvaluacionWithNumComentario> typedQuery = entityManager.createQuery(cq);
     if (pageable != null && pageable.isPaged()) {
@@ -89,8 +100,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     List<EvaluacionWithNumComentario> result = typedQuery.getResultList();
 
-    Page<EvaluacionWithNumComentario> returnValue = new PageImpl<EvaluacionWithNumComentario>(result, pageable,
-        result.size());
+    Page<EvaluacionWithNumComentario> returnValue = new PageImpl<EvaluacionWithNumComentario>(result, pageable, count);
 
     log.debug("findEvaluacionesAnterioresByMemoria : {} - end");
     return returnValue;
@@ -323,8 +333,6 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   @Override
   public Page<Evaluacion> findEvaluacionesEnSeguimientosByEvaluador(String personaRef, String query,
       Pageable pageable) {
-    // TODO: Revisar uso pageable. Aunque se está paginando, no se está calculando
-    // el count total.
     log.debug("findEvaluacionesEnSeguimientosByEvaluador(String personaRef, String query, Pageable pageable) - start");
 
     // Create query
@@ -334,13 +342,20 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     // Define FROM clause
     Root<Evaluacion> rootEvaluacion = cq.from(Evaluacion.class);
 
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    countQuery.select(cb.count(rootCount));
+
     // Evaluaciones en seguimiento
     List<Predicate> listPredicates = getPredicateEvaluacionEnSeguimiento(rootEvaluacion, cb, personaRef);
+    List<Predicate> listPredicatesCount = getPredicateEvaluacionEnSeguimiento(rootCount, cb, personaRef);
 
     // Where
     if (query != null) {
       Specification<Evaluacion> spec = SgiRSQLJPASupport.toSpecification(query);
       listPredicates.add(spec.toPredicate(rootEvaluacion, cq, cb));
+      listPredicatesCount.add(spec.toPredicate(rootCount, cq, cb));
     }
 
     // Filtros
@@ -350,6 +365,10 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), rootEvaluacion, cb);
     cq.orderBy(orders);
 
+        // Número de registros totales para la paginación
+    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
     // Paginación
     TypedQuery<Evaluacion> typedQuery = entityManager.createQuery(cq);
     if (pageable != null && pageable.isPaged()) {
@@ -357,7 +376,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       typedQuery.setMaxResults(pageable.getPageSize());
     }
     List<Evaluacion> result = typedQuery.getResultList();
-    Page<Evaluacion> returnValue = new PageImpl<Evaluacion>(result, pageable, result.size());
+    Page<Evaluacion> returnValue = new PageImpl<Evaluacion>(result, pageable, count);
 
     log.debug("findEvaluacionesEnSeguimientosByEvaluador(String personaRef, String query, Pageable pageable) - end");
     return returnValue;
