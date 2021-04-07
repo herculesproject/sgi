@@ -70,7 +70,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     this.listadoFragment = this.fragment as PeticionEvaluacionTareasFragment;
 
     this.displayedColumns = ['nombreCompleto', 'numReferencia', 'tarea',
-      'formacionEspecifica', 'organismo', 'acciones'];
+      'formacionEspecifica', 'organismo', 'anio', 'acciones'];
 
   }
 
