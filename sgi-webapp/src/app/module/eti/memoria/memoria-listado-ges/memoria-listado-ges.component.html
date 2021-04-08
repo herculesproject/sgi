@@ -66,8 +66,8 @@
           <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
             <mat-icon>search</mat-icon> {{'btn.search'| translate}}
           </button>
-          <button color="warn" aria-label="Center Align" (click)="onClearFilters()"
-            mat-button>{{'btn.clean'| translate}}
+          <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+            translate}}
           </button>
         </div>
       </div>
@@ -121,8 +121,8 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let memoria;let i=index;">
           <ng-container>
-            <button mat-button [routerLink]="[memoria.id]" matTooltip="{{'btn.edit' | translate}}">
-              <mat-icon color="primary">border_color</mat-icon>
+            <button mat-button [routerLink]="[memoria.id]" matTooltip="{{'btn.view' | translate}}">
+              <mat-icon color="primary">visibility</mat-icon>
             </button>
             <button *ngIf="memoria.estadoActual.id === 3 || memoria.estadoActual.id === 4 || 
               memoria.estadoActual.id === 10 || memoria.estadoActual.id === 5" mat-button

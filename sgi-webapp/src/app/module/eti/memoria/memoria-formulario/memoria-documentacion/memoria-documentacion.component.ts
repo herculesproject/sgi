@@ -272,9 +272,13 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    *
    */
   hasPermisoUpdateDocumentacionInicial(): boolean {
-    return this.estadoMemoria.id === 1 || this.estadoMemoria.id === 2
-      || this.estadoMemoria.id === 6 || this.estadoMemoria.id === 7
-      || this.estadoMemoria.id === 8;
+    if (this.actionService.readonly) {
+      return false;
+    } else {
+      return this.estadoMemoria.id === 1 || this.estadoMemoria.id === 2
+        || this.estadoMemoria.id === 6 || this.estadoMemoria.id === 7
+        || this.estadoMemoria.id === 8;
+    }
   }
 
   /**
@@ -283,7 +287,11 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    *
    */
   hasPermisoUpdateDocumentacionSeguimientoAnual(): boolean {
-    return this.estadoMemoria.id === 9 || this.estadoMemoria.id === 11;
+    if (this.actionService.readonly) {
+      return false;
+    } else {
+      return this.estadoMemoria.id === 9 || this.estadoMemoria.id === 11;
+    }
   }
 
   /**
@@ -292,7 +300,11 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    *
    */
   hasPermisoUpdateDocumentacionSeguimientoFinal(): boolean {
-    return this.estadoMemoria.id === 14 || this.estadoMemoria.id === 16 || this.estadoMemoria.id === 21;
+    if (this.actionService.readonly) {
+      return false;
+    } else {
+      return this.estadoMemoria.id === 14 || this.estadoMemoria.id === 16 || this.estadoMemoria.id === 21;
+    }
   }
 
   /**
@@ -300,7 +312,11 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    * PENDIENTE, COMPLETADA
    */
   hasPermisoUpdateDocumentacionRetrospectiva(): boolean {
-    return this.estadoRetrospectiva?.id === 1 || this.estadoRetrospectiva?.id === 2;
+    if (this.actionService.readonly) {
+      return false;
+    } else {
+      return this.estadoRetrospectiva?.id === 1 || this.estadoRetrospectiva?.id === 2;
+    }
   }
 
   /**

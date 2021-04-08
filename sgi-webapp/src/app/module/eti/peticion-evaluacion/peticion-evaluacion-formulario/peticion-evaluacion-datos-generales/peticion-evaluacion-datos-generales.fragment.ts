@@ -33,7 +33,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
       codigo: [{ value: '', disabled: true }, Validators.required],
-      titulo: ['', Validators.required],
+      titulo: [{ value: '', disabled: this.readonly }, Validators.required],
       tipoActividad: [{ value: '', disabled: this.readonly }, new NullIdValidador().isValid()],
       tipoInvestigacionTutelada: [{ value: '', disabled: this.readonly }, []],
       financiacion: [{ value: '', disabled: this.readonly }, Validators.required],

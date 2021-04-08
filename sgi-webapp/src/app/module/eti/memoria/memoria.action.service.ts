@@ -74,9 +74,9 @@ export class MemoriaActionService extends ActionService {
     }
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaFisicaService,
       peticionEvaluacionService);
-    this.formularios = new MemoriaFormularioFragment(logger, this.memoria?.id, this.memoria?.comite, formularioService,
+    this.formularios = new MemoriaFormularioFragment(logger, this.readonly, this.memoria?.id, this.memoria?.comite, formularioService,
       bloqueService, apartadoService, respuestaService, service, evaluacionService);
-    this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, service, documentoService);
+    this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, this.readonly, service, documentoService);
     this.evaluaciones = new MemoriaEvaluacionesFragment(this.memoria?.id, service);
     this.versiones = new MemoriaInformesFragment(this.memoria?.id, service);
 
