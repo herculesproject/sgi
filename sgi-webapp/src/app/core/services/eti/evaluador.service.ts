@@ -13,6 +13,7 @@ import { IEvaluador } from '@core/models/eti/evaluador';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,28 @@ export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBa
       `${this.endpointUrl}/${idEvaluador}/conflictos`,
       null,
       CONFLICTO_INTERESES_CONVERTER
+    );
+  }
+
+  /**
+   * Comprueba si el usuario es evaluador de alguna evaluación
+   *
+  */
+  hasAssignedEvaluaciones(): Observable<boolean> {
+    const url = `${this.endpointUrl}/evaluaciones`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si el usuario es evaluador de alguna evaluación en seguimiento
+   *
+  */
+  hasAssignedEvaluacionesSeguimiento(): Observable<boolean> {
+    const url = `${this.endpointUrl}/evaluaciones-seguimiento`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
     );
   }
 }

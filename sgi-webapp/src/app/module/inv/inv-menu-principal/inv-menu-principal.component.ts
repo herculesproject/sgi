@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MSG_PARAMS } from '@core/i18n';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { LayoutService } from '@core/services/layout.service';
 import { Subscription } from 'rxjs';
 import { INV_ROUTE_NAMES } from '../inv-route-names';
@@ -16,11 +17,16 @@ export class InvMenuPrincipalComponent implements OnDestroy {
   opened: boolean;
   panelDesplegado: boolean;
 
-  private subcription: Subscription;
+  showEvaluaciones: boolean = false;
+  showSeguimientos: boolean = false;
+
+  private subscriptions = [] as Subscription[];
 
   constructor(
-    private layout: LayoutService) {
-    this.subcription = this.layout.menuOpened$.subscribe((val) => this.opened = val);
+    private layout: LayoutService, private evaluadorService: EvaluadorService) {
+    this.subscriptions.push(this.layout.menuOpened$.subscribe((val) => this.opened = val));
+    this.subscriptions.push(this.evaluadorService.hasAssignedEvaluaciones().subscribe((res) => this.showEvaluaciones = res));
+    this.subscriptions.push(this.evaluadorService.hasAssignedEvaluacionesSeguimiento().subscribe((res) => this.showSeguimientos = res));
   }
 
   /**
@@ -38,7 +44,7 @@ export class InvMenuPrincipalComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subcription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   get MSG_PARAMS() {
