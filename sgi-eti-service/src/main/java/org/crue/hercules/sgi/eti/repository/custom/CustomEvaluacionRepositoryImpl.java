@@ -365,7 +365,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), rootEvaluacion, cb);
     cq.orderBy(orders);
 
-        // Número de registros totales para la paginación
+    // Número de registros totales para la paginación
     countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -548,5 +548,69 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     listPredicates.add(cb.or(memoria, retrospectiva));
 
     return listPredicates;
+  }
+
+  /**
+   * Recupera las evaluaciones del tipo memoria en estado 'En evaluacion' (id = 4)
+   * o 'En secretaria revisión minima'(id = 5), o tipo retrospectiva, memoria que
+   * requiere retrospectiva y el estado de la RETROSPECTIVA es 'En evaluacion' (id
+   * = 4).
+   * 
+   * @param personaRef Identificador del {@link Evaluador}
+   * @return true/false si existen datos
+   */
+  @Override
+  public Boolean hasAssignedEvaluacionesByEvaluador(String personaRef) {
+    log.debug("hasAssignedEvaluacionesByEvaluador(String personaRef) - start");
+
+    // Create query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Evaluacion> cq = cb.createQuery(Evaluacion.class);
+
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    countQuery.select(cb.count(rootCount));
+
+    List<Predicate> listPredicatesCount = getPredicatesByEvaluador(rootCount, cb, cq, personaRef);
+
+    // Número de registros totales para la paginación
+    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("hasAssignedEvaluacionesByEvaluador(String personaRef) - end");
+    return count > 0;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link Evaluacion}, en estado "En evaluación
+   * seguimiento anual" (id = 11), "En evaluación seguimiento final" (id = 12) o
+   * "En secretaría seguimiento final aclaraciones" (id = 13), paginadas asociadas
+   * a un evaluador.
+   * 
+   * @param personaRef Persona Ref del {@link Evaluador}
+   * @return true/false si existen datos
+   */
+  @Override
+  public Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) {
+    log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - start");
+
+    // Create query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
+    countQuery.select(cb.count(rootCount));
+
+    // Evaluaciones en seguimiento
+    List<Predicate> listPredicatesCount = getPredicateEvaluacionEnSeguimiento(rootCount, cb, personaRef);
+
+    // Número de registros totales para la paginación
+    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
+    return count > 0;
   }
 }

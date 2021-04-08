@@ -71,4 +71,21 @@ public interface CustomEvaluacionRepository {
    */
 
   public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(String query, Pageable pageable);
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion}
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  Boolean hasAssignedEvaluacionesByEvaluador(String personaRef);
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion} en
+   * Seguimiento
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef);
 }

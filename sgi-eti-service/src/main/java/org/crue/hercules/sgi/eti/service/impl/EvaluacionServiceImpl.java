@@ -564,4 +564,29 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     }).orElseThrow(() -> new MemoriaNotFoundException(id));
 
   }
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion}
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public Boolean hasAssignedEvaluacionesByEvaluador(String personaRef) {
+    log.debug("hasAssignedEvaluacionesByEvaluador(String personaRef) - end");
+    return evaluacionRepository.hasAssignedEvaluacionesByEvaluador(personaRef);
+  }
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion} en
+   * Seguimiento
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) {
+    log.debug("hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef) - end");
+    return evaluacionRepository.hasAssignedEvaluacionesSeguimientoByEvaluador(personaRef);
+  }
 }

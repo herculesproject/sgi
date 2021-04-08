@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -233,6 +234,44 @@ public class EvaluadorController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si el usuario es Evaluador en alguna Evaluacion
+   * 
+   * @param authorization authorization
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/evaluaciones", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V','ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  public ResponseEntity<?> hasAssignedEvaluaciones(Authentication authorization) {
+    log.debug("hasAssignedEvaluaciones(Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (evaluacionService.hasAssignedEvaluacionesByEvaluador(personaRef)) {
+      log.debug("hasAssignedEvaluaciones(Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("hasAssignedEvaluaciones(Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Comprueba si el usuario es Evaluador en alguna Evaluacion en Seguimiento
+   * 
+   * @param authorization authorization
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/evaluaciones-seguimiento", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  public ResponseEntity<?> hasAssignedEvaluacionesSeguimiento(Authentication authorization) {
+    log.debug("hasAssignedEvaluacionesSeguimiento(Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (evaluacionService.hasAssignedEvaluacionesSeguimientoByEvaluador(personaRef)) {
+      log.debug("hasAssignedEvaluacionesSeguimiento(Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("hasAssignedEvaluacionesSeguimiento(Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

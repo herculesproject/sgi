@@ -166,4 +166,21 @@ public interface EvaluacionService {
    */
   Page<Evaluacion> findAllByMemoriaId(Long id, Pageable pageable);
 
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion}
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  Boolean hasAssignedEvaluacionesByEvaluador(String personaRef);
+
+  /**
+   * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion} en
+   * Seguimiento
+   * 
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  Boolean hasAssignedEvaluacionesSeguimientoByEvaluador(String personaRef);
+
 }
