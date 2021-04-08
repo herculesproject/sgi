@@ -191,7 +191,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     if (evaluacion.getTipoEvaluacion().getId().equals(2L)) {
       evaluacion.setVersion(evaluacion.getMemoria().getVersion() + 1);
-      evaluacion.getMemoria().setVersion(evaluacion.getVersion());
     } else {
       evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(evaluacion.getMemoria().getId())
           .map(evaluacionAnterior -> {
@@ -201,10 +200,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
             } else {
               evaluacion.setVersion(1);
             }
-
             return evaluacionAnterior;
           });
     }
+    evaluacion.getMemoria().setVersion(evaluacion.getVersion());
+
     return evaluacion;
   }
 
