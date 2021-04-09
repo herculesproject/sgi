@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/sgp" name="api-sgp" xmlns="http://ws.apache.org/ns/synapse">
+<api context="/sgp" name="sgp-api" xmlns="http://ws.apache.org/ns/synapse">
 
   <!-- categorias-profesionales -->
   <resource methods="GET" url-mapping="/categorias-profesionales">
@@ -14,7 +14,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/categorias-profesionales/{id}/subcategorias-profesionales">
@@ -29,7 +31,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -46,7 +50,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -63,7 +69,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" url-mapping="/datos-academicos/formly/create">
@@ -78,7 +86,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/datos-academicos/persona/{id}">
@@ -93,7 +103,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   
@@ -110,7 +122,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" url-mapping="/datos-contacto/formly/create">
@@ -125,7 +139,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/datos-contacto/persona/{id}">
@@ -140,7 +156,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -157,7 +175,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" url-mapping="/datos-personales/formly/create">
@@ -172,7 +192,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/datos-personales/persona/{id}">
@@ -187,7 +209,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -204,7 +228,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -221,7 +247,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="POST" url-mapping="/personas">
@@ -236,7 +264,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" url-mapping="/personas/formly/create">
@@ -251,7 +281,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/personas/{id}">
@@ -266,7 +298,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/personas/{id}/fotografia">
@@ -281,7 +315,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -298,7 +334,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 
@@ -315,7 +353,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" url-mapping="/vinculaciones/formly/create">
@@ -330,7 +370,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
   <resource methods="GET" uri-template="/vinculaciones/persona/{id}">
@@ -345,7 +387,9 @@
     <outSequence>
       <respond/>
     </outSequence>
-    <faultSequence/>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
   </resource>
 
 </api>
