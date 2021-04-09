@@ -258,10 +258,9 @@ public class PeticionEvaluacionServiceTest extends BaseServiceTest {
       peticiones.add(generarMockPeticionEvaluacionWithIsEliminable(Long.valueOf(i),
           "PeticionEvaluacion" + String.format("%03d", i)));
     }
-    BDDMockito.given(
-        peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(ArgumentMatchers.<Specification<Memoria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
-        .willReturn(new PageImpl<>(peticiones));
+    BDDMockito.given(peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(
+        ArgumentMatchers.<Specification<Memoria>>any(), ArgumentMatchers.<Specification<PeticionEvaluacion>>any(),
+        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any())).willReturn(new PageImpl<>(peticiones));
 
     // when: find unlimited peticiones evaluación
     Page<PeticionEvaluacionWithIsEliminable> page = peticionEvaluacionService
@@ -283,8 +282,9 @@ public class PeticionEvaluacionServiceTest extends BaseServiceTest {
           "PeticionEvaluacion" + String.format("%03d", i)));
     }
 
-    BDDMockito.given(
-        peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(ArgumentMatchers.<Specification<Memoria>>any(),
+    BDDMockito
+        .given(peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(
+            ArgumentMatchers.<Specification<Memoria>>any(), ArgumentMatchers.<Specification<PeticionEvaluacion>>any(),
             ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
         .willAnswer(new Answer<Page<PeticionEvaluacionWithIsEliminable>>() {
           @Override

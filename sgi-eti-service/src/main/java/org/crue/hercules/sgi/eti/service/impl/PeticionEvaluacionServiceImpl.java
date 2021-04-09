@@ -2,13 +2,13 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
-
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.predicate.PeticionEvaluacionPredicateResolver;
 import org.crue.hercules.sgi.eti.repository.specification.PeticionEvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -208,13 +208,15 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     log.debug("findAllPeticionEvaluacionMemoria(String query, Pageable pageable, String personaRef) - start");
     // TODO: Eliminar esta comprobación cuando se controlen los Predicate == null
     // dentro del custom repository
-    Specification<Memoria> specs = null;
+    Specification<Memoria> specsMem = null;
+    Specification<PeticionEvaluacion> specsPet = null;
     if (StringUtils.isNotBlank(query)) {
-      specs = SgiRSQLJPASupport.toSpecification(query);
+      specsPet = SgiRSQLJPASupport.toSpecification(query, PeticionEvaluacionPredicateResolver.getInstance());
+      specsMem = SgiRSQLJPASupport.toSpecification(query);
     }
 
     Page<PeticionEvaluacionWithIsEliminable> returnValue = peticionEvaluacionRepository
-        .findAllPeticionEvaluacionMemoria(specs, pageable, personaRef);
+        .findAllPeticionEvaluacionMemoria(specsMem, specsPet, pageable, personaRef);
     log.debug("findAllPeticionEvaluacionMemoria(String query, Pageable pageable,  String personaRef) - end");
     return returnValue;
   }

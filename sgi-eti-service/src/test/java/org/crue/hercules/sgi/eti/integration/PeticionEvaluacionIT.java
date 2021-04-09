@@ -214,7 +214,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 2L;
-    String query = "peticionEvaluacion.titulo=ke=PeticionEvaluacion;peticionEvaluacion.id==" + id;
+    String query = "peticionEvaluacion.titulo=ke=PeticionEvaluacion";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -465,7 +465,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // when: Ordena por id desc
     String sort = "id,desc";
     // when: Filtra por numReferencia like
-    String filter = "numReferencia=ke=ref-";
+    String filter = "peticionEvaluacion.titulo=ke=PeticionEvaluacion2";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/memorias")
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();

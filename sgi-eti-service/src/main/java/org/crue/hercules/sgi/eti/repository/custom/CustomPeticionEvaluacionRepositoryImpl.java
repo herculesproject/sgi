@@ -43,7 +43,7 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
 
   @Override
   public Page<PeticionEvaluacionWithIsEliminable> findAllPeticionEvaluacionMemoria(Specification<Memoria> specsMem,
-      Pageable pageable, String personaRefConsulta) {
+      Specification<PeticionEvaluacion> specsPet, Pageable pageable, String personaRefConsulta) {
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<PeticionEvaluacionWithIsEliminable> cq = cb.createQuery(PeticionEvaluacionWithIsEliminable.class);
@@ -69,8 +69,17 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
     List<Predicate> predicatesCount = new ArrayList<Predicate>();
     // Where
     if (specsMem != null) {
-      predicates.add(predicateMemoria);
-      predicatesCount.add(predicateMemoriaCount);
+      if (predicatePersonaRef != null) {
+        predicates.add(cb.or(predicateMemoria, cb.and(predicatePersonaRef,
+            cb.isTrue(root.get(PeticionEvaluacion_.activo)), specsPet.toPredicate(root, cq, cb))));
+        predicatesCount.add(cb.or(predicateMemoriaCount, cb.and(predicatePersonaRefCount,
+            cb.isTrue(rootCount.get(PeticionEvaluacion_.activo)), specsPet.toPredicate(rootCount, cq, cb))));
+      } else {
+        predicates.add(cb.or(predicateMemoria,
+            cb.and(cb.isTrue(root.get(PeticionEvaluacion_.activo)), specsPet.toPredicate(root, cq, cb))));
+        predicatesCount.add(cb.or(predicateMemoriaCount,
+            cb.and(cb.isTrue(rootCount.get(PeticionEvaluacion_.activo)), specsPet.toPredicate(rootCount, cq, cb))));
+      }
     } else {
       if (predicatePersonaRef != null) {
         predicates

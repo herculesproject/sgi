@@ -19,11 +19,12 @@ public interface CustomPeticionEvaluacionRepository {
    * usuario es creador de las peticiones de evaluación o responsable de memoria
    * 
    * @param specsMem           Specification {@link Memoria}
+   * @param specsPet           Specification {@link PeticionEvaluacion}
    * @param pageable           paginación
    * @param personaRefConsulta usuario
    * @return las entidades {@link PeticionEvaluacion} paginadas y filtradas
    */
   Page<PeticionEvaluacionWithIsEliminable> findAllPeticionEvaluacionMemoria(Specification<Memoria> specsMem,
-      Pageable pageable, String personaRefConsulta);
+      Specification<PeticionEvaluacion> specsPet, Pageable pageable, String personaRefConsulta);
 
 }
