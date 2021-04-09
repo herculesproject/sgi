@@ -105,7 +105,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
     this.translate.get(
       ACTA_CONVOCATORIA_REUNION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamConvocatoriaReunionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamConvocatoriaReunionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
       ACTA_HORA_INICIO_KEY,

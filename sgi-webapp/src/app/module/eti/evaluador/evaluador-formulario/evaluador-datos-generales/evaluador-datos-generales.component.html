@@ -4,7 +4,7 @@
   <div class="separacion" [ngClass]="{'disabled': isEditForm}">
     <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
       [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosGeneralesFragment.personaText" (usuarioSeleccionado)="
-                    datosGeneralesFragment.setPersona($event)"></sgi-buscar-persona>
+                    datosGeneralesFragment.setPersona($event)" required></sgi-buscar-persona>
   </div>
 
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -15,13 +15,13 @@
       <mat-form-field>
         <mat-label>{{'label.eti.comite' | translate}}</mat-label>
         <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
-          formControlName="comite" [matAutocomplete]="autocompleteComite">
+          formControlName="comite" [matAutocomplete]="autocompleteComite" required>
         <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
           <mat-option *ngFor="let c of filteredComites | async" [value]="c">
             {{c.comite}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.comite.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.comite.errors?.required">
           {{'error.required.entity' | translate:msgParamComiteEntity}}
         </mat-error>
       </mat-form-field>
@@ -65,7 +65,7 @@
       <mat-form-field>
         <mat-label>{{'eti.evaluador.cargo-comite' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.evaluador.cargo-comite' | translate" arial-label="Number" matInput
-          formControlName="cargoComite" [matAutocomplete]="autocompleteCargoComite">
+          formControlName="cargoComite" [matAutocomplete]="autocompleteCargoComite" required>
         <mat-autocomplete #autocompleteCargoComite="matAutocomplete" [displayWith]="getCargoComite">
           <mat-option *ngFor="let cargoComite of filteredCargosComite | async" [value]="cargoComite">
             {{cargoComite.nombre}}

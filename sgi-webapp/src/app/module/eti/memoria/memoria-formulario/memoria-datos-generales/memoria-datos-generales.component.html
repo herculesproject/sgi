@@ -21,14 +21,14 @@
       <mat-form-field>
         <mat-label>{{'label.eti.comite' | translate}}</mat-label>
         <input type="text" [placeholder]="'label.eti.comite' | translate" arial-label="Number" matInput
-          formControlName="comite" [matAutocomplete]="autocompleteComite">
+          formControlName="comite" [matAutocomplete]="autocompleteComite" required>
         <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite"
           (optionSelected)="selectComite($event.option.value)">
           <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
             {{comite.comite}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.comite.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.comite.errors?.required">
           {{'error.required.entity' | translate:msgParamComiteEntity}}
         </mat-error>
       </mat-form-field>
@@ -40,14 +40,14 @@
       <mat-form-field>
         <mat-label>{{'eti.memoria.tipo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.memoria.tipo' | translate" arial-label="Number" matInput
-          formControlName="tipoMemoria" [matAutocomplete]="autocompleteTipoMemoria">
+          formControlName="tipoMemoria" [matAutocomplete]="autocompleteTipoMemoria" required>
         <mat-autocomplete #autocompleteTipoMemoria="matAutocomplete" [displayWith]="getTipoMemoria"
           (optionSelected)="selectTipoMemoria($event.option.value)">
           <mat-option *ngFor="let tipoMemoria of filteredTipoMemorias | async" [value]="tipoMemoria">
             {{tipoMemoria.nombre}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.required">
           {{'error.required.entity' | translate:msgParamTipoMemoriaEntity}}
         </mat-error>
       </mat-form-field>

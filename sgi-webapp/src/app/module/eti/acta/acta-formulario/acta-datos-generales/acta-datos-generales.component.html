@@ -15,7 +15,7 @@
             {{convocatoria.codigo}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.convocatoriaReunion.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.convocatoriaReunion.errors?.required">
           {{'error.required.entity' | translate:msgParamConvocatoriaReunionEntity}}
         </mat-error>
       </mat-form-field>
@@ -26,8 +26,7 @@
         <mat-label>{{'eti.acta.hora-inicio' | translate}}</mat-label>
         <input matInput formControlName="horaInicio" id="horaInicio" type="number"
           placeholder="{{'eti.acta.hora-inicio' | translate}}" required [readonly]="readonly">
-        <mat-error
-          *ngIf="formGroup.controls.horaInicio.errors?.vacio || formGroup.controls.horaInicio.errors?.required">
+        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.required">
           {{'error.required.entity' | translate:msgParamHoraInicioEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.horaInicio.errors?.noValido">
@@ -44,8 +43,7 @@
         <mat-label>{{'eti.acta.minuto-inicio' | translate}}</mat-label>
         <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
           placeholder="{{'eti.acta.minuto-inicio' | translate}}" required [readonly]="readonly">
-        <mat-error
-          *ngIf="formGroup.controls.minutoInicio.errors?.vacio || formGroup.controls.minutoInicio.errors?.required">
+        <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.required">
           {{'error.required.entity' | translate:msgParamMinutoInicioEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.noValido">
@@ -62,7 +60,7 @@
         <mat-label>{{'eti.acta.hora-fin' | translate}}</mat-label>
         <input matInput formControlName="horaFin" id="horaFin" type="number"
           placeholder="{{'eti.acta.hora-fin' | translate}}" required [readonly]="readonly">
-        <mat-error *ngIf="formGroup.controls.horaFin.errors?.vacio || formGroup.controls.horaFin.errors?.required">
+        <mat-error *ngIf="formGroup.controls.horaFin.errors?.required">
           {{'error.required.entity' | translate:msgParamHoraFinEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.horaFin.errors?.noValido">
@@ -79,7 +77,7 @@
         <mat-label>{{'eti.acta.minuto-fin' | translate}}</mat-label>
         <input matInput formControlName="minutoFin" id="minutoFin" type="number"
           placeholder="{{'eti.acta.minuto-fin' | translate}}" required [readonly]="readonly">
-        <mat-error *ngIf="formGroup.controls.minutoFin.errors?.vacio || formGroup.controls.minutoFin.errors?.required">
+        <mat-error *ngIf="formGroup.controls.minutoFin.errors?.required">
           {{'error.required.entity' | translate:msgParamMinutoFinEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.minutoFin.errors?.noValido">

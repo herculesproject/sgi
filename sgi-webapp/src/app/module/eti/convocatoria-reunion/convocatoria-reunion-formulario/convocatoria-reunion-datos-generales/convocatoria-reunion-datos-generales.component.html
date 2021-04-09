@@ -29,7 +29,7 @@
             {{comite.comite}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.comite.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.comite.errors?.required">
           {{'error.required.entity' | translate:msgParamComiteEntity}}
         </mat-error>
       </mat-form-field>
@@ -89,7 +89,7 @@
             {{tipoConvocatoriaReunion.nombre}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.tipoConvocatoriaReunion.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.tipoConvocatoriaReunion.errors?.required">
           {{'error.required.entity' | translate:msgParamTipoEntity}}
         </mat-error>
       </mat-form-field>
@@ -102,7 +102,7 @@
         <mat-label>{{'eti.convocatoria-reunion.hora-inicio' | translate}}</mat-label>
         <input matInput formControlName="horaInicio" id="horaInicio" type="number"
           placeholder="{{'eti.convocatoria-reunion.hora-inicio' | translate}}" required>
-        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.required">
           {{'error.required.entity' | translate:msgParamHoraInicioEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.horaInicio.errors?.noValido">
@@ -118,7 +118,7 @@
         <mat-label>{{'eti.convocatoria-reunion.minuto-inicio' | translate}}</mat-label>
         <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
           placeholder="{{'eti.convocatoria-reunion.minuto-inicio' | translate}}" required>
-        <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.required">
           {{'error.required.entity' | translate:msgParamMinutoInicioEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.noValido">
@@ -151,6 +151,9 @@
             {{convocante?.persona?.segundoApellido}}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="formGroup.controls.convocantes.errors?.required">
+          {{'error.required.entity' | translate:msgParamConvocantesEntity}}
+        </mat-error>
       </mat-form-field>
     </div>
 

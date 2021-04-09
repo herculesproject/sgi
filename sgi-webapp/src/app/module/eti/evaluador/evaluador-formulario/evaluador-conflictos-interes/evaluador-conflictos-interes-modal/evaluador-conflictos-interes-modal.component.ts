@@ -84,7 +84,7 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
    * Comprueba el formulario y envia el conflicto de interés resultante
    */
   addConflicto() {
-    if (FormGroupUtil.valid(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup) && this.nuevaPersonaConflicto?.personaRef) {
       this.closeModal(this.getDatosForm());
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM);
@@ -97,7 +97,9 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
    */
   public onSelectPersona(personaSeleccionada: IPersona): void {
     this.nuevaPersonaConflicto = personaSeleccionada;
-    this.formGroup.controls.identificador.setValue(`${personaSeleccionada.identificadorNumero}${personaSeleccionada.identificadorLetra}`);
+    if (personaSeleccionada) {
+      this.formGroup.controls.identificador.setValue(`${personaSeleccionada.identificadorNumero}${personaSeleccionada.identificadorLetra}`);
+    }
   }
 
   /**

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
+import { TranslateService } from '@ngx-translate/core';
 import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
 
 const TEXT_USER_TITLE = marker('title.eti.search.user');
@@ -17,6 +19,8 @@ export class BuscarPersonaComponent implements OnChanges {
   datosUsuario: string;
   private persona: IPersona;
 
+  msgParamPersonaEntity = {};
+
   @Input() required = false;
   @Input() disabled = false;
   @Input() textoLabel = TEXT_USER_TITLE;
@@ -27,8 +31,19 @@ export class BuscarPersonaComponent implements OnChanges {
   @Output()
   usuarioSeleccionado: EventEmitter<IPersona> = new EventEmitter();
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private readonly translate: TranslateService) {
     this.datosUsuario = this.datosUsuarioTexto;
+  }
+
+  ngOnInit() {
+    this.setupI18N();
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      this.textoLabel,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   ngOnChanges(changes: SimpleChanges) {

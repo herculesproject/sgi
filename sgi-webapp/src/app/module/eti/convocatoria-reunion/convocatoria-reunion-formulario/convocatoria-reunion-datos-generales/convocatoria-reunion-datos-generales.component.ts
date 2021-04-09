@@ -33,6 +33,7 @@ const CONVOCATORIA_HORA_INICIO_KEY = marker('eti.convocatoria-reunion.hora-inici
 const CONVOCATORIA_MINUTO_INICIO_KEY = marker('eti.convocatoria-reunion.minuto-inicio');
 const CONVOCATORIA_LUGAR_KEY = marker('eti.convocatoria-reunion.lugar');
 const CONVOCATORIA_ORDEN_DIA_KEY = marker('eti.convocatoria-reunion.orden-dia');
+const CONVOCATORIA_CONVOCANTES_KEY = marker('eti.convocatoria-reunion.convocantes');
 @Component({
   selector: 'sgi-convocatoria-reunion-datos-generales',
   templateUrl: './convocatoria-reunion-datos-generales.component.html',
@@ -62,6 +63,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   msgParamMinutoInicioEntity = {};
   msgParamLugarEntity = {};
   msgParamOrdenDiaEntity = {};
+  msgParamConvocantesEntity = {};
 
   constructor(
     private readonly logger: NGXLogger,
@@ -131,7 +133,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     this.translate.get(
       CONVOCATORIA_TIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
       CONVOCATORIA_HORA_INICIO_KEY,
@@ -152,6 +154,11 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
       CONVOCATORIA_LUGAR_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamLugarEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      CONVOCATORIA_CONVOCANTES_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamConvocantesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   ngOnDestroy() {

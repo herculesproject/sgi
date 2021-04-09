@@ -29,8 +29,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
-        <input matInput formControlName="referenciaMemoria"
-          placeholder="{{'eti.memoria.referencia' | translate}}">
+        <input matInput formControlName="referenciaMemoria" placeholder="{{'eti.memoria.referencia' | translate}}">
       </mat-form-field>
     </div>
 
@@ -66,6 +65,9 @@
               {{dictamen.nombre}}
             </mat-option>
           </mat-autocomplete>
+          <mat-error *ngIf="formGroup.controls.dictamen.errors?.required">
+            {{'error.required.entity' | translate:msgParamDictamenEntity}}
+          </mat-error>
         </mat-form-field>
         <div fxLayoutAlign="center center">
           <button mat-icon-button

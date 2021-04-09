@@ -29,6 +29,12 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
 const BTN_ADD = marker('btn.add');
 const BTN_OK = marker('btn.ok');
+const TAREA_EQUIPO_TRABAJO_KEY = marker('eti.peticion-evaluacion.tarea.persona');
+const TAREA_MEMORIA_KEY = marker('eti.memoria');
+const TAREA_FORMACION_ESPECIFICA_KEY = marker('eti.peticion-evaluacion.tarea.formacion-especifica');
+const TAREA_ANIO_KEY = marker('eti.peticion-evaluacion.tarea.anio');
+const TAREA_ORGANISMO_KEY = marker('eti.peticion-evaluacion.tarea.organismo');
+
 @Component({
   selector: 'sgi-peticion-evaluacion-tareas-modal',
   templateUrl: './peticion-evaluacion-tareas-modal.component.html',
@@ -74,6 +80,13 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
 
   title: string;
   textoAceptar: string;
+
+  msgParamEquipoTrabajoEntity = {};
+  msgParamMemoriaEntity = {};
+  msgParamTareaEntity = {};
+  msgParamFormacionEntity = {};
+  msgParamAnioEntity = {};
+  msgParamOrganismoEntity = {};
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -145,6 +158,36 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
       ).subscribe((value) => this.textoAceptar = value);
 
     }
+
+    this.translate.get(
+      TAREA_EQUIPO_TRABAJO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEquipoTrabajoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      TAREA_MEMORIA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMemoriaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      TAREA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTareaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      TAREA_FORMACION_ESPECIFICA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFormacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      TAREA_ANIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAnioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      TAREA_ORGANISMO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamOrganismoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   /**
