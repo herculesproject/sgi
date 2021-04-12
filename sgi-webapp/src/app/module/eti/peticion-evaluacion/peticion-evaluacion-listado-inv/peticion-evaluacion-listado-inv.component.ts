@@ -7,7 +7,7 @@ import { AbstractTablePaginationComponent } from '@core/component/abstract-table
 import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacionWithIsEliminable } from '@core/models/eti/peticion-evaluacion-with-is-eliminable';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -31,7 +31,7 @@ const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion');
   templateUrl: './peticion-evaluacion-listado-inv.component.html',
   styleUrls: ['./peticion-evaluacion-listado-inv.component.scss']
 })
-export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginationComponent<IPeticionEvaluacion> implements OnInit {
+export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginationComponent<IPeticionEvaluacionWithIsEliminable> implements OnInit {
 
 
   ROUTE_NAMES = ROUTE_NAMES;
@@ -48,7 +48,7 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  peticionesEvaluacion$: Observable<IPeticionEvaluacion[]> = of();
+  peticionesEvaluacion$: Observable<IPeticionEvaluacionWithIsEliminable[]> = of();
   memorias$: Observable<IMemoria[]> = of();
 
   comiteListado: IComite[];
@@ -132,7 +132,7 @@ export class PeticionEvaluacionListadoInvComponent extends AbstractTablePaginati
     ).subscribe((value) => this.textoDeleteSuccess = value);
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacion>> {
+  protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacionWithIsEliminable>> {
     const observable$ = this.peticionesEvaluacionService.findAllPeticionEvaluacionMemoria(this.getFindOptions());
     return observable$;
   }

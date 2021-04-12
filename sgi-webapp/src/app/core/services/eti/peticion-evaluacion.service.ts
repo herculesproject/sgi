@@ -165,11 +165,11 @@ export class PeticionEvaluacionService extends SgiMutableRestService<number, IPe
    * @return las peticiones de evaluación
    */
   findAllPeticionEvaluacionMemoria(options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<IPeticionEvaluacion>> {
-    return this.find<IPeticionEvaluacionBackend, IPeticionEvaluacion>(
+    Observable<SgiRestListResult<IPeticionEvaluacionWithIsEliminable>> {
+    return this.find<IPeticionEvaluacionWithIsEliminableBackend, IPeticionEvaluacionWithIsEliminable>(
       `${this.endpointUrl}/memorias`,
       options,
-      PETICION_EVALUACION_CONVERTER
+      PETICION_EVALUACION_WITH_IS_ELIMINABLE_CONVERTER
     );
   }
 }
