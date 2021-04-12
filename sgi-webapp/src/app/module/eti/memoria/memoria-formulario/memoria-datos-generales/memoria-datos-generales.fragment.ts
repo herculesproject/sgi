@@ -93,7 +93,9 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       this.memoria.comite = form.comite;
       this.memoria.tipoMemoria = form.tipoMemoria;
     }
-    this.memoria.titulo = form.titulo;
+    if (this.showTitulo && form.titulo) {
+      this.memoria.titulo = form.titulo;
+    }
     if (!this.memoria.responsable) {
       this.memoria.responsable = {
       } as IPersona;

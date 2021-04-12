@@ -16,7 +16,7 @@
             arial-label="Number" matInput formControlName="memoria" [matAutocomplete]="autocompleteMemoria" required>
           <mat-autocomplete #autocompleteMemoria="matAutocomplete" [displayWith]="getMemoria">
             <mat-option *ngFor="let memoria of filteredMemorias | async" [value]="memoria">
-              {{memoria.numReferencia}} - {{memoria.titulo}}
+              {{memoria.numReferencia}}{{(memoria.titulo ? ' - ' + memoria.titulo : '')}}
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.memoria.errors?.required">

@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogData } from '@block/dialog/dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { IMemoria } from '@core/models/eti/memoria';
@@ -18,7 +17,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { StringValidator } from '@core/validators/string-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
@@ -33,6 +31,7 @@ const MEMORIA_EVALUADOR1_KEY = marker('eti.convocatoria-reunion.memoria.evaludad
 const MEMORIA_EVALUADOR2_KEY = marker('eti.convocatoria-reunion.memoria.evaludador-2');
 const MEMORIA_KEY = marker('eti.memoria');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias-modal',
   templateUrl: './convocatoria-reunion-asignacion-memorias-modal.component.html',
@@ -445,7 +444,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * @returns referencia y titulo memoria
    */
   getMemoria(memoria: IMemoria): string {
-    return memoria ? (memoria.numReferencia + ' - ' + memoria.titulo) : '';
+    return memoria.numReferencia + (memoria.titulo ? ' - ' + memoria.titulo : '');
   }
 
   getDatosForm(): IEvaluacion {
@@ -477,5 +476,4 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   onCancel(): void {
     this.dialogRef.close();
   }
-
 }
