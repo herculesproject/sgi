@@ -29,7 +29,6 @@ const CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.convocatoria
 const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_MES_FIN_KEY = marker('csp.convocatoria-seguimiento-cientifico.mes-final');
 const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_MES_INICIO_KEY = marker('csp.convocatoria-seguimiento-cientifico.mes-inicial');
 const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_NUMERO_PERIODO_KEY = marker('csp.convocatoria-seguimiento-cientifico.numero-periodo');
-const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY = marker('csp.convocatoria-seguimiento-cientifico.observaciones');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -100,9 +99,9 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     ).subscribe((value) => this.msgParamMesFinEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
-      CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY,
-      MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamMesInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+      CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_MES_INICIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMesInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.data.convocatoriaSeguimientoCientifico?.numPeriodo) {
       this.translate.get(
