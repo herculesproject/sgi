@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 const MSG_ERROR_FORM = marker('error.form-group');
 const CONFLICTO_INTERES_KEY = marker('eti.evaluador.conflicto-interes');
 const MSG_ERROR_CONFLICTO_REPETIDO = marker('error.eti.evaluador.conflicto-interes.duplicate');
+const EVALUADOR_PERSONA_KEY = marker('title.eti.search.user');
 
 @Component({
   selector: 'sgi-evaluador-conflictos-interes-modal',
@@ -27,10 +28,11 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
 
-  conflictoInteresSuscripcion: Subscription;
+  personaChangeSuscripcion: Subscription;
 
   nuevaPersonaConflicto: IPersona;
   msgParamConflictoInteresEntity = {};
+  msgParamPersonaEntity = {};
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public conflictos: IConflictoInteres[],
@@ -51,14 +53,26 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
       CONFLICTO_INTERES_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamConflictoInteresEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      EVALUADOR_PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
   /**
    * Inicializa el formGroup
    */
   private initFormGroup() {
     this.formGroup = new FormGroup({
-      identificador: new FormControl({ value: '', disabled: true }, [Validators.required])
+      persona: new FormControl(null, [Validators.required]),
+      identificador: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
+
+    this.personaChangeSuscripcion =
+      this.formGroup.controls.persona.valueChanges.subscribe((value) => {
+        this.formGroup.controls.identificador.setValue(
+          `${value.identificadorNumero}${value.identificadorLetra}`);
+      });
   }
 
   /**
@@ -84,21 +98,10 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
    * Comprueba el formulario y envia el conflicto de interés resultante
    */
   addConflicto() {
-    if (FormGroupUtil.valid(this.formGroup) && this.nuevaPersonaConflicto?.personaRef) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.closeModal(this.getDatosForm());
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM);
-    }
-  }
-
-  /**
-   * Setea el persona seleccionado a través del componente
-   * @param persona persona seleccionada
-   */
-  public onSelectPersona(personaSeleccionada: IPersona): void {
-    this.nuevaPersonaConflicto = personaSeleccionada;
-    if (personaSeleccionada) {
-      this.formGroup.controls.identificador.setValue(`${personaSeleccionada.identificadorNumero}${personaSeleccionada.identificadorLetra}`);
     }
   }
 
@@ -119,13 +122,13 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
     const conflictoInteres: IConflictoInteres = {
       evaluador: evaluadorObj,
       id: null,
-      personaConflicto: this.nuevaPersonaConflicto,
+      personaConflicto: this.formGroup.controls.persona.value
     };
     return conflictoInteres;
   }
 
   ngOnDestroy(): void {
-    this.conflictoInteresSuscripcion?.unsubscribe();
+    this.personaChangeSuscripcion?.unsubscribe();
   }
 
 }

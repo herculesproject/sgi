@@ -9,7 +9,6 @@ import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
-import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -20,15 +19,12 @@ import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
-const TEXT_USER_TITLE = marker('eti.solicitante');
-const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
 const MSG_ESTADO_ANTERIOR_OK = marker('msg.eti.memoria.estado-anterior.success');
 const MSG_ESTADO_ANTERIOR_ERROR = marker('error.eti.memoria.estado-anterior');
 const MSG_RECUPERAR_ESTADO = marker('msg.eti.memoria.estado-anterior');
@@ -53,8 +49,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(BuscarPersonaComponent, { static: false }) private buscarPersona: BuscarPersonaComponent;
-
 
   memorias$: Observable<IMemoriaPeticionEvaluacion[]>;
 
@@ -63,11 +57,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   estadoMemoriaListado: TipoEstadoMemoria[];
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
-
-
-  textoUsuarioLabel = TEXT_USER_TITLE;
-  textoUsuarioInput = TEXT_USER_TITLE;
-  textoUsuarioButton = TEXT_USER_BUTTON;
 
   constructor(
     protected readonly snackBarService: SnackBarService,
@@ -142,7 +131,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
       .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.numReferencia.value)
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
-      .and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value);
+      .and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
   }
 
   protected loadTable(reset?: boolean) {
@@ -242,14 +231,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   }
 
   /**
-   * Setea el persona seleccionado a través del componente
-   * @param solicitante persona seleccionada
-   */
-  public setUsuario(solicitante: IPersona) {
-    this.formGroup.controls.solicitante.setValue(solicitante?.personaRef);
-  }
-
-  /**
    * Se recupera el estado anterior de la memoria
    * @param memoria la memoria a reestablecer el estado
    */
@@ -285,13 +266,4 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
     this.suscripciones.push(dialogServiceSubscription);
   }
-
-  /**
-   * Clean filters an reload the table
-   */
-  onClearFilters(): void {
-    super.onClearFilters();
-    this.buscarPersona.clear();
-  }
-
 }

@@ -9,7 +9,6 @@ import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
-import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -27,8 +26,6 @@ import { MEMORIAS_ROUTE } from '../memoria-route-names';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
-const TEXT_USER_TITLE = marker('eti.solicitante');
-const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
 const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('msg.eti.memoria.enviar-secretaria.success');
 const MSG_ERROR_ENVIAR_SECRETARIA = marker('error.eti.memoria.enviar-secretaria');
 const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('msg.eti.memoria.enviar-secretaria');
@@ -70,11 +67,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
   estadoMemoriaListado: TipoEstadoMemoria[];
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
-  textoUsuarioLabel = TEXT_USER_TITLE;
-  textoUsuarioInput = TEXT_USER_TITLE;
-  textoUsuarioButton = TEXT_USER_BUTTON;
-  personaRef: string;
-  datosSolicitante: string;
   textoDelete: string;
   textoDeleteSuccess: string;
   textoDeleteError: string;
@@ -187,7 +179,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.numReferencia.value)
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
-      .and('personaRef', SgiRestFilterOperator.EQUALS, this.personaRef);
+      .and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
   }
 
   protected loadTable(reset?: boolean) {
@@ -286,19 +278,6 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       (estadoMemoria => estadoMemoria.nombre.toLowerCase().includes(filterValue));
   }
 
-  /**
-   * Setea el persona seleccionado a través del componente
-   * @param personaRef referencia del persona seleccionado
-   */
-  public setUsuario(solicitante: IPersona) {
-    this.formGroup.controls.solicitante.setValue(solicitante?.personaRef);
-    this.datosSolicitante = solicitante?.nombre
-      ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido
-      : ''
-      ;
-    this.personaRef = solicitante?.personaRef;
-  }
-
   hasPermisoEnviarSecretaria(estadoMemoriaId: number, responsable: boolean): boolean {
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
     // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
@@ -390,13 +369,4 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
         }
       );
   }
-
-  /**
-   * Clean filters an reload the table
-   */
-  onClearFilters(): void {
-    super.onClearFilters();
-    this.setUsuario({} as IPersona);
-  }
-
 }

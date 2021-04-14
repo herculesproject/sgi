@@ -1,14 +1,23 @@
 <!-- Evaluador datos generales -->
 <section class="evaluador-datos-generales">
   <h2>{{'label.datos-generales' | translate}}</h2>
-  <div class="separacion" [ngClass]="{'disabled': isEditForm}">
-    <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
-      [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosGeneralesFragment.personaText" (usuarioSeleccionado)="
-                    datosGeneralesFragment.setPersona($event)" required></sgi-buscar-persona>
-  </div>
 
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+    <!--Persona-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order" [ngClass]="{'disabled': isEditForm}">
+      <mat-form-field fxFill>
+        <mat-label>{{'title.eti.search.user' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'title.eti.search.user' | translate}}" formControlName="persona" required>
+        </sgi-select-persona>
+        <mat-error *ngIf="formGroup.controls.persona.errors?.required">
+          {{'error.required.entity' | translate:msgParamPersonaEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <!-- Comité -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">

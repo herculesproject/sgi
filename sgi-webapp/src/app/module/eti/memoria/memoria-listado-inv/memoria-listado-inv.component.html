@@ -39,11 +39,14 @@
           </mat-form-field>
         </div>
 
-        <!--Solicitante-->
+        <!--Persona-->
         <div class="col">
-          <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
-            [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosSolicitante" (usuarioSeleccionado)="
-                                              setUsuario($event)"></sgi-buscar-persona>
+          <mat-form-field fxFill>
+            <mat-label>{{'title.eti.search.solicitante' | translate}}</mat-label>
+            <sgi-select-persona placeholder="{{'title.eti.search.solicitante' | translate}}"
+              formControlName="solicitante">
+            </sgi-select-persona>
+          </mat-form-field>
         </div>
 
         <!-- Estado Memoria -->
@@ -66,8 +69,8 @@
           <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
             <mat-icon>search</mat-icon> {{'btn.search'| translate}}
           </button>
-          <button color="warn" aria-label="Center Align" (click)="onClearFilters()"
-            mat-button>{{'btn.clean'| translate}}
+          <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+            translate}}
           </button>
         </div>
       </div>

@@ -18,14 +18,14 @@ import { map, startWith } from 'rxjs/operators';
 import { EvaluadorActionService } from '../../evaluador.action.service';
 import { EvaluadorDatosGeneralesFragment } from './evaluador-datos-generales.fragment';
 
-const TEXT_USER_BUTTON = marker('btn.eti.search.user');
-const TEXT_USER_TITLE = marker('title.eti.search.user');
 const MSG_ERROR_INIT_ = marker('error.load');
 const EVALUDADOR_COMITE_KEY = marker('label.eti.comite');
 const EVALUADOR_FECHA_ALTA_KEY = marker('eti.evaluador.fecha-alta');
 const EVALUADOR_FECHA_BAJA_KEY = marker('eti.evaluador.fecha-baja');
 const EVALUADOR_CARGO_COMITE_KEY = marker('eti.evaluador.cargo-comite');
 const EVALUADOR_RESUMEN_KEY = marker('eti.evaluador.resumen');
+const EVALUADOR_PERSONA_KEY = marker('title.eti.search.user');
+
 @Component({
   selector: 'sgi-evaluador-datos-generales',
   templateUrl: './evaluador-datos-generales.component.html',
@@ -42,15 +42,12 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
   filteredComites: Observable<IComite[]>;
   filteredCargosComite: Observable<CargoComite[]>;
 
-  textoUsuarioLabel = TEXT_USER_TITLE;
-  textoUsuarioInput = TEXT_USER_TITLE;
-  textoUsuarioButton = TEXT_USER_BUTTON;
-  datosUsuarioEvaluadorEditado: string;
   msgParamComiteEntity = {};
   msgParamFechaAltaEntity = {};
   msgParamFechaBajaEntity = {};
   msgParamCargoComiteEntity = {};
   msgParamResumenEntity = {};
+  msgParamPersonaEntity = {};
 
   datosGeneralesFragment: EvaluadorDatosGeneralesFragment;
 
@@ -119,6 +116,11 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
       EVALUADOR_RESUMEN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamResumenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      EVALUADOR_PERSONA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   cargarSelectorComites() {

@@ -1,11 +1,11 @@
 import { Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
-
 import { MatDialog } from '@angular/material/dialog';
-import { IPersona } from '@core/models/sgp/persona';
-import { BuscarPersonaDialogoComponent } from '@shared/buscar-persona/dialogo/buscar-persona-dialogo.component';
+import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { SelectDialogComponent } from '@core/component/select-dialog/select-dialog.component';
+import { IPersona } from '@core/models/sgp/persona';
+import { SearchPersonaModalComponent } from './dialog/search-persona.component';
+
 
 @Component({
   selector: 'sgi-select-persona',
@@ -41,7 +41,7 @@ import { SelectDialogComponent } from '@core/component/select-dialog/select-dial
     }
   ],
 })
-export class SelectPersonaComponent extends SelectDialogComponent<BuscarPersonaDialogoComponent, IPersona> {
+export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaModalComponent, IPersona> {
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -51,7 +51,7 @@ export class SelectPersonaComponent extends SelectDialogComponent<BuscarPersonaD
     @Attribute('tabindex') tabIndex: string,
     dialog: MatDialog) {
 
-    super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, BuscarPersonaDialogoComponent);
+    super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, SearchPersonaModalComponent);
   }
 
   get displayValue(): string {

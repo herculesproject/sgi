@@ -10,8 +10,6 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
 import { ActionFragmentMenuGroupComponent } from './action-fragment-menu-group/action-fragment-menu-group.component';
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
-import { BuscarPersonaComponent } from './buscar-persona/buscar-persona.component';
-import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-persona-dialogo.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
 import { LuxonDatePipe } from './luxon-date-pipe';
@@ -20,8 +18,8 @@ import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/s
 import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
 import { SearchEmpresaEconomicaModalComponent } from './select-empresa-economica/dialog/search-empresa-economica.component';
 import { SelectEmpresaEconomicaComponent } from './select-empresa-economica/select-empresa-economica.component';
+import { SearchPersonaModalComponent } from './select-persona/dialog/search-persona.component';
 import { SelectPersonaComponent } from './select-persona/select-persona.component';
-
 
 @NgModule({
   declarations: [
@@ -30,8 +28,7 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
     ActionFooterComponent,
     ActionFooterButtonComponent,
     RootComponent,
-    BuscarPersonaComponent,
-    BuscarPersonaDialogoComponent,
+    SearchPersonaModalComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,
@@ -57,7 +54,6 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
     ActionFooterComponent,
     ActionFooterButtonComponent,
     RootComponent,
-    BuscarPersonaComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,

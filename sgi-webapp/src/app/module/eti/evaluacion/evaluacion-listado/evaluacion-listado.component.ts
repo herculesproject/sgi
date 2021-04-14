@@ -8,7 +8,6 @@ import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
-import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -24,8 +23,6 @@ import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('error.load');
-const TEXT_USER_TITLE = marker('title.eti.search.solicitante');
-const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
 
 @Component({
   selector: 'sgi-evaluacion-listado',
@@ -54,12 +51,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
   buscadorFormGrou: FormGroup;
 
-  textoUsuarioLabel = TEXT_USER_TITLE;
-  textoUsuarioInput = TEXT_USER_TITLE;
-  textoUsuarioButton = TEXT_USER_BUTTON;
-  datosUsuarioSolicitante: string;
-  personaRefSolicitante: string;
-
   constructor(
     private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
@@ -68,7 +59,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService
-
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -87,7 +77,6 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     this.fxLayoutProperties.xs = 'column';
 
     this.suscripciones = [];
-
   }
 
   ngOnInit(): void {
@@ -129,7 +118,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
         'convocatoriaReunion.tipoConvocatoriaReunion.id',
         SgiRestFilterOperator.EQUALS,
         controls.tipoConvocatoriaReunion.value?.id?.toString()
-      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, this.personaRefSolicitante);
+      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
 
     return filter;
   }
@@ -288,21 +277,10 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   /**
-   * Setea el persona seleccionado a través del componente
-   * @param persona Persona seleccionada
-   */
-  public setPersona(persona: IPersona) {
-    this.formGroup.controls.solicitante.setValue(persona.personaRef);
-    this.datosUsuarioSolicitante = persona.nombre ? persona.nombre + ' ' + persona.primerApellido + ' ' + persona.segundoApellido : '';
-    this.personaRefSolicitante = persona.personaRef;
-  }
-
-  /**
    * Clean filters an reload the table
    */
   onClearFilters(): void {
     super.onClearFilters();
-    this.setPersona({} as IPersona);
     this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
     this.formGroup.controls.fechaEvaluacionFin.setValue(null);
   }

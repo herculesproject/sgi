@@ -39,11 +39,14 @@
           </mat-form-field>
         </div>
 
-        <!--Solicitante-->
+        <!--Persona-->
         <div class="col">
-          <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
-            [textoButton]="textoUsuarioButton" (usuarioSeleccionado)="
-                                              setUsuario($event)"></sgi-buscar-persona>
+          <mat-form-field fxFill>
+            <mat-label>{{'title.eti.search.solicitante' | translate}}</mat-label>
+            <sgi-select-persona placeholder="{{'title.eti.search.solicitante' | translate}}"
+              formControlName="solicitante">
+            </sgi-select-persona>
+          </mat-form-field>
         </div>
 
         <!-- Estado Memoria -->

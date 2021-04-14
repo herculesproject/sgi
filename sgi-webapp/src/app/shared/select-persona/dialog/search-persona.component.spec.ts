@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
@@ -9,12 +9,11 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SearchPersonaModalComponent } from './search-persona.component';
 
-import { BuscarPersonaDialogoComponent } from './buscar-persona-dialogo.component';
-
-describe('BuscarPersonaDialogoComponent', () => {
-  let component: BuscarPersonaDialogoComponent;
-  let fixture: ComponentFixture<BuscarPersonaDialogoComponent>;
+describe('SearchPersonaModalComponent', () => {
+  let component: SearchPersonaModalComponent;
+  let fixture: ComponentFixture<SearchPersonaModalComponent>;
 
   beforeEach(waitForAsync(() => {
     const mockDialogRef = {
@@ -43,12 +42,12 @@ describe('BuscarPersonaDialogoComponent', () => {
         },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
       ],
-      declarations: [BuscarPersonaDialogoComponent, HeaderComponent],
+      declarations: [SearchPersonaModalComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BuscarPersonaDialogoComponent);
+    fixture = TestBed.createComponent(SearchPersonaModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

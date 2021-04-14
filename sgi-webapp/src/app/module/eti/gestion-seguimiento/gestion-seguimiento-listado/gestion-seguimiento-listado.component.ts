@@ -8,7 +8,6 @@ import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
-import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -23,9 +22,8 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-const TEXT_USER_TITLE = marker('title.eti.search.solicitante');
-const TEXT_USER_BUTTON = marker('btn.eti.search.solicitante');
 const MSG_ERROR = marker('error.load');
+
 @Component({
   selector: 'sgi-gestion-seguimiento-listado',
   templateUrl: './gestion-seguimiento-listado.component.html',
@@ -42,12 +40,6 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   evaluaciones$: Observable<IEvaluacion[]> = of();
-
-  textoUsuarioLabel = TEXT_USER_TITLE;
-  textoUsuarioInput = TEXT_USER_TITLE;
-  textoUsuarioButton = TEXT_USER_BUTTON;
-  datosUsuarioSolicitante: string;
-  personaRefSolicitante: string;
 
   private comiteListado: IComite[];
   private tipoEvaluacionListado: TipoEvaluacion[];
@@ -124,7 +116,7 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
         'convocatoriaReunion.tipoConvocatoriaReunion.id',
         SgiRestFilterOperator.EQUALS,
         controls.tipoConvocatoriaReunion.value?.id?.toString()
-      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, this.personaRefSolicitante);
+      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
 
     return filter;
   }
@@ -303,21 +295,10 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
   }
 
   /**
-   * Setea el persona seleccionado a través del componente
-   * @param persona Persona seleccionada
-   */
-  public setPersona(persona: IPersona) {
-    this.formGroup.controls.solicitante.setValue(persona.personaRef);
-    this.datosUsuarioSolicitante = persona.nombre ? persona.nombre + ' ' + persona.primerApellido + ' ' + persona.segundoApellido : '';
-    this.personaRefSolicitante = persona?.personaRef;
-  }
-
-  /**
    * Clean filters an reload the table
    */
   onClearFilters(): void {
     super.onClearFilters();
-    this.setPersona({} as IPersona);
     this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
     this.formGroup.controls.fechaEvaluacionFin.setValue(null);
   }

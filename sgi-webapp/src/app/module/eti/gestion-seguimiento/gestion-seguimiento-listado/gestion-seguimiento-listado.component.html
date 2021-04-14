@@ -4,19 +4,22 @@
     <div class="formulario  mat-elevation-z8">
 
       <!-- Buscador de Gestión de Evaluaciones -->
-
-      <!--Persona-->
-      <div class="buscador">
-        <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
-          [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosUsuarioSolicitante" (usuarioSeleccionado)="
-                                        setPersona($event)"></sgi-buscar-persona>
-      </div>
-
       <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
         <div fxFlex="85%" fxFlex.sm="50%" fxFlex.md="73%" [fxLayout.xs]="fxLayoutProperties.xs"
           [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+          <!--Persona-->
+          <div class="col">
+            <mat-form-field fxFill>
+              <mat-label>{{'title.eti.search.solicitante' | translate}}</mat-label>
+              <sgi-select-persona placeholder="{{'title.eti.search.solicitante' | translate}}"
+                formControlName="solicitante">
+              </sgi-select-persona>
+            </mat-form-field>
+          </div>
+
           <!-- Comité -->
           <div class="col">
             <mat-form-field class="input-form">

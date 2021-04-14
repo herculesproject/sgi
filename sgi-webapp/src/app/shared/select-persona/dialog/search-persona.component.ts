@@ -16,10 +16,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 const MSG_LISTADO_ERROR = marker('error.load');
 
 @Component({
-  templateUrl: './buscar-persona-dialogo.component.html',
-  styleUrls: ['./buscar-persona-dialogo.component.scss']
+  templateUrl: './search-persona.component.html',
+  styleUrls: ['./search-persona.component.scss']
 })
-export class BuscarPersonaDialogoComponent implements AfterViewInit {
+export class SearchPersonaModalComponent implements AfterViewInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -35,7 +35,7 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
 
   constructor(
     private readonly logger: NGXLogger,
-    public dialogRef: MatDialogRef<BuscarPersonaDialogoComponent>,
+    public dialogRef: MatDialogRef<SearchPersonaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IPersona,
     private personaFisicaService: PersonaFisicaService,
     private snackBarService: SnackBarService) {

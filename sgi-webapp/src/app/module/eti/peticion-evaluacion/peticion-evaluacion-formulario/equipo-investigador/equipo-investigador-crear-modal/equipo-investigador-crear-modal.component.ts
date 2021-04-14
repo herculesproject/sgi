@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -7,16 +7,20 @@ import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 const PERSONA_KEY = marker('eti.peticion-evaluacion.equipo-investigador.persona');
+const MSG_ERROR_FORM = marker('error.form-group');
+
 @Component({
   selector: 'sgi-equipo-investigador-crear-modal',
   templateUrl: './equipo-investigador-crear-modal.component.html',
   styleUrls: ['./equipo-investigador-crear-modal.component.scss']
 })
-export class EquipoInvestigadorCrearModalComponent implements OnInit {
+export class EquipoInvestigadorCrearModalComponent implements OnInit, OnDestroy {
 
   FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
@@ -24,13 +28,14 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  nuevaPersonaEquipo: IPersona;
-
   msgParamEntity = {};
+
+  subscriptionPersonaChange: Subscription;
 
   constructor(
     public readonly matDialogRef: MatDialogRef<EquipoInvestigadorCrearModalComponent>,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly snackBarService: SnackBarService,
   ) { }
 
   ngOnInit(): void {
@@ -64,20 +69,22 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
     const equipoTrabajo: IEquipoTrabajo = {
       id: null,
       peticionEvaluacion: null,
-      persona: this.nuevaPersonaEquipo
+      persona: this.formGroup.controls.persona.value
     };
-
-    this.matDialogRef.close(equipoTrabajo);
+    if (FormGroupUtil.valid(this.formGroup)) {
+      this.matDialogRef.close(equipoTrabajo);
+    } else {
+      this.snackBarService.showError(MSG_ERROR_FORM);
+    }
   }
 
   /**
    * Setea el persona seleccionado a través del componente
    * @param persona persona seleccionada
    */
-  public onSelectPersona(personaSeleccionada: IPersona): void {
+  private onSelectPersona(personaSeleccionada: IPersona): void {
     personaSeleccionada.vinculacion = 'PDI';
     personaSeleccionada.nivelAcademico = 'Licenciado';
-    this.nuevaPersonaEquipo = personaSeleccionada;
     this.formGroup.controls.numDocumento.setValue(`${personaSeleccionada.identificadorNumero}${personaSeleccionada.identificadorLetra}`);
     this.formGroup.controls.nombreCompleto.setValue(`${personaSeleccionada.nombre} ${personaSeleccionada.primerApellido} ${personaSeleccionada.segundoApellido}`);
     this.formGroup.controls.vinculacion.setValue(personaSeleccionada.vinculacion);
@@ -89,11 +96,20 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit {
    */
   private initFormGroup() {
     this.formGroup = new FormGroup({
-      numDocumento: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numDocumento: new FormControl({ value: '', disabled: true }),
       nombreCompleto: new FormControl({ value: '', disabled: true }),
       vinculacion: new FormControl({ value: '', disabled: true }),
-      nivelAcademico: new FormControl({ value: '', disabled: true })
+      nivelAcademico: new FormControl({ value: '', disabled: true }),
+      persona: new FormControl(null, [Validators.required])
     });
+
+    this.subscriptionPersonaChange =
+      this.formGroup.controls.persona.valueChanges.subscribe((value) => {
+        this.onSelectPersona(value);
+      });
   }
 
+  ngOnDestroy(): void {
+    this.subscriptionPersonaChange?.unsubscribe();
+  }
 }

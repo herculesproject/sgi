@@ -19,7 +19,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -27,16 +26,16 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
-const TEXT_USER_TITLE = marker('title.eti.search.user');
-const TEXT_USER_BUTTON = marker('btn.eti.search.user');
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_SUCCESS = marker('msg.delete.entity.success');
 const EVALUADOR_KEY = marker('eti.evaluador');
+
 @Component({
   selector: 'sgi-evaluador-listado',
   templateUrl: './evaluador-listado.component.html',
   styleUrls: ['./evaluador-listado.component.scss']
 })
+
 export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<IEvaluador> implements OnInit {
 
   ROUTE_NAMES = ROUTE_NAMES;
@@ -48,7 +47,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(BuscarPersonaComponent, { static: false }) private buscarPersona: BuscarPersonaComponent;
 
   evaluadores$: Observable<IEvaluador[]> = of();
 
@@ -58,9 +56,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   textoCrear: string;
   textoDelete: string;
   textoDeleteSuccess: string;
-  textoUsuarioLabel = TEXT_USER_TITLE;
-  textoUsuarioInput = TEXT_USER_TITLE;
-  textoUsuarioButton = TEXT_USER_BUTTON;
 
   personasRef: string[];
 
@@ -158,7 +153,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         .and('fechaBaja', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(DateTime.now()))
         .and('fechaAlta', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(DateTime.now().plus({ days: 1 })));
     }
-    filter.and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value);
+    filter.and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
 
     return filter;
   }
@@ -312,21 +307,4 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
       });
     this.suscripciones.push(dialogServiceSubscriptionGetSubscription);
   }
-
-  /**
-   * Setea el persona seleccionado a través del componente
-   * @param persona persona seleccionado
-   */
-  public setUsuario(persona: IPersona) {
-    this.formGroup.controls.solicitante.setValue(persona?.personaRef);
-  }
-
-  /**
-   * Clean filters an reload the table
-   */
-  onClearFilters(): void {
-    super.onClearFilters();
-    this.buscarPersona.clear();
-  }
-
 }

@@ -6,8 +6,18 @@
     <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Boton buscador personas -->
-      <sgi-buscar-persona (usuarioSeleccionado)="onSelectPersona($event)"></sgi-buscar-persona>
+      <!--Persona-->
+      <div [fxLayout]="fxLayoutProperties.layout">
+        <mat-form-field fxFill>
+          <mat-label>{{'eti.peticion-evaluacion.equipo-investigador.persona' | translate}}</mat-label>
+          <sgi-select-persona placeholder="{{'eti.peticion-evaluacion.equipo-investigador.persona' | translate}}"
+            formControlName="persona" required>
+          </sgi-select-persona>
+          <mat-error *ngIf="formGroup.controls.persona.errors?.required">
+            {{'error.required.entity' | translate:msgParamEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
 
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
@@ -47,7 +57,7 @@
 
 
 <mat-dialog-actions align="center">
-  <button color="accent" (click)="addPersonaEquipoInvestigador()" md-button mat-raised-button
-    tabindex="-1">{{'btn.add' | translate}}</button>
+  <button color="accent" (click)="addPersonaEquipoInvestigador()" md-button mat-raised-button tabindex="-1">{{'btn.add'
+    | translate}}</button>
   <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1">{{'btn.cancel' | translate}}</button>
 </mat-dialog-actions>

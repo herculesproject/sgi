@@ -30,7 +30,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
       minutoFin: ['', new MinutoValidador().isValid()],
       resumen: ['', Validators.required]
     }, {
-      validator: [DateGreatValidator('horaInicio', 'horaFin', 'minutoInicio', 'minutoFin')]
+      validators: [DateGreatValidator('horaInicio', 'horaFin', 'minutoInicio', 'minutoFin')]
     }
     );
 

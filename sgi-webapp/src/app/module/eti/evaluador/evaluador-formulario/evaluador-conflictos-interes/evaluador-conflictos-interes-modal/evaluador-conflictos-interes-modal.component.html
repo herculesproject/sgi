@@ -4,9 +4,17 @@
   </header>
   <main>
     <form [formGroup]="formGroup">
-      <!-- Boton buscador personas -->
-      <sgi-buscar-persona (usuarioSeleccionado)="onSelectPersona($event)" required></sgi-buscar-persona>
-
+      <!--Persona-->
+      <div [fxLayout]="fxLayoutProperties.layout">
+        <mat-form-field fxFill>
+          <mat-label>{{'title.eti.search.user' | translate}}</mat-label>
+          <sgi-select-persona placeholder="{{'title.eti.search.user' | translate}}" formControlName="persona" required>
+          </sgi-select-persona>
+          <mat-error *ngIf="formGroup.controls.persona.errors?.required">
+            {{'error.required.entity' | translate:msgParamPersonaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
       <div [fxLayout]="fxLayoutProperties.layout">
         <mat-form-field fxFill>
           <mat-label>{{'eti.evaluador.conflicto-interes.identificador' | translate}}
