@@ -27,7 +27,8 @@
 
     <mat-list class="enlaces-menu" *ngIf="actionService.getActionLinks().length">
       <sgi-action-fragment-link-item *ngFor="let action of actionService.getActionLinks()"
-        [title]="action.title | translate" [route]="action.routerLink"></sgi-action-fragment-link-item>
+        [title]="action.title | translate:action.titleParams" [route]="action.routerLink">
+      </sgi-action-fragment-link-item>
     </mat-list>
 
   </mat-drawer>

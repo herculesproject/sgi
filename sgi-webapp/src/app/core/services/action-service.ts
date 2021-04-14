@@ -232,6 +232,10 @@ export interface ActionLink {
    */
   title: string;
   /**
+   * Params for de title of the action link
+   */
+  titleParams?: { [key: string]: any };
+  /**
    * Router link of the action link
    */
   routerLink: string | string[];
@@ -900,6 +904,9 @@ export abstract class ActionService implements IActionService, OnDestroy {
    * @param value action link to add
    */
   protected addActionLink(value: ActionLink) {
+    if (!value.titleParams) {
+      value.titleParams = {};
+    }
     this.actionLinks.push(value);
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
@@ -94,6 +95,7 @@ export class MemoriaActionService extends ActionService {
   private addPeticionEvaluacionLink(idPeticionEvaluacion: number): void {
     this.addActionLink({
       title: MSG_PETICIONES_EVALUACION,
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
       routerLink: ['../..', PETICION_EVALUACION_ROUTE, idPeticionEvaluacion.toString()]
     });
   }
