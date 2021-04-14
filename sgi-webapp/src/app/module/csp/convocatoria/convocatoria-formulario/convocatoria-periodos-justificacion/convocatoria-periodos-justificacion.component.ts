@@ -29,7 +29,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   formPart: ConvocatoriaPeriodosJustificacionFragment;
   private subscriptions: Subscription[] = [];
 
-  displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'observaciones', 'acciones'];
+  displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'tipo', 'observaciones', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
 
   dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoJustificacion>>;
