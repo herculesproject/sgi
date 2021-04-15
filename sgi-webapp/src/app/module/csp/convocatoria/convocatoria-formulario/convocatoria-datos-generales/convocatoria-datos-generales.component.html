@@ -73,7 +73,8 @@
         <mat-error *ngIf="formGroup.controls.anio.errors?.max">
           {{ 'error.max.entity' | translate:msgParamAnioEntity }}
         </mat-error>
-        <mat-error *ngIf="formGroup.controls.anio.errors?.isPlusYear">
+        <mat-error
+          *ngIf="!formGroup.controls.anio.errors?.required && !formGroup.controls.anio.errors?.max && formGroup.controls.anio.errors?.isPlusYear">
           {{'csp.convocatoria.anio.plus-year' | translate}}
         </mat-error>
       </mat-form-field>
