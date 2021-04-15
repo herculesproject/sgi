@@ -27,7 +27,7 @@ const PROYECTO_SOCIO_EQUIPO_FECHA_FIN_KEY = marker('csp.proyecto-socio.equipo.fe
 const PROYECTO_SOCIO_EQUIPO_FECHA_INICIO_KEY = marker('csp.proyecto-socio.equipo.fecha-inicio-participacion');
 const PROYECTO_SOCIO_EQUIPO_PERSONA_KEY = marker('csp.proyecto-socio.equipo.persona');
 const PROYECTO_SOCIO_EQUIPO_ROL_PARTICIPACION_KEY = marker('csp.proyecto-socio.equipo.rol-proyecto.participacion');
-const PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+const PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoEquipoSocioModalData {
@@ -113,12 +113,12 @@ export class ProyectoSocioEquipoModalComponent extends
 
     if (this.data.isEdit) {
       this.translate.get(
-        PROYECTO_SOCIO_COLABORADOR_KEY,
+        PROYECTO_SOCIO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        PROYECTO_SOCIO_COLABORADOR_KEY,
+        PROYECTO_SOCIO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {

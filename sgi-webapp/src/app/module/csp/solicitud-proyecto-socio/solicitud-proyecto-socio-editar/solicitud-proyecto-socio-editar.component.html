@@ -6,16 +6,16 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES.EQUIPO]"
-        [title]="'csp.socios-colaboradores.equipos-socio' | translate"
+        [title]="'csp.solicitud-proyecto-socio.equipos-socio' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES.PERIODOS_PAGOS]"
         *ngIf="!actionService.solicitudProyectoCoordinadorExterno"
-        [title]="'csp.socios-colaboradores.periodos-pago' | translate"
+        [title]="'csp.solicitud-proyecto-socio.periodos-pago' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODOS_PAGOS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES.PERIODOS_JUSTIFICACION]"
-        [title]="'csp.socios-colaboradores.periodos-justificacion' | translate"
+        [title]="'csp.solicitud-proyecto-socio.periodos-justificacion' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODOS_JUSTIFICACION)">
       </sgi-action-fragment-menu-item>
     </mat-list>

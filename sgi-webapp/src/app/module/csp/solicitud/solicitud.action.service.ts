@@ -32,7 +32,7 @@ import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-for
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.fragment';
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
-import { SolicitudSociosColaboradoresFragment } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.fragment';
+import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
 
 export interface ISolicitudData {
   readonly: boolean;
@@ -50,7 +50,7 @@ export class SolicitudActionService extends ActionService {
     PROYECTO_DATOS: 'proyectoDatos',
     HITOS: 'hitos',
     EQUIPO_PROYECTO: 'equipoProyecto',
-    SOCIOS_COLABORADORES: 'sociosColaboradores',
+    SOCIOS: 'socios',
     ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras',
     DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal',
     DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades'
@@ -62,12 +62,12 @@ export class SolicitudActionService extends ActionService {
   private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
   private hitos: SolicitudHitosFragment;
   private equipoProyecto: SolicitudEquipoProyectoFragment;
-  private socioColaboradores: SolicitudSociosColaboradoresFragment;
+  private socio: SolicitudProyectoSocioFragment;
   private entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
   private desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
   private desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
 
-  readonly showSociosColaboradores$: Subject<boolean> = new BehaviorSubject(false);
+  readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   readonly showHitos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly showDesglosePresupuestoGlobal$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly showDesglosePresupuestoEntidad$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -148,7 +148,7 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoService, convocatoriaService, this.readonly);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService, this.readonly);
-    this.socioColaboradores = new SolicitudSociosColaboradoresFragment(this.data?.solicitud?.id, solicitudService,
+    this.socio = new SolicitudProyectoSocioFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoSocioService, empresaEconomicaService, this.readonly);
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.data?.solicitud?.id, solicitudService,
       solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
@@ -166,7 +166,7 @@ export class SolicitudActionService extends ActionService {
       if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
         this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
         this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
-        this.addFragment(this.FRAGMENT.SOCIOS_COLABORADORES, this.socioColaboradores);
+        this.addFragment(this.FRAGMENT.SOCIOS, this.socio);
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
@@ -198,7 +198,7 @@ export class SolicitudActionService extends ActionService {
 
         this.subscriptions.push(this.proyectoDatos.colaborativo$.subscribe(
           (value) => {
-            this.showSociosColaboradores$.next(value);
+            this.showSocios$.next(value);
           }
         ));
 
@@ -214,7 +214,7 @@ export class SolicitudActionService extends ActionService {
           this.proyectoDatos.disablePresupuestoPorEntidades(rowTableData);
         }));
 
-        this.subscriptions.push(this.socioColaboradores.proyectoSocios$.subscribe((value) => {
+        this.subscriptions.push(this.socio.proyectoSocios$.subscribe((value) => {
           const rowTableData = value.length > 0;
           this.proyectoDatos.disableSocioColaborador(rowTableData);
         }));

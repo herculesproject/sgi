@@ -14,7 +14,7 @@ import { SolicitudProyectoSocioActionService } from '../solicitud-proyecto-socio
 const MSG_BUTTON_EDIT = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.update.entity.success');
 const MSG_ERROR = marker('error.update.entity');
-const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.socio-colaborador');
+const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.solicitud-proyecto-socio');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-editar',

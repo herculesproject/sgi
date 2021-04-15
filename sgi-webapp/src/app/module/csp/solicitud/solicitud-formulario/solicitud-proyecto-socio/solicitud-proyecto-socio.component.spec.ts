@@ -14,11 +14,11 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SOLICITUD_DATA_KEY } from '../../solicitud-data.resolver';
 import { ISolicitudData, SolicitudActionService } from '../../solicitud.action.service';
-import { SolicitudSociosColaboradoresComponent } from './solicitud-socios-colaboradores.component';
+import { SolicitudProyectoSocioComponent } from './solicitud-proyecto-socio.component';
 
-describe('SolicitudSociosColaboradoresComponent', () => {
-  let component: SolicitudSociosColaboradoresComponent;
-  let fixture: ComponentFixture<SolicitudSociosColaboradoresComponent>;
+describe('SolicitudProyectoSocioComponent', () => {
+  let component: SolicitudProyectoSocioComponent;
+  let fixture: ComponentFixture<SolicitudProyectoSocioComponent>;
   const routeData: Data = {
     [SOLICITUD_DATA_KEY]: {
       solicitud: {
@@ -34,7 +34,7 @@ describe('SolicitudSociosColaboradoresComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SolicitudSociosColaboradoresComponent
+        SolicitudProyectoSocioComponent
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -58,7 +58,7 @@ describe('SolicitudSociosColaboradoresComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolicitudSociosColaboradoresComponent);
+    fixture = TestBed.createComponent(SolicitudProyectoSocioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -14,7 +14,7 @@ import { ProyectoSocioActionService } from '../proyecto-socio.action.service';
 const MSG_BUTTON_SAVE = marker('btn.save.entity');
 const MSG_SUCCESS = marker('msg.save.entity.success');
 const MSG_ERROR = marker('error.save.entity');
-const PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+const PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
 
 @Component({
   selector: 'sgi-proyecto-socio-crear',
@@ -50,7 +50,7 @@ export class ProyectoSocioCrearComponent extends ActionComponent implements OnIn
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_SOCIO_COLABORADOR_KEY,
+      PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -62,7 +62,7 @@ export class ProyectoSocioCrearComponent extends ActionComponent implements OnIn
     ).subscribe((value) => this.textoCrear = value);
 
     this.translate.get(
-      PROYECTO_SOCIO_COLABORADOR_KEY,
+      PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -74,7 +74,7 @@ export class ProyectoSocioCrearComponent extends ActionComponent implements OnIn
     ).subscribe((value) => this.textoCrearSuccess = value);
 
     this.translate.get(
-      PROYECTO_SOCIO_COLABORADOR_KEY,
+      PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {

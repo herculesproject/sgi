@@ -25,7 +25,7 @@ const MSG_ACEPTAR = marker('btn.ok');
 const PROYECTO_SOCIO_EQUIPO_KEY = marker('csp.proyecto-socio');
 const PROYECTO_SOCIO_EQUIPO_PERSONA_KEY = marker('csp.proyecto-socio.equipo.persona');
 const PROYECTO_SOCIO_EQUIPO_ROL_PROYECTO_KEY = marker('csp.proyecto-socio.equipo.rol-proyecto.participacion');
-const SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface SolicitudProyectoSocioEquipoModalData {
@@ -110,12 +110,12 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
 
     if (this.data.solicitudProyectoSocioEquipo.rolProyecto) {
       this.translate.get(
-        SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+        SOLICITUD_PROYECTO_SOCIO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        SOLICITUD_PROYECTO_SOCIO_COLABORADOR_KEY,
+        SOLICITUD_PROYECTO_SOCIO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {

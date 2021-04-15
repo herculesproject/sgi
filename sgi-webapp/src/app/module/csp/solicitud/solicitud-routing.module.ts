@@ -20,14 +20,14 @@ import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-fo
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
-import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
+import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SOLICITUD_ROUTE_NAMES } from './solicitud-route-names';
 import { SOLICITUD_ROUTE_PARAMS } from './solicitud-route-params';
 
 const SOLICITUD_KEY = marker('csp.solicitud');
 const MSG_NEW_TITLE = marker('title.new.entity');
-const SOCIOS_COLABORADORES_KEY = marker('csp.socios-colaboradores');
+const PROYECTO_SOCIO_KEY = marker('csp.solicitud-proyecto-socio');
 const PROYECTO_PRESUPUESTO_KEY = marker('menu.csp.solicitudes.desgloses-presupuesto');
 
 const routes: SgiRoutes = [
@@ -93,8 +93,8 @@ const routes: SgiRoutes = [
         canDeactivate: [FragmentGuard]
       },
       {
-        path: SOLICITUD_ROUTE_NAMES.SOCIOS_COLABORADORES,
-        component: SolicitudSociosColaboradoresComponent,
+        path: SOLICITUD_ROUTE_NAMES.SOCIOS,
+        component: SolicitudProyectoSocioComponent,
         canDeactivate: [FragmentGuard]
       },
       {
@@ -154,14 +154,14 @@ const routes: SgiRoutes = [
     },
     children: [
       {
-        path: SOLICITUD_ROUTE_NAMES.SOCIOS_COLABORADORES,
+        path: SOLICITUD_ROUTE_NAMES.SOCIOS,
         loadChildren: () =>
           import('../solicitud-proyecto-socio/solicitud-proyecto-socio.module').then(
             (m) => m.SolicitudProyectoSocioModule
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: SOCIOS_COLABORADORES_KEY
+          title: PROYECTO_SOCIO_KEY
         }
       },
       {

@@ -24,7 +24,7 @@ const SOLICITUD_PROYECTO_SOCIO_MES_INICIO_KEY = marker('csp.proyecto-socio.mes-i
 const SOLICITUD_PROYECTO_SOCIO_NUMERO_INVESTIGADOR_KEY = marker('csp.proyecto-socio.num-investigadores');
 const SOLICITUD_PROYECTO_SOCIO_ROL_SOCIO_KEY = marker('csp.proyecto-socio.rol-socio');
 const SOLICITUD_PROYECTO_SOCIO_SOCIO_KEY = marker('csp.proyecto-socio.socio');
-const SOLICITUD_SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
+const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.solicitud-proyecto-socio');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-datos-generales',
@@ -124,7 +124,7 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
     ).subscribe((value) => this.msgParamSocioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
-      SOLICITUD_SOCIO_COLABORADOR_KEY,
+      SOLICITUD_PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }

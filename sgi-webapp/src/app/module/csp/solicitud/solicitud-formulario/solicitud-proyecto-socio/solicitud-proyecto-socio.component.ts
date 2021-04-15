@@ -18,24 +18,24 @@ import { Subscription } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
-import { SolicitudSociosColaboradoresFragment } from './solicitud-socios-colaboradores.fragment';
+import { SolicitudProyectoSocioFragment } from './solicitud-proyecto-socio.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CASCADE = marker('msg.csp.solicitud-socio-colaborador.relations.delete');
 const MSG_ERROR = marker('error.msg.csp.solicitud-socio-colaborador.relations.delete');
-const SOLICITUD_SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
+const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.solicitud-proyecto-socio');
 
 @Component({
-  selector: 'sgi-solicitud-socios-colaboradores',
-  templateUrl: './solicitud-socios-colaboradores.component.html',
-  styleUrls: ['./solicitud-socios-colaboradores.component.scss']
+  selector: 'sgi-solicitud-proyecto-socio',
+  templateUrl: './solicitud-proyecto-socio.component.html',
+  styleUrls: ['./solicitud-proyecto-socio.component.scss']
 })
-export class SolicitudSociosColaboradoresComponent extends FragmentComponent implements OnInit, OnDestroy {
+export class SolicitudProyectoSocioComponent extends FragmentComponent implements OnInit, OnDestroy {
 
   ROUTE_NAMES = ROUTE_NAMES;
 
   private subscriptions: Subscription[] = [];
-  formPart: SolicitudSociosColaboradoresFragment;
+  formPart: SolicitudProyectoSocioFragment;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -46,6 +46,7 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   msgParamEntity = {};
+  msgParamEntities = {};
   textoDelete: string;
 
   constructor(
@@ -57,8 +58,8 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
     private snackBarService: SnackBarService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.SOCIOS_COLABORADORES, actionService);
-    this.formPart = this.fragment as SolicitudSociosColaboradoresFragment;
+    super(actionService.FRAGMENT.SOCIOS, actionService);
+    this.formPart = this.fragment as SolicitudProyectoSocioFragment;
   }
 
   ngOnInit(): void {
@@ -95,12 +96,17 @@ export class SolicitudSociosColaboradoresComponent extends FragmentComponent imp
 
   private setupI18N(): void {
     this.translate.get(
-      SOLICITUD_SOCIO_COLABORADOR_KEY,
+      SOLICITUD_PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      SOLICITUD_SOCIO_COLABORADOR_KEY,
+      SOLICITUD_PROYECTO_SOCIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEntities = { entity: value });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {

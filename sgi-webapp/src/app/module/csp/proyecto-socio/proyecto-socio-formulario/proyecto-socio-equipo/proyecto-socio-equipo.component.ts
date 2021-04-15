@@ -18,7 +18,7 @@ import { ProyectoSocioActionService } from '../../proyecto-socio.action.service'
 import { ProyectoSocioEquipoFragment } from './proyecto-socio-equipo.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
-const PROYECTO_SOCIO_COLABORADOR_KEY = marker('csp.proyecto-socio-colaborador');
+const PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
 
 @Component({
   selector: 'sgi-proyecto-socio-equipo',
@@ -60,12 +60,12 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_SOCIO_COLABORADOR_KEY,
+      PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      PROYECTO_SOCIO_COLABORADOR_KEY,
+      PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {

@@ -7,7 +7,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
-export class SolicitudSociosColaboradoresFragment extends Fragment {
+export class SolicitudProyectoSocioFragment extends Fragment {
   proyectoSocios$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoSocio>[]>([]);
   private sociosEliminados: StatusWrapper<ISolicitudProyectoSocio>[] = [];
 

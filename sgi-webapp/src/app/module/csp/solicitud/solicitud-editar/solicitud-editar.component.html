@@ -16,10 +16,10 @@
           [title]="'menu.csp.solicitudes.equipos-proyecto' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
         </sgi-action-fragment-menu-item>
-        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.SOCIOS_COLABORADORES]"
-          *ngIf="(actionService.datosProyectoComplete$ | async) && (actionService.showSociosColaboradores$ | async)"
-          [title]="'csp.socios-colaboradores' | translate"
-          [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS_COLABORADORES)">
+        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.SOCIOS]"
+          *ngIf="(actionService.datosProyectoComplete$ | async) && (actionService.showSocios$ | async)"
+          [title]="'csp.solicitud-proyecto-socio' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">
         </sgi-action-fragment-menu-item>
         <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.ENTIDADES_FINANCIADORAS]"
           *ngIf="actionService.datosProyectoComplete$ | async"

@@ -22,7 +22,7 @@ import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-fo
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
-import { SolicitudSociosColaboradoresComponent } from './solicitud-formulario/solicitud-socios-colaboradores/solicitud-socios-colaboradores.component';
+import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SolicitudRoutingModule } from './solicitud-routing.module';
 
@@ -41,7 +41,7 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudAreaTematicaModalComponent,
     SolicitudEquipoProyectoComponent,
     SolicitudEquipoProyectoModalComponent,
-    SolicitudSociosColaboradoresComponent,
+    SolicitudProyectoSocioComponent,
     SolicitudProyectoEntidadesFinanciadorasComponent,
     SolicitudProyectoPresupuestoGlobalComponent,
     SolicitudProyectoPresupuestoEntidadesComponent,

@@ -18,7 +18,7 @@ import { SOLICITUD_PROYECTO_SOCIO_ROUTE_NAMES } from './solicitud-proyecto-socio
 import { SOLICITUD_PROYECTO_SOCIO_ROUTE_PARAMS } from './solicitud-proyecto-socio-route-params';
 
 const MSG_NEW_TITLE = marker('title.new.entity');
-const MSG_EDIT_TITLE = marker('csp.socio-colaborador');
+const MSG_EDIT_TITLE = marker('csp.solicitud-proyecto-socio');
 
 const routes: SgiRoutes = [
   {

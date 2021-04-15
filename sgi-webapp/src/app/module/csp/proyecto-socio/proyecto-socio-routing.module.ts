@@ -18,7 +18,7 @@ import { PROYECTO_SOCIO_ROUTE_NAMES } from './proyecto-socio-route-names';
 import { PROYECTO_SOCIO_ROUTE_PARAMS } from './proyecto-socio-route-params';
 
 const MSG_NEW_TITLE = marker('title.new.entity');
-const SOCIO_COLABORADOR_KEY = marker('csp.socio-colaborador');
+const PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
 const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_KEY = marker('menu.csp.proyectos.socios.periodos-justificacion');
 
 const routes: SgiRoutes = [
@@ -30,7 +30,7 @@ const routes: SgiRoutes = [
     data: {
       title: MSG_NEW_TITLE,
       titleParams: {
-        entity: SOCIO_COLABORADOR_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+        entity: PROYECTO_SOCIO_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
       }
     },
     resolve: {
@@ -70,7 +70,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     data: {
-      title: SOCIO_COLABORADOR_KEY
+      title: PROYECTO_SOCIO_KEY
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver
@@ -107,7 +107,7 @@ const routes: SgiRoutes = [
     path: `:${PROYECTO_SOCIO_ROUTE_PARAMS.ID}`,
     canActivate: [SgiAuthGuard],
     data: {
-      title: SOCIO_COLABORADOR_KEY
+      title: PROYECTO_SOCIO_KEY
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver
