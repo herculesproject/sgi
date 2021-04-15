@@ -64,7 +64,7 @@ const routes: SgiRoutes = [
         canDeactivate: [FragmentGuard]
       },
       {
-        path: CONVOCATORIA_ROUTE_NAMES.PLAZOS_FASES,
+        path: CONVOCATORIA_ROUTE_NAMES.FASES,
         component: ConvocatoriaPlazosFasesComponent,
         canDeactivate: [FragmentGuard]
       },

@@ -60,7 +60,7 @@ export class ProyectoActionService extends ActionService {
     HITOS: 'hitos',
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
     PAQUETE_TRABAJO: 'paquete-trabajo',
-    PLAZOS: 'plazos',
+    FASES: 'fases',
     CONTEXTO_PROYECTO: 'contexto-proyecto',
     SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
     ENTIDAD_GESTORA: 'entidad-gestora',
@@ -166,7 +166,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
       this.addFragment(this.FRAGMENT.HITOS, this.hitos);
-      this.addFragment(this.FRAGMENT.PLAZOS, this.plazos);
+      this.addFragment(this.FRAGMENT.FASES, this.plazos);
       this.addFragment(this.FRAGMENT.ENTIDADES_CONVOCANTES, this.entidadesConvocantes);
       this.addFragment(this.FRAGMENT.PAQUETE_TRABAJO, this.paqueteTrabajo);
       this.addFragment(this.FRAGMENT.CONTEXTO_PROYECTO, this.proyectoContexto);

@@ -116,7 +116,7 @@ const routes: SgiAuthRoutes = [
         canDeactivate: [FragmentGuard]
       },
       {
-        path: PROYECTO_ROUTE_NAMES.PLAZOS,
+        path: PROYECTO_ROUTE_NAMES.FASES,
         component: ProyectoPlazosComponent,
         canDeactivate: [FragmentGuard]
       },

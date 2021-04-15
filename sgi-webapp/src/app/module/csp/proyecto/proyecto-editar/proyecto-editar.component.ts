@@ -31,6 +31,10 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   textoEditarSuccess: string;
   textoEditarError: string;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,

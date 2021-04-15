@@ -37,10 +37,10 @@
         [title]="'menu.csp.proyectos.socios' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-group [title]="'menu.csp.proyectos.plazos-hitos' | translate">
-        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PLAZOS]"
-          [title]="'menu.csp.proyectos.plazos' | translate"
-          [fragment]="actionService.getFragment(actionService.FRAGMENT.PLAZOS)">
+      <sgi-action-fragment-menu-group [title]="'menu.csp.proyectos.fases-hitos' | translate">
+        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.FASES]"
+          [title]="'csp.proyecto-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.FASES)">
         </sgi-action-fragment-menu-item>
         <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.HITOS]"
           [title]="'menu.csp.proyectos.hitos' | translate"

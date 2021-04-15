@@ -19,7 +19,7 @@ import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoPlazosFragment } from './proyecto-plazos.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
-const PROYECTO_PLAZO_KEY = marker('csp.proyecto-plazo');
+const PROYECTO_FASE_KEY = marker('csp.proyecto-fase');
 
 @Component({
   selector: 'sgi-proyecto-plazos',
@@ -42,6 +42,10 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
 
   plazos$: BehaviorSubject<StatusWrapper<IProyectoPlazos>[]>;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     protected snackBarService: SnackBarService,
     public actionService: ProyectoActionService,
@@ -49,7 +53,7 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PLAZOS, actionService);
+    super(actionService.FRAGMENT.FASES, actionService);
     this.formPart = this.fragment as ProyectoPlazosFragment;
     this.plazos$ = (this.fragment as ProyectoPlazosFragment).plazos$;
   }
@@ -68,18 +72,18 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_PLAZO_KEY,
+      PROYECTO_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      PROYECTO_PLAZO_KEY,
+      PROYECTO_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
         return this.translate.get(
           MSG_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoDelete = value);

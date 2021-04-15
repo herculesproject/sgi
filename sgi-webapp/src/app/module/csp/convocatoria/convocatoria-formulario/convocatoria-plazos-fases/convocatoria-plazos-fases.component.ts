@@ -20,7 +20,7 @@ import { ConvocatoriaPlazosFasesFragment } from './convocatoria-plazos-fases.fra
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_ERROR = marker('error.csp.convocatoria-fase.delete');
-const CONVOCATORIA_PLAZO_KEY = marker('csp.convocatoria-plazo');
+const CONVOCATORIA_FASE_KEY = marker('csp.convocatoria-fase');
 
 @Component({
   selector: 'sgi-convocatoria-plazos-fases',
@@ -44,6 +44,10 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
 
   plazosFase$: BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     protected snackBarService: SnackBarService,
     public actionService: ConvocatoriaActionService,
@@ -51,7 +55,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PLAZOS_FASES, actionService);
+    super(actionService.FRAGMENT.FASES, actionService);
     this.formPart = this.fragment as ConvocatoriaPlazosFasesFragment;
     this.plazosFase$ = (this.fragment as ConvocatoriaPlazosFasesFragment).plazosFase$;
   }
@@ -71,18 +75,18 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
 
   private setupI18N(): void {
     this.translate.get(
-      CONVOCATORIA_PLAZO_KEY,
+      CONVOCATORIA_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      CONVOCATORIA_PLAZO_KEY,
+      CONVOCATORIA_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
         return this.translate.get(
           MSG_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.textoDelete = value);

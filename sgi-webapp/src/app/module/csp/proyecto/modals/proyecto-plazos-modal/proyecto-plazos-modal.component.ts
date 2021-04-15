@@ -28,7 +28,7 @@ const PROYECTO_PLAZO_FECHA_INICIO_KEY = marker('csp.proyecto.plazo.fecha-inicio'
 const PROYECTO_PLAZO_FECHA_FIN_KEY = marker('csp.proyecto.plazo.fecha-fin');
 const PROYECTO_PLAZO_TIPO_FASE_KEY = marker('csp.proyecto.plazo.tipo-fase');
 const PROYECTO_PLAZO_OBSERVACIONES_KEY = marker('csp.proyecto.plazo.observaciones');
-const PROYECTO_PLAZO_KEY = marker('csp.proyecto-plazo');
+const PROYECTO_FASE_KEY = marker('csp.proyecto-fase');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoPlazosModalComponentData {
@@ -132,18 +132,18 @@ export class ProyectoPlazosModalComponent implements OnInit, OnDestroy {
 
     if (this.data.plazo?.tipoFase) {
       this.translate.get(
-        PROYECTO_PLAZO_KEY,
+        PROYECTO_FASE_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        PROYECTO_PLAZO_KEY,
+        PROYECTO_FASE_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {
           return this.translate.get(
             TITLE_NEW_ENTITY,
-            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
           );
         })
       ).subscribe((value) => this.title = value);

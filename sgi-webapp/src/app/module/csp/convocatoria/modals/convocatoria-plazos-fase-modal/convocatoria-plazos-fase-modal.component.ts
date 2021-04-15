@@ -25,11 +25,11 @@ const MSG_ERROR_INIT = marker('error.load');
 const MSG_ERROR_TIPOS = marker('error.csp.convocatoria-tipo-fase');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
-const CONVOCATORIA_PLAZO_KEY = marker('csp.convocatoria-plazo');
-const CONVOCATORIA_PLAZOS_FASE_FECHA_FIN_KEY = marker('csp.convocatoria-plazos-fases.fecha-fin');
-const CONVOCATORIA_PLAZOS_FASE_FECHA_INICIO_KEY = marker('csp.convocatoria-plazos-fases.fecha-inicio');
-const CONVOCATORIA_PLAZOS_FASE_OBSERVACIONES_KEY = marker('csp.convocatoria-plazos-fases.observaciones');
-const CONVOCATORIA_PLAZOS_FASE_TIPO_KEY = marker('csp.convocatoria-plazos-fases.tipo');
+const CONVOCATORIA_FASE_KEY = marker('csp.convocatoria-fase');
+const CONVOCATORIA_FASES_FECHA_FIN_KEY = marker('csp.convocatoria-fase.fecha-fin');
+const CONVOCATORIA_FASES_FECHA_INICIO_KEY = marker('csp.convocatoria-fase.fecha-inicio');
+const CONVOCATORIA_FASES_OBSERVACIONES_KEY = marker('csp.convocatoria-fase.observaciones');
+const CONVOCATORIA_FASES_TIPO_KEY = marker('csp.convocatoria-fase.tipo');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ConvocatoriaPlazosFaseModalComponentData {
@@ -103,39 +103,39 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
 
   private setupI18N(): void {
     this.translate.get(
-      CONVOCATORIA_PLAZOS_FASE_FECHA_FIN_KEY,
+      CONVOCATORIA_FASES_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
-      CONVOCATORIA_PLAZOS_FASE_FECHA_INICIO_KEY,
+      CONVOCATORIA_FASES_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
-      CONVOCATORIA_PLAZOS_FASE_TIPO_KEY,
+      CONVOCATORIA_FASES_TIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
-      CONVOCATORIA_PLAZOS_FASE_OBSERVACIONES_KEY,
+      CONVOCATORIA_FASES_OBSERVACIONES_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     if (this.data.plazo.tipoFase) {
       this.translate.get(
-        CONVOCATORIA_PLAZO_KEY,
+        CONVOCATORIA_FASE_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        CONVOCATORIA_PLAZO_KEY,
+        CONVOCATORIA_FASE_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {
           return this.translate.get(
             TITLE_NEW_ENTITY,
-            { entity: value, ...MSG_PARAMS.GENDER.MALE }
+            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
           );
         })
       ).subscribe((value) => this.title = value);

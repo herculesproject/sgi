@@ -56,7 +56,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datos-generales',
     PERIODO_JUSTIFICACION: 'periodos-justificacion',
-    PLAZOS_FASES: 'plazos-fases',
+    FASES: 'fases',
     HITOS: 'hitos',
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
     SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico',
@@ -191,7 +191,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.addFragment(this.FRAGMENT.ENTIDADES_CONVOCANTES, this.entidadesConvocantes);
     this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
     this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodoJustificacion);
-    this.addFragment(this.FRAGMENT.PLAZOS_FASES, this.plazosFases);
+    this.addFragment(this.FRAGMENT.FASES, this.plazosFases);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     this.addFragment(this.FRAGMENT.ENLACES, this.enlaces);
