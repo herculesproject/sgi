@@ -53,6 +53,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
 
   formFragment: ConvocatoriaReunionDatosGeneralesFragment;
   disableCamposDatosGenerales: boolean;
+  disableComite: boolean;
   private subscriptions: Subscription[] = [];
 
   msgParamComiteEntity = {};
@@ -108,6 +109,10 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
         this.disableCamposDatosGenerales = value;
       }
     ));
+
+    if (this.actionService.hasMemoriasAssigned()) {
+      this.formGroup.controls.comite.disable({ onlySelf: true });
+    }
 
     // Inicializa los combos
     this.getComites();

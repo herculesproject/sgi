@@ -93,6 +93,13 @@ export class ConvocatoriaReunionActionService extends ActionService {
   }
 
   /**
+   * Comprueba si existen memorias asignadas a la convocatoria de reunión (Si hay evaluaciones)
+   */
+  hasMemoriasAssigned(): boolean {
+    return this.asignacionMemorias.evaluaciones$.value.length > 0;
+  }
+
+  /**
    * Actualiza el valor de disableCamposDatosGenerales utilizado para evitar que se
    * modifiquen los datos del comité, del tipo de convocatoria y de la fecha límite
    * de la convocatoria cuando ya tiene memorias asignadas.

@@ -110,7 +110,9 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
 
     if (this.idConvocatoria) {
       this.loadMemoriasAsignablesConvocatoria();
-    } else {
+    } else if (this.filterData && this.filterData.idComite &&
+      this.filterData.idTipoConvocatoria &&
+      this.filterData.fechaLimite) {
       if (this.isTipoConvocatoriaSeguimiento) {
         this.loadMemoriasAsignablesConvocatoriaSeguimiento();
       } else {
@@ -444,7 +446,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * @returns referencia y titulo memoria
    */
   getMemoria(memoria: IMemoria): string {
-    return memoria.numReferencia + (memoria.titulo ? ' - ' + memoria.titulo : '');
+    return memoria ? (memoria.numReferencia + (memoria.titulo ? ' - ' + memoria.titulo : '')) : '';
   }
 
   getDatosForm(): IEvaluacion {
