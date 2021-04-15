@@ -63,7 +63,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     }
     boolean applyFilter = Boolean.parseBoolean(node.getArguments().get(0));
     if (!applyFilter) {
-      return null;
+      return cb.equal(cb.literal("1"), cb.literal("1"));
     }
 
     Instant now = Instant.now();
@@ -84,10 +84,10 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
   public Predicate toPredicate(ComparisonNode node, Root<Convocatoria> root, CriteriaQuery<?> query,
       CriteriaBuilder criteriaBuilder) {
     switch (Property.fromCode(node.getSelector())) {
-      case PLAZO_PRESENTACION_SOLICITUD:
-        return buildInPlazoPresentacionSolicitudes(node, root, query, criteriaBuilder);
-      default:
-        return null;
+    case PLAZO_PRESENTACION_SOLICITUD:
+      return buildInPlazoPresentacionSolicitudes(node, root, query, criteriaBuilder);
+    default:
+      return null;
     }
   }
 }
