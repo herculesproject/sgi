@@ -85,7 +85,7 @@
       </div>
 
       <div class="fieldset-form">
-        {{'title.csp.proyecto-socio-periodo-justificacion.periodo-solicitud-justificacion' | translate}}
+        {{'title.csp.proyecto-socio-periodo-justificacion.periodo-presentacion-justificacion' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -94,10 +94,10 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}
+            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.fecha-inicio-presentacion' | translate}}
             </mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" id="fechaInicio"
-              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}">
+              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.fecha-inicio-presentacion' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
             </ngx-mat-datetime-picker>
@@ -108,9 +108,10 @@
         <div [fxFlex.sm]=" fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
-            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.fecha-fin' | translate}}</mat-label>
+            <mat-label>{{'title.csp.proyecto-socio-periodo-justificacion.fecha-fin-presentacion' | translate}}
+            </mat-label>
             <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" id="fechaInicio"
-              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.fecha-fin' | translate}}">
+              placeholder="{{'title.csp.proyecto-socio-periodo-justificacion.fecha-fin-presentacion' | translate}}">
             <mat-datepicker-toggle matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
             </ngx-mat-datetime-picker>

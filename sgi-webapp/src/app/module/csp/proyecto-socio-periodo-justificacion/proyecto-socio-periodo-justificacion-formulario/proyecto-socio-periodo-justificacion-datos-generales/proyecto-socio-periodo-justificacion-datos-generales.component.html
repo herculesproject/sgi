@@ -24,7 +24,7 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}</mat-label>
           <input matInput [ngxMatDatetimePicker]="fechaInicioPicker" formControlName="fechaInicio" id="fechaInicio"
-            placeholder="{{'csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}">
+            placeholder="{{'csp.proyecto-socio-periodo-justificacion.fecha-inicio' | translate}}" required>
           <mat-datepicker-toggle matSuffix [for]="fechaInicioPicker"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #fechaInicioPicker showSeconds="true" [defaultTime]="[0,0,0]">
           </ngx-mat-datetime-picker>
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div class="fieldset-form">
-      {{'title.csp.proyecto-socio-periodo-justificacion.periodo-justificacion-socio' | translate}}
+      {{'title.csp.proyecto-socio-periodo-justificacion.periodo-presentacion-justificacion' | translate}}
     </div>
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
