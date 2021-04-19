@@ -224,16 +224,16 @@
     <table class="mat-elevation-z8 table-convocatoria-inv" mat-table [dataSource]="convocatorias$ | async" matSort
       matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
-      <!-- Referencia Column -->
-      <ng-container matColumnDef="codigo">
-        <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.referencia' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.convocatoria.codigo}}</td>
-      </ng-container>
-
       <!-- Titulo Column -->
       <ng-container matColumnDef="titulo">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.titulo' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{element.convocatoria.titulo}}</td>
+      </ng-container>
+
+      <!-- Referencia Column -->
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.referencia' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.convocatoria.codigo}}</td>
       </ng-container>
 
       <!-- Fecha inicio solicitud Column -->

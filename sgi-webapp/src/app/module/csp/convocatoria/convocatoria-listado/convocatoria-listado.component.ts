@@ -357,7 +357,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   protected initColumns(): void {
     this.columnas = [
-      'codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
+      'titulo', 'codigo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
       'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
       'fuenteFinanciacion', 'estado', 'activo', 'acciones'
     ];
