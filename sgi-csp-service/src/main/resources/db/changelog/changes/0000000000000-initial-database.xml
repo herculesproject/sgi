@@ -915,7 +915,6 @@
             <column name="titulo" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>
-            <column name="uni_subcontratada" type="BOOLEAN"/>
             <column name="unidad_gestion_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
@@ -1533,7 +1532,6 @@
             <column name="titulo" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>
-            <column name="uni_subcontratada" type="BOOLEAN"/>
             <column name="area_tematica_id" type="BIGINT"/>
         </createTable>
     </changeSet>

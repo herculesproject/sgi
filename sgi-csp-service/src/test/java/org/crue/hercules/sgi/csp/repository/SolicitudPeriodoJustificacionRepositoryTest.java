@@ -39,7 +39,7 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
     // @formatter:on
     SolicitudProyecto solicitudProyecto = entityManager
         .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, Boolean.TRUE, Boolean.TRUE,
-            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+            null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()

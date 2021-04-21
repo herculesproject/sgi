@@ -2638,7 +2638,6 @@ industries" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="false" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="timesheet" value="true" />
       <column name="paquetes_trabajo" value="false" />
       <column name="coste_hora" value="true" />
@@ -2671,7 +2670,6 @@ industries" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="timesheet" value="true" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
@@ -2704,7 +2702,6 @@ industries" />
       <column name="clasificacion_cvn" value="COMPETITIVOS" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="true" />
-      <column name="uni_subcontratada" value="false" />
       <column name="timesheet" value="true" />
       <column name="paquetes_trabajo" value="true" />
       <column name="coste_hora" value="true" />
@@ -2797,7 +2794,6 @@ industries" />
       <column name="duracion" value="24" />
       <column name="colaborativo" value="false" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -2813,7 +2809,6 @@ industries" />
       <column name="duracion" value="24" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -2829,7 +2824,6 @@ industries" />
       <column name="duracion" value="36" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -2845,7 +2839,6 @@ industries" />
       <column name="duracion" value="24" />
       <column name="colaborativo" value="false" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />
@@ -2861,7 +2854,6 @@ industries" />
       <column name="duracion" value="48" />
       <column name="colaborativo" value="true" />
       <column name="coordinador_externo" value="false" />
-      <column name="uni_subcontratada" value="false" />
       <column name="objetivos" value="null" />
       <column name="intereses" value="null" />
       <column name="resultados_previstos" value="null" />

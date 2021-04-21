@@ -278,7 +278,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setTimesheet(proyectoActualizar.getTimesheet());
       data.setTipoHorasAnuales(proyectoActualizar.getTipoHorasAnuales());
       data.setTitulo(proyectoActualizar.getTitulo());
-      data.setUniSubcontratada(proyectoActualizar.getUniSubcontratada());
       data.setUnidadGestionRef(proyectoActualizar.getUnidadGestionRef());
 
       Proyecto returnValue = repository.save(data);
@@ -736,7 +735,6 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
     proyecto.setColaborativo(solicitudProyecto.getColaborativo());
     proyecto.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
-    proyecto.setUniSubcontratada(solicitudProyecto.getUniversidadSubcontratada());
     log.debug("copyDatosGenerales(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
     return proyecto;
   }

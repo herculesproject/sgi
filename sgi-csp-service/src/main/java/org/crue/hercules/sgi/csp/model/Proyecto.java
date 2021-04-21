@@ -145,10 +145,6 @@ public class Proyecto extends BaseEntity {
   @Column(name = "coordinador_externo", nullable = true)
   private Boolean coordinadorExterno;
 
-  /** Universidad Subcontratada */
-  @Column(name = "uni_subcontratada", nullable = true)
-  private Boolean uniSubcontratada;
-
   /** TimeSheet */
   @Column(name = "timesheet", nullable = true)
   private Boolean timesheet;
