@@ -24,10 +24,12 @@ export interface IConvocatoriaPeriodoJustificacion {
 
 export enum Tipo {
   PERIODICO = 'PERIODICO',
+  INTERMEDIO = 'INTERMEDIO',
   FINAL = 'FINAL'
 }
 
 export const TIPO_MAP: Map<Tipo, string> = new Map([
   [Tipo.PERIODICO, marker(`csp.convocatoria-periodo-justificacion.tipo.PERIODICO`)],
+  [Tipo.INTERMEDIO, marker(`csp.convocatoria-periodo-justificacion.tipo.INTERMEDIO`)],
   [Tipo.FINAL, marker(`csp.convocatoria-periodo-justificacion.tipo.FINAL`)],
 ]);

@@ -129,6 +129,7 @@
   "csp.convocatoria-periodo-justificacion.periodo": "Número de Periodo",
   "csp.convocatoria-periodo-justificacion.tipo": "Tipo",
   "csp.convocatoria-periodo-justificacion.tipo.FINAL": "Final",
+  "csp.convocatoria-periodo-justificacion.tipo.INTERMEDIO": "Intermedio",
   "csp.convocatoria-periodo-justificacion.tipo.PERIODICO": "Periódico",
   "csp.convocatoria-periodo-seguimiento-cientifico": "Periodo{count,plural,=0{} one{} other{s}} Seguimiento Científico",
   "csp.convocatoria-requisito-equipo": "Requisitos Equipo",
