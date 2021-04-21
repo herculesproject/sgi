@@ -39,8 +39,6 @@ export interface IProyectoBackend {
   colaborativo: boolean;
   /** coordinadorExterno */
   coordinadorExterno: boolean;
-  /** uniSubcontratada */
-  uniSubcontratada: boolean;
   /** timesheet */
   timesheet: boolean;
   /** permitePaquetesTrabajo */

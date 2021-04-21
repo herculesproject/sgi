@@ -52,7 +52,6 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       duracion: new FormControl(null, [Validators.min(1), Validators.max(9999)]),
       colaborativo: new FormControl(undefined, [Validators.required]),
       coordinadorExterno: new FormControl(undefined, [Validators.required]),
-      universidadSubcontratada: new FormControl(null, []),
       presupuestoPorEntidades: new FormControl(undefined, [Validators.required]),
       objetivos: new FormControl(null, [Validators.maxLength(2000)]),
       intereses: new FormControl(null, [Validators.maxLength(2000)]),
@@ -121,7 +120,6 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       duracion: solicitudProyecto?.duracion,
       colaborativo: solicitudProyecto?.colaborativo,
       coordinadorExterno: solicitudProyecto?.coordinadorExterno,
-      universidadSubcontratada: solicitudProyecto?.universidadSubcontratada,
       presupuestoPorEntidades: solicitudProyecto?.presupuestoPorEntidades,
       objetivos: solicitudProyecto?.objetivos,
       intereses: solicitudProyecto?.intereses,
@@ -208,7 +206,6 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.solicitudProyecto.duracion = form.duracion;
     this.solicitudProyecto.colaborativo = Boolean(form.colaborativo);
     this.solicitudProyecto.coordinadorExterno = Boolean(form.coordinadorExterno);
-    this.solicitudProyecto.universidadSubcontratada = form.universidadSubcontratada;
     this.solicitudProyecto.objetivos = form.objetivos;
     this.solicitudProyecto.intereses = form.intereses;
     this.solicitudProyecto.resultadosPrevistos = form.resultadosPrevistos;

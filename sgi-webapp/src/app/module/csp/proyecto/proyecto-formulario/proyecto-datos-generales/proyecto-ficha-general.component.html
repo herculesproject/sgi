@@ -340,18 +340,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Universidad subcontratada -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.universidad-subcontratada' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="uniSubcontratada">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
     </div>
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"

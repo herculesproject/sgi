@@ -7,7 +7,6 @@ export interface ISolicitudProyecto {
   duracion: number;
   colaborativo: boolean;
   coordinadorExterno: boolean;
-  universidadSubcontratada: boolean;
   objetivos: string;
   intereses: string;
   resultadosPrevistos: string;

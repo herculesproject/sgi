@@ -98,18 +98,6 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Universidad Subcontratada -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field class="input-form">
-          <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.universidad-subcontratada' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="universidadSubcontratada">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
       <!-- Presupuesto por Entidades -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">

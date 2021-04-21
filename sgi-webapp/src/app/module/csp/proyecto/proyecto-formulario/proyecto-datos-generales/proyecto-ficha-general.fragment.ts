@@ -132,7 +132,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       clasificacionCVN: new FormControl(null),
       colaborativo: new FormControl(null),
       coordinadorExterno: new FormControl(null),
-      uniSubcontratada: new FormControl(null),
       timesheet: new FormControl(null),
       permitePaquetesTrabajo: new FormControl(null),
       costeHora: new FormControl(null),
@@ -188,7 +187,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       clasificacionCVN: proyecto.clasificacionCVN,
       colaborativo: proyecto.colaborativo,
       coordinadorExterno: proyecto.coordinadorExterno,
-      uniSubcontratada: proyecto.uniSubcontratada,
       timesheet: proyecto.timesheet,
       permitePaquetesTrabajo: proyecto.permitePaquetesTrabajo,
       costeHora: proyecto.costeHora,
@@ -240,7 +238,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.confidencial = form.confidencial.value;
     this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
     this.proyecto.colaborativo = form.colaborativo.value;
-    this.proyecto.uniSubcontratada = form.uniSubcontratada.value;
     this.proyecto.timesheet = form.timesheet.value;
     this.proyecto.permitePaquetesTrabajo = form.permitePaquetesTrabajo.value;
     this.proyecto.costeHora = form.costeHora.value;
