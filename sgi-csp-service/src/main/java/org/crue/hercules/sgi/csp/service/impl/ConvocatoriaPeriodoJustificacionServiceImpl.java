@@ -131,7 +131,8 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
 
       Assert.isTrue(
           periodoJustificacionAnterior == null || (periodoJustificacionAnterior != null
-              && periodoJustificacionAnterior.getTipo() == ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO),
+              && (periodoJustificacionAnterior.getTipo() == (ConvocatoriaPeriodoJustificacion.Tipo.PERIODICO)
+                  || periodoJustificacionAnterior.getTipo() == (ConvocatoriaPeriodoJustificacion.Tipo.INTERMEDIO))),
           "El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
 
       periodoJustificacionAnterior = periodoJustificacion;

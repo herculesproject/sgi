@@ -45,7 +45,9 @@ public class ConvocatoriaPeriodoJustificacion extends BaseEntity {
     /** Final */
     FINAL,
     /** Periódico */
-    PERIODICO;
+    PERIODICO,
+    /** Intermedio */
+    INTERMEDIO;
   }
 
   /** Id. */
