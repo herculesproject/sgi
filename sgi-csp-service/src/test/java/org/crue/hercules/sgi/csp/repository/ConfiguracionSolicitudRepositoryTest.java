@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -27,7 +28,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());
@@ -40,7 +41,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());
@@ -66,7 +67,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());
@@ -78,7 +79,7 @@ public class ConfiguracionSolicitudRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());

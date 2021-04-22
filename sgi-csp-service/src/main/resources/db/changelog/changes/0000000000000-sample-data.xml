@@ -1838,7 +1838,9 @@ industries" />
       <column name="unidad_gestion_ref" value="UGI" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="codigo" value="CGF/UGI-01" />
-      <column name="anio" value="2021" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="Título de la referencia CGF/UGI-01" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -1856,7 +1858,9 @@ industries" />
       <column name="unidad_gestion_ref" value="OPE" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-01" />
-      <column name="anio" value="2021" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="Título de la referencia CG/OPE-01" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -1874,7 +1878,9 @@ industries" />
       <column name="unidad_gestion_ref" value="OPE" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-02" />
-      <column name="anio" value="2021" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="Título de la referencia CGF/OPE-02" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -1892,7 +1898,9 @@ industries" />
       <column name="unidad_gestion_ref" value="OPE" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-03" />
-      <column name="anio" value="2021" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="Título referencia CGF/OPE-3" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -1910,7 +1918,9 @@ industries" />
       <column name="unidad_gestion_ref" value="OPE" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-04" />
-      <column name="anio" value="2021" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="Título CGF/OPE-04" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -1928,7 +1938,9 @@ industries" />
       <column name="unidad_gestion_ref" value="OPE" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="H2020-MSCA-IF-2020" />
-      <column name="anio" value="2020" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="Marie Sklodowska Curie Individual Fellowship" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />
@@ -1946,7 +1958,9 @@ industries" />
       <column name="unidad_gestion_ref" value="OPE" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="LIFE 2020- CLIMATE ACTION- CCA" />
-      <column name="anio" value="2020" />
+      <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
+      <column name="fecha_provisional" value="2021-02-15T23:00:00Z" />
+      <column name="fecha_concesion" value="2021-02-16T23:00:00Z" />
       <column name="titulo" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="objeto" value="" />
       <column name="observaciones" value="" />

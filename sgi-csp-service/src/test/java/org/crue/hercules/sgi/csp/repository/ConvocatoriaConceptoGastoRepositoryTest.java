@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.time.Instant;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
@@ -113,7 +115,9 @@ public class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest 
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
         .codigo("codigo" + suffix)
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
+        .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo" + suffix)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)

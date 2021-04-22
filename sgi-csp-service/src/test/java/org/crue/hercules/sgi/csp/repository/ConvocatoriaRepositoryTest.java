@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,9 @@ public class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
     Assertions.assertThat(dataFound.getUnidadGestionRef()).isEqualTo(convocatoria.getUnidadGestionRef());
     Assertions.assertThat(dataFound.getModeloEjecucion().getId()).isEqualTo(convocatoria.getModeloEjecucion().getId());
     Assertions.assertThat(dataFound.getCodigo()).isEqualTo(convocatoria.getCodigo());
-    Assertions.assertThat(dataFound.getAnio()).isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(dataFound.getFechaPublicacion()).isEqualTo(convocatoria.getFechaPublicacion());
+    Assertions.assertThat(dataFound.getFechaProvisional()).isEqualTo(convocatoria.getFechaProvisional());
+    Assertions.assertThat(dataFound.getFechaConcesion()).isEqualTo(convocatoria.getFechaConcesion());
     Assertions.assertThat(dataFound.getTitulo()).isEqualTo(convocatoria.getTitulo());
     Assertions.assertThat(dataFound.getObjeto()).isEqualTo(convocatoria.getObjeto());
     Assertions.assertThat(dataFound.getObservaciones()).isEqualTo(convocatoria.getObservaciones());
@@ -106,7 +109,9 @@ public class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
         .codigo("codigo" + suffix)
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
+        .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo" + suffix)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)

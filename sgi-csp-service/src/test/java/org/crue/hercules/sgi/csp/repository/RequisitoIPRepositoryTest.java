@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -68,7 +69,7 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-00" + index)
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build();

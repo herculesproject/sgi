@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -79,13 +80,18 @@ public class Convocatoria extends BaseEntity {
   @Size(max = 50)
   private String codigo;
 
-  /** Anio */
-  @Column(name = "anio", nullable = false)
+  /** Fecha Publicación */
+  @Column(name = "fecha_publicacion", nullable = false)
   @NotNull
-  @Min(1000)
-  @Max(9999)
-  @Digits(fraction = 0, integer = 4)
-  private Integer anio;
+  private Instant fechaPublicacion;
+
+  /** Fecha Provisional */
+  @Column(name = "fecha_provisional", nullable = true)
+  private Instant fechaProvisional;
+
+  /** Fecha Concesión */
+  @Column(name = "fecha_concesion", nullable = true)
+  private Instant fechaConcesion;
 
   /** Titulo */
   @Column(name = "titulo", length = 250, nullable = false)

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,7 +101,12 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseData.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
         .isEqualTo(convocatoria.getModeloEjecucion().getId());
     Assertions.assertThat(responseData.getCodigo()).as("getCodigo()").isEqualTo(convocatoria.getCodigo());
-    Assertions.assertThat(responseData.getAnio()).as("getAnio()").isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(responseData.getFechaPublicacion()).as("getFechaPublicacion()")
+        .isEqualTo(convocatoria.getFechaPublicacion());
+    Assertions.assertThat(responseData.getFechaProvisional()).as("getFechaProvisional()")
+        .isEqualTo(convocatoria.getFechaProvisional());
+    Assertions.assertThat(responseData.getFechaConcesion()).as("getFechaConcesion()")
+        .isEqualTo(convocatoria.getFechaConcesion());
     Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo(convocatoria.getTitulo());
     Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo(convocatoria.getObjeto());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
@@ -145,7 +151,12 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseData.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
         .isEqualTo(convocatoria.getModeloEjecucion().getId());
     Assertions.assertThat(responseData.getCodigo()).as("getCodigo()").isEqualTo(convocatoria.getCodigo());
-    Assertions.assertThat(responseData.getAnio()).as("getAnio()").isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(responseData.getFechaPublicacion()).as("getFechaPublicacion()")
+        .isEqualTo(convocatoria.getFechaPublicacion());
+    Assertions.assertThat(responseData.getFechaProvisional()).as("getFechaProvisional()")
+        .isEqualTo(convocatoria.getFechaProvisional());
+    Assertions.assertThat(responseData.getFechaConcesion()).as("getFechaConcesion()")
+        .isEqualTo(convocatoria.getFechaConcesion());
     Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo(convocatoria.getTitulo());
     Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo(convocatoria.getObjeto());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
@@ -414,7 +425,12 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseData.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("unidad-001");
     Assertions.assertThat(responseData.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getCodigo()).as("getCodigo()").isEqualTo("codigo-001");
-    Assertions.assertThat(responseData.getAnio()).as("getAnio()").isEqualTo(2020);
+    Assertions.assertThat(responseData.getFechaPublicacion()).as("getFechaPublicacion()")
+        .isEqualTo(Instant.parse("2021-08-01T00:00:00Z"));
+    Assertions.assertThat(responseData.getFechaProvisional()).as("getFechaProvisional()")
+        .isEqualTo(Instant.parse("2021-09-01T00:00:00Z"));
+    Assertions.assertThat(responseData.getFechaConcesion()).as("getFechaConcesion()")
+        .isEqualTo(Instant.parse("2021-10-01T00:00:00Z"));
     Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo("titulo-001");
     Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo("objeto-001");
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
@@ -1206,7 +1222,9 @@ public class ConvocatoriaIT extends BaseIT {
         .unidadGestionRef((unidadGestionId == null) ? null : "OPE")
         .modeloEjecucion(modeloEjecucion)
         .codigo("codigo-" + String.format("%03d", convocatoriaId))
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
+        .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo-" + String.format("%03d", convocatoriaId))
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))

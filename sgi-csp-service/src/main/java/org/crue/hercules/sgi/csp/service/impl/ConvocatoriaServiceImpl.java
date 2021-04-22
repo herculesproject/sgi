@@ -123,7 +123,9 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       data.setUnidadGestionRef(validConvocatoria.getUnidadGestionRef());
       data.setModeloEjecucion(validConvocatoria.getModeloEjecucion());
       data.setCodigo(validConvocatoria.getCodigo());
-      data.setAnio(validConvocatoria.getAnio());
+      data.setFechaPublicacion(validConvocatoria.getFechaPublicacion());
+      data.setFechaProvisional(validConvocatoria.getFechaProvisional());
+      data.setFechaConcesion(validConvocatoria.getFechaConcesion());
       data.setTitulo(validConvocatoria.getTitulo());
       data.setObjeto(validConvocatoria.getObjeto());
       data.setObservaciones(validConvocatoria.getObservaciones());
@@ -304,7 +306,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
         // Campos requeridos a nivel de convocatoria
         if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
-            && convocatoria.get().getAnio() != null && convocatoria.get().getTitulo() != null
+            && convocatoria.get().getFechaPublicacion() != null && convocatoria.get().getTitulo() != null
             && convocatoria.get().getFinalidad() != null && convocatoria.get().getAmbitoGeografico() != null) {
 
           Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
@@ -623,12 +625,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       datosConvocatoria.setModeloEjecucion(modeloUnidad.get().getModeloEjecucion());
     }
 
-    // Anio
-    if (datosConvocatoria.getAnio() != null) {
-      Assert.isTrue(datosConvocatoria.getAnio() <= (Instant.now().atZone(ZoneOffset.UTC).get(ChronoField.YEAR) + 1),
-          "Año no debe ser mayor que el año actual + 1");
-    }
-
     // TipoFinalidad
     if (datosConvocatoria.getFinalidad() != null) {
 
@@ -746,8 +742,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(datosConvocatoria.getModeloEjecucion(), "ModeloEjecucion no puede ser null en la Convocatoria");
     // Codigo
     Assert.notNull(datosConvocatoria.getCodigo(), "Codigo no puede ser null en la Convocatoria");
-    // Anio
-    Assert.notNull(datosConvocatoria.getAnio(), "Año no puede ser null en la Convocatoria");
+    // FechaPublicacion
+    Assert.notNull(datosConvocatoria.getFechaPublicacion(), "Fecha publicación no puede ser null en la Convocatoria");
     // Titulo
     Assert.notNull(datosConvocatoria.getTitulo(), "Titulo no puede ser null en la Convocatoria");
     // TipoFinalidad
@@ -774,8 +770,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(datosConvocatoria.getUnidadGestionRef(), "UnidadGestionRef no puede ser null en la Convocatoria");
     // Codigo
     Assert.notNull(datosConvocatoria.getCodigo(), "Codigo no puede ser null en la Convocatoria");
-    // Anio
-    Assert.notNull(datosConvocatoria.getAnio(), "Año no puede ser null en la Convocatoria");
+    // FechaPublicacion
+    Assert.notNull(datosConvocatoria.getFechaPublicacion(), "Fecha publicación no puede ser null en la Convocatoria");
     // Titulo
     Assert.notNull(datosConvocatoria.getTitulo(), "Titulo no puede ser null en la Convocatoria");
 

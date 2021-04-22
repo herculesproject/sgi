@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -31,7 +32,7 @@ public class RequisitoEquipoRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());
@@ -40,9 +41,9 @@ public class RequisitoEquipoRepositoryTest {
         "na-001", 4, 48, 6, false, "mc-001", 2, 10, 10, 15, 15, "otros"));
 
     // @formatter:on
-    Convocatoria convocatoria2 = entityManager
-        .persistAndFlush(Convocatoria.builder().estado(Convocatoria.Estado.BORRADOR).codigo("codigo-2")
-            .unidadGestionRef("OPE").anio(2020).titulo("titulo").activo(Boolean.TRUE).build());
+    Convocatoria convocatoria2 = entityManager.persistAndFlush(
+        Convocatoria.builder().estado(Convocatoria.Estado.BORRADOR).codigo("codigo-2").unidadGestionRef("OPE")
+            .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z")).titulo("titulo").activo(Boolean.TRUE).build());
     // @formatter:on
     entityManager.persistAndFlush(new RequisitoEquipo(null, convocatoria2.getId(), "na-001", 4, 48, 6, false, "mc-001",
         2, 10, 10, 15, 15, "otros"));
@@ -71,7 +72,7 @@ public class RequisitoEquipoRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());
@@ -85,7 +86,7 @@ public class RequisitoEquipoRepositoryTest {
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("OPE")
-        .anio(2020)
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
         .build());
