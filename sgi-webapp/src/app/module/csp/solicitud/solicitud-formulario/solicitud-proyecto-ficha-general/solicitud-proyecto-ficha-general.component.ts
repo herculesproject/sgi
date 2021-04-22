@@ -20,6 +20,7 @@ import { SolicitudActionService } from '../../solicitud.action.service';
 import { AreaTematicaSolicitudData, SolicitudProyectoFichaGeneralFragment } from './solicitud-proyecto-ficha-general.fragment';
 
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_ACRONIMO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.acronimo');
+const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COD_EXTERNO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.codigo-externo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COLABORATIVO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.proyecto-colaborativo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADOR_EXTERNO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.coordinador-externo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_PRESUPUESTO_ENTIDADES_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.presupuesto-entidades');
@@ -46,6 +47,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
   msgParamTituloEntity = {};
   msgParamAreaTematicaEntities = {};
   msgParamAreaEntities: {};
+  msgParamCodExternoEntity = {};
 
   convocatoriaAreaTematicas = new MatTableDataSource<AreaTematicaSolicitudData>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -99,6 +101,11 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
       SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_ACRONIMO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamAcronimoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COD_EXTERNO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamCodExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COLABORATIVO_KEY,

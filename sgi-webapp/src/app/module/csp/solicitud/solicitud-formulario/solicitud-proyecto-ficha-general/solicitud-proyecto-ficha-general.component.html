@@ -40,6 +40,21 @@
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.codigo-externo' | translate}}</mat-label>
+          <input matInput formControlName="codExterno" type="text"
+            placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.codigo-externo' | translate}}">
+          <mat-error *ngIf="formGroup.controls.codExterno.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamCodExternoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
       <!-- Duración -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"

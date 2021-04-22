@@ -49,6 +49,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     const form = new FormGroup({
       titulo: new FormControl(undefined, [Validators.required, Validators.maxLength(250)]),
       acronimo: new FormControl(null, [Validators.maxLength(50)]),
+      codExterno: new FormControl(undefined, [Validators.maxLength(250)]),
       duracion: new FormControl(null, [Validators.min(1), Validators.max(9999)]),
       colaborativo: new FormControl(undefined, [Validators.required]),
       coordinadorExterno: new FormControl(undefined, [Validators.required]),
@@ -117,6 +118,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     return {
       titulo: solicitudProyecto?.titulo,
       acronimo: solicitudProyecto?.acronimo,
+      codExterno: solicitudProyecto?.codExterno,
       duracion: solicitudProyecto?.duracion,
       colaborativo: solicitudProyecto?.colaborativo,
       coordinadorExterno: solicitudProyecto?.coordinadorExterno,
@@ -203,6 +205,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     const form = this.getFormGroup().controls;
     this.solicitudProyecto.titulo = form.titulo.value;
     this.solicitudProyecto.acronimo = form.acronimo.value;
+    this.solicitudProyecto.codExterno = form.codExterno.value;
     this.solicitudProyecto.duracion = form.duracion.value;
     this.solicitudProyecto.colaborativo = Boolean(form.colaborativo.value);
     this.solicitudProyecto.coordinadorExterno = Boolean(form.coordinadorExterno.value);

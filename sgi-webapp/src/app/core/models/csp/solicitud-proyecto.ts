@@ -4,6 +4,7 @@ export interface ISolicitudProyecto {
   id: number;
   titulo: string;
   acronimo: string;
+  codExterno: string;
   duracion: number;
   colaborativo: boolean;
   coordinadorExterno: boolean;

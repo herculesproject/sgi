@@ -463,6 +463,7 @@
   "csp.root.title": "Inicio",
   "csp.solicitud": "Solicitud{count,plural,=0{} one{} other{es}}",
   "csp.solicitud-datos-proyecto-ficha-general.acronimo": "Acrónimo",
+  "csp.solicitud-datos-proyecto-ficha-general.codigo-externo": "Referencia en entidad convocante",
   "csp.solicitud-datos-proyecto-ficha-general.coordinador-externo": "Coordinador Externo",
   "csp.solicitud-datos-proyecto-ficha-general.duracion": "Duración (meses)",
   "csp.solicitud-datos-proyecto-ficha-general.justificacion-interes": "Justificación e Interés",
