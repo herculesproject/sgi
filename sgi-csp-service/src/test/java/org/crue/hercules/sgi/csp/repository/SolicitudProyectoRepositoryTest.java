@@ -39,8 +39,8 @@ public class SolicitudProyectoRepositoryTest {
         .build());
     // @formatter:on
     SolicitudProyecto solicitudProyecto1 = entityManager
-        .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, Boolean.TRUE, Boolean.TRUE,
-            null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+        .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE,
+            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
@@ -51,8 +51,8 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, Boolean.TRUE,
-        Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
+        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
     Long convocatoriaIdBuscada = solicitud1.getId();
 
@@ -81,8 +81,8 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, Boolean.TRUE,
-        Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+    entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null,
+        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
@@ -92,8 +92,8 @@ public class SolicitudProyectoRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
     // @formatter:on
-    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, Boolean.TRUE,
-        Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+    entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
+        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
 
     Long solicitudIdBuscada = 99999L;
 

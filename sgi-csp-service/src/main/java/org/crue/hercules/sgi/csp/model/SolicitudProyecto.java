@@ -54,6 +54,11 @@ public class SolicitudProyecto extends BaseEntity {
   @Size(max = 50)
   private String acronimo;
 
+  /** Código externo */
+  @Column(name = "codigo_externo", length = 250, nullable = true)
+  @Size(max = 50)
+  private String codExterno;
+
   /** Duracion */
   @Column(name = "duracion", nullable = true)
   @Min(1)

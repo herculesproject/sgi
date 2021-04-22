@@ -81,6 +81,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
 
       solicitudProyectoExistente.setTitulo(solicitudProyecto.getTitulo());
       solicitudProyectoExistente.setAcronimo(solicitudProyecto.getAcronimo());
+      solicitudProyectoExistente.setCodExterno(solicitudProyecto.getCodExterno());
       solicitudProyectoExistente.setDuracion(solicitudProyecto.getDuracion());
       solicitudProyectoExistente.setColaborativo(solicitudProyecto.getColaborativo());
       solicitudProyectoExistente.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());

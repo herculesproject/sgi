@@ -1517,6 +1517,7 @@
             <column name="last_modified_date" type="TIMESTAMP"/>
             <column name="acronimo" type="VARCHAR(50)"/>
             <column name="check_list_ref" type="VARCHAR(2000)"/>
+            <column name="codigo_externo" type="VARCHAR(50)"/>
             <column defaultValueBoolean="false" name="colaborativo" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
