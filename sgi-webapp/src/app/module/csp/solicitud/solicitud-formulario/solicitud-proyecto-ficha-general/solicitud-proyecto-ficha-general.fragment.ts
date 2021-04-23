@@ -200,17 +200,17 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   }
 
   getValue(): ISolicitudProyecto {
-    const form = this.getFormGroup().value;
-    this.solicitudProyecto.titulo = form.titulo;
-    this.solicitudProyecto.acronimo = form.acronimo;
-    this.solicitudProyecto.duracion = form.duracion;
-    this.solicitudProyecto.colaborativo = Boolean(form.colaborativo);
-    this.solicitudProyecto.coordinadorExterno = Boolean(form.coordinadorExterno);
-    this.solicitudProyecto.objetivos = form.objetivos;
-    this.solicitudProyecto.intereses = form.intereses;
-    this.solicitudProyecto.resultadosPrevistos = form.resultadosPrevistos;
-    this.solicitudProyecto.envioEtica = form.envioEtica;
-    this.solicitudProyecto.presupuestoPorEntidades = Boolean(form.presupuestoPorEntidades);
+    const form = this.getFormGroup().controls;
+    this.solicitudProyecto.titulo = form.titulo.value;
+    this.solicitudProyecto.acronimo = form.acronimo.value;
+    this.solicitudProyecto.duracion = form.duracion.value;
+    this.solicitudProyecto.colaborativo = Boolean(form.colaborativo.value);
+    this.solicitudProyecto.coordinadorExterno = Boolean(form.coordinadorExterno.value);
+    this.solicitudProyecto.objetivos = form.objetivos.value;
+    this.solicitudProyecto.intereses = form.intereses.value;
+    this.solicitudProyecto.resultadosPrevistos = form.resultadosPrevistos.value;
+    this.solicitudProyecto.envioEtica = form.envioEtica.value;
+    this.solicitudProyecto.presupuestoPorEntidades = Boolean(form.presupuestoPorEntidades.value);
     return this.solicitudProyecto;
   }
 

@@ -15,6 +15,7 @@
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[PROYECTO_SOCIO_ROUTE_NAMES.PERIODO_JUSTIFICACION]"
         [title]="'menu.csp.proyectos.socios.periodos-justificacion' | translate"
+        *ngIf="!actionService.coordinadorExterno"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODO_JUSTIFICACION)">
       </sgi-action-fragment-menu-item>
     </mat-list>
