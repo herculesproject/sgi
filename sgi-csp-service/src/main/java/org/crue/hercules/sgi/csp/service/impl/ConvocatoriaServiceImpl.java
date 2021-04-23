@@ -305,9 +305,9 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
         // Campos requeridos a nivel de convocatoria
         if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
-            && convocatoria.get().getCodigo() != null && convocatoria.get().getAnio() != null
-            && convocatoria.get().getTitulo() != null && convocatoria.get().getFinalidad() != null
-            && convocatoria.get().getDestinatarios() != null && convocatoria.get().getAmbitoGeografico() != null) {
+            && convocatoria.get().getAnio() != null && convocatoria.get().getTitulo() != null
+            && convocatoria.get().getFinalidad() != null && convocatoria.get().getDestinatarios() != null
+            && convocatoria.get().getAmbitoGeografico() != null) {
 
           Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
               .findByConvocatoriaId(convocatoria.get().getId());
@@ -623,14 +623,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
             "ModeloEjecucion '" + modeloUnidad.get().getModeloEjecucion().getNombre() + "' no está activo");
       }
       datosConvocatoria.setModeloEjecucion(modeloUnidad.get().getModeloEjecucion());
-    }
-
-    // Codigo
-    if (datosConvocatoria.getCodigo() != null) {
-      repository.findByCodigo(datosConvocatoria.getCodigo()).ifPresent((convocatoriaExistente) -> {
-        Assert.isTrue(datosConvocatoria.getId() == convocatoriaExistente.getId(),
-            "Ya existe una Convocatoria con el código " + convocatoriaExistente.getCodigo());
-      });
     }
 
     // Anio

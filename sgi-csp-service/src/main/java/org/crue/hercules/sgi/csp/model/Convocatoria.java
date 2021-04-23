@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -37,8 +36,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "convocatoria", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "codigo" }, name = "UK_CONVOCATORIA_CODIGO") })
+@Table(name = "convocatoria")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -87,8 +85,7 @@ public class Convocatoria extends BaseEntity {
   private ModeloEjecucion modeloEjecucion;
 
   /** Codigo */
-  @Column(name = "codigo", length = 50, nullable = false)
-  @NotBlank
+  @Column(name = "codigo", length = 50, nullable = true)
   @Size(max = 50)
   private String codigo;
 

@@ -313,50 +313,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_BorradorWithoutCodigo_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador without Codigo
-    Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setCodigo(null);
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
-        // then: throw exception as Codigo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Codigo no puede ser null en la Convocatoria");
-  }
-
-  @Test
-  public void create_WithDuplicatedCodigo_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria with duplicated codigo
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setCodigo(convocatoriaExistente.getCodigo());
-
-    BDDMockito
-        .given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyString()))
-        .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
-            convocatoria.getUnidadGestionRef(), Boolean.TRUE)));
-    BDDMockito.given(repository.findByCodigo(ArgumentMatchers.anyString()))
-        .willReturn(Optional.of(convocatoriaExistente));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
-        // then: throw exception as Codigo already exists
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una Convocatoria con el código %s", convocatoriaExistente.getCodigo());
-  }
-
-  @Test
   public void create_BorradorWithoutAnio_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without Anio
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1139,81 +1095,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as updated ModeloEjecucion is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '%s' no está activo", convocatoria.getModeloEjecucion().getNombre());
-  }
-
-  @Test
-  public void update_RegistradaWithoutCodigo_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Registrada without Codigo
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setCodigo(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
-        // then: throw exception as Codigo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Codigo no puede ser null en la Convocatoria");
-  }
-
-  @Test
-  public void update_BorradorWithoutCodigo_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador without Codigo
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setCodigo(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
-        // then: throw exception as Codigo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Codigo no puede ser null en la Convocatoria");
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
-  public void update_WithDuplicatedCodigo_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria with duplicated codigo
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoriaCodigoExistente = generarMockConvocatoria(2L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setCodigo(convocatoriaCodigoExistente.getCodigo());
-    convocatoria.setObservaciones("observaciones-modificadas");
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud));
-
-    BDDMockito
-        .given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyString()))
-        .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
-            convocatoria.getUnidadGestionRef(), Boolean.TRUE)));
-
-    BDDMockito.given(repository.findByCodigo(ArgumentMatchers.anyString()))
-        .willReturn(Optional.of(convocatoriaCodigoExistente));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
-        // then: throw exception as Codigo already exists
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una Convocatoria con el código %s", convocatoriaCodigoExistente.getCodigo());
   }
 
   @Test
@@ -2408,22 +2289,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void registrar_WithEstadoBorradorAndWithoutCodigo_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria without Codigo
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setCodigo(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    Assertions.assertThatThrownBy(
-        // when: registrar Convocatoria
-        () -> service.registrar(convocatoria.getId()))
-        // then: throw exception as Codigo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Codigo no puede ser null en la Convocatoria");
-  }
-
-  @Test
   public void registrar_WithEstadoBorradorAndWithoutTitulo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria without Titulo
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2772,25 +2637,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setModeloEjecucion(null);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
-
-    // when: check registrable
-    boolean responseData = service.registrable(id);
-
-    // then: returns FALSE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isFalse();
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
-  public void registrable_WithoutCodigo_ReturnsFalse() throws Exception {
-    // given: existing id without Codigo
-    Long id = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(id, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setCodigo(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoria));
 
