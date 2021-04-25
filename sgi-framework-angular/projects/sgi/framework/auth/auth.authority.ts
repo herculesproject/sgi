@@ -64,13 +64,13 @@ export function hasAnyModuleAccess(userModules: string[], modules: string[]): bo
 
 /**
  * Extract the user modules that user has access based on their authorities
- * 
+ *
  * @param userAuthorities The user authorities to scan
  */
 export function extractModuleAccess(userAuthorities: string[]): string[] {
   const modules: string[] = [];
   userAuthorities.forEach((authority) => {
-    if (/^.+-INV($|_.+$)/gm.test(authority)) {
+    if (/^.+-INV-.+$/gm.test(authority)) {
       if (modules.indexOf('INV') < 0) {
         modules.push('INV');
       }

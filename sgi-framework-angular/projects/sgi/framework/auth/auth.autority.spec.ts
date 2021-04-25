@@ -133,7 +133,7 @@ describe(`hasAnyModuleAccess()`, () => {
 });
 
 describe(`extractModuleAccess()`, () => {
-  const userAuthorizations = ['GEN-ONE', 'GEN-TWO', 'MASTER-THREE', 'GEN-ONE_UO', 'LOCK-ONE_UO2', 'GEN-TWO_UO', 'ACCOUNT-FOUR-INV_OU'];
+  const userAuthorizations = ['GEN-ONE', 'GEN-TWO', 'MASTER-THREE', 'GEN-ONE_UO', 'LOCK-ONE_UO2', 'GEN-TWO_UO', 'ACCOUNT-INV-FOUR_OU'];
   const expected = ['GEN', 'MASTER', 'LOCK', 'INV'];
 
   it('test for extract modules from authorities should return expected', () => {
