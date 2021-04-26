@@ -2577,16 +2577,40 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-rol_socio">
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
-      <column name="abreviatura" value="LEAD" />
-      <column name="nombre" value="Socio coordinador" />
+      <column name="abreviatura" value="COORD" />
+      <column name="nombre" value="Coordinador" />
       <column name="descripcion" value="null" />
       <column name="coordinador" value="true" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
-      <column name="abreviatura" value="COL" />
-      <column name="nombre" value="Socio colaborador" />
+      <column name="abreviatura" value="SOCIO" />
+      <column name="nombre" value="Socio" />
+      <column name="descripcion" value="null" />
+      <column name="coordinador" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="TERPA" />
+      <column name="nombre" value="Tercera parte" />
+      <column name="descripcion" value="null" />
+      <column name="coordinador" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="PARTN" />
+      <column name="nombre" value="Partner organisation" />
+      <column name="descripcion" value="null" />
+      <column name="coordinador" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="OTROS" />
+      <column name="nombre" value="Otros" />
       <column name="descripcion" value="null" />
       <column name="coordinador" value="false" />
       <column name="activo" value="true" />
