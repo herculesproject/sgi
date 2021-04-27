@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Destinatarios } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { ActionService } from '@core/services/action-service';
@@ -105,24 +104,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     return this.data?.readonly ?? false;
   }
 
-  /**
-   * Modifica la visibilidad de la pestaña Requisito IP
-   *
-   * @param value Valor boolean
-   */
-  get disabledRequisitoIP(): boolean {
-    return this.destionarioRequisitoIP;
-  }
-
-  /**
-   * Modifica la visibilidad de la pestaña requisito EQUIPO
-   *
-   * @param value Valor boolean
-   */
-  get disabledRequisitoEquipo(): boolean {
-    return this.destionarioRequisitoEquipo;
-  }
-
   constructor(
     fb: FormBuilder,
     logger: NGXLogger,
@@ -220,10 +201,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.subscriptions.push(this.plazosFases.plazosFase$.subscribe(fases => {
       this.configuracionSolicitudes.setFases(fases.map(fase => fase.value));
     }));
-
-    this.subscriptions.push(this.datosGenerales.destinatariosValue$.subscribe(
-      (destinatarios) => this.mostrarPestañaRequisito(destinatarios)
-    ));
     this.subscriptions.push(this.datosGenerales.modeloEjecucion$.subscribe(
       (modeloEjecucion) => {
         this.blockAddPlazos$.next(!Boolean(modeloEjecucion));
@@ -291,23 +268,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
           return super.saveOrUpdate();
         })
       );
-    }
-  }
-
-  /**
-   * Mostramos pestaña requisitos IP/Equipo dependiendo
-   * lo seleccionado en la pestaña DATOS GENERALES - DESTINATARIOS
-   */
-  private mostrarPestañaRequisito(destionarios: Destinatarios) {
-    this.destionarioRequisitoIP = false;
-    this.destionarioRequisitoEquipo = false;
-    if (destionarios === Destinatarios.INDIVIDUAL) {
-      this.destionarioRequisitoIP = !this.destionarioRequisitoIP;
-      this.destionarioRequisitoEquipo = this.destionarioRequisitoEquipo;
-    }
-    if (destionarios === Destinatarios.EQUIPO_PROYECTO || destionarios === Destinatarios.GRUPO_INVESTIGACION) {
-      this.destionarioRequisitoIP = !this.destionarioRequisitoIP;
-      this.destionarioRequisitoEquipo = !this.destionarioRequisitoEquipo;
     }
   }
 

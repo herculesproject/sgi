@@ -1,5 +1,5 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { Destinatarios, Estado } from '../convocatoria';
+import { Estado } from '../convocatoria';
 import { ITipoAmbitoGeografico } from '../tipo-ambito-geografico';
 import { ITipoRegimenConcurrencia } from '../tipo-regimen-concurrencia';
 import { IModeloEjecucion, ITipoFinalidad } from '../tipos-configuracion';
@@ -15,7 +15,6 @@ export interface IConvocatoriaBackend {
   observaciones: string;
   finalidad: ITipoFinalidad;
   regimenConcurrencia: ITipoRegimenConcurrencia;
-  destinatarios: Destinatarios;
   colaborativos: boolean;
   estado: Estado;
   duracion: number;

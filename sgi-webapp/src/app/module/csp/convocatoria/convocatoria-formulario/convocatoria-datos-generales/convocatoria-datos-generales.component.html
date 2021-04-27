@@ -216,20 +216,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Destinatarios -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form">
-        <mat-label>{{'csp.convocatoria.destinatarios' | translate}}</mat-label>
-        <mat-select formControlName="destinatarios" placeholder="{{'csp.convocatoria.destinatarios' | translate}}">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let destinatarios of DESTINATARIOS_MAP | keyvalue" [value]="destinatarios.key">
-            {{ destinatarios.value | translate}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
     <!-- Objeto -->
     <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexProperties.md"
       [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">

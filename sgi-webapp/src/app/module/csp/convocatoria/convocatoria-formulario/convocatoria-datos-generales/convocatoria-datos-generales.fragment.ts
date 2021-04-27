@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
-import { Destinatarios, Estado, IConvocatoria } from '@core/models/csp/convocatoria';
+import { Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
@@ -32,7 +32,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
-  destinatariosValue$: Subject<Destinatarios> = new BehaviorSubject<Destinatarios>(null);
   modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
 
   constructor(
@@ -80,7 +79,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       clasificacionCVN: new FormControl(null),
       regimenConcurrencia: new FormControl(''),
       colaborativos: new FormControl(null),
-      destinatarios: new FormControl(null),
       entidadGestora: new FormControl(''),
       objeto: new FormControl('',
         Validators.maxLength(2000)),
@@ -90,12 +88,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     if (this.readonly) {
       form.disable();
     }
-
-    this.subscriptions.push(
-      form.controls.destinatarios.valueChanges.subscribe((value) => {
-        this.destinatariosValue$.next(value);
-      })
-    );
 
     this.subscriptions.push(
       form.controls.modeloEjecucion.valueChanges.subscribe((value) => {
@@ -119,7 +111,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       observaciones: convocatoria.observaciones,
       finalidad: convocatoria.finalidad,
       regimenConcurrencia: convocatoria.regimenConcurrencia,
-      destinatarios: convocatoria.destinatarios,
       colaborativos: convocatoria.colaborativos,
       estado: convocatoria.estado,
       duracion: convocatoria.duracion,
@@ -268,7 +259,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     } else {
       this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
     }
-    this.convocatoria.destinatarios = form.destinatarios.value;
     this.convocatoria.colaborativos = form.colaborativos.value;
     this.convocatoria.duracion = form.duracion.value;
     if (typeof form.ambitoGeografico.value === 'string') {

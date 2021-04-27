@@ -16,7 +16,6 @@ export interface IConvocatoria {
   observaciones: string;
   finalidad: ITipoFinalidad;
   regimenConcurrencia: ITipoRegimenConcurrencia;
-  destinatarios: Destinatarios;
   colaborativos: boolean;
   estado: Estado;
   duracion: number;
@@ -25,18 +24,6 @@ export interface IConvocatoria {
   clasificacionCVN: ClasificacionCVN;
   activo: boolean;
 }
-
-export enum Destinatarios {
-  INDIVIDUAL = 'INDIVIDUAL',
-  EQUIPO_PROYECTO = 'EQUIPO_PROYECTO',
-  GRUPO_INVESTIGACION = 'GRUPO_INVESTIGACION'
-}
-
-export const DESTINATARIOS_MAP: Map<Destinatarios, string> = new Map([
-  [Destinatarios.INDIVIDUAL, marker(`csp.convocatoria.destinatarios.INDIVIDUAL`)],
-  [Destinatarios.EQUIPO_PROYECTO, marker(`csp.convocatoria.destinatarios.EQUIPO_PROYECTO`)],
-  [Destinatarios.GRUPO_INVESTIGACION, marker(`csp.convocatoria.destinatarios.GRUPO_INVESTIGACION`)]
-]);
 
 export enum Estado {
   BORRADOR = 'BORRADOR',
