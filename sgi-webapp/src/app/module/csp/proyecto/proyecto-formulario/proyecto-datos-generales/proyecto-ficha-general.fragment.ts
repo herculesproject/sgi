@@ -302,6 +302,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         );
       }
 
+      this.getFormGroup().controls.clasificacionCVN.setValue(convocatoria.clasificacionCVN);
+      this.getFormGroup().controls.colaborativo.setValue(convocatoria.colaborativos);
+
       const options: SgiRestFindOptions = {
         sort: new RSQLSgiRestSort('numPeriodo', SgiRestSortDirection.ASC)
       };
