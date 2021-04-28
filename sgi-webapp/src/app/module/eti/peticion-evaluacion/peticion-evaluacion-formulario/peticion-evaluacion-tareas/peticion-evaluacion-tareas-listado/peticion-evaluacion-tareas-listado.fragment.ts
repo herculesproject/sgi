@@ -4,7 +4,7 @@ import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminabl
 import { Fragment } from '@core/services/action-service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TareaService } from '@core/services/eti/tarea.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class PeticionEvaluacionTareasFragment extends Fragment {
 
   constructor(
     key: number,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private tareaService: TareaService,
     private peticionEvaluacionService: PeticionEvaluacionService,
     private equipoInvestigadorFragment: EquipoInvestigadorListadoFragment,
@@ -51,7 +51,7 @@ export class PeticionEvaluacionTareasFragment extends Fragment {
       map((response) => {
         if (response.items) {
           response.items.forEach((tarea) => {
-            this.personaFisicaService.getInformacionBasica(tarea.equipoTrabajo.persona.personaRef).pipe(
+            this.personaService.findById(tarea.equipoTrabajo.persona.id).pipe(
               map((usuarioInfo) => {
                 tarea.equipoTrabajo.persona = usuarioInfo;
               })
@@ -126,7 +126,7 @@ export class PeticionEvaluacionTareasFragment extends Fragment {
     const current = this.tareas$.value;
 
     const currentWithoutTareasEquipoTrabajo = current.filter((wrapper) =>
-      wrapper.value.equipoTrabajo.persona.personaRef !== wrapperEquipoTrabajo.value.persona.personaRef
+      wrapper.value.equipoTrabajo.persona.id !== wrapperEquipoTrabajo.value.persona.id
     );
 
     if (currentWithoutTareasEquipoTrabajo.length !== current.length) {
@@ -181,7 +181,7 @@ export class PeticionEvaluacionTareasFragment extends Fragment {
     return from(createdTareas).pipe(
       mergeMap((wrappedTarea) => {
         wrappedTarea.value.equipoTrabajo = this.equiposTrabajo.find(
-          equipo => equipo.persona.personaRef === wrappedTarea.value.equipoTrabajo.persona.personaRef);
+          equipo => equipo.persona.id === wrappedTarea.value.equipoTrabajo.persona.id);
 
         const idEquipoTrabajo = wrappedTarea.value.equipoTrabajo.id;
 

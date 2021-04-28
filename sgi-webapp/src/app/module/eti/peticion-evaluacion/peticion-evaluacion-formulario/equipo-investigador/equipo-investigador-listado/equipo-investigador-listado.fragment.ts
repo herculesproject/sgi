@@ -1,11 +1,13 @@
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { Fragment } from '@core/services/action-service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class EquipoInvestigadorListadoFragment extends Fragment {
 
@@ -17,9 +19,11 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
 
   constructor(
     key: number,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private peticionEvaluacionService: PeticionEvaluacionService,
-    private sgiAuthService: SgiAuthService
+    private sgiAuthService: SgiAuthService,
+    private datosAcademicosService: DatosAcademicosService,
+    private vinculacionService: VinculacionService,
   ) {
     super(key);
     this.selectedIdPeticionEvaluacion = key;
@@ -49,33 +53,45 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
           );
       } else {
         equiposTrabajoRecuperados$ = this.peticionEvaluacionService.findEquipoInvestigador(idPeticionEvaluacion).pipe(
-          switchMap((response) => {
-            const equiposTrabajo = response.items;
-
-            if (response.items) {
-              const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo) => equipoTrabajo.persona.personaRef);
-              const equiposTrabajoWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs([...personaRefsEquiposTrabajo]).pipe(
-                map((result) => {
-                  const personas = result.items;
-
-                  equiposTrabajo.forEach((equipoTrabajo) => {
-                    const datosPersona = personas.find((persona) =>
-                      equipoTrabajo.persona.personaRef === persona.personaRef);
-
-                    equipoTrabajo.persona = datosPersona;
-                    equipoTrabajo.eliminable = equipoTrabajo.persona.personaRef !==
-                      this.sgiAuthService.authStatus$.getValue().userRefId && equipoTrabajo.eliminable;
-                  });
-
-                  return equiposTrabajo.map((equipoTrabajo) => new StatusWrapper<IEquipoTrabajoWithIsEliminable>(equipoTrabajo));
-                })
-              );
-
-              return equiposTrabajoWithDatosPersona$;
+          map((personasEquipoTrabajo) => personasEquipoTrabajo.items
+            .map((equipoTrabajo) => new StatusWrapper<IEquipoTrabajoWithIsEliminable>(equipoTrabajo))),
+          mergeMap(personasEquipoTrabajo => {
+            if (personasEquipoTrabajo.length === 0) {
+              return of([] as StatusWrapper<IEquipoTrabajoWithIsEliminable>[]);
             }
-            else {
-              return of([]);
-            }
+            return from(personasEquipoTrabajo).pipe(
+              map((element) => {
+                return this.personaService.findById(element.value.persona.id).pipe(
+                  map((persona) => {
+                    element.value.persona = persona;
+                    element.value.eliminable = element.value.persona.id !==
+                      this.sgiAuthService.authStatus$.getValue().userRefId && element.value.eliminable;
+                    return element;
+                  }),
+                  switchMap(() => {
+                    return this.vinculacionService.findByPersonaId(element.value.persona.id).pipe(
+                      map((vinculacion) => {
+                        element.value.persona.vinculacion = vinculacion;
+                        return element;
+                      }),
+                      catchError(() => of(element))
+                    );
+                  }),
+                  switchMap(() => {
+                    return this.datosAcademicosService.findByPersonaId(element.value.persona.id).pipe(
+                      map((datosAcademicos) => {
+                        element.value.persona.datosAcademicos = datosAcademicos;
+                        return element;
+                      }),
+                      catchError(() => of(element))
+                    );
+                  }),
+                  catchError(() => of(element))
+                );
+              }),
+              mergeAll(),
+              map(() => personasEquipoTrabajo)
+            );
           })
         );
       }
@@ -142,7 +158,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
    * @return observable con el investigador actual.
    */
   private getInvestigadorActual(): Observable<IEquipoTrabajoWithIsEliminable> {
-    return this.personaFisicaService.getInformacionBasica(this.sgiAuthService.authStatus$?.getValue()?.userRefId)
+    return this.personaService.findById(this.sgiAuthService.authStatus$?.getValue()?.userRefId)
       .pipe(
         map((persona) => {
           return {

@@ -96,8 +96,7 @@
         <mat-autocomplete #autocompletePersonaResponsable="matAutocomplete" [displayWith]="getPersonaResponsable">
           <mat-option *ngFor="let personaRes of datosGeneralesFragment.personasResponsable$ | async"
             [value]="personaRes">
-            {{personaRes.nombre}} {{personaRes.primerApellido}} {{personaRes.segundoApellido}}
-            ({{personaRes.identificadorNumero}}{{personaRes.identificadorLetra}})
+            {{personaRes.nombre}} {{personaRes.apellidos}} ({{personaRes.numeroDocumento}})
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

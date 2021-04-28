@@ -15,7 +15,7 @@ import { FormacionEspecificaService } from '@core/services/eti/formacion-especif
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TareaService } from '@core/services/eti/tarea.service';
 import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
@@ -105,7 +105,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     protected readonly formacionService: FormacionEspecificaService,
     protected readonly memoriaService: MemoriaService,
     protected readonly equipoTrabajoService: EquipoTrabajoService,
-    protected readonly personaFisicaService: PersonaFisicaService,
+    protected readonly personaService: PersonaService,
     protected readonly tipoTareaService: TipoTareaService,
     private readonly translate: TranslateService
   ) {
@@ -355,7 +355,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     if (typeof equipoTrabajo === 'string') {
       return null;
     }
-    return equipoTrabajo?.persona.nombre + ' ' + equipoTrabajo?.persona.primerApellido + ' ' + equipoTrabajo?.persona.segundoApellido;
+    return equipoTrabajo?.persona.nombre + ' ' + equipoTrabajo?.persona.apellidos;
   }
 
   /**
@@ -429,7 +429,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
   loadDatosUsuario(equiposTrabajo: IEquipoTrabajo[]) {
     this.equipoTrabajoListado = [];
     equiposTrabajo.forEach(equipoTrabajo => {
-      this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(equipoTrabajo.persona?.personaRef)
+      this.personaServiceOneSubscritpion = this.personaService.findById(equipoTrabajo.persona?.id)
         .subscribe(
           (persona: IPersona) => {
             equipoTrabajo.persona = persona;
@@ -454,13 +454,12 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
       filterValue = value.toLowerCase();
     } else {
       filterValue = value.persona.nombre.toLowerCase()
-        + ' ' + value.persona.primerApellido.toLowerCase()
-        + ' ' + value.persona.segundoApellido.toLowerCase();
+        + ' ' + value.persona.apellidos.toLowerCase();
     }
 
     return this.equipoTrabajoListado?.filter
-      (equipoTrabajo => (equipoTrabajo.persona.nombre.toLowerCase() + ' ' + equipoTrabajo.persona.primerApellido.toLowerCase() + ' ' +
-        equipoTrabajo.persona.segundoApellido.toLowerCase()).includes(filterValue));
+      (equipoTrabajo => (equipoTrabajo.persona.nombre.toLowerCase()
+        + ' ' + equipoTrabajo.persona.apellidos.toLowerCase()).includes(filterValue));
   }
 
   /**

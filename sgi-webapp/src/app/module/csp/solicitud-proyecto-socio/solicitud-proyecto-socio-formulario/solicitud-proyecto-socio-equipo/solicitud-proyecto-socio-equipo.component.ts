@@ -12,12 +12,13 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { SolicitudProyectoSocioEquipoModalComponent, SolicitudProyectoSocioEquipoModalData } from '../../modals/solicitud-proyecto-socio-equipo-modal/solicitud-proyecto-socio-equipo-modal.component';
+import { MiembroEquipoSolicitudModalComponent, MiembroEquipoSolicitudModalData } from '../../../modals/miembro-equipo-solicitud-modal/miembro-equipo-solicitud-modal.component';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoSocioEquipoFragment } from './solicitud-proyecto-socio-equipo.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
-const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
+const MODAL_TITLE_KEY = marker('csp.solicitud-proyecto-socio-equipo.miembro-equipo');
+const SOLICITUD_PROYECTO_SOCIO_EQUIPO_MIEMBRO_KEY = marker('csp.solicitud-proyecto-socio-equipo.miembro');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-socio-equipo',
@@ -32,6 +33,7 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
   displayedColumns = ['persona', 'nombre', 'apellidos', 'rolProyecto', 'acciones'];
 
   msgParamEntity = {};
+  modalTitleEntity: string;
   textoDelete: string;
 
   dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocioEquipo>>();
@@ -60,12 +62,11 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
     this.dataSource.sortingDataAccessor = (wrapper, property) => {
       switch (property) {
         case 'persona':
-          return wrapper.value.persona.personaRef;
+          return wrapper.value.persona.numeroDocumento;
         case 'nombre':
           return wrapper.value.persona.nombre;
         case 'apellidos':
-          const persona = wrapper.value.persona;
-          return `${persona.primerApellido} ${persona.segundoApellido}`;
+          return wrapper.value.persona.apellidos;
         case 'rolProyecto':
           return wrapper.value.rolProyecto.nombre;
         default:
@@ -76,12 +77,17 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
 
   private setupI18N(): void {
     this.translate.get(
-      SOLICITUD_PROYECTO_SOCIO_KEY,
+      SOLICITUD_PROYECTO_SOCIO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      SOLICITUD_PROYECTO_SOCIO_KEY,
+      MODAL_TITLE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.modalTitleEntity = value);
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -98,20 +104,20 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
   }
 
   openModal(wrapper?: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {
-    const data: SolicitudProyectoSocioEquipoModalData = {
-      solicitudProyectoSocioEquipo: wrapper?.value ?? {} as ISolicitudProyectoSocioEquipo,
-      duracion: this.actionService.solicitudProyectoDuracion,
-      selectedProyectoSocioEquipo: this.dataSource.data.map(element => element.value),
-      mesInicioSolicitudProyectoSocio: this.actionService.mesInicio,
-      mesFinSolicitudProyectoSocio: this.actionService.mesFin,
+    const data: MiembroEquipoSolicitudModalData = {
+      titleEntity: this.modalTitleEntity,
+      entidad: wrapper?.value ?? {} as ISolicitudProyectoSocioEquipo,
+      selectedEntidades: this.dataSource.data.map(element => element.value),
+      mesInicialMin: this.actionService.mesInicio,
+      mesFinalMax: this.actionService.mesFin ?? this.actionService.solicitudProyectoDuracion,
       isEdit: Boolean(wrapper),
       readonly: this.formPart.readonly
     };
 
     if (wrapper) {
-      const index = data.selectedProyectoSocioEquipo.findIndex((element) => element === wrapper.value);
+      const index = data.selectedEntidades.findIndex((element) => element === wrapper.value);
       if (index >= 0) {
-        data.selectedProyectoSocioEquipo.splice(index, 1);
+        data.selectedEntidades.splice(index, 1);
       }
     }
 
@@ -121,21 +127,17 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
       data,
       autoFocus: false
     };
-    const dialogRef = this.matDialog.open(SolicitudProyectoSocioEquipoModalComponent, config);
-    dialogRef.afterClosed().subscribe(
-      (modalData: SolicitudProyectoSocioEquipoModalData) => {
-        if (modalData) {
-          if (wrapper) {
-            if (!wrapper.created) {
-              wrapper.setEdited();
-            }
-            this.formPart.setChanges(true);
-          } else {
-            this.formPart.addProyectoEquipoSocio(modalData.solicitudProyectoSocioEquipo);
-          }
+    const dialogRef = this.matDialog.open(MiembroEquipoSolicitudModalComponent, config);
+    dialogRef.afterClosed().subscribe((modalData: MiembroEquipoSolicitudModalData) => {
+      if (modalData) {
+        if (!wrapper) {
+          this.formPart.addProyectoEquipoSocio(modalData.entidad as ISolicitudProyectoSocioEquipo);
+        } else if (!wrapper.created) {
+          const entidad = new StatusWrapper<ISolicitudProyectoSocioEquipo>(wrapper.value);
+          this.formPart.updateProyectoEquipoSocio(entidad);
         }
       }
-    );
+    });
   }
 
   deleteProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {

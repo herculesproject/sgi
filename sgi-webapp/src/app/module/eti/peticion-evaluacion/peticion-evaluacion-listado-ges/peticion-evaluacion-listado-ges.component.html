@@ -46,7 +46,7 @@
           <mat-form-field fxFill>
             <mat-label>{{'title.eti.search.solicitante' | translate}}</mat-label>
             <sgi-select-persona placeholder="{{'title.eti.search.solicitante' | translate}}"
-              formControlName="solicitante">
+              [tipoColectivo]="tipoColectivoSolicitante" formControlName="solicitante">
             </sgi-select-persona>
           </mat-form-field>
         </div>
@@ -86,8 +86,7 @@
         <th mat-header-cell *matHeaderCellDef> {{'eti.solicitante' | translate}}
         </th>
         <td mat-cell *matCellDef="let peticionEvaluacion">
-          {{peticionEvaluacion.solicitante?.nombre}} {{peticionEvaluacion.solicitante?.primerApellido}}
-          {{peticionEvaluacion.solicitante?.segundoApellido}}
+          {{peticionEvaluacion.solicitante?.nombre}} {{peticionEvaluacion.solicitante?.apellidos}}
         </td>
       </ng-container>
 

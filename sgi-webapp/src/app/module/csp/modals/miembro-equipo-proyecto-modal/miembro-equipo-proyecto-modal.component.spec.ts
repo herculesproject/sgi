@@ -4,40 +4,32 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
+import { IMiembroEquipoProyecto } from '@core/models/csp/miembro-equipo-proyecto';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
-import { DateTime } from 'luxon';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { ProyectoEquipoSocioModalData, ProyectoSocioEquipoModalComponent } from './proyecto-socio-equipo-modal.component';
+import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from './miembro-equipo-proyecto-modal.component';
 
-describe('ProyectoSocioEquipoModalComponent', () => {
-  let component: ProyectoSocioEquipoModalComponent;
-  let fixture: ComponentFixture<ProyectoSocioEquipoModalComponent>;
+describe('MiembroEquipoProyectoModalComponent', () => {
+  let component: MiembroEquipoProyectoModalComponent;
+  let fixture: ComponentFixture<MiembroEquipoProyectoModalComponent>;
 
-  const proyectoSocioEquipo: IProyectoSocioEquipo = {
-    fechaFin: undefined,
-    fechaInicio: undefined,
-    id: undefined,
-    persona: undefined,
-    proyectoSocioId: undefined,
-    rolProyecto: undefined
-  };
-
-  const newData: ProyectoEquipoSocioModalData = {
+  const newData: MiembroEquipoProyectoModalData = {
+    titleEntity: 'title',
     isEdit: false,
-    proyectoSocioEquipo,
-    selectedProyectoSocioEquipos: [],
-    fechaFinProyectoSocio: DateTime.now(),
-    fechaInicioProyectoSocio: DateTime.now()
+    selectedEntidades: [],
+    entidad: {} as IMiembroEquipoProyecto,
+    fechaFinMax: undefined,
+    fechaInicioMin: undefined,
+    showHorasDedicacion: true
   };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ProyectoSocioEquipoModalComponent
+        MiembroEquipoProyectoModalComponent
       ],
       imports: [
         SharedModule,
@@ -59,7 +51,7 @@ describe('ProyectoSocioEquipoModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProyectoSocioEquipoModalComponent);
+    fixture = TestBed.createComponent(MiembroEquipoProyectoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -12,7 +12,7 @@ class ConflictoInteresesConverter extends SgiBaseConverter<IConflictoInteresBack
     return {
       id: value.id,
       evaluador: EVALUADOR_CONVERTER.toTarget(value.evaluador),
-      personaConflicto: { personaRef: value.personaConflictoRef } as IPersona
+      personaConflicto: { id: value.personaConflictoRef } as IPersona
     };
   }
 
@@ -23,7 +23,7 @@ class ConflictoInteresesConverter extends SgiBaseConverter<IConflictoInteresBack
     return {
       id: value.id,
       evaluador: EVALUADOR_CONVERTER.fromTarget(value.evaluador),
-      personaConflictoRef: value.personaConflicto?.personaRef
+      personaConflictoRef: value.personaConflicto?.id
     };
   }
 }

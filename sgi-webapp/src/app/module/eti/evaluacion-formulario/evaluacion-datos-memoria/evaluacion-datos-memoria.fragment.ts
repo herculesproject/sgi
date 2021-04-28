@@ -2,7 +2,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { IMemoria } from '@core/models/eti/memoria';
 import { FormFragment } from '@core/services/action-service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
@@ -14,7 +14,7 @@ export class EvaluacionDatosMemoriaFragment extends FormFragment<IMemoria> {
     private fb: FormBuilder,
     key: number,
     private service: EvaluacionService,
-    private personaFisicaService: PersonaFisicaService
+    private personaService: PersonaService
   ) {
     super(key);
     this.memoria = {} as IMemoria;
@@ -38,8 +38,8 @@ export class EvaluacionDatosMemoriaFragment extends FormFragment<IMemoria> {
         return this.memoria;
       }),
       switchMap((memoria) => {
-        if (memoria.peticionEvaluacion?.solicitante?.personaRef) {
-          return this.personaFisicaService.getInformacionBasica(memoria.peticionEvaluacion?.solicitante.personaRef)
+        if (memoria.peticionEvaluacion?.solicitante?.id) {
+          return this.personaService.findById(memoria.peticionEvaluacion?.solicitante.id)
             .pipe(
               map((persona) => {
                 memoria.peticionEvaluacion.solicitante = persona;
@@ -63,7 +63,7 @@ export class EvaluacionDatosMemoriaFragment extends FormFragment<IMemoria> {
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,
-      solicitante: `${value?.peticionEvaluacion.solicitante?.nombre} ${value?.peticionEvaluacion.solicitante?.primerApellido} ${value?.peticionEvaluacion.solicitante?.segundoApellido}`
+      solicitante: `${value?.peticionEvaluacion.solicitante?.nombre} ${value?.peticionEvaluacion.solicitante?.apellidos}`
     };
     return patch;
   }

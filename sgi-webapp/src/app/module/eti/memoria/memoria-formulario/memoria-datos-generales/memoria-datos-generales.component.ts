@@ -198,13 +198,8 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
 
   getPersonaResponsable(persona: IPersona): string {
     if (persona) {
-      return persona?.nombre + ' ' + persona?.primerApellido + ' ' +
-        persona?.segundoApellido + '(' + persona?.identificadorNumero + persona?.identificadorLetra + ')';
+      return persona?.nombre + ' ' + persona?.apellidos + ' (' + persona?.numeroDocumento + ')';
     }
-  }
-
-  getPersonaRef(persona: IPersona): string {
-    return persona.personaRef;
   }
 
   /**

@@ -34,7 +34,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
     return this.service.findById(key).pipe(
       switchMap((value) => {
         return this.personaService
-          .findById(value.persona.personaRef).pipe(
+          .findById(value.persona.id).pipe(
             map(persona => {
               value.persona = persona;
               return value;

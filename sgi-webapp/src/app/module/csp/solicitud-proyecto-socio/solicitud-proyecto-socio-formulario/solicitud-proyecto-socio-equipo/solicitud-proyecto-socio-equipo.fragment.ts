@@ -2,7 +2,7 @@ import { ISolicitudProyectoSocioEquipo } from '@core/models/csp/solicitud-proyec
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoSocioEquipoService } from '@core/services/csp/solicitud-proyecto-socio-equipo.service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable } from 'rxjs';
@@ -16,7 +16,7 @@ export class SolicitudProyectoSocioEquipoFragment extends Fragment {
     key: number,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
     private solicitudProyectoSocioEquipoService: SolicitudProyectoSocioEquipoService,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     public readonly
   ) {
     super(key);
@@ -31,8 +31,8 @@ export class SolicitudProyectoSocioEquipoFragment extends Fragment {
           switchMap(result => {
             return from(result.items).pipe(
               mergeMap(solicitudProyectoSocioEquipo => {
-                const personaRef = solicitudProyectoSocioEquipo.persona.personaRef;
-                return this.personaFisicaService.getInformacionBasica(personaRef).pipe(
+                const personaId = solicitudProyectoSocioEquipo.persona.id;
+                return this.personaService.findById(personaId).pipe(
                   map(persona => {
                     solicitudProyectoSocioEquipo.persona = persona;
                     return solicitudProyectoSocioEquipo;
@@ -66,6 +66,16 @@ export class SolicitudProyectoSocioEquipoFragment extends Fragment {
     current.push(wrapped);
     this.solicitudProyectoSocioEquipos$.next(current);
     this.setChanges(true);
+  }
+
+  updateProyectoEquipoSocio(wrapper: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {
+    const current = this.solicitudProyectoSocioEquipos$.value;
+    const index = current.findIndex(value => value.value.id === wrapper.value.id);
+    if (index >= 0) {
+      wrapper.setEdited();
+      this.solicitudProyectoSocioEquipos$.value[index] = wrapper;
+      this.setChanges(true);
+    }
   }
 
   deleteProyectoEquipoSocio(wrapper: StatusWrapper<ISolicitudProyectoSocioEquipo>): void {

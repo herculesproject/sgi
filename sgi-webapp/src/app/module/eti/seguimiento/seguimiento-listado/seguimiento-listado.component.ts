@@ -11,7 +11,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
@@ -38,7 +38,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly personaFisicaService: PersonaFisicaService,
+    private readonly personaService: PersonaService,
     private readonly comiteService: ComiteService,
     private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly evaluadorService: EvaluadorService
@@ -109,10 +109,10 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
    */
   private loadSolicitantes(): void {
     this.evaluaciones.map((evaluacion) => {
-      const personaRef = evaluacion.memoria?.peticionEvaluacion?.solicitante?.personaRef;
+      const personaRef = evaluacion.memoria?.peticionEvaluacion?.solicitante?.id;
       if (personaRef) {
         this.suscripciones.push(
-          this.personaFisicaService.getInformacionBasica(personaRef).subscribe(
+          this.personaService.findById(personaRef).subscribe(
             (persona: IPersona) => evaluacion.memoria.peticionEvaluacion.solicitante = persona
           )
         );

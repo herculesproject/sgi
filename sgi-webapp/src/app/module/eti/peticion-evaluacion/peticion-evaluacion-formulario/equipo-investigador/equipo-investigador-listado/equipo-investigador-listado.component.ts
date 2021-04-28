@@ -13,7 +13,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -59,7 +58,6 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     protected matDialog: MatDialog,
     protected readonly dialogService: DialogService,
     protected readonly equipoTrabajoService: EquipoTrabajoService,
-    protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly sgiAuthService: SgiAuthService,
     protected readonly snackBarService: SnackBarService,
@@ -85,11 +83,10 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
       (wrapper: StatusWrapper<IEquipoTrabajoWithIsEliminable>, property: string) => {
         switch (property) {
           case 'numDocumento':
-            return wrapper.value?.persona?.identificadorNumero + wrapper.value?.persona?.identificadorLetra;
+            return wrapper.value?.persona?.numeroDocumento;
           case 'nombreCompleto':
             return wrapper.value?.persona?.nombre
-              + ' ' + wrapper.value?.persona?.primerApellido
-              + wrapper.value?.persona?.segundoApellido;
+              + ' ' + wrapper.value?.persona?.apellidos;
           default:
             return wrapper.value[property];
         }
@@ -132,7 +129,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
         if (equipoTrabajoAniadido) {
           const isRepetido =
             this.listadoFragment.equiposTrabajo$.value.some(equipoTrabajoWrapper =>
-              equipoTrabajoAniadido.persona.personaRef === equipoTrabajoWrapper.value.persona.personaRef);
+              equipoTrabajoAniadido.persona.id === equipoTrabajoWrapper.value.persona.id);
 
           if (isRepetido) {
             this.snackBarService.showError(MSG_ERROR_INVESTIGADOR_REPETIDO);

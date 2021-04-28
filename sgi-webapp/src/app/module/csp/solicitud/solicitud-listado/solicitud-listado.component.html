@@ -130,7 +130,7 @@
             <mat-form-field fxFill>
               <mat-label>{{'csp.solicitud.solicitante' | translate}}</mat-label>
               <sgi-select-persona placeholder="{{'csp.solicitud.solicitante' | translate}}"
-                formControlName="solicitante">
+                formControlName="solicitante" [tipoColectivo]="tipoColectivoSolicitante">
               </sgi-select-persona>
             </mat-form-field>
           </div>
@@ -295,8 +295,7 @@
           {{'csp.solicitud.solicitante' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.solicitante?.nombre }} {{ element.solicitante?.primerApellido }}
-          {{ element.solicitante?.segundoApellido }}
+          {{ element.solicitante?.nombre }} {{ element.solicitante?.apellidos }}
         </td>
       </ng-container>
 

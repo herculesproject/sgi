@@ -6,7 +6,6 @@ import { IAsistente } from '@core/models/eti/asistente';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject } from 'rxjs';
@@ -36,14 +35,13 @@ export class ActaAsistentesListadoComponent extends FragmentComponent implements
 
   constructor(
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
-    protected readonly personaFisicaService: PersonaFisicaService,
     protected matDialog: MatDialog,
     private actionService: ActaActionService
   ) {
     super(actionService.FRAGMENT.ASISTENTES, actionService);
     this.asistentes$ = (this.fragment as ActaAsistentesFragment).asistentes$;
 
-    this.displayedColumns = ['evaluador.identificadorNumero', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
+    this.displayedColumns = ['evaluador.numeroDocumento', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
   }
 
   ngOnInit() {

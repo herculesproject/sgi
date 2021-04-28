@@ -4,11 +4,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IMiembroEquipoSolicitud } from '@core/models/csp/miembro-equipo-solicitud';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { ISolicitudProyectoSocioEquipo } from '@core/models/csp/solicitud-proyecto-socio-equipo';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -16,52 +17,65 @@ import { NumberValidator } from '@core/validators/number-validator';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { merge } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR_INIT = marker('error.load');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
-const PROYECTO_SOCIO_EQUIPO_KEY = marker('csp.proyecto-socio');
-const PROYECTO_SOCIO_EQUIPO_PERSONA_KEY = marker('csp.proyecto-socio.equipo.persona');
-const PROYECTO_SOCIO_EQUIPO_ROL_PROYECTO_KEY = marker('csp.proyecto-socio.equipo.rol-proyecto.participacion');
-const SOLICITUD_PROYECTO_SOCIO_KEY = marker('csp.proyecto-socio');
+const MIEMBRO_EQUIPO_SOLICITUD_ROL_PARTICIPACION_KEY = marker('csp.miembro-equipo-solicitud.rol-participacion');
+const MIEMBRO_EQUIPO_SOLICITUD_MIEMBRO_KEY = marker('csp.miembro-equipo-solicitud.miembro');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
-export interface SolicitudProyectoSocioEquipoModalData {
-  solicitudProyectoSocioEquipo: ISolicitudProyectoSocioEquipo;
-  duracion: number;
-  selectedProyectoSocioEquipo: ISolicitudProyectoSocioEquipo[];
-  mesInicioSolicitudProyectoSocio: number;
-  mesFinSolicitudProyectoSocio: number;
+export interface MiembroEquipoSolicitudModalData {
+  titleEntity: string;
+  entidad: IMiembroEquipoSolicitud;
+  selectedEntidades: IMiembroEquipoSolicitud[];
+  mesInicialMin: number;
+  mesFinalMax: number;
   isEdit: boolean;
   readonly: boolean;
 }
 
 @Component({
-  templateUrl: './solicitud-proyecto-socio-equipo-modal.component.html',
-  styleUrls: ['./solicitud-proyecto-socio-equipo-modal.component.scss']
+  templateUrl: './miembro-equipo-solicitud-modal.component.html',
+  styleUrls: ['./miembro-equipo-solicitud-modal.component.scss']
 })
-export class SolicitudProyectoSocioEquipoModalComponent extends
-  BaseModalComponent<SolicitudProyectoSocioEquipoModalData, SolicitudProyectoSocioEquipoModalComponent> implements OnInit {
-  private rolProyectoFiltered: IRolProyecto[] = [];
-  rolProyectos$: Observable<IRolProyecto[]>;
+export class MiembroEquipoSolicitudModalComponent extends
+  BaseModalComponent<MiembroEquipoSolicitudModalData, MiembroEquipoSolicitudModalComponent> implements OnInit {
+  fxFlexProperties: FxFlexProperties;
+  fxFlexPropertiesFullWidth: FxFlexProperties;
+  fxLayoutProperties: FxLayoutProperties;
   textSaveOrUpdate: string;
 
-  msgParamPersonaEntity = {};
-  msgParamRolProyectoEntity = {};
+  saveDisabled = false;
+  rolesProyecto: IRolProyecto[] = [];
+  colectivoIdRolParticipacion: string;
+
+  msgParamRolParticipacionEntity = {};
+  msgParamMiembroEntity = {};
   msgParamEntity = {};
   title: string;
+
+  compareRolProyecto = (option: IRolProyecto, value: IRolProyecto) => option?.id === value?.id;
 
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
-    public matDialogRef: MatDialogRef<SolicitudProyectoSocioEquipoModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: SolicitudProyectoSocioEquipoModalData,
+    public matDialogRef: MatDialogRef<MiembroEquipoSolicitudModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: MiembroEquipoSolicitudModalData,
+    private personaService: PersonaService,
     private rolProyectoService: RolProyectoService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
+
+    this.fxFlexPropertiesFullWidth = new FxFlexProperties();
+    this.fxFlexPropertiesFullWidth.sm = '0 1 100%';
+    this.fxFlexPropertiesFullWidth.md = '0 1 100%';
+    this.fxFlexPropertiesFullWidth.gtMd = '0 1 100%';
+    this.fxFlexPropertiesFullWidth.order = '1';
+
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -71,51 +85,57 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
+    this.textSaveOrUpdate = this.data.entidad?.id ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.loadRolProyectos();
-
     this.setupI18N();
+    this.colectivoIdRolParticipacion = this.data.entidad?.rolProyecto?.colectivoRef;
 
-    this.textSaveOrUpdate = this.data.isEdit ? MSG_ACEPTAR : MSG_ANADIR;
+    this.subscriptions.push(
+      this.formGroup.get('rolProyecto').valueChanges
+        .subscribe((rolProyecto) => {
+          this.checkSelectedRol(rolProyecto);
+        })
+    );
+
     this.subscriptions.push(
       merge(
-        this.formGroup.get('persona').valueChanges,
+        this.formGroup.get('miembro').valueChanges,
         this.formGroup.get('mesInicio').valueChanges,
         this.formGroup.get('mesFin').valueChanges
-      ).subscribe(
-        () => this.checkRangesMeses()
-      )
+      ).subscribe(() => {
+        this.checkRangesMeses();
+      })
     );
   }
 
   private setupI18N(): void {
+    this.translate.get(
+      MIEMBRO_EQUIPO_SOLICITUD_ROL_PARTICIPACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamRolParticipacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
-      PROYECTO_SOCIO_EQUIPO_KEY,
+      MIEMBRO_EQUIPO_SOLICITUD_MIEMBRO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamMiembroEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      this.data.titleEntity,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
-    this.translate.get(
-      PROYECTO_SOCIO_EQUIPO_PERSONA_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
-
-    this.translate.get(
-      PROYECTO_SOCIO_EQUIPO_ROL_PROYECTO_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamRolProyectoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
-
-    if (this.data.solicitudProyectoSocioEquipo.rolProyecto) {
+    if (this.data.entidad.rolProyecto) {
       this.translate.get(
-        SOLICITUD_PROYECTO_SOCIO_KEY,
+        this.data.titleEntity,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        SOLICITUD_PROYECTO_SOCIO_KEY,
+        this.data.titleEntity,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {
@@ -133,11 +153,7 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
       map(result => result.items)
     ).subscribe(
       res => {
-        this.rolProyectoFiltered = res;
-        this.rolProyectos$ = this.formGroup.get('rolProyecto').valueChanges.pipe(
-          startWith(''),
-          map(value => this.filtroRolProyecto(value))
-        );
+        this.rolesProyecto = res;
       },
       error => {
         this.logger.error(error);
@@ -147,49 +163,30 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
     this.subscriptions.push(subcription);
   }
 
-  private filtroRolProyecto(value: string): IRolProyecto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.rolProyectoFiltered.filter(
-      rolProyecto => rolProyecto.nombre.toLowerCase().includes(filterValue));
-  }
-
-  getNombreRolProyecto(rolProyecto?: IRolProyecto): string {
-    return typeof rolProyecto === 'string' ? rolProyecto : rolProyecto?.nombre;
-  }
-
-  protected getDatosForm(): SolicitudProyectoSocioEquipoModalData {
-    this.data.solicitudProyectoSocioEquipo.rolProyecto = this.formGroup.get('rolProyecto').value;
-    this.data.solicitudProyectoSocioEquipo.persona = this.formGroup.get('persona').value;
-    this.data.solicitudProyectoSocioEquipo.mesInicio = this.formGroup.get('mesInicio').value;
-    this.data.solicitudProyectoSocioEquipo.mesFin = this.formGroup.get('mesFin').value;
-    return this.data;
-  }
-
   protected getFormGroup(): FormGroup {
-    const mesInicio = this.data.mesInicioSolicitudProyectoSocio;
-    const mesFinal = this.data.mesFinSolicitudProyectoSocio;
-    const duracion = this.data.duracion;
     const formGroup = new FormGroup(
       {
-        rolProyecto: new FormControl(this.data.solicitudProyectoSocioEquipo.rolProyecto, [
+        rolProyecto: new FormControl(this.data.entidad.rolProyecto, [
           Validators.required,
           IsEntityValidator.isValid()
         ]),
-        persona: new FormControl({
-          value: this.data.solicitudProyectoSocioEquipo.persona,
-          disabled: this.data.isEdit
+        miembro: new FormControl({
+          value: this.data.entidad.persona,
+          disabled: !this.data.entidad.rolProyecto
         }, [Validators.required]),
-        mesInicio: new FormControl(this.data.solicitudProyectoSocioEquipo.mesInicio, [
-          Validators.min(mesInicio ? mesInicio : 1),
-          Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
+        mesInicio: new FormControl(this.data.entidad.mesInicio, [
+          Validators.min(this.data.mesInicialMin ?? 1),
+          Validators.max(this.data.mesFinalMax ?? GLOBAL_CONSTANTS.integerMaxValue)
         ]),
-        mesFin: new FormControl(this.data.solicitudProyectoSocioEquipo.mesFin, [
-          Validators.min(mesInicio ? mesInicio : 1),
-          Validators.max(mesFinal ? mesFinal : (isNaN(duracion) ? GLOBAL_CONSTANTS.integerMaxValue : duracion)),
+        mesFin: new FormControl(this.data.entidad.mesFin, [
+          Validators.min(this.data.mesInicialMin ?? 1),
+          Validators.max(this.data.mesFinalMax ?? GLOBAL_CONSTANTS.integerMaxValue)
         ]),
       },
       {
-        validators: [NumberValidator.isAfterOptional('mesInicio', 'mesFin')]
+        validators: [
+          NumberValidator.isAfterOptional('mesInicio', 'mesFin'),
+        ]
       }
     );
 
@@ -200,16 +197,45 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
     return formGroup;
   }
 
+  protected getDatosForm(): MiembroEquipoSolicitudModalData {
+    this.data.entidad.rolProyecto = this.formGroup.get('rolProyecto').value;
+    this.data.entidad.persona = this.formGroup.get('miembro').value;
+    this.data.entidad.mesInicio = this.formGroup.get('mesInicio').value;
+    this.data.entidad.mesFin = this.formGroup.get('mesFin').value;
+    return this.data;
+  }
+
+  private checkSelectedRol(rolProyecto: IRolProyecto): void {
+    this.colectivoIdRolParticipacion = rolProyecto?.colectivoRef;
+
+    if (rolProyecto && this.formGroup.controls.miembro.value) {
+      this.saveDisabled = true;
+      this.subscriptions.push(
+        this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, rolProyecto.colectivoRef)
+          .subscribe((result) => {
+            if (!result) {
+              this.formGroup.controls.miembro.setValue(undefined);
+            }
+            this.saveDisabled = false;
+          })
+      );
+    } else if (rolProyecto && this.formGroup.controls.miembro.disabled) {
+      this.formGroup.controls.miembro.enable();
+    } else if (!rolProyecto) {
+      this.formGroup.controls.miembro.disable();
+      this.formGroup.controls.miembro.setValue(undefined);
+    }
+  }
+
   private checkRangesMeses(): void {
-    const personaForm = this.formGroup.get('persona');
+    const miembroForm = this.formGroup.get('miembro');
     const mesInicioForm = this.formGroup.get('mesInicio');
     const mesFinForm = this.formGroup.get('mesFin');
 
     const mesInicio = mesInicioForm.value ? mesInicioForm.value : Number.MIN_VALUE;
     const mesFin = mesFinForm.value ? mesFinForm.value : Number.MAX_VALUE;
-
-    const ranges = this.data.selectedProyectoSocioEquipo.filter(
-      element => element.persona.personaRef === personaForm.value?.personaRef)
+    const ranges = this.data.selectedEntidades
+      .filter(element => element.persona.id === miembroForm.value?.id)
       .map(solicitudProyectoSocio => {
         const range: IRange = {
           inicio: solicitudProyectoSocio.mesInicio ? solicitudProyectoSocio.mesInicio : Number.MIN_VALUE,
@@ -217,6 +243,7 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
         };
         return range;
       });
+
     if (ranges.some(range => (mesInicio <= range.fin && range.inicio <= mesFin))) {
       if (mesInicioForm.value) {
         this.addError(mesInicioForm, 'range');
@@ -225,14 +252,14 @@ export class SolicitudProyectoSocioEquipoModalComponent extends
         this.addError(mesFinForm, 'range');
       }
       if (!mesInicioForm.value && !mesFinForm.value) {
-        this.addError(personaForm, 'contains');
-      } else if (personaForm.errors) {
-        this.deleteError(personaForm, 'contains');
+        this.addError(miembroForm, 'contains');
+      } else if (miembroForm.errors) {
+        this.deleteError(miembroForm, 'contains');
       }
     } else {
       this.deleteError(mesInicioForm, 'range');
       this.deleteError(mesFinForm, 'range');
-      this.deleteError(personaForm, 'contains');
+      this.deleteError(miembroForm, 'contains');
     }
   }
 

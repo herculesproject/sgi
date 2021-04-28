@@ -1,32 +1,40 @@
-import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 const MSG_LISTADO_ERROR = marker('error.load');
 
+export interface SearchPersonaModalData {
+  tipoColectivo: string;
+  colectivos: string[];
+}
+
 @Component({
   templateUrl: './search-persona.component.html',
   styleUrls: ['./search-persona.component.scss']
 })
-export class SearchPersonaModalComponent implements AfterViewInit {
+export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
 
+  formGroup: FormGroup;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns: string[];
-  elementosPagina: number[];
-  totalElementos: number;
+  displayedColumns = ['nombre', 'apellidos', 'numeroDocumento', 'acciones'];
+  elementosPagina = [5, 10, 25, 100];
+  totalElementos = 0;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -36,14 +44,10 @@ export class SearchPersonaModalComponent implements AfterViewInit {
   constructor(
     private readonly logger: NGXLogger,
     public dialogRef: MatDialogRef<SearchPersonaModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IPersona,
-    private personaFisicaService: PersonaFisicaService,
-    private snackBarService: SnackBarService) {
-
-    this.displayedColumns = ['nombre', 'primerApellido', 'segundoApellido', 'numIdentificadorPersonal'];
-    this.elementosPagina = [5, 10, 25, 100];
-    this.totalElementos = 0;
-
+    @Inject(MAT_DIALOG_DATA) public data: SearchPersonaModalData,
+    private personaService: PersonaService,
+    private snackBarService: SnackBarService
+  ) {
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -56,20 +60,37 @@ export class SearchPersonaModalComponent implements AfterViewInit {
     this.fxLayoutProperties.xs = 'column';
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+  ngOnInit(): void {
+    this.formGroup = new FormGroup({
+      datosPersona: new FormControl()
+    });
   }
 
-  buscarPersona(reset?: boolean) {
-    this.personas$ = this.personaFisicaService
-      .findAllPersonas(
+  ngAfterViewInit(): void {
+    this.search(true);
+
+    merge(
+      this.paginator.page,
+      this.sort.sortChange
+    ).pipe(
+      tap(() => this.search())
+    ).subscribe();
+  }
+
+  closeModal(persona?: IPersona): void {
+    this.dialogRef.close(persona);
+  }
+
+  search(reset?: boolean) {
+    this.personas$ = this.personaService
+      .findAll(
         {
           page: {
             index: reset ? 0 : this.paginator.pageIndex,
             size: this.paginator.pageSize
           },
-          // TODO: Add sorts
-          filter: this.buildFilter(this.data)
+          sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+          filter: this.buildFilter(this.dialogRef.componentInstance.data)
         }
       )
       .pipe(
@@ -94,32 +115,38 @@ export class SearchPersonaModalComponent implements AfterViewInit {
       );
   }
 
-  private buildFilter(persona: IPersona): SgiRestFilter {
-    return new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.EQUALS, persona.nombre)
-      .and('primerApellido', SgiRestFilterOperator.EQUALS, persona.primerApellido)
-      .and('segundoApellido', SgiRestFilterOperator.EQUALS, persona.segundoApellido)
-      .and('identificadorNumero', SgiRestFilterOperator.EQUALS, persona.identificadorNumero)
-      .and('identificadorLetra', SgiRestFilterOperator.EQUALS, persona.identificadorLetra);
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    this.formGroup.reset();
+    this.search(true);
   }
 
-  ngAfterViewInit(): void {
-    // Merge events that trigger load table data
-    merge(
-      // Link pageChange event to fire new request
-      this.paginator.page,
-      // Link sortChange event to fire new request
-      this.sort.sortChange
-    )
-      .pipe(
-        tap(() => {
-          // Load table
-          this.buscarPersona();
-        })
-      )
-      .subscribe();
-    // First load
-    // this.buscarPersona();
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
+  /**
+   * Recupera el filtro resultante de componer los filtros recibidos y los filtros del formulario
+   *
+   * @param filter filtros que se quieren aplicar
+   * @returns el filtro
+   */
+  private buildFilter(filter: SearchPersonaModalData): SgiRestFilter {
+    const controls = this.formGroup.controls;
+
+    const rsqlFilter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value)
+      .or('apellidos', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value)
+      .or('numeroDocumento', SgiRestFilterOperator.LIKE_ICASE, controls.datosPersona.value);
+
+    if (filter?.colectivos?.length) {
+      rsqlFilter.and('colectivoId', SgiRestFilterOperator.IN, filter.colectivos);
+    } else if (filter?.tipoColectivo) {
+      rsqlFilter.and('tipoColectivo', SgiRestFilterOperator.EQUALS, filter.tipoColectivo);
+    }
+
+    return rsqlFilter;
   }
 
 }
-

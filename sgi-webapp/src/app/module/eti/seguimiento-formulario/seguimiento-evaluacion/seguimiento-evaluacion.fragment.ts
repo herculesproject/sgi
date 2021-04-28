@@ -4,7 +4,7 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IMemoria } from '@core/models/eti/memoria';
 import { FormFragment } from '@core/services/action-service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NullIdValidador } from '@core/validators/null-id-validador';
@@ -23,7 +23,7 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoria> {
     key: number,
     protected readonly snackBarService: SnackBarService,
     private service: EvaluacionService,
-    private personaFisicaService: PersonaFisicaService) {
+    private personaService: PersonaService) {
     super(key);
     this.memoria = {} as IMemoria;
   }
@@ -48,8 +48,8 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoria> {
         return this.memoria;
       }),
       switchMap((memoria) => {
-        if (memoria.peticionEvaluacion?.solicitante?.personaRef) {
-          return this.personaFisicaService.getInformacionBasica(memoria.peticionEvaluacion.solicitante.personaRef).pipe(
+        if (memoria.peticionEvaluacion?.solicitante?.id) {
+          return this.personaService.findById(memoria.peticionEvaluacion.solicitante.id).pipe(
             map((persona) => {
               memoria.peticionEvaluacion.solicitante = persona;
               return memoria;
@@ -70,7 +70,7 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoria> {
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,
-      solicitante: `${value?.peticionEvaluacion?.solicitante?.nombre} ${value?.peticionEvaluacion?.solicitante?.primerApellido} ${value?.peticionEvaluacion?.solicitante?.segundoApellido}`,
+      solicitante: `${value?.peticionEvaluacion?.solicitante?.nombre} ${value?.peticionEvaluacion?.solicitante?.apellidos}`,
       dictamen: this.evaluacion.dictamen
     };
   }

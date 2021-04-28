@@ -13,7 +13,7 @@ class SolicitudProyectoEquipoConverter extends SgiBaseConverter<ISolicitudProyec
       id: value.id,
       mesFin: value.mesFin,
       mesInicio: value.mesInicio,
-      persona: { personaRef: value.personaRef } as IPersona,
+      persona: { id: value.personaRef } as IPersona,
       rolProyecto: value.rolProyecto,
       solicitudProyectoId: value.solicitudProyectoId
     };
@@ -27,7 +27,7 @@ class SolicitudProyectoEquipoConverter extends SgiBaseConverter<ISolicitudProyec
       id: value.id,
       mesFin: value.mesFin,
       mesInicio: value.mesInicio,
-      personaRef: value.persona.personaRef,
+      personaRef: value.persona.id,
       rolProyecto: value.rolProyecto,
       solicitudProyectoId: value.solicitudProyectoId
     };

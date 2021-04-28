@@ -8,7 +8,7 @@ import { SolicitudProyectoSocioEquipoService } from '@core/services/csp/solicitu
 import { SolicitudProyectoSocioPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-socio-periodo-justificacion.service';
 import { SolicitudProyectoSocioPeriodoPagoService } from '@core/services/csp/solicitud-proyecto-socio-periodo-pago.service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { SOLICITUD_PROYECTO_SOCIO_DATA_KEY } from './solicitud-proyecto-socio-data.resolver';
 import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyecto-socio-formulario/solicitud-proyecto-socio-datos-generales/solicitud-proyecto-socio-datos-generales.fragment';
@@ -70,7 +70,7 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     solicitudProyectoSocioPeriodoPagoService: SolicitudProyectoSocioPeriodoPagoService,
     solicitudProyectoSocioPeriodoJustificacionService: SolicitudProyectoSocioPeriodoJustificacionService,
     solicitudProyectoSocioEquipoService: SolicitudProyectoSocioEquipoService,
-    personaFisicaService: PersonaFisicaService
+    personaService: PersonaService
   ) {
     super();
 
@@ -88,7 +88,7 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     this.periodosJustificacion = new SolicitudProyectoSocioPeriodoJustificacionFragment(logger, id,
       solicitudProyectoSocioService, solicitudProyectoSocioPeriodoJustificacionService, this.data.readonly);
     this.equipo = new SolicitudProyectoSocioEquipoFragment(logger, id,
-      solicitudProyectoSocioService, solicitudProyectoSocioEquipoService, personaFisicaService, this.data.readonly);
+      solicitudProyectoSocioService, solicitudProyectoSocioEquipoService, personaService, this.data.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.PERIODOS_PAGOS, this.periodosPago);

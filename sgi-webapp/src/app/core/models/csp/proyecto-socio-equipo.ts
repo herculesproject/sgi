@@ -1,12 +1,5 @@
-import { DateTime } from 'luxon';
-import { IPersona } from '../sgp/persona';
-import { IRolProyecto } from './rol-proyecto';
+import { IMiembroEquipoProyecto } from './miembro-equipo-proyecto';
 
-export interface IProyectoSocioEquipo {
-  id: number;
+export interface IProyectoSocioEquipo extends IMiembroEquipoProyecto {
   proyectoSocioId: number;
-  rolProyecto: IRolProyecto;
-  persona: IPersona;
-  fechaInicio: DateTime;
-  fechaFin: DateTime;
 }

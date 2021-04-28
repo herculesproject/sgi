@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -17,6 +17,7 @@ describe('SearchPersonaModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     const mockDialogRef = {
+      componentInstance: jasmine.createSpy('componentInstance'),
       close: jasmine.createSpy('close'),
     };
 
@@ -32,7 +33,7 @@ describe('SearchPersonaModalComponent', () => {
         LoggerTestingModule,
         MatDialogModule,
         TestUtils.getIdiomas(),
-        FormsModule,
+        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [

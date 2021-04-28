@@ -12,7 +12,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
@@ -70,7 +69,6 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     private readonly logger: NGXLogger,
     protected readonly dialogService: DialogService,
     protected readonly memoriaService: MemoriaService,
-    protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
     private actionService: PeticionEvaluacionActionService,

@@ -11,7 +11,7 @@ class EquipoTrabajoConverter extends SgiBaseConverter<IEquipoTrabajoBackend, IEq
     }
     return {
       id: value.id,
-      persona: { personaRef: value.personaRef } as IPersona,
+      persona: { id: value.personaRef } as IPersona,
       peticionEvaluacion: PETICION_EVALUACION_CONVERTER.toTarget(value.peticionEvaluacion)
     };
   }
@@ -22,7 +22,7 @@ class EquipoTrabajoConverter extends SgiBaseConverter<IEquipoTrabajoBackend, IEq
     }
     return {
       id: value.id,
-      personaRef: value.persona?.personaRef,
+      personaRef: value.persona?.id,
       peticionEvaluacion: PETICION_EVALUACION_CONVERTER.fromTarget(value.peticionEvaluacion)
     };
   }

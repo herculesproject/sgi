@@ -26,7 +26,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     this.peticionEvaluacion.activo = true;
     this.peticionEvaluacion.externo = false;
     this.peticionEvaluacion.tieneFondosPropios = false;
-    this.peticionEvaluacion.solicitante = { personaRef: sgiAuthService.authStatus$.getValue().userRefId } as IPersona;
+    this.peticionEvaluacion.solicitante = { id: sgiAuthService.authStatus$.getValue().userRefId } as IPersona;
     this.readonly = readonly;
   }
 

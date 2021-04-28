@@ -12,6 +12,7 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -52,6 +53,10 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
   datosGeneralesFragment: EvaluadorDatosGeneralesFragment;
 
   isEditForm: boolean;
+
+  get tipoColectivoEvaluador() {
+    return TipoColectivo.EVALUADOR_ETICA;
+  }
 
   constructor(
     private readonly logger: NGXLogger,

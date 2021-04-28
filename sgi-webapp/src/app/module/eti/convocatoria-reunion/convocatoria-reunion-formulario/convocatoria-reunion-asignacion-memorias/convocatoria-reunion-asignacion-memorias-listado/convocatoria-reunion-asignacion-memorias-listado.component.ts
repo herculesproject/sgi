@@ -10,7 +10,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -55,7 +55,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     private readonly matDialog: MatDialog,
     protected readonly evaluacionService: EvaluacionService,
     protected readonly dialogService: DialogService,
-    protected readonly personaFisicaService: PersonaFisicaService,
+    protected readonly personaService: PersonaService,
     protected readonly snackBarService: SnackBarService,
     private actionService: ConvocatoriaReunionActionService,
     private readonly translate: TranslateService
@@ -88,12 +88,10 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
             return wrapper.value.memoria?.numReferencia;
           case 'evaluador1':
             return wrapper.value.evaluador1?.persona?.nombre
-              + wrapper.value.evaluador1?.persona?.primerApellido
-              + wrapper.value.evaluador1?.persona?.segundoApellido;
+              + ' ' + wrapper.value.evaluador1?.persona?.apellidos;
           case 'evaluador2':
             return wrapper.value.evaluador2?.persona?.nombre
-              + wrapper.value.evaluador2?.persona?.primerApellido
-              + wrapper.value.evaluador2?.persona?.segundoApellido;
+              + ' ' + wrapper.value.evaluador2?.persona?.apellidos;
           default:
             return wrapper.value[property];
         }

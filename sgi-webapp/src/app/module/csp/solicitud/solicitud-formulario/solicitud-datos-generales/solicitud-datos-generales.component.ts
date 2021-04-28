@@ -16,6 +16,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -54,7 +55,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
   msgParamConvocatoriaExternaEntity = {};
   msgParamCodigoExternoEntity = {};
-  msgParamEntidadConvocanteEntity = {}
+  msgParamEntidadConvocanteEntity = {};
   msgParamObservacionesEntity = {};
   msgParamUnidadGestionEntity = {};
 
@@ -63,6 +64,10 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   private subscriptions = [] as Subscription[];
+
+  get tipoColectivoSolicitante() {
+    return TipoColectivo.SOLICITANTE_CSP;
+  }
 
   get FORMULARIO_SOLICITUD_MAP() {
     return FORMULARIO_SOLICITUD_MAP;

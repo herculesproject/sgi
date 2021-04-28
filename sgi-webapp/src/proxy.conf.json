@@ -27,7 +27,7 @@
     "logLevel": "debug"
   },
   "/api/sgp": {
-    "target": "http://192.168.3.127:8280",
+    "target": "http://wso-mi.ic.corp.treelogic.com",
     "pathRewrite": {
       "^/api/sgp": "/sgp"
     },
@@ -35,10 +35,19 @@
     "secure": false,
     "logLevel": "debug"
   },
-  "/api/sge": {
+  "/api/sge/**": {
     "target": "http://192.168.3.127:8280",
     "pathRewrite": {
       "^/api/sge": "/sge"
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sgemp/**": {
+    "target": "http://192.168.3.127:8280",
+    "pathRewrite": {
+      "^/api/sgemp": "/sgp"
     },
     "changeOrigin": true,
     "secure": false,

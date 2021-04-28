@@ -173,7 +173,7 @@
             <mat-form-field class="input-form">
               <mat-label>{{'csp.proyecto.responsable' | translate}}</mat-label>
               <sgi-select-persona placeholder="{{'csp.proyecto.responsable' | translate}}"
-                formControlName="responsableProyecto"></sgi-select-persona>
+                formControlName="responsableProyecto" [colectivos]="colectivosResponsableProyecto"></sgi-select-persona>
             </mat-form-field>
           </div>
           <!-- Miembro de equipo -->
@@ -182,7 +182,7 @@
             <mat-form-field class="input-form">
               <mat-label>{{'csp.proyecto.miembro-equipo' | translate}}</mat-label>
               <sgi-select-persona placeholder="{{'csp.proyecto.miembro-equipo' | translate}}"
-                formControlName="miembroEquipo"></sgi-select-persona>
+                formControlName="miembroEquipo" [colectivos]="colectivosMiembroEquipo"></sgi-select-persona>
             </mat-form-field>
           </div>
         </div>

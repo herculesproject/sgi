@@ -14,10 +14,11 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -50,6 +51,10 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
   filteredTipoEvaluacion: Observable<TipoEvaluacion[]>;
   filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
+  get tipoColectivoSolicitante() {
+    return TipoColectivo.SOLICITANTE_ETICA;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
@@ -57,7 +62,7 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
     private readonly comiteService: ComiteService,
     private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
-    protected readonly personaFisicaService: PersonaFisicaService
+    protected readonly personaService: PersonaService
   ) {
 
     super(snackBarService, MSG_ERROR);
@@ -116,7 +121,7 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
         'convocatoriaReunion.tipoConvocatoriaReunion.id',
         SgiRestFilterOperator.EQUALS,
         controls.tipoConvocatoriaReunion.value?.id?.toString()
-      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
+      ).and('memoria.peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id);
 
     return filter;
   }
@@ -136,8 +141,8 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
           // Solicitantes
           const listObservables: Observable<IEvaluacion>[] = [];
           response.items.forEach((evaluacion) => {
-            const evaluacion$ = this.personaFisicaService.getInformacionBasica(
-              evaluacion.memoria?.peticionEvaluacion?.solicitante?.personaRef
+            const evaluacion$ = this.personaService.findById(
+              evaluacion.memoria?.peticionEvaluacion?.solicitante?.id
             ).pipe(
               map((personaInfo) => {
                 evaluacion.memoria.peticionEvaluacion.solicitante = personaInfo;

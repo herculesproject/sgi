@@ -3,7 +3,7 @@ import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
@@ -19,7 +19,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
     private readonly logger: NGXLogger,
     key: number,
     private service: EvaluacionService,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private convocatoriaReunionService: ConvocatoriaReunionService
   ) {
     super(key);
@@ -88,24 +88,24 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragme
             return of([]);
           }
 
-          const personaRefsEvaluadores = new Set<string>();
+          const personaIdsEvaluadores = new Set<string>();
 
           evaluaciones.forEach((evaluacion: IEvaluacion) => {
-            personaRefsEvaluadores.add(evaluacion?.evaluador1?.persona?.personaRef);
-            personaRefsEvaluadores.add(evaluacion?.evaluador2?.persona?.personaRef);
+            personaIdsEvaluadores.add(evaluacion?.evaluador1?.persona?.id);
+            personaIdsEvaluadores.add(evaluacion?.evaluador2?.persona?.id);
           });
 
-          return this.personaFisicaService.findByPersonasRefs([...personaRefsEvaluadores]).pipe(
+          return this.personaService.findAllByIdIn([...personaIdsEvaluadores]).pipe(
             map((result) => {
               const personas = result.items;
 
               evaluaciones.forEach((evaluacion: IEvaluacion) => {
                 const datosPersonaEvaluador1 = personas.find((persona) =>
-                  evaluacion.evaluador1.persona.personaRef === persona.personaRef);
+                  evaluacion.evaluador1.persona.id === persona.id);
                 evaluacion.evaluador1.persona = datosPersonaEvaluador1;
 
                 const datosPersonaEvaluador2 = personas.find((persona) =>
-                  evaluacion.evaluador2.persona.personaRef === persona.personaRef);
+                  evaluacion.evaluador2.persona.id === persona.id);
                 evaluacion.evaluador2.persona = datosPersonaEvaluador2;
               });
 

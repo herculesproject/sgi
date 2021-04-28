@@ -1,11 +1,5 @@
-import { IPersona } from '../sgp/persona';
-import { IRolProyecto } from './rol-proyecto';
+import { IMiembroEquipoSolicitud } from "./miembro-equipo-solicitud";
 
-export interface ISolicitudProyectoSocioEquipo {
-  id: number;
+export interface ISolicitudProyectoSocioEquipo extends IMiembroEquipoSolicitud {
   solicitudProyectoSocioId: number;
-  persona: IPersona;
-  rolProyecto: IRolProyecto;
-  mesInicio: number;
-  mesFin: number;
 }

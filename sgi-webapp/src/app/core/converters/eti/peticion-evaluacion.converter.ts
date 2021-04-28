@@ -25,7 +25,7 @@ class PeticionEvaluacionConverter extends SgiBaseConverter<IPeticionEvaluacionBa
       disMetodologico: value.disMetodologico,
       externo: value.externo,
       tieneFondosPropios: value.tieneFondosPropios,
-      solicitante: { personaRef: value.personaRef } as IPersona,
+      solicitante: { id: value.personaRef } as IPersona,
       activo: value.activo
     };
   }
@@ -50,7 +50,7 @@ class PeticionEvaluacionConverter extends SgiBaseConverter<IPeticionEvaluacionBa
       disMetodologico: value.disMetodologico,
       externo: value.externo,
       tieneFondosPropios: value.tieneFondosPropios,
-      personaRef: value.solicitante?.personaRef,
+      personaRef: value.solicitante?.id,
       activo: value.activo
     };
   }

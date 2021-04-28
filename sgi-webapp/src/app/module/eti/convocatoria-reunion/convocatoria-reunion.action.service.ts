@@ -7,7 +7,7 @@ import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
@@ -42,7 +42,7 @@ export class ConvocatoriaReunionActionService extends ActionService {
     service: ConvocatoriaReunionService,
     asistenteService: AsistenteService,
     evaluacionService: EvaluacionService,
-    personaFisicaService: PersonaFisicaService,
+    personaService: PersonaService,
     evaluadorService: EvaluadorService
   ) {
     super();
@@ -54,11 +54,11 @@ export class ConvocatoriaReunionActionService extends ActionService {
     this.datosGenerales = new ConvocatoriaReunionDatosGeneralesFragment(
       logger,
       fb, this.convocatoriaReunion?.id,
-      service, asistenteService, personaFisicaService, evaluadorService);
+      service, asistenteService, personaService, evaluadorService);
     this.asignacionMemorias = new ConvocatoriaReunionAsignacionMemoriasListadoFragment(
       logger,
       this.convocatoriaReunion?.id,
-      evaluacionService, personaFisicaService, service);
+      evaluacionService, personaService, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.ASIGNACION_MEMORIAS, this.asignacionMemorias);

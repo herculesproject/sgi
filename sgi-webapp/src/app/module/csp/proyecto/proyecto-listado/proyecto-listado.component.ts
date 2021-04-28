@@ -15,6 +15,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -57,6 +58,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   fxLayoutProperties: FxLayoutProperties;
   proyecto$: Observable<IProyecto[]>;
 
+  colectivosResponsableProyecto: string[];
+  colectivosMiembroEquipo: string[];
+
   get Estado() {
     return Estado;
   }
@@ -91,6 +95,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private programaService: ProgramaService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
+    private rolProyectoService: RolProyectoService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
@@ -120,8 +125,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       fechaFinDesde: new FormControl(),
       fechaFinHasta: new FormControl(),
       ambitoGeografico: new FormControl(''),
-      responsableProyecto: new FormControl(''),
-      miembroEquipo: new FormControl(''),
+      responsableProyecto: new FormControl({ value: '', disabled: true }),
+      miembroEquipo: new FormControl({ value: '', disabled: true }),
       socioColaborador: new FormControl(''),
       convocatoria: new FormControl(''),
       entidadConvocante: new FormControl(''),
@@ -133,6 +138,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.loadAmbitoGeografico();
     this.loadPlanInvestigacion();
     this.loadFuenteFinanciacion();
+    this.loadColectivos();
     this.filter = this.createFilter();
   }
 
@@ -263,8 +269,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
       .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
       .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
-      .and('responsableProyecto', SgiRestFilterOperator.EQUALS, controls.responsableProyecto.value?.personaRef)
-      .and('equipos.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.personaRef)
+      .and('responsableProyecto', SgiRestFilterOperator.EQUALS, controls.responsableProyecto.value?.id)
+      .and('equipos.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
       .and('socios.empresaRef', SgiRestFilterOperator.EQUALS, controls.socioColaborador.value?.personaRef)
       .and('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
       .and('entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
@@ -490,6 +496,30 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
               startWith(''),
               map(value => this.filtroAmbitoGeografico(value))
             );
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR);
+        }
+      )
+    );
+  }
+
+  /**
+   * Carga las listas de colectivos para hacer la busqueda de responsables de proyecto y miembros de equipo
+   * y activa ambos campos en el buscador.
+   */
+  private loadColectivos() {
+    this.subscriptions.push(
+      this.rolProyectoService.findAll().subscribe(
+        (res) => {
+          this.colectivosMiembroEquipo = res.items.map(rol => rol.colectivoRef);
+          this.formGroup.controls.miembroEquipo.enable();
+
+          this.colectivosResponsableProyecto = res.items
+            .filter(rol => rol.rolPrincipal || rol.responsableEconomico)
+            .map(rol => rol.colectivoRef);
+          this.formGroup.controls.responsableProyecto.enable();
         },
         (error) => {
           this.logger.error(error);

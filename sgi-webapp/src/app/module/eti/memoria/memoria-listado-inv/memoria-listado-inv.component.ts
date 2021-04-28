@@ -19,6 +19,7 @@ import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -106,8 +107,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       comite: new FormControl('', []),
       titulo: new FormControl('', []),
       numReferencia: new FormControl('', []),
-      tipoEstadoMemoria: new FormControl('', []),
-      solicitante: new FormControl('', [])
+      tipoEstadoMemoria: new FormControl('', [])
     });
 
     this.loadComites();
@@ -178,8 +178,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     return new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
       .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.numReferencia.value)
-      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
-      .and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
+      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString());
   }
 
   protected loadTable(reset?: boolean) {

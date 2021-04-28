@@ -19,7 +19,7 @@ import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
@@ -81,6 +81,10 @@ export class SolicitudActionService extends ActionService {
     return this.datosGenerales.getValue().formularioSolicitud;
   }
 
+  get duracionProyecto(): number {
+    return this.proyectoDatos.getValue().duracion;
+  }
+
   get estado(): Estado {
     return this.datosGenerales.getValue().estado?.estado;
   }
@@ -108,7 +112,7 @@ export class SolicitudActionService extends ActionService {
     configuracionSolicitudService: ConfiguracionSolicitudService,
     convocatoriaService: ConvocatoriaService,
     empresaEconomicaService: EmpresaEconomicaService,
-    personaFisicaService: PersonaFisicaService,
+    personaService: PersonaService,
     solicitudModalidadService: SolicitudModalidadService,
     solicitudHitoService: SolicitudHitoService,
     unidadGestionService: UnidadGestionService,
@@ -134,7 +138,7 @@ export class SolicitudActionService extends ActionService {
       configuracionSolicitudService,
       convocatoriaService,
       empresaEconomicaService,
-      personaFisicaService,
+      personaService,
       solicitudModalidadService,
       unidadGestionService,
       this.readonly

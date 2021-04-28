@@ -5,12 +5,16 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
 import { EntidadFinanciadoraModalComponent } from '../modals/entidad-financiadora-modal/entidad-financiadora-modal.component';
+import { MiembroEquipoProyectoModalComponent } from '../modals/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
+import { MiembroEquipoSolicitudModalComponent } from './miembro-equipo-solicitud-modal/miembro-equipo-solicitud-modal.component';
 import { PartidaGastoModalComponent } from './partida-gasto-modal/partida-gasto-modal.component';
 
 @NgModule({
   declarations: [
     EntidadFinanciadoraModalComponent,
-    PartidaGastoModalComponent
+    PartidaGastoModalComponent,
+    MiembroEquipoProyectoModalComponent,
+    MiembroEquipoSolicitudModalComponent
   ],
   imports: [
     SharedModule,
@@ -22,7 +26,8 @@ import { PartidaGastoModalComponent } from './partida-gasto-modal/partida-gasto-
   ],
   exports: [
     EntidadFinanciadoraModalComponent,
-    PartidaGastoModalComponent
+    PartidaGastoModalComponent,
+    MiembroEquipoSolicitudModalComponent
   ]
 })
 export class CspModalsModule { }

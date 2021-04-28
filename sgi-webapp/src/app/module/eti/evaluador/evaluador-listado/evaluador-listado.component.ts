@@ -14,11 +14,12 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -61,12 +62,16 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   personas$: Observable<IPersona[]> = of();
 
+  get tipoColectivoEvaluador() {
+    return TipoColectivo.EVALUADOR_ETICA;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly evaluadoresService: EvaluadorService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
-    private readonly personaFisicaService: PersonaFisicaService,
+    private readonly personaService: PersonaService,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
@@ -141,7 +146,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   }
 
   protected initColumns(): void {
-    this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
+    this.displayedColumns = ['nombre', 'numeroDocumento', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
   }
 
   protected createFilter(): SgiRestFilter {
@@ -153,7 +158,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         .and('fechaBaja', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(DateTime.now()))
         .and('fechaAlta', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(DateTime.now().plus({ days: 1 })));
     }
-    filter.and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
+    filter.and('personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id);
 
     return filter;
   }
@@ -207,8 +212,8 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         evaluador.activo = false;
       }
 
-      if (evaluador.persona.personaRef && evaluador.persona.personaRef !== '') {
-        this.personasRef.push(evaluador.persona.personaRef);
+      if (evaluador.persona.id && evaluador.persona.id !== '') {
+        this.personasRef.push(evaluador.persona.id);
       }
 
       // cambiar en futuro pasando las referencias de las personas
@@ -223,7 +228,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * returns el evaluador con los datos de persona
    */
   loadDatosUsuario(evaluador: IEvaluador): IEvaluador {
-    const personaServiceOneSubscription = this.personaFisicaService.getInformacionBasica(evaluador.persona.personaRef)
+    const personaServiceOneSubscription = this.personaService.findById(evaluador.persona.id)
       .subscribe(
         (persona: IPersona) => {
           evaluador.persona = persona;

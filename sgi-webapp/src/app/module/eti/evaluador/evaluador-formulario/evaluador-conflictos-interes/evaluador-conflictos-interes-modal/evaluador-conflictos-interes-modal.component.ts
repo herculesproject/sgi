@@ -10,6 +10,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { Subscription } from 'rxjs';
 
 const MSG_ERROR_FORM = marker('error.form-group');
@@ -33,6 +34,10 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
   nuevaPersonaConflicto: IPersona;
   msgParamConflictoInteresEntity = {};
   msgParamPersonaEntity = {};
+
+  get tipoColectivoEquipoTrabajo() {
+    return TipoColectivo.EQUIPO_TRABAJO_ETICA;
+  }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public conflictos: IConflictoInteres[],
@@ -70,8 +75,7 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
 
     this.personaChangeSuscripcion =
       this.formGroup.controls.persona.valueChanges.subscribe((value) => {
-        this.formGroup.controls.identificador.setValue(
-          `${value.identificadorNumero}${value.identificadorLetra}`);
+        this.formGroup.controls.identificador.setValue(`${value.numeroDocumento}`);
       });
   }
 
@@ -84,7 +88,7 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
     if (conflictoInteres) {
       const isRepetido =
         this.conflictos.some(conflictoListado =>
-          conflictoInteres.personaConflicto.personaRef === conflictoListado.personaConflicto.personaRef);
+          conflictoInteres.personaConflicto.id === conflictoListado.personaConflicto.id);
 
       if (isRepetido) {
         this.snackBarService.showError(MSG_ERROR_CONFLICTO_REPETIDO);

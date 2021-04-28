@@ -12,7 +12,7 @@ class EquipoTrabajoWithIsEliminableConverter
     }
     return {
       id: value.id,
-      persona: { personaRef: value.personaRef } as IPersona,
+      persona: { id: value.personaRef } as IPersona,
       peticionEvaluacion: PETICION_EVALUACION_CONVERTER.toTarget(value.peticionEvaluacion),
       eliminable: value.eliminable
     };
@@ -24,7 +24,7 @@ class EquipoTrabajoWithIsEliminableConverter
     }
     return {
       id: value.id,
-      personaRef: value.persona?.personaRef,
+      personaRef: value.persona?.id,
       peticionEvaluacion: PETICION_EVALUACION_CONVERTER.fromTarget(value.peticionEvaluacion),
       eliminable: value.eliminable
     };

@@ -34,7 +34,7 @@
       <mat-form-field fxFill>
         <mat-label>{{'csp.solicitud.solicitante' | translate}}</mat-label>
         <sgi-select-persona placeholder="{{'csp.solicitud.solicitante' | translate}}" formControlName="solicitante"
-          required>
+          [tipoColectivo]="tipoColectivoSolicitante" required>
         </sgi-select-persona>
       </mat-form-field>
     </div>

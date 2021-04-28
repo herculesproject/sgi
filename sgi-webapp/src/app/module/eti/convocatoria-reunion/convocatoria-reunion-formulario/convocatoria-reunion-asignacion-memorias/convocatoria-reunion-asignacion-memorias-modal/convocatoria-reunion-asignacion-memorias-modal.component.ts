@@ -12,7 +12,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -76,7 +76,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     private readonly dialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,
     private readonly evaluadorService: EvaluadorService,
     private readonly memoriaService: MemoriaService,
-    private readonly PersonafisicaService: PersonaFisicaService,
+    private readonly personaService: PersonaService,
     private readonly snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private readonly translate: TranslateService
@@ -357,19 +357,19 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
           if (response.items) {
             const evaluadores = response.items;
 
-            const personaRefsEvaluadores = evaluadores.map((convocante: IEvaluador) => convocante.persona.personaRef);
+            const personaIdsEvaluadores = new Set<string>(evaluadores.map((convocante: IEvaluador) => convocante.persona.id));
 
-            if (personaRefsEvaluadores.length === 0) {
+            if (personaIdsEvaluadores.size === 0) {
               return of([]);
             }
 
-            const evaluadoresWithDatosPersona$ = this.PersonafisicaService.findByPersonasRefs(personaRefsEvaluadores).pipe(
+            const evaluadoresWithDatosPersona$ = this.personaService.findAllByIdIn([...personaIdsEvaluadores]).pipe(
               map((result: SgiRestListResult<IPersona>) => {
                 const personas = result.items;
 
                 evaluadores.forEach((evaluador: IEvaluador) => {
                   const datosPersonaEvaluador = personas.find(
-                    (persona: IPersona) => evaluador.persona.personaRef === persona.personaRef
+                    (persona: IPersona) => evaluador.persona.id === persona.id
                   );
                   evaluador.persona = datosPersonaEvaluador;
                 });
@@ -420,12 +420,12 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();
     } else {
-      filterValue = (value.persona.nombre + ' ' + value.persona.primerApellido + ' ' + value.persona.segundoApellido).toLowerCase();
+      filterValue = (value.persona.nombre + ' ' + value.persona.apellidos).toLowerCase();
     }
 
     return this.evaluadores.filter
       (evaluador =>
-        (evaluador.persona.nombre + ' ' + evaluador.persona.primerApellido + ' ' + evaluador.persona.segundoApellido)
+        (evaluador.persona.nombre + ' ' + evaluador.persona.apellidos)
           .toLowerCase().includes(filterValue));
   }
 
@@ -436,7 +436,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * @returns nombre completo del evaluador
    */
   getEvaluador(evaluador: IEvaluador): string {
-    return evaluador ? evaluador.persona.nombre + ' ' + evaluador.persona.primerApellido + ' ' + evaluador.persona.segundoApellido : '';
+    return evaluador ? evaluador.persona.nombre + ' ' + evaluador.persona.apellidos : '';
   }
 
   /**
@@ -463,7 +463,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   onAsignarmemoria(): void {
     const evaluacion: IEvaluacion = this.getDatosForm();
 
-    if (evaluacion.evaluador1?.persona?.personaRef === evaluacion.evaluador2?.persona?.personaRef) {
+    if (evaluacion.evaluador1?.persona?.id === evaluacion.evaluador2?.persona?.id) {
       this.snackBarService.showError(MSG_ERROR_EVALUADOR_REPETIDO);
       return;
     }

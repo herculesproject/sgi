@@ -24,7 +24,7 @@ import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service'
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -123,7 +123,7 @@ export class ProyectoActionService extends ActionService {
     documentoService: DocumentoService,
     proyectoEntidadGestora: ProyectoEntidadGestoraService,
     proyectoEquipoService: ProyectoEquipoService,
-    personaFisicaService: PersonaFisicaService,
+    personaService: PersonaService,
     proyectoProrrogaService: ProyectoProrrogaService,
     proyectoDocumentoService: ProyectoDocumentoService,
     solicitudService: SolicitudService,
@@ -155,7 +155,7 @@ export class ProyectoActionService extends ActionService {
       this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService);
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
         id, proyectoService, proyectoPeriodoSeguimientoService, documentoService);
-      this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaFisicaService);
+      this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService);
       this.entidadGestora = new ProyectoEntidadGestoraFragment(fb, id, proyectoService, proyectoEntidadGestora, empresaEconomicaService);
       this.prorrogas = new ProyectoProrrogasFragment(id, proyectoService, proyectoProrrogaService, documentoService);
       this.historicoEstados = new ProyectoHistoricoEstadosFragment(id, proyectoService);

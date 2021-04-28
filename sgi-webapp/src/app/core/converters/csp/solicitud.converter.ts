@@ -19,8 +19,8 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       estado: ESTADO_SOLICITUD_CONVERTER.toTarget(value.estado),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
-      creador: { personaRef: value.creadorRef } as IPersona,
-      solicitante: { personaRef: value.solicitanteRef } as IPersona,
+      creador: { id: value.creadorRef } as IPersona,
+      solicitante: { id: value.solicitanteRef } as IPersona,
       formularioSolicitud: value.formularioSolicitud,
       unidadGestion: { acronimo: value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones
@@ -39,8 +39,8 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       estado: ESTADO_SOLICITUD_CONVERTER.fromTarget(value.estado),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
-      creadorRef: value.creador?.personaRef,
-      solicitanteRef: value.solicitante?.personaRef,
+      creadorRef: value.creador?.id,
+      solicitanteRef: value.solicitante?.id,
       formularioSolicitud: value.formularioSolicitud,
       unidadGestionRef: value.unidadGestion?.acronimo,
       observaciones: value.observaciones

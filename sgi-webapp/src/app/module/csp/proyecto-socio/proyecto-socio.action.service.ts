@@ -8,7 +8,7 @@ import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/pro
 import { ProyectoSocioPeriodoPagoService } from '@core/services/csp/proyecto-socio-periodo-pago.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { PROYECTO_SOCIO_DATA_KEY } from './proyecto-socio-data.resolver';
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-formulario/proyecto-socio-datos-generales/proyecto-socio-datos-generales.fragment';
@@ -57,7 +57,7 @@ export class ProyectoSocioActionService extends ActionService {
     empresaEconomicaService: EmpresaEconomicaService,
     proyectoSocioService: ProyectoSocioService,
     proyectoEquipoSocioService: ProyectoSocioEquipoService,
-    personaFisicaService: PersonaFisicaService,
+    personaService: PersonaService,
     proyectoSocioPeriodoPagoService: ProyectoSocioPeriodoPagoService,
     proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService
   ) {
@@ -72,7 +72,7 @@ export class ProyectoSocioActionService extends ActionService {
     this.datosGenerales = new ProyectoSocioDatosGeneralesFragment(id, this.data.proyecto.id,
       proyectoSocioService, empresaEconomicaService);
     this.equipo = new ProyectoSocioEquipoFragment(logger, id, proyectoSocioService,
-      proyectoEquipoSocioService, personaFisicaService);
+      proyectoEquipoSocioService, personaService);
     this.periodoPago = new ProyectoSocioPeriodoPagoFragment(logger, id, proyectoSocioService,
       proyectoSocioPeriodoPagoService);
     this.periodosJustificacion = new ProyectoSocioPeriodoJustificacionFragment(logger, id,

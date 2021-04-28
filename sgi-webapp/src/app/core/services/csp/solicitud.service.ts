@@ -37,7 +37,7 @@ import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@s
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import { PersonaFisicaService } from '../sgp/persona-fisica.service';
+import { PersonaService } from '../sgp/persona.service';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
 
 @Injectable({
@@ -49,7 +49,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   constructor(
     private readonly logger: NGXLogger,
     protected http: HttpClient,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
   ) {
     super(
       SolicitudService.name,
@@ -191,8 +191,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }
 
   private loadSolicitante(solicitudProyectoEquipo: ISolicitudProyectoEquipo): Observable<ISolicitudProyectoEquipo> {
-    const personaRef = solicitudProyectoEquipo.persona.personaRef;
-    return this.personaFisicaService.getInformacionBasica(personaRef).pipe(
+    return this.personaService.findById(solicitudProyectoEquipo.persona.id).pipe(
       map(solicitante => {
         solicitudProyectoEquipo.persona = solicitante;
         return solicitudProyectoEquipo;

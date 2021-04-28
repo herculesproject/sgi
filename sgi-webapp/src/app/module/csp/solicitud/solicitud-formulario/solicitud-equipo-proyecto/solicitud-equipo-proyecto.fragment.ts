@@ -60,6 +60,19 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
     this.setChanges(true);
   }
 
+  updateProyectoEquipo(wrapper: StatusWrapper<ISolicitudProyectoEquipo>): void {
+    const current = this.proyectoEquipos$.value;
+    const index = current.findIndex(value => value.value.id === wrapper.value.id);
+    if (index >= 0) {
+      if (!wrapper.created) {
+        wrapper.setEdited();
+        this.setChanges(true);
+      }
+      this.proyectoEquipos$.value[index] = wrapper;
+      this.proyectoEquipos$.next(this.proyectoEquipos$.value);
+    }
+  }
+
   saveOrUpdate(): Observable<void> {
     return merge(
       this.deleteEquipoProyecto(),

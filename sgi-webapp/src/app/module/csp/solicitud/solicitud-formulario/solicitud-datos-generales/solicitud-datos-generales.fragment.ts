@@ -13,7 +13,7 @@ import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalida
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
@@ -52,7 +52,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private convocatoriaService: ConvocatoriaService,
     private empresaEconomicaService: EmpresaEconomicaService,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private solicitudModalidadService: SolicitudModalidadService,
     private unidadGestionService: UnidadGestionService,
     public readonly: boolean
@@ -68,7 +68,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         return solicitud as SolicitudDatosGenerales;
       }),
       switchMap((solicitud) => {
-        return this.personaFisicaService.getInformacionBasica(solicitud.solicitante.personaRef).pipe(
+        return this.personaService.findById(solicitud.solicitante.id).pipe(
           map(solicitente => {
             solicitud.solicitante = solicitente;
             return solicitud;

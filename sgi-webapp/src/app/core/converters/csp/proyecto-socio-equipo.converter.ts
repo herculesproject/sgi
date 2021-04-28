@@ -14,7 +14,7 @@ class ProyectoSocioEquipoConverter extends SgiBaseConverter<IProyectoSocioEquipo
       id: value.id,
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
-      persona: { personaRef: value.personaRef } as IPersona,
+      persona: { id: value.personaRef } as IPersona,
       rolProyecto: value.rolProyecto,
       proyectoSocioId: value.proyectoSocioId
     };
@@ -28,7 +28,7 @@ class ProyectoSocioEquipoConverter extends SgiBaseConverter<IProyectoSocioEquipo
       id: value.id,
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
-      personaRef: value.persona?.personaRef,
+      personaRef: value.persona?.id,
       rolProyecto: value.rolProyecto,
       proyectoSocioId: value.proyectoSocioId
     };

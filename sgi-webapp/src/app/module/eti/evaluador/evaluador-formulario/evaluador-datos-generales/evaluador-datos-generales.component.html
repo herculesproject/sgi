@@ -10,7 +10,8 @@
       [fxFlexOrder]="fxFlexProperties.order" [ngClass]="{'disabled': isEditForm}">
       <mat-form-field fxFill>
         <mat-label>{{'title.eti.search.user' | translate}}</mat-label>
-        <sgi-select-persona placeholder="{{'title.eti.search.user' | translate}}" formControlName="persona" required>
+        <sgi-select-persona placeholder="{{'title.eti.search.user' | translate}}" formControlName="persona"
+          [tipoColectivo]="tipoColectivoEvaluador" required>
         </sgi-select-persona>
         <mat-error *ngIf="formGroup.controls.persona.errors?.required">
           {{'error.required.entity' | translate:msgParamPersonaEntity}}

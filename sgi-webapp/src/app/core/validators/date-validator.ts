@@ -172,4 +172,27 @@ export class DateValidator {
       }
     };
   }
+
+  /**
+   * Comprueba que la fecha este entre las fecha indicadas
+   *
+   * @param minDate fecha minima
+   * @param maxDate fecha maxima
+   */
+  static isBetween(minDate: DateTime, maxDate: DateTime): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if ((control.errors && !control.errors.invalid
+        || control.errors && !control.errors.invalid)) {
+        return null;
+      }
+
+      const date = control.value;
+      if (date && (date < minDate || date > maxDate)) {
+        return { invalid: true } as ValidationErrors;
+      }
+
+      return null;
+    };
+  }
+
 }

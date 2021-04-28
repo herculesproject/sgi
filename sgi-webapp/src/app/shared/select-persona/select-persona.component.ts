@@ -1,11 +1,17 @@
-import { Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Optional, Self } from '@angular/core';
+import { Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { SelectDialogComponent } from '@core/component/select-dialog/select-dialog.component';
 import { IPersona } from '@core/models/sgp/persona';
-import { SearchPersonaModalComponent } from './dialog/search-persona.component';
+import { SearchPersonaModalComponent, SearchPersonaModalData } from './dialog/search-persona.component';
 
+export enum TipoColectivo {
+  SOLICITANTE_ETICA = 'SOLICITANTE_ETICA',
+  EVALUADOR_ETICA = 'EVALUADOR_ETICA',
+  EQUIPO_TRABAJO_ETICA = 'EQUIPO_TRABAJO_ETICA',
+  SOLICITANTE_CSP = 'SOLICITANTE_CSP'
+}
 
 @Component({
   selector: 'sgi-select-persona',
@@ -43,6 +49,25 @@ import { SearchPersonaModalComponent } from './dialog/search-persona.component';
 })
 export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaModalComponent, IPersona> {
 
+  @Input()
+  tipoColectivo: TipoColectivo;
+
+  @Input()
+  get colectivos(): string[] {
+    return this._colectivos;
+  }
+  set colectivos(value: string[]) {
+    if (Array.isArray(value)) {
+      this._colectivos = value;
+    }
+    else {
+      this._colectivos = value ? [value] : [];
+    }
+  }
+  // tslint:disable-next-line: variable-name
+  private _colectivos: string[] = [];
+
+
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     elementRef: ElementRef,
@@ -54,11 +79,18 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
     super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, SearchPersonaModalComponent);
   }
 
+  protected getDialogData(): SearchPersonaModalData {
+    return {
+      tipoColectivo: this.tipoColectivo,
+      colectivos: this.colectivos
+    };
+  }
+
   get displayValue(): string {
     if (this.empty) {
       return '';
     }
 
-    return `${this.value.nombre} ${this.value.primerApellido} ${this.value.segundoApellido} (${this.value.identificadorNumero}${this.value.identificadorLetra})`;
+    return `${this.value.nombre} ${this.value.apellidos} (${this.value.numeroDocumento})`;
   }
 }

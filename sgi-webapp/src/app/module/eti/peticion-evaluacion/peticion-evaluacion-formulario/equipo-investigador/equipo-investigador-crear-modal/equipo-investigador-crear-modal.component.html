@@ -11,7 +11,7 @@
         <mat-form-field fxFill>
           <mat-label>{{'eti.peticion-evaluacion.equipo-investigador.persona' | translate}}</mat-label>
           <sgi-select-persona placeholder="{{'eti.peticion-evaluacion.equipo-investigador.persona' | translate}}"
-            formControlName="persona" required>
+            formControlName="persona" [tipoColectivo]="tipoColectivoPersona" required>
           </sgi-select-persona>
           <mat-error *ngIf="formGroup.controls.persona.errors?.required">
             {{'error.required.entity' | translate:msgParamEntity}}

@@ -14,7 +14,7 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
@@ -72,7 +72,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     private evaluadorService: EvaluadorService,
     private tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private snackBarService: SnackBarService,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private actionService: ConvocatoriaReunionActionService,
     private convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly translate: TranslateService
@@ -244,8 +244,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     return this.evaluadorService.findAll(options)
       .pipe(
         switchMap((listadoConvocantes) => {
-          const personaRefsConvocantes = listadoConvocantes.items.map((convocante: IEvaluador) => convocante.persona.personaRef);
-          const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes)
+          const personaIdsConvocantes = new Set<string>(listadoConvocantes.items.map((convocante: IEvaluador) => convocante.persona.id));
+          const convocantesWithDatosPersona$ = this.personaService.findAllByIdIn([...personaIdsConvocantes])
             .pipe(
               map((personas: SgiRestListResult<IPersona>) => {
                 return this.loadDatosPersona(personas, listadoConvocantes.items);
@@ -269,7 +269,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   private loadDatosPersona(listado: SgiRestListResult<IPersona>, evaluadores: IEvaluador[]): IEvaluador[] {
     const personas = listado.items;
     evaluadores.forEach((convocante) => {
-      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.persona.personaRef === persona.personaRef);
+      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.persona.id === persona.id);
       convocante.persona = datosPersonaConvocante;
     });
     return evaluadores;

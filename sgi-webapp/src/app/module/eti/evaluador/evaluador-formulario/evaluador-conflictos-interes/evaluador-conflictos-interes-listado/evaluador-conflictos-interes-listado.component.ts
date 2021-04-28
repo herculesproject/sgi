@@ -11,7 +11,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -48,7 +47,6 @@ export class EvaluadorConflictosInteresListadoComponent extends FragmentComponen
   constructor(
     protected readonly dialogService: DialogService,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
-    protected readonly personaFisicaService: PersonaFisicaService,
     protected matDialog: MatDialog,
     protected readonly snackBarService: SnackBarService,
     actionService: EvaluadorActionService,
@@ -75,11 +73,10 @@ export class EvaluadorConflictosInteresListadoComponent extends FragmentComponen
       (wrapper: StatusWrapper<IConflictoInteres>, property: string) => {
         switch (property) {
           case 'identificador':
-            return wrapper.value.personaConflicto.identificadorNumero + wrapper.value.personaConflicto.identificadorLetra;
+            return wrapper.value.personaConflicto.numeroDocumento;
           case 'nombreCompleto':
             return wrapper.value.personaConflicto.nombre
-              + ' ' + wrapper.value.personaConflicto.primerApellido
-              + ' ' + wrapper.value.personaConflicto.segundoApellido;
+              + ' ' + wrapper.value.personaConflicto.apellidos;
           default:
             return wrapper.value[property];
         }

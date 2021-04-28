@@ -8,7 +8,7 @@ import { FormFragment } from '@core/services/action-service';
 import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
@@ -29,7 +29,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
     key: number,
     private convocatoriaReunionService: ConvocatoriaReunionService,
     private asistenteService: AsistenteService,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private evaluadorService: EvaluadorService
   ) {
     super(key);
@@ -84,8 +84,8 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
     };
     return this.evaluadorService.findAll(options).pipe(
       switchMap((listadoConvocantes) => {
-        const personaRefs = listadoConvocantes.items.map((convocante) => convocante.persona.personaRef);
-        return this.personaFisicaService.findByPersonasRefs(personaRefs).pipe(
+        const personaIds = new Set<string>(listadoConvocantes.items.map((convocante) => convocante.persona.id));
+        return this.personaService.findAllByIdIn([...personaIds]).pipe(
           map((personas) => this.loadDatosPersona(personas, listadoConvocantes.items))
         );
       }),
@@ -108,7 +108,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
   private loadDatosPersona(listado: SgiRestListResult<IPersona>, evaluadores: IEvaluador[]): IEvaluador[] {
     const personas = listado.items;
     evaluadores.forEach((convocante) => {
-      const datosPersonaConvocante = personas.find((persona) => convocante.persona.personaRef === persona.personaRef);
+      const datosPersonaConvocante = personas.find((persona) => convocante.persona.id === persona.id);
       convocante.persona = datosPersonaConvocante;
     });
     return evaluadores;

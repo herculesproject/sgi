@@ -7,7 +7,6 @@ import { SharedModule } from '@shared/shared.module';
 import { CambioEstadoModalComponent } from './modals/cambio-estado-modal/cambio-estado-modal.component';
 import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
 import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
-import { SolicitudEquipoProyectoModalComponent } from './modals/solicitud-equipo-proyecto-modal/solicitud-equipo-proyecto-modal.component';
 import { SolicitiudHitosModalComponent } from './modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
@@ -40,7 +39,6 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudProyectoFichaGeneralComponent,
     SolicitudAreaTematicaModalComponent,
     SolicitudEquipoProyectoComponent,
-    SolicitudEquipoProyectoModalComponent,
     SolicitudProyectoSocioComponent,
     SolicitudProyectoEntidadesFinanciadorasComponent,
     SolicitudProyectoPresupuestoGlobalComponent,

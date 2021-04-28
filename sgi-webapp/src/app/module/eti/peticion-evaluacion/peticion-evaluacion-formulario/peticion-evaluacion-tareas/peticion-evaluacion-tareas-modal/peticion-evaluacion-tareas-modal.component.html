@@ -13,7 +13,7 @@
             (click)="onClickEquipoTrabajo()" required>
           <mat-autocomplete #autocompleteEquipoTrabajo="matAutocomplete" [displayWith]="getEquipoTrabajo">
             <mat-option *ngFor="let eqt of filteredEquiposTrabajo | async" [value]="eqt">
-              {{eqt?.persona?.nombre}} {{eqt?.persona?.primerApellido}} {{eqt?.persona?.segundoApellido}}
+              {{eqt?.persona?.nombre}} {{eqt?.persona?.apellidos}}
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="formGroup.controls.equipoTrabajo.errors?.required">

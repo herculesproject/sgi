@@ -10,12 +10,12 @@
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="dataSource" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
 
-    <!-- Persona Column -->
+    <!-- Nº identificacion Column -->
     <ng-container matColumnDef="persona">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.solicitud-equipo-proyecto.numero-identificacion' | translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.persona.personaRef}} </td>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.persona.numeroDocumento}} </td>
     </ng-container>
 
     <!-- Nombre Column -->
@@ -29,8 +29,7 @@
     <ng-container matColumnDef="apellidos">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.solicitud-equipo-proyecto.apellidos' | translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.persona.primerApellido}}
-        {{wrapper.value.persona.segundoApellido}}</td>
+      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.persona.apellidos}} </td>
     </ng-container>
 
     <!-- Rol de proyecto Column -->

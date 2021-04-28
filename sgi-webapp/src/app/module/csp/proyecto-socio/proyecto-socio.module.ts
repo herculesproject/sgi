@@ -5,7 +5,6 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { ProyectoSocioEquipoModalComponent } from './modals/proyecto-socio-equipo-modal/proyecto-socio-equipo-modal.component';
 import { ProyectoSocioPeriodoPagoModalComponent } from './modals/proyecto-socio-periodo-pago-modal/proyecto-socio-periodo-pago-modal.component';
 import { ProyectoSocioCrearComponent } from './proyecto-socio-crear/proyecto-socio-crear.component';
 import { ProyectoSocioDataResolver } from './proyecto-socio-data.resolver';
@@ -22,7 +21,6 @@ import { ProyectoSocioRouting } from './proyecto-socio-routing.module';
     ProyectoSocioEditarComponent,
     ProyectoSocioDatosGeneralesComponent,
     ProyectoSocioEquipoComponent,
-    ProyectoSocioEquipoModalComponent,
     ProyectoSocioPeriodoPagoComponent,
     ProyectoSocioPeriodoPagoModalComponent,
     ProyectoSocioPeriodoJustificacionComponent

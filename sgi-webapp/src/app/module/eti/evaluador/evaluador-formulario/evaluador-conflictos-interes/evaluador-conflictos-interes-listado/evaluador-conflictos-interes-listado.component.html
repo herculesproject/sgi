@@ -8,7 +8,7 @@
         {{'eti.evaluador.conflicto-interes.identificador' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value.personaConflicto?.identificadorNumero}}{{wrapper.value.personaConflicto?.identificadorLetra}}
+        {{wrapper.value.personaConflicto?.numeroDocumento}}
       </td>
     </ng-container>
 
@@ -17,9 +17,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.evaluador.conflicto-interes.persona' | translate}}
       </th>
-      <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.personaConflicto?.nombre}}
-        {{wrapper.value.personaConflicto?.primerApellido}}
-        {{wrapper.value.personaConflicto?.segundoApellido}} </td>
+      <td mat-cell *matCellDef="let wrapper">
+        {{wrapper.value.personaConflicto?.nombre}}
+        {{wrapper.value.personaConflicto?.apellidos}}
+      </td>
     </ng-container>
 
     <!-- Acciones Column -->

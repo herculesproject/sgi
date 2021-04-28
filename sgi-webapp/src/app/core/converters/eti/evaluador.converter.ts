@@ -16,7 +16,7 @@ class EvaluadorConverter extends SgiBaseConverter<IEvaluadorBackend, IEvaluador>
       resumen: value.resumen,
       fechaAlta: LuxonUtils.fromBackend(value.fechaAlta),
       fechaBaja: LuxonUtils.fromBackend(value.fechaBaja),
-      persona: { personaRef: value.personaRef } as IPersona,
+      persona: { id: value.personaRef } as IPersona,
       activo: value.activo
     };
   }
@@ -32,7 +32,7 @@ class EvaluadorConverter extends SgiBaseConverter<IEvaluadorBackend, IEvaluador>
       resumen: value.resumen,
       fechaAlta: LuxonUtils.toBackend(value.fechaAlta),
       fechaBaja: LuxonUtils.toBackend(value.fechaBaja),
-      personaRef: value.persona?.personaRef,
+      personaRef: value.persona?.id,
       activo: value.activo
     };
   }

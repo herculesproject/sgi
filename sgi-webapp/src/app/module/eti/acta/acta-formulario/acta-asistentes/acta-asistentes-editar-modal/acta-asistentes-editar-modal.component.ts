@@ -89,8 +89,10 @@ export class ActaAsistentesEditarModalComponent implements OnInit {
    */
   private initFormGroup() {
     this.formGroup = new FormGroup({
-      asistente: new FormControl(this.asistente?.evaluador?.persona?.nombre + ' ' + this.asistente?.evaluador?.persona?.primerApellido
-        + ' ' + this.asistente?.evaluador?.persona?.segundoApellido, [Validators.required]),
+      asistente: new FormControl(
+        this.asistente?.evaluador?.persona?.nombre + ' ' + this.asistente?.evaluador?.persona?.apellidos,
+        [Validators.required]
+      ),
       asistencia: new FormControl(this.asistente.asistencia, [Validators.required]),
       motivo: new FormControl(this.asistente.motivo),
     });

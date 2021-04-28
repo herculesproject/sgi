@@ -8,7 +8,6 @@ import { SharedModule } from '@shared/shared.module';
 import { CspModalsModule } from '../modals/csp-modals.module';
 import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
 import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
-import { ProyectoEquipoModalComponent } from './modals/proyecto-equipo-modal/proyecto-equipo-modal.component';
 import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
 import { ProyectoPaquetesTrabajoModalComponent } from './modals/proyecto-paquetes-trabajo-modal/proyecto-paquetes-trabajo-modal.component';
 import { ProyectoPlazosModalComponent } from './modals/proyecto-plazos-modal/proyecto-plazos-modal.component';
@@ -55,7 +54,6 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     ProyectoPeriodoSeguimientosComponent,
     ProyectoEntidadGestoraComponent,
     ProyectoEquipoComponent,
-    ProyectoEquipoModalComponent,
     ProyectoProrrogasComponent,
     ProyectoHistoricoEstadosComponent,
     ProyectoDocumentosComponent],

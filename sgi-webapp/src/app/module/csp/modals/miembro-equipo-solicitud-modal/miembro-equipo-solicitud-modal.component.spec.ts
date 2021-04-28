@@ -6,42 +6,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DialogComponent } from '@block/dialog/dialog.component';
 import { HeaderComponent } from '@block/header/header.component';
-import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
-import { IPersona } from '@core/models/sgp/persona';
+import { IMiembroEquipoSolicitud } from '@core/models/csp/miembro-equipo-solicitud';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { EquipoProyectoModalData, SolicitudEquipoProyectoModalComponent } from './solicitud-equipo-proyecto-modal.component';
+import { MiembroEquipoSolicitudModalComponent, MiembroEquipoSolicitudModalData } from './miembro-equipo-solicitud-modal.component';
 
-describe('SolicitudEquipoProyectoModalComponent', () => {
-  let component: SolicitudEquipoProyectoModalComponent;
-  let fixture: ComponentFixture<SolicitudEquipoProyectoModalComponent>;
+describe('MiembroEquipoSolicitudModalComponent', () => {
+  let component: MiembroEquipoSolicitudModalComponent;
+  let fixture: ComponentFixture<MiembroEquipoSolicitudModalComponent>;
 
-  const persona: IPersona = {
-    identificadorLetra: '',
-    identificadorNumero: '',
-    nivelAcademico: '',
-    nombre: '',
-    personaRef: '',
-    primerApellido: '',
-    segundoApellido: '',
-    vinculacion: '',
-  };
-
-  const solicitudProyectoEquipo: ISolicitudProyectoEquipo = {
-    id: 1,
-    mesFin: undefined,
-    mesInicio: undefined,
-    persona,
-    rolProyecto: undefined,
-    solicitudProyectoId: undefined
-  };
-
-  const data: EquipoProyectoModalData = {
-    selectedProyectoEquipos: [],
-    solicitudProyectoEquipo,
+  const data: MiembroEquipoSolicitudModalData = {
+    titleEntity: 'title',
+    selectedEntidades: [],
+    entidad: {} as IMiembroEquipoSolicitud,
+    mesInicialMin: 1,
+    mesFinalMax: 20,
     isEdit: true,
     readonly: true
   };
@@ -49,7 +31,7 @@ describe('SolicitudEquipoProyectoModalComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SolicitudEquipoProyectoModalComponent,
+        MiembroEquipoSolicitudModalComponent,
         DialogComponent,
         HeaderComponent
       ],
@@ -73,7 +55,7 @@ describe('SolicitudEquipoProyectoModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolicitudEquipoProyectoModalComponent);
+    fixture = TestBed.createComponent(MiembroEquipoSolicitudModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

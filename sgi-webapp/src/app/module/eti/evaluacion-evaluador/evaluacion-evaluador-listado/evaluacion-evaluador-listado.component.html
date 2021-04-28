@@ -139,9 +139,10 @@
       <ng-container matColumnDef="solicitante">
         <th mat-header-cell *matHeaderCellDef> {{'eti.solicitante' | translate}}
         </th>
-        <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria.peticionEvaluacion.solicitante?.nombre}}
-          {{evaluacion.memoria.peticionEvaluacion.solicitante?.primerApellido}}
-          {{evaluacion.memoria.peticionEvaluacion.solicitante?.segundoApellido}}</td>
+        <td mat-cell *matCellDef="let evaluacion">
+          {{evaluacion.memoria.peticionEvaluacion.solicitante?.nombre}}
+          {{evaluacion.memoria.peticionEvaluacion.solicitante?.apellidos}}
+        </td>
       </ng-container>
 
       <!-- Versión -->

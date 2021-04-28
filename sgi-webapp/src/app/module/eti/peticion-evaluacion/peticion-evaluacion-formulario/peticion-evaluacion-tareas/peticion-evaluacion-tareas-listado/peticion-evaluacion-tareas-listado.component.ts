@@ -14,7 +14,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -59,7 +58,6 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   constructor(
     protected readonly dialogService: DialogService,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
-    protected readonly personaFisicaService: PersonaFisicaService,
     protected matDialog: MatDialog,
     protected readonly snackBarService: SnackBarService,
     actionService: PeticionEvaluacionActionService,
@@ -87,8 +85,8 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
       (wrapper: StatusWrapper<ITareaWithIsEliminable>, property: string) => {
         switch (property) {
           case 'nombreCompleto':
-            return wrapper.value.equipoTrabajo?.persona.nombre + ' ' + wrapper.value.equipoTrabajo?.persona.primerApellido + ' ' +
-              wrapper.value.equipoTrabajo?.persona.segundoApellido;
+            return wrapper.value.equipoTrabajo?.persona.nombre
+              + ' ' + wrapper.value.equipoTrabajo?.persona.apellidos;
           case 'numReferencia':
             return wrapper.value.memoria?.numReferencia;
           case 'tarea':

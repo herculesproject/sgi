@@ -3,11 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 
+import { DatosAcademicosService } from './datos-academicos.service';
 
-import { PersonaFisicaService } from './persona-fisica.service';
-
-describe('PersonaFisicaService', () => {
-  let service: PersonaFisicaService;
+describe('DatosAcademicosService', () => {
+  let service: DatosAcademicosService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -20,7 +19,7 @@ describe('PersonaFisicaService', () => {
         SgiAuthService
       ],
     });
-    service = TestBed.inject(PersonaFisicaService);
+    service = TestBed.inject(DatosAcademicosService);
   });
 
   it('should be created', () => {

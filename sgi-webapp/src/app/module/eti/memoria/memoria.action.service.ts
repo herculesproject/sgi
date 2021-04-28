@@ -16,7 +16,7 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { map } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
@@ -54,7 +54,7 @@ export class MemoriaActionService extends ActionService {
     route: ActivatedRoute,
     service: MemoriaService,
     private peticionEvaluacionService: PeticionEvaluacionService,
-    personaFisicaService: PersonaFisicaService,
+    personaService: PersonaService,
     documentoService: DocumentoService,
     formularioService: FormularioService,
     bloqueService: BloqueService,
@@ -73,7 +73,7 @@ export class MemoriaActionService extends ActionService {
     else {
       this.loadPeticionEvaluacion(history.state.idPeticionEvaluacion);
     }
-    this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaFisicaService,
+    this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaService,
       peticionEvaluacionService);
     this.formularios = new MemoriaFormularioFragment(logger, this.readonly, this.memoria?.id, this.memoria?.comite, formularioService,
       bloqueService, apartadoService, respuestaService, service, evaluacionService);

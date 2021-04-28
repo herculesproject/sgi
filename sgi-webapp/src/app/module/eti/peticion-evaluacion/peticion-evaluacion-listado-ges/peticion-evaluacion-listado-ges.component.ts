@@ -15,10 +15,11 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -56,13 +57,17 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   estadoMemoriaListado: TipoEstadoMemoria[];
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
+  get tipoColectivoSolicitante() {
+    return TipoColectivo.SOLICITANTE_ETICA;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly peticionesEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
-    private readonly personaFisicaService: PersonaFisicaService,
+    private readonly personaService: PersonaService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
@@ -122,17 +127,17 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
         if (!response.items || response.items.length === 0) {
           return of({} as SgiRestListResult<IPeticionEvaluacion>);
         }
-        const personaRefsEvaluadores = new Set<string>();
+        const personaIdsEvaluadores = new Set<string>();
 
         response.items.forEach((peticionEvaluacion: IPeticionEvaluacion) => {
-          personaRefsEvaluadores.add(peticionEvaluacion?.solicitante?.personaRef);
+          personaIdsEvaluadores.add(peticionEvaluacion?.solicitante?.id);
         });
 
-        const personaSubscription = this.personaFisicaService.findByPersonasRefs([...personaRefsEvaluadores]).subscribe((result) => {
+        const personaSubscription = this.personaService.findAllByIdIn([...personaIdsEvaluadores]).subscribe((result) => {
           const personas = result.items;
           response.items.forEach((peticionEvaluacion: IPeticionEvaluacion) => {
             const datosPersona = personas.find((persona) =>
-              peticionEvaluacion.solicitante.personaRef === persona.personaRef);
+              peticionEvaluacion.solicitante.id === persona.id);
             peticionEvaluacion.solicitante = datosPersona;
           });
         });
@@ -162,7 +167,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
-      .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.personaRef);
+      .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id);
   }
 
   protected loadTable(reset?: boolean) {

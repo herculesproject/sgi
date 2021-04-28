@@ -19,12 +19,13 @@ import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
@@ -79,6 +80,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   msgParamObservacionesEntity = {};
   msgParamUnidadGestionEntity = {};
 
+  get tipoColectivoSolicitante() {
+    return TipoColectivo.SOLICITANTE_CSP;
+  }
+
   get ESTADO_MAP() {
     return ESTADO_MAP;
   }
@@ -92,7 +97,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private dialogService: DialogService,
     protected snackBarService: SnackBarService,
     private solicitudService: SolicitudService,
-    private personaFisicaService: PersonaFisicaService,
+    private personaService: PersonaService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
     private programaService: ProgramaService,
     private proyectoService: ProyectoService,
@@ -256,8 +261,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         }
 
         const solicitudes = response.items;
-        const personaRefsSolicitantes = solicitudes.map((solicitud) => solicitud.solicitante.personaRef);
-        const solicitudesWithDatosSolicitante$ = this.personaFisicaService.findByPersonasRefs([...personaRefsSolicitantes]).pipe(
+        const personaIdsSolicitantes = new Set<string>(solicitudes.map((solicitud) => solicitud.solicitante.id));
+        const solicitudesWithDatosSolicitante$ = this.personaService.findAllByIdIn([...personaIdsSolicitantes]).pipe(
           map((result) => {
             const personas = result.items;
 
@@ -266,7 +271,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
                 this.mapCrearProyecto.set(solicitud.id, value);
               }));
               solicitud.solicitante = personas.find((persona) =>
-                solicitud.solicitante.personaRef === persona.personaRef);
+                solicitud.solicitante.id === persona.id);
 
               this.suscripciones.push(this.solicitudService.modificable(solicitud.id).subscribe((value) => {
                 this.mapModificable.set(solicitud.id, value);
@@ -318,7 +323,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
             SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value));
       }
       filter
-        .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.personaRef)
+        .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id)
         .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value)
         .and('convocatoria.anio', SgiRestFilterOperator.EQUALS, controls.añoConvocatoria.value)
         .and('convocatoria.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloConvocatoria.value)

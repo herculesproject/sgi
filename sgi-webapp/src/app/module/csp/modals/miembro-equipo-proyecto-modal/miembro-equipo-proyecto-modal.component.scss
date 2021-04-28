@@ -1,4 +1,6 @@
-.solicitud-equipo-proyecto-modal{
+@import "typography.scss";
+
+.miembro-equipo-proyecto-modal {
   .wrapper {
     display: flex;
     align-items: baseline;
@@ -10,5 +12,11 @@
     display: inline-flex;
     flex-wrap: wrap;
     padding-right: 15px;
+  }
+
+  .fieldset-form {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: mat-font-size($custom-typography, body-2);
   }
 }
