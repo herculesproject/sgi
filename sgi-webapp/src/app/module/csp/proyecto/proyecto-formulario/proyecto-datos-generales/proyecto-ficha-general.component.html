@@ -47,13 +47,7 @@
             {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
           </mat-error>
         </mat-form-field>
-
       </div>
-
-    </div>
-
-    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
       <!-- acronimo -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -63,63 +57,6 @@
           <input type="text" placeholder="{{'csp.proyecto.acronimo' | translate}}" matInput formControlName="acronimo">
           <mat-error *ngIf="formGroup.controls.acronimo.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamAcronimoEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Cod identificacion externo -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.codigo-externo' | translate}}</mat-label>
-          <input type="text" placeholder="{{'csp.proyecto.codigo-externo' | translate}}" matInput
-            formControlName="codigoExterno">
-          <mat-error *ngIf="formGroup.controls.codigoExterno.errors?.maxlength">
-            {{'error.maxlength.entity' | translate:msgParamCodigoExternoEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-    </div>
-
-    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-
-      <!-- Fecha inicio -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field color="primary">
-          <mat-label>{{'csp.proyecto.fecha-inicio'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
-          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
-          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
-            {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
-            {{'error.csp.proyecto-ficha-general.fecha-inicio.range' | translate}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Fecha fin -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field color="primary">
-          <mat-label>{{'csp.proyecto.fecha-fin'| translate}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
-          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
-          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
-            {{'error.required.entity' | translate:msgParamFechaFinEntity}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
-            {{'error.after.fecha-fin' | translate}}
-          </mat-error>
-          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
-            {{'error.csp.proyecto-ficha-general.fecha-fin.range' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -140,7 +77,7 @@
         </mat-form-field>
       </div>
 
-      <!-- Referencia externa -->
+      <!-- Referencia externa convocatoria // Identificación convocatoria -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field>
@@ -157,6 +94,20 @@
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+      <!-- Cod identificacion externo -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto.codigo-externo' | translate}}</mat-label>
+          <input type="text" placeholder="{{'csp.proyecto.codigo-externo' | translate}}" matInput
+            formControlName="codigoExterno">
+          <mat-error *ngIf="formGroup.controls.codigoExterno.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamCodigoExternoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
       <!-- Solicitud -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order" *ngIf="formPart.mostrarSolicitud">
@@ -166,6 +117,33 @@
             formControlName="solicitudProyecto">
         </mat-form-field>
       </div>
+
+      <!-- Tipo de ámbito geográfico -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto.ambito-geografico' | translate}}</mat-label>
+          <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
+            placeholder="{{'csp.proyecto.ambito-geografico' | translate}}" [matAutocomplete]="autoTipoAmbitoGeografico"
+            [required]="formPart.abiertoRequired">
+          <mat-autocomplete #autoTipoAmbitoGeografico="matAutocomplete" [displayWith]="getTipoAmbitoGeografico">
+            <mat-option *ngFor="let tipoAmbitoGeografico of tipoAmbitosGeograficos$ | async"
+              [value]="tipoAmbitoGeografico">
+              {{tipoAmbitoGeografico.nombre}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
+            {{'error.required.entity' | translate:msgParamAmbitoGeograficoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.vacio">
+            {{'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.invalid">
+            {{'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
     </div>
 
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -243,28 +221,41 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Tipo de ámbito geográfico -->
+      <!-- Fecha inicio -->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto.ambito-geografico' | translate}}</mat-label>
-          <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
-            placeholder="{{'csp.proyecto.ambito-geografico' | translate}}" [matAutocomplete]="autoTipoAmbitoGeografico"
-            [required]="formPart.abiertoRequired">
-          <mat-autocomplete #autoTipoAmbitoGeografico="matAutocomplete" [displayWith]="getTipoAmbitoGeografico">
-            <mat-option *ngFor="let tipoAmbitoGeografico of tipoAmbitosGeograficos$ | async"
-              [value]="tipoAmbitoGeografico">
-              {{tipoAmbitoGeografico.nombre}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
-            {{'error.required.entity' | translate:msgParamAmbitoGeograficoEntity}}
+        <mat-form-field color="primary">
+          <mat-label>{{'csp.proyecto.fecha-inicio'| translate}}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.vacio">
-            {{'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity}}
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.range">
+            {{'error.csp.proyecto-ficha-general.fecha-inicio.range' | translate}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.invalid">
-            {{'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity}}
+        </mat-form-field>
+      </div>
+
+      <!-- Fecha fin -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field color="primary">
+          <mat-label>{{'csp.proyecto.fecha-fin'| translate}}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaFinEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+            {{'error.after.fecha-fin' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
+            {{'error.csp.proyecto-ficha-general.fecha-fin.range' | translate}}
           </mat-error>
         </mat-form-field>
       </div>

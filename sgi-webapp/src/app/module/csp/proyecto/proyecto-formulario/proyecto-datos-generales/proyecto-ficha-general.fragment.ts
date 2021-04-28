@@ -212,12 +212,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     const form = this.getFormGroup().controls;
     this.proyecto.titulo = form.titulo.value;
     this.proyecto.acronimo = form.acronimo.value;
-    this.proyecto.codigoExterno = form.acronimo.value;
+    this.proyecto.codigoExterno = form.codigoExterno.value;
     this.proyecto.fechaInicio = form.fechaInicio.value;
     this.proyecto.fechaFin = form.fechaFin.value;
     this.proyecto.convocatoriaId = form.convocatoria.value?.id;
     if (form.convocatoria.value) {
-      this.proyecto.convocatoriaExterna = undefined;
+      this.proyecto.convocatoriaExterna = form.convocatoria.value?.codigo;
     } else {
       this.proyecto.convocatoriaExterna = form.convocatoriaExterna.value;
     }
@@ -266,7 +266,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.seguimientoCientificos = [];
 
     if (convocatoria) {
-      this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
+      if (convocatoria.codigo) {
+        this.getFormGroup().controls.convocatoriaExterna.setValue(convocatoria.codigo);
+      }
 
       if (!this.proyecto.unidadGestion || !this.isEdit()) {
         this.subscriptions.push(
@@ -407,7 +409,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         const mesInicial = this.seguimientoCientificos[0].mesInicial;
         const mesFinal = this.seguimientoCientificos[this.seguimientoCientificos.length - 1].mesFinal;
         const inicioProyecto = inicioForm.value.plus({ months: mesInicial - 1 });
-        const finProyecto = finForm.value.plus({ months: mesFinal - 1 });
+        const finProyecto = inicioForm.value.plus({ months: mesFinal - 1 });
         if (inicioProyecto >= inicioForm.value && finProyecto <= finForm.value) {
           return;
         }
