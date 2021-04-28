@@ -270,6 +270,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.getFormGroup().controls.convocatoriaExterna.setValue(convocatoria.codigo);
       }
 
+      if (convocatoria.duracion && this.getFormGroup().controls.fechaInicio.value
+        && !this.getFormGroup().controls.fechaFin.value) {
+        const fechaFin = this.getFormGroup().controls.fechaInicio.value.plus({ months: convocatoria.duracion });
+        this.getFormGroup().controls.fechaFin.setValue(fechaFin);
+      }
+
       if (!this.proyecto.unidadGestion || !this.isEdit()) {
         this.subscriptions.push(
           this.unidadGestionService.findByAcronimo(convocatoria.unidadGestion.acronimo).subscribe(unidadGestion => {
