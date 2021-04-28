@@ -8,7 +8,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { ESTADO_MEMORIA, TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -342,12 +342,9 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
   hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria, responsable: boolean): boolean {
     // Si el estado es 'Completada', es de tipo CEEA y requiere retrospectiva se muestra el botón de enviar.
     // Si la retrospectiva ya está 'En secretaría' no se muestra el botón.
-    if (memoria.estadoActual.id === 2 && memoria.comite.comite === 'CEEA' && memoria.requiereRetrospectiva
-      && memoria.retrospectiva.estadoRetrospectiva.id !== 3 && !responsable) {
-      return true;
-    } else {
-      return false;
-    }
+    // El estado de la memoria debe de ser mayor a FIN_EVALUACION
+    return (memoria.estadoActual.id > ESTADO_MEMORIA.FIN_EVALUACION && memoria.comite.comite === 'CEEA' && memoria.requiereRetrospectiva
+      && memoria.retrospectiva.estadoRetrospectiva.id !== 3 && !responsable);
   }
 
   enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) {
