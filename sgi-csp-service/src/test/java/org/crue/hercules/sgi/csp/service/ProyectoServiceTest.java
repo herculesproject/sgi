@@ -312,20 +312,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
-  public void create_WithConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Proyecto
-    Proyecto proyecto = generarMockProyecto(null);
-    proyecto.setConvocatoriaId(1L);
-    proyecto.setConvocatoriaExterna("conv-001");
-
-    // when: Creamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
   public void create_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -503,20 +489,6 @@ public class ProyectoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El proyecto no pertenece a una Unidad de Gestión gestionable por el usuario");
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
-  public void update_WithConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
-    // given: Actualizar Proyecto
-    Proyecto proyecto = generarMockProyecto(1L);
-    proyecto.setConvocatoriaId(1L);
-    proyecto.setConvocatoriaExterna("conv-001");
-
-    // when: Actualizamos el Proyecto
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
   }
 
   @Test

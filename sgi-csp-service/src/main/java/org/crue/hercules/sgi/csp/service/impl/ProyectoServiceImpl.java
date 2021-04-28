@@ -489,11 +489,6 @@ public class ProyectoServiceImpl implements ProyectoService {
    * 
    */
   private void validarDatos(Proyecto proyecto) {
-    Assert.isTrue(
-        (proyecto.getConvocatoriaId() != null && proyecto.getConvocatoriaExterna() == null)
-            || proyecto.getConvocatoriaId() == null,
-        "La convocatoria no puede ser externa ya que el proyecto tiene una convocatoria asignada");
-
     if (proyecto.getConvocatoriaId() != null) {
       Assert.isTrue(convocatoriaRepository.existsById(proyecto.getConvocatoriaId()),
           "La convocatoria con id '" + proyecto.getConvocatoriaId() + "' no existe");
@@ -727,11 +722,14 @@ public class ProyectoServiceImpl implements ProyectoService {
     proyecto.setTitulo(solicitudProyecto.getTitulo());
     proyecto.setAcronimo(solicitudProyecto.getAcronimo());
     proyecto.setUnidadGestionRef(solicitud.getUnidadGestionRef());
+    proyecto.setCodigoExterno(solicitudProyecto.getCodExterno());
     if (solicitud.getConvocatoriaId() != null) {
       Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
       proyecto.setFinalidad(convocatoria.getFinalidad());
       proyecto.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
+    } else {
+      proyecto.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
     }
     proyecto.setColaborativo(solicitudProyecto.getColaborativo());
     proyecto.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
