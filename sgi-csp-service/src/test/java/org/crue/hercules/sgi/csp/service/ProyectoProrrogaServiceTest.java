@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoProrrogaServiceImpl;
@@ -40,12 +41,15 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
   private ProyectoRepository proyectoRepository;
   @Mock
   private ProrrogaDocumentoRepository prorrogaDocumentoRepository;
+  @Mock
+  private ProyectoEquipoRepository proyectoEquipoRepository;
 
   private ProyectoProrrogaService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ProyectoProrrogaServiceImpl(repository, proyectoRepository, prorrogaDocumentoRepository);
+    service = new ProyectoProrrogaServiceImpl(repository, proyectoRepository, prorrogaDocumentoRepository,
+        proyectoEquipoRepository);
   }
 
   @Test

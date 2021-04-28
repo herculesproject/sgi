@@ -1,15 +1,20 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProrrogaSpecifications;
@@ -35,12 +40,15 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   private final ProyectoProrrogaRepository repository;
   private final ProyectoRepository proyectoRepository;
   private final ProrrogaDocumentoRepository prorrogaDocumentoRepository;
+  private final ProyectoEquipoRepository proyectoEquipoRepository;
 
   public ProyectoProrrogaServiceImpl(ProyectoProrrogaRepository proyectoProrrogaRepository,
-      ProyectoRepository proyectoRepository, ProrrogaDocumentoRepository prorrogaDocumentoRepository) {
+      ProyectoRepository proyectoRepository, ProrrogaDocumentoRepository prorrogaDocumentoRepository,
+      ProyectoEquipoRepository proyectoEquipoRepository) {
     this.repository = proyectoProrrogaRepository;
     this.proyectoRepository = proyectoRepository;
     this.prorrogaDocumentoRepository = prorrogaDocumentoRepository;
+    this.proyectoEquipoRepository = proyectoEquipoRepository;
   }
 
   /**
@@ -230,12 +238,31 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
         proyecto.isPresent() && proyectoProrroga.getFechaFin().compareTo(proyecto.get().getFechaInicio()) >= 0,
         "La fecha de fin debe ser posterior a la fecha de inicio del proyecto");
 
+    // Se actualizan los miembros de equipo cuya fecha de fin coincida con la fecha
+    // de fin del proyecto o sea mayor a la nueva fecha de fin del proyecto
+    List<ProyectoEquipo> miembros = new ArrayList<ProyectoEquipo>();
+    List<ProyectoEquipo> miembrosFechaFinEqual = proyectoEquipoRepository
+        .findAllByProyectoIdAndFechaFin(proyecto.get().getId(), proyecto.get().getFechaFin());
+    List<ProyectoEquipo> miembrosFechaFinGreater = proyectoEquipoRepository
+        .findAllByProyectoIdAndFechaFinGreaterThan(proyecto.get().getId(), proyectoProrroga.getFechaFin());
+
+    if (CollectionUtils.isNotEmpty(miembrosFechaFinEqual)) {
+      miembros.addAll(miembrosFechaFinEqual);
+    }
+
+    if (CollectionUtils.isNotEmpty(miembrosFechaFinGreater)) {
+      miembros.addAll(miembrosFechaFinGreater);
+    }
+
+    if (CollectionUtils.isNotEmpty(miembros)) {
+      miembros.stream().forEach(miembro -> {
+        miembro.setFechaFin(proyectoProrroga.getFechaFin());
+        proyectoEquipoRepository.save(miembro);
+      });
+    }
+
     proyecto.get().setFechaFin(proyectoProrroga.getFechaFin());
     proyectoRepository.save(proyecto.get());
-
-    // TODO: Actualizar FechaFin de los miembros del proyecto cuando esté listo
-    // ProyectoMiembro
-
     log.debug("actualizarFechaFin(ProyectoProrroga proyectoProrroga) - end");
   }
 
