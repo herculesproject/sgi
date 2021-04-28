@@ -129,7 +129,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       data.setObservaciones(validConvocatoria.getObservaciones());
       data.setFinalidad(validConvocatoria.getFinalidad());
       data.setRegimenConcurrencia(validConvocatoria.getRegimenConcurrencia());
-      data.setDestinatarios(validConvocatoria.getDestinatarios());
       data.setColaborativos(validConvocatoria.getColaborativos());
       data.setDuracion(validConvocatoria.getDuracion());
       data.setAmbitoGeografico(validConvocatoria.getAmbitoGeografico());
@@ -306,8 +305,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
         // Campos requeridos a nivel de convocatoria
         if (convocatoria.get().getUnidadGestionRef() != null && convocatoria.get().getModeloEjecucion() != null
             && convocatoria.get().getAnio() != null && convocatoria.get().getTitulo() != null
-            && convocatoria.get().getFinalidad() != null && convocatoria.get().getDestinatarios() != null
-            && convocatoria.get().getAmbitoGeografico() != null) {
+            && convocatoria.get().getFinalidad() != null && convocatoria.get().getAmbitoGeografico() != null) {
 
           Optional<ConfiguracionSolicitud> configuracionSolicitud = configuracionSolicitudRepository
               .findByConvocatoriaId(convocatoria.get().getId());
@@ -754,8 +752,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(datosConvocatoria.getTitulo(), "Titulo no puede ser null en la Convocatoria");
     // TipoFinalidad
     Assert.notNull(datosConvocatoria.getFinalidad(), "Finalidad no puede ser null en la Convocatoria");
-    // TipoDestinatario
-    Assert.notNull(datosConvocatoria.getDestinatarios(), "Destinatarios no puede ser null en la Convocatoria");
     // TipoAmbitoGeografico
     Assert.notNull(datosConvocatoria.getAmbitoGeografico(), "AmbitoGeografico no puede ser null en la Convocatoria");
 

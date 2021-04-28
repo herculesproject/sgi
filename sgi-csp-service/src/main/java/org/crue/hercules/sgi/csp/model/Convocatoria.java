@@ -49,16 +49,6 @@ public class Convocatoria extends BaseEntity {
    */
   private static final long serialVersionUID = 1L;
 
-  /** Destinatarios de la convocatoria */
-  public enum Destinatarios {
-    /** Individual */
-    INDIVIDUAL,
-    /** Equipo de proyecto */
-    EQUIPO_PROYECTO,
-    /** Grupo de investigación */
-    GRUPO_INVESTIGACION;
-  }
-
   /** Estados de la convocatoria */
   public enum Estado {
     /** Borrador */
@@ -122,11 +112,6 @@ public class Convocatoria extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "tipo_regimen_concurrencia_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIA_REGIMENCONCURRENCIA"))
   private TipoRegimenConcurrencia regimenConcurrencia;
-
-  /** Destinatarios */
-  @Column(name = "destinatarios", length = 50, nullable = true)
-  @Enumerated(EnumType.STRING)
-  private Destinatarios destinatarios;
 
   /** Colaborativos */
   @Column(name = "colaborativos", nullable = true)

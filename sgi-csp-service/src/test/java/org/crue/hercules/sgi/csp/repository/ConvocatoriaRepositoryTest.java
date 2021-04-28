@@ -41,7 +41,6 @@ public class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
     Assertions.assertThat(dataFound.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
     Assertions.assertThat(dataFound.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(dataFound.getDestinatarios()).isEqualTo(convocatoria.getDestinatarios());
     Assertions.assertThat(dataFound.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
     Assertions.assertThat(dataFound.getEstado()).isEqualTo(convocatoria.getEstado());
     Assertions.assertThat(dataFound.getDuracion()).isEqualTo(convocatoria.getDuracion());
@@ -113,7 +112,6 @@ public class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
-        .destinatarios(Convocatoria.Destinatarios.INDIVIDUAL)
         .colaborativos(Boolean.TRUE)
         .estado(Convocatoria.Estado.REGISTRADA)
         .duracion(12)
