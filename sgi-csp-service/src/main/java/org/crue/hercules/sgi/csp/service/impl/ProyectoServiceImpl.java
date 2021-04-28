@@ -886,10 +886,12 @@ public class ProyectoServiceImpl implements ProyectoService {
       log.debug("Copy SolicitudProyectoEquipo with id: {0}", entidadSolicitud.getId());
       ProyectoEquipo proyectoEquipo = new ProyectoEquipo();
       proyectoEquipo.setProyectoId(proyecto.getId());
-      proyectoEquipo.setFechaInicio(Instant.from(
-          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesInicio() - 1))));
-      proyectoEquipo.setFechaFin(Instant.from(
-          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesFin() - 1))));
+      if (entidadSolicitud.getMesInicio() != null && entidadSolicitud.getMesFin() != null) {
+        proyectoEquipo.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(entidadSolicitud.getMesInicio() - 1))));
+        proyectoEquipo.setFechaFin(Instant.from(
+            proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesFin() - 1))));
+      }
       proyectoEquipo.setRolProyecto(entidadSolicitud.getRolProyecto());
       proyectoEquipo.setPersonaRef(entidadSolicitud.getPersonaRef());
       proyectoEquipos.add(proyectoEquipo);
