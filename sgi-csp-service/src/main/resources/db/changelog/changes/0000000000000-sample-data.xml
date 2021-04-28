@@ -2359,8 +2359,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC1202102011617" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="1" />
-      <column name="creador_ref" value="user-010" />
-      <column name="solicitante_ref" value="user-001" />
+      <column name="creador_ref" value="10" />
+      <column name="solicitante_ref" value="1" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="UGI" />
@@ -2373,8 +2373,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC2202102011656" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="1" />
-      <column name="creador_ref" value="user-010" />
-      <column name="solicitante_ref" value="user-002" />
+      <column name="creador_ref" value="10" />
+      <column name="solicitante_ref" value="2" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="UGI" />
@@ -2387,8 +2387,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC3202102011729" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="2" />
-      <column name="creador_ref" value="user-009" />
-      <column name="solicitante_ref" value="user-001" />
+      <column name="creador_ref" value="9" />
+      <column name="solicitante_ref" value="1" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
@@ -2401,8 +2401,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC4202102011741" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="2" />
-      <column name="creador_ref" value="user-009" />
-      <column name="solicitante_ref" value="user-003" />
+      <column name="creador_ref" value="9" />
+      <column name="solicitante_ref" value="3" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
@@ -2415,8 +2415,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC5202102020943" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="4" />
-      <column name="creador_ref" value="user-009" />
-      <column name="solicitante_ref" value="user-004" />
+      <column name="creador_ref" value="9" />
+      <column name="solicitante_ref" value="4" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
@@ -2429,8 +2429,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC6202102031256" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="null" />
-      <column name="creador_ref" value="user-009" />
-      <column name="solicitante_ref" value="user-001" />
+      <column name="creador_ref" value="9" />
+      <column name="solicitante_ref" value="1" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="unidad_gestion_ref" value="OPE" />
@@ -2443,8 +2443,8 @@ industries" />
       <column name="codigo_registro_interno" value="SGI_SLC7202102031828" />
       <column name="estado_solicitud_id" value="null" />
       <column name="convocatoria_id" value="2" />
-      <column name="creador_ref" value="user-009" />
-      <column name="solicitante_ref" value="user-004" />
+      <column name="creador_ref" value="9" />
+      <column name="solicitante_ref" value="4" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
       <column name="unidad_gestion_ref" value="OPE" />
@@ -2528,11 +2528,11 @@ industries" />
     </update>
     <update tableName="solicitud">
       <column name="estado_solicitud_id" value="6" />
-      <where>id=5</where>
+      <where>id=6</where>
     </update>
     <update tableName="solicitud">
       <column name="estado_solicitud_id" value="7" />
-      <where>id=6</where>
+      <where>id=7</where>
     </update>
   </changeSet>
 
@@ -2602,7 +2602,7 @@ industries" />
       <column name="rol_principal" value="true" />
       <column name="responsable_economico" value="false" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="colectivo_ref" value="null" />
+      <column name="colectivo_ref" value="1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="rol_proyecto">
@@ -2613,7 +2613,7 @@ industries" />
       <column name="rol_principal" value="false" />
       <column name="responsable_economico" value="false" />
       <column name="equipo" value="INVESTIGACION" />
-      <column name="colectivo_ref" value="null" />
+      <column name="colectivo_ref" value="2" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -2949,7 +2949,7 @@ industries" />
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
       <column name="solicitud_proyecto_id" value="1" />
-      <column name="persona_ref" value="user-001" />
+      <column name="persona_ref" value="1" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="24" />
@@ -2957,7 +2957,7 @@ industries" />
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
       <column name="solicitud_proyecto_id" value="2" />
-      <column name="persona_ref" value="user-002" />
+      <column name="persona_ref" value="2" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="24" />
@@ -2965,7 +2965,7 @@ industries" />
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
       <column name="solicitud_proyecto_id" value="2" />
-      <column name="persona_ref" value="user-004" />
+      <column name="persona_ref" value="4" />
       <column name="rol_proyecto_id" value="2" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="24" />
@@ -2973,7 +2973,7 @@ industries" />
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
       <column name="solicitud_proyecto_id" value="3" />
-      <column name="persona_ref" value="user-001" />
+      <column name="persona_ref" value="1" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="36" />
@@ -2981,7 +2981,7 @@ industries" />
     <insert tableName="solicitud_proyecto_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_seq" />
       <column name="solicitud_proyecto_id" value="3" />
-      <column name="persona_ref" value="user-002" />
+      <column name="persona_ref" value="2" />
       <column name="rol_proyecto_id" value="2" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="36" />
@@ -3026,7 +3026,7 @@ industries" />
     <insert tableName="solicitud_proyecto_socio_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_socio_seq" />
       <column name="solicitud_proyecto_socio_id" value="1" />
-      <column name="persona_ref" value="user-003" />
+      <column name="persona_ref" value="3" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="24" />
@@ -3034,7 +3034,7 @@ industries" />
     <insert tableName="solicitud_proyecto_socio_equipo">
       <column name="id" valueSequenceNext="solicitud_proyecto_equipo_socio_seq" />
       <column name="solicitud_proyecto_socio_id" value="2" />
-      <column name="persona_ref" value="user-003" />
+      <column name="persona_ref" value="3" />
       <column name="rol_proyecto_id" value="1" />
       <column name="mes_inicio" value="1" />
       <column name="mes_fin" value="24" />
