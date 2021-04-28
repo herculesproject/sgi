@@ -15,13 +15,12 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
-import { PeticionEvaluacionTareasModalComponent } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
+import { PeticionEvaluacionTareasModalComponent, PeticionEvaluacionTareasModalComponentData } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-listado.fragment';
 
 const MSG_CONFIRM_DELETE = marker('msg.delete.entity');
@@ -129,21 +128,21 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     const equiposTrabajo: IEquipoTrabajo[] = this.listadoFragment.equiposTrabajo;
     const memorias: IMemoriaPeticionEvaluacion[] = this.listadoFragment.memorias;
 
+    const data: PeticionEvaluacionTareasModalComponentData = {
+      tarea, equiposTrabajo, memorias
+    };
+
     const config = {
-      width: GLOBAL_CONSTANTS.minWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.minHeightModal,
-      data: {
-        tarea, equiposTrabajo, memorias
-      },
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data
     };
 
     const dialogRef = this.matDialog.open(PeticionEvaluacionTareasModalComponent, config);
 
     dialogRef.afterClosed().subscribe(
-      (tareaAniadida: ITareaWithIsEliminable) => {
-        if (tareaAniadida) {
-          this.listadoFragment.addTarea(tareaAniadida);
+      (modalData: PeticionEvaluacionTareasModalComponentData) => {
+        if (modalData && modalData.tarea) {
+          this.listadoFragment.addTarea(modalData.tarea);
         }
       });
   }
@@ -157,18 +156,18 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     const equiposTrabajo: IEquipoTrabajo[] = this.listadoFragment.equiposTrabajo;
     const memorias: IMemoriaPeticionEvaluacion[] = this.listadoFragment.memorias;
 
+    const data: PeticionEvaluacionTareasModalComponentData = {
+      tarea: tarea.value, equiposTrabajo, memorias
+    };
+
     const config = {
-      width: GLOBAL_CONSTANTS.minWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.minHeightModal,
-      data: {
-        tarea: tarea.value, equiposTrabajo, memorias
-      },
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data
     };
     const dialogRef = this.matDialog.open(PeticionEvaluacionTareasModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (resultado: ITarea) => {
-        if (resultado) {
+      (modalData: PeticionEvaluacionTareasModalComponentData) => {
+        if (modalData && modalData.tarea) {
           tarea.setEdited();
           this.fragment.setChanges(true);
           this.fragment.setComplete(true);

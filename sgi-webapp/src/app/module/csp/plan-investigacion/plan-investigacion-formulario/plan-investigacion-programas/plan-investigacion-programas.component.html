@@ -98,13 +98,13 @@
         </div>
       </div>
       <div class="separation-button">
-        <button *ngIf="viewMode === 'new' || viewMode === 'edit'" color="accent" md-button mat-raised-button
+        <button *ngIf="viewMode === 'new' || viewMode === 'edit'" color="accent" mat-raised-button
           (click)="acceptDetail()">{{'btn.ok' | translate}}</button>
         <button *ngIf="viewMode === 'new' || viewMode === 'edit'" class="link-cancelar" mat-button><span
             class="underline" (click)="cancelDetail()">{{'btn.cancel' | translate}}</span></button>
-        <button *ngIf="viewMode === 'view'" color="accent" md-button mat-raised-button
+        <button *ngIf="viewMode === 'view'" color="accent" mat-raised-button
           (click)="switchToEdit()">{{'btn.edit.entity'| translate:msgParamEntity}}</button>
-        <button *ngIf="viewMode === 'view'" color="warn" aria-label="Center Align" md-button mat-raised-button
+        <button *ngIf="viewMode === 'view'" color="warn" aria-label="Center Align" mat-raised-button
           (click)="deleteDetail()">
           {{'btn.delete.entity' | translate:msgParamEntity}}
         </button>
@@ -116,7 +116,7 @@
   </div>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="switchToNew()">
+    <button color="three" aria-label="Center Align" mat-raised-button (click)="switchToNew()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

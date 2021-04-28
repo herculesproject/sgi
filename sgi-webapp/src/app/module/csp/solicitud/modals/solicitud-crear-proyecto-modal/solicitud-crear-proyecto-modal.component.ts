@@ -9,7 +9,6 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
@@ -39,7 +38,6 @@ export interface ISolicitudCrearProyectoModalData {
 })
 export class SolicitudCrearProyectoModalComponent
   extends BaseModalComponent<IProyecto, SolicitudCrearProyectoModalComponent> implements OnInit {
-  fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   textSaveOrUpdate: string;
 
@@ -63,12 +61,6 @@ export class SolicitudCrearProyectoModalComponent
     private convocatoriaService: ConvocatoriaService
   ) {
     super(snackBarService, matDialogRef, { solicitudId: data.solicitud?.id } as IProyecto);
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(32%-10px)';
-    this.fxFlexProperties.order = '2';
-
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';

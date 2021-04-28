@@ -9,7 +9,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -72,7 +71,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     }));
   }
 
-
   private setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_FASE_KEY,
@@ -92,7 +90,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     ).subscribe((value) => this.textoDelete = value);
   }
 
-
   /**
    * Apertura de modal de plazos fase
    * @param plazo Identificador de plazos fase al guardar/editar
@@ -106,22 +103,21 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: datosPlazosFases,
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaPlazosFaseModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (plazosFase: IConvocatoriaFase) => {
-        if (plazosFase) {
+      (modalData: ConvocatoriaPlazosFaseModalComponentData) => {
+        if (modalData) {
           if (plazo) {
             if (!plazo.created) {
               plazo.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addPlazosFases(plazosFase);
+            this.formPart.addPlazosFases(modalData.plazo);
           }
         }
       }

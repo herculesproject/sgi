@@ -10,7 +10,6 @@ import { IComentario } from '@core/models/eti/comentario';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { DialogService } from '@core/services/dialog.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -131,16 +130,14 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.maxWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: evaluacionData,
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data: evaluacionData
     };
     const dialogRef = this.matDialog.open(ComentarioModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (comentario: IComentario) => {
-        if (comentario) {
-          this.formPart.addComentario(comentario);
+      (modalData: ComentarioModalData) => {
+        if (modalData && modalData.comentario) {
+          this.formPart.addComentario(modalData.comentario);
         }
       }
     );
@@ -160,19 +157,17 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.maxWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: evaluacionData,
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data: evaluacionData
     };
 
     const dialogRef = this.matDialog.open(ComentarioModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (resultado: IComentario) => {
-        if (resultado) {
+      (modalData: ComentarioModalData) => {
+        if (modalData && modalData.comentario) {
           this.subscriptions.push(this.getTipoComentario().subscribe(
             (tipoComentario) => {
-              resultado.tipoComentario = tipoComentario;
+              modalData.comentario.tipoComentario = tipoComentario;
             }
           ));
           if (!wrapperRef.created) {

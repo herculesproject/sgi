@@ -1,5 +1,5 @@
 <section class="tipo-enlace-listado">
-  <h2>{{'csp.tipo-enlace | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
+  <h2>{{'csp.tipo-enlace' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
   <!-- Listado de tipos de enlace -->
   <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="modelosTipoEnlaces" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
@@ -34,7 +34,7 @@
   </mat-paginator>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModal()">
+    <button color="three" aria-label="Center Align" mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

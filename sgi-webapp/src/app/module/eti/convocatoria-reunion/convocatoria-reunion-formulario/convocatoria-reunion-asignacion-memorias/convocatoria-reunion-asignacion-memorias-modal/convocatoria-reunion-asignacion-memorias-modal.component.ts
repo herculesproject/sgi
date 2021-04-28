@@ -2,29 +2,25 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { DialogData } from '@block/dialog/dialog.component';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPersona } from '@core/models/sgp/persona';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { DatosAsignacionEvaluacion } from '../../../convocatoria-reunion.action.service';
 
-const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const MSG_ERROR_LOAD = marker('error.load');
 const MSG_ERROR_EVALUADOR_REPETIDO = marker('error.eti.convocatoria-reunion.memoria.evaluador.duplicate');
 const MEMORIA_EVALUADOR1_KEY = marker('eti.convocatoria-reunion.memoria.evaludador-1');
@@ -32,17 +28,21 @@ const MEMORIA_EVALUADOR2_KEY = marker('eti.convocatoria-reunion.memoria.evaludad
 const MEMORIA_KEY = marker('eti.memoria');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
+export interface ConvocatoriaReunionAsignacionMemoriasModalComponentData {
+  idConvocatoria: number;
+  memoriasAsignadas: IMemoria[];
+  filterMemoriasAsignables: DatosAsignacionEvaluacion;
+  evaluacion: IEvaluacionWithIsEliminable;
+}
+
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias-modal',
   templateUrl: './convocatoria-reunion-asignacion-memorias-modal.component.html',
   styleUrls: ['./convocatoria-reunion-asignacion-memorias-modal.component.scss']
 })
-export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnInit, OnDestroy {
-  fxFlexProperties: FxFlexProperties;
+export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
+  BaseModalComponent<ConvocatoriaReunionAsignacionMemoriasModalComponentData, ConvocatoriaReunionAsignacionMemoriasModalComponent> implements OnInit, OnDestroy {
   fxLayoutProperties: FxLayoutProperties;
-
-  FormGroupUtil = FormGroupUtil;
-  formGroup: FormGroup;
 
   evaluadores: IEvaluador[];
   memorias: IMemoria[];
@@ -51,14 +51,8 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   filteredEvaluadoresEvaluador2: Observable<IEvaluador[]>;
   filteredMemorias: Observable<IMemoria[]>;
 
-  private subscriptions: Subscription[];
-
-  idConvocatoria: number;
   isTipoConvocatoriaSeguimiento: boolean;
-  filterData: { idComite: number, idTipoConvocatoria: number, fechaLimite: DateTime };
   filterMemoriasAsignables: SgiRestFilter;
-  memoriasAsignadas: IMemoria[];
-  evaluacion: IEvaluacion;
 
   isEdit = false;
 
@@ -73,46 +67,32 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly dialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,
+    public matDialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,
     private readonly evaluadorService: EvaluadorService,
     private readonly memoriaService: MemoriaService,
     private readonly personaService: PersonaService,
-    private readonly snackBarService: SnackBarService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    protected readonly snackBarService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaReunionAsignacionMemoriasModalComponentData,
     private readonly translate: TranslateService
   ) {
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
-    this.fxFlexProperties.order = '2';
+    super(snackBarService, matDialogRef, data);
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.subscriptions = [];
-
-    const params: any = data.params;
-    if (params) {
-      this.idConvocatoria = params.idConvocatoria;
-      this.memoriasAsignadas = params.memoriasAsignadas;
-      this.filterData = params.filterMemoriasAsignables;
-      this.evaluacion = params.evaluacion;
-    }
     this.buildFilter();
   }
 
   ngOnInit(): void {
-    this.initFormGroup();
+    super.ngOnInit();
     this.setupI18N();
 
-    if (this.idConvocatoria) {
+    if (this.data.idConvocatoria) {
       this.loadMemoriasAsignablesConvocatoria();
-    } else if (this.filterData && this.filterData.idComite &&
-      this.filterData.idTipoConvocatoria &&
-      this.filterData.fechaLimite) {
+    } else if (this.data.filterMemoriasAsignables && this.data.filterMemoriasAsignables.idComite &&
+      this.data.filterMemoriasAsignables.idTipoConvocatoria &&
+      this.data.filterMemoriasAsignables.fechaLimite) {
       if (this.isTipoConvocatoriaSeguimiento) {
         this.loadMemoriasAsignablesConvocatoriaSeguimiento();
       } else {
@@ -120,7 +100,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
       }
     }
 
-    this.isEdit = this.evaluacion?.memoria ? true : false;
+    this.isEdit = this.data.evaluacion?.memoria ? true : false;
 
     this.loadEvaluadores();
   }
@@ -141,7 +121,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamMemoriaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
-    if (this.evaluacion.memoria) {
+    if (this.data.evaluacion.memoria) {
       this.translate.get(
         MEMORIA_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -162,45 +142,17 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   }
 
   /**
-   * Inicializa el formGroup
-   */
-  private initFormGroup() {
-    this.formGroup = new FormGroup({
-      memoria: new FormControl(this.evaluacion.memoria, [Validators.required]),
-      evaluador1: new FormControl(this.evaluacion.evaluador1),
-      evaluador2: new FormControl(this.evaluacion.evaluador2),
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions?.forEach(x => x.unsubscribe());
-  }
-
-  /**
-   * Crear el FormGroup
-   *
-   */
-  createFormGroup(): FormGroup {
-    const formGroup = new FormGroup({
-      memoria: new FormControl(null, [new NullIdValidador().isValid()]),
-      evaluador1: new FormControl(null, [Validators.required]),
-      evaluador2: new FormControl(null, [Validators.required])
-    });
-    return formGroup;
-  }
-
-  /**
    * Construye los filtros necesarios para la búsqueda de las memorias asignables.
    *
    */
   private buildFilter(): void {
-    if (this.filterData && this.filterData.idComite &&
-      this.filterData.idTipoConvocatoria &&
-      this.filterData.fechaLimite) {
-      this.isTipoConvocatoriaSeguimiento = (this.filterData.idTipoConvocatoria === 3) ? true : false;
+    if (this.data.filterMemoriasAsignables && this.data.filterMemoriasAsignables.idComite &&
+      this.data.filterMemoriasAsignables.idTipoConvocatoria &&
+      this.data.filterMemoriasAsignables.fechaLimite) {
+      this.isTipoConvocatoriaSeguimiento = (this.data.filterMemoriasAsignables.idTipoConvocatoria === 3) ? true : false;
 
-      this.filterMemoriasAsignables = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, this.filterData.idComite.toString())
-        .and('fechaEnvioSecretaria', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.filterData.fechaLimite));
+      this.filterMemoriasAsignables = new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, this.data.filterMemoriasAsignables.idComite.toString())
+        .and('fechaEnvioSecretaria', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(this.data.filterMemoriasAsignables.fechaLimite));
     }
     else {
       this.filterMemoriasAsignables = undefined;
@@ -212,7 +164,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    */
   private loadMemoriasAsignablesConvocatoria(): void {
     this.subscriptions.push(this.memoriaService
-      .findAllMemoriasAsignablesConvocatoria(this.idConvocatoria)
+      .findAllMemoriasAsignablesConvocatoria(this.data.idConvocatoria)
       .subscribe(
         (response: SgiRestListResult<IMemoria>) => {
           this.memorias = response.items;
@@ -220,7 +172,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
           // Eliminar de la lista las memorias que ya están asignadas
           this.memorias = this.memorias.filter(
             (memoria: IMemoria) => {
-              return (!this.memoriasAsignadas.some(e => e.id === memoria.id));
+              return (!this.data.memoriasAsignadas.some(e => e.id === memoria.id));
             }
           );
 
@@ -250,7 +202,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
           // Eliminar de la lista las memorias que ya están asignadas
           this.memorias = this.memorias.filter(
             (memoria: IMemoria) => {
-              return (!this.memoriasAsignadas.some(e => e.id === memoria.id));
+              return (!this.data.memoriasAsignadas.some(e => e.id === memoria.id));
             }
           );
 
@@ -280,7 +232,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
           // Eliminar de la lista las memorias que ya están asignadas
           this.memorias = this.memorias.filter(
             (memoria: IMemoria) => {
-              return (!this.memoriasAsignadas.some(e => e.id === memoria.id));
+              return (!this.data.memoriasAsignadas.some(e => e.id === memoria.id));
             }
           );
 
@@ -303,7 +255,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   private loadEvaluadores(): void {
     let evaluadoresMemoriaSeleccionada$ = null;
     if (this.isEdit) {
-      evaluadoresMemoriaSeleccionada$ = this.getEvaluadoresMemoria(this.evaluacion?.memoria);
+      evaluadoresMemoriaSeleccionada$ = this.getEvaluadoresMemoria(this.data.evaluacion?.memoria);
     } else {
       evaluadoresMemoriaSeleccionada$ =
         this.formGroup.controls.memoria.valueChanges.pipe(
@@ -449,33 +401,36 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
     return memoria ? (memoria.numReferencia + (memoria.titulo ? ' - ' + memoria.titulo : '')) : '';
   }
 
-  getDatosForm(): IEvaluacion {
-    this.evaluacion.memoria = FormGroupUtil.getValue(this.formGroup, 'memoria');
-    this.evaluacion.evaluador1 = FormGroupUtil.getValue(this.formGroup, 'evaluador1');
-    this.evaluacion.evaluador2 = FormGroupUtil.getValue(this.formGroup, 'evaluador2');
-
-    return this.evaluacion;
-  }
-
   /**
    * Confirmar asignación
    */
-  onAsignarmemoria(): void {
-    const evaluacion: IEvaluacion = this.getDatosForm();
-
-    if (evaluacion.evaluador1?.persona?.id === evaluacion.evaluador2?.persona?.id) {
+  saveOrUpdate(): void {
+    const modalData: ConvocatoriaReunionAsignacionMemoriasModalComponentData = this.getDatosForm();
+    if (modalData.evaluacion.evaluador1?.persona?.id === modalData.evaluacion.evaluador2?.persona?.id) {
       this.snackBarService.showError(MSG_ERROR_EVALUADOR_REPETIDO);
       return;
     }
-
-    if (FormGroupUtil.valid(this.formGroup)) {
-      this.dialogRef.close(evaluacion);
-    } else {
-      this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
-    }
+    super.saveOrUpdate();
   }
 
-  onCancel(): void {
-    this.dialogRef.close();
+  protected getDatosForm(): ConvocatoriaReunionAsignacionMemoriasModalComponentData {
+    this.data.evaluacion.memoria = this.formGroup.controls.memoria.value;
+    this.data.evaluacion.evaluador1 = this.formGroup.controls.evaluador1.value;
+    this.data.evaluacion.evaluador2 = this.formGroup.controls.evaluador2.value;
+    return this.data;
+  }
+
+  protected getFormGroup(): FormGroup {
+    const formGroup = new FormGroup({
+      memoria: new FormControl(this.data.evaluacion.memoria, [Validators.required]),
+      evaluador1: new FormControl(this.data.evaluacion.evaluador1),
+      evaluador2: new FormControl(this.data.evaluacion.evaluador2),
+    });
+
+    return formGroup;
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 }

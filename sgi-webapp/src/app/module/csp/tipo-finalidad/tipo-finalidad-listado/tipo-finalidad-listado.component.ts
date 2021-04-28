@@ -10,7 +10,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -253,8 +252,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
    */
   openModal(tipoFinalidad?: ITipoFinalidad): void {
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: tipoFinalidad ? Object.assign({}, tipoFinalidad) : { activo: true } as ITipoFinalidad
     };
     const dialogRef = this.matDialog.open(TipoFinalidadModalComponent, config);

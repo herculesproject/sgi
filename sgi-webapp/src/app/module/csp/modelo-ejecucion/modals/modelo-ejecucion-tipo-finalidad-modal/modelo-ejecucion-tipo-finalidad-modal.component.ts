@@ -16,6 +16,9 @@ import { switchMap } from 'rxjs/operators';
 const MODELO_EJECUCION_TIPO_FINALIDAD_KEY = marker('csp.tipo-finalidad');
 const MODELO_EJECUCION_TIPO_FINALIDAD_TIPO_KEY = marker('csp.modelo-ejecucion-tipo-finalidad.tipo');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+
 export interface ModeloEjecucionTipoFinalidadModalData {
   modeloTipoFinalidad: IModeloTipoFinalidad;
   tipoFinalidades: ITipoFinalidad[];
@@ -32,6 +35,8 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
   title: string;
   msgParamTipoEntiy = {};
 
+  textSaveOrUpdate: string;
+
   constructor(
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoFinalidadModalComponent>,
@@ -40,6 +45,7 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoFinalidad);
+    this.textSaveOrUpdate = this.data.modeloTipoFinalidad?.tipoFinalidad ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   ngOnInit(): void {
@@ -52,7 +58,6 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
       })
     );
   }
-
 
   private setupI18N(): void {
     this.translate.get(

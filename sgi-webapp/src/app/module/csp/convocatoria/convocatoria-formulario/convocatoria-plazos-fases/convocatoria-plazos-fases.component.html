@@ -64,7 +64,7 @@
   </mat-paginator>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button *ngIf="!formPart.readonly"
+    <button color="three" aria-label="Center Align" mat-raised-button *ngIf="!formPart.readonly"
       (click)="openModalPlazos()" [disabled]="actionService.blockAddPlazos$ | async">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}

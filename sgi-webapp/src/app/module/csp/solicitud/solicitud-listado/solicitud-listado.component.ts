@@ -21,7 +21,6 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
@@ -473,8 +472,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.suscripciones.push(this.solicitudService.findSolicitudProyecto(solicitud.id).pipe(
       map(solicitudProyectoDatos => {
         const config = {
-          width: GLOBAL_CONSTANTS.widthModalCSP,
-          maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+          panelClass: 'sgi-dialog-container',
           data: { solicitud, solicitudProyecto: solicitudProyectoDatos } as ISolicitudCrearProyectoModalData
         };
         const dialogRef = this.matDialog.open(SolicitudCrearProyectoModalComponent, config);

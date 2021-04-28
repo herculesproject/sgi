@@ -7,7 +7,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { DocumentoService, FileModel } from '@core/services/sgdoc/documento.service';
@@ -33,14 +32,8 @@ const DOCUMENTO_TIPO_KEY = marker('eti.memoria.documento.tipo');
   styleUrls: ['./memoria-documentacion-memoria-modal.component.scss']
 })
 export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
-
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-
   formGroup: FormGroup;
-
-  fxFlexProperties: FxFlexProperties;
-  fxFlexProperties2: FxFlexProperties;
-  fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   tiposDcoumentacionFiltered: ITipoDocumento[];
@@ -59,25 +52,6 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
     private readonly documentoService: DocumentoService,
     @Inject(MAT_DIALOG_DATA) public documentacionesMemoria: StatusWrapper<IDocumentacionMemoria>[],
     private readonly translate: TranslateService) {
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(15%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxFlexProperties2 = new FxFlexProperties();
-    this.fxFlexProperties2.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.order = '3';
-
-    this.fxFlexProperties3 = new FxFlexProperties();
-    this.fxFlexProperties3.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.order = '3';
-
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
@@ -160,15 +134,8 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
   getTipoDocumento(tipoDocumento?: ITipoDocumento): string | undefined {
     return typeof tipoDocumento === 'string' ? tipoDocumento : tipoDocumento?.nombre;
   }
-  /**
-   * Cierra la ventana modal y devuelve el documento aportado.
-   *
-   */
-  closeModal(documentacionMemoria?: StatusWrapper<IDocumentacionMemoria>): void {
-    this.matDialogRef.close(documentacionMemoria);
-  }
 
-  save(): void {
+  saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
       let existDocumentacion = false;
       let documentacionMemoria: IDocumentacionMemoria = {} as IDocumentacionMemoria;
@@ -195,7 +162,7 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
                 }
                 documentacionMemoriaListado.value.aportado = true;
                 existDocumentacion = true;
-                this.closeModal(documentacionMemoriaListado);
+                this.matDialogRef.close(documentacionMemoriaListado);
               }
               if (!existDocumentacion) {
                 this.documentacionesMemoria = [];
@@ -211,7 +178,7 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
                   new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
                 wrapperDocumentacion.setCreated();
                 this.documentacionesMemoria.push(wrapperDocumentacion);
-                this.closeModal(wrapperDocumentacion);
+                this.matDialogRef.close(wrapperDocumentacion);
               }
             });
           } else {
@@ -228,7 +195,7 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
               new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
             wrapperDocumentacion.setCreated();
             this.documentacionesMemoria.push(wrapperDocumentacion);
-            this.closeModal(wrapperDocumentacion);
+            this.matDialogRef.close(wrapperDocumentacion);
           }
         });
     } else {

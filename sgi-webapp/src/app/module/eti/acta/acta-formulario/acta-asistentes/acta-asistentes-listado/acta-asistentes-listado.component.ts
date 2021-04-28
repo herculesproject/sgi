@@ -6,7 +6,6 @@ import { IAsistente } from '@core/models/eti/asistente';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject } from 'rxjs';
 import { ActaActionService } from '../../../acta.action.service';
@@ -56,8 +55,7 @@ export class ActaAsistentesListadoComponent extends FragmentComponent implements
    */
   openUpdateModal(asistente: StatusWrapper<IAsistente>): void {
     const config = {
-      width: GLOBAL_CONSTANTS.minWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.minHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: asistente.value
     };
     const dialogRef = this.matDialog.open(ActaAsistentesEditarModalComponent, config);

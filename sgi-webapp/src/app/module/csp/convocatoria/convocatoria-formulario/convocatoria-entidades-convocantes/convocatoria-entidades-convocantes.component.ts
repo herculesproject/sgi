@@ -7,7 +7,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { switchMap } from 'rxjs/operators';
@@ -59,7 +58,6 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     );
   }
 
-
   private setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
@@ -93,8 +91,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaEntidadConvocanteModalComponent, config);

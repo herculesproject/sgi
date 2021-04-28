@@ -7,7 +7,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -46,10 +45,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
   formGroup: FormGroup;
-
-  fxFlexProperties: FxFlexProperties;
-  fxFlexProperties2: FxFlexProperties;
-  fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   modeloTiposHito$: Observable<IModeloTipoHito[]>;
@@ -72,25 +67,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: SolicitudHitosModalComponentData,
     private snackBarService: SnackBarService,
     private readonly translate: TranslateService) {
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(15%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxFlexProperties2 = new FxFlexProperties();
-    this.fxFlexProperties2.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.gtMd = '0 1 calc(40%-10px)';
-    this.fxFlexProperties2.order = '3';
-
-    this.fxFlexProperties3 = new FxFlexProperties();
-    this.fxFlexProperties3.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.order = '3';
-
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
@@ -163,8 +139,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   /**
    * Validacion de fechas a la hora de seleccionar
    * un tipo de hito en el modal
@@ -195,7 +169,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
       this.formGroup.get('aviso').enable();
     }
   }
-
 
   loadTiposHito() {
     this.suscripciones.push(
@@ -239,19 +212,10 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
       modeloTipoHito.tipoHito?.nombre.toLowerCase().includes(filterValue));
   }
 
-  /**
-   * Cierra la ventana modal y devuelve el hito modificado o creado.
-   *
-   * @param hito hito modificado o creado.
-   */
-  closeModal(hito?: ISolicitudHito): void {
-    this.matDialogRef.close(hito);
-  }
-
   saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
-      this.closeModal(this.data.hito);
+      this.matDialogRef.close(this.data.hito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
@@ -268,7 +232,6 @@ export class SolicitiudHitosModalComponent implements OnInit, OnDestroy {
     this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
     this.data.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
   }
-
 
   ngOnDestroy(): void {
     this.suscripciones.forEach(subscription => subscription.unsubscribe());

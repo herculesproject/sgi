@@ -90,14 +90,14 @@
   </mat-paginator>
 
   <div class="separation-button" *ngIf="!formPart.readonly && actionService.permitido">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalCrear(true)"
+    <button color="three" aria-label="Center Align" mat-raised-button (click)="openModalCrear(true)"
       [disabled]="actionService.blockAddCodigosEconomicos$ | async">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'btn.add.entity'| translate:msgParamCodigoPermitidoEntity}}
     </button>
   </div>
   <div class="separation-button" *ngIf="!formPart.readonly && !actionService.permitido">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalCrear(false)"
+    <button color="three" aria-label="Center Align" mat-raised-button (click)="openModalCrear(false)"
       [disabled]="actionService.blockAddCodigosEconomicos$ | async">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'btn.add.entity'| translate:msgParamCodigoNoPermitidoEntity}}

@@ -17,11 +17,14 @@ const MODELO_EJECUCUION_TIPO_DOCUMENTO_KEY = marker('csp.tipo-documento');
 const MODELO_EJECUCUION_TIPO_DOCUMENTO_TIPO_KEY = marker('csp.documento.tipo');
 const MODELO_EJECUCUION_TIPO_DOCUMENTO_FASE_KEY = marker('csp.modelo-ejecucion-tipo-documento.fase');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
+
 export interface ModeloTipoDocumentoModalData {
   modeloTipoDocumento: IModeloTipoDocumento;
   tipoDocumentos: ITipoDocumento[];
   tipoFases: ITipoFase[];
-  modeloTipoDocumentos: IModeloTipoDocumento[],
+  modeloTipoDocumentos: IModeloTipoDocumento[];
   id: number;
 }
 
@@ -34,11 +37,13 @@ export class ModeloEjecucionTipoDocumentoModalComponent extends
   BaseModalComponent<IModeloTipoDocumento, ModeloEjecucionTipoDocumentoModalComponent> implements OnInit {
   tipoDocumentos$: Observable<ITipoDocumento[]>;
   tipoFases$: Observable<ITipoFase[]>;
-  isFaseRequired: boolean = false;
+  isFaseRequired = false;
 
   msgParamFaseEntiy = {};
   msgParamTipoEntiy = {};
   title: string;
+
+  textSaveOrUpdate: string;
 
   constructor(
     protected snackBarService: SnackBarService,
@@ -47,6 +52,7 @@ export class ModeloEjecucionTipoDocumentoModalComponent extends
     private tipoDocumentoService: TipoDocumentoService,
     private readonly translate: TranslateService) {
     super(snackBarService, matDialogRef, data.modeloTipoDocumento);
+    this.textSaveOrUpdate = this.data.modeloTipoDocumento?.tipoDocumento ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   ngOnInit(): void {

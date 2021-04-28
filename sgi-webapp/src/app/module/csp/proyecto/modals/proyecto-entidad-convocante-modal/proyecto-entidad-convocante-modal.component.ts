@@ -10,7 +10,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -81,7 +80,6 @@ function sortByName(nodes: NodePrograma[]): NodePrograma[] {
 })
 export class ProyectoEntidadConvocanteModalComponent extends
   BaseModalComponent<ProyectoEntidadConvocanteModalData, ProyectoEntidadConvocanteModalComponent> implements OnInit {
-  fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   msgParamEntity = {};
@@ -124,11 +122,6 @@ export class ProyectoEntidadConvocanteModalComponent extends
   }
 
   private setupLayout(): void {
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
@@ -351,7 +344,7 @@ export class ProyectoEntidadConvocanteModalComponent extends
       } else if (!programa) {
         this.saveIncompleteFormGroup(MSG_CONTINUE_ENTITY_NOTSET_KEY, this.msgParamProgramaEntity);
       } else {
-        this.closeModal(this.getDatosForm());
+        this.matDialogRef.close(this.getDatosForm());
       }
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
@@ -363,7 +356,7 @@ export class ProyectoEntidadConvocanteModalComponent extends
       this.dialogService.showConfirmation(message, params).subscribe(
         (aceptado) => {
           if (aceptado) {
-            this.closeModal(this.getDatosForm());
+            this.matDialogRef.close(this.getDatosForm());
           }
         }
       )

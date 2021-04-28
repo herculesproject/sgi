@@ -16,6 +16,8 @@ import { switchMap } from 'rxjs/operators';
 const MODELO_EJECUCION_TIPO_ENLACE = marker('csp.tipo-enlace');
 const MODELO_EJECUCION_TIPO_ENLACE_TIPO = marker('csp.modelo-ejecucion-tipo-enlace.tipo');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
 
 export interface ModeloEjecucionTipoEnlaceModalData {
   modeloTipoEnlace: IModeloTipoEnlace;
@@ -33,6 +35,8 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
   msgParamTipoEntiy = {};
   title: string;
 
+  textSaveOrUpdate: string;
+
   constructor(
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoEnlaceModalComponent>,
@@ -41,6 +45,7 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoEnlace);
+    this.textSaveOrUpdate = this.data.modeloTipoEnlace?.tipoEnlace ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   ngOnInit(): void {

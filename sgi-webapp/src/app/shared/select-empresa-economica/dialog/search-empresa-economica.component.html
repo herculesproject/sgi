@@ -15,8 +15,8 @@
     </form>
 
     <div class="separacion">
-      <button color="primary" md-button mat-raised-button
-        (click)="buscarEmpresasEconomicas(true)">{{'btn.search' | translate}}</button>
+      <button color="primary" mat-raised-button (click)="buscarEmpresasEconomicas(true)">{{'btn.search' |
+        translate}}</button>
     </div>
 
 
@@ -89,7 +89,7 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let empresaEconomica">
           <ng-container>
-            <button color="three" md-button mat-raised-button *ngIf="checkSelectedEmpresa(empresaEconomica)"
+            <button color="three" mat-raised-button *ngIf="checkSelectedEmpresa(empresaEconomica)"
               (click)="closeModal(empresaEconomica)">{{'btn.select' | translate}}</button>
             <span *ngIf="!checkSelectedEmpresa(empresaEconomica)">{{'sgp.empresa.seleccionada'| translate}}</span>
           </ng-container>

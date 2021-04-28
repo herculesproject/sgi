@@ -224,7 +224,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       switchMap((value) => {
         return this.translate.get(
           TITLE_NEW_ENTITY,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
         );
       })
     ).subscribe((value) => this.titleNew = value);
@@ -248,6 +248,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     };
 
     const config = {
+      panelClass: 'sgi-dialog-container',
       data
     };
 

@@ -15,7 +15,6 @@ const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
-  fxFlexProperties: FxFlexProperties;
   protected subscriptions: Subscription[] = [];
 
   constructor(
@@ -26,11 +25,6 @@ export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
   }
 
   ngOnInit(): void {
@@ -38,20 +32,11 @@ export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
   }
 
   /**
-   * Close the modal and return the entity data
-   *
-   * @param entity Entity
-   */
-  closeModal(entity?: T): void {
-    this.matDialogRef.close(entity);
-  }
-
-  /**
    * Checks the formGroup, returns the entered data and closes the modal
    */
   saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
-      this.closeModal(this.getDatosForm());
+      this.matDialogRef.close(this.getDatosForm());
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }

@@ -2,19 +2,17 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { StringValidator } from '@core/validators/string-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
-import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const PAQUETE_TRABAJO_DESCRIPCION_KEY = marker('csp.proyecto-paquete-trabajo.descripcion');
@@ -37,17 +35,13 @@ export interface PaquetesTrabajoModalData {
   templateUrl: './proyecto-paquetes-trabajo-modal.component.html',
   styleUrls: ['./proyecto-paquetes-trabajo-modal.component.scss']
 })
-export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy {
-
-  formGroup: FormGroup;
+export class ProyectoPaquetesTrabajoModalComponent extends
+  BaseModalComponent<PaquetesTrabajoModalData, ProyectoPaquetesTrabajoModalComponent> implements OnInit, OnDestroy {
 
   textSaveOrUpdate: string;
 
-  fxFlexProperties: FxFlexProperties;
-  fxFlexProperties2: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   fxLayoutProperties2: FxLayoutProperties;
-  private suscripciones: Subscription[] = [];
 
   msgParamDescripcionEntity = {};
   msgParamNombreEntity = {};
@@ -59,17 +53,13 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
   constructor(
     public matDialogRef: MatDialogRef<ProyectoPaquetesTrabajoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PaquetesTrabajoModalData,
-    private snackBarService: SnackBarService,
+    protected snackBarService: SnackBarService,
     private readonly translate: TranslateService) {
+    super(snackBarService, matDialogRef, data);
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.xs = 'column';
 
@@ -77,19 +67,11 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
     this.fxLayoutProperties2.gap = '20px';
     this.fxLayoutProperties2.layout = 'row';
     this.fxLayoutProperties2.xs = 'column';
-
-    this.fxFlexProperties2 = new FxFlexProperties();
-    this.fxFlexProperties2.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties2.md = '0 1 calc(50%-10px)';
-    this.fxFlexProperties2.gtMd = '0 1 calc(50%-10px)';
-    this.fxFlexProperties2.order = '3';
   }
 
   ngOnInit(): void {
-    this.initFormGroup();
-
+    super.ngOnInit();
     this.setupI18N();
-
     this.textSaveOrUpdate = this.data?.paqueteTrabajo?.nombre ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
@@ -139,12 +121,17 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
     }
   }
 
+  protected getDatosForm(): PaquetesTrabajoModalData {
+    this.data.paqueteTrabajo.nombre = this.formGroup.controls.nombre.value;
+    this.data.paqueteTrabajo.fechaFin = this.formGroup.controls.fechaFin.value;
+    this.data.paqueteTrabajo.fechaInicio = this.formGroup.controls.fechaInicio.value;
+    this.data.paqueteTrabajo.personaMes = this.formGroup.controls.personaMes.value;
+    this.data.paqueteTrabajo.descripcion = this.formGroup.controls.descripcion.value;
+    return this.data;
+  }
 
-  /**
-   * Inicializa formulario de creación/edición de paquetes trabajo
-   */
-  private initFormGroup() {
-    this.formGroup = new FormGroup({
+  protected getFormGroup(): FormGroup {
+    const formGroup = new FormGroup({
       nombre: new FormControl(this.data?.paqueteTrabajo?.nombre,
         [Validators.maxLength(250), Validators.required,
         StringValidator.notIn(this.data?.paquetesTrabajo?.map(paquete => paquete?.nombre))]),
@@ -159,44 +146,11 @@ export class ProyectoPaquetesTrabajoModalComponent implements OnInit, OnDestroy 
           ValidarRangoProyecto.rangoProyecto('fechaInicio', 'fechaFin', this.data),
           DateValidator.isAfter('fechaInicio', 'fechaFin')]
       });
-  }
-
-  /**
-   * Actualizar o guardar datos
-   */
-  saveOrUpdate(): void {
-    if (this.formGroup.valid) {
-      this.loadDatosForm();
-      this.closeModal(this.data.paqueteTrabajo);
-    } else {
-      this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
-    }
-  }
-
-  /**
-   * Método para actualizar la entidad con los datos de un formGroup
-   *
-   * @returns Comentario con los datos del formulario
-   */
-  private loadDatosForm(): void {
-    this.data.paqueteTrabajo.nombre = this.formGroup.get('nombre').value;
-    this.data.paqueteTrabajo.fechaFin = this.formGroup.get('fechaFin').value;
-    this.data.paqueteTrabajo.fechaInicio = this.formGroup.get('fechaInicio').value;
-    this.data.paqueteTrabajo.personaMes = this.formGroup.get('personaMes').value;
-    this.data.paqueteTrabajo.descripcion = this.formGroup.get('descripcion').value;
-  }
-
-  /**
-   * Cierra la ventana modal y devuelve el paqueteTrabajo modificado o creado.
-   *
-   * @param paqueteTrabajo paqueteTrabajo modificado o creado.
-   */
-  closeModal(paqueteTrabajo?: IProyectoPaqueteTrabajo): void {
-    this.matDialogRef.close(paqueteTrabajo);
+    return formGroup;
   }
 
   ngOnDestroy(): void {
-    this.suscripciones?.forEach(subscription => subscription.unsubscribe());
+    super.ngOnDestroy();
   }
 
 }

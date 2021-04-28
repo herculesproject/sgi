@@ -11,7 +11,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -122,21 +121,20 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
     }
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: dataModal,
     };
     const dialogRef = this.matDialog.open(ProyectoPaquetesTrabajoModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (paqueteTrabajo) => {
-        if (paqueteTrabajo) {
+      (modalData: PaquetesTrabajoModalData) => {
+        if (modalData) {
           if (wrapper) {
             if (!wrapper.created) {
               wrapper.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addPaqueteTrabajo(paqueteTrabajo);
+            this.formPart.addPaqueteTrabajo(modalData.paqueteTrabajo);
           }
         }
       }

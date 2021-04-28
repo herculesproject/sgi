@@ -103,12 +103,6 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
 
     this.isEdit = data.modalidad ? true : false;
 
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(20%-10px)';
-    this.fxFlexProperties.order = '2';
-
     this.fxFlexPropertiesTree = new FxFlexProperties();
     this.fxFlexPropertiesTree.sm = '0 1 calc(100%-10px)';
     this.fxFlexPropertiesTree.md = '0 1 calc(100%-10px)';

@@ -2,11 +2,13 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
 import { IMemoria } from '@core/models/eti/memoria';
-import { ITarea } from '@core/models/eti/tarea';
+import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
+import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
 import { TipoTarea } from '@core/models/eti/tipo-tarea';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -17,7 +19,6 @@ import { TareaService } from '@core/services/eti/tarea.service';
 import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -35,15 +36,20 @@ const TAREA_FORMACION_ESPECIFICA_KEY = marker('eti.peticion-evaluacion.tarea.for
 const TAREA_ANIO_KEY = marker('eti.peticion-evaluacion.tarea.anio');
 const TAREA_ORGANISMO_KEY = marker('eti.peticion-evaluacion.tarea.organismo');
 
+export interface PeticionEvaluacionTareasModalComponentData {
+  tarea: ITareaWithIsEliminable;
+  equiposTrabajo: IEquipoTrabajo[];
+  memorias: IMemoriaPeticionEvaluacion[];
+}
+
 @Component({
   selector: 'sgi-peticion-evaluacion-tareas-modal',
   templateUrl: './peticion-evaluacion-tareas-modal.component.html',
   styleUrls: ['./peticion-evaluacion-tareas-modal.component.scss']
 })
-export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy {
+export class PeticionEvaluacionTareasModalComponent extends
+  BaseModalComponent<PeticionEvaluacionTareasModalComponentData, PeticionEvaluacionTareasModalComponent> implements OnInit, OnDestroy {
 
-  FormGroupUtil = FormGroupUtil;
-  formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
 
   tareaSuscripcion: Subscription;
@@ -52,9 +58,9 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
   formacionesSubscription: Subscription;
   filteredFormaciones: Observable<FormacionEspecifica[]>;
 
-  memoriaListado: IMemoria[];
+  memoriaListado: IMemoriaPeticionEvaluacion[];
   memoriasSubscription: Subscription;
-  filteredMemorias: Observable<IMemoria[]>;
+  filteredMemorias: Observable<IMemoriaPeticionEvaluacion[]>;
 
   equipoTrabajoListado: IEquipoTrabajo[];
   equiposTrabajoSubscription: Subscription;
@@ -95,12 +101,8 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<PeticionEvaluacionTareasModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      tarea: ITarea,
-      equiposTrabajo: IEquipoTrabajo[],
-      memorias: IMemoria[]
-    },
-    private readonly snackBarService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: PeticionEvaluacionTareasModalComponentData,
+    protected readonly snackBarService: SnackBarService,
     protected readonly tareaService: TareaService,
     protected readonly formacionService: FormacionEspecificaService,
     protected readonly memoriaService: MemoriaService,
@@ -109,11 +111,14 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     protected readonly tipoTareaService: TipoTareaService,
     private readonly translate: TranslateService
   ) {
+    super(snackBarService, matDialogRef, data);
+
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'column';
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.setupI18N();
     this.mostrarOrganismoYanioSubscription = this.mostrarOrganismoYanio$.subscribe(mostrar => {
       this.mostrarOrganismoYanio = mostrar;
@@ -121,7 +126,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     this.tareaYformacionTextoSubscription = this.tareaYformacionTexto$.subscribe(mostrar => {
       this.tareaYformacionTexto = mostrar;
     });
-    this.initFormGroup();
+    this.onClickMemoria(this.data.tarea?.memoria);
     this.loadFormaciones();
     this.loadMemorias();
     this.loadEquiposTrabajo();
@@ -188,43 +193,6 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
       TAREA_ORGANISMO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamOrganismoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
-  }
-
-  /**
-   * Inicializa el formGroup
-   */
-  private initFormGroup() {
-    this.formGroup = new FormGroup({
-      tarea: new FormControl(this.data.tarea?.tarea),
-      tipoTarea: new FormControl(this.data.tarea?.tipoTarea),
-      organismo: new FormControl(this.data.tarea?.organismo),
-      anio: new FormControl(this.data.tarea?.anio),
-      formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica),
-      formacion: new FormControl(this.data.tarea?.formacion),
-      memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
-      equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' : this.data.tarea?.equipoTrabajo, [Validators.required])
-    });
-    this.onClickMemoria(this.data.tarea?.memoria);
-  }
-
-  /**
-   * Cierra la ventana modal y devuelve el asistencia si se ha modificado
-   *
-   * @param tarea asistencia modificada
-   */
-  closeModal(tarea?: ITarea): void {
-    this.matDialogRef.close(tarea);
-  }
-
-  /**
-   * Comprueba el formulario y envia la tarea resultante
-   */
-  addTarea() {
-    if (FormGroupUtil.valid(this.formGroup)) {
-      this.closeModal(this.getDatosForm());
-    } else {
-      this.snackBarService.showError(MSG_ERROR_FORM);
-    }
   }
 
   /**
@@ -334,16 +302,16 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
    * @param value value a filtrar (string o título memoria).
    * @returns lista de memorias filtradas.
    */
-  private filterMemoria(value: string | IMemoria): IMemoria[] {
+  private filterMemoria(value: string | IMemoriaPeticionEvaluacion): IMemoriaPeticionEvaluacion[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();
     } else {
-      filterValue = value.titulo.toLowerCase();
+      filterValue = value.numReferencia.toLowerCase();
     }
 
     return this.memoriaListado?.filter
-      (memoria => memoria.titulo.toLowerCase().includes(filterValue));
+      (memoria => memoria.numReferencia.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -462,38 +430,49 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
         + ' ' + equipoTrabajo.persona.apellidos.toLowerCase()).includes(filterValue));
   }
 
-  /**
-   * Método para actualizar la entidad con los datos de un formGroup
-   */
-  private getDatosForm(): ITarea {
-    const tarea = this.data.tarea;
+  protected getDatosForm(): PeticionEvaluacionTareasModalComponentData {
     if (this.mostrarOrganismoYanio) {
-      tarea.organismo = FormGroupUtil.getValue(this.formGroup, 'organismo');
-      tarea.anio = FormGroupUtil.getValue(this.formGroup, 'anio');
+      this.data.tarea.organismo = this.formGroup.controls.organismo.value;
+      this.data.tarea.anio = this.formGroup.controls.anio.value;
     } else {
-      tarea.organismo = null;
-      tarea.anio = null;
+      this.data.tarea.organismo = null;
+      this.data.tarea.anio = null;
     }
 
     if (this.tareaYformacionTexto) {
-      tarea.tipoTarea = null;
-      tarea.formacionEspecifica = null;
-      tarea.tarea = FormGroupUtil.getValue(this.formGroup, 'tarea');
-      tarea.formacion = FormGroupUtil.getValue(this.formGroup, 'formacion');
+      this.data.tarea.tipoTarea = null;
+      this.data.tarea.formacionEspecifica = null;
+      this.data.tarea.tarea = this.formGroup.controls.tarea.value;
+      this.data.tarea.formacion = this.formGroup.controls.formacion.value;
     } else {
-      tarea.tarea = null;
-      tarea.formacion = null;
-      tarea.tipoTarea = FormGroupUtil.getValue(this.formGroup, 'tipoTarea');
-      tarea.formacionEspecifica = FormGroupUtil.getValue(this.formGroup, 'formacionEspecifica');
+      this.data.tarea.tarea = null;
+      this.data.tarea.formacion = null;
+      this.data.tarea.tipoTarea = this.formGroup.controls.tipoTarea.value;
+      this.data.tarea.formacionEspecifica = this.formGroup.controls.formacionEspecifica.value;
     }
 
-    tarea.memoria = FormGroupUtil.getValue(this.formGroup, 'memoria');
-    tarea.equipoTrabajo = FormGroupUtil.getValue(this.formGroup, 'equipoTrabajo');
-    return tarea;
+    this.data.tarea.memoria = this.formGroup.controls.memoria.value;
+    this.data.tarea.equipoTrabajo = this.formGroup.controls.equipoTrabajo.value;
+
+    return this.data;
+  }
+
+  protected getFormGroup(): FormGroup {
+    const formGroup = new FormGroup({
+      tarea: new FormControl(this.data.tarea?.tarea),
+      tipoTarea: new FormControl(this.data.tarea?.tipoTarea),
+      organismo: new FormControl(this.data.tarea?.organismo),
+      anio: new FormControl(this.data.tarea?.anio),
+      formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica),
+      formacion: new FormControl(this.data.tarea?.formacion),
+      memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
+      equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' : this.data.tarea?.equipoTrabajo, [Validators.required])
+    });
+
+    return formGroup;
   }
 
   ngOnDestroy(): void {
-    this.tareaSuscripcion?.unsubscribe();
-    this.mostrarOrganismo$?.unsubscribe();
+    super.ngOnDestroy();
   }
 }

@@ -64,12 +64,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   ) {
     super(snackBarService, matDialogRef, data.convocatoriaPeriodoJustificacion);
 
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(20%-10px)';
-    this.fxFlexProperties.order = '2';
-
     this.fxFlexProperties2 = new FxFlexProperties();
     this.fxFlexProperties2.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties2.md = '0 1 calc(100%-10px)';
@@ -139,8 +133,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
         })
       ).subscribe((value) => this.title = value);
     }
-
-
   }
 
   protected getFormGroup(): FormGroup {

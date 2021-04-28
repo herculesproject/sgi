@@ -36,7 +36,8 @@
 
       <!-- Programa Convocatoria Column -->
       <ng-container matColumnDef="programaConvocatoria">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'csp.proyecto-entidad-convocante.programa.programa-convocatoria'
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{
+          'csp.proyecto-entidad-convocante.programa.programa-convocatoria'
           |
           translate }}</th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
@@ -45,7 +46,8 @@
 
       <!-- Programa Column -->
       <ng-container matColumnDef="programa">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'csp.proyecto-entidad-convocante.programa.programa' | translate
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'csp.proyecto-entidad-convocante.programa.programa' |
+          translate
           }}
         </th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
@@ -72,7 +74,7 @@
     <mat-paginator [pageSizeOptions]="elementsPage" showFirstLastButtons></mat-paginator>
   </div>
   <div class="separation-button">
-    <button color="three" md-button mat-raised-button (click)="openModal()">
+    <button color="three" mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon> {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>
   </div>

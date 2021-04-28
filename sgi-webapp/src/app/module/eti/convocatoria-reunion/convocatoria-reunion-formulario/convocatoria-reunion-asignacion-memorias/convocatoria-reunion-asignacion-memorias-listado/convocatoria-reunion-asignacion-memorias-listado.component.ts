@@ -12,13 +12,12 @@ import { DialogService } from '@core/services/dialog.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionActionService } from '../../../convocatoria-reunion.action.service';
-import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from '../convocatoria-reunion-asignacion-memorias-modal/convocatoria-reunion-asignacion-memorias-modal.component';
+import { ConvocatoriaReunionAsignacionMemoriasModalComponent, ConvocatoriaReunionAsignacionMemoriasModalComponentData } from '../convocatoria-reunion-asignacion-memorias-modal/convocatoria-reunion-asignacion-memorias-modal.component';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-asignacion-memorias-listado.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
@@ -130,7 +129,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    *
    */
   openDialogAsignarMemoria(): void {
-    const evaluacion: IEvaluacion = {
+    const evaluacion: IEvaluacionWithIsEliminable = {
       activo: true,
       comite: null,
       convocatoriaReunion: this.actionService.getDatosGeneralesConvocatoriaReunion(),
@@ -143,30 +142,27 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       memoria: null,
       tipoEvaluacion: null,
       version: null,
+      eliminable: true
     };
 
+    const data: ConvocatoriaReunionAsignacionMemoriasModalComponentData = {
+      idConvocatoria: this.listadoFragment.getKey() as number,
+      filterMemoriasAsignables: this.actionService.getDatosAsignacion(),
+      memoriasAsignadas: this.listadoFragment.evaluaciones$.value.map(evc => evc.value.memoria),
+      evaluacion
+    };
     const config = {
-      width: GLOBAL_CONSTANTS.maxWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      ...this.matDialog,
-      data: {
-        params: {
-          idConvocatoria: this.listadoFragment.getKey() as number,
-          filterMemoriasAsignables: this.actionService.getDatosAsignacion(),
-          memoriasAsignadas: this.listadoFragment.evaluaciones$.value.map(evc => evc.value.memoria),
-          evaluacion
-        }
-      },
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaReunionAsignacionMemoriasModalComponent, config);
 
     this.subscriptions.push(
       dialogRef.afterClosed().subscribe(
-        (evaluacionAniadida: IEvaluacionWithIsEliminable) => {
-          if (evaluacionAniadida) {
-            this.listadoFragment.addEvaluacion(evaluacionAniadida);
+        (modelData: ConvocatoriaReunionAsignacionMemoriasModalComponentData) => {
+          if (modelData && modelData.evaluacion) {
+            this.listadoFragment.addEvaluacion(modelData.evaluacion);
           }
         }
       ));
@@ -195,25 +191,21 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
    * @param evaluacion evaluación a modificar
    */
   openUpdateModal(evaluacion: StatusWrapper<IEvaluacionWithIsEliminable>): void {
+    const data: ConvocatoriaReunionAsignacionMemoriasModalComponentData = {
+      idConvocatoria: this.listadoFragment.getKey() as number,
+      filterMemoriasAsignables: this.actionService.getDatosAsignacion(),
+      memoriasAsignadas: this.listadoFragment.evaluaciones$.value.map(evc => evc.value.memoria),
+      evaluacion: evaluacion.value
+    };
     const config = {
-      width: GLOBAL_CONSTANTS.maxWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      ...this.matDialog,
-      data: {
-        params: {
-          idConvocatoria: this.listadoFragment.getKey() as number,
-          filterMemoriasAsignables: this.actionService.getDatosAsignacion(),
-          memoriasAsignadas: this.listadoFragment.evaluaciones$.value.map(evc => evc.value.memoria),
-          evaluacion: evaluacion.value
-        }
-      },
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaReunionAsignacionMemoriasModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (resultado: IEvaluacionWithIsEliminable) => {
-        if (resultado) {
+      (modelData: ConvocatoriaReunionAsignacionMemoriasModalComponentData) => {
+        if (modelData && modelData.evaluacion) {
           evaluacion.setEdited();
           this.fragment.setChanges(true);
           this.fragment.setComplete(true);

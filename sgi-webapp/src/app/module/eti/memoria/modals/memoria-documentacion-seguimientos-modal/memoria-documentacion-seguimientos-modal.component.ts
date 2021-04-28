@@ -7,7 +7,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DocumentoService, FileModel } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -22,20 +21,16 @@ const MSG_ERROR_APORTAR_DOCUMENTACION = marker('error.eti.memoria.documentacion.
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 const DOCUMENTO_KEY = marker('eti.memoria.documento');
+
 @Component({
   templateUrl: './memoria-documentacion-seguimientos-modal.component.html',
   styleUrls: ['./memoria-documentacion-seguimientos-modal.component.scss']
 })
 export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
-
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-
   FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
 
-  fxFlexProperties: FxFlexProperties;
-  fxFlexProperties2: FxFlexProperties;
-  fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   tiposDcoumentacionFiltered: ITipoDocumento[];
@@ -52,24 +47,6 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
     private readonly documentoService: DocumentoService,
     @Inject(MAT_DIALOG_DATA) public documentacionesMemoria: StatusWrapper<IDocumentacionMemoria>[],
     private readonly translate: TranslateService) {
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(15%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxFlexProperties2 = new FxFlexProperties();
-    this.fxFlexProperties2.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.order = '3';
-
-    this.fxFlexProperties3 = new FxFlexProperties();
-    this.fxFlexProperties3.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.order = '3';
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
@@ -107,15 +84,7 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
     });
   }
 
-  /**
-   * Cierra la ventana modal y devuelve el documento aportado.
-   *
-   */
-  closeModal(documentacionMemoria?: StatusWrapper<IDocumentacionMemoria>): void {
-    this.matDialogRef.close(documentacionMemoria);
-  }
-
-  save(): void {
+  saveOrUpdate(): void {
     if (FormGroupUtil.valid(this.formGroup)) {
       let documentacionMemoria: IDocumentacionMemoria = {} as IDocumentacionMemoria;
       const fileModel = {
@@ -143,14 +112,12 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
             new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
           wrapperDocumentacion.setCreated();
           this.documentacionesMemoria.push(wrapperDocumentacion);
-          this.closeModal(wrapperDocumentacion);
+          this.matDialogRef.close(wrapperDocumentacion);
         });
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
   }
-
-
 
   /**
    * Rellena el campo del formulario con el fichero seleccionado.

@@ -11,7 +11,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -118,10 +117,8 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
       readonly: this.formPart.readonly
     };
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data,
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data
     };
     const dialogRef = this.matDialog.open(SolicitiudHitosModalComponent, config);
     dialogRef.afterClosed().subscribe(

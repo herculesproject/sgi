@@ -12,7 +12,6 @@ import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatori
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -132,21 +131,32 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoCodigoEcModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (convocatoriaConceptoGastoCodigoEc: ConvocatoriaConceptoGastoCodigoEc) => {
-        if (convocatoriaConceptoGastoCodigoEc) {
+      (modalData: IConvocatoriaConceptoGastoCodigoEcModalComponent) => {
+        if (modalData.convocatoriaConceptoGastoCodigoEc) {
           if (wrapper) {
             if (!wrapper.created) {
               wrapper.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addConvocatoriaConceptoGastoCodigoEc(convocatoriaConceptoGastoCodigoEc);
+            const convConceptoGastoEc = {
+              convocatoriaConceptoGasto: {
+                id: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
+              },
+              id: modalData.convocatoriaConceptoGastoCodigoEc.id,
+              codigoEconomicoRef: modalData.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef,
+              fechaInicio: modalData.convocatoriaConceptoGastoCodigoEc.fechaInicio,
+              fechaFin: modalData.convocatoriaConceptoGastoCodigoEc.fechaFin,
+              observaciones: modalData.convocatoriaConceptoGastoCodigoEc.observaciones,
+              convocatoriaConceptoGastoId: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
+            } as ConvocatoriaConceptoGastoCodigoEc;
+            convConceptoGastoEc.convocatoriaConceptoGasto = { conceptoGasto: this.actionService.conceptoGasto } as IConvocatoriaConceptoGasto;
+            this.formPart.addConvocatoriaConceptoGastoCodigoEc(convConceptoGastoEc);
           }
         }
       }
@@ -174,16 +184,26 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoCodigoEcModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (result: ConvocatoriaConceptoGastoCodigoEc) => {
-        if (result) {
-          result.convocatoriaConceptoGasto = { conceptoGasto: this.actionService.conceptoGasto } as IConvocatoriaConceptoGasto;
-          this.formPart.addConvocatoriaConceptoGastoCodigoEc(result);
+      (modalData: IConvocatoriaConceptoGastoCodigoEcModalComponent) => {
+        if (modalData) {
+          const convConceptoGastoEc = {
+            convocatoriaConceptoGasto: {
+              id: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
+            },
+            id: modalData.convocatoriaConceptoGastoCodigoEc.id,
+            codigoEconomicoRef: modalData.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef,
+            fechaInicio: modalData.convocatoriaConceptoGastoCodigoEc.fechaInicio,
+            fechaFin: modalData.convocatoriaConceptoGastoCodigoEc.fechaFin,
+            observaciones: modalData.convocatoriaConceptoGastoCodigoEc.observaciones,
+            convocatoriaConceptoGastoId: modalData.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGastoId
+          } as ConvocatoriaConceptoGastoCodigoEc;
+          convConceptoGastoEc.convocatoriaConceptoGasto = { conceptoGasto: this.actionService.conceptoGasto } as IConvocatoriaConceptoGasto;
+          this.formPart.addConvocatoriaConceptoGastoCodigoEc(convConceptoGastoEc);
         }
       }
     );

@@ -1,15 +1,15 @@
-<mat-dialog-content align="center">
-  <header class="modal-header-material">
-    <h3 mat-dialog-title>
-      {{title | translate}}</h3>
-  </header>
-  <section>
-    <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+<div class="sgi-dialog-header" fxLayout="row" fxLayoutGap="20px">
+  <span fxFlexAlign="center" mat-mat-dialog-title role="heading" aria-level="3" fxFlex>{{title | translate}}</span>
+  <button fxFlex="nogrow" mat-icon-button mat-dialog-close>
+    <mat-icon class="close-icon">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Memoria -->
+    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-
-      <!-- Memoria -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+      <div>
         <mat-form-field class="input-form">
           <mat-label>{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
           <input type="text" [placeholder]="'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
@@ -24,10 +24,8 @@
           </mat-error>
         </mat-form-field>
       </div>
-
       <!-- Evaluador 1 -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+      <div>
         <mat-form-field>
           <mat-label>{{'eti.convocatoria-reunion.memoria.evaludador-1' | translate}}
           </mat-label>
@@ -44,10 +42,8 @@
           </mat-error>
         </mat-form-field>
       </div>
-
       <!-- Evaluador 2 -->
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
+      <div>
         <mat-form-field>
           <mat-label>{{'eti.convocatoria-reunion.memoria.evaludador-2' | translate}}
           </mat-label>
@@ -64,11 +60,14 @@
           </mat-error>
         </mat-form-field>
       </div>
-    </form>
-  </section>
+    </div>
+  </form>
 </mat-dialog-content>
-<mat-dialog-actions align="center">
-  <button color="accent" (click)="onAsignarmemoria()" md-button mat-raised-button tabindex="-1">{{isEdit ? ('btn.ok' |
-    translate) : ('btn.add'| translate)}}</button>
-  <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1">{{'btn.cancel' | translate}}</button>
+<mat-dialog-actions>
+  <button color="accent" (click)="saveOrUpdate()" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{isEdit ? ('btn.ok' |
+    translate) : ('btn.add'| translate)}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
 </mat-dialog-actions>

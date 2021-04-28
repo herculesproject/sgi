@@ -9,7 +9,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -102,22 +101,21 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: datosPlazosFases,
     };
 
     const dialogRef = this.matDialog.open(ProyectoPlazosModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (plazosFase: IProyectoPlazos) => {
-        if (plazosFase) {
+      (modalData: ProyectoPlazosModalComponentData) => {
+        if (modalData) {
           if (plazo) {
             if (!plazo.created) {
               plazo.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addPlazos(plazosFase);
+            this.formPart.addPlazos(modalData.plazo);
           }
         }
       }

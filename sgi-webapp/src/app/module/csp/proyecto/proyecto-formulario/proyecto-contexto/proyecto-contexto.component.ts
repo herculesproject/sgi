@@ -9,7 +9,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoContexto, PROPIEDAD_RESULTADOS_MAP } from '@core/models/csp/proyecto-contexto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ProyectoContextoModalComponent } from '../../modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
@@ -131,8 +130,7 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: wrapper ? wrapper : newData
     };
     const dialogRef = this.matDialog.open(ProyectoContextoModalComponent, config);

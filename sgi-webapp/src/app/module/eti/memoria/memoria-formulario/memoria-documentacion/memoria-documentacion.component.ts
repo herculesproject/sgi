@@ -15,7 +15,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
@@ -195,10 +194,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
   openModalDocumentacionMemoria(): void {
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: this.dataSourceDocumentoMemoria.data,
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data: this.dataSourceDocumentoMemoria.data
     };
 
     const dialogRef = this.matDialog.open(MemoriaDocumentacionMemoriaModalComponent, config);
@@ -217,10 +214,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
   openModalDocumentacionSeguimiento(tipoSeguimiento: number, documentacion?: StatusWrapper<IDocumentacionMemoria>): void {
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: documentacion ? documentacion.value : {} as IDocumentacionMemoria,
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data: documentacion ? documentacion.value : {} as IDocumentacionMemoria
     };
 
     const dialogRef = this.matDialog.open(MemoriaDocumentacionSeguimientosModalComponent, config);

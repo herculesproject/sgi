@@ -110,7 +110,7 @@
   </mat-paginator>
   <!-- Botón añadir memoria -->
   <div class="separation-button">
-    <button md-button mat-raised-button color="three" *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
+    <button mat-raised-button color="three" *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
       [routerLink]="['../../..', MEMORIAS_ROUTE, 'new']" [state]="{idPeticionEvaluacion: fragment.getKey()}">
       <mat-icon>add_box</mat-icon>
       {{'btn.add.entity' | translate:msgParamEntity}}

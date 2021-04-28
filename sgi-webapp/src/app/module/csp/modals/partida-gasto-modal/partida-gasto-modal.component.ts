@@ -142,13 +142,16 @@ export class PartidaGastoModalComponent extends
 
       this.subscriptions.push(this.formGroup.controls.conceptoGasto.valueChanges.subscribe(
         (conceptoGasto) => {
-          this.showCodigosEconomicosInfo = true;
-
           this.conceptosGastosPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcPermitidos
             .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id));
 
           this.conceptosGastosNoPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcNoPermitidos
             .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id));
+
+          if (this.conceptosGastosPermitidos.length > 0 && this.conceptosGastosNoPermitidos.length > 0) {
+            this.showCodigosEconomicosInfo = true;
+          }
+
         })
       );
     }

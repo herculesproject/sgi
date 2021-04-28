@@ -11,7 +11,6 @@ import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -22,6 +21,7 @@ import { ModeloEjecucionTipoFaseFragment } from './modelo-ejecucion-tipo-fase.fr
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MODELO_EJECUCION_TIPO_FASE_KEY = marker('csp.tipo-fase');
+
 @Component({
   selector: 'sgi-modelo-ejecucion-tipo-fase',
   templateUrl: './modelo-ejecucion-tipo-fase.component.html',
@@ -129,8 +129,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
       tipoFases
     };
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoFaseModalComponent, config);

@@ -148,8 +148,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
 
   openModal(data: AreaTematicaSolicitudData): void {
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(SolicitudAreaTematicaModalComponent, config);

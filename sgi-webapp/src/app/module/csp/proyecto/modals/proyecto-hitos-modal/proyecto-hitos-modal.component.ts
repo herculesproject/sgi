@@ -1,13 +1,13 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -17,11 +17,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR_INIT = marker('error.load');
-const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const PROYECTO_HITO_FECHA_KEY = marker('csp.proyecto-hito.fecha');
@@ -40,14 +39,11 @@ export interface ProyectoHitosModalComponentData {
   templateUrl: './proyecto-hitos-modal.component.html',
   styleUrls: ['./proyecto-hitos-modal.component.scss']
 })
-export class ProyectoHitosModalComponent implements OnInit {
+export class ProyectoHitosModalComponent extends
+  BaseModalComponent<ProyectoHitosModalComponentData, ProyectoHitosModalComponent> implements OnInit, OnDestroy {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-  formGroup: FormGroup;
 
-  fxFlexProperties: FxFlexProperties;
-  fxFlexProperties2: FxFlexProperties;
-  fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   modeloTiposHito$: Observable<IModeloTipoHito[]>;
@@ -55,8 +51,6 @@ export class ProyectoHitosModalComponent implements OnInit {
   private modeloTiposHitoFiltered: IModeloTipoHito[];
 
   textSaveOrUpdate: string;
-
-  private suscripciones: Subscription[] = [];
 
   msgParamFechaEntity = {};
   msgParamTipoEntity = {};
@@ -68,26 +62,9 @@ export class ProyectoHitosModalComponent implements OnInit {
     public matDialogRef: MatDialogRef<ProyectoHitosModalComponent>,
     private modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoHitosModalComponentData,
-    private snackBarService: SnackBarService,
+    protected snackBarService: SnackBarService,
     private readonly translate: TranslateService) {
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(15%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxFlexProperties2 = new FxFlexProperties();
-    this.fxFlexProperties2.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties2.gtMd = '0 1 calc(40%-10px)';
-    this.fxFlexProperties2.order = '3';
-
-    this.fxFlexProperties3 = new FxFlexProperties();
-    this.fxFlexProperties3.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties3.order = '3';
+    super(snackBarService, matDialogRef, data);
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
@@ -96,29 +73,19 @@ export class ProyectoHitosModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
-      fecha: new FormControl(this.data?.hito?.fecha, [Validators.required]),
-      comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
-      aviso: new FormControl(this.data?.hito?.generaAviso)
-    });
-
+    super.ngOnInit();
     this.setupI18N();
 
-    if (this.data.readonly) {
-      this.formGroup.disable();
-    }
-
     const suscription = this.formGroup.controls.tipoHito.valueChanges.subscribe((value) => this.createValidatorDate(value));
-    this.suscripciones.push(suscription);
+    this.subscriptions.push(suscription);
 
     const suscriptionFecha = this.formGroup.controls.fecha.valueChanges.subscribe(() =>
       this.createValidatorDate(this.formGroup.controls.tipoHito.value));
-    this.suscripciones.push(suscriptionFecha);
+    this.subscriptions.push(suscriptionFecha);
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
-    this.suscripciones.push(this.formGroup.get('fecha').valueChanges.subscribe(() => this.validarFecha())
+    this.subscriptions.push(this.formGroup.get('fecha').valueChanges.subscribe(() => this.validarFecha())
     );
     this.validarFecha();
   }
@@ -193,7 +160,7 @@ export class ProyectoHitosModalComponent implements OnInit {
 
 
   loadTiposHito() {
-    this.suscripciones.push(
+    this.subscriptions.push(
       this.modeloEjecucionService.findModeloTipoHitoProyecto(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
           this.modeloTiposHitoFiltered = res.items;
@@ -230,34 +197,31 @@ export class ProyectoHitosModalComponent implements OnInit {
       modeloTipoHito.tipoHito?.nombre.toLowerCase().includes(filterValue));
   }
 
-  /**
-   * Cierra la ventana modal y devuelve el hito modificado o creado.
-   *
-   * @param hito hito modificado o creado.
-   */
-  closeModal(hito?: IProyectoHito): void {
-    this.matDialogRef.close(hito);
+  protected getDatosForm(): ProyectoHitosModalComponentData {
+    this.data.hito.comentario = this.formGroup.controls.comentario.value;
+    this.data.hito.fecha = this.formGroup.controls.fecha.value;
+    this.data.hito.tipoHito = this.formGroup.controls.tipoHito.value;
+    this.data.hito.generaAviso = this.formGroup.controls.aviso.value ? this.formGroup.controls.aviso.value : false;
+    return this.data;
   }
 
-  saveOrUpdate(): void {
-    if (this.formGroup.valid) {
-      this.loadDatosForm();
-      this.closeModal(this.data.hito);
-    } else {
-      this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
+  protected getFormGroup(): FormGroup {
+    const formGroup = new FormGroup({
+      tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
+      fecha: new FormControl(this.data?.hito?.fecha, [Validators.required]),
+      comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
+      aviso: new FormControl(this.data?.hito?.generaAviso)
+    });
+
+    if (this.data.readonly) {
+      formGroup.disable();
     }
+
+    return formGroup;
   }
 
-  /**
-   * Método para actualizar la entidad con los datos de un formGroup
-   *
-   * @returns Comentario con los datos del formulario
-   */
-  private loadDatosForm(): void {
-    this.data.hito.comentario = this.formGroup.get('comentario').value;
-    this.data.hito.fecha = this.formGroup.get('fecha').value;
-    this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
-    this.data.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 
 }

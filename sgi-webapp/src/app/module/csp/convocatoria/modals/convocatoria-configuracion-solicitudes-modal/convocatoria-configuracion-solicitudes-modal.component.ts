@@ -6,7 +6,6 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -38,7 +37,6 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent
   extends BaseModalComponent<ConvocatoriaConfiguracionSolicitudesModalData, ConvocatoriaConfiguracionSolicitudesModalComponent>
   implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
-  fxFlexProperties: FxFlexProperties;
 
   documentoRequeridoFiltered: ITipoDocumento[];
   documentoRequerido$: Observable<ITipoDocumento[]>;
@@ -59,11 +57,6 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
   }
 
   ngOnInit(): void {
@@ -92,7 +85,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent
         switchMap((value) => {
           return this.translate.get(
             TITLE_NEW_ENTITY,
-            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+            { entity: value, ...MSG_PARAMS.GENDER.MALE }
           );
         })
       ).subscribe((value) => this.title = value);

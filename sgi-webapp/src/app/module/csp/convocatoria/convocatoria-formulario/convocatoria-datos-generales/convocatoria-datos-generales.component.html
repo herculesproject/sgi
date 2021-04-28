@@ -304,7 +304,7 @@
       <tr mat-row *matRowDef="let row; columns: columns;"></tr>
     </table>
     <div class="separation-button">
-      <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModal()"
+      <button color="three" aria-label="Center Align" mat-raised-button (click)="openModal()"
         *ngIf="convocatoriaAreaTematicas.data.length === 0 && !formPart.readonly">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamAreaTematicaEntity }}

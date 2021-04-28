@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -6,7 +6,6 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IMiembroEquipoSolicitud } from '@core/models/csp/miembro-equipo-solicitud';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -42,9 +41,7 @@ export interface MiembroEquipoSolicitudModalData {
   styleUrls: ['./miembro-equipo-solicitud-modal.component.scss']
 })
 export class MiembroEquipoSolicitudModalComponent extends
-  BaseModalComponent<MiembroEquipoSolicitudModalData, MiembroEquipoSolicitudModalComponent> implements OnInit {
-  fxFlexProperties: FxFlexProperties;
-  fxFlexPropertiesFullWidth: FxFlexProperties;
+  BaseModalComponent<MiembroEquipoSolicitudModalData, MiembroEquipoSolicitudModalComponent> implements OnInit, OnDestroy {
   fxLayoutProperties: FxLayoutProperties;
   textSaveOrUpdate: string;
 
@@ -69,18 +66,6 @@ export class MiembroEquipoSolicitudModalComponent extends
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
-
-    this.fxFlexPropertiesFullWidth = new FxFlexProperties();
-    this.fxFlexPropertiesFullWidth.sm = '0 1 100%';
-    this.fxFlexPropertiesFullWidth.md = '0 1 100%';
-    this.fxFlexPropertiesFullWidth.gtMd = '0 1 100%';
-    this.fxFlexPropertiesFullWidth.order = '1';
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
@@ -278,5 +263,9 @@ export class MiembroEquipoSolicitudModalComponent extends
     }
     formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 }

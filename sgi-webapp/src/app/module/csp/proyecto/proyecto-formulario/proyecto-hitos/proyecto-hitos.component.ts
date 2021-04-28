@@ -11,7 +11,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -119,21 +118,20 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
     }
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(ProyectoHitosModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (proyectoHito) => {
-        if (proyectoHito) {
+      (modalData: ProyectoHitosModalComponentData) => {
+        if (modalData) {
           if (wrapper) {
             if (!wrapper.created) {
               wrapper.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addHito(proyectoHito);
+            this.formPart.addHito(modalData.hito);
           }
         }
       }

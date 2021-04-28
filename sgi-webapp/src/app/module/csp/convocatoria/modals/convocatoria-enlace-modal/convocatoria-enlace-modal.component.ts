@@ -7,7 +7,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -40,7 +39,6 @@ export interface ConvocatoriaEnlaceModalComponentData {
 export class ConvocatoriaEnlaceModalComponent extends
   BaseModalComponent<ConvocatoriaEnlaceModalComponentData, ConvocatoriaEnlaceModalComponent> implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
-  fxFlexProperties: FxFlexProperties;
 
   modeloTiposEnlace$: Observable<IModeloTipoEnlace[]>;
   private modeloTiposEnlaceFiltered: IModeloTipoEnlace[];
@@ -63,11 +61,6 @@ export class ConvocatoriaEnlaceModalComponent extends
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
   }
 
   ngOnInit() {

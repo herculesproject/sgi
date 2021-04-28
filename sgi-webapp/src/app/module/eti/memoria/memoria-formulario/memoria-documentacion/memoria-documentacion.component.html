@@ -60,7 +60,7 @@
   <!-- Botón añadir documentación -->
   <div class="separation-button">
     <ng-container *ngIf="hasPermisoUpdateDocumentacionInicial()">
-      <button color="three" md-button mat-raised-button (click)="openModalDocumentacionMemoria()">
+      <button color="three" mat-raised-button (click)="openModalDocumentacionMemoria()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{'btn.add.entity' | translate:msgParamDocumentoEntity}}
       </button>
@@ -140,7 +140,7 @@
     <!-- Botón añadir documentación -->
     <div class="separation-button">
       <ng-container *ngIf="hasPermisoUpdateDocumentacionSeguimientoAnual()">
-        <button color="three" md-button mat-raised-button
+        <button color="three" mat-raised-button
           (click)="openModalDocumentacionSeguimiento(documentacionTipo.SEGUIMIENTO_ANUAL)">
           <mat-icon color="accent">add_circle</mat-icon>
           {{'btn.add.entity' | translate:msgParamDocumentoEntity}}
@@ -212,7 +212,7 @@
     <div class="separation-button">
       <!-- Botón añadir documentación -->
       <ng-container *ngIf="hasPermisoUpdateDocumentacionSeguimientoFinal()">
-        <button color="three" md-button mat-raised-button
+        <button color="three" mat-raised-button
           (click)="openModalDocumentacionSeguimiento(documentacionTipo.SEGUIMIENTO_FINAL)">
           <mat-icon color="accent">add_circle</mat-icon>
           {{'btn.add.entity' | translate:msgParamDocumentoEntity}}
@@ -285,7 +285,7 @@
     <div class="separation-button">
       <!-- Botón añadir documentación -->
       <ng-container *ngIf="hasPermisoUpdateDocumentacionRetrospectiva()">
-        <button color="three" md-button mat-raised-button
+        <button color="three" mat-raised-button
           (click)="openModalDocumentacionSeguimiento(documentacionTipo.RETROSPECTIVA)">
           <mat-icon color="accent">add_circle</mat-icon>
           {{'btn.add.entity' | translate:msgParamDocumentoEntity}}

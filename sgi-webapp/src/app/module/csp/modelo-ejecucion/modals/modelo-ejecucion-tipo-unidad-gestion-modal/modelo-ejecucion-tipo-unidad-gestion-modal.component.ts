@@ -15,6 +15,8 @@ import { switchMap } from 'rxjs/operators';
 
 const MODELO_EJECUCION_UNIDAD_GESTION_KEY = marker('csp.modelo-ejecucion-unidad-gestion');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
 
 export interface IModeloEjecucionTipoUnidadModal {
   modeloTipoUnidad: IModeloUnidad;
@@ -32,6 +34,7 @@ export class ModeloEjecucionTipoUnidadGestionModalComponent extends
 
   msgParamUnidadGestionEntiy = {};
   title: string;
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly snackBarService: SnackBarService,
@@ -41,6 +44,7 @@ export class ModeloEjecucionTipoUnidadGestionModalComponent extends
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoUnidad);
+    this.textSaveOrUpdate = this.data.modeloTipoUnidad?.unidadGestion ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
   ngOnInit(): void {
@@ -73,7 +77,6 @@ export class ModeloEjecucionTipoUnidadGestionModalComponent extends
       })
     ).subscribe((value) => this.title = value);
   }
-
 
   private filterExistingTipoUnidadGestion(result: SgiRestListResult<ITipoUnidadGestion>): ITipoUnidadGestion[] {
     return result.items.filter((tipoUnidadGestion: ITipoUnidadGestion) => {

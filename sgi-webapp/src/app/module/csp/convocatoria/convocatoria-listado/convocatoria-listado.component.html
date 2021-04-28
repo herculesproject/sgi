@@ -31,15 +31,15 @@
 
         <div class="buttons-final" *ngIf="!busquedaAvanzada">
           <div class="col filter-button">
-            <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+            <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
               <mat-icon>search</mat-icon> {{'btn.search'| translate}}
             </button>
-            <button class="link-busqueda underline" aria-label="Center Align" md-button mat-button
+            <button class="link-busqueda underline" aria-label="Center Align" mat-button
               (click)="toggleBusquedaAvanzada()">
               {{'btn.search.advanced'| translate}}
             </button>
-            <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
-              mat-button>{{'btn.clean'| translate}}
+            <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+              translate}}
             </button>
           </div>
         </div>
@@ -246,15 +246,15 @@
 
         <div class="buttons-final">
           <div class="col filter-button">
-            <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+            <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
               <mat-icon>search</mat-icon> {{'btn.search'| translate}}
             </button>
-            <button class="link-busqueda underline" aria-label="Center Align" md-button mat-button
+            <button class="link-busqueda underline" aria-label="Center Align" mat-button
               (click)="toggleBusquedaAvanzada()">
               {{'btn.search.simple'| translate}}
             </button>
-            <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
-              mat-button>{{'btn.clean'| translate}}
+            <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+              translate}}
             </button>
           </div>
         </div>

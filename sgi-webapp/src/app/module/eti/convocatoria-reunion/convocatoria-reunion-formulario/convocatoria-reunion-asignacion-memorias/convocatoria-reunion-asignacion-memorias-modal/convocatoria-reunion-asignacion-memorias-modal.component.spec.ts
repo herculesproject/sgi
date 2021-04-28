@@ -13,24 +13,22 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { DateTime } from 'luxon';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from './convocatoria-reunion-asignacion-memorias-modal.component';
+import { ConvocatoriaReunionAsignacionMemoriasModalComponent, ConvocatoriaReunionAsignacionMemoriasModalComponentData } from './convocatoria-reunion-asignacion-memorias-modal.component';
 
 describe('ConvocatoriaReunionAsignacionMemoriasModalComponent', () => {
   let component: ConvocatoriaReunionAsignacionMemoriasModalComponent;
   let fixture: ComponentFixture<ConvocatoriaReunionAsignacionMemoriasModalComponent>;
 
   const dialogData = {
-    params: {
-      idConvocatoria: 0,
-      memoriasAsignadas: [] as IMemoria[],
-      filterMemoriasAsignables: {
-        idComite: 0,
-        idTipoConvocatoria: 0,
-        fechaLimite: DateTime.now()
-      },
-      evaluacion: {} as IEvaluacion
-    }
-  };
+    idConvocatoria: 0,
+    memoriasAsignadas: [] as IMemoria[],
+    filterMemoriasAsignables: {
+      idComite: 0,
+      idTipoConvocatoria: 0,
+      fechaLimite: DateTime.now()
+    },
+    evaluacion: {} as IEvaluacion
+  } as ConvocatoriaReunionAsignacionMemoriasModalComponentData;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

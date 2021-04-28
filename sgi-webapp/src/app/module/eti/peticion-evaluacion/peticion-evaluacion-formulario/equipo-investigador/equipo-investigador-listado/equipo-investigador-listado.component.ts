@@ -14,7 +14,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -118,8 +117,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
    */
   openModalAddEquipoTrabajo(): void {
     const config = {
-      width: GLOBAL_CONSTANTS.minWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.minHeightModal
+      panelClass: 'sgi-dialog-container'
     };
 
     const dialogRef = this.matDialog.open(EquipoInvestigadorCrearModalComponent, config);

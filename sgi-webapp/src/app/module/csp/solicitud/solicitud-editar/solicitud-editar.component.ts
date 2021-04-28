@@ -291,16 +291,14 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
       comentario: null,
     };
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data,
-      autoFocus: false
+      panelClass: 'sgi-dialog-container',
+      data
     };
     const dialogRef = this.matDialog.open(CambioEstadoModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (comentario) => {
-        if (comentario) {
-          this.cambioEstadoComentario(comentario, estadoNuevo);
+      (modalData: SolicitudCambioEstadoModalComponentData) => {
+        if (modalData && modalData.comentario) {
+          this.cambioEstadoComentario(modalData.comentario, modalData.estadoNuevo);
         }
 
       }

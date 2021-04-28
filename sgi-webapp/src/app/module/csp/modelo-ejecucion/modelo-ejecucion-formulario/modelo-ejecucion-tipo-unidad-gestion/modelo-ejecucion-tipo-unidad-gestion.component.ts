@@ -10,7 +10,6 @@ import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -129,8 +128,7 @@ export class ModeloEjecucionTipoUnidadGestionComponent extends FragmentComponent
     };
 
     const config = {
-      width: GLOBAL_CONSTANTS.widthModalCSP,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      panelClass: 'sgi-dialog-container',
       data: dataModal
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoUnidadGestionModalComponent, config);

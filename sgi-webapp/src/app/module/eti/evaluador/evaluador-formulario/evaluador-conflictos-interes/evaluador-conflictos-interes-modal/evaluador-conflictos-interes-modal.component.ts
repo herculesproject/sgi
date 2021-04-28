@@ -80,30 +80,22 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
   }
 
   /**
-   * Cierra la ventana modal y devuelve el conflicto de interés si se ha modificado
-   *
-   * @param conflictoInteres conflicto interés modificado
-   */
-  closeModal(conflictoInteres?: IConflictoInteres): void {
-    if (conflictoInteres) {
-      const isRepetido =
-        this.conflictos.some(conflictoListado =>
-          conflictoInteres.personaConflicto.id === conflictoListado.personaConflicto.id);
-
-      if (isRepetido) {
-        this.snackBarService.showError(MSG_ERROR_CONFLICTO_REPETIDO);
-        return;
-      }
-    }
-    this.matDialogRef.close(conflictoInteres);
-  }
-
-  /**
    * Comprueba el formulario y envia el conflicto de interés resultante
    */
-  addConflicto() {
+  saveOrUpdate() {
+    const conflictoInteres = this.getDatosForm();
     if (FormGroupUtil.valid(this.formGroup)) {
-      this.closeModal(this.getDatosForm());
+      if (conflictoInteres) {
+        const isRepetido =
+          this.conflictos.some(conflictoListado =>
+            conflictoInteres.personaConflicto.id === conflictoListado.personaConflicto.id);
+
+        if (isRepetido) {
+          this.snackBarService.showError(MSG_ERROR_CONFLICTO_REPETIDO);
+          return;
+        }
+      }
+      this.matDialogRef.close(conflictoInteres);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM);
     }

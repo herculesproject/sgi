@@ -8,14 +8,13 @@ import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoFinalidad, ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface EntidadFinanciadoraDataModal {
   title: string;
@@ -28,7 +27,7 @@ const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const ENTIDAD_FINANCIADORA_KEY = marker('csp.entidad-financiadora');
 const ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY = marker('csp.entidad-financiadora.porcentaje-financiacion');
-const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 @Component({
   templateUrl: './entidad-financiadora-modal.component.html',
   styleUrls: ['./entidad-financiadora-modal.component.scss']
@@ -56,11 +55,6 @@ export class EntidadFinanciadoraModalComponent extends
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
   }
 
   ngOnInit(): void {
@@ -69,6 +63,7 @@ export class EntidadFinanciadoraModalComponent extends
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
     this.textSaveOrUpdate = this.data.entidad?.empresa ? MSG_ACEPTAR : MSG_ANADIR;
+    this.title = this.data.title;
   }
 
   private setupI18N(): void {
@@ -81,25 +76,6 @@ export class EntidadFinanciadoraModalComponent extends
       ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamPorcentajeFinanciacionoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
-
-    if (this.data.entidad?.empresa) {
-      this.translate.get(
-        this.data.title,
-        MSG_PARAMS.CARDINALIRY.SINGULAR
-      ).subscribe((value) => this.title = value);
-    } else {
-      this.translate.get(
-        this.data.title,
-        MSG_PARAMS.CARDINALIRY.SINGULAR
-      ).pipe(
-        switchMap((value) => {
-          return this.translate.get(
-            TITLE_NEW_ENTITY,
-            { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
-          );
-        })
-      ).subscribe((value) => this.title = value);
-    }
   }
 
   protected getDatosForm(): IEntidadFinanciadora {

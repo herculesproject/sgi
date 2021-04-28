@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -6,9 +6,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IMiembroEquipoProyecto } from '@core/models/csp/miembro-equipo-proyecto';
-import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -19,7 +17,7 @@ import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Subscription } from 'rxjs';
+import { merge } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
@@ -47,13 +45,9 @@ export interface MiembroEquipoProyectoModalData {
   styleUrls: ['./miembro-equipo-proyecto-modal.component.scss']
 })
 export class MiembroEquipoProyectoModalComponent extends
-  BaseModalComponent<MiembroEquipoProyectoModalData, MiembroEquipoProyectoModalComponent> implements OnInit {
+  BaseModalComponent<MiembroEquipoProyectoModalData, MiembroEquipoProyectoModalComponent> implements OnInit, OnDestroy {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-  formGroup: FormGroup;
-
-  fxFlexProperties: FxFlexProperties;
-  fxFlexPropertiesFullWidth: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   textSaveOrUpdate: string;
@@ -79,21 +73,7 @@ export class MiembroEquipoProyectoModalComponent extends
     private personaService: PersonaService,
     private rolProyectoService: RolProyectoService,
     private readonly translate: TranslateService) {
-
     super(snackBarService, matDialogRef, data);
-
-    this.fxFlexPropertiesFullWidth = new FxFlexProperties();
-    this.fxFlexPropertiesFullWidth.sm = '0 1 100%';
-    this.fxFlexPropertiesFullWidth.md = '0 1 100%';
-    this.fxFlexPropertiesFullWidth.gtMd = '0 1 100%';
-    this.fxFlexPropertiesFullWidth.order = '1';
-
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
-    this.fxFlexProperties.order = '2';
-
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
@@ -311,6 +291,10 @@ export class MiembroEquipoProyectoModalComponent extends
     }
     formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 
 }

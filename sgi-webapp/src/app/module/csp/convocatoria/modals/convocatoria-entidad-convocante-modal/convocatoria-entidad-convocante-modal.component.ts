@@ -336,7 +336,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
       } else if (!programa) {
         this.saveIncompleteFormGroup(MSG_FORM_GROUP_WITHOUT_PROGRAMA);
       } else {
-        this.closeModal(this.getDatosForm());
+        this.matDialogRef.close(this.getDatosForm());
       }
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
@@ -348,7 +348,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
       this.dialogService.showConfirmation(message).subscribe(
         (aceptado) => {
           if (aceptado) {
-            this.closeModal(this.getDatosForm());
+            this.matDialogRef.close(this.getDatosForm());
           }
         }
       )

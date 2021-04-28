@@ -140,6 +140,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
       readonly: this.formPart.readonly
     };
     const config = {
+      panelClass: 'sgi-dialog-container',
       data
     };
     const dialogRef = this.matDialog.open(EntidadFinanciadoraModalComponent, config);

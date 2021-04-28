@@ -6,14 +6,14 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const CONCEPTO_GASTO_KEY = marker('csp.concepto-gasto');
 const CONCEPTO_GASTO_NOMBRE_KEY = marker('csp.concepto-gasto.nombre');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+const MSG_ANADIR = marker('btn.add');
+const MSG_ACEPTAR = marker('btn.ok');
 
 @Component({
   selector: 'sgi-concepto-gasto-modal',
@@ -25,6 +25,7 @@ export class ConceptoGastoModalComponent extends
 
   msgParamNombreEntity = {};
   title: string;
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly snackBarService: SnackBarService,
@@ -61,6 +62,8 @@ export class ConceptoGastoModalComponent extends
         CONCEPTO_GASTO_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
+
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     } else {
       this.translate.get(
         CONCEPTO_GASTO_KEY,
@@ -74,20 +77,7 @@ export class ConceptoGastoModalComponent extends
         })
       ).subscribe((value) => this.title = value);
 
-    }
-
-  }
-
-  closeModal(conceptoGasto?: IConceptoGasto): void {
-    this.matDialogRef.close(conceptoGasto);
-  }
-
-  saveOrUpdate(): void {
-    if (FormGroupUtil.valid(this.formGroup)) {
-      this.getDatosForm();
-      this.closeModal(this.conceptoGasto);
-    } else {
-      this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
+      this.textSaveOrUpdate = MSG_ANADIR;
     }
   }
 

@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-listado/convocatoria-reunion-asignacion-memorias-listado.fragment';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.fragment';
 
-interface DatosAsignacionEvaluacion {
+export interface DatosAsignacionEvaluacion {
   idComite: number;
   idTipoConvocatoria: number;
   fechaLimite: DateTime;

@@ -5,6 +5,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
@@ -22,11 +23,10 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { from, Observable, of, Subscription } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
 
-const MSG_ERROR_BLOQUE = marker('error.load');
 const MSG_ERROR_APARTADO = marker('error.load');
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
@@ -92,12 +92,9 @@ function sortByName(nodes: NodeApartado[]): NodeApartado[] {
     }
   ]
 })
-export class ComentarioModalComponent implements OnInit, OnDestroy {
-
-  formGroup: FormGroup;
+export class ComentarioModalComponent extends
+  BaseModalComponent<ComentarioModalData, ComentarioModalComponent> implements OnInit, OnDestroy {
   fxLayoutProperties: FxLayoutProperties;
-
-  private suscripciones: Subscription[];
 
   apartado$: Observable<IBloque[]>;
   treeControl = new NestedTreeControl<NodeApartado>(node => node.childs);
@@ -123,31 +120,27 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
     private readonly formularioService: FormularioService,
     private readonly bloqueService: BloqueService,
     private readonly apartadoService: ApartadoService,
-    private readonly snackBarService: SnackBarService,
+    protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ComentarioModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ComentarioModalData,
     private readonly translate: TranslateService
   ) {
+    super(snackBarService, matDialogRef, data);
+
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'column';
     this.fxLayoutProperties.layoutAlign = 'space-around start';
-    this.suscripciones = [];
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.setupI18N();
-    this.suscripciones = [];
-    this.formGroup = new FormGroup({
-      bloque: new FormControl(this.data?.comentario?.apartado?.bloque, [Validators.required, IsEntityValidator.isValid()]),
-      comentario: new FormControl(this.data?.comentario?.texto, [
-        Validators.required, Validators.maxLength(2000)])
-    });
     this.loadBloques();
     if (this.data?.comentario?.apartado?.bloque) {
       this.loadTreeApartados(this.data?.comentario?.apartado?.bloque.id);
     }
     const subscription = this.formGroup.get('bloque').valueChanges.subscribe((value) => this.loadTreeApartados(value.id));
-    this.suscripciones.push(subscription);
+    this.subscriptions.push(subscription);
   }
 
   private setupI18N(): void {
@@ -199,7 +192,7 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
       (this.data?.evaluacion?.tipoEvaluacion, this.data?.evaluacion?.memoria?.comite)).pipe(
         map(res => res.items),
         catchError(error => {
-          this.closeModalError(MSG_ERROR_BLOQUE);
+          this.matDialogRef.close(null);
           this.snackBarService.showError(MSG_ERROR_APARTADO);
           this.logger.error(ComentarioModalComponent.name,
             `loadBloques()`, error);
@@ -240,7 +233,7 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
             `loadTreeApartados()`, error);
         }
       );
-      this.suscripciones.push(susbcription);
+      this.subscriptions.push(susbcription);
     }
   }
 
@@ -295,29 +288,6 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
     this.checkedNode = $event.checked ? node : undefined;
   }
 
-  ngOnDestroy(): void {
-    this.suscripciones?.forEach(suscription => suscription.unsubscribe());
-  }
-
-  /**
-   * Muestra un mensaje de error y cierra la ventana modal
-   *
-   * @param texto Texto de error a mostrar
-   */
-  private closeModalError(texto: string): void {
-    this.snackBarService.showError(texto);
-    this.closeModal();
-  }
-
-  /**
-   * Cierra la ventana modal y devuelve el comentario si se ha creado
-   *
-   * @param comentario Comentario creado
-   */
-  closeModal(comentario?: IComentario): void {
-    this.matDialogRef.close(comentario);
-  }
-
   getNombreBloque(bloque: IBloque): string {
     return bloque?.nombre;
   }
@@ -325,10 +295,10 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
   /**
    * Comprueba el formulario y envia el comentario resultante
    */
-  saveComentario() {
+  saveOrUpdate() {
     if (this.formGroup.valid) {
       if (this.checkedNode?.apartado?.value) {
-        this.closeModal(this.getDatosForm());
+        this.matDialogRef.close(this.getDatosForm());
       } else {
         this.mostrarError = true;
         this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
@@ -338,10 +308,20 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  protected getFormGroup(): FormGroup {
+    const formGroup = new FormGroup({
+      bloque: new FormControl(this.data?.comentario?.apartado?.bloque, [Validators.required, IsEntityValidator.isValid()]),
+      comentario: new FormControl(this.data?.comentario?.texto, [
+        Validators.required, Validators.maxLength(2000)])
+    });
+
+    return formGroup;
+  }
+
   /**
    * Método para actualizar la entidad con los datos del formgroup + tree
    */
-  private getDatosForm(): IComentario {
+  protected getDatosForm(): ComentarioModalData {
     const comentario = {} as IComentario;
     const subapartado: IApartado = this.checkedNode?.apartado?.value;
     if (subapartado) {
@@ -349,6 +329,11 @@ export class ComentarioModalComponent implements OnInit, OnDestroy {
     }
     comentario.texto = FormGroupUtil.getValue(this.formGroup, 'comentario');
     comentario.memoria = this.data.evaluacion.memoria;
-    return comentario;
+    this.data.comentario = comentario;
+    return this.data;
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 }
