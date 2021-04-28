@@ -369,7 +369,8 @@
             </button>
           </ng-container>
           <ng-container>
-            <button *ngIf="mapModificable.get(element.convocatoria.id) && element.convocatoria.activo === true"
+            <button
+              *ngIf="mapModificable.get(element.convocatoria.id) && element.convocatoria.activo === true && element.convocatoria.estado === 'BORRADOR'"
               mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deactivateConvocatoria(element)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
