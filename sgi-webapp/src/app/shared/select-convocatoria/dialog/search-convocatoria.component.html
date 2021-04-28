@@ -1,5 +1,5 @@
 <div class="dialog-convocatoria">
-  <h3 mat-dialog-title>{{'csp.convocatoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</h3>
+  <h3 mat-dialog-title>{{'csp.convocatoria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h3>
 
   <!-- Buscador -->
   <div class="dialog-modal" mat-dialog-content>
@@ -18,13 +18,11 @@
     <mat-checkbox class="example-margin" [(ngModel)]="data.abiertoPlazoPresentacionSolicitud">
       {{'csp.convocatoria.plazo-abierto' | translate}}</mat-checkbox>
 
-
-
     <div class="separacion">
-      <button color="primary" mat-raised-button (click)="buscarConvocatorias(true)">{{'btn.search' |
-        translate}}</button>
+      <button color="primary" mat-raised-buttonn (click)="buscarConvocatorias(true)">
+        {{'btn.search' | translate}}
+      </button>
     </div>
-
 
     <!-- Tabla resultados -->
     <table class="mat-elevation-z8 table-convocatorias" mat-table [dataSource]="convocatorias$ | async" matSort

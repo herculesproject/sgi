@@ -22,7 +22,7 @@
           <!-- Estado solicitud -->
           <div class="col">
             <mat-form-field>
-              <mat-label>{{'csp.solicitud.estado-solicitud-solicitud' | translate}}</mat-label>
+              <mat-label>{{'csp.solicitud.estado-solicitud' | translate}}</mat-label>
               <mat-select matNativeControl formControlName="estadoSolicitud">
                 <mat-option [value]="undefined"></mat-option>
                 <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">

@@ -74,6 +74,18 @@ export class ModeloEjecucionEditarComponent extends ActionComponent {
         );
       })
     ).subscribe((value) => this.textoCrearError = value);
+
+    this.translate.get(
+      MODELO_EJECUCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoCrearSuccess = value);
   }
 
   saveOrUpdate(): void {

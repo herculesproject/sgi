@@ -6,7 +6,8 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_FASES]"
-        [title]="'csp.tipo-fase' | translate" [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_FASES)">
+        [title]="'csp.tipo-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_FASES)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_DOCUMENTOS]"
         [title]="'csp.tipo-documento' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
