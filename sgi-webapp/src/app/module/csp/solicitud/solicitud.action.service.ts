@@ -149,7 +149,7 @@ export class SolicitudActionService extends ActionService {
 
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.data?.solicitud?.id, solicitudService, this.readonly);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.data?.solicitud?.id, solicitudService,
-      solicitudProyectoService, convocatoriaService, this.readonly);
+      solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId);
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService, this.readonly);
     this.socio = new SolicitudProyectoSocioFragment(this.data?.solicitud?.id, solicitudService,

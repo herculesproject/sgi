@@ -29,7 +29,8 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     private solicitudService: SolicitudService,
     private solicitudProyectoService: SolicitudProyectoService,
     private convocatoriaService: ConvocatoriaService,
-    public readonly: boolean
+    public readonly: boolean,
+    private convocatoriaId: number
   ) {
     super(key, true);
     this.setComplete(true);
@@ -131,6 +132,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   }
 
   protected initializer(key: number): Observable<ISolicitudProyecto> {
+
     return this.solicitudService.findSolicitudProyecto(key).pipe(
       switchMap((solicitudProyectoDatos) => {
         return this.loadSolicitudProyecto(solicitudProyectoDatos);
@@ -138,8 +140,8 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       switchMap(solicitudProyecto => {
         if (solicitudProyecto?.id) {
           return this.solicitudProyectoService.hasSolicitudSocio(solicitudProyecto?.id).pipe(
-            map(status => {
-              this.disableSocioColaborador(status);
+            map(hasSolicitudSocio => {
+              this.disableSocioColaborador(hasSolicitudSocio);
               return solicitudProyecto;
             })
           );
@@ -149,8 +151,21 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       switchMap(solicitudProyecto => {
         if (solicitudProyecto?.id) {
           return this.solicitudProyectoService.hasSolicitudPresupuesto(solicitudProyecto.id).pipe(
-            map(status => {
-              this.disablePresupuestoPorEntidades(status);
+            map(hasSolicitudPresupuesto => {
+              this.disablePresupuestoPorEntidades(hasSolicitudPresupuesto);
+              return solicitudProyecto;
+            })
+          );
+        }
+        return of(solicitudProyecto);
+      }),
+      switchMap(solicitudProyecto => {
+        if (this.convocatoriaId && !solicitudProyecto?.id) {
+          return this.convocatoriaService.findById(this.convocatoriaId).pipe(
+            map(convocatoria => {
+              solicitudProyecto = {} as ISolicitudProyecto;
+              solicitudProyecto.colaborativo = convocatoria.colaborativos;
+              solicitudProyecto.duracion = convocatoria.duracion;
               return solicitudProyecto;
             })
           );
