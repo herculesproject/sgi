@@ -122,9 +122,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.setupI18N();
 
     this.formGroup = new FormGroup({
-      referenciaConvocatoria: new FormControl(''),
+      convocatoria: new FormControl(undefined),
       estadoSolicitud: new FormControl(''),
-
       plazoAbierto: new FormControl(false),
       fechaInicioDesde: new FormControl(null),
       fechaInicioHasta: new FormControl(null),
@@ -292,9 +291,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   protected initColumns(): void {
     this.columnas = [
-      'referencia',
-      'convocatoria.titulo',
       'codigoRegistroInterno',
+      'codigoExterno',
+      'convocatoria.titulo',
+      'referencia',
       'solicitante',
       'estado.estado',
       'estado.fechaEstado',
@@ -309,7 +309,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('referenciaConvocatoria', SgiRestFilterOperator.LIKE_ICASE, controls.referenciaConvocatoria.value)
+    const filter = new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value);
     if (this.busquedaAvanzada) {
       if (controls.plazoAbierto.value) {

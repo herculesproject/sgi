@@ -10,12 +10,13 @@
 
         <div fxFlex="73%" fxFlex.sm="50%" fxFlex.md="53%" [fxLayout.xs]="fxLayoutProperties.xs"
           [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-          <!-- Referencia convocatoria -->
+          <!-- Convocatoria -->
           <div class="col">
             <mat-form-field>
-              <mat-label>{{'csp.solicitud.referencia-convocatoria' | translate}}</mat-label>
-              <input matInput type="text" placeholder="{{'csp.solicitud.referencia-convocatoria' | translate}}"
-                formControlName="referenciaConvocatoria">
+              <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
+              <sgi-select-convocatoria placeholder="{{'csp.solicitud.convocatoria' | translate}}"
+                formControlName="convocatoria">
+              </sgi-select-convocatoria>
             </mat-form-field>
           </div>
 
@@ -281,13 +282,23 @@
     <table class="mat-elevation-z8 table-solicitud" mat-table [dataSource]="solicitudes$ | async" matSort
       matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
-      <!-- Referencia convocatoria Column -->
-      <ng-container matColumnDef="referencia">
-        <th mat-header-cell *matHeaderCellDef>
-          {{'csp.solicitud.referencia-convocatoria' | translate}}
+      <!-- Codigo interno Column -->
+      <ng-container matColumnDef="codigoRegistroInterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.solicitud.codigo' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.convocatoria ? element.convocatoria.codigo : element.convocatoriaExterna}}
+          {{ element.codigoRegistroInterno}}
+        </td>
+      </ng-container>
+
+      <!-- Codigo interno Column -->
+      <ng-container matColumnDef="codigoExterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.solicitud.codigo-externo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.codigoExterno}}
         </td>
       </ng-container>
 
@@ -301,13 +312,13 @@
         </td>
       </ng-container>
 
-      <!-- Codigo solicitud Column -->
-      <ng-container matColumnDef="codigoRegistroInterno">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'csp.solicitud.codigo' | translate}}
+      <!-- Referencia convocatoria Column -->
+      <ng-container matColumnDef="referencia">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.solicitud.referencia-convocatoria' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.codigoRegistroInterno}}
+          {{ element.convocatoria ? element.convocatoria.codigo : element.convocatoriaExterna}}
         </td>
       </ng-container>
 
@@ -324,7 +335,7 @@
       <!-- Estado solicitud Column -->
       <ng-container matColumnDef="estado.estado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{'csp.solicitud.estado-solicitud' | translate}}
+          {{'csp.solicitud.estado' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
           {{ESTADO_MAP.get(element.estado?.estado) | translate}}
