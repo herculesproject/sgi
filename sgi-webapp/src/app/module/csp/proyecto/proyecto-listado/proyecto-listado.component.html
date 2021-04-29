@@ -294,18 +294,18 @@
     <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="proyecto$ | async" matSort matSortActive="id"
       matSortDirection="asc" matSortDisableClear>
 
-      <!-- Acronimo -->
-      <ng-container matColumnDef="acronimo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.acronimo' | translate}}
-        </th>
-        <td mat-cell *matCellDef="let proyecto">{{proyecto.acronimo}}</td>
-      </ng-container>
-
       <!-- Titulo -->
       <ng-container matColumnDef="titulo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.titulo' | translate}}
         </th>
         <td mat-cell *matCellDef="let proyecto">{{proyecto.titulo}}</td>
+      </ng-container>
+
+      <!-- Acronimo -->
+      <ng-container matColumnDef="acronimo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.acronimo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let proyecto">{{proyecto.acronimo}}</td>
       </ng-container>
 
       <!-- Fecha inicio -->

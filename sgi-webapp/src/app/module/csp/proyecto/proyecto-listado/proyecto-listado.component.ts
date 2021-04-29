@@ -246,7 +246,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   protected initColumns(): void {
-    this.columnas = ['acronimo', 'titulo', 'fechaInicio', 'fechaFin', 'estado', 'activo', 'acciones'];
+    this.columnas = ['titulo', 'acronimo', 'fechaInicio', 'fechaFin', 'estado', 'activo', 'acciones'];
   }
 
   protected loadTable(reset?: boolean): void {

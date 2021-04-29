@@ -882,7 +882,7 @@
   "info.csp.convocatoria-enlace": "Para añadir enlaces es necesario rellenar el modelo de ejecución de la convocatoria.",
   "info.csp.hito": "Para añadir hitos es necesario rellenar el modelo de ejecución de la convocatoria.",
   "info.csp.plan-investigacion.programa.no-padre": "Aún no se ha creado ningún programa para el plan de investigación",
-  "info.csp.proyecto-socio": "Ha seleccionado en los datos generales que es un proyecto no colaborativo por lo que no existirán socios colaboradores",
+  "info.csp.proyecto-socio": "Ha seleccionado en los datos generales que es un proyecto no colaborativo por lo que no existirán socios",
   "info.csp.proyecto-socio.fecha-fin": "Fecha Fin Partic.",
   "info.csp.proyecto-socio.fecha-inicio": "Fecha Inicio Partic.",
   "info.csp.proyecto-socio.nombre": "Nombre",
