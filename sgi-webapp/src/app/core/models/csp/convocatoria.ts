@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { DateTime } from 'luxon';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
 import { ITipoRegimenConcurrencia } from './tipo-regimen-concurrencia';
@@ -10,7 +11,9 @@ export interface IConvocatoria {
   unidadGestion: IUnidadGestion;
   modeloEjecucion: IModeloEjecucion;
   codigo: string;
-  anio: number;
+  fechaPublicacion: DateTime;
+  fechaProvisional: DateTime;
+  fechaConcesion: DateTime;
   titulo: string;
   objeto: string;
   observaciones: string;

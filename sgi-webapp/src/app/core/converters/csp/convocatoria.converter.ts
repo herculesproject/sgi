@@ -1,6 +1,7 @@
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConvocatoria> {
@@ -14,7 +15,9 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       unidadGestion: { acronimo: value.unidadGestionRef } as IUnidadGestion,
       modeloEjecucion: value.modeloEjecucion,
       codigo: value.codigo,
-      anio: value.anio,
+      fechaPublicacion: LuxonUtils.fromBackend(value.fechaPublicacion),
+      fechaProvisional: LuxonUtils.fromBackend(value.fechaProvisional),
+      fechaConcesion: LuxonUtils.fromBackend(value.fechaConcesion),
       titulo: value.titulo,
       objeto: value.objeto,
       observaciones: value.observaciones,
@@ -39,7 +42,9 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       unidadGestionRef: value.unidadGestion?.acronimo,
       modeloEjecucion: value.modeloEjecucion,
       codigo: value.codigo,
-      anio: value.anio,
+      fechaPublicacion: LuxonUtils.toBackend(value.fechaPublicacion),
+      fechaProvisional: LuxonUtils.toBackend(value.fechaProvisional),
+      fechaConcesion: LuxonUtils.toBackend(value.fechaConcesion),
       titulo: value.titulo,
       objeto: value.objeto,
       observaciones: value.observaciones,

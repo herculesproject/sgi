@@ -129,17 +129,36 @@
 
         </div>
 
+        <div class="fieldset-form">
+          {{'csp.convocatoria.fecha-publicacion' | translate}}
+        </div>
 
         <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
           [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-          <!-- Año -->
-          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <mat-form-field class="input-form">
-              <mat-label>{{'csp.convocatoria.anio' | translate}}</mat-label>
-              <input matInput formControlName="anio" type="number" id="anio" min="1900"
-                placeholder="{{'csp.convocatoria.anio' | translate}}">
+          <!-- Fecha publicacion desde-->
+          <div class="col">
+            <mat-form-field>
+              <mat-label>{{'csp.convocatoria.fecha-publicacion-desde' | translate}}</mat-label>
+              <input matInput formControlName="fechaPublicacionDesde"
+                [ngxMatDatetimePicker]="pickerFechaPublicacionDesde"
+                [placeholder]="'csp.convocatoria.fecha-publicacion-desde' | translate">
+              <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionDesde"></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #pickerFechaPublicacionDesde showSeconds="true" [defaultTime]="[0,0,0]">
+              </ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+
+          <!-- Fecha publicacion hasta-->
+          <div class="col">
+            <mat-form-field>
+              <mat-label>{{'csp.convocatoria.fecha-publicacion-hasta' | translate}}</mat-label>
+              <input matInput formControlName="fechaPublicacionHasta"
+                [ngxMatDatetimePicker]="pickerFechaPublicacionHasta"
+                [placeholder]="'csp.convocatoria.fecha-publicacion-hasta' | translate">
+              <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionHasta"></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #pickerFechaPublicacionHasta showSeconds="true" [defaultTime]="[0,0,0]">
+              </ngx-mat-datetime-picker>
             </mat-form-field>
           </div>
 

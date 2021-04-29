@@ -150,16 +150,38 @@
 
         </div>
 
+        <div class="fieldset-form">
+          {{'csp.solicitud.fecha-publicacion-convocatoria' | translate}}
+        </div>
+
         <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
           [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-          <!-- añoConvocatoria -->
-          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <mat-form-field class="input-form">
-              <mat-label>{{'csp.solicitud.anio-convocatoria' | translate}}</mat-label>
-              <input matInput formControlName="añoConvocatoria" type="number" id="añoConvocatoria" min="1900"
-                placeholder="{{'csp.solicitud.anio-convocatoria' | translate}}">
+          <!-- fechaPublicacionConvocatoriaDesde-->
+          <div class="col">
+            <mat-form-field>
+              <mat-label>{{'csp.solicitud.fecha-publicacion-convocatoria-desde' | translate}}</mat-label>
+              <input matInput formControlName="fechaPublicacionConvocatoriaDesde"
+                [ngxMatDatetimePicker]="pickerFechaPublicacionConvocatoriaDesde"
+                [placeholder]="'csp.solicitud.fecha-publicacion-convocatoria-desde' | translate">
+              <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionConvocatoriaDesde"></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #pickerFechaPublicacionConvocatoriaDesde showSeconds="true"
+                [defaultTime]="[0,0,0]">
+              </ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+
+          <!-- fechaPublicacionConvocatoriaHasta-->
+          <div class="col">
+            <mat-form-field>
+              <mat-label>{{'csp.solicitud.fecha-publicacion-convocatoria-hasta' | translate}}</mat-label>
+              <input matInput formControlName="fechaPublicacionConvocatoriaHasta"
+                [ngxMatDatetimePicker]="pickerFechaPublicacionConvocatoriaHasta"
+                [placeholder]="'csp.solicitud.fecha-publicacion-convocatoria-hasta' | translate">
+              <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionConvocatoriaHasta"></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #pickerFechaPublicacionConvocatoriaHasta showSeconds="true"
+                [defaultTime]="[0,0,0]">
+              </ngx-mat-datetime-picker>
             </mat-form-field>
           </div>
 

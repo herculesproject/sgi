@@ -9,7 +9,9 @@ export interface IConvocatoriaBackend {
   unidadGestionRef: string;
   modeloEjecucion: IModeloEjecucion;
   codigo: string;
-  anio: number;
+  fechaPublicacion: string;
+  fechaProvisional: string;
+  fechaConcesion: string;
   titulo: string;
   objeto: string;
   observaciones: string;

@@ -27,6 +27,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -140,7 +141,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
       titulo: new FormControl(''),
-      anio: new FormControl(''),
+      fechaPublicacionDesde: new FormControl(null),
+      fechaPublicacionHasta: new FormControl(null),
       activo: new FormControl('true'),
       unidadGestion: new FormControl('', [IsEntityValidator.isValid()]),
       modeloEjecucion: new FormControl('', [IsEntityValidator.isValid()]),
@@ -378,7 +380,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
     filter
-      .and('anio', SgiRestFilterOperator.EQUALS, controls.anio.value)
+      .and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
+      .and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
       .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.acronimo)
       .and('modeloEjecucion.id', SgiRestFilterOperator.EQUALS, controls.modeloEjecucion.value?.id?.toString())
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value)

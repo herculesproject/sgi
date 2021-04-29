@@ -94,7 +94,10 @@
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria.codigo-referencia' | translate}}</mat-label>
         <input matInput formControlName="codigo" type="text" id="codigo"
-          placeholder="{{'csp.convocatoria.codigo-referencia' | translate}}">
+          placeholder="{{'csp.convocatoria.codigo-referencia' | translate}}" required>
+        <mat-error *ngIf="formGroup.controls.codigo.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamCodigoReferenciaEntity }}
+        </mat-error>
         <mat-error *ngIf="formGroup.controls.codigo.errors?.maxlength">
           {{ 'error.maxlength.entity' | translate:msgParamCodigoReferenciaEntity }}
         </mat-error>
@@ -111,18 +114,42 @@
       </mat-form-field>
     </div>
 
-    <!-- Tipo de régimen de concurrencia-->
+    <!-- Fecha Publicación -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form">
-        <mat-label>{{'csp.convocatoria.regimen-concurrencia' | translate}}</mat-label>
-        <input matInput formControlName="regimenConcurrencia" type="text" id="regimenConcurrencia"
-          placeholder="{{'csp.convocatoria.regimen-concurrencia' | translate}}"
-          [matAutocomplete]="autoTipoRegimenConcurrencia">
-        <mat-autocomplete #autoTipoRegimenConcurrencia="matAutocomplete" [displayWith]="getTipoRegimenConcurrencia">
-          <mat-option *ngFor="let tipoRegimenConcurrencia of tipoRegimenesConcurrencia$ | async"
-            [value]="tipoRegimenConcurrencia">{{tipoRegimenConcurrencia.nombre}}</mat-option>
-        </mat-autocomplete>
+      <mat-form-field color="primary">
+        <mat-label>{{'csp.convocatoria.fecha-publicacion'| translate}}</mat-label>
+        <input matInput [ngxMatDatetimePicker]="pickerFechaPublicacion" formControlName="fechaPublicacion" required>
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaPublicacion"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #pickerFechaPublicacion showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
+        <mat-error *ngIf="formGroup.controls.fechaPublicacion.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamFechaPublicacionEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Fecha Provisional -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field color="primary">
+        <mat-label>{{'csp.convocatoria.fecha-provisional'| translate}}</mat-label>
+        <input matInput [ngxMatDatetimePicker]="pickerFechaProvisional" formControlName="fechaProvisional">
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaProvisional"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #pickerFechaProvisional showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
+      </mat-form-field>
+    </div>
+
+    <!-- Fecha Concesión -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field color="primary">
+        <mat-label>{{'csp.convocatoria.fecha-concesion'| translate}}</mat-label>
+        <input matInput [ngxMatDatetimePicker]="pickerFechaConcesion" formControlName="fechaConcesion">
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaConcesion"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #pickerFechaConcesion showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
       </mat-form-field>
     </div>
 
@@ -138,29 +165,6 @@
         </mat-error>
         <mat-error *ngIf="formGroup.controls.duracion.errors?.max">
           {{ 'error.max.entity' | translate:msgParamDuracionEntity }}
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <!-- Año -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form">
-        <mat-label>{{'csp.convocatoria.anio' | translate}}</mat-label>
-        <input matInput formControlName="anio" type="number" id="anio" min="1900" required
-          placeholder="{{'csp.convocatoria.anio' | translate}}">
-        <mat-error *ngIf="formGroup.controls.anio.errors?.required">
-          {{ 'error.required.entity' | translate:msgParamAnioEntity }}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.anio.errors?.min">
-          {{ 'error.min.entity' | translate:msgParamAnioEntity }}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.anio.errors?.max">
-          {{ 'error.max.entity' | translate:msgParamAnioEntity }}
-        </mat-error>
-        <mat-error
-          *ngIf="!formGroup.controls.anio.errors?.required && !formGroup.controls.anio.errors?.max && formGroup.controls.anio.errors?.isPlusYear">
-          {{'csp.convocatoria.anio.plus-year' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -185,6 +189,21 @@
         <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.invalid">
           {{ 'error.invalid.entity' | translate:msgParamAmbitoGeograficoEntity }}
         </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Tipo de régimen de concurrencia-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field class="input-form">
+        <mat-label>{{'csp.convocatoria.regimen-concurrencia' | translate}}</mat-label>
+        <input matInput formControlName="regimenConcurrencia" type="text" id="regimenConcurrencia"
+          placeholder="{{'csp.convocatoria.regimen-concurrencia' | translate}}"
+          [matAutocomplete]="autoTipoRegimenConcurrencia">
+        <mat-autocomplete #autoTipoRegimenConcurrencia="matAutocomplete" [displayWith]="getTipoRegimenConcurrencia">
+          <mat-option *ngFor="let tipoRegimenConcurrencia of tipoRegimenesConcurrencia$ | async"
+            [value]="tipoRegimenConcurrencia">{{tipoRegimenConcurrencia.nombre}}</mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </div>
 

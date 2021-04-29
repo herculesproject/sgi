@@ -63,12 +63,11 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       }),
       unidadGestion: new FormControl('', [
         Validators.required, IsEntityValidator.isValid()]),
-      anio: new FormControl(DateTime.now().year, [
-        Validators.required,
-        Validators.min(1000),
-        Validators.max(9999),
-        IsYearPlus.isValid(1)
+      fechaPublicacion: new FormControl(null, [
+        Validators.required
       ]),
+      fechaProvisional: new FormControl(null),
+      fechaConcesion: new FormControl(null),
       titulo: new FormControl('', [
         Validators.required, Validators.maxLength(250)]),
       modeloEjecucion: new FormControl(''),
@@ -105,7 +104,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       modeloEjecucion: convocatoria.modeloEjecucion,
       unidadGestion: convocatoria.unidadGestion,
       codigo: convocatoria.codigo,
-      anio: convocatoria.anio,
+      fechaPublicacion: convocatoria.fechaPublicacion,
+      fechaProvisional: convocatoria.fechaProvisional,
+      fechaConcesion: convocatoria.fechaConcesion,
       titulo: convocatoria.titulo,
       objeto: convocatoria.objeto,
       observaciones: convocatoria.observaciones,
@@ -245,7 +246,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       this.convocatoria.modeloEjecucion = form.modeloEjecucion.value;
     }
     this.convocatoria.codigo = form.codigo.value;
-    this.convocatoria.anio = form.anio.value;
+    this.convocatoria.fechaPublicacion = form.fechaPublicacion.value;
+    this.convocatoria.fechaProvisional = form.fechaProvisional.value;
+    this.convocatoria.fechaConcesion = form.fechaConcesion.value;
     this.convocatoria.titulo = form.titulo.value;
     this.convocatoria.objeto = form.objeto.value;
     this.convocatoria.observaciones = form.observaciones.value;

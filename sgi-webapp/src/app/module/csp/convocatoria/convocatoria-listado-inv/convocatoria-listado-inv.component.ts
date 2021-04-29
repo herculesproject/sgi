@@ -22,6 +22,7 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
@@ -99,7 +100,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
       titulo: new FormControl(''),
-      anio: new FormControl(''),
+      fechaPublicacionDesde: new FormControl(null),
+      fechaPublicacionHasta: new FormControl(null),
       abiertoPlazoPresentacionSolicitud: new FormControl(true),
       aplicarFiltro: new FormControl(true),
       finalidad: new FormControl(''),
@@ -222,7 +224,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
-      .and('anio', SgiRestFilterOperator.EQUALS, controls.anio.value)
+      .and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
+      .and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value?.toString())
       .and('finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString())
       .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
@@ -331,7 +334,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
    * @param value del input para autocompletar
    */
   private filtroFinalidades(value: string): ITipoFinalidad[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = value?.toString().toLowerCase();
     return this.finalidadFiltered.filter(finalidad => finalidad.nombre.toLowerCase().includes(filterValue));
   }
 
@@ -341,7 +344,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
    * @param value del input para autocompletar
    */
   private filtroTipoAmbitoGeografico(value: string): ITipoAmbitoGeografico[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = value?.toString().toLowerCase();
     return this.tipoAmbitoGeograficoFiltered.filter(
       ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue)
     );

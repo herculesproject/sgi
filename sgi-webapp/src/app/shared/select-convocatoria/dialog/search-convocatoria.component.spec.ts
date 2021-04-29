@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,7 +11,7 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SearchConvocatoriaModalComponent } from './search-convocatoria.component';
 
-describe('BuscarConvocatoriaDialogoComponent', () => {
+describe('SearchConvocatoriaModalComponent', () => {
   let component: SearchConvocatoriaModalComponent;
   let fixture: ComponentFixture<SearchConvocatoriaModalComponent>;
 
@@ -33,6 +33,7 @@ describe('BuscarConvocatoriaDialogoComponent', () => {
         MatDialogModule,
         TestUtils.getIdiomas(),
         FormsModule,
+        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [

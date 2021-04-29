@@ -3,26 +3,49 @@
 
   <!-- Buscador -->
   <div class="dialog-modal" mat-dialog-content>
-    <mat-form-field>
-      <mat-label>{{'csp.convocatoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-      <input matInput [(ngModel)]="data.titulo">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>{{'csp.convocatoria.codigo' | translate}}</mat-label>
-      <input matInput [(ngModel)]="data.codigo">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>{{'csp.convocatoria.anio' | translate}}</mat-label>
-      <input matInput type="number" min="1900" [(ngModel)]="data.anio">
-    </mat-form-field>
-    <mat-checkbox class="example-margin" [(ngModel)]="data.abiertoPlazoPresentacionSolicitud">
-      {{'csp.convocatoria.plazo-abierto' | translate}}</mat-checkbox>
 
-    <div class="separacion">
-      <button color="primary" mat-raised-buttonn (click)="buscarConvocatorias(true)">
-        {{'btn.search' | translate}}
-      </button>
-    </div>
+    <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      fxLayoutGap="fxLayoutProperties.gap">
+
+      <mat-form-field>
+        <mat-label>{{'csp.convocatoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+        <input matInput formControlName="titulo" matInput type="text"
+          placeholder="{{'csp.convocatoria.titulo' | translate}}">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{'csp.convocatoria.codigo' | translate}}</mat-label>
+        <input matInput formControlName="codigo" type="text"
+          placeholder="{{'csp.convocatoria.referencia' | translate}}">
+      </mat-form-field>
+      <div class="fieldset-form">
+        {{'csp.convocatoria.fecha-publicacion' | translate}}
+      </div>
+      <mat-form-field>
+        <mat-label>{{'csp.convocatoria.fecha-publicacion-desde' | translate}}</mat-label>
+        <input matInput formControlName="fechaPublicacionDesde" [ngxMatDatetimePicker]="pickerFechaPublicacionDesde"
+          [placeholder]="'csp.convocatoria.fecha-publicacion-desde' | translate">
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionDesde"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #pickerFechaPublicacionDesde showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{'csp.convocatoria.fecha-publicacion-hasta' | translate}}</mat-label>
+        <input matInput formControlName="fechaPublicacionHasta" [ngxMatDatetimePicker]="pickerFechaPublicacionHasta"
+          [placeholder]="'csp.convocatoria.fecha-publicacion-hasta' | translate">
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaPublicacionHasta"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #pickerFechaPublicacionHasta showSeconds="true" [defaultTime]="[0,0,0]">
+        </ngx-mat-datetime-picker>
+      </mat-form-field>
+      <mat-checkbox class="example-margin" formControlName="abiertoPlazoPresentacionSolicitud">
+        {{'csp.convocatoria.plazo-abierto' | translate}}</mat-checkbox>
+
+
+
+      <div class="separacion">
+        <button color="primary" md-button mat-raised-button
+          (click)="buscarConvocatorias(true)">{{'btn.search' | translate}}</button>
+      </div>
+    </form>
 
     <!-- Tabla resultados -->
     <table class="mat-elevation-z8 table-convocatorias" mat-table [dataSource]="convocatorias$ | async" matSort

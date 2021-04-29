@@ -36,7 +36,9 @@ const MSG_ERROR_INIT = marker('error.load');
 const MSG_DELETE_AREA_TEMATICA = marker('msg.delete.entity');
 const AREA_KEY = marker('csp.area');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
-const CONVOCATORIA_ANIO_KEY = marker('csp.convocatoria.anio');
+const CONVOCATORIA_FECHA_PUBLICACION_KEY = marker('csp.convocatoria.fecha-publicacion');
+const CONVOCATORIA_FECHA_PROVISIONAL_KEY = marker('csp.convocatoria.fecha-provisional');
+const CONVOCATORIA_FECHA_CONCESION_KEY = marker('csp.convocatoria.fecha-concesion');
 const CONVOCATORIA_AMBITO_GEOGRAFICO_KEY = marker('csp.convocatoria.ambito-geografico');
 const CONVOCATORIA_CODIGO_REFERENCIA_KEY = marker('csp.convocatoria.codigo-referencia');
 const CONVOCATORIA_DESCRIPCION_KEY = marker('csp.convocatoria.descripcion');
@@ -78,7 +80,6 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
 
   private subscriptions = [] as Subscription[];
 
-  msgParamAnioEntity = {};
   msgParamAmbitoGeograficoEntity = {};
   msgParamAreaEntities = {};
   msgParamAreaTematicaEntity = {};
@@ -89,6 +90,9 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   msgParamFinalidadEntity = {};
   msgParamModeloEjecucionEntity = {};
   msgParamObservacionesEntity = {};
+  msgParamFechaConcesionEntity = {};
+  msgParamFechaProvisionalEntity = {};
+  msgParamFechaPublicacionEntity = {};
   msgParamTituloEntity = {};
   msgParamUnidadGestionEntity = {};
   textoDeleteAreaTematica: string;
@@ -214,9 +218,19 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
-      CONVOCATORIA_ANIO_KEY,
+      CONVOCATORIA_FECHA_PUBLICACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamAnioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamFechaPublicacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_FECHA_PROVISIONAL_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaProvisionalEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+
+    this.translate.get(
+      CONVOCATORIA_FECHA_CONCESION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaConcesionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
       CONVOCATORIA_TITULO_KEY,

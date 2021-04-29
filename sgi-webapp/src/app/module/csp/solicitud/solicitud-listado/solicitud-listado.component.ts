@@ -132,7 +132,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       fechaFinHasta: new FormControl(null),
       solicitante: new FormControl(undefined),
       activo: new FormControl('true'),
-      añoConvocatoria: new FormControl(undefined),
+      fechaPublicacionConvocatoriaDesde: new FormControl(null),
+      fechaPublicacionConvocatoriaHasta: new FormControl(null),
       tituloConvocatoria: new FormControl(undefined),
       entidadConvocante: new FormControl(undefined),
       planInvestigacion: new FormControl(undefined),
@@ -324,7 +325,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       filter
         .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id)
         .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value)
-        .and('convocatoria.anio', SgiRestFilterOperator.EQUALS, controls.añoConvocatoria.value)
+        .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
+        .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaHasta.value))
         .and('convocatoria.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloConvocatoria.value)
         .and('convocatoria.entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
         .and('convocatoria.entidadesConvocantes.programa.id',
@@ -407,7 +409,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup.controls.fechaFinHasta.setValue(null);
     this.formGroup.controls.solicitante.setValue(undefined);
     this.formGroup.controls.activo.setValue('true');
-    this.formGroup.controls.añoConvocatoria.setValue(undefined);
+    this.formGroup.controls.fechaPublicacionConvocatoriaDesde.setValue(null);
+    this.formGroup.controls.fechaPublicacionConvocatoriaHasta.setValue(null);
     this.formGroup.controls.entidadConvocante.setValue(undefined);
     this.formGroup.controls.entidadFinanciadora.setValue(undefined);
   }

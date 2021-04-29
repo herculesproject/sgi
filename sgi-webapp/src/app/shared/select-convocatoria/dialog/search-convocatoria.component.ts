@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatDateRangePicker } from '@angular/material/datepicker';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,7 +16,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
@@ -38,6 +42,7 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+  formGroup: FormGroup;
 
   displayedColumns = ['codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
     'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
@@ -49,6 +54,10 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   convocatorias$: Observable<IConvocatoriaListado[]> = of();
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -70,6 +79,16 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     this.fxLayoutProperties.xs = 'column';
   }
 
+  ngOnInit(): void {
+    this.formGroup = new FormGroup({
+      codigo: new FormControl(''),
+      titulo: new FormControl(''),
+      fechaPublicacionDesde: new FormControl(null),
+      fechaPublicacionHasta: new FormControl(null),
+      abiertoPlazoPresentacionSolicitud: new FormControl(''),
+    });
+  }
+
   ngAfterViewInit(): void {
     merge(
       this.paginator.page,
@@ -87,15 +106,17 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
   }
 
   buscarConvocatorias(reset?: boolean) {
+
     this.convocatorias$ = this.convocatoriaService
       .findAllRestringidos(
+
         {
           page: {
             index: reset ? 0 : this.paginator.pageIndex,
             size: this.paginator.pageSize
           },
           // TODO: Add sorts
-          filter: this.buildFilter(this.dialogRef.componentInstance.data)
+          filter: this.buildFilter()
         }
       )
       .pipe(
@@ -188,16 +209,13 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       );
   }
 
-  private buildFilter(convocatoria: IConvocatoria): SgiRestFilter {
-    return new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, convocatoria.titulo)
-      .and('codigo', SgiRestFilterOperator.LIKE_ICASE, convocatoria.codigo)
-      .and('anio', SgiRestFilterOperator.EQUALS, convocatoria.anio?.toString())
-      .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, convocatoria.abiertoPlazoPresentacionSolicitud?.toString());
-  }
-
-
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
+  private buildFilter(): SgiRestFilter {
+    const controls = this.formGroup.controls;
+    return new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
+      .and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
+      .and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
+      .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value?.toString());
   }
 
 }
