@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDateRangePicker } from '@angular/material/datepicker';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,14 +10,11 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
@@ -40,8 +36,6 @@ interface IConvocatoriaListado {
 })
 export class SearchConvocatoriaModalComponent implements AfterViewInit {
 
-  fxFlexProperties: FxFlexProperties;
-  fxLayoutProperties: FxLayoutProperties;
   formGroup: FormGroup;
 
   displayedColumns = ['codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
@@ -67,16 +61,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     private empresaService: EmpresaService,
     private readonly snackBarService: SnackBarService
   ) {
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
   }
 
   ngOnInit(): void {
@@ -99,10 +83,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       })
     ).subscribe();
 
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
   buscarConvocatorias(reset?: boolean) {

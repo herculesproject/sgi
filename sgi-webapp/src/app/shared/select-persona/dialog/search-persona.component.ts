@@ -6,8 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestSortDirection } from '@sgi/framework/http';
@@ -29,8 +27,6 @@ export interface SearchPersonaModalData {
 export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
 
   formGroup: FormGroup;
-  fxFlexProperties: FxFlexProperties;
-  fxLayoutProperties: FxLayoutProperties;
 
   displayedColumns = ['nombre', 'apellidos', 'numeroDocumento', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
@@ -48,16 +44,6 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
     private personaService: PersonaService,
     private snackBarService: SnackBarService
   ) {
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
   }
 
   ngOnInit(): void {

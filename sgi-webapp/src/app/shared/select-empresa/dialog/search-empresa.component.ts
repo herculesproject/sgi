@@ -6,8 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
@@ -34,8 +32,6 @@ interface EmpresaListado {
 export class SearchEmpresaModalComponent implements OnInit, AfterViewInit {
 
   formGroup: FormGroup;
-  fxFlexProperties: FxFlexProperties;
-  fxLayoutProperties: FxLayoutProperties;
 
   displayedColumns = ['numeroIdentificacion', 'nombre', 'razonSocial', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
@@ -53,16 +49,6 @@ export class SearchEmpresaModalComponent implements OnInit, AfterViewInit {
     private empresaService: EmpresaService,
     private snackBarService: SnackBarService
   ) {
-    this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
-    this.fxFlexProperties.order = '2';
-
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
   }
 
   ngOnInit(): void {
