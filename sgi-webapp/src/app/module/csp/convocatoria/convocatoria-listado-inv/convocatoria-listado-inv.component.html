@@ -136,9 +136,10 @@
             <mat-form-field class="input-form">
               <mat-label>{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
               </mat-label>
-              <sgi-select-empresa-economica
+              <sgi-select-empresa
                 placeholder="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
-                formControlName="entidadConvocante"></sgi-select-empresa-economica>
+                formControlName="entidadConvocante">
+              </sgi-select-empresa>
             </mat-form-field>
           </div>
 
@@ -153,9 +154,10 @@
             <mat-form-field class="input-form">
               <mat-label>{{'csp.convocatoria-entidad-financiadora' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
               </mat-label>
-              <sgi-select-empresa-economica
+              <sgi-select-empresa
                 placeholder="{{'csp.convocatoria-entidad-financiadora' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
-                formControlName="entidadFinanciadora"></sgi-select-empresa-economica>
+                formControlName="entidadFinanciadora">
+              </sgi-select-empresa>
             </mat-form-field>
           </div>
 
@@ -271,14 +273,14 @@
       <ng-container matColumnDef="entidadConvocante">
         <th mat-header-cell *matHeaderCellDef>
           {{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}} </th>
-        <td mat-cell *matCellDef="let element">{{element.entidadConvocanteEmpresa.razonSocial}}</td>
+        <td mat-cell *matCellDef="let element">{{element.entidadConvocanteEmpresa.nombre}}</td>
       </ng-container>
 
       <!-- Entidad Financiadora Column -->
       <ng-container matColumnDef="entidadFinanciadora">
         <th mat-header-cell *matHeaderCellDef>
           {{'csp.convocatoria-entidad-financiadora' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}} </th>
-        <td mat-cell *matCellDef="let element">{{element.entidadFinanciadoraEmpresa.razonSocial}}</td>
+        <td mat-cell *matCellDef="let element">{{element.entidadFinanciadoraEmpresa.nombre}}</td>
       </ng-container>
 
       <!-- Fuente Financiacion Column -->

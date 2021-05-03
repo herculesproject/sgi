@@ -3,7 +3,7 @@ import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyec
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
     key: number,
     private solicitudService: SolicitudService,
     private solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     public readonly: boolean
   ) {
     super(key);
@@ -36,10 +36,10 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
           from(solicitudProyectoPresupuestos.items)
             .pipe(
               map((solicitudProyectoPresupuesto) => {
-                if (solicitudProyectoPresupuesto.empresa.personaRef) {
-                  return this.empresaEconomicaService.findById(solicitudProyectoPresupuesto.empresa.personaRef)
+                if (solicitudProyectoPresupuesto.empresa.id) {
+                  return this.empresaService.findById(solicitudProyectoPresupuesto.empresa.id)
                     .pipe(
-                      tap(empresaEconomica => solicitudProyectoPresupuesto.empresa = empresaEconomica),
+                      tap(empresa => solicitudProyectoPresupuesto.empresa = empresa),
                       catchError(() => of(null))
                     );
                 } else {

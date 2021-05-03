@@ -16,8 +16,8 @@ import { LuxonDatePipe } from './luxon-date-pipe';
 import { RootComponent } from './root/root.component';
 import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/search-convocatoria.component';
 import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
-import { SearchEmpresaEconomicaModalComponent } from './select-empresa-economica/dialog/search-empresa-economica.component';
-import { SelectEmpresaEconomicaComponent } from './select-empresa-economica/select-empresa-economica.component';
+import { SearchEmpresaModalComponent } from './select-empresa/dialog/search-empresa.component';
+import { SelectEmpresaComponent } from './select-empresa/select-empresa.component';
 import { SearchPersonaModalComponent } from './select-persona/dialog/search-persona.component';
 import { SelectPersonaComponent } from './select-persona/select-persona.component';
 
@@ -32,8 +32,8 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,
-    SelectEmpresaEconomicaComponent,
-    SearchEmpresaEconomicaModalComponent,
+    SelectEmpresaComponent,
+    SearchEmpresaModalComponent,
     SelectConvocatoriaComponent,
     SearchConvocatoriaModalComponent,
     SgiFileUploadComponent,
@@ -57,7 +57,7 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,
-    SelectEmpresaEconomicaComponent,
+    SelectEmpresaComponent,
     SelectConvocatoriaComponent,
     SgiFileUploadComponent,
     ActionFragmentMenuGroupComponent,

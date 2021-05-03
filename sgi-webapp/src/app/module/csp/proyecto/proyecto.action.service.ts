@@ -23,7 +23,7 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -107,7 +107,7 @@ export class ProyectoActionService extends ActionService {
     logger: NGXLogger,
     route: ActivatedRoute,
     proyectoService: ProyectoService,
-    empresaEconomicaService: EmpresaEconomicaService,
+    empresaService: EmpresaService,
     proyectoSocioService: ProyectoSocioService,
     unidadGestionService: UnidadGestionService,
     modeloEjecucionService: ModeloEjecucionService,
@@ -146,22 +146,22 @@ export class ProyectoActionService extends ActionService {
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
     if (this.isEdit()) {
       this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(
-        id, proyectoService, proyectoEntidadFinanciadoraService, empresaEconomicaService, false);
-      this.socios = new ProyectoSociosFragment(id, empresaEconomicaService, proyectoService, proyectoSocioService);
+        id, proyectoService, proyectoEntidadFinanciadoraService, empresaService, false);
+      this.socios = new ProyectoSociosFragment(id, empresaService, proyectoService, proyectoSocioService);
       this.hitos = new ProyectoHitosFragment(id, proyectoService, proyectoHitoService);
       this.plazos = new ProyectoPlazosFragment(id, proyectoService, proyectoPlazoService);
-      this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(logger, id, proyectoService, empresaEconomicaService);
+      this.entidadesConvocantes = new ProyectoEntidadesConvocantesFragment(logger, id, proyectoService, empresaService);
       this.paqueteTrabajo = new ProyectoPaqueteTrabajoFragment(id, proyectoService, proyectoPaqueteTrabajoService);
       this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService);
       this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
         id, proyectoService, proyectoPeriodoSeguimientoService, documentoService);
       this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService);
-      this.entidadGestora = new ProyectoEntidadGestoraFragment(fb, id, proyectoService, proyectoEntidadGestora, empresaEconomicaService);
+      this.entidadGestora = new ProyectoEntidadGestoraFragment(fb, id, proyectoService, proyectoEntidadGestora, empresaService);
       this.prorrogas = new ProyectoProrrogasFragment(id, proyectoService, proyectoProrrogaService, documentoService);
       this.historicoEstados = new ProyectoHistoricoEstadosFragment(id, proyectoService);
       this.documentos = new ProyectoDocumentosFragment(
         id, proyectoService, proyectoPeriodoSeguimientoService, proyectoSocioService,
-        proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaEconomicaService, translate);
+        proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaService, translate);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);

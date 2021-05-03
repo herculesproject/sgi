@@ -1,6 +1,6 @@
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ConvocatoriaEntidadFinanciadoraConverter extends
@@ -12,7 +12,7 @@ class ConvocatoriaEntidadFinanciadoraConverter extends
     }
     return {
       id: value.id,
-      empresa: { personaRef: value.entidadRef } as IEmpresaEconomica,
+      empresa: { id: value.entidadRef } as IEmpresa,
       convocatoriaId: value.convocatoriaId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
@@ -26,7 +26,7 @@ class ConvocatoriaEntidadFinanciadoraConverter extends
     }
     return {
       id: value.id,
-      entidadRef: value.empresa?.personaRef,
+      entidadRef: value.empresa?.id,
       convocatoriaId: value.convocatoriaId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,

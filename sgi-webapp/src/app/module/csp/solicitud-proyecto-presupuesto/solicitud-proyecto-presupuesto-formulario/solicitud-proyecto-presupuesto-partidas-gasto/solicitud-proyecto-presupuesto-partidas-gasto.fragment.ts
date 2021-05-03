@@ -1,6 +1,6 @@
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { ISolicitudProyectoPresupuestoTotalConceptoGasto } from '@core/models/csp/solicitud-proyecto-presupuesto-total-concepto-gasto';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -24,7 +24,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoFragment extends Fragment 
 
   constructor(
     solicitudId: number,
-    private empresaEconomica: IEmpresaEconomica,
+    private empresa: IEmpresa,
     private readonly ajena: boolean,
     private solicitudService: SolicitudService,
     private solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
@@ -46,8 +46,8 @@ export class SolicitudProyectoPresupuestoPartidasGastoFragment extends Fragment 
             this.solicitudProyectoPresupuestoTotalesConceptoGasto = solicitudProyectoPresupuestoTotalesConceptoGasto;
 
             const observable$ = !this.ajena ?
-              this.solicitudService.findAllSolicitudProyectoPresupuestoEntidadConvocatoria(key, this.empresaEconomica.personaRef) :
-              this.solicitudService.findAllSolicitudProyectoPresupuestoEntidadAjena(key, this.empresaEconomica.personaRef);
+              this.solicitudService.findAllSolicitudProyectoPresupuestoEntidadConvocatoria(key, this.empresa.id) :
+              this.solicitudService.findAllSolicitudProyectoPresupuestoEntidadAjena(key, this.empresa.id);
             return observable$
               .pipe(
                 map((result) => result.items),
@@ -57,7 +57,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoFragment extends Fragment 
                       map(() => {
                         return solicitudProyectoPresupuestos
                           .map((element, index) => {
-                            element.empresa = this.empresaEconomica;
+                            element.empresa = this.empresa;
 
                             return {
                               partidaGasto: new StatusWrapper<ISolicitudProyectoPresupuesto>(element),
@@ -129,7 +129,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoFragment extends Fragment 
   }
 
   public addPartidaGasto(partidaGasto: ISolicitudProyectoPresupuesto) {
-    partidaGasto.empresa = this.empresaEconomica;
+    partidaGasto.empresa = this.empresa;
     partidaGasto.financiacionAjena = this.ajena;
 
     const wrapped = new StatusWrapper<ISolicitudProyectoPresupuesto>(partidaGasto);

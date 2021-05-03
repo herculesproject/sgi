@@ -34,8 +34,8 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
   protected buildPatch(entidadFinanciadora: IEntidadFinanciadora): { [key: string]: any; } {
     this.entidadFinanciadora = entidadFinanciadora;
     const result = {
-      nombre: entidadFinanciadora?.empresa?.razonSocial,
-      cif: entidadFinanciadora?.empresa?.numeroDocumento,
+      nombre: entidadFinanciadora?.empresa?.nombre,
+      cif: entidadFinanciadora?.empresa?.numeroIdentificacion,
       fuenteFinanciacion: entidadFinanciadora?.fuenteFinanciacion?.nombre,
       ambito: entidadFinanciadora?.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre,
       tipoFinanciacion: entidadFinanciadora?.tipoFinanciacion?.nombre,

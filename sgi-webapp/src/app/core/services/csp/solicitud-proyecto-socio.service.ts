@@ -16,7 +16,7 @@ import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { EmpresaEconomicaService } from '../sgp/empresa-economica.service';
+import { EmpresaService } from '../sgemp/empresa.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
 
   constructor(
     protected http: HttpClient,
-    private empresaEconomicaService: EmpresaEconomicaService
+    private empresaService: EmpresaService
   ) {
     super(
       SolicitudProyectoSocioService.name,
@@ -39,8 +39,7 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
   findById(id: number): Observable<ISolicitudProyectoSocio> {
     return super.findById(id).pipe(
       switchMap(solicitudProyectoSocio => {
-        const personaRef = solicitudProyectoSocio.empresa.personaRef;
-        return this.empresaEconomicaService.findById(personaRef).pipe(
+        return this.empresaService.findById(solicitudProyectoSocio.empresa.id).pipe(
           map(empresa => {
             solicitudProyectoSocio.empresa = empresa;
             return solicitudProyectoSocio;

@@ -2,7 +2,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
     key: number,
     proyectoId: number,
     private service: ProyectoSocioService,
-    private empresaEconomicaService: EmpresaEconomicaService
+    private empresaService: EmpresaService
   ) {
     super(key);
     this.proyectoSocio = { proyectoId } as IProyectoSocio;
@@ -70,8 +70,7 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
     return this.service.findById(key)
       .pipe(
         switchMap(proyectoSocio => {
-          const personaRef = proyectoSocio.empresa.personaRef;
-          return this.empresaEconomicaService.findById(personaRef)
+          return this.empresaService.findById(proyectoSocio.empresa.id)
             .pipe(
               map(empresa => {
                 proyectoSocio.empresa = empresa;

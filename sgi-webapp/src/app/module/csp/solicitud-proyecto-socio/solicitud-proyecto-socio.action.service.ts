@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { ActionService } from '@core/services/action-service';
 import { SolicitudProyectoSocioEquipoService } from '@core/services/csp/solicitud-proyecto-socio-equipo.service';
 import { SolicitudProyectoSocioPeriodoJustificacionService } from '@core/services/csp/solicitud-proyecto-socio-periodo-justificacion.service';
@@ -59,7 +59,7 @@ export class SolicitudProyectoSocioActionService extends ActionService {
     return this.datosGenerales.getValue().mesFin;
   }
 
-  get empresa(): IEmpresaEconomica {
+  get empresa(): IEmpresa {
     return this.datosGenerales.getValue().empresa;
   }
 

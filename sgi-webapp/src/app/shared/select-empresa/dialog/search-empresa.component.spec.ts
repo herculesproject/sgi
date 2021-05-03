@@ -1,20 +1,20 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SearchEmpresaModalComponent, SearchEmpresaModalData } from './search-empresa.component';
 
-import { SelectEmpresaEconomicaComponent } from './select-empresa-economica.component';
 
-describe('SelectEmpresaEconomicaComponent', () => {
-  let component: SelectEmpresaEconomicaComponent;
-  let fixture: ComponentFixture<SelectEmpresaEconomicaComponent>;
+describe('SearchEmpresaModalComponent', () => {
+  let component: SearchEmpresaModalComponent;
+  let fixture: ComponentFixture<SearchEmpresaModalComponent>;
 
   beforeEach(waitForAsync(() => {
     const mockDialogRef = {
@@ -22,7 +22,9 @@ describe('SelectEmpresaEconomicaComponent', () => {
     };
 
     // Mock MAT_DIALOG
-    const matDialogData = {};
+    const matDialogData: SearchEmpresaModalData = {
+      selectedEmpresas: []
+    };
 
     TestBed.configureTestingModule({
       imports: [
@@ -43,14 +45,13 @@ describe('SelectEmpresaEconomicaComponent', () => {
           useValue: mockDialogRef,
         },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
-        SgiAuthService
       ],
-      declarations: [SelectEmpresaEconomicaComponent, HeaderComponent],
+      declarations: [SearchEmpresaModalComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectEmpresaEconomicaComponent);
+    fixture = TestBed.createComponent(SearchEmpresaModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

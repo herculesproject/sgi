@@ -12,7 +12,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -51,7 +51,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     private service: SolicitudService,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private convocatoriaService: ConvocatoriaService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private personaService: PersonaService,
     private solicitudModalidadService: SolicitudModalidadService,
     private unidadGestionService: UnidadGestionService,
@@ -223,7 +223,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    */
   public addSolicitudModalidad(solicitudModalidad: ISolicitudModalidad): void {
     const current = this.entidadesConvocantesModalidad$.value;
-    const index = current.findIndex(value => value.entidadConvocante.entidad.personaRef === solicitudModalidad.entidad.personaRef);
+    const index = current.findIndex(value => value.entidadConvocante.entidad.id === solicitudModalidad.entidad.id);
     if (index >= 0) {
       const wrapper = new StatusWrapper(solicitudModalidad);
       current[index].modalidad = wrapper;
@@ -447,9 +447,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         }
         return from(entidadesConvocantesModalidad).pipe(
           mergeMap((element) => {
-            return this.empresaEconomicaService.findById(element.entidadConvocante.entidad.personaRef).pipe(
-              map(empresaEconomica => {
-                element.entidadConvocante.entidad = empresaEconomica;
+            return this.empresaService.findById(element.entidadConvocante.entidad.id).pipe(
+              map(empresa => {
+                element.entidadConvocante.entidad = empresa;
                 element.plan = this.getPlan(element.entidadConvocante.programa);
                 return element;
               }),
@@ -469,7 +469,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
           switchMap(solicitudModalidades => {
             entidadesConvocantesModalidad.map(element => {
               const solicitudModalidad = solicitudModalidades
-                .find(modalidad => modalidad.entidad.personaRef === element.entidadConvocante.entidad.personaRef);
+                .find(modalidad => modalidad.entidad.id === element.entidadConvocante.entidad.id);
               if (solicitudModalidad) {
                 element.modalidad = new StatusWrapper(solicitudModalidad);
               }

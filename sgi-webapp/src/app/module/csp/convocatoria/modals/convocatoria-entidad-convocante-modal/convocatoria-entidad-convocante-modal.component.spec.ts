@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
-import { IEmpresaEconomica, TipoEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import TestUtils from '@core/utils/test-utils';
@@ -25,20 +25,9 @@ describe('ConvocatoriaEntidadConvocanteModalComponent', () => {
     programa: undefined
   };
 
-  const empresaEconomica: IEmpresaEconomica = {
-    direccion: '',
-    numeroDocumento: '',
-    personaRef: '',
-    personaRefPadre: '',
-    razonSocial: '',
-    tipo: TipoEmpresaEconomica.ENTIDAD,
-    tipoDocumento: '',
-    tipoEmpresa: ''
-  };
-
   const modalData: ConvocatoriaEntidadConvocanteModalData = {
     entidadConvocanteData: {
-      empresaEconomica,
+      empresa: {} as IEmpresa,
       entidadConvocante: new StatusWrapper<IConvocatoriaEntidadConvocante>(data),
       plan: undefined,
       programa: undefined,

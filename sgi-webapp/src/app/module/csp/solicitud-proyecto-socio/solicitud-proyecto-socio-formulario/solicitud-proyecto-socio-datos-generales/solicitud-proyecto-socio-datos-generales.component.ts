@@ -170,7 +170,7 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
     const mesInicio = mesInicioForm.value ? mesInicioForm.value : Number.MIN_VALUE;
     const mesFin = mesFinForm.value ? mesFinForm.value : Number.MAX_VALUE;
     const ranges = this.actionService.solicitudProyectoSocios.filter(
-      element => element.empresa.personaRef === empresaForm.value?.personaRef
+      element => element.empresa.id === empresaForm.value?.id
         && element.id !== this.formPart.solicitudProyectoSocio.id)
       .map(solicitudProyectoSocio => {
         const range: IRange = {

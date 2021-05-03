@@ -1,6 +1,6 @@
 import { ISolicitudProyectoSocioBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-backend';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class SolicitudProyectoSocioConverter extends SgiBaseConverter<ISolicitudProyectoSocioBackend, ISolicitudProyectoSocio> {
@@ -10,7 +10,7 @@ class SolicitudProyectoSocioConverter extends SgiBaseConverter<ISolicitudProyect
       return value as unknown as ISolicitudProyectoSocio;
     }
     return {
-      empresa: { personaRef: value.empresaRef } as IEmpresaEconomica,
+      empresa: { id: value.empresaRef } as IEmpresa,
       id: value.id,
       importeSolicitado: value.importeSolicitado,
       mesFin: value.mesFin,
@@ -26,7 +26,7 @@ class SolicitudProyectoSocioConverter extends SgiBaseConverter<ISolicitudProyect
       return value as unknown as ISolicitudProyectoSocioBackend;
     }
     return {
-      empresaRef: value.empresa.personaRef,
+      empresaRef: value.empresa.id,
       id: value.id,
       importeSolicitado: value.importeSolicitado,
       mesFin: value.mesFin,

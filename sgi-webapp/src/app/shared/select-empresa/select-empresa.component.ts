@@ -4,11 +4,11 @@ import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/mate
 
 import { MatDialog } from '@angular/material/dialog';
 import { SelectDialogComponent } from '@core/component/select-dialog/select-dialog.component';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-import { SearchEmpresaEconomicaModalComponent, SearchEmpresaEconomicaModalData } from './dialog/search-empresa-economica.component';
+import { IEmpresa } from '@core/models/sgemp/empresa';
+import { SearchEmpresaModalComponent, SearchEmpresaModalData } from './dialog/search-empresa.component';
 
 @Component({
-  selector: 'sgi-select-empresa-economica',
+  selector: 'sgi-select-empresa',
   templateUrl: '../../core/component/select-dialog/select-dialog.component.html',
   styleUrls: ['../../core/component/select-dialog/select-dialog.component.scss'],
   // tslint:disable-next-line: no-inputs-metadata-property
@@ -37,15 +37,14 @@ import { SearchEmpresaEconomicaModalComponent, SearchEmpresaEconomicaModalData }
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: SelectEmpresaEconomicaComponent
+      useExisting: SelectEmpresaComponent
     }
   ],
 })
-export class SelectEmpresaEconomicaComponent extends SelectDialogComponent<SearchEmpresaEconomicaModalComponent, IEmpresaEconomica> {
+export class SelectEmpresaComponent extends SelectDialogComponent<SearchEmpresaModalComponent, IEmpresa> {
 
-  // tslint:disable-next-line: no-input-rename
-  @Input('filter')
-  filter: IEmpresaEconomica[];
+  @Input()
+  selectedEmpresas: IEmpresa[];
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -55,12 +54,12 @@ export class SelectEmpresaEconomicaComponent extends SelectDialogComponent<Searc
     @Attribute('tabindex') tabIndex: string,
     dialog: MatDialog) {
 
-    super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, SearchEmpresaEconomicaModalComponent);
+    super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, SearchEmpresaModalComponent);
   }
 
-  protected getDialogData(): SearchEmpresaEconomicaModalData {
+  protected getDialogData(): SearchEmpresaModalData {
     return {
-      filter: this.filter
+      selectedEmpresas: this.selectedEmpresas ?? []
     };
   }
 
@@ -69,6 +68,6 @@ export class SelectEmpresaEconomicaComponent extends SelectDialogComponent<Searc
       return '';
     }
 
-    return `${this.value.razonSocial}`;
+    return `${this.value.nombre}`;
   }
 }

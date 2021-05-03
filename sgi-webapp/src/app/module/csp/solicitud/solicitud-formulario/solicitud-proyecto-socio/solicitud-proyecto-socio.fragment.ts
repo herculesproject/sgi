@@ -2,7 +2,7 @@ import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-soc
 import { Fragment } from '@core/services/action-service';
 import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proyecto-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class SolicitudProyectoSocioFragment extends Fragment {
     key: number,
     private solicitudService: SolicitudService,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     public readonly
   ) {
     super(key);
@@ -29,8 +29,8 @@ export class SolicitudProyectoSocioFragment extends Fragment {
         switchMap((proyectoSocios) =>
           from(proyectoSocios.items).pipe(
             mergeMap((proyectoSocio) =>
-              this.empresaEconomicaService.findById(proyectoSocio.empresa.personaRef).pipe(
-                tap(empresaEconomica => proyectoSocio.empresa = empresaEconomica),
+              this.empresaService.findById(proyectoSocio.empresa.id).pipe(
+                tap(empresa => proyectoSocio.empresa = empresa),
                 catchError(() => of())
               )
             ),

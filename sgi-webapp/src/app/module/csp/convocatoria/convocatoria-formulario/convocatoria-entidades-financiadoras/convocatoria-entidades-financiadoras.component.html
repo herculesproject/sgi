@@ -6,14 +6,14 @@
       <!-- Nombre Column -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria-entidad-financiadora.nombre' | translate}}</th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.empresa?.razonSocial}}
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.empresa?.nombre}}
         </td>
       </ng-container>
 
       <!-- Cif Column -->
       <ng-container matColumnDef="cif">
         <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria-entidad-financiadora.cif' | translate}}</th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.empresa?.numeroDocumento}}
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.empresa?.numeroIdentificacion}}
         </td>
       </ng-container>
 

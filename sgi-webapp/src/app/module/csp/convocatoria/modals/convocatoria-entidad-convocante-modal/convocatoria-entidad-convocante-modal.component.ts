@@ -9,7 +9,7 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProgramaService } from '@core/services/csp/programa.service';
@@ -35,7 +35,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ConvocatoriaEntidadConvocanteModalData {
   entidadConvocanteData: ConvocatoriaEntidadConvocanteData;
-  selectedEmpresas: IEmpresaEconomica[];
+  selectedEmpresas: IEmpresa[];
   readonly: boolean;
 }
 
@@ -131,7 +131,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     if (!data.entidadConvocanteData) {
       data.entidadConvocanteData = {
         entidadConvocante: new StatusWrapper<IConvocatoriaEntidadConvocante>({} as IConvocatoriaEntidadConvocante),
-        empresaEconomica: undefined,
+        empresa: undefined,
         modalidad: undefined,
         plan: undefined,
         programa: undefined,
@@ -181,7 +181,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamPlanEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
-    if (this.data.entidadConvocanteData.empresaEconomica) {
+    if (this.data.entidadConvocanteData.empresa) {
       this.translate.get(
         CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
         MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -298,7 +298,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      empresaEconomica: new FormControl(this.data.entidadConvocanteData.empresaEconomica, Validators.required),
+      empresa: new FormControl(this.data.entidadConvocanteData.empresa, Validators.required),
       plan: new FormControl(this.data.entidadConvocanteData.plan, IsEntityValidator.isValid()),
       programa: new FormControl(this.data.entidadConvocanteData.entidadConvocante.value.programa?.id)
     });
@@ -310,14 +310,14 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
 
   protected getDatosForm(): ConvocatoriaEntidadConvocanteModalData {
     const entidadConvocante = this.data.entidadConvocanteData.entidadConvocante;
-    entidadConvocante.value.entidad = this.formGroup.get('empresaEconomica').value;
+    entidadConvocante.value.entidad = this.formGroup.get('empresa').value;
     const plan = this.formGroup.get('plan').value;
     const programa = this.checkedNode?.programa?.value;
     entidadConvocante.value.programa = programa ? programa : plan;
     if (plan === '' && !programa) {
       entidadConvocante.value.programa = undefined;
     }
-    this.data.entidadConvocanteData.empresaEconomica = this.formGroup.get('empresaEconomica').value;
+    this.data.entidadConvocanteData.empresa = this.formGroup.get('empresa').value;
     this.data.entidadConvocanteData.modalidad = entidadConvocante.value.programa;
     return this.data;
   }

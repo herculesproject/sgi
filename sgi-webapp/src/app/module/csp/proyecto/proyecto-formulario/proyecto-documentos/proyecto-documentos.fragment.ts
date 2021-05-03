@@ -10,7 +10,7 @@ import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.se
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
@@ -161,7 +161,7 @@ export class ProyectoDocumentosFragment extends Fragment {
     private proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
     private proyectoProrrogaService: ProyectoProrrogaService,
     private proyectoDocumentoService: ProyectoDocumentoService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private readonly translate: TranslateService,
   ) {
     super(proyectoId);
@@ -269,7 +269,7 @@ export class ProyectoDocumentosFragment extends Fragment {
         const nodes: NodeDocumento[] = [];
         return from(socios.items).pipe(
           mergeMap(socio => {
-            return this.empresaEconomicaService.findById(socio.empresa.personaRef).pipe(
+            return this.empresaService.findById(socio.empresa.id).pipe(
               map(empresa => {
                 socio.empresa = empresa;
                 return socio;
@@ -296,7 +296,7 @@ export class ProyectoDocumentosFragment extends Fragment {
                           let socioNode = this.nodeLookup.get(keySocio);
                           if (!socioNode) {
                             socioNode = new NodeDocumento(
-                              keySocio, socio.empresa.razonSocial + ' (' + socio.empresa.numeroDocumento + ')', 1
+                              keySocio, socio.empresa.nombre + ' (' + socio.empresa.numeroIdentificacion + ')', 1
                             );
                             this.nodeLookup.set(keySocio, socioNode);
                             tipoNode.addChild(socioNode);

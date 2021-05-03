@@ -10,12 +10,12 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.entidad-financiadora.empresa-economica' | translate}}</mat-label>
-        <sgi-select-empresa-economica formControlName="empresaEconomica"
-          placeholder="{{'csp.entidad-financiadora.empresa-economica' | translate}}" [filter]="data.selectedEmpresas"
-          required>
-        </sgi-select-empresa-economica>
-        <mat-error *ngIf="formGroup.controls.empresaEconomica.errors?.required">
-          {{ 'error.required.entity' | translate:msgParamEmpresaEconomicaEntity }}
+        <sgi-select-empresa formControlName="empresa"
+          placeholder="{{'csp.entidad-financiadora.empresa-economica' | translate}}"
+          [selectedEmpresas]="data.selectedEmpresas" required>
+        </sgi-select-empresa>
+        <mat-error *ngIf="formGroup.controls.empresa.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamEmpresaEntity }}
         </mat-error>
       </mat-form-field>
     </div>

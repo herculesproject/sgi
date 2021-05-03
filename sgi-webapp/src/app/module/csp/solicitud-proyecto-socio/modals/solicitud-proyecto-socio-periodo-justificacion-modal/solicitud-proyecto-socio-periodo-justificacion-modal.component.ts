@@ -5,7 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitudProyectoSocioPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-socio-periodo-justificacion';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -25,7 +25,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface SolicitudProyectoSocioPeriodoJustificacionModalData {
   periodoJustificacion: ISolicitudProyectoSocioPeriodoJustificacion;
   duracion: number;
-  empresa: IEmpresaEconomica;
+  empresa: IEmpresa;
   selectedPeriodoJustificaciones: ISolicitudProyectoSocioPeriodoJustificacion[];
   mesInicioSolicitudProyectoSocio: number;
   mesFinSolicitudProyectoSocio: number;
@@ -120,7 +120,7 @@ export class SolicitudProyectoSocioPeriodoJustificacionModalComponent
     const formGroup = new FormGroup(
       {
         nombre: new FormControl({
-          value: this.data.empresa?.razonSocial,
+          value: this.data.empresa?.nombre,
           disabled: true
         }),
         numPeriodo: new FormControl({

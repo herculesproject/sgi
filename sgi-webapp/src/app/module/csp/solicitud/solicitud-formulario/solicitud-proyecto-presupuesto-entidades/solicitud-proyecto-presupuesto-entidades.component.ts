@@ -91,9 +91,9 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
       (entidadFinanciadoraDesglose: EntidadFinanciadoraDesglosePresupuesto, property: string) => {
         switch (property) {
           case 'nombre':
-            return entidadFinanciadoraDesglose.entidadFinanciadora.empresa.razonSocial;
+            return entidadFinanciadoraDesglose.entidadFinanciadora.empresa.nombre;
           case 'cif':
-            return entidadFinanciadoraDesglose.entidadFinanciadora.empresa.numeroDocumento;
+            return entidadFinanciadoraDesglose.entidadFinanciadora.empresa.numeroIdentificacion;
           case 'ajena':
             return entidadFinanciadoraDesglose.ajena;
           default:

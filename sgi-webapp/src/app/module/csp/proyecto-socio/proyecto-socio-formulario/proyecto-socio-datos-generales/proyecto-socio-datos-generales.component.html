@@ -8,9 +8,9 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
           <mat-label>{{'csp.proyecto-socio.socio' | translate}}</mat-label>
-          <sgi-select-empresa-economica formControlName="empresa"
-            placeholder="{{'csp.proyecto-socio.socio' | translate}}" required>
-          </sgi-select-empresa-economica>
+          <sgi-select-empresa formControlName="empresa" placeholder="{{'csp.proyecto-socio.socio' | translate}}"
+            required>
+          </sgi-select-empresa>
           <mat-error *ngIf="formGroup.controls.empresa.errors?.required">
             {{'error.required.entity' | translate:msgParamEntity}}
           </mat-error>

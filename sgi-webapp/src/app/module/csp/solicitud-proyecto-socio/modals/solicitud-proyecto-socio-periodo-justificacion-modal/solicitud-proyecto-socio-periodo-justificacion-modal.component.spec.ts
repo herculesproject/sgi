@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ISolicitudProyectoSocioPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-socio-periodo-justificacion';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -35,7 +35,7 @@ describe('SolicitudProyectoSocioPeriodoJustificacionesModalComponent', () => {
     mesInicioSolicitudProyectoSocio: 1,
     readonly: false,
     duracion: 0,
-    empresa: {} as IEmpresaEconomica
+    empresa: {} as IEmpresa
   };
 
   beforeEach(waitForAsync(() => {

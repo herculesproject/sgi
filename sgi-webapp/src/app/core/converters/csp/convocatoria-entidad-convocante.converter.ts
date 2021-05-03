@@ -1,6 +1,6 @@
 import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ConvocatoriaEntidadConvocanteConverter extends
@@ -13,7 +13,7 @@ class ConvocatoriaEntidadConvocanteConverter extends
     return {
       id: value.id,
       convocatoriaId: value.convocatoriaId,
-      entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
+      entidad: { id: value.entidadRef } as IEmpresa,
       programa: value.programa
     };
   }
@@ -25,7 +25,7 @@ class ConvocatoriaEntidadConvocanteConverter extends
     return {
       id: value.id,
       convocatoriaId: value.convocatoriaId,
-      entidadRef: value.entidad?.personaRef,
+      entidadRef: value.entidad?.id,
       programa: value.programa
     };
   }

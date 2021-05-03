@@ -7,7 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoFinalidad, ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
@@ -19,7 +19,7 @@ import { map } from 'rxjs/operators';
 export interface EntidadFinanciadoraDataModal {
   title: string;
   entidad: IEntidadFinanciadora;
-  selectedEmpresas: IEmpresaEconomica[];
+  selectedEmpresas: IEmpresa[];
   readonly: boolean;
 }
 
@@ -41,7 +41,7 @@ export class EntidadFinanciadoraModalComponent extends
   title: string;
 
   msgParamPorcentajeFinanciacionoEntity = {};
-  msgParamEmpresaEconomicaEntity = {};
+  msgParamEmpresaEntity = {};
 
   constructor(
     protected snackBarService: SnackBarService,
@@ -70,7 +70,7 @@ export class EntidadFinanciadoraModalComponent extends
     this.translate.get(
       ENTIDAD_FINANCIADORA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEmpresaEconomicaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamEmpresaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
       ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY,
@@ -83,7 +83,7 @@ export class EntidadFinanciadoraModalComponent extends
     const tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
 
     const entidad = this.data.entidad;
-    entidad.empresa = this.formGroup.get('empresaEconomica').value;
+    entidad.empresa = this.formGroup.get('empresa').value;
     entidad.fuenteFinanciacion = typeof fuenteFinanciacion === 'string' ? undefined : fuenteFinanciacion;
     entidad.tipoFinanciacion = typeof tipoFinanciacion === 'string' ? undefined : tipoFinanciacion;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
@@ -92,7 +92,7 @@ export class EntidadFinanciadoraModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      empresaEconomica: new FormControl(
+      empresa: new FormControl(
         {
           value: this.data.entidad.empresa,
           disabled: this.data.entidad.empresa || this.data.readonly

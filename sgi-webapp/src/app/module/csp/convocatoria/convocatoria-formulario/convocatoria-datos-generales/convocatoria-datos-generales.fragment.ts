@@ -4,13 +4,13 @@ import { Estado, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IsYearPlus } from '@core/validators/is-year-plus';
@@ -38,7 +38,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     private readonly logger: NGXLogger,
     key: number,
     private convocatoriaService: ConvocatoriaService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     private unidadGestionService: UnidadGestionService,
     private convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
@@ -160,9 +160,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
             const convocatoriasEntidadGestoras = listResult.items;
             if (convocatoriasEntidadGestoras.length > 0) {
               this.convocatoriaEntidadGestora = convocatoriasEntidadGestoras[0];
-              return this.empresaEconomicaService.findById(this.convocatoriaEntidadGestora.empresaEconomica.personaRef).pipe(
-                map((empresaEconomica) => {
-                  this.getFormGroup().get('entidadGestora').setValue(empresaEconomica);
+              return this.empresaService.findById(this.convocatoriaEntidadGestora.empresa.id).pipe(
+                map((empresa) => {
+                  this.getFormGroup().get('entidadGestora').setValue(empresa);
                   return convocatoria;
                 })
               );
@@ -304,10 +304,10 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   private saveOrUpdateConvocatoriaEntidadGestora(result: IConvocatoria): Observable<IConvocatoria> {
     let observable$: Observable<any>;
-    const entidadRef = this.getFormGroup().controls.entidadGestora.value?.personaRef;
+    const empresaId = this.getFormGroup().controls.entidadGestora.value?.id;
     this.convocatoriaEntidadGestora.convocatoriaId = result.id;
-    if (entidadRef !== this.convocatoriaEntidadGestora.empresaEconomica?.personaRef) {
-      if (!entidadRef) {
+    if (empresaId !== this.convocatoriaEntidadGestora.empresa?.id) {
+      if (!empresaId) {
         observable$ = this.deleteConvocatoriaEntidadGestora();
       }
       else {
@@ -322,33 +322,33 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   private createConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
-    this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+    this.convocatoriaEntidadGestora.empresa = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.create(this.convocatoriaEntidadGestora).pipe(
       tap(result => {
         this.convocatoriaEntidadGestora = result;
-        this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+        this.convocatoriaEntidadGestora.empresa = this.getFormGroup().controls.entidadGestora.value;
       })
     );
   }
 
   private updateConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
-    this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+    this.convocatoriaEntidadGestora.empresa = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.update(
       this.convocatoriaEntidadGestora.id, this.convocatoriaEntidadGestora).pipe(
         tap(result => {
           this.convocatoriaEntidadGestora = result;
-          this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+          this.convocatoriaEntidadGestora.empresa = this.getFormGroup().controls.entidadGestora.value;
         })
       );
   }
 
   private deleteConvocatoriaEntidadGestora(): Observable<void> {
-    this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+    this.convocatoriaEntidadGestora.empresa = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.deleteById(
       this.convocatoriaEntidadGestora.id).pipe(
         tap(() => {
           this.convocatoriaEntidadGestora = {} as IConvocatoriaEntidadGestora;
-          this.convocatoriaEntidadGestora.empresaEconomica = {} as IEmpresaEconomica;
+          this.convocatoriaEntidadGestora.empresa = {} as IEmpresa;
         })
       );
   }

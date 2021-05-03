@@ -44,10 +44,10 @@
     "secure": false,
     "logLevel": "debug"
   },
-  "/api/sgemp/**": {
-    "target": "http://192.168.3.127:8280",
+  "/api/sgemp": {
+    "target": "http://wso-mi.ic.corp.treelogic.com",
     "pathRewrite": {
-      "^/api/sgemp": "/sgp"
+      "^/api/sgemp": "/sgemp"
     },
     "changeOrigin": true,
     "secure": false,

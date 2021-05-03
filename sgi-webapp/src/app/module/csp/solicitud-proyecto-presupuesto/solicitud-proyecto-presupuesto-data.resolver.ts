@@ -5,7 +5,7 @@ import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -30,7 +30,7 @@ export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolve
     snackBar: SnackBarService,
     private solicitudService: SolicitudService,
     private convocatoriaService: ConvocatoriaService,
-    private empresaEconomicaService: EmpresaEconomicaService
+    private empresaService: EmpresaService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
@@ -51,7 +51,7 @@ export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolve
         };
       }),
       switchMap(data => {
-        return this.empresaEconomicaService.findById(data.entidadFinanciadora.empresa.personaRef).pipe(
+        return this.empresaService.findById(data.entidadFinanciadora.empresa.id).pipe(
           map(empresa => {
             data.entidadFinanciadora.empresa = empresa;
             return data;

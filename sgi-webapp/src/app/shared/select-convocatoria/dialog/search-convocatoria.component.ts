@@ -10,11 +10,11 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
@@ -29,9 +29,9 @@ interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
   entidadConvocante: IConvocatoriaEntidadConvocante;
-  entidadConvocanteEmpresa: IEmpresaEconomica;
+  entidadConvocanteEmpresa: IEmpresa;
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
-  entidadFinanciadoraEmpresa: IEmpresaEconomica;
+  entidadFinanciadoraEmpresa: IEmpresa;
 }
 
 @Component({
@@ -64,7 +64,7 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     public dialogRef: MatDialogRef<SearchConvocatoriaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoria,
     private readonly convocatoriaService: ConvocatoriaService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private readonly snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -125,9 +125,9 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
             return {
               convocatoria,
               entidadConvocante: {} as IConvocatoriaEntidadConvocante,
-              entidadConvocanteEmpresa: {} as IEmpresaEconomica,
+              entidadConvocanteEmpresa: {} as IEmpresa,
               entidadFinanciadora: {} as IConvocatoriaEntidadFinanciadora,
-              entidadFinanciadoraEmpresa: {} as IEmpresaEconomica,
+              entidadFinanciadoraEmpresa: {} as IEmpresa,
               fase: {} as IConvocatoriaFase
             } as IConvocatoriaListado;
           });
@@ -149,9 +149,9 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
                 }),
                 switchMap(() => {
                   if (convocatoriaListado.entidadFinanciadora.id) {
-                    return this.empresaEconomicaService.findById(convocatoriaListado.entidadFinanciadora.empresa.personaRef).pipe(
-                      map(empresaEconomica => {
-                        convocatoriaListado.entidadFinanciadoraEmpresa = empresaEconomica;
+                    return this.empresaService.findById(convocatoriaListado.entidadFinanciadora.empresa.id).pipe(
+                      map(empresa => {
+                        convocatoriaListado.entidadFinanciadoraEmpresa = empresa;
                         return convocatoriaListado;
                       }),
                     );
@@ -178,9 +178,9 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
                     }),
                     switchMap(() => {
                       if (convocatoriaListado.entidadConvocante.id) {
-                        return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidad.personaRef).pipe(
-                          map(empresaEconomica => {
-                            convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
+                        return this.empresaService.findById(convocatoriaListado.entidadConvocante.entidad.id).pipe(
+                          map(empresa => {
+                            convocatoriaListado.entidadConvocanteEmpresa = empresa;
                             return convocatoriaListado;
                           }),
                         );

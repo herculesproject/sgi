@@ -136,7 +136,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       (entidadConvocanteModalidad: SolicitudModalidadEntidadConvocanteListado, property: string) => {
         switch (property) {
           case 'entidadConvocante':
-            return entidadConvocanteModalidad.entidadConvocante.entidad.razonSocial;
+            return entidadConvocanteModalidad.entidadConvocante.entidad.nombre;
           case 'plan':
             return entidadConvocanteModalidad.plan.nombre;
           case 'programaConvocatoria':

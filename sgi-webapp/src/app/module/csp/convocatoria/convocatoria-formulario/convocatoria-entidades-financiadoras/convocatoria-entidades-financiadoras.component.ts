@@ -7,9 +7,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { DialogService } from '@core/services/dialog.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, of, Subscription } from 'rxjs';
@@ -44,12 +44,12 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  selectedEmpresas: IEmpresaEconomica[];
+  selectedEmpresas: IEmpresa[];
 
   constructor(
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
@@ -109,7 +109,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
         switchMap(wrappers => {
           return forkJoin(wrappers.map(
             wrapper => {
-              return this.empresaEconomicaService.findById(wrapper.value.empresa.personaRef).pipe(
+              return this.empresaService.findById(wrapper.value.empresa.id).pipe(
                 map(empresa => {
                   this.selectedEmpresas.push(empresa);
                   wrapper.value.empresa = empresa;
@@ -163,7 +163,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
         (aceptado: boolean) => {
           if (aceptado) {
             const empresa = wrapper.value.empresa;
-            this.selectedEmpresas = this.selectedEmpresas.filter(x => x.personaRef !== empresa.personaRef);
+            this.selectedEmpresas = this.selectedEmpresas.filter(x => x.id !== empresa.id);
             const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value);
             this.formPart.deleteConvocatoriaEntidadFinanciadora(entidad);
             this.getDataSource();

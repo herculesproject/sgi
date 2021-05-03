@@ -13,7 +13,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Subscription } from 'rxjs';
@@ -84,7 +84,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private convocatoriaService: ConvocatoriaService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
@@ -109,9 +109,9 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       (entidadFinanciadora: IConvocatoriaEntidadFinanciadora, property: string) => {
         switch (property) {
           case 'nombre':
-            return entidadFinanciadora.empresa?.razonSocial;
+            return entidadFinanciadora.empresa?.nombre;
           case 'cif':
-            return entidadFinanciadora.empresa?.numeroDocumento;
+            return entidadFinanciadora.empresa?.numeroIdentificacion;
           case 'fuenteFinanciacion':
             return entidadFinanciadora.fuenteFinanciacion?.nombre;
           case 'ambito':
@@ -131,9 +131,9 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       (entidadFinanciadora: StatusWrapper<ISolicitudProyectoEntidadFinanciadoraAjena>, property: string) => {
         switch (property) {
           case 'nombre':
-            return entidadFinanciadora.value.empresa?.razonSocial;
+            return entidadFinanciadora.value.empresa?.nombre;
           case 'cif':
-            return entidadFinanciadora.value.empresa?.numeroDocumento;
+            return entidadFinanciadora.value.empresa?.numeroIdentificacion;
           case 'fuenteFinanciacion':
             return entidadFinanciadora.value.fuenteFinanciacion?.nombre;
           case 'ambito':
@@ -157,10 +157,10 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
             return from(entidadesFinanciadoras)
               .pipe(
                 map((entidadesFinanciadora) => {
-                  return this.empresaEconomicaService.findById(entidadesFinanciadora.empresa.personaRef)
+                  return this.empresaService.findById(entidadesFinanciadora.empresa.id)
                     .pipe(
-                      map(empresaEconomica => {
-                        entidadesFinanciadora.empresa = empresaEconomica;
+                      map(empresa => {
+                        entidadesFinanciadora.empresa = empresa;
                         return entidadesFinanciadora;
                       }),
                     );

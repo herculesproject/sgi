@@ -7,14 +7,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { SearchEmpresaEconomicaModalComponent, SearchEmpresaEconomicaModalData } from './search-empresa-economica.component';
+import { SelectEmpresaComponent } from './select-empresa.component';
 
-describe('SearchEmpresaEconomicaModalComponent', () => {
-  let component: SearchEmpresaEconomicaModalComponent;
-  let fixture: ComponentFixture<SearchEmpresaEconomicaModalComponent>;
+describe('SelectEmpresaComponent', () => {
+  let component: SelectEmpresaComponent;
+  let fixture: ComponentFixture<SelectEmpresaComponent>;
 
   beforeEach(waitForAsync(() => {
     const mockDialogRef = {
@@ -22,7 +22,7 @@ describe('SearchEmpresaEconomicaModalComponent', () => {
     };
 
     // Mock MAT_DIALOG
-    const matDialogData: SearchEmpresaEconomicaModalData = {};
+    const matDialogData = {};
 
     TestBed.configureTestingModule({
       imports: [
@@ -43,13 +43,14 @@ describe('SearchEmpresaEconomicaModalComponent', () => {
           useValue: mockDialogRef,
         },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
+        SgiAuthService
       ],
-      declarations: [SearchEmpresaEconomicaModalComponent, HeaderComponent],
+      declarations: [SelectEmpresaComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SearchEmpresaEconomicaModalComponent);
+    fixture = TestBed.createComponent(SelectEmpresaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

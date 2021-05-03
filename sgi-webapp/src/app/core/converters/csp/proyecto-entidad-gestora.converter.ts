@@ -1,6 +1,6 @@
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ProyectoEntidadGestoraConverter extends SgiBaseConverter<IProyectoEntidadGestoraBackend, IProyectoEntidadGestora> {
@@ -12,7 +12,7 @@ class ProyectoEntidadGestoraConverter extends SgiBaseConverter<IProyectoEntidadG
     return {
       id: value.id,
       proyectoId: value.proyectoId,
-      empresaEconomica: { personaRef: value.entidadRef } as IEmpresaEconomica
+      empresa: { id: value.entidadRef } as IEmpresa
     };
   }
 
@@ -23,7 +23,7 @@ class ProyectoEntidadGestoraConverter extends SgiBaseConverter<IProyectoEntidadG
     return {
       id: value.id,
       proyectoId: value.proyectoId,
-      entidadRef: value.empresaEconomica?.personaRef
+      entidadRef: value.empresa?.id
     };
   }
 }

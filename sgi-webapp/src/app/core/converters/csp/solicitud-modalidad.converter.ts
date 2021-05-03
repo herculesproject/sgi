@@ -1,6 +1,6 @@
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class SolicitudModalidadConverter extends SgiBaseConverter<ISolicitudModalidadBackend, ISolicitudModalidad> {
@@ -12,7 +12,7 @@ class SolicitudModalidadConverter extends SgiBaseConverter<ISolicitudModalidadBa
     return {
       id: value.id,
       solicitudId: value.solicitudId,
-      entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
+      entidad: { id: value.entidadRef } as IEmpresa,
       programa: value.programa
     };
   }
@@ -24,7 +24,7 @@ class SolicitudModalidadConverter extends SgiBaseConverter<ISolicitudModalidadBa
     return {
       id: value.id,
       solicitudId: value.solicitudId,
-      entidadRef: value.entidad?.personaRef,
+      entidadRef: value.entidad?.id,
       programa: value.programa
     };
   }

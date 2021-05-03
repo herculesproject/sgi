@@ -39,7 +39,7 @@ export class ProyectoSociosComponent extends FragmentComponent implements OnInit
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns = ['empresa.numeroDocumento', 'empresa.razonSocial', 'rolSocio.nombre', 'numInvestigadores', 'fechaInicio', 'fechaFin', 'acciones'];
+  displayedColumns = ['empresa.numeroIdentificacion', 'empresa.nombre', 'rolSocio.nombre', 'numInvestigadores', 'fechaInicio', 'fechaFin', 'acciones'];
 
   msgParamEntity = {};
   textoDelete: string;

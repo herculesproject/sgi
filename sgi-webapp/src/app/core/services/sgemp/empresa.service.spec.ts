@@ -1,11 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { EmpresaService } from './empresa.service';
 
-import { EmpresaEconomicaService } from './empresa-economica.service';
-
-describe('EmpresaEconomicaService', () => {
-  let service: EmpresaEconomicaService;
+describe('EmpresaService', () => {
+  let service: EmpresaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,7 +13,7 @@ describe('EmpresaEconomicaService', () => {
         LoggerTestingModule
       ]
     });
-    service = TestBed.inject(EmpresaEconomicaService);
+    service = TestBed.inject(EmpresaService);
   });
 
   it('should be created', () => {

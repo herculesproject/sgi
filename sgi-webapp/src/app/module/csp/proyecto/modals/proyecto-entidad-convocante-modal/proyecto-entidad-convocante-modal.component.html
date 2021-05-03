@@ -10,10 +10,10 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field class="input-form">
         <mat-label>{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}</mat-label>
-        <sgi-select-empresa-economica formControlName="entidad"
+        <sgi-select-empresa formControlName="entidad"
           placeholder="{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}"
-          [filter]="data.selectedEmpresas" required>
-        </sgi-select-empresa-economica>
+          [selectedEmpresas]="data.selectedEmpresas" required>
+        </sgi-select-empresa>
         <mat-error *ngIf="formGroup.controls.entidad.errors?.required">
           {{ 'error.required.entity' | translate:msgParamEntity }}
         </mat-error>

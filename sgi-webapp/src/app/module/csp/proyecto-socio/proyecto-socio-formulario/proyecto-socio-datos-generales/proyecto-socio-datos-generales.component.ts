@@ -165,7 +165,7 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
     const fechaFinForm = this.formGroup.get('fechaFin');
 
     const proyectoSocios = this.actionService.proyectoSocios.filter(
-      element => element.empresa.personaRef === empresaForm.value.personaRef
+      element => element.empresa.id === empresaForm.value.id
         && element.id !== this.formPart.proyectoSocio.id);
 
 

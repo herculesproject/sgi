@@ -328,10 +328,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
         .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaHasta.value))
         .and('convocatoria.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloConvocatoria.value)
-        .and('convocatoria.entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
+        .and('convocatoria.entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.id)
         .and('convocatoria.entidadesConvocantes.programa.id',
           SgiRestFilterOperator.EQUALS, controls.planInvestigacion.value?.id?.toString())
-        .and('convocatoria.entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.personaRef)
+        .and('convocatoria.entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id)
         .and('convocatoria.entidadesFinanciadoras.fuenteFinanciacion.id',
           SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString());
     }

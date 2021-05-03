@@ -9,7 +9,7 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProgramaService } from '@core/services/csp/programa.service';
@@ -21,7 +21,7 @@ import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 const SOLICITUD_MODALIDAD_KEY = marker('csp.solicitud-modalidad');
 export interface SolicitudModalidadEntidadConvocanteModalData {
-  entidad: IEmpresaEconomica;
+  entidad: IEmpresa;
   plan: IPrograma;
   programa: IPrograma;
   modalidad: ISolicitudModalidad;
@@ -151,7 +151,7 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      entidadConvocante: new FormControl({ value: this.data.entidad?.razonSocial, disabled: true }),
+      entidadConvocante: new FormControl({ value: this.data.entidad?.nombre, disabled: true }),
       plan: new FormControl({ value: this.data.plan?.nombre, disabled: true })
     });
 

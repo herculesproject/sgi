@@ -12,7 +12,7 @@ import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
@@ -25,7 +25,7 @@ import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -50,9 +50,9 @@ interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
   entidadConvocante: IConvocatoriaEntidadConvocante;
-  entidadConvocanteEmpresa: IEmpresaEconomica;
+  entidadConvocanteEmpresa: IEmpresa;
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
-  entidadFinanciadoraEmpresa: IEmpresaEconomica;
+  entidadFinanciadoraEmpresa: IEmpresa;
 }
 
 @Component({
@@ -110,7 +110,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     private unidadGestionService: UnidadGestionService,
     private unidadModeloService: ModeloUnidadService,
     private modeloEjecucionService: ModeloEjecucionService,
@@ -274,9 +274,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
           return {
             convocatoria,
             entidadConvocante: {} as IConvocatoriaEntidadConvocante,
-            entidadConvocanteEmpresa: {} as IEmpresaEconomica,
+            entidadConvocanteEmpresa: {} as IEmpresa,
             entidadFinanciadora: {} as IConvocatoriaEntidadFinanciadora,
-            entidadFinanciadoraEmpresa: {} as IEmpresaEconomica,
+            entidadFinanciadoraEmpresa: {} as IEmpresa,
             fase: {} as IConvocatoriaFase
           } as IConvocatoriaListado;
         });
@@ -306,9 +306,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               }),
               switchMap(() => {
                 if (convocatoriaListado.entidadFinanciadora.id) {
-                  return this.empresaEconomicaService.findById(convocatoriaListado.entidadFinanciadora.empresa.personaRef).pipe(
-                    map(empresaEconomica => {
-                      convocatoriaListado.entidadFinanciadoraEmpresa = empresaEconomica;
+                  return this.empresaService.findById(convocatoriaListado.entidadFinanciadora.empresa.id).pipe(
+                    map(empresa => {
+                      convocatoriaListado.entidadFinanciadoraEmpresa = empresa;
                       return convocatoriaListado;
                     }),
                   );
@@ -335,9 +335,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                   }),
                   switchMap(() => {
                     if (convocatoriaListado.entidadConvocante.id) {
-                      return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidad.personaRef).pipe(
-                        map(empresaEconomica => {
-                          convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
+                      return this.empresaService.findById(convocatoriaListado.entidadConvocante.entidad.id).pipe(
+                        map(empresa => {
+                          convocatoriaListado.entidadConvocanteEmpresa = empresa;
                           return convocatoriaListado;
                         }),
                       );
@@ -387,8 +387,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value)
       .and('finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString())
       .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
-      .and('entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.personaRef)
-      .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.personaRef)
+      .and('entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.id)
+      .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id)
       .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
       .and('areasTematicas.id', SgiRestFilterOperator.EQUALS, controls.areaTematica.value?.id?.toString());
 
@@ -398,6 +398,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   onClearFilters() {
     super.onClearFilters();
     this.formGroup.controls.activo.setValue('true');
+    this.formGroup.controls.fechaPublicacionDesde.setValue(null);
+    this.formGroup.controls.fechaPublicacionHasta.setValue(null);
     this.onSearch();
   }
 

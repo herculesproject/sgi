@@ -1,4 +1,4 @@
-import { IEmpresaEconomica } from '../sgp/empresa-economica';
+import { IEmpresa } from '../sgemp/empresa';
 import { IPrograma } from './programa';
 
 export interface ISolicitudModalidad {
@@ -7,7 +7,7 @@ export interface ISolicitudModalidad {
   /** Id de Solicitud */
   solicitudId: number;
   /** Entidad */
-  entidad: IEmpresaEconomica;
+  entidad: IEmpresa;
   /** Programa */
   programa: IPrograma;
 }

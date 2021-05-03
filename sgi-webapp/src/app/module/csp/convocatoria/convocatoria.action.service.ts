@@ -23,7 +23,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DocumentoRequeridoSolicitudService } from '@core/services/csp/documento-requerido-solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -110,7 +110,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     route: ActivatedRoute,
     private convocatoriaService: ConvocatoriaService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
-    empresaEconomicaService: EmpresaEconomicaService,
+    empresaService: EmpresaService,
     convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
     convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     unidadGestionService: UnidadGestionService,
@@ -137,14 +137,14 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     }
 
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
-      logger, this.id, convocatoriaService, empresaEconomicaService,
+      logger, this.id, convocatoriaService, empresaService,
       convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService,
       this.readonly);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
       this.id, convocatoriaService, convocatoriaPeriodoJustificacionService, this.readonly);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.id, convocatoriaService, convocatoriaEntidadConvocanteService,
-      empresaEconomicaService, this.readonly);
+      empresaService, this.readonly);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
       this.id, convocatoriaService, convocatoriaFaseService, this.readonly);
     this.hitos = new ConvocatoriaHitosFragment(this.id, convocatoriaService,

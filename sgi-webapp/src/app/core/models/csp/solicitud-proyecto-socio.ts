@@ -1,10 +1,10 @@
-import { IEmpresaEconomica } from '../sgp/empresa-economica';
+import { IEmpresa } from '../sgemp/empresa';
 import { IRolSocio } from './rol-socio';
 
 export interface ISolicitudProyectoSocio {
   id: number;
   solicitudProyectoId: number;
-  empresa: IEmpresaEconomica;
+  empresa: IEmpresa;
   rolSocio: IRolSocio;
   mesInicio: number;
   mesFin: number;

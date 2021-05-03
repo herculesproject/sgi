@@ -1,6 +1,6 @@
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ProyectoEntidadConvocanteConverter extends SgiBaseConverter<IProyectoEntidadConvocanteBackend, IProyectoEntidadConvocante> {
@@ -11,7 +11,7 @@ class ProyectoEntidadConvocanteConverter extends SgiBaseConverter<IProyectoEntid
     }
     return {
       id: value.id,
-      entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
+      entidad: { id: value.entidadRef } as IEmpresa,
       programaConvocatoria: value.programaConvocatoria,
       programa: value.programa
     };
@@ -23,7 +23,7 @@ class ProyectoEntidadConvocanteConverter extends SgiBaseConverter<IProyectoEntid
     }
     return {
       id: value.id,
-      entidadRef: value.entidad?.personaRef,
+      entidadRef: value.entidad?.id,
       programaConvocatoria: value.programaConvocatoria,
       programa: value.programa
     };

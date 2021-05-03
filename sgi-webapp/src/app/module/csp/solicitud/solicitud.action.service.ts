@@ -18,7 +18,7 @@ import { SolicitudProyectoSocioService } from '@core/services/csp/solicitud-proy
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -111,7 +111,7 @@ export class SolicitudActionService extends ActionService {
     private solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
     convocatoriaService: ConvocatoriaService,
-    empresaEconomicaService: EmpresaEconomicaService,
+    empresaService: EmpresaService,
     personaService: PersonaService,
     solicitudModalidadService: SolicitudModalidadService,
     solicitudHitoService: SolicitudHitoService,
@@ -137,7 +137,7 @@ export class SolicitudActionService extends ActionService {
       solicitudService,
       configuracionSolicitudService,
       convocatoriaService,
-      empresaEconomicaService,
+      empresaService,
       personaService,
       solicitudModalidadService,
       unidadGestionService,
@@ -153,13 +153,13 @@ export class SolicitudActionService extends ActionService {
     this.equipoProyecto = new SolicitudEquipoProyectoFragment(this.data?.solicitud?.id, solicitudService,
       solicitudProyectoEquipoService, this.readonly);
     this.socio = new SolicitudProyectoSocioFragment(this.data?.solicitud?.id, solicitudService,
-      solicitudProyectoSocioService, empresaEconomicaService, this.readonly);
+      solicitudProyectoSocioService, empresaService, this.readonly);
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.data?.solicitud?.id, solicitudService,
-      solicitudEntidadFinanciadoraService, empresaEconomicaService, this.readonly);
+      solicitudEntidadFinanciadoraService, empresaService, this.readonly);
     this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(this.data?.solicitud?.id, solicitudService,
-      solicitudProyectoPresupuestoService, empresaEconomicaService, this.readonly);
+      solicitudProyectoPresupuestoService, empresaService, this.readonly);
     this.desglosePresupuestoEntidades = new SolicitudProyectoPresupuestoEntidadesFragment(this.data?.solicitud?.id,
-      this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaEconomicaService, this.readonly);
+      this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     if (this.isEdit()) {

@@ -94,23 +94,21 @@
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria.codigo-referencia' | translate}}</mat-label>
         <input matInput formControlName="codigo" type="text" id="codigo"
-          placeholder="{{'csp.convocatoria.codigo-referencia' | translate}}" required>
-        <mat-error *ngIf="formGroup.controls.codigo.errors?.required">
-          {{ 'error.required.entity' | translate:msgParamCodigoReferenciaEntity }}
-        </mat-error>
+          placeholder="{{'csp.convocatoria.codigo-referencia' | translate}}">
         <mat-error *ngIf="formGroup.controls.codigo.errors?.maxlength">
           {{ 'error.maxlength.entity' | translate:msgParamCodigoReferenciaEntity }}
         </mat-error>
       </mat-form-field>
     </div>
 
-    <!-- Empresa Economica -->
+    <!-- Entidad gestora -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria.entidad-gestora' | translate}}</mat-label>
-        <sgi-select-empresa-economica placeholder="{{'csp.convocatoria.entidad-gestora' | translate}}"
-          formControlName="entidadGestora"></sgi-select-empresa-economica>
+        <sgi-select-empresa placeholder="{{'csp.convocatoria.entidad-gestora' | translate}}"
+          formControlName="entidadGestora">
+        </sgi-select-empresa>
       </mat-form-field>
     </div>
 

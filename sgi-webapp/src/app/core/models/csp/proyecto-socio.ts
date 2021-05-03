@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
-import { IEmpresaEconomica } from '../sgp/empresa-economica';
+import { IEmpresa } from '../sgemp/empresa';
 import { IRolSocio } from './rol-socio';
 
 export interface IProyectoSocio {
   id: number;
   proyectoId: number;
-  empresa: IEmpresaEconomica;
+  empresa: IEmpresa;
   rolSocio: IRolSocio;
   fechaInicio: DateTime;
   fechaFin: DateTime;

@@ -7,7 +7,7 @@ import { ProyectoSocioEquipoService } from '@core/services/csp/proyecto-socio-eq
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioPeriodoPagoService } from '@core/services/csp/proyecto-socio-periodo-pago.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { PROYECTO_SOCIO_DATA_KEY } from './proyecto-socio-data.resolver';
@@ -54,7 +54,7 @@ export class ProyectoSocioActionService extends ActionService {
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
-    empresaEconomicaService: EmpresaEconomicaService,
+    empresaService: EmpresaService,
     proyectoSocioService: ProyectoSocioService,
     proyectoEquipoSocioService: ProyectoSocioEquipoService,
     personaService: PersonaService,
@@ -70,7 +70,7 @@ export class ProyectoSocioActionService extends ActionService {
     }
 
     this.datosGenerales = new ProyectoSocioDatosGeneralesFragment(id, this.data.proyecto.id,
-      proyectoSocioService, empresaEconomicaService);
+      proyectoSocioService, empresaService);
     this.equipo = new ProyectoSocioEquipoFragment(logger, id, proyectoSocioService,
       proyectoEquipoSocioService, personaService);
     this.periodoPago = new ProyectoSocioPeriodoPagoFragment(logger, id, proyectoSocioService,

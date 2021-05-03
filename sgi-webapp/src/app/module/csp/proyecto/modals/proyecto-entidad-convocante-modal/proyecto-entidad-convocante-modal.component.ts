@@ -9,7 +9,7 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -29,7 +29,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface ProyectoEntidadConvocanteModalData {
   proyectoEntidadConvocante: IProyectoEntidadConvocante;
-  selectedEmpresas: IEmpresaEconomica[];
+  selectedEmpresas: IEmpresa[];
 }
 
 class NodePrograma {

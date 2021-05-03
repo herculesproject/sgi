@@ -10,7 +10,7 @@
           {{ 'csp.proyecto-entidad-convocante.programa.nombre' | translate }}
         </th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
-          {{ proyectoEntidadConvocanteData.entidad.razonSocial }}
+          {{ proyectoEntidadConvocanteData.entidad.nombre }}
         </td>
       </ng-container>
 
@@ -20,7 +20,7 @@
           {{ 'csp.proyecto-entidad-convocante.programa.cif' | translate }}
         </th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
-          {{ proyectoEntidadConvocanteData.entidad.numeroDocumento }}
+          {{ proyectoEntidadConvocanteData.entidad.numeroIdentificacion }}
         </td>
       </ng-container>
 
@@ -36,19 +36,17 @@
 
       <!-- Programa Convocatoria Column -->
       <ng-container matColumnDef="programaConvocatoria">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{
-          'csp.proyecto-entidad-convocante.programa.programa-convocatoria'
-          |
-          translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto-entidad-convocante.programa.programa-convocatoria' | translate }}
+        </th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
           {{ proyectoEntidadConvocanteData.programaConvocatoria?.nombre }} </td>
       </ng-container>
 
       <!-- Programa Column -->
       <ng-container matColumnDef="programa">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'csp.proyecto-entidad-convocante.programa.programa' |
-          translate
-          }}
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'csp.proyecto-entidad-convocante.programa.programa' | translate }}
         </th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
           {{ proyectoEntidadConvocanteData.programa?.nombre }}

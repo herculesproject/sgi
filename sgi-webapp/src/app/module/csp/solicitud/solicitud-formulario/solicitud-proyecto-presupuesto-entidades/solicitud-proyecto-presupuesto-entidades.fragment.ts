@@ -4,7 +4,7 @@ import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeAll, switchMap, takeLast } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
     public convocatoriaId: number,
     private convocatoriaService: ConvocatoriaService,
     private solicitudService: SolicitudService,
-    private empresaEconomicaService: EmpresaEconomicaService,
+    private empresaService: EmpresaService,
     public readonly: boolean
   ) {
     super(key, true);
@@ -87,10 +87,10 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
           return from(entidadesFinanciadoras)
             .pipe(
               map((entidadesFinanciadora) => {
-                return this.empresaEconomicaService.findById(entidadesFinanciadora.empresa.personaRef)
+                return this.empresaService.findById(entidadesFinanciadora.empresa.id)
                   .pipe(
-                    map(empresaEconomica => {
-                      entidadesFinanciadora.empresa = empresaEconomica;
+                    map(empresa => {
+                      entidadesFinanciadora.empresa = empresa;
                       return entidadesFinanciadora;
                     }),
                   );
@@ -129,10 +129,10 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
           return from(entidadesFinanciadoras)
             .pipe(
               map((entidadesFinanciadora) => {
-                return this.empresaEconomicaService.findById(entidadesFinanciadora.empresa.personaRef)
+                return this.empresaService.findById(entidadesFinanciadora.empresa.id)
                   .pipe(
-                    map(empresaEconomica => {
-                      entidadesFinanciadora.empresa = empresaEconomica;
+                    map(empresa => {
+                      entidadesFinanciadora.empresa = empresa;
                       return entidadesFinanciadora;
                     }),
                   );

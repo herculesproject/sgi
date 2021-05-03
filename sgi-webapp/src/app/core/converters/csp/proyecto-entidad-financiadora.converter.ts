@@ -1,6 +1,6 @@
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { IEmpresa } from '@core/models/sgemp/empresa';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEntidadFinanciadoraBackend, IProyectoEntidadFinanciadora> {
@@ -11,7 +11,7 @@ class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEnt
     }
     return {
       id: value.id,
-      empresa: { personaRef: value.entidadRef } as IEmpresaEconomica,
+      empresa: { id: value.entidadRef } as IEmpresa,
       proyectoId: value.proyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
@@ -26,7 +26,7 @@ class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEnt
     }
     return {
       id: value.id,
-      entidadRef: value.empresa?.personaRef,
+      entidadRef: value.empresa?.id,
       proyectoId: value.proyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,

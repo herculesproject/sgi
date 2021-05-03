@@ -56,8 +56,8 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (proyectoEntidadConvocante: IProyectoEntidadConvocante, property: string) => {
       switch (property) {
-        case 'nombre': return proyectoEntidadConvocante.entidad.razonSocial;
-        case 'cif': return proyectoEntidadConvocante.entidad.numeroDocumento;
+        case 'nombre': return proyectoEntidadConvocante.entidad.nombre;
+        case 'cif': return proyectoEntidadConvocante.entidad.numeroIdentificacion;
         case 'plan': return this.proyectoEntidadConvocantePlanPipe.transform(proyectoEntidadConvocante);
         case 'programaConvocatoria': return proyectoEntidadConvocante.programaConvocatoria?.nombre;
         case 'programa': return proyectoEntidadConvocante.programa?.nombre;

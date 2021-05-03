@@ -84,7 +84,7 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
     this.dataSource.sortingDataAccessor = (wrapper, property) => {
       switch (property) {
         case 'empresa':
-          return wrapper.value.empresa.razonSocial;
+          return wrapper.value.empresa.nombre;
         case 'rolSocio':
           return wrapper.value.rolSocio.nombre;
         default:

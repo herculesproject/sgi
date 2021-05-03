@@ -1,10 +1,10 @@
-import { IEmpresaEconomica } from '../sgp/empresa-economica';
+import { IEmpresa } from '../sgemp/empresa';
 
 export interface IProyectoEntidadGestora {
   /** Id */
   id: number;
   /** Id de Proyecto */
   proyectoId: number;
-  /** entidadRef */
-  empresaEconomica: IEmpresaEconomica;
+  /** Empresa */
+  empresa: IEmpresa;
 }

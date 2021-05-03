@@ -193,9 +193,9 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'csp.proyecto-socio' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-              <sgi-select-empresa-economica
-                placeholder="{{'csp.proyecto-socio' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
-                formControlName="socioColaborador"></sgi-select-empresa-economica>
+              <sgi-select-empresa placeholder="{{'csp.proyecto-socio' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
+                formControlName="socioColaborador">
+              </sgi-select-empresa>
             </mat-form-field>
           </div>
         </div>
@@ -218,9 +218,9 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'csp.proyecto-entidad-convocante.programa' | translate}}</mat-label>
-              <sgi-select-empresa-economica placeholder="{{'csp.proyecto-entidad-convocante.programa' | translate}}"
+              <sgi-select-empresa placeholder="{{'csp.proyecto-entidad-convocante.programa' | translate}}"
                 formControlName="entidadConvocante">
-              </sgi-select-empresa-economica>
+              </sgi-select-empresa>
             </mat-form-field>
           </div>
           <!-- Plan de investigación -->
@@ -248,8 +248,9 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'csp.proyecto-entidad-financiadora' | translate}}</mat-label>
-              <sgi-select-empresa-economica placeholder="{{'csp.proyecto-entidad-financiadora' | translate}}"
-                formControlName="entidadFinanciadora"></sgi-select-empresa-economica>
+              <sgi-select-empresa placeholder="{{'csp.proyecto-entidad-financiadora' | translate}}"
+                formControlName="entidadFinanciadora">
+              </sgi-select-empresa>
             </mat-form-field>
           </div>
 
