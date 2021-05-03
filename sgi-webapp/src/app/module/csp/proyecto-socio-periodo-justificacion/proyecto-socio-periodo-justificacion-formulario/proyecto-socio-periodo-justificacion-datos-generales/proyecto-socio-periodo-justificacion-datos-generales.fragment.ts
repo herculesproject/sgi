@@ -42,14 +42,10 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
           disabled: true
         }),
         fechaInicio: new FormControl(null, [
-          Validators.required,
-          DateValidator.minDate(this.proyectoSocio?.fechaInicio),
-          DateValidator.maxDate(this.proyectoSocio?.fechaFin)
+          Validators.required
         ]),
         fechaFin: new FormControl(null, [
-          Validators.required,
-          DateValidator.minDate(this.proyectoSocio?.fechaInicio),
-          DateValidator.maxDate(this.proyectoSocio?.fechaFin)
+          Validators.required
         ]),
         fechaInicioPresentacion: new FormControl(null),
         fechaFinPresentacion: new FormControl(null),
@@ -67,6 +63,14 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
         ]
       }
     );
+
+    if (this.proyectoSocio?.fechaInicio) {
+      form.controls.fechaInicio.setValidators([Validators.required, DateValidator.minDate(this.proyectoSocio?.fechaInicio),
+      DateValidator.maxDate(this.proyectoSocio?.fechaFin)]);
+      form.controls.fechaFin.setValidators([Validators.required, DateValidator.minDate(this.proyectoSocio?.fechaInicio),
+      DateValidator.maxDate(this.proyectoSocio?.fechaFin)]);
+    }
+
     return form;
   }
 
