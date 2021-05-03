@@ -2,9 +2,6 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.Period;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
