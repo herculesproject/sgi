@@ -65,8 +65,6 @@ public class RolProyectoIT extends BaseIT {
     Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
         .isEqualTo(rolProyecto.getResponsableEconomico());
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(rolProyecto.getEquipo());
-    Assertions.assertThat(responseData.getColectivoRef()).as("getColectivoRef()")
-        .isEqualTo(rolProyecto.getColectivoRef());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
 
   }
@@ -96,8 +94,6 @@ public class RolProyectoIT extends BaseIT {
     Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
         .isEqualTo(rolProyecto.getResponsableEconomico());
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(rolProyecto.getEquipo());
-    Assertions.assertThat(responseData.getColectivoRef()).as("getColectivoRef()")
-        .isEqualTo(rolProyecto.getColectivoRef());
   }
 
   @Sql
@@ -188,7 +184,6 @@ public class RolProyectoIT extends BaseIT {
     Assertions.assertThat(responseData.getResponsableEconomico()).as("getResponsableEconomico()")
         .isEqualTo(Boolean.FALSE);
     Assertions.assertThat(responseData.getEquipo()).as("getEquipo()").isEqualTo(RolProyecto.Equipo.INVESTIGACION);
-    Assertions.assertThat(responseData.getColectivoRef()).as("getColectivoRef()").isEqualTo("PDI");
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -289,7 +284,6 @@ public class RolProyectoIT extends BaseIT {
         .rolPrincipal(Boolean.FALSE)
         .responsableEconomico(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
-        .colectivoRef("PDI")
         .activo(Boolean.TRUE)
         .build();
     // @formatter:on

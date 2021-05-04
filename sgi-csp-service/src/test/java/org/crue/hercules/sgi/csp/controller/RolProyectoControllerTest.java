@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.service.RolProyectoColectivoService;
 import org.crue.hercules.sgi.csp.service.RolProyectoService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,8 @@ public class RolProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private RolProyectoService service;
+  @MockBean
+  private RolProyectoColectivoService rolProyectoColectivoservice;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -78,7 +81,6 @@ public class RolProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("rolPrincipal").value(rolProyecto.getRolPrincipal()))
         .andExpect(MockMvcResultMatchers.jsonPath("responsableEconomico").value(rolProyecto.getResponsableEconomico()))
         .andExpect(MockMvcResultMatchers.jsonPath("equipo").value(rolProyecto.getEquipo().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colectivoRef").value(rolProyecto.getColectivoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
@@ -132,7 +134,6 @@ public class RolProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("rolPrincipal").value(rolProyecto.getRolPrincipal()))
         .andExpect(MockMvcResultMatchers.jsonPath("responsableEconomico").value(rolProyecto.getResponsableEconomico()))
         .andExpect(MockMvcResultMatchers.jsonPath("equipo").value(rolProyecto.getEquipo().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colectivoRef").value(rolProyecto.getColectivoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(rolProyectoExistente.getActivo()));
   }
 
@@ -480,7 +481,6 @@ public class RolProyectoControllerTest extends BaseControllerTest {
         .rolPrincipal(Boolean.FALSE)
         .responsableEconomico(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
-        .colectivoRef("PDI")
         .activo(Boolean.TRUE)
         .build();
     // @formatter:on

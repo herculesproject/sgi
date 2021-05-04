@@ -1,8 +1,12 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoColectivo;
+import org.crue.hercules.sgi.csp.service.RolProyectoColectivoService;
 import org.crue.hercules.sgi.csp.service.RolProyectoService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -33,13 +37,19 @@ public class RolProyectoController {
   /** RolProyectoService service */
   private final RolProyectoService service;
 
+  /** RolProyectoColectivoService serviceRolProyectoColectivo */
+  RolProyectoColectivoService serviceRolProyectoColectivo;
+
   /**
    * Instancia un nuevo RolProyectoController.
    * 
-   * @param rolProyectoService {@link RolProyectoService}.
+   * @param rolProyectoService          {@link RolProyectoService}.
+   * @param serviceRolProyectoColectivo {@link RolProyectoColectivoService}
    */
-  public RolProyectoController(RolProyectoService rolProyectoService) {
+  public RolProyectoController(RolProyectoService rolProyectoService,
+      RolProyectoColectivoService serviceRolProyectoColectivo) {
     this.service = rolProyectoService;
+    this.serviceRolProyectoColectivo = serviceRolProyectoColectivo;
   }
 
   /**
@@ -168,7 +178,7 @@ public class RolProyectoController {
    * @return el listado de entidades {@link RolProyecto} paginadas y filtradas.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RPRO-V')")
   ResponseEntity<Page<RolProyecto>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query,Pageable paging) - start");
@@ -180,6 +190,26 @@ public class RolProyectoController {
     }
     log.debug("findAllTodos(String query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada {@link RolProyectoColectivo}.
+   * 
+   * @param id identificador {@link RolProyecto}.
+   * @return el listado de entidades {@link RolProyectoColectivo}.
+   */
+  @GetMapping("/{id}/colectivos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RPRO-V')")
+  ResponseEntity<List<String>> findAllColectivos(@PathVariable Long id) {
+    log.debug("findAllColectivos(Long id) - start");
+    List<String> listadoColectivos = serviceRolProyectoColectivo.findAllColectivos(id);
+
+    if (listadoColectivos.isEmpty()) {
+      log.debug("findAllColectivos(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllColectivos(Long id) - end");
+    return new ResponseEntity<>(listadoColectivos, HttpStatus.OK);
   }
 
 }

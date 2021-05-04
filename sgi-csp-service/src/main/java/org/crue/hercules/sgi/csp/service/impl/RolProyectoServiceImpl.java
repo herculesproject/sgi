@@ -74,7 +74,6 @@ public class RolProyectoServiceImpl implements RolProyectoService {
       rolProyectoExistente.setRolPrincipal(rolProyecto.getRolPrincipal());
       rolProyectoExistente.setResponsableEconomico(rolProyecto.getResponsableEconomico());
       rolProyectoExistente.setEquipo(rolProyecto.getEquipo());
-      rolProyectoExistente.setColectivoRef(rolProyecto.getColectivoRef());
 
       RolProyecto returnValue = repository.save(rolProyectoExistente);
 

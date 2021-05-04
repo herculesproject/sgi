@@ -58,7 +58,6 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
         .rolPrincipal(Boolean.FALSE)
         .responsableEconomico(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
-        .colectivoRef("PDI")
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(rolProyecto);
