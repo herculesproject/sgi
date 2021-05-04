@@ -47,7 +47,7 @@ export class MiembroEquipoSolicitudModalComponent extends
 
   saveDisabled = false;
   rolesProyecto: IRolProyecto[] = [];
-  colectivoIdRolParticipacion: string;
+  colectivosIdRolParticipacion: string[];
 
   msgParamRolParticipacionEntity = {};
   msgParamMiembroEntity = {};
@@ -77,7 +77,8 @@ export class MiembroEquipoSolicitudModalComponent extends
     super.ngOnInit();
     this.loadRolProyectos();
     this.setupI18N();
-    this.colectivoIdRolParticipacion = this.data.entidad?.rolProyecto?.colectivoRef;
+
+    this.getColectivosRolProyecto(this.data.entidad?.rolProyecto?.id);
 
     this.subscriptions.push(
       this.formGroup.get('rolProyecto').valueChanges
@@ -130,6 +131,17 @@ export class MiembroEquipoSolicitudModalComponent extends
           );
         })
       ).subscribe((value) => this.title = value);
+    }
+  }
+
+  private getColectivosRolProyecto(rolProyectoId: number): void {
+    this.colectivosIdRolParticipacion = [];
+    if (rolProyectoId) {
+      this.rolProyectoService.findAllColectivos(rolProyectoId).subscribe(
+        (res) => {
+          this.colectivosIdRolParticipacion = res.items;
+        }
+      );
     }
   }
 
@@ -191,19 +203,17 @@ export class MiembroEquipoSolicitudModalComponent extends
   }
 
   private checkSelectedRol(rolProyecto: IRolProyecto): void {
-    this.colectivoIdRolParticipacion = rolProyecto?.colectivoRef;
-
     if (rolProyecto && this.formGroup.controls.miembro.value) {
-      this.saveDisabled = true;
-      this.subscriptions.push(
-        this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, rolProyecto.colectivoRef)
-          .subscribe((result) => {
-            if (!result) {
-              this.formGroup.controls.miembro.setValue(undefined);
-            }
-            this.saveDisabled = false;
-          })
-      );
+      this.subscriptions.push(this.rolProyectoService.findAllColectivos(rolProyecto?.id).pipe(
+        switchMap((response) => {
+          this.colectivosIdRolParticipacion = response.items;
+          return this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, this.colectivosIdRolParticipacion);
+        })
+      ).subscribe(result => {
+        if (!result) {
+          this.formGroup.controls.miembro.setValue(undefined);
+        }
+      }));
     } else if (rolProyecto && this.formGroup.controls.miembro.disabled) {
       this.formGroup.controls.miembro.enable();
     } else if (!rolProyecto) {

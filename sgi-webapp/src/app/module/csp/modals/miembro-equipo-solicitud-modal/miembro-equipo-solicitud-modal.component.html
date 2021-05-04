@@ -34,7 +34,7 @@
           {{'csp.miembro-equipo-solicitud.miembro' | translate}}
         </mat-label>
         <sgi-select-persona placeholder="{{'csp.miembro-equipo-solicitud.miembro' | translate}}"
-          formControlName="miembro" [colectivos]="colectivoIdRolParticipacion" required>
+          formControlName="miembro" [colectivos]="colectivosIdRolParticipacion" required>
         </sgi-select-persona>
         <mat-error *ngIf="formGroup.controls.miembro.errors?.required">
           {{'error.required.entity' | translate:msgParamMiembroEntity}}

@@ -18,7 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { merge } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -54,7 +54,7 @@ export class MiembroEquipoProyectoModalComponent extends
 
   saveDisabled = false;
   rolesProyecto: IRolProyecto[] = [];
-  colectivoIdRolParticipacion: string;
+  colectivosIdRolParticipacion: string[];
 
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
@@ -87,7 +87,8 @@ export class MiembroEquipoProyectoModalComponent extends
     this.setupI18N();
 
     this.textSaveOrUpdate = this.data?.entidad?.rolProyecto ? MSG_ACEPTAR : MSG_ANADIR;
-    this.colectivoIdRolParticipacion = this.data.entidad?.rolProyecto?.colectivoRef;
+
+    this.getColectivosRolProyecto(this.data.entidad?.rolProyecto?.id);
 
     this.subscriptions.push(
       this.formGroup.get('rolParticipacion').valueChanges
@@ -105,6 +106,16 @@ export class MiembroEquipoProyectoModalComponent extends
     );
   }
 
+  private getColectivosRolProyecto(rolProyectoId: number): void {
+    this.colectivosIdRolParticipacion = [];
+    if (rolProyectoId) {
+      this.rolProyectoService.findAllColectivos(rolProyectoId).subscribe(
+        (res) => {
+          this.colectivosIdRolParticipacion = res.items;
+        }
+      );
+    }
+  }
 
   private setupI18N(): void {
     this.translate.get(
@@ -220,19 +231,17 @@ export class MiembroEquipoProyectoModalComponent extends
   }
 
   private checkSelectedRol(rolProyecto: IRolProyecto): void {
-    this.colectivoIdRolParticipacion = rolProyecto?.colectivoRef;
-
     if (rolProyecto && this.formGroup.controls.miembro.value) {
-      this.saveDisabled = true;
-      this.subscriptions.push(
-        this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, rolProyecto.colectivoRef)
-          .subscribe((result) => {
-            if (!result) {
-              this.formGroup.controls.miembro.setValue(undefined);
-            }
-            this.saveDisabled = false;
-          })
-      );
+      this.subscriptions.push(this.rolProyectoService.findAllColectivos(rolProyecto?.id).pipe(
+        switchMap((response) => {
+          this.colectivosIdRolParticipacion = response.items;
+          return this.personaService.isPersonaInColectivo(this.formGroup.controls.miembro.value.id, this.colectivosIdRolParticipacion);
+        })
+      ).subscribe(result => {
+        if (!result) {
+          this.formGroup.controls.miembro.setValue(undefined);
+        }
+      }));
     } else if (rolProyecto && this.formGroup.controls.miembro.disabled) {
       this.formGroup.controls.miembro.enable();
     } else if (!rolProyecto) {

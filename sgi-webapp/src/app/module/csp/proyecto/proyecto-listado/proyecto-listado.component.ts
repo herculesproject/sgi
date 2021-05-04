@@ -7,6 +7,7 @@ import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -24,7 +25,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -510,22 +511,44 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    * y activa ambos campos en el buscador.
    */
   private loadColectivos() {
-    this.subscriptions.push(
-      this.rolProyectoService.findAll().subscribe(
-        (res) => {
-          this.colectivosMiembroEquipo = res.items.map(rol => rol.colectivoRef);
-          this.formGroup.controls.miembroEquipo.enable();
+    const queryOptions: SgiRestFindOptions = {};
+    queryOptions.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'false')
+      .and('responsableEconomico', SgiRestFilterOperator.EQUALS, 'false');
+    this.subscriptions.push(this.rolProyectoService.findAll(queryOptions).subscribe(
+      (response) => {
+        response.items.forEach((rolProyecto: IRolProyecto) => {
+          this.rolProyectoService.findAllColectivos(rolProyecto.id).subscribe(
+            (res) => {
+              this.colectivosMiembroEquipo = res.items;
+              this.formGroup.controls.miembroEquipo.enable();
+            }
+          );
+        });
+      },
+      (error) => {
+        this.logger.error(error);
+        this.snackBarService.showError(MSG_ERROR);
+      }
+    ));
 
-          this.colectivosResponsableProyecto = res.items
-            .filter(rol => rol.rolPrincipal || rol.responsableEconomico)
-            .map(rol => rol.colectivoRef);
-          this.formGroup.controls.responsableProyecto.enable();
-        },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
-        }
-      )
+    const queryOptionsResponsable: SgiRestFindOptions = {};
+    queryOptionsResponsable.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'true')
+      .or('responsableEconomico', SgiRestFilterOperator.EQUALS, 'true');
+    this.rolProyectoService.findAll(queryOptionsResponsable).subscribe(
+      (response) => {
+        response.items.forEach((rolProyecto: IRolProyecto) => {
+          this.rolProyectoService.findAllColectivos(rolProyecto.id).subscribe(
+            (res) => {
+              this.colectivosResponsableProyecto = res.items;
+              this.formGroup.controls.responsableProyecto.enable();
+            }
+          );
+        });
+      },
+      (error) => {
+        this.logger.error(error);
+        this.snackBarService.showError(MSG_ERROR);
+      }
     );
   }
 

@@ -38,13 +38,13 @@ export class PersonaService extends SgiRestService<string, IPersona>{
    * Comprueba si la persona pertenece al colectivo
    *
    * @param personaId identificador de la persona
-   * @param colectivoId identificador del colectivo
+   * @param colectivosId identificadores del colectivo
    * @returns si la persona pertenece al colectivo o no
    */
-  isPersonaInColectivo(personaId: string, colectivoId: string): Observable<boolean> {
+  isPersonaInColectivo(personaId: string, colectivosId: string[]): Observable<boolean> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, personaId)
-        .and('colectivoId', SgiRestFilterOperator.EQUALS, colectivoId)
+        .and('colectivoId', SgiRestFilterOperator.IN, colectivosId)
     };
 
     return this.findAll(options).pipe(
