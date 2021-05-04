@@ -65,6 +65,8 @@ export class ConvocatoriaReunionListadoComponent
   private comitesSubscription: Subscription;
   private tiposConvocatoriaReunionSubscription: Subscription;
 
+  mapEliminable: Map<number, boolean> = new Map();
+
   constructor(
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly dialogService: DialogService,
@@ -93,7 +95,17 @@ export class ConvocatoriaReunionListadoComponent
 
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaReunion>> {
-    const observable$ = this.convocatoriaReunionService.findAll(this.getFindOptions());
+    const observable$ = this.convocatoriaReunionService.findAll(this.getFindOptions()).pipe(
+      map(response => {
+        const convocatorias = response.items;
+        convocatorias.forEach(convocatoriaReunion => {
+          this.suscripciones.push(this.convocatoriaReunionService.eliminable(convocatoriaReunion.id).subscribe((value) => {
+            this.mapEliminable.set(convocatoriaReunion.id, value);
+          }));
+        });
+        return response as SgiRestListResult<IConvocatoriaReunion>;
+      })
+    );
     return observable$;
   }
   protected initColumns(): void {

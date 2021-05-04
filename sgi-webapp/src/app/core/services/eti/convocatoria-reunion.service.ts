@@ -89,4 +89,15 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
     );
   }
 
+  /**
+   * Comprueba si cumple los requisitos para poder eliminar la convocatoria de reunión
+   *
+   * @param id Id de la convocatoria de reunión
+   */
+  eliminable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/eliminable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
 }

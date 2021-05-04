@@ -137,7 +137,7 @@
           matTooltip="{{'btn.edit' | translate}}">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <span *ngIf="convocatoriaReunion.activo ? true : false">
+        <span *ngIf="mapEliminable.get(convocatoriaReunion.id)">
           <button color="warn" mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-B'"
             matTooltip="{{'btn.delete' | translate}}" (click)="borrar(convocatoriaReunion.id, $event)">
             <mat-icon>highlight_off</mat-icon>
