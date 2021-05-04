@@ -110,4 +110,12 @@ public interface ConvocatoriaReunionService {
    */
   Boolean eliminable(Long id);
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link ConvocatoriaReunion} puede ser modificada.
+   *
+   * @param id Id de la {@link ConvocatoriaReunion}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  Boolean modificable(Long id);
 }

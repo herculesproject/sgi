@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.repository;
 
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.custom.CustomActaRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -22,4 +23,15 @@ public interface ActaRepository
    * @return si hay acta asociado a la convocatoria de reunión
    */
   boolean existsByConvocatoriaReunionId(Long convocatoriaReunionId);
+
+  /**
+   * Indica si existe o no el {@link Acta} asignada a la
+   * {@link ConvocatoriaReunion} en un determinado {@link TipoEstadoActa}
+   * 
+   * @param convocatoriaReunionId identificador de la {@link ConvocatoriaReunion}
+   * @param tipoEstadoActaId      identificador del {@link TipoEstadoActa}
+   * @return si existe true y si no false
+   */
+  boolean existsByConvocatoriaReunionIdAndEstadoActualId(Long convocatoriaReunionId, Long tipoEstadoActaId);
+
 }

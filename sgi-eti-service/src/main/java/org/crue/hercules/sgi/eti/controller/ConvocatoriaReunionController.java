@@ -311,4 +311,20 @@ public class ConvocatoriaReunionController {
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link ConvocatoriaReunion} puede ser modificada.
+   * 
+   * @param id Id del {@link ConvocatoriaReunion}.
+   * @return HTTP-200 Si se permite modificación / HTTP-204 Si no se permite
+   *         modificación
+   */
+  @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-V', 'ETI-CNV-E')")
+  ResponseEntity<ConvocatoriaReunion> modificable(@PathVariable Long id) {
+    log.debug("modificable(Long id) - start");
+    Boolean returnValue = convocatoriaReunionService.modificable(id);
+    log.debug("modificable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 }

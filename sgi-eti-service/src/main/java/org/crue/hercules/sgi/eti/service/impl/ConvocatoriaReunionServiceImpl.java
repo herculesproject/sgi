@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ConvocatoriaReunionSpecifications;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -238,6 +239,19 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
     return !actaRepository.existsByConvocatoriaReunionId(id) && !evaluacionRepository.existsByConvocatoriaReunionId(id)
         ? true
         : false;
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link ConvocatoriaReunion} puede ser modificada.
+   *
+   * @param id Id de la {@link ConvocatoriaReunion}.
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  @Override
+  public Boolean modificable(Long id) {
+    log.debug("modificable(Long id) - start - end");
+    return !actaRepository.existsByConvocatoriaReunionIdAndEstadoActualId(id, Constantes.TIPO_ESTADO_ACTA_FINALIZADA);
   }
 
 }
