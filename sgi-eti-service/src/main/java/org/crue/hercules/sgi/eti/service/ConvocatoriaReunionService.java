@@ -101,4 +101,13 @@ public interface ConvocatoriaReunionService {
 
   List<ConvocatoriaReunion> findConvocatoriasSinActa();
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link ConvocatoriaReunion} puede ser eliminada.
+   *
+   * @param id Id del {@link ConvocatoriaReunion}.
+   * @return true si puede ser eliminada / false si no puede ser eliminada
+   */
+  Boolean eliminable(Long id);
+
 }

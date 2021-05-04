@@ -14,7 +14,9 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
+import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConvocatoriaReunionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +36,16 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaReunionRepository repository;
+  @Mock
+  private ActaRepository actaRepository;
+  @Mock
+  private EvaluacionRepository evaluacionRepository;
 
   private ConvocatoriaReunionService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaReunionServiceImpl(repository);
+    service = new ConvocatoriaReunionServiceImpl(repository, actaRepository, evaluacionRepository);
   }
 
   @Test

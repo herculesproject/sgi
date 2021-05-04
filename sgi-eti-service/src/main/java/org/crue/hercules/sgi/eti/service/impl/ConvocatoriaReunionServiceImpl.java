@@ -8,7 +8,9 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
+import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ConvocatoriaReunionSpecifications;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -30,9 +32,14 @@ import lombok.extern.slf4j.Slf4j;
 public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionService {
 
   private final ConvocatoriaReunionRepository repository;
+  private final ActaRepository actaRepository;
+  private final EvaluacionRepository evaluacionRepository;
 
-  public ConvocatoriaReunionServiceImpl(ConvocatoriaReunionRepository repository) {
+  public ConvocatoriaReunionServiceImpl(ConvocatoriaReunionRepository repository, ActaRepository actaRepository,
+      EvaluacionRepository evaluacionRepository) {
     this.repository = repository;
+    this.actaRepository = actaRepository;
+    this.evaluacionRepository = evaluacionRepository;
   }
 
   /**
@@ -217,6 +224,20 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
 
     return convocatoriaReunion;
 
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link ConvocatoriaReunion} puede ser eliminada.
+   *
+   * @param id Id del {@link ConvocatoriaReunion}.
+   * @return true si puede ser eliminada / false si no puede ser eliminada
+   */
+  @Override
+  public Boolean eliminable(Long id) {
+    return !actaRepository.existsByConvocatoriaReunionId(id) && !evaluacionRepository.existsByConvocatoriaReunionId(id)
+        ? true
+        : false;
   }
 
 }

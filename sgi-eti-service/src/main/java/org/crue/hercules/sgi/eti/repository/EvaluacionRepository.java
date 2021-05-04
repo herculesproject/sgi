@@ -59,4 +59,13 @@ public interface EvaluacionRepository
    * @return el objeto {@link Evaluacion}
    */
   Evaluacion findByMemoriaIdAndVersion(Long idMemoria, Integer version);
+
+  /**
+   * Comprueba si existen {@link Evaluacion} asociadas a una
+   * {@link ConvocatoriaReunion}
+   *
+   * @param convocatoriaReunionId Id de {@link ConvocatoriaReunion}.
+   * @return si hay acta asociado a la convocatoria de reunión
+   */
+  boolean existsByConvocatoriaReunionId(Long convocatoriaReunionId);
 }

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -292,6 +293,22 @@ public class ConvocatoriaReunionController {
     }
     log.debug("findConvocatoriasSinActa() - end");
     return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link ConvocatoriaReunion} puede ser eliminada.
+   * 
+   * @param id Id del {@link ConvocatoriaReunion}.
+   * @return HTTP-200 Si se permite eliminar / HTTP-204 Si no se permite eliminar
+   */
+  @RequestMapping(path = "/{id}/eliminable", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-CNV-V')")
+  ResponseEntity<ConvocatoriaReunion> eliminable(@PathVariable Long id) {
+    log.debug("eliminable(Long id) - start");
+    Boolean returnValue = convocatoriaReunionService.eliminable(id);
+    log.debug("eliminable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }
