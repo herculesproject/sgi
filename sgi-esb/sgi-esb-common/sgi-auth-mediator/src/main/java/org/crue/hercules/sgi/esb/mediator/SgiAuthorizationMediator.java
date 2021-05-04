@@ -176,7 +176,8 @@ public class SgiAuthorizationMediator extends AbstractMediator implements Manage
       tokenVerifier.publicKey(publicKey)
           .withChecks(// @formatter:off
             TokenVerifier.IS_ACTIVE, 
-            new RealmUrlCheck(getRealmUrl()),
+            // Elimina validacion del token issuer porque la url varia en funcion del punto de acceso
+            // new RealmUrlCheck(getRealmUrl()), 
             new TokenTypeCheck(TokenUtil.TOKEN_TYPE_BEARER),
             TokenVerifier.SUBJECT_EXISTS_CHECK,
             new HasAnyAuthorityCheck(requiredAuthorities)
