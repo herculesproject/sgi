@@ -27,7 +27,6 @@ const CONVOCATORIA_ENLACE_KEY = marker('csp.convocatoria-enlace');
 export class ConvocatoriaEnlaceComponent extends FragmentComponent implements OnInit, OnDestroy {
   formPart: ConvocatoriaEnlaceFragment;
   private subscriptions: Subscription[] = [];
-  disableAddEnlace = true;
 
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['url', 'descripcion', 'tipoEnlace', 'acciones'];
@@ -44,7 +43,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
   }
 
   constructor(
-    private actionService: ConvocatoriaActionService,
+    public actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
@@ -70,7 +69,6 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
             return wrapper[property];
         }
       };
-    this.disableAddEnlace = !Boolean(this.actionService.modeloEjecucionId);
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.enlace$.subscribe(elements => {
       this.dataSource.data = elements;

@@ -15,12 +15,11 @@ import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
-import { Observable, of, Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, iif, of, Subject, Subscription } from 'rxjs';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaDocumentosFragment, NodeDocumento } from './convocatoria-documentos.fragment';
 
@@ -68,10 +67,15 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
 
   uploading = false;
 
-  tiposDocumento: ITipoDocumento[] = [];
-
-  tipoFases$: Observable<ITipoFase[]> = of([]);
+  tipoFases$: Subject<ITipoFase[]> = new BehaviorSubject<ITipoFase[]>([]);
+  tiposDocumento$: Subject<ITipoDocumento[]> = new BehaviorSubject<ITipoDocumento[]>([]);
   private tipoDocumentosFase = new Map<number, ITipoDocumento[]>();
+
+  msgParamEntity = {};
+  msgParamNombreEntity = {};
+  msgParamFicheroEntity = {};
+  msgParamPublicoEntity = {};
+  textoDelete: string;
 
   private getLevel = (node: NodeDocumento) => node.level;
   private isExpandable = (node: NodeDocumento) => node.childs.length > 0;
@@ -82,12 +86,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
 
   compareFase = (option: ITipoFase, value: ITipoFase) => option?.id === value?.id;
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
-
-  msgParamEntity = {};
-  msgParamNombreEntity = {};
-  msgParamFicheroEntity = {};
-  msgParamPublicoEntity = {};
-  textoDelete: string;
 
   constructor(
     private dialogService: DialogService,
@@ -125,43 +123,55 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     this.group.load(new FormGroup({
       nombre: new FormControl('', Validators.required),
       fichero: new FormControl(null, Validators.required),
-      fase: new FormControl(null, IsEntityValidator.isValid),
-      tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
+      fase: new FormControl(null),
+      tipoDocumento: new FormControl(null),
       publico: new FormControl(null, Validators.required),
       observaciones: new FormControl('')
     }));
     this.group.initialize();
-    const id = this.actionService.modeloEjecucionId;
+
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('convocatoria', SgiRestFilterOperator.EQUALS, 'true')
     };
 
-    this.subscriptions.push(
-      this.modeloEjecucionService.findModeloTipoDocumento(id).pipe(
-        tap(() => {
-          this.tipoFases$ = this.modeloEjecucionService.findModeloTipoFaseModeloEjecucion(id, options).pipe(
-            map(modeloTipoFases => modeloTipoFases.items.map(modeloTipoFase => modeloTipoFase.tipoFase))
-          );
-        })
-      ).subscribe(
-        (tipos) => {
-          tipos.items.forEach((tipo) => {
-            const idTipoFase = tipo.modeloTipoFase ? tipo.modeloTipoFase.tipoFase.id : null;
-            let tiposDocumentos = this.tipoDocumentosFase.get(idTipoFase);
-            if (!tiposDocumentos) {
-              tiposDocumentos = [];
-              this.tipoDocumentosFase.set(idTipoFase, tiposDocumentos);
-            }
-            tiposDocumentos.push(tipo.tipoDocumento);
-          });
-        }
-      )
-    );
+    this.subscriptions.push(this.actionService.hasModeloEjecucion$.pipe(
+      mergeMap(value => iif(
+        () => !!value,
+        this.modeloEjecucionService.findModeloTipoFaseModeloEjecucion(this.actionService.modeloEjecucionId, options).pipe(
+          map(response => response.items.map(modeloTipoFase => modeloTipoFase.tipoFase)),
+          map(items => {
+            this.tipoFases$.next(items);
+            return value;
+          })
+        ),
+        of(value)
+      )),
+      mergeMap(value => iif(
+        () => !!value,
+        this.modeloEjecucionService.findModeloTipoDocumento(this.actionService.modeloEjecucionId).pipe(
+          map(response => response.items),
+          map(tipos => {
+            tipos.forEach(tipo => {
+              const idTipoFase = tipo.modeloTipoFase ? tipo.modeloTipoFase.tipoFase.id : null;
+              let tiposDocumentos = this.tipoDocumentosFase.get(idTipoFase);
+              if (!tiposDocumentos) {
+                tiposDocumentos = [];
+                this.tipoDocumentosFase.set(idTipoFase, tiposDocumentos);
+              }
+              tiposDocumentos.push(tipo.tipoDocumento);
+            });
+            return value;
+          })
+        ),
+        of(value)
+      ))
+    ).subscribe());
+
     this.subscriptions.push(this.formGroup.controls.fase.valueChanges.subscribe((value: ITipoFase) => {
       if (this.viewMode === VIEW_MODE.EDIT || this.viewMode === VIEW_MODE.NEW) {
         this.formGroup.controls.tipoDocumento.reset();
       }
-      this.tiposDocumento = this.tipoDocumentosFase.get(value ? value.id : null);
+      this.tiposDocumento$.next(this.tipoDocumentosFase.get(value ? value.id : null));
     }));
     this.switchToNone();
   }
@@ -199,8 +209,6 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
-
   }
 
   ngOnDestroy() {

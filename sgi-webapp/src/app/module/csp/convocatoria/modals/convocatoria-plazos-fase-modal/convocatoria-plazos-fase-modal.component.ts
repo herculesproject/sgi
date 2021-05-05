@@ -5,22 +5,16 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('error.load');
-const MSG_ERROR_TIPOS = marker('error.csp.convocatoria-tipo-fase');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const CONVOCATORIA_FASE_KEY = marker('csp.convocatoria-fase');
@@ -36,6 +30,7 @@ export interface ConvocatoriaPlazosFaseModalComponentData {
   idModeloEjecucion: number;
   readonly: boolean;
 }
+
 @Component({
   templateUrl: './convocatoria-plazos-fase-modal.component.html',
   styleUrls: ['./convocatoria-plazos-fase-modal.component.scss']
@@ -44,9 +39,8 @@ export class ConvocatoriaPlazosFaseModalComponent extends
   BaseModalComponent<ConvocatoriaPlazosFaseModalComponentData, ConvocatoriaPlazosFaseModalComponent> implements OnInit, OnDestroy {
   fxLayoutProperties: FxLayoutProperties;
   fxLayoutProperties2: FxLayoutProperties;
-  modeloTipoFases$: Observable<IModeloTipoFase[]>;
+  tiposFases$: Observable<ITipoFase[]>;
 
-  private modeloTipoFasesFiltered: IModeloTipoFase[];
 
   textSaveOrUpdate: string;
   title: string;
@@ -57,11 +51,10 @@ export class ConvocatoriaPlazosFaseModalComponent extends
   msgParamObservacionesEntity = {};
 
   constructor(
-    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaPlazosFaseModalComponentData,
     public matDialogRef: MatDialogRef<ConvocatoriaPlazosFaseModalComponent>,
-    private modeloEjecucionService: ModeloEjecucionService,
+    modeloEjecucionService: ModeloEjecucionService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
@@ -76,6 +69,10 @@ export class ConvocatoriaPlazosFaseModalComponent extends
     this.fxLayoutProperties2.gap = '20px';
     this.fxLayoutProperties2.layout = 'row';
     this.fxLayoutProperties2.xs = 'column';
+
+    this.tiposFases$ = modeloEjecucionService.findModeloTipoFaseModeloEjecucionConvocatoria(this.data.idModeloEjecucion).pipe(
+      map(response => response.items.map(modeloTipoFase => modeloTipoFase.tipoFase))
+    );
   }
 
   ngOnInit(): void {
@@ -85,7 +82,6 @@ export class ConvocatoriaPlazosFaseModalComponent extends
     const suscription = this.formGroup.controls.tipoFase.valueChanges.pipe(tap((value) => this.createValidatorDate(value))).subscribe();
     this.subscriptions.push(suscription);
 
-    this.loadTipoFases();
     this.setupI18N();
     this.textSaveOrUpdate = this.data.plazo.fechaInicio ? MSG_ACEPTAR : MSG_ANADIR;
   }
@@ -160,48 +156,6 @@ export class ConvocatoriaPlazosFaseModalComponent extends
     ]);
   }
 
-  loadTipoFases() {
-    this.subscriptions.push(
-      this.modeloEjecucionService.findModeloTipoFaseModeloEjecucionConvocatoria(this.data.idModeloEjecucion).subscribe(
-        (res: SgiRestListResult<IModeloTipoFase>) => {
-          this.modeloTipoFasesFiltered = res.items;
-          this.modeloTipoFases$ = this.formGroup.controls.tipoFase.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroTipoPlazosFase(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          if (this.data.idModeloEjecucion) {
-            this.snackBarService.showError(MSG_ERROR_INIT);
-          } else {
-            this.snackBarService.showError(MSG_ERROR_TIPOS);
-          }
-        })
-    );
-  }
-
-  /**
-   * Devuelve el nombre tipo de plazos fase
-   * @param tipoFase tipo de plazos fase
-   * @returns nombre de plazos fase
-   */
-  getTipoPlazosFase(tipoFase?: ITipoFase): string | undefined {
-    return typeof tipoFase === 'string' ? tipoFase : tipoFase?.nombre;
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio.
-   *
-   * @param value del input para autocompletar
-   */
-  filtroTipoPlazosFase(value: string): IModeloTipoFase[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.modeloTipoFasesFiltered.filter(modeloTipoFase =>
-      modeloTipoFase.tipoFase?.nombre?.toLowerCase().includes(filterValue));
-  }
-
   protected getDatosForm(): ConvocatoriaPlazosFaseModalComponentData {
     this.data.plazo.fechaInicio = this.formGroup.controls.fechaInicio.value;
     this.data.plazo.fechaFin = this.formGroup.controls.fechaFin.value;
@@ -212,10 +166,10 @@ export class ConvocatoriaPlazosFaseModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, [Validators.required]),
+      fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, Validators.required),
       fechaFin: new FormControl(this.data?.plazo?.fechaFin, Validators.required),
-      tipoFase: new FormControl(this.data?.plazo?.tipoFase, [Validators.required, new NullIdValidador().isValid()]),
-      observaciones: new FormControl(this.data?.plazo?.observaciones, [Validators.maxLength(250)])
+      tipoFase: new FormControl(this.data?.plazo?.tipoFase, Validators.required),
+      observaciones: new FormControl(this.data?.plazo?.observaciones, Validators.maxLength(250))
     });
 
     if (this.data.readonly) {

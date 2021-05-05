@@ -5,7 +5,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { CspModalsModule } from '../modals/csp-modals.module';
+import { CspSharedModule } from '../shared/csp-shared.module';
 import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
 import { ConvocatoriaDataResolver } from './convocatoria-data.resolver';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
@@ -69,7 +69,7 @@ import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convoc
     TranslateModule,
     FormsModule,
     SgiAuthModule,
-    CspModalsModule
+    CspSharedModule
   ],
   providers: [
     ConvocatoriaDataResolver

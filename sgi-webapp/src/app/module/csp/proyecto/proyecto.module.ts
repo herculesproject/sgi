@@ -5,7 +5,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { CspModalsModule } from '../modals/csp-modals.module';
+import { CspSharedModule } from '../shared/csp-shared.module';
 import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
 import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
 import { ProyectoHitosModalComponent } from './modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
@@ -66,7 +66,7 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule,
-    CspModalsModule
+    CspSharedModule
   ],
   providers: [
     ProyectoDataResolver,

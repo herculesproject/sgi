@@ -11,9 +11,8 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { requiredChecked } from '@core/validators/checkbox-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -49,6 +48,17 @@ export class ModeloEjecucionTipoFaseModalComponent extends
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoFase);
+
+    this.tipoFases$ = this.tipoFaseService.findAll().pipe(
+      map(response => {
+        if (!this.data.modeloTipoFase.tipoFase) {
+          return response.items.filter(tipoFase => {
+            return !this.data.tipoFases.some(currentTipo => currentTipo.id === tipoFase.id);
+          });
+        }
+        return response.items;
+      })
+    );
   }
 
   ngOnInit(): void {
@@ -57,12 +67,6 @@ export class ModeloEjecucionTipoFaseModalComponent extends
     this.setupI18N();
 
     if (!this.data.modeloTipoFase.tipoFase) {
-      this.tipoFases$ = this.tipoFaseService.findAll().pipe(
-        switchMap((result) => {
-          const list = this.filterExistingTipoFase(result);
-          return of(list);
-        })
-      );
       this.textSaveOrUpdate = MSG_ANADIR;
 
       this.translate.get(
@@ -77,9 +81,6 @@ export class ModeloEjecucionTipoFaseModalComponent extends
         })
       ).subscribe((value) => this.title = value);
     } else {
-      this.tipoFases$ = this.tipoFaseService.findAll().pipe(
-        switchMap((result) => of(result.items))
-      );
       this.textSaveOrUpdate = MSG_ACEPTAR;
 
       this.translate.get(
@@ -99,17 +100,6 @@ export class ModeloEjecucionTipoFaseModalComponent extends
       MODELO_EJECUCION_TIPO_FASE_TIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamTipoEntiy = { entity: value, ...MSG_PARAMS.GENDER.MALE });
-  }
-
-  /**
-   * Comprueba que no hay 2 valores en la lista
-   *
-   * @param result resultado
-   */
-  private filterExistingTipoFase(result: SgiRestListResult<ITipoFase>): ITipoFase[] {
-    return result.items.filter((tipoFase: ITipoFase) => {
-      return this.data.tipoFases.find((currentTipo) => currentTipo.id === tipoFase.id) ? false : true;
-    });
   }
 
   protected getDatosForm(): IModeloTipoFase {
@@ -134,9 +124,5 @@ export class ModeloEjecucionTipoFaseModalComponent extends
       }, [requiredChecked(1)]),
     });
     return formGroup;
-  }
-
-  equals(o1: ITipoFase, o2: ITipoFase): boolean {
-    return o1?.id === o2?.id;
   }
 }

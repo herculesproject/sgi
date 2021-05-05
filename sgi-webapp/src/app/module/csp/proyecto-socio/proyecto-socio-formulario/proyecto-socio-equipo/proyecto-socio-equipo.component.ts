@@ -12,9 +12,9 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from '../../../shared/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ProyectoSocioEquipoFragment } from './proyecto-socio-equipo.fragment';
-import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from '../../../modals/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_EQUIPO_SOCIO_MIEMBRO_KEY = marker('csp.proyecto-socio-equipo.miembro');

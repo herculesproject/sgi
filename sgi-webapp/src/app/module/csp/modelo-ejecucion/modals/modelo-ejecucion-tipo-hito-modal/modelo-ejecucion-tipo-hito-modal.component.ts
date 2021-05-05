@@ -11,9 +11,8 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { requiredChecked } from '@core/validators/checkbox-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 export interface ModeloEjecucionTipoHitoModalData {
   modeloTipoHito: IModeloTipoHito;
@@ -50,25 +49,25 @@ export class ModeloEjecucionTipoHitoModalComponent extends
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoHito);
+
+    this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
+      map(response => {
+        if (!this.data.modeloTipoHito.tipoHito) {
+          return response.items.filter(tipoHito => {
+            return !this.data.tipoHitos.some(currentTipo => currentTipo.id === tipoHito.id);
+          });
+        }
+        return response.items;
+      })
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
     if (!this.data.modeloTipoHito.tipoHito) {
-      this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
-        switchMap((result) => {
-          const list = this.filterExistingTipoHito(result);
-          return of(list);
-        })
-      );
       this.textSaveOrUpdate = MSG_ANADIR;
     } else {
-      this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
-        switchMap((result) => {
-          return of(result.items);
-        })
-      );
       this.textSaveOrUpdate = MSG_ACEPTAR;
     }
     this.translate.get(
@@ -97,17 +96,6 @@ export class ModeloEjecucionTipoHitoModalComponent extends
     ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
-  /**
-   * Comprueba que no hay 2 valores en la lista
-   *
-   * @param result resultado
-   */
-  private filterExistingTipoHito(result: SgiRestListResult<ITipoHito>): ITipoHito[] {
-    return result.items.filter((tipoHito: ITipoHito) => {
-      return !this.data.tipoHitos.find((currentTipo) => currentTipo.id === tipoHito.id);
-    });
-  }
-
   protected getDatosForm(): IModeloTipoHito {
     const modeloTipoHito = this.data.modeloTipoHito;
     const disponible = this.formGroup.controls.disponible as FormGroup;
@@ -133,7 +121,4 @@ export class ModeloEjecucionTipoHitoModalComponent extends
     return formGroup;
   }
 
-  equals(o1: ITipoHito, o2: ITipoHito): boolean {
-    return o1?.id === o2?.id;
-  }
 }

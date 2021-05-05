@@ -11,14 +11,8 @@
       <mat-form-field>
         <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
         </mat-label>
-        <input matInput formControlName="conceptoGasto" type="text"
-          placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}"
-          [matAutocomplete]="autoConceptoGasto" required>
-        <mat-autocomplete #autoConceptoGasto="matAutocomplete" [displayWith]="getNombreConceptoGasto">
-          <mat-option *ngFor="let conceptoGasto of conceptosGasto$ | async" [value]="conceptoGasto">
-            {{conceptoGasto.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-entity formControlName="conceptoGasto" required [options]="conceptosGasto$ | async">
+        </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.conceptoGasto.errors?.required">
           {{'error.required.entity' | translate:msgParaConceptoGastoEntity}}
         </mat-error>

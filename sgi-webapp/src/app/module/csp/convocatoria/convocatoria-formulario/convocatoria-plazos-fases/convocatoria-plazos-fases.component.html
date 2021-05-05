@@ -2,7 +2,7 @@
 <section class="convocatoria-plazos-fases">
 
   <h2>{{'csp.convocatoria-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
-  <div *ngIf="actionService.blockAddPlazos$ | async" class="info-message">
+  <div *ngIf="!(actionService.hasModeloEjecucion$ | async)" class="info-message">
     {{'info.csp.hito' | translate}}
   </div>
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-plazos-fases">
@@ -65,7 +65,7 @@
 
   <div class="separation-button">
     <button color="three" aria-label="Center Align" mat-raised-button *ngIf="!formPart.readonly"
-      (click)="openModalPlazos()" [disabled]="actionService.blockAddPlazos$ | async">
+      (click)="openModalPlazos()" [disabled]="!(actionService.hasModeloEjecucion$ | async)">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

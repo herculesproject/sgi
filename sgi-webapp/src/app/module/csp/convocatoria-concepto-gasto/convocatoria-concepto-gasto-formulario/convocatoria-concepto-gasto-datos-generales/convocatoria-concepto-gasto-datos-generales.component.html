@@ -8,15 +8,9 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.convocatoria-elegibilidad.concepto-gasto.concepto-gasto' | translate}}</mat-label>
-          <input matInput formControlName="conceptoGasto" type="text" id="conceptoGasto"
-            placeholder="{{'csp.convocatoria-elegibilidad.concepto-gasto.concepto-gasto' | translate}}"
-            [matAutocomplete]="autocompleteConceptoGasto" required>
-          <mat-autocomplete #autocompleteConceptoGasto="matAutocomplete" [displayWith]="getNombreConceptoGasto">
-            <mat-option *ngFor="let conceptoGasto of conceptoGastos$ | async" [value]="conceptoGasto">
-              {{conceptoGasto.nombre}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="formGroup.controls.conceptoGasto.errors?.invalid">
+          <sgi-select-entity formControlName="conceptoGasto" required [options]="conceptosGasto$ | async">
+          </sgi-select-entity>
+          <mat-error *ngIf="formGroup.controls.conceptoGasto.errors?.required">
             {{'error.invalid.entity' | translate:msgParamConceptoGastoEntity}}
           </mat-error>
         </mat-form-field>

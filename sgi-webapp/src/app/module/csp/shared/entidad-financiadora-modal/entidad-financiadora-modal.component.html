@@ -23,28 +23,15 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.entidad-financiadora.fuente-financiacion' | translate}}</mat-label>
-        <input matInput formControlName="fuenteFinanciacion" type="text"
-          placeholder="{{'csp.entidad-financiadora.fuente-financiacion' | translate}}"
-          [matAutocomplete]="autoFuenteFinanciacion">
-        <mat-autocomplete #autoFuenteFinanciacion="matAutocomplete" [displayWith]="getNombreFuenteFinanciacion">
-          <mat-option *ngFor="let fuenteFinanciacion of fuentesFinanciacion$ | async" [value]="fuenteFinanciacion">
-            {{fuenteFinanciacion.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-fuente-financiacion formControlName="fuenteFinanciacion"></sgi-select-fuente-financiacion>
       </mat-form-field>
     </div>
     <!-- Tipo de financiación -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.entidad-financiadora.tipo-financiacion' | translate}}</mat-label>
-        <input matInput formControlName="tipoFinanciacion" type="text" id="tipoFinanciacion"
-          placeholder="{{'csp.entidad-financiadora.tipo-financiacion' | translate}}"
-          [matAutocomplete]="autoTipoFinanciacion">
-        <mat-autocomplete #autoTipoFinanciacion="matAutocomplete" [displayWith]="getNombreTipoFinanciacion">
-          <mat-option *ngFor="let tipoFinanciacion of tiposFinanciacion$ | async" [value]="tipoFinanciacion">
-            {{tipoFinanciacion.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-entity formControlName="tipoFinanciacion" [options]="tiposFinanciacion$ | async">
+        </sgi-select-entity>
       </mat-form-field>
     </div>
     <!-- Porcentaje de financiación -->

@@ -53,10 +53,10 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
   tipoColectivo: TipoColectivo;
 
   @Input()
-  get colectivos(): string[] {
+  get colectivos(): string | string[] {
     return this._colectivos;
   }
-  set colectivos(value: string[]) {
+  set colectivos(value: string | string[]) {
     if (Array.isArray(value)) {
       this._colectivos = value;
     }
@@ -82,7 +82,7 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
   protected getDialogData(): SearchPersonaModalData {
     return {
       tipoColectivo: this.tipoColectivo,
-      colectivos: this.colectivos
+      colectivos: this._colectivos
     };
   }
 
@@ -93,4 +93,5 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
 
     return `${this.value.nombre} ${this.value.apellidos} (${this.value.numeroDocumento})`;
   }
+
 }

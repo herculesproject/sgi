@@ -10,10 +10,7 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
           <mat-label>{{'csp.convocatoria-configuracion-solicitud.tramitacion-sgi' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="tramitacionSGI">
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
+          <sgi-select-boolean formControlName="tramitacionSGI" required></sgi-select-boolean>
         </mat-form-field>
       </div>
     </div>
@@ -26,15 +23,10 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form" [ngClass]="this.dataSource.data.length>0 ? 'disabled' : ''">
           <mat-label>{{'csp.convocatoria-configuracion-solicitud.fase-presentacion.select' | translate}}</mat-label>
-          <input matInput formControlName="fasePresentacionSolicitudes" type="text" id="fasePresentacionSolicitudes"
-            placeholder="{{'csp.convocatoria-configuracion-solicitud.fase-presentacion.select' | translate}}"
-            [matAutocomplete]="autoPresentacionSolicitudes" [required]="formGroup.controls.tramitacionSGI.value">
-          <mat-autocomplete #autoPresentacionSolicitudes="matAutocomplete" [displayWith]="getFormularioSolicitud">
-            <mat-option *ngFor="let convocatoriaFase of convocatoriaFase$ | async"
-              [value]="convocatoriaFase | translate" [disabled]="this.dataSource.data.length>0">
-              {{ convocatoriaFase.tipoFase.nombre | translate}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-entity formControlName="fasePresentacionSolicitudes"
+            [required]="formGroup.controls.tramitacionSGI.value" [options]="formPart.convocatoriaFases$ | async"
+            [displayWith]="displayerConvocatoriaFase">
+          </sgi-select-entity>
           <mat-error *ngIf="formGroup.controls.fasePresentacionSolicitudes.errors?.required">
             {{'error.required.entity' | translate:msgParamFasePresentacionEntity}}
           </mat-error>
@@ -149,13 +141,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria-configuracion-solicitud.formulario' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="formularioSolicitud">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let formularioSolicitud of FORMULARIO_SOLICITUD_MAP | keyvalue"
-            [value]="formularioSolicitud.key">
-            {{ formularioSolicitud.value | translate}}
-          </mat-option>
-        </mat-select>
+        <sgi-select-enum formControlName="formularioSolicitud" [enumMap]="FORMULARIO_SOLICITUD_MAP"></sgi-select-enum>
       </mat-form-field>
     </div>
 

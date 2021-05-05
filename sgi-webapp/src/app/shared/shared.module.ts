@@ -14,12 +14,14 @@ import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
 import { LuxonDatePipe } from './luxon-date-pipe';
 import { RootComponent } from './root/root.component';
-import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/search-convocatoria.component';
-import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
+import { SelectBooleanComponent } from './select-boolean/select-boolean.component';
 import { SearchEmpresaModalComponent } from './select-empresa/dialog/search-empresa.component';
 import { SelectEmpresaComponent } from './select-empresa/select-empresa.component';
+import { SelectEntityComponent } from './select-entity/select-entity.component';
+import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SearchPersonaModalComponent } from './select-persona/dialog/search-persona.component';
 import { SelectPersonaComponent } from './select-persona/select-persona.component';
+import { SelectComponent } from './select/select.component';
 
 @NgModule({
   declarations: [
@@ -34,11 +36,13 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
     SelectPersonaComponent,
     SelectEmpresaComponent,
     SearchEmpresaModalComponent,
-    SelectConvocatoriaComponent,
-    SearchConvocatoriaModalComponent,
     SgiFileUploadComponent,
     ActionFragmentMenuGroupComponent,
-    LuxonDatePipe
+    LuxonDatePipe,
+    SelectBooleanComponent,
+    SelectComponent,
+    SelectEntityComponent,
+    SelectEnumComponent
   ],
   imports: [
     CommonModule,
@@ -58,11 +62,13 @@ import { SelectPersonaComponent } from './select-persona/select-persona.componen
     ActionFragmentLinkItemComponent,
     SelectPersonaComponent,
     SelectEmpresaComponent,
-    SelectConvocatoriaComponent,
     SgiFileUploadComponent,
     ActionFragmentMenuGroupComponent,
-    LuxonDatePipe
+    LuxonDatePipe,
+    SelectBooleanComponent,
+    SelectComponent,
+    SelectEntityComponent,
+    SelectEnumComponent
   ]
 })
-export class SharedModule {
-}
+export class SharedModule { }

@@ -100,16 +100,9 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria-concepto-gasto.costes-indirectos.concepto' | translate}}</mat-label>
-        <input type="text"
-          [placeholder]="'csp.convocatoria-concepto-gasto.costes-indirectos.concepto.placeholder' | translate"
-          arial-label="Number" matInput formControlName="costeIndirecto"
-          [matAutocomplete]="autocompleteCostesIndirectos">
-        <mat-autocomplete #autocompleteCostesIndirectos="matAutocomplete" [displayWith]="getCosteIndirecto">
-          <mat-option *ngFor="let costeIndirecto of filteredCostesIndirectos | async" [value]="costeIndirecto">
-            {{costeIndirecto.conceptoGasto.nombre}} {{costeIndirecto.mesInicial ? '('+ costeIndirecto.mesInicial +
-            (costeIndirecto.mesFinal ? (' - ' + costeIndirecto.mesFinal) : '')+')' : ''}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select-entity formControlName="costeIndirecto" [options]="costesIndirectos$ | async"
+          [displayWith]="displayerCosteIndirecto">
+        </sgi-select-entity>
       </mat-form-field>
     </div>
 

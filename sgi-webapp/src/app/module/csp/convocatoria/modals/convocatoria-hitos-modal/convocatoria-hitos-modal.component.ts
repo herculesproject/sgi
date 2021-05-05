@@ -6,22 +6,16 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
-import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http/types';
 import { DateTime } from 'luxon';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('error.load');
-const MSG_ERROR_TIPOS = marker('error.csp.convocatoria-tipo-hito');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const CONVOCATORIA_HITO_KEY = marker('csp.hito');
@@ -48,9 +42,7 @@ export class ConvocatoriaHitosModalComponent extends
 
   fxLayoutProperties: FxLayoutProperties;
 
-  modeloTiposHito$: Observable<IModeloTipoHito[]>;
-
-  private modeloTiposHitoFiltered: IModeloTipoHito[];
+  tipoHitos$: Observable<ITipoHito[]>;
 
   textSaveOrUpdate: string;
   title: string;
@@ -60,9 +52,8 @@ export class ConvocatoriaHitosModalComponent extends
   msgParamTipoEntity = {};
 
   constructor(
-    private readonly logger: NGXLogger,
     public matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
-    private modeloEjecucionService: ModeloEjecucionService,
+    modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaHitosModalComponentData,
     protected snackBarService: SnackBarService,
     private readonly translate: TranslateService) {
@@ -71,6 +62,10 @@ export class ConvocatoriaHitosModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.tipoHitos$ = modeloEjecucionService.findModeloTipoHitoConvocatoria(this.data.idModeloEjecucion).pipe(
+      map(response => response.items.map(modeloTipoHito => modeloTipoHito.tipoHito))
+    );
   }
 
   ngOnInit(): void {
@@ -86,7 +81,7 @@ export class ConvocatoriaHitosModalComponent extends
     this.subscriptions.push(suscriptionFecha);
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
-    this.loadTiposHito();
+
     this.subscriptions.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
       (value) => this.validarFecha(value)));
   }
@@ -135,10 +130,11 @@ export class ConvocatoriaHitosModalComponent extends
    */
   private createValidatorDate(tipoHito: ITipoHito): void {
     let fechas: DateTime[] = [];
-    if (tipoHito && typeof tipoHito !== 'string') {
+    if (tipoHito) {
       const convocatoriasHitos = this.data.hitos.filter(hito =>
-        hito.tipoHito.id === (tipoHito as ITipoHito).id &&
-        (!hito.fecha.equals(this.data.hito.fecha)));
+        hito.tipoHito.id === tipoHito.id &&
+        this.data.hito.fecha &&
+        !hito.fecha.equals(this.data.hito.fecha));
       fechas = convocatoriasHitos.map(hito => hito.fecha);
     }
     this.formGroup.setValidators([
@@ -159,62 +155,20 @@ export class ConvocatoriaHitosModalComponent extends
     }
   }
 
-  loadTiposHito() {
-    this.subscriptions.push(
-      this.modeloEjecucionService.findModeloTipoHitoConvocatoria(this.data.idModeloEjecucion).subscribe(
-        (res: SgiRestListResult<IModeloTipoHito>) => {
-          this.modeloTiposHitoFiltered = res.items;
-          this.modeloTiposHito$ = this.formGroup.controls.tipoHito.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroTipoHito(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          if (this.data.idModeloEjecucion) {
-            this.snackBarService.showError(MSG_ERROR_INIT);
-          } else {
-            this.snackBarService.showError(MSG_ERROR_TIPOS);
-          }
-        })
-    );
-  }
-
-  /**
-   * Devuelve el nombre de un tipo de hito.
-   * @param tipoHito tipo de hito.
-   * @returns nombre de un tipo de hito.
-   */
-  getTipoHito(tipoHito?: ITipoHito): string | undefined {
-    return typeof tipoHito === 'string' ? tipoHito : tipoHito?.nombre;
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio.
-   *
-   * @param value del input para autocompletar
-   */
-  filtroTipoHito(value: string): IModeloTipoHito[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.modeloTiposHitoFiltered.filter(modeloTipoHito =>
-      modeloTipoHito.tipoHito?.nombre.toLowerCase().includes(filterValue));
-  }
-
   protected getDatosForm(): ConvocatoriaHitosModalComponentData {
     this.data.hito.comentario = this.formGroup.controls.comentario.value;
     this.data.hito.fecha = this.formGroup.controls.fechaInicio.value;
     this.data.hito.tipoHito = this.formGroup.controls.tipoHito.value;
-    this.data.hito.generaAviso = this.formGroup.controls.aviso.value ? this.formGroup.controls.aviso.value : false;
+    this.data.hito.generaAviso = this.formGroup.controls.aviso.value;
     return this.data;
   }
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
-      fechaInicio: new FormControl(this.data?.hito?.fecha, [Validators.required]),
-      comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
-      aviso: new FormControl(this.data?.hito?.generaAviso)
+      tipoHito: new FormControl(this.data?.hito?.tipoHito, Validators.required),
+      fechaInicio: new FormControl(this.data?.hito?.fecha, Validators.required),
+      comentario: new FormControl(this.data?.hito?.comentario, Validators.maxLength(250)),
+      aviso: new FormControl(this.data?.hito?.generaAviso ?? false)
     });
     if (this.data.readonly) {
       formGroup.disable();

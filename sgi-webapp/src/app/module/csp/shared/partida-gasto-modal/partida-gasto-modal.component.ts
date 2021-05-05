@@ -117,13 +117,15 @@ export class PartidaGastoModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.conceptosGasto$ = this.conceptoGastoService.findAll().pipe(
+      map((conceptosGasto) => conceptosGasto.items)
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-
-    this.loadConceptosGasto();
 
     if (this.data.convocatoriaId) {
       this.subscriptions.push(
@@ -240,15 +242,6 @@ export class PartidaGastoModalComponent extends
     return entidad;
   }
 
-  /**
-   * Carga todos los conceptos de gasto
-   */
-  private loadConceptosGasto(): void {
-    this.conceptosGasto$ = this.conceptoGastoService.findAll().pipe(
-      map((conceptosGasto) => conceptosGasto.items)
-    );
-  }
-
   private getConvocatoriaConceptoGasto(convocatoriaId: number): Observable<Map<number, IConvocatoriaConceptoGasto>> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, convocatoriaId.toString())
@@ -312,10 +305,6 @@ export class PartidaGastoModalComponent extends
         });
       })
     );
-  }
-
-  getNombreConceptoGasto(conceptoGasto: IConceptoGasto): string {
-    return conceptoGasto?.nombre;
   }
 
   private toConceptoGastoInfo(convocatoriaConceptoGastos: ConceptoGastoCodigoEc[]): ConceptoGastoInfo[] {

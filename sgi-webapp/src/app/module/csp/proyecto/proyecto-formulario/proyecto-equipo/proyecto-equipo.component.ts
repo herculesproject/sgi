@@ -13,7 +13,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from '../../../modals/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
+import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from '../../../shared/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoEquipoFragment } from './proyecto-equipo.fragment';
 

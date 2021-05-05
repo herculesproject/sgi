@@ -71,7 +71,7 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
     this.setupI18N();
     this.formGroup = new FormGroup({
       nombre: new FormControl(''),
-      activo: new FormControl('true')
+      activo: new FormControl(true)
     });
     this.filter = this.createFilter();
   }
@@ -125,7 +125,6 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);
 
-
     this.translate.get(
       MODELO_EJECUCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -150,7 +149,6 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
 
-
     this.translate.get(
       MODELO_EJECUCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -165,7 +163,7 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
   }
 
   onClearFilters() {
-    this.formGroup.controls.activo.setValue('true');
+    this.formGroup.controls.activo.setValue(true);
     this.formGroup.controls.nombre.setValue('');
     this.onSearch();
   }
@@ -185,12 +183,8 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
-    if (controls.activo.value !== 'todos') {
-      filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
-    }
-
-    return filter;
+    return new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
+      .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value?.toString());
   }
 
   /**

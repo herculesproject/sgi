@@ -33,7 +33,6 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  public disableAddHito = true;
 
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['fechaInicio', 'tipoHito', 'comentario', 'aviso', 'acciones'];
@@ -51,7 +50,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
 
   constructor(
     protected convocatoriaReunionService: ConvocatoriaService,
-    private actionService: ConvocatoriaActionService,
+    public actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
@@ -78,7 +77,6 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
         }
       };
     this.dataSource.sort = this.sort;
-    this.disableAddHito = !Boolean(this.actionService.modeloEjecucionId);
     this.subscriptions.push(this.formPart.hitos$.subscribe(elements => {
       this.dataSource.data = elements;
     }));

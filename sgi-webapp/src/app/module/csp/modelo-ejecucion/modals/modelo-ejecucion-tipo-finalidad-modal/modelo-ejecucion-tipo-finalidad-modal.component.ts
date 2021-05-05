@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -9,9 +9,8 @@ import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 const MODELO_EJECUCION_TIPO_FINALIDAD_KEY = marker('csp.tipo-finalidad');
 const MODELO_EJECUCION_TIPO_FINALIDAD_TIPO_KEY = marker('csp.modelo-ejecucion-tipo-finalidad.tipo');
@@ -41,22 +40,24 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoFinalidadModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoFinalidadModalData,
-    private readonly tipoFinalidadService: TipoFinalidadService,
+    readonly tipoFinalidadService: TipoFinalidadService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoFinalidad);
     this.textSaveOrUpdate = this.data.modeloTipoFinalidad?.tipoFinalidad ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.tipoFinalidad$ = tipoFinalidadService.findAll().pipe(
+      map((response) => {
+        return response.items.filter(tipoFinalidad => {
+          return !this.data.tipoFinalidades.some(currentTipo => currentTipo.id === tipoFinalidad.id);
+        });
+      })
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.tipoFinalidad$ = this.tipoFinalidadService.findAll().pipe(
-      switchMap((result: SgiRestListResult<ITipoFinalidad>) => {
-        const list = this.filterExistingTipoFinalidad(result);
-        return of(list);
-      })
-    );
   }
 
   private setupI18N(): void {
@@ -78,15 +79,9 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
     ).subscribe((value) => this.title = value);
   }
 
-  private filterExistingTipoFinalidad(result: SgiRestListResult<ITipoFinalidad>): ITipoFinalidad[] {
-    return result.items.filter((tipoFinalidad: ITipoFinalidad) => {
-      return this.data.tipoFinalidades.find((currentTipo) => currentTipo.id === tipoFinalidad.id) ? false : true;
-    });
-  }
-
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      tipoFinalidad: new FormControl(this.data.modeloTipoFinalidad?.tipoFinalidad)
+      tipoFinalidad: new FormControl(this.data.modeloTipoFinalidad?.tipoFinalidad, Validators.required)
     });
     return formGroup;
   }

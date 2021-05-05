@@ -10,9 +10,9 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { CspSharedModule } from '../../shared/csp-shared.module';
 import { SolicitudActionService } from '../solicitud.action.service';
 import { SolicitudListadoComponent } from './solicitud-listado.component';
-
 
 describe('SolicitudListadoComponent', () => {
   let component: SolicitudListadoComponent;
@@ -34,7 +34,8 @@ describe('SolicitudListadoComponent', () => {
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
+        CspSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

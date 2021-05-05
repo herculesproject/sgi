@@ -17,11 +17,10 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { map, mergeMap, startWith, switchMap, takeLast, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { ConvocatoriaEntidadConvocanteData } from '../../convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
 
 const MSG_ERROR_FORM_GROUP = marker('error.form-group');
@@ -90,9 +89,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  planes$: Observable<IPrograma[]>;
-  private programaFiltered = [] as IPrograma[];
-
   programaTree$ = new BehaviorSubject<NodePrograma[]>([]);
   treeControl = new NestedTreeControl<NodePrograma>(node => node.childs);
   dataSource = new MatTreeNestedDataSource<NodePrograma>();
@@ -103,6 +99,10 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
 
   msgParamEntity = {};
   msgParamPlanEntity = {};
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
 
   checkedNode: NodePrograma;
   hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
@@ -150,24 +150,17 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
         this.dataSource.data = programas;
       }
     ));
-    const subcription = this.programaService.findAllPlan().subscribe(
-      list => {
-        this.programaFiltered = list.items;
-        this.planes$ = this.formGroup.get('plan').valueChanges.pipe(
-          startWith(''),
-          map(value => this.filterPrograma(value)),
-          tap(() => {
-            // Reset selected node on first user change
-            if (this.formGroup.get('plan').value?.id !== this.data.entidadConvocanteData.plan?.id) {
-              this.formGroup.get('programa').setValue(undefined);
-              this.checkedNode = undefined;
-            }
-            this.loadTreePrograma();
-          })
-        );
-      }
+    this.subscriptions.push(this.formGroup.get('plan').valueChanges.subscribe(
+      (value) => {
+        // Reset selected node on first user change
+        if (value?.id !== this.data.entidadConvocanteData.plan?.id) {
+          this.formGroup.get('programa').setValue(undefined);
+          this.checkedNode = undefined;
+        }
+        this.loadTreePrograma(value?.id);
+      })
     );
-    this.subscriptions.push(subcription);
+    this.loadTreePrograma(this.data.entidadConvocanteData?.plan?.id);
   }
 
   private setupI18N(): void {
@@ -198,26 +191,13 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
           );
         })
       ).subscribe((value) => this.textoTitle = value);
-
     }
-
   }
 
-  private filterPrograma(value: string): IPrograma[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.programaFiltered.filter(programa =>
-      programa.nombre.toLowerCase().includes(filterValue));
-  }
-
-  getNombrePlan(plan: IPrograma): string {
-    return plan?.nombre;
-  }
-
-  private loadTreePrograma() {
-    const id = this.formGroup.get('plan').value?.id;
-    if (id && !isNaN(id)) {
+  private loadTreePrograma(programaId: number) {
+    if (programaId) {
       this.checkedNode = undefined;
-      const subscription = this.programaService.findAllHijosPrograma(id).pipe(
+      const subscription = this.programaService.findAllHijosPrograma(programaId).pipe(
         switchMap(response => {
           if (response.items.length === 0) {
             this.programaTree$.next([]);
@@ -299,7 +279,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       empresa: new FormControl(this.data.entidadConvocanteData.empresa, Validators.required),
-      plan: new FormControl(this.data.entidadConvocanteData.plan, IsEntityValidator.isValid()),
+      plan: new FormControl(this.data.entidadConvocanteData.plan),
       programa: new FormControl(this.data.entidadConvocanteData.entidadConvocante.value.programa?.id)
     });
     if (this.data.readonly) {
@@ -314,7 +294,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     const plan = this.formGroup.get('plan').value;
     const programa = this.checkedNode?.programa?.value;
     entidadConvocante.value.programa = programa ? programa : plan;
-    if (plan === '' && !programa) {
+    if (!plan && !programa) {
       entidadConvocante.value.programa = undefined;
     }
     this.data.entidadConvocanteData.empresa = this.formGroup.get('empresa').value;
@@ -355,7 +335,4 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     );
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 }

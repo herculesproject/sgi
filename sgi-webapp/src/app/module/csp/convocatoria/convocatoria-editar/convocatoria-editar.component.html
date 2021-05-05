@@ -62,9 +62,8 @@
       <router-outlet></router-outlet>
     </div>
     <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">
-      <sgi-action-footer-button color="primary" [text]="textoRegistrar"
-        [disabled]="disableRegistrar || actionService.readonly || disable" icon="move_to_inbox"
-        (buttonClick)="registrar()">
+      <sgi-action-footer-button color="primary" [text]="textoRegistrar" [disabled]="disableRegistrar$ | async"
+        icon="move_to_inbox" (buttonClick)="registrar()">
       </sgi-action-footer-button>
     </sgi-action-footer>
   </mat-drawer-content>

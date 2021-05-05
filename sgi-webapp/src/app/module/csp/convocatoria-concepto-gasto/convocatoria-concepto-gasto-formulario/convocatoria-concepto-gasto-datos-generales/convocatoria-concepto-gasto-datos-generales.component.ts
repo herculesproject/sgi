@@ -7,20 +7,16 @@ import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concep
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ConvocatoriaConceptoGastoActionService } from '../../convocatoria-concepto-gasto.action.service';
 import { ConvocatoriaConceptoGastoDatosGeneralesFragment } from './convocatoria-concepto-gasto-datos-generales.fragment';
 
-const MSG_ERROR_INIT = marker('error.load');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
-
 const CONVOCATORIA_ELEGIBILIDAD_CONCEPTO_GASTO_KEY = marker('csp.convocatoria-elegibilidad.concepto-gasto.concepto-gasto');
+
 @Component({
   templateUrl: './convocatoria-concepto-gasto-datos-generales.component.html',
   styleUrls: ['./convocatoria-concepto-gasto-datos-generales.component.scss']
@@ -32,17 +28,14 @@ export class ConvocatoriaConceptoGastoDatosGeneralesComponent
   fxFlexProperties: FxFlexProperties;
 
   private subscriptions: Subscription[] = [];
-  conceptoGastosFiltered: IConceptoGasto[];
-  conceptoGastos$: Observable<IConceptoGasto[]>;
+  conceptosGasto$: Observable<IConceptoGasto[]>;
 
   textSaveOrUpdate: string;
 
   msgParamConceptoGastoEntity = {};
 
   constructor(
-    private logger: NGXLogger,
-    private snackBarService: SnackBarService,
-    private conceptoGastoService: ConceptoGastoService,
+    conceptoGastoService: ConceptoGastoService,
     public readonly actionService: ConvocatoriaConceptoGastoActionService,
     private readonly translate: TranslateService
   ) {
@@ -56,12 +49,15 @@ export class ConvocatoriaConceptoGastoDatosGeneralesComponent
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
+
+    this.conceptosGasto$ = conceptoGastoService.findAll().pipe(
+      map(response => response.items)
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.loadConceptoGastos();
     this.textSaveOrUpdate = this.fragment.getKey() ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
@@ -72,36 +68,8 @@ export class ConvocatoriaConceptoGastoDatosGeneralesComponent
     ).subscribe((value) => this.msgParamConceptoGastoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
-  loadConceptoGastos() {
-    this.subscriptions.push(
-      this.conceptoGastoService.findAll().subscribe(
-        (res: SgiRestListResult<IConceptoGasto>) => {
-          this.conceptoGastosFiltered = res.items;
-          this.conceptoGastos$ = this.formGroup.controls.conceptoGasto.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroConceptoGasto(value))
-            );
-        },
-        (error) => {
-          this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(error);
-        }
-      )
-    );
-  }
-
-  filtroConceptoGasto(value: string): IConceptoGasto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.conceptoGastosFiltered.filter(tipoLazoEnlace => tipoLazoEnlace.nombre.toLowerCase().includes(filterValue));
-  }
-
-  getNombreConceptoGasto(conceptoGasto?: IConceptoGasto): string | undefined {
-    return typeof conceptoGasto === 'string' ? conceptoGasto : conceptoGasto?.nombre;
-  }
-
   ngOnDestroy(): void {
-    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.subscriptions?.forEach(subscription => subscription.unsubscribe());
   }
 
 }

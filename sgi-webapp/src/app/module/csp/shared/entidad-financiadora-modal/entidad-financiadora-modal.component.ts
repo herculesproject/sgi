@@ -5,11 +5,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
-import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
-import { ITipoFinalidad, ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
+import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,7 +33,6 @@ const ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY = marker('csp.entidad-fin
 export class EntidadFinanciadoraModalComponent extends
   BaseModalComponent<IEntidadFinanciadora, EntidadFinanciadoraModalComponent> implements OnInit {
 
-  fuentesFinanciacion$: Observable<IFuenteFinanciacion[]>;
   tiposFinanciacion$: Observable<ITipoFinalidad[]>;
   textSaveOrUpdate: string;
   title: string;
@@ -47,21 +44,22 @@ export class EntidadFinanciadoraModalComponent extends
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<EntidadFinanciadoraModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EntidadFinanciadoraDataModal,
-    private tipoFinanciacionService: TipoFinanciacionService,
-    private fuenteFinanciacionService: FuenteFinanciacionService,
+    tipoFinanciacionService: TipoFinanciacionService,
     private readonly translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data.entidad);
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
+
+    this.tiposFinanciacion$ = tipoFinanciacionService.findAll().pipe(
+      map((tipoFinanciaciones) => tipoFinanciaciones.items)
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.loadFuentesFinanciacion();
-    this.loadTiposFinanciacion();
     this.textSaveOrUpdate = this.data.entidad?.empresa ? MSG_ACEPTAR : MSG_ANADIR;
     this.title = this.data.title;
   }
@@ -79,13 +77,10 @@ export class EntidadFinanciadoraModalComponent extends
   }
 
   protected getDatosForm(): IEntidadFinanciadora {
-    const fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
-    const tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
-
     const entidad = this.data.entidad;
     entidad.empresa = this.formGroup.get('empresa').value;
-    entidad.fuenteFinanciacion = typeof fuenteFinanciacion === 'string' ? undefined : fuenteFinanciacion;
-    entidad.tipoFinanciacion = typeof tipoFinanciacion === 'string' ? undefined : tipoFinanciacion;
+    entidad.fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
+    entidad.tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
     return entidad;
   }
@@ -109,31 +104,5 @@ export class EntidadFinanciadoraModalComponent extends
       formGroup.disable();
     }
     return formGroup;
-  }
-
-  /**
-   * Carga todas las fuentes de financiación
-   */
-  private loadFuentesFinanciacion(): void {
-    this.fuentesFinanciacion$ = this.fuenteFinanciacionService.findAll().pipe(
-      map((fuenteFinanciones) => fuenteFinanciones.items)
-    );
-  }
-
-  /**
-   * Carga todos los tipos de financiación
-   */
-  private loadTiposFinanciacion(): void {
-    this.tiposFinanciacion$ = this.tipoFinanciacionService.findAll().pipe(
-      map((tipoFinanciaciones) => tipoFinanciaciones.items)
-    );
-  }
-
-  getNombreFuenteFinanciacion(fuenteFinanciacion: IFuenteFinanciacion): string {
-    return fuenteFinanciacion?.nombre;
-  }
-
-  getNombreTipoFinanciacion(tipoFinanciacion: ITipoFinanciacion): string {
-    return tipoFinanciacion?.nombre;
   }
 }

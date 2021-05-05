@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -12,17 +12,14 @@ import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
-import { NGXLogger } from 'ngx-logger';
-import { merge } from 'rxjs';
-import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
-const MSG_ERROR_INIT = marker('error.load');
 const MIEMBRO_EQUIPO_PROYECTO_FECHA_FIN_KEY = marker('csp.miembro-equipo-proyecto.fecha-fin');
 const MIEMBRO_EQUIPO_PROYECTO_FECHA_INICIO_KEY = marker('csp.miembro-equipo-proyecto.fecha-inicio');
 const MIEMBRO_EQUIPO_PROYECTO_EQUIPO_MIEMBRO_KEY = marker('csp.miembro-equipo-proyecto.miembro');
@@ -45,7 +42,7 @@ export interface MiembroEquipoProyectoModalData {
   styleUrls: ['./miembro-equipo-proyecto-modal.component.scss']
 })
 export class MiembroEquipoProyectoModalComponent extends
-  BaseModalComponent<MiembroEquipoProyectoModalData, MiembroEquipoProyectoModalComponent> implements OnInit, OnDestroy {
+  BaseModalComponent<MiembroEquipoProyectoModalData, MiembroEquipoProyectoModalComponent> implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
   fxLayoutProperties: FxLayoutProperties;
@@ -53,7 +50,7 @@ export class MiembroEquipoProyectoModalComponent extends
   textSaveOrUpdate: string;
 
   saveDisabled = false;
-  rolesProyecto: IRolProyecto[] = [];
+  rolesProyecto$: Observable<IRolProyecto[]>;
   colectivosIdRolParticipacion: string[];
 
   msgParamFechaFinEntity = {};
@@ -63,10 +60,7 @@ export class MiembroEquipoProyectoModalComponent extends
   msgParamHoraEntity = {};
   title: string;
 
-  compareRolProyecto = (option: IRolProyecto, value: IRolProyecto) => option?.id === value?.id;
-
   constructor(
-    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<MiembroEquipoProyectoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MiembroEquipoProyectoModalData,
@@ -78,11 +72,14 @@ export class MiembroEquipoProyectoModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
+
+    this.rolesProyecto$ = this.rolProyectoService.findAll().pipe(
+      map(result => result.items)
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.loadRolEquipo();
 
     this.setupI18N();
 
@@ -164,14 +161,10 @@ export class MiembroEquipoProyectoModalComponent extends
     }
   }
 
-
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
-        rolParticipacion: new FormControl(this.data?.entidad?.rolProyecto, [
-          Validators.required,
-          IsEntityValidator.isValid()
-        ]),
+        rolParticipacion: new FormControl(this.data?.entidad?.rolProyecto, Validators.required),
         miembro: new FormControl({
           value: this.data?.entidad?.persona,
           disabled: !this.data.entidad.rolProyecto
@@ -213,21 +206,6 @@ export class MiembroEquipoProyectoModalComponent extends
     }
 
     return this.data;
-  }
-
-  private loadRolEquipo(): void {
-    const subcription = this.rolProyectoService.findAll().pipe(
-      map(result => result.items)
-    ).subscribe(
-      res => {
-        this.rolesProyecto = res;
-      },
-      error => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_INIT);
-      }
-    );
-    this.subscriptions.push(subcription);
   }
 
   private checkSelectedRol(rolProyecto: IRolProyecto): void {
@@ -300,10 +278,6 @@ export class MiembroEquipoProyectoModalComponent extends
     }
     formControl.errors[errorName] = true;
     formControl.markAsTouched({ onlySelf: true });
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 
 }

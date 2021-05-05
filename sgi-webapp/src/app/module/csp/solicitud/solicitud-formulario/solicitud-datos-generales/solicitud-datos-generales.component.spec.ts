@@ -12,6 +12,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { SOLICITUD_DATA_KEY } from '../../solicitud-data.resolver';
 import { ISolicitudData, SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudDatosGeneralesComponent } from './solicitud-datos-generales.component';
@@ -46,7 +47,8 @@ describe('SolicitudDatosGeneralesComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        SharedModule
+        SharedModule,
+        CspSharedModule
       ],
       providers: [
         SolicitudActionService,

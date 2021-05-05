@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { CspSharedModule } from '../shared/csp-shared.module';
 import { ConvocatoriaDataResolver } from './convocatoria-data.resolver';
 import { ConvocatoriaListadoInvComponent } from './convocatoria-listado-inv/convocatoria-listado-inv.component';
 import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module';
@@ -19,7 +20,8 @@ import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module'
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    CspSharedModule
   ],
   providers: [
     ConvocatoriaDataResolver

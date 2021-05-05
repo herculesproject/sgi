@@ -10,20 +10,11 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria-elegibilidad.codigo-economico.sge' | translate}}</mat-label>
-        <input matInput formControlName="codigoEconomicoRef" type="text"
-          placeholder="{{'csp.convocatoria-elegibilidad.codigo-economico.sge' | translate}}"
-          [matAutocomplete]="autocompleteCodigoEconomico" required>
-        <mat-autocomplete #autocompleteCodigoEconomico="matAutocomplete">
-          <mat-option *ngFor="let codigoEconomico of codigosEconomicos$ | async"
-            [value]="codigoEconomico?.codigoEconomicoRef" (click)="getCodigoEconomico(codigoEconomico)">
-            {{codigoEconomico.codigoEconomicoRef}}
-          </mat-option>
-        </mat-autocomplete>
+        <sgi-select formControlName="codigoEconomicoRef" required [options]="codigosEconomicos$ | async"
+          [compareWith]="comparerCodigoEconomico" [displayWith]="displayerCodigoEconomico"
+          [sortWith]="sorterCodigoEconomico"></sgi-select>
         <mat-error *ngIf="formGroup.controls.codigoEconomicoRef.errors?.required">
           {{'error.required.entity' | translate:msgParamCodigoEconomigoSgeEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.codigoEconomicoRef.errors?.invalid">
-          {{'error.invalid.entity' | translate:msgParamCodigoEconomigoSgeEntity}}
         </mat-error>
       </mat-form-field>
     </div>

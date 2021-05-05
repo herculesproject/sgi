@@ -41,16 +41,7 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field fxFill>
         <mat-label>{{'csp.convocatoria-enlace.tipo-enlace' | translate}}</mat-label>
-        <input matInput formControlName="tipoEnlace" type="text"
-          placeholder="{{'csp.convocatoria-enlace.tipo-enlace' | translate}}" [matAutocomplete]="autoTipoEnlace">
-        <mat-autocomplete #autoTipoEnlace="matAutocomplete" [displayWith]="getNombreTipoEnlace">
-          <mat-option *ngFor="let modeloTipoEnlace of modeloTiposEnlace$ | async" [value]="modeloTipoEnlace.tipoEnlace">
-            {{modeloTipoEnlace.tipoEnlace.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.tipoEnlace.errors?.invalid">
-          {{ 'error.invalid.entity' | translate:msgParamTipoEnlaceEntity }}
-        </mat-error>
+            <sgi-select-entity formControlName="tipoEnlace" [options]="tiposEnlace$ |async"></sgi-select-entity>
       </mat-form-field>
     </div>
   </form>

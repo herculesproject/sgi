@@ -80,16 +80,9 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'csp.convocatoria.finalidad' | translate}}</mat-label>
-              <input matInput formControlName="finalidad" type="text" id="finalidad"
-                placeholder="{{'csp.convocatoria.finalidad' | translate}}" [matAutocomplete]="autoFinalidad">
-              <mat-autocomplete #autoFinalidad="matAutocomplete" [displayWith]="getFinalidad">
-                <mat-option *ngFor="let finalidad of finalidades$ | async" [value]="finalidad">
-                  {{finalidad.nombre}}
-                </mat-option>
-              </mat-autocomplete>
+              <sgi-select-tipo-finalidades formControlName="finalidad"></sgi-select-tipo-finalidades>
             </mat-form-field>
           </div>
-
         </div>
 
         <div class="fieldset-form">
@@ -166,14 +159,7 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'csp.convocatoria.fuente-financiacion' | translate}}</mat-label>
-              <input matInput formControlName="fuenteFinanciacion" type="text" id="fuente"
-                placeholder="{{'csp.convocatoria.fuente-financiacion' | translate}}" maxlength="100"
-                [matAutocomplete]="fuente">
-              <mat-autocomplete #fuente="matAutocomplete" [displayWith]="getFuenteFinanciacion">
-                <mat-option *ngFor="let fuente of fuenteFinanciacion$ | async" [value]="fuente">
-                  {{fuente.nombre}}
-                </mat-option>
-              </mat-autocomplete>
+              <sgi-select-fuente-financiacion formControlName="fuenteFinanciacion"></sgi-select-fuente-financiacion>
             </mat-form-field>
           </div>
 
@@ -187,15 +173,7 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'csp.convocatoria.ambito-geografico' | translate}}</mat-label>
-              <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
-                placeholder="{{'csp.convocatoria.ambito-geografico' | translate}}"
-                [matAutocomplete]="autoTipoAmbitoGeografico">
-              <mat-autocomplete #autoTipoAmbitoGeografico="matAutocomplete" [displayWith]="getTipoAmbitoGeografico">
-                <mat-option *ngFor="let tipoAmbitoGeografico of tipoAmbitosGeograficos$ | async"
-                  [value]="tipoAmbitoGeografico">
-                  {{tipoAmbitoGeografico.nombre}}
-                </mat-option>
-              </mat-autocomplete>
+              <sgi-select-tipo-ambito-geografico formControlName="ambitoGeografico"></sgi-select-tipo-ambito-geografico>
             </mat-form-field>
           </div>
 
@@ -209,14 +187,7 @@
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field class="input-form">
               <mat-label>{{'list.entity' | translate:msgParamAreaTematicaEntity}}</mat-label>
-              <input matInput formControlName="areaTematica" type="text" id="areaTematica"
-                placeholder="{{'list.entity' | translate:msgParamAreaTematicaEntity}}"
-                [matAutocomplete]="autoAreaTematica">
-              <mat-autocomplete #autoAreaTematica="matAutocomplete" [displayWith]="getAreaTematica">
-                <mat-option *ngFor="let area of areaTematica$ | async" [value]="area">
-                  {{area.nombre}}
-                </mat-option>
-              </mat-autocomplete>
+              <sgi-select-area-tematica formControlName="areaTematica"></sgi-select-area-tematica>
             </mat-form-field>
           </div>
 

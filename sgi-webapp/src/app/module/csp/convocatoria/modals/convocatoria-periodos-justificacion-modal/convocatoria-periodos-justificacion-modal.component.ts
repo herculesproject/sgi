@@ -34,6 +34,7 @@ const CONVOCTORIA_PERIODO_JUSTIFICACION_PERIODO_KEY = marker('csp.convocatoria-p
 const CONVOCTORIA_PERIODO_JUSTIFICACION_TIPO_KEY = marker('csp.convocatoria-periodo-justificacion.tipo');
 const CONVOCATORIA_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY = marker('csp.convocatoria-periodo-justificacion.observaciones');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
+
 @Component({
   templateUrl: './convocatoria-periodos-justificacion-modal.component.html',
   styleUrls: ['./convocatoria-periodos-justificacion-modal.component.scss']
@@ -55,6 +56,10 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   msgParamObservacionesEntity = {};
   msgParamPeriodoEntity = {};
   msgParamTipoEntity = {};
+
+  get TIPO_MAP() {
+    return TIPO_MAP;
+  }
 
   constructor(
     protected snackBarService: SnackBarService,
@@ -81,7 +86,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     this.setupI18N();
     this.textSaveOrUpdate = this.data.convocatoriaPeriodoJustificacion?.numPeriodo ? MSG_ACEPTAR : MSG_ANADIR;
   }
-
 
   private setupI18N(): void {
     this.translate.get(
@@ -156,13 +160,13 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       .sort((a, b) => (b.value.mesInicial > a.value.mesInicial) ? 1 : ((a.value.mesInicial > b.value.mesInicial) ? -1 : 0)).find(c => true);
 
     const formGroup = new FormGroup({
-      numPeriodo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.numPeriodo, [Validators.required]),
-      tipo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.tipo, [Validators.required]),
+      numPeriodo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.numPeriodo, Validators.required),
+      tipo: new FormControl(this.data.convocatoriaPeriodoJustificacion?.tipo, Validators.required),
       desdeMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesInicial, [Validators.required, Validators.min(1)]),
       hastaMes: new FormControl(this.data.convocatoriaPeriodoJustificacion?.mesFinal, [Validators.required, Validators.min(2)]),
-      fechaInicio: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion, []),
-      fechaFin: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaFinPresentacion, []),
-      observaciones: new FormControl(this.data.convocatoriaPeriodoJustificacion?.observaciones, [Validators.maxLength(2000)])
+      fechaInicio: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion),
+      fechaFin: new FormControl(this.data.convocatoriaPeriodoJustificacion?.fechaFinPresentacion),
+      observaciones: new FormControl(this.data.convocatoriaPeriodoJustificacion?.observaciones, Validators.maxLength(2000))
     }, {
       validators: [
         this.isFinalUltimoPeriodo(ultimoPeriodoJustificacionNoFinal?.value.mesFinal),
@@ -210,9 +214,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     return convocatoriaPeriodoJustificacion;
   }
 
-
-
-
   /**
    * Recalcula el numero de periodo en funcion de la ordenacion por mes inicial de todos los periodos.
    */
@@ -256,10 +257,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
         tipoJustificacionControl.updateValueAndValidity({ onlySelf: true });
       }
     };
-  }
-
-  get TIPO_MAP() {
-    return TIPO_MAP;
   }
 
 }

@@ -12,9 +12,6 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { IsYearPlus } from '@core/validators/is-year-plus';
-import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -26,13 +23,13 @@ export interface AreaTematicaData {
 }
 
 export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocatoria> {
-  areasTematicas$ = new BehaviorSubject<AreaTematicaData[]>([]);
+  readonly areasTematicas$ = new BehaviorSubject<AreaTematicaData[]>([]);
   private convocatoriaAreaTematicaEliminadas: StatusWrapper<IConvocatoriaAreaTematica>[] = [];
 
   private convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
-  modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
+  readonly modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -55,34 +52,22 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
-      codigo: new FormControl('', [
-        Validators.maxLength(50)]),
-      estado: new FormControl({
-        value: Estado.BORRADOR,
-        disabled: true
-      }),
-      unidadGestion: new FormControl('', [
-        Validators.required, IsEntityValidator.isValid()]),
-      fechaPublicacion: new FormControl(null, [
-        Validators.required
-      ]),
+      codigo: new FormControl('', Validators.maxLength(50)),
+      unidadGestion: new FormControl(null, Validators.required),
+      fechaPublicacion: new FormControl(null, Validators.required),
       fechaProvisional: new FormControl(null),
       fechaConcesion: new FormControl(null),
-      titulo: new FormControl('', [
-        Validators.required, Validators.maxLength(250)]),
-      modeloEjecucion: new FormControl(''),
-      finalidad: new FormControl(''),
-      duracion: new FormControl('', [
-        Validators.min(1), Validators.max(9999)]),
-      ambitoGeografico: new FormControl(''),
+      titulo: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+      modeloEjecucion: new FormControl(null),
+      finalidad: new FormControl(null),
+      duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),
+      ambitoGeografico: new FormControl(null),
       clasificacionCVN: new FormControl(null),
-      regimenConcurrencia: new FormControl(''),
+      regimenConcurrencia: new FormControl(null),
       colaborativos: new FormControl(null),
-      entidadGestora: new FormControl(''),
-      objeto: new FormControl('',
-        Validators.maxLength(2000)),
-      observaciones: new FormControl('',
-        Validators.maxLength(2000))
+      entidadGestora: new FormControl(null),
+      objeto: new FormControl('', Validators.maxLength(2000)),
+      observaciones: new FormControl('', Validators.maxLength(2000))
     });
     if (this.readonly) {
       form.disable();
@@ -113,7 +98,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       finalidad: convocatoria.finalidad,
       regimenConcurrencia: convocatoria.regimenConcurrencia,
       colaborativos: convocatoria.colaborativos,
-      estado: convocatoria.estado,
       duracion: convocatoria.duracion,
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
@@ -128,15 +112,13 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
    */
   private checkEstado(formgroup: FormGroup, convocatoria: IConvocatoria): void {
     if (convocatoria.estado === Estado.BORRADOR) {
-      formgroup.get('modeloEjecucion').setValidators(IsEntityValidator.isValid());
-      formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
-      formgroup.get('ambitoGeografico').setValidators(IsEntityValidator.isValid());
+      formgroup.get('modeloEjecucion').clearValidators();
+      formgroup.get('finalidad').clearValidators();
+      formgroup.get('ambitoGeografico').clearValidators();
     } else {
-      formgroup.get('modeloEjecucion').setValidators([
-        Validators.required, IsEntityValidator.isValid()]);
-      formgroup.get('finalidad').setValidators([Validators.required, IsEntityValidator.isValid()]);
-      formgroup.get('ambitoGeografico').setValidators([
-        Validators.required, IsEntityValidator.isValid()]);
+      formgroup.get('modeloEjecucion').setValidators(Validators.required);
+      formgroup.get('finalidad').setValidators(Validators.required);
+      formgroup.get('ambitoGeografico').setValidators(Validators.required);
     }
   }
 
@@ -240,11 +222,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   getValue(): IConvocatoria {
     const form = this.getFormGroup().controls;
     this.convocatoria.unidadGestion = form.unidadGestion.value;
-    if (typeof form.modeloEjecucion.value === 'string') {
-      this.convocatoria.modeloEjecucion = undefined;
-    } else {
-      this.convocatoria.modeloEjecucion = form.modeloEjecucion.value;
-    }
+    this.convocatoria.modeloEjecucion = form.modeloEjecucion.value;
     this.convocatoria.codigo = form.codigo.value;
     this.convocatoria.fechaPublicacion = form.fechaPublicacion.value;
     this.convocatoria.fechaProvisional = form.fechaProvisional.value;
@@ -252,23 +230,11 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     this.convocatoria.titulo = form.titulo.value;
     this.convocatoria.objeto = form.objeto.value;
     this.convocatoria.observaciones = form.observaciones.value;
-    if (typeof form.finalidad.value === 'string') {
-      this.convocatoria.finalidad = undefined;
-    } else {
-      this.convocatoria.finalidad = form.finalidad.value;
-    }
-    if (typeof form.regimenConcurrencia.value === 'string') {
-      this.convocatoria.regimenConcurrencia = undefined;
-    } else {
-      this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
-    }
+    this.convocatoria.finalidad = form.finalidad.value;
+    this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
     this.convocatoria.colaborativos = form.colaborativos.value;
     this.convocatoria.duracion = form.duracion.value;
-    if (typeof form.ambitoGeografico.value === 'string') {
-      this.convocatoria.ambitoGeografico = undefined;
-    } else {
-      this.convocatoria.ambitoGeografico = form.ambitoGeografico.value;
-    }
+    this.convocatoria.ambitoGeografico = form.ambitoGeografico.value;
     this.convocatoria.clasificacionCVN = form.clasificacionCVN.value;
 
     return this.convocatoria;

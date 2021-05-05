@@ -30,12 +30,12 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
-      tramitacionSGI: new FormControl(false),
-      fasePresentacionSolicitudes: new FormControl(''),
+      tramitacionSGI: new FormControl(false, Validators.required),
+      fasePresentacionSolicitudes: new FormControl(null),
       formularioSolicitud: new FormControl(null),
       fechaInicioFase: new FormControl({ value: null, disabled: true }),
       fechaFinFase: new FormControl({ value: null, disabled: true }),
-      importeMaximoSolicitud: new FormControl(null, [Validators.maxLength(50)]),
+      importeMaximoSolicitud: new FormControl(null, Validators.maxLength(50)),
     });
     if (this.readonly) {
       form.disable();
@@ -50,6 +50,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           form.controls.fasePresentacionSolicitudes.setValidators([]);
         }
         form.controls.fasePresentacionSolicitudes.updateValueAndValidity();
+        form.controls.fasePresentacionSolicitudes.markAsTouched();
       }
     ));
 
@@ -107,15 +108,15 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   }
 
   getValue(): IConfiguracionSolicitud {
-    const form = this.getFormGroup().value;
+    const controls = this.getFormGroup().controls;
     if (this.configuracionSolicitud === null) {
       this.configuracionSolicitud = {} as IConfiguracionSolicitud;
     }
-    this.configuracionSolicitud.tramitacionSGI = form.tramitacionSGI ? true : false;
-    this.configuracionSolicitud.fasePresentacionSolicitudes = form.fasePresentacionSolicitudes ? form.fasePresentacionSolicitudes : null;
+    this.configuracionSolicitud.tramitacionSGI = controls.tramitacionSGI.value ? true : false;
+    this.configuracionSolicitud.fasePresentacionSolicitudes = controls.fasePresentacionSolicitudes.value;
 
-    this.configuracionSolicitud.formularioSolicitud = form.formularioSolicitud;
-    this.configuracionSolicitud.importeMaximoSolicitud = form.importeMaximoSolicitud;
+    this.configuracionSolicitud.formularioSolicitud = controls.formularioSolicitud.value;
+    this.configuracionSolicitud.importeMaximoSolicitud = controls.importeMaximoSolicitud.value;
 
     return this.configuracionSolicitud;
   }
@@ -162,6 +163,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
         plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
       configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
+      this.getFormGroup().controls.fasePresentacionSolicitudes.setValue(fasePresentacionSolicitudes, { onlySelf: true, emitEvent: false });
     }
 
     return this.configuracionSolicitudService.create(configuracion).pipe(
@@ -179,6 +181,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
         plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
       configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
+      this.getFormGroup().controls.fasePresentacionSolicitudes.setValue(fasePresentacionSolicitudes, { onlySelf: true, emitEvent: false });
     }
 
     return this.configuracionSolicitudService.update(Number(this.getKey()), configuracion).pipe(

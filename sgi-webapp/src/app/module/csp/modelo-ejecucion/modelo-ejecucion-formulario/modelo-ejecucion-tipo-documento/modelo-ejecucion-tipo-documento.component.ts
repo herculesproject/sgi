@@ -44,10 +44,14 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
   msgParamEntity = {};
   textoDelete: string;
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private dialogService: DialogService,
     private matDialog: MatDialog,
-    private actionService: ModeloEjecucionActionService,
+    actionService: ModeloEjecucionActionService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TIPO_DOCUMENTOS, actionService);
@@ -130,12 +134,11 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
       tipoDocumentos.push(wrapper.value.tipoDocumento);
       modeloTipoDocumentos.push(wrapper.value);
     });
-    const availableTipoFases = this.actionService.getTipoFases();
 
     const data: ModeloTipoDocumentoModalData = {
       modeloTipoDocumento,
       tipoDocumentos,
-      tipoFases: availableTipoFases,
+      tipoFases: this.formPart.modeloTipoFases.map(modelo => modelo.tipoFase),
       modeloTipoDocumentos,
       id: this.formPart.getKey() as number
     };
@@ -165,8 +168,4 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
     );
   }
 
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 }
-

@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -11,15 +11,12 @@ import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NumberValidator } from '@core/validators/number-validator';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
-import { merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('error.load');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const MIEMBRO_EQUIPO_SOLICITUD_ROL_PARTICIPACION_KEY = marker('csp.miembro-equipo-solicitud.rol-participacion');
@@ -41,12 +38,12 @@ export interface MiembroEquipoSolicitudModalData {
   styleUrls: ['./miembro-equipo-solicitud-modal.component.scss']
 })
 export class MiembroEquipoSolicitudModalComponent extends
-  BaseModalComponent<MiembroEquipoSolicitudModalData, MiembroEquipoSolicitudModalComponent> implements OnInit, OnDestroy {
+  BaseModalComponent<MiembroEquipoSolicitudModalData, MiembroEquipoSolicitudModalComponent> implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
   textSaveOrUpdate: string;
 
   saveDisabled = false;
-  rolesProyecto: IRolProyecto[] = [];
+  rolesProyecto$: Observable<IRolProyecto[]>;
   colectivosIdRolParticipacion: string[];
 
   msgParamRolParticipacionEntity = {};
@@ -54,10 +51,7 @@ export class MiembroEquipoSolicitudModalComponent extends
   msgParamEntity = {};
   title: string;
 
-  compareRolProyecto = (option: IRolProyecto, value: IRolProyecto) => option?.id === value?.id;
-
   constructor(
-    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<MiembroEquipoSolicitudModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MiembroEquipoSolicitudModalData,
@@ -71,11 +65,14 @@ export class MiembroEquipoSolicitudModalComponent extends
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.xs = 'row';
     this.textSaveOrUpdate = this.data.entidad?.id ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.rolesProyecto$ = this.rolProyectoService.findAll().pipe(
+      map(result => result.items)
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.loadRolProyectos();
     this.setupI18N();
 
     this.getColectivosRolProyecto(this.data.entidad?.rolProyecto?.id);
@@ -145,28 +142,10 @@ export class MiembroEquipoSolicitudModalComponent extends
     }
   }
 
-  private loadRolProyectos(): void {
-    const subcription = this.rolProyectoService.findAll().pipe(
-      map(result => result.items)
-    ).subscribe(
-      res => {
-        this.rolesProyecto = res;
-      },
-      error => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_INIT);
-      }
-    );
-    this.subscriptions.push(subcription);
-  }
-
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
-        rolProyecto: new FormControl(this.data.entidad.rolProyecto, [
-          Validators.required,
-          IsEntityValidator.isValid()
-        ]),
+        rolProyecto: new FormControl(this.data.entidad.rolProyecto, Validators.required),
         miembro: new FormControl({
           value: this.data.entidad.persona,
           disabled: !this.data.entidad.rolProyecto
@@ -275,7 +254,4 @@ export class MiembroEquipoSolicitudModalComponent extends
     formControl.markAsTouched({ onlySelf: true });
   }
 
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-  }
 }

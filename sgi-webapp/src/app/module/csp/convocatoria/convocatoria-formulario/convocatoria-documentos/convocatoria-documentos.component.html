@@ -59,27 +59,18 @@
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.convocatoria-documento.fase' | translate}}</mat-label>
-          <mat-select placeholder="{{'csp.convocatoria-documento.fase' | translate}}" formControlName="fase"
-            [compareWith]="compareFase">
-            <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let fase of tipoFases$ | async" [value]="fase">{{fase.nombre}}</mat-option>
-          </mat-select>
+          <sgi-select-entity #fase formControlName="fase" [options]="tipoFases$ | async">
+          </sgi-select-entity>
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.tipo' | translate}}</mat-label>
-          <mat-select placeholder="{{'csp.documento.tipo' | translate}}" formControlName="tipoDocumento"
-            [compareWith]="compareTipoDocumento">
-            <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{tipo.nombre}}</mat-option>
-          </mat-select>
+          <sgi-select-entity formControlName="tipoDocumento" [options]="tiposDocumento$ | async"
+            [resetOnChange]="fase.selectionChange">
+          </sgi-select-entity>
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.convocatoria-documento.publico' | translate}}</mat-label>
-          <mat-select placeholder="{{'csp.convocatoria-documento.publico' | translate}}" formControlName="publico"
-            required>
-            <mat-option [value]="true">{{'label.si' | translate }}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate }}</mat-option>
-          </mat-select>
+          <sgi-select-boolean formControlName="publico" required></sgi-select-boolean>
           <mat-error *ngIf="formGroup.get('publico').errors?.required">
             {{'error.required.entity' | translate:msgParamPublicoEntity}}
           </mat-error>

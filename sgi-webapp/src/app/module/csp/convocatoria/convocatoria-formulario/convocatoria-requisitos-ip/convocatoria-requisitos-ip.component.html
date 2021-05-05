@@ -70,6 +70,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria-requisito-ip.sexo' | translate}}</mat-label>
+        <!-- TODO: Convertir en enumerado -->
         <mat-select matNativeControl formControlName="sexo">
           <mat-option [value]="null"></mat-option>
           <mat-option [value]="'label.sexo.hombre' | translate">{{'label.sexo.hombre' | translate}}</mat-option>
@@ -83,11 +84,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria-requisito-ip.vinculacion-universidad' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="vinculacionUniversidad">
-          <mat-option [value]="null"></mat-option>
-          <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-          <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-        </mat-select>
+        <sgi-select-boolean formControlName="vinculacionUniversidad"></sgi-select-boolean>
       </mat-form-field>
     </div>
 

@@ -53,13 +53,8 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
-        <mat-label>{{'csp.convocatoria-requisito-equipo.vinculacion-universidad' | translate}}
-        </mat-label>
-        <mat-select matNativeControl formControlName="vinculacionUniversidad">
-          <mat-option [value]="null"></mat-option>
-          <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-          <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-        </mat-select>
+        <mat-label>{{'csp.convocatoria-requisito-equipo.vinculacion-universidad' | translate}}</mat-label>
+        <sgi-select-boolean formControlName="vinculacionUniversidad"></sgi-select-boolean>
       </mat-form-field>
     </div>
 

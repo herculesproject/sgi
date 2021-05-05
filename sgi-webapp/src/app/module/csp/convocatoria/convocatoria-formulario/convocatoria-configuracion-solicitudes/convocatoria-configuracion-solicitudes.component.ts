@@ -16,8 +16,8 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-configuracion-solicitudes.fragment';
@@ -54,7 +54,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
 
   private subscriptions: Subscription[] = [];
 
-  convocatoriaFase$: Observable<IConvocatoriaFase[]>;
   configuracionSolicitud: IConfiguracionSolicitud;
 
   msgParamDocumentoEntity = {};
@@ -93,16 +92,31 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.loadConvocatoriaFases();
-    this.initializeDataSource();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return wrapper.value.tipoDocumento.nombre;
+          case 'descripcion':
+            return wrapper.value.tipoDocumento.descripcion;
+          case 'observaciones':
+            return wrapper.value.observaciones;
+          default:
+            return wrapper[property];
+        }
+      };
+    this.dataSource.sort = this.sort;
 
     this.subscriptions.push(this.formPart.documentosRequeridos$.subscribe(elements => {
       this.dataSource.data = elements;
+      if (elements.length > 0) {
+        this.formGroup.controls.fasePresentacionSolicitudes.disable();
+      }
+      else {
+        this.formGroup.controls.fasePresentacionSolicitudes.enable();
+      }
     }));
-
-    this.subscriptions.push(this.formPart.convocatoriaFases$.subscribe(
-      () => this.loadConvocatoriaFases()
-    ));
   }
 
   private setupI18N(): void {
@@ -134,56 +148,8 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
     ).subscribe((value) => this.textoDelete = value);
   }
 
-  private initializeDataSource(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>, property: string) => {
-        switch (property) {
-          case 'nombre':
-            return wrapper.value.tipoDocumento.nombre;
-          case 'descripcion':
-            return wrapper.value.tipoDocumento.descripcion;
-          case 'observaciones':
-            return wrapper.value.observaciones;
-          default:
-            return wrapper[property];
-        }
-      };
-    this.dataSource.sort = this.sort;
-  }
-
-  /**
-   * Cargamos fases asignadas a la convocatoria
-   * del fragment
-   */
-  private loadConvocatoriaFases(): void {
-    this.convocatoriaFase$ = this.formGroup.controls.fasePresentacionSolicitudes.valueChanges
-      .pipe(
-        startWith(''),
-        map(value =>
-          this.filtroConvocatoriaFase(value)
-        )
-      );
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio
-   *
-   * @param value del input para autocompletar
-   */
-  private filtroConvocatoriaFase(value: string): IConvocatoriaFase[] {
-    const filterValue = value ? value?.toString().toLowerCase() : '';
-    return this.formPart.convocatoriaFases$.value.filter(convocatoriaFase =>
-      convocatoriaFase.tipoFase.nombre.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Devuelve el nombre de un Tipo Formulario Solicitud.
-   * @param formulario tipo formulario solicitud.
-   * @returns nombre de un tipo formulario solicitud.
-   */
-  getFormularioSolicitud(convocatoriaFase?: IConvocatoriaFase): string | undefined {
-    return typeof convocatoriaFase === 'string' ? convocatoriaFase : convocatoriaFase?.tipoFase.nombre;
+  displayerConvocatoriaFase(convocatoriaFase: IConvocatoriaFase): string {
+    return convocatoriaFase?.tipoFase?.nombre ?? '';
   }
 
   /**
@@ -202,12 +168,10 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
       tipoDocumento: undefined,
     };
 
-    const modeloEjecucionId = this.actionService.modeloEjecucionId;
-
     const data: ConvocatoriaConfiguracionSolicitudesModalData = {
       documentoRequerido: wrapper ? wrapper.value : documentosRequerido,
-      tipoFaseId: this.fragment.getFormGroup().controls.fasePresentacionSolicitudes.value.id,
-      modeloEjecucionId,
+      tipoFaseId: this.formGroup.controls.fasePresentacionSolicitudes.value?.tipoFase?.id,
+      modeloEjecucionId: this.actionService.modeloEjecucionId,
       readonly: this.formPart.readonly
     };
     const config = {
@@ -226,10 +190,6 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
           } else {
             this.formPart.addDocumentoRequerido(result.documentoRequerido);
           }
-          this.subscriptions.push(this.formPart.documentosRequeridos$.subscribe(elements => {
-            this.dataSource.data = elements;
-          })
-          );
         }
       }
     );

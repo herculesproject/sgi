@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { PartidaGastoDataModal, PartidaGastoModalComponent } from '../../../modals/partida-gasto-modal/partida-gasto-modal.component';
+import { PartidaGastoDataModal, PartidaGastoModalComponent } from '../../../shared/partida-gasto-modal/partida-gasto-modal.component';
 import { SolicitudProyectoPresupuestoActionService } from '../../solicitud-proyecto-presupuesto.action.service';
 import { SolicitudProyectoPresupuestoListado, SolicitudProyectoPresupuestoPartidasGastoFragment } from './solicitud-proyecto-presupuesto-partidas-gasto.fragment';
 

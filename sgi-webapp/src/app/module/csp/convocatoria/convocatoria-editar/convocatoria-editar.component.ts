@@ -8,6 +8,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CONVOCATORIA_ROUTE_NAMES } from '../convocatoria-route-names';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
@@ -36,8 +37,8 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   textoEditarSuccess: string;
   textoEditarError: string;
 
-  disableRegistrar = true;
-  disable = true;
+  disableRegistrar$: Subject<boolean> = new BehaviorSubject<boolean>(true);
+  private registrable = false;
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -54,17 +55,25 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
+    this.disableRegistrar$.next(true);
+    this.subscriptions.push(
+      this.convocatoriaService.registrable(this.actionService.id).subscribe(
+        registrable => {
+          this.registrable = registrable;
+          this.disableRegistrar$.next(!registrable);
+        }
+      )
+    );
+    this.subscriptions.push(this.actionService.status$.subscribe(
+      status => {
+        this.disableRegistrar$.next(!this.registrable || actionService.readonly || status.changes || status.errors);
+      }
+    ));
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.isDisableRegistrar();
-    this.subscriptions.push(this.actionService.status$.subscribe(
-      status => {
-        this.disableRegistrar = status.changes || status.errors;
-      }
-    ));
   }
 
   private setupI18N(): void {
@@ -132,21 +141,5 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
       }
     );
   }
-
-  /**
-   * Permite habilitar o deshabilitar el botón de registro en función de los datos de convocatoria
-   */
-  private isDisableRegistrar(): void {
-    this.subscriptions.push(
-      this.convocatoriaService.registrable(this.actionService.id).subscribe(
-        res => this.disable = !res,
-        (error) => {
-          this.logger.error(error);
-          this.disable = true;
-        }
-      )
-    );
-  }
-
 
 }

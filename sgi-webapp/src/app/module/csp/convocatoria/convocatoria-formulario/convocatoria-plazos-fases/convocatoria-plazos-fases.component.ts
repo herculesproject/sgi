@@ -11,7 +11,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaPlazosFaseModalComponent, ConvocatoriaPlazosFaseModalComponentData } from '../../modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
@@ -41,8 +41,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  plazosFase$: BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>;
-
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
@@ -56,7 +54,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
   ) {
     super(actionService.FRAGMENT.FASES, actionService);
     this.formPart = this.fragment as ConvocatoriaPlazosFasesFragment;
-    this.plazosFase$ = (this.fragment as ConvocatoriaPlazosFasesFragment).plazosFase$;
   }
 
   ngOnInit(): void {

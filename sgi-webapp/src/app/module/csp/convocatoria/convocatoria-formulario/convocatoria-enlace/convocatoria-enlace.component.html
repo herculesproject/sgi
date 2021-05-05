@@ -3,7 +3,7 @@
 
   <h2>{{'csp.convocatoria-enlace' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</h2>
 
-  <div *ngIf="disableAddEnlace" class="info-message">
+  <div *ngIf="!(actionService.hasModeloEjecucion$ | async)" class="info-message">
     {{'info.csp.convocatoria-enlace' | translate}}
   </div>
   <table class="mat-elevation-z8 table-enlace" mat-table [dataSource]="dataSource" matSort matSortActive="id"
@@ -61,7 +61,7 @@
 
   <div class="separation-button">
     <button color="three" aria-label="Center Align" mat-raised-button *ngIf="!formPart.readonly" (click)="openModal()"
-      [disabled]="disableAddEnlace">
+      [disabled]="!(actionService.hasModeloEjecucion$ | async)">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

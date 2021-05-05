@@ -13,8 +13,8 @@ import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatori
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { CONVOCATORIA_ROUTE_NAMES } from '../../convocatoria-route-names';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
@@ -46,10 +46,13 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
 
   formPart: ConvocatoriaConceptoGastoFragment;
   private subscriptions: Subscription[] = [];
+  costesIndirectos$ = new Subject<IConvocatoriaConceptoGasto[]>();
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumnsPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
-  displayedColumnsNoPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
+  displayedColumnsPermitidos =
+    ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
+  displayedColumnsNoPermitidos =
+    ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'mesInicial', 'mesFinal', 'observaciones', 'acciones'];
 
   msgParamEntityPermitido = {};
   msgParamEntityNoPermitido = {};
@@ -61,8 +64,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   @ViewChild('paginatorNoPermitidos', { static: true }) paginatorNoPermitidos: MatPaginator;
   @ViewChild('sortPermitidos', { static: true }) sortPermitidos: MatSort;
   @ViewChild('sortNoPermitidos', { static: true }) sortNoPermitidos: MatSort;
-
-  filteredCostesIndirectos: Observable<IConvocatoriaConceptoGasto[]>;
 
   constructor(
     protected actionService: ConvocatoriaActionService,
@@ -95,14 +96,8 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
     this.dataSourceNoPermitidos.paginator = this.paginatorNoPermitidos;
     this.dataSourceNoPermitidos.sort = this.sortNoPermitidos;
     this.subscriptions.push(this.formPart?.convocatoriaConceptoGastoPermitido$.subscribe(elements => {
+      this.costesIndirectos$.next(elements.map(element => element.value));
       this.dataSourcePermitidos.data = elements;
-      this.filteredCostesIndirectos = this.formPart.getFormGroup().controls.costeIndirecto.valueChanges
-        .pipe(
-          startWith(''),
-          map(value => {
-            return this.filterCosteIndirecto(value);
-          })
-        );
     }));
     this.subscriptions.push(this.formPart?.convocatoriaConceptoGastoNoPermitido$.subscribe(elements => {
       this.dataSourceNoPermitidos.data = elements;
@@ -148,7 +143,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
@@ -177,23 +171,7 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
     });
   }
 
-  private filterCosteIndirecto(value: string | IConvocatoriaConceptoGasto): IConvocatoriaConceptoGasto[] {
-    let filterValue: string;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      if (value === null) {
-        filterValue = '';
-      } else {
-        filterValue = value.conceptoGasto.nombre.toLowerCase();
-      }
-    }
-
-    return this.dataSourcePermitidos.data.filter
-      (wrapper => wrapper.value.conceptoGasto.nombre.toLowerCase().includes(filterValue)).map(wrapper => wrapper.value);
-  }
-
-  getCosteIndirecto(costeIndirecto: IConvocatoriaConceptoGasto): string {
+  displayerCosteIndirecto(costeIndirecto: IConvocatoriaConceptoGasto): string {
     const nombreCosteIndirecto = costeIndirecto?.conceptoGasto?.nombre;
     let mesesCosteIndirecto = '';
     if (costeIndirecto?.mesInicial) {

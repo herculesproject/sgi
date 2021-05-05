@@ -5,7 +5,6 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { CspModalsModule } from '../modals/csp-modals.module';
 import { ConvocatoriaConceptoGastoCrearComponent } from './convocatoria-concepto-gasto-crear/convocatoria-concepto-gasto-crear.component';
 import { ConvocatoriaConceptoGastoDataResolver } from './convocatoria-concepto-gasto-data.resolver';
 import {
@@ -32,8 +31,7 @@ import { ConvocatoriaConceptoGastoCodigoEcModalComponent } from './modals/convoc
     ConvocatoriaConceptoGastoRouting,
     SgiAuthModule,
     FormsModule,
-    ReactiveFormsModule,
-    CspModalsModule
+    ReactiveFormsModule
   ],
   providers: [
     ConvocatoriaConceptoGastoDataResolver

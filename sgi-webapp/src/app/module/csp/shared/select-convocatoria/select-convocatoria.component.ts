@@ -10,8 +10,8 @@ import { SearchConvocatoriaModalComponent } from './dialog/search-convocatoria.c
 
 @Component({
   selector: 'sgi-select-convocatoria',
-  templateUrl: '../../core/component/select-dialog/select-dialog.component.html',
-  styleUrls: ['../../core/component/select-dialog/select-dialog.component.scss'],
+  templateUrl: '../../../../core/component/select-dialog/select-dialog.component.html',
+  styleUrls: ['../../../../core/component/select-dialog/select-dialog.component.scss'],
   // tslint:disable-next-line: no-inputs-metadata-property
   inputs: ['disabled', 'disableRipple', 'tabIndex'],
   changeDetection: ChangeDetectionStrategy.OnPush,

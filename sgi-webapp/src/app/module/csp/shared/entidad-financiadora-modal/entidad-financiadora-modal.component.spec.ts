@@ -10,7 +10,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-
+import { CspSharedModule } from '../csp-shared.module';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from './entidad-financiadora-modal.component';
 
 describe('EntidadFinanciadoraModalComponent', () => {
@@ -38,7 +38,8 @@ describe('EntidadFinanciadoraModalComponent', () => {
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
+        CspSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

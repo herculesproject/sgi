@@ -12,18 +12,10 @@
         <mat-label>
           {{'csp.miembro-equipo-proyecto.rol-participacion' | translate}}
         </mat-label>
-        <mat-select formControlName="rolParticipacion" [compareWith]="compareRolProyecto"
-          placeholder="{{'csp.miembro-equipo-solicitud.rol-participacion' | translate}}">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let rolParticipacion of rolesProyecto" [value]="rolParticipacion">
-            {{rolParticipacion?.nombre}}
-          </mat-option>
-        </mat-select>
+        <sgi-select-entity formControlName="rolParticipacion" required [options]="rolesProyecto$ | async">
+        </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.rolParticipacion.errors?.required">
           {{'error.required.entity' | translate:msgParamRolParticipacionEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.rolParticipacion.errors?.invalid">
-          {{'error.invalid.entity' | translate:msgParamRolParticipacionEntity}}
         </mat-error>
       </mat-form-field>
     </div>

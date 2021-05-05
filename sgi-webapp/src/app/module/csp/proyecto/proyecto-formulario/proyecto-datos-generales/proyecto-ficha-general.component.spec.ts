@@ -10,6 +10,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { PROYECTO_DATA_KEY } from '../../proyecto-data.resolver';
 import { IProyectoData, ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralComponent } from './proyecto-ficha-general.component';
@@ -37,7 +38,8 @@ describe('ProyectoFichaGeneralComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        SharedModule
+        SharedModule,
+        CspSharedModule
       ],
       providers: [
         ProyectoActionService,

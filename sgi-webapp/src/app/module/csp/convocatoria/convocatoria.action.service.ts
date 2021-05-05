@@ -26,7 +26,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_DATA_KEY } from './convocatoria-data.resolver';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
 import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.fragment';
@@ -83,13 +83,11 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   private configuracionSolicitudes: ConvocatoriaConfiguracionSolicitudesFragment;
 
   private dialogService: DialogService;
-  private destionarioRequisitoIP = false;
-  private destionarioRequisitoEquipo = false;
 
   private readonly data: IConvocatoriaData;
   public readonly id: number;
 
-  public readonly blockAddPlazos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  public readonly hasModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   private modeloEjecucion: IModeloEjecucion;
   get modeloEjecucionId(): number {
@@ -203,8 +201,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     }));
     this.subscriptions.push(this.datosGenerales.modeloEjecucion$.subscribe(
       (modeloEjecucion) => {
-        this.blockAddPlazos$.next(!Boolean(modeloEjecucion));
         this.modeloEjecucion = modeloEjecucion;
+        this.hasModeloEjecucion$.next(Boolean(modeloEjecucion));
       }
     ));
 
@@ -223,8 +221,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     }
 
     return !(convocatoriaFaseEliminada.tipoFase.id === fasePresentacionSolicitudes?.tipoFase?.id
-      && convocatoriaFaseEliminada.fechaInicio === fasePresentacionSolicitudes?.fechaInicio
-      && convocatoriaFaseEliminada.fechaFin === fasePresentacionSolicitudes?.fechaFin
+      && convocatoriaFaseEliminada.fechaInicio.equals(fasePresentacionSolicitudes?.fechaInicio)
+      && convocatoriaFaseEliminada.fechaFin.equals(fasePresentacionSolicitudes?.fechaFin)
       && convocatoriaFaseEliminada.observaciones === fasePresentacionSolicitudes?.observaciones);
   }
 
@@ -234,39 +232,41 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       return throwError('Errores');
     }
     if (this.isEdit()) {
-      return this.datosGenerales.saveOrUpdate().pipe(
-        switchMap(() => {
-          this.datosGenerales.refreshInitialState(true);
-          return this.plazosFases.saveOrUpdate();
-        }),
-        switchMap(() => {
-          this.plazosFases.refreshInitialState(true);
-          return this.elegibilidad.saveOrUpdate();
-        }),
-        switchMap(() => {
-          this.elegibilidad.refreshInitialState(true);
-
-          return super.saveOrUpdate();
-        })
+      let cascade = of(void 0);
+      if (this.datosGenerales.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.datosGenerales.saveOrUpdate().pipe(tap(() => this.datosGenerales.refreshInitialState(true))))
+        );
+      }
+      if (this.plazosFases.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.plazosFases.saveOrUpdate().pipe(tap(() => this.plazosFases.refreshInitialState(true))))
+        );
+      }
+      return cascade.pipe(
+        switchMap(() => super.saveOrUpdate())
       );
     } else {
-      return this.datosGenerales.saveOrUpdate().pipe(
-        switchMap((key) => {
-          this.datosGenerales.refreshInitialState(true);
-          if (typeof key === 'string' || typeof key === 'number') {
-            this.onKeyChange(key);
-          }
-          return this.plazosFases.saveOrUpdate();
-        }),
-        switchMap(() => {
-          this.plazosFases.refreshInitialState(true);
-          return this.elegibilidad.saveOrUpdate();
-        }),
-        switchMap(() => {
-          this.elegibilidad.refreshInitialState(true);
-
-          return super.saveOrUpdate();
-        })
+      let cascade = of(void 0);
+      if (this.datosGenerales.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.datosGenerales.saveOrUpdate().pipe(
+            tap((key) => {
+              this.datosGenerales.refreshInitialState(true);
+              if (typeof key === 'string' || typeof key === 'number') {
+                this.onKeyChange(key);
+              }
+            })
+          ))
+        );
+      }
+      if (this.plazosFases.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.plazosFases.saveOrUpdate().pipe(tap(() => this.plazosFases.refreshInitialState(true))))
+        );
+      }
+      return cascade.pipe(
+        switchMap(() => super.saveOrUpdate())
       );
     }
   }

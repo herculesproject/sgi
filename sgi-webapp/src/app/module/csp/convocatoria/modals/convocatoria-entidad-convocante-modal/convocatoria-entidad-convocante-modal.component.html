@@ -21,16 +21,7 @@
     <div>
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria-entidad-convocante.plan' | translate}}</mat-label>
-        <input type="text" placeholder="{{'csp.convocatoria-entidad-convocante.plan' | translate}}" arial-label="Number"
-          matInput formControlName="plan" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombrePlan">
-          <mat-option *ngFor="let plan of planes$ | async" [value]="plan">
-            {{plan.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.plan.errors?.invalid">
-          {{'error.required.entity' | translate:msgParamPlanEntity}}
-        </mat-error>
+          <sgi-select-programa formControlName="plan"></sgi-select-programa>
       </mat-form-field>
     </div>
     <div class="programa" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"

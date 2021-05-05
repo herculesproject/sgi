@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -9,9 +9,8 @@ import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 const MODELO_EJECUCION_TIPO_ENLACE = marker('csp.tipo-enlace');
 const MODELO_EJECUCION_TIPO_ENLACE_TIPO = marker('csp.modelo-ejecucion-tipo-enlace.tipo');
@@ -46,17 +45,19 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
   ) {
     super(snackBarService, matDialogRef, data.modeloTipoEnlace);
     this.textSaveOrUpdate = this.data.modeloTipoEnlace?.tipoEnlace ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.tipoEnlaces$ = this.tipoEnlaceService.findAll().pipe(
+      map(result => {
+        return result.items.filter((tipoEnlace: ITipoEnlace) => {
+          return !this.data.tipoEnlaces.some((currentTipo) => currentTipo.id === tipoEnlace.id);
+        });
+      })
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.tipoEnlaces$ = this.tipoEnlaceService.findAll().pipe(
-      switchMap((result: SgiRestListResult<ITipoEnlace>) => {
-        const list = this.filterExistingTipoEnlace(result);
-        return of(list);
-      })
-    );
   }
 
   private setupI18N(): void {
@@ -78,16 +79,9 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
     ).subscribe((value) => this.title = value);
   }
 
-
-  private filterExistingTipoEnlace(result: SgiRestListResult<ITipoEnlace>): ITipoEnlace[] {
-    return result.items.filter((tipoEnlace: ITipoEnlace) => {
-      return !this.data.tipoEnlaces.find((currentTipo) => currentTipo.id === tipoEnlace.id);
-    });
-  }
-
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      tipoEnlace: new FormControl(this.data.modeloTipoEnlace?.tipoEnlace)
+      tipoEnlace: new FormControl(this.data.modeloTipoEnlace?.tipoEnlace, Validators.required)
     });
     return formGroup;
   }
@@ -97,4 +91,5 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
     modeloTipoEnlace.tipoEnlace = this.formGroup.get('tipoEnlace').value;
     return modeloTipoEnlace;
   }
+
 }

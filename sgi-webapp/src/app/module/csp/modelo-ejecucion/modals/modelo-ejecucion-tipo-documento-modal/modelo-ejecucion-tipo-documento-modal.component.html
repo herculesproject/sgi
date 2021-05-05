@@ -10,12 +10,9 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.documento.tipo' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="tipoDocumento" required>
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let tipoDocumento of tipoDocumentos$ | async" [value]="tipoDocumento">
-            {{tipoDocumento.nombre}}
-          </mat-option>
-        </mat-select>
+            <sgi-select-entity #tipoDocumento formControlName="tipoDocumento" required
+              [options]="tipoDocumentos$ | async">
+            </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
           {{'error.required.entity' | translate:msgParamTipoEntiy}}
         </mat-error>
@@ -25,12 +22,9 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
         <mat-label>{{'csp.modelo-ejecucion-tipo-documento.fase' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="tipoFase" [required]="isFaseRequired">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let tipoFase of tipoFases$ | async" [value]="tipoFase">
-            {{tipoFase.nombre}}
-          </mat-option>
-        </mat-select>
+            <sgi-select-entity formControlName="tipoFase" [required]="isFaseRequired" [options]="tipoFases$ | async"
+              [resetOnChange]="tipoDocumento.selectionChange">
+            </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.tipoFase.errors?.required">
           {{'error.required.entity' | translate:msgParamFaseEntiy}}
         </mat-error>

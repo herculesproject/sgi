@@ -547,7 +547,7 @@ export class Group implements IGroup {
 
   load(form: FormGroup): void {
     this.form = form;
-    this.initialState = form.value;
+    this.initialState = form.getRawValue();
   }
 
   initialize(): void {
@@ -582,7 +582,7 @@ export class Group implements IGroup {
 
   patch(value: { [key: string]: any }) {
     this.form.patchValue(value, { onlySelf: false, emitEvent: true });
-    this.initialState = this.form.value;
+    this.initialState = this.form.getRawValue();
     this.editing = true;
   }
 
@@ -648,7 +648,7 @@ export class Group implements IGroup {
       return this.status$.value.changes;
     }
     else {
-      return this.form ? !this.deepEquals(this.initialState, this.form.value) : false;
+      return this.form ? !this.deepEquals(this.initialState, this.form.getRawValue()) : false;
     }
   }
 
@@ -662,7 +662,7 @@ export class Group implements IGroup {
   private checkChanges(): void {
     let value = false;
     if (this.form) {
-      value = !this.deepEquals(this.initialState, this.form.value);
+      value = !this.deepEquals(this.initialState, this.form.getRawValue());
     }
     this.publishChanges(value);
   }
@@ -691,7 +691,7 @@ export class Group implements IGroup {
   }
 
   refreshInitialState(transitionToEdit?: boolean): void {
-    this.initialState = this.form ? this.form.value : undefined;
+    this.initialState = this.form ? this.form.getRawValue() : undefined;
     if (transitionToEdit) {
       this.editing = true;
     }

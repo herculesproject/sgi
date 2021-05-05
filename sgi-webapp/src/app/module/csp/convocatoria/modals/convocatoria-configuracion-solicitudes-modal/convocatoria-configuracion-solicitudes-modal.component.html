@@ -9,20 +9,11 @@
     <!-- Tipo de documento -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
-        <mat-label>{{'csp.documento.tipo' | translate}}
-        </mat-label>
-        <input matInput formControlName="tipoDocumento" type="text" placeholder="{{'csp.documento.tipo' | translate}}"
-          [matAutocomplete]="autoTipoDocumento" required>
-        <mat-autocomplete #autoTipoDocumento="matAutocomplete" [displayWith]="getNombreTipoDocumento">
-          <mat-option *ngFor="let tipoDocumento of documentoRequerido$ | async" [value]="tipoDocumento">
-            {{tipoDocumento.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+        <mat-label>{{'csp.documento.tipo' | translate}}</mat-label>
+        <sgi-select-entity formControlName="tipoDocumento" [options]="documentosRequeridos$ | async" required>
+        </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
           {{'error.required.entity' | translate:msgParamTipoDocumentoEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.invalid">
-          {{'error.invalid.entity' | translate:msgParamTipoDocumentoEntity}}
         </mat-error>
       </mat-form-field>
     </div>

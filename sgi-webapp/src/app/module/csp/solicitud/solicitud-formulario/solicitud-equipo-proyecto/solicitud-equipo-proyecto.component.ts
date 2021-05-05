@@ -15,7 +15,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { MiembroEquipoSolicitudModalData, MiembroEquipoSolicitudModalComponent } from '../../../modals/miembro-equipo-solicitud-modal/miembro-equipo-solicitud-modal.component';
+import { MiembroEquipoSolicitudModalComponent, MiembroEquipoSolicitudModalData } from '../../../shared/miembro-equipo-solicitud-modal/miembro-equipo-solicitud-modal.component';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudEquipoProyectoFragment } from './solicitud-equipo-proyecto.fragment';

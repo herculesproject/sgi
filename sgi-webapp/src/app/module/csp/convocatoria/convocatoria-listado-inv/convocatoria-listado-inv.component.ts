@@ -3,36 +3,26 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
-import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
-import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
-import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
-import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
-import { map, mergeAll, startWith, switchMap } from 'rxjs/operators';
+import { map, mergeAll, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('error.load');
-const MSG_ERROR_INIT = marker('error.load');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
+
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
@@ -56,29 +46,16 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   busquedaAvanzada = false;
 
-  private finalidadFiltered = [] as ITipoFinalidad[];
-  finalidades$: Observable<ITipoFinalidad[]>;
-
-  private tipoAmbitoGeograficoFiltered = [] as ITipoAmbitoGeografico[];
-  tipoAmbitosGeograficos$: Observable<ITipoAmbitoGeografico[]>;
-
-  private fuenteFinanciacionFiltered = [] as IFuenteFinanciacion[];
-  fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
-
-  private areaTematicaFiltered = [] as IAreaTematica[];
-  areaTematica$: Observable<IAreaTematica[]>;
-
   msgParamAreaTematicaEntity = {};
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
-    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
-    private tipoFinalidadService: TipoFinalidadService,
-    private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
-    private fuenteFinanciacionService: FuenteFinanciacionService,
-    private areaTematicaService: AreaTematicaService,
     private translate: TranslateService
   ) {
     super(snackBarService, MSG_ERROR);
@@ -104,19 +81,15 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
       fechaPublicacionHasta: new FormControl(null),
       abiertoPlazoPresentacionSolicitud: new FormControl(true),
       aplicarFiltro: new FormControl(true),
-      finalidad: new FormControl(''),
-      ambitoGeografico: new FormControl('', [IsEntityValidator.isValid()]),
-      entidadConvocante: new FormControl(''),
-      entidadFinanciadora: new FormControl(''),
-      fuenteFinanciacion: new FormControl(''),
-      areaTematica: new FormControl('', [IsEntityValidator.isValid()]),
+      finalidad: new FormControl(null),
+      ambitoGeografico: new FormControl(null),
+      entidadConvocante: new FormControl(null),
+      entidadFinanciadora: new FormControl(null),
+      fuenteFinanciacion: new FormControl(null),
+      areaTematica: new FormControl(null),
     });
-    this.loadAmbitosGeograficos();
-    this.loadFinalidades();
-    this.fuenteFinanciacion();
-    this.loadAreasTematica();
-    this.filter = this.createFilter();
 
+    this.filter = this.createFilter();
   }
 
   private setupI18N(): void {
@@ -237,173 +210,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   onClearFilters() {
     this.formGroup.reset();
+    this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue(true);
     this.onSearch();
-  }
-
-  /**
-   * Cargar areas tematicas
-   */
-  private loadAreasTematica() {
-    this.suscripciones.push(
-      this.areaTematicaService.findAll().subscribe(
-        (res: SgiRestListResult<IAreaTematica>) => {
-          this.areaTematicaFiltered = res.items;
-          this.areaTematica$ = this.formGroup.controls.areaTematica.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroAreaTematica(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
-        }
-      )
-    );
-  }
-
-  /**
-   * Cargar fuente financiacion
-   */
-  private fuenteFinanciacion() {
-    this.suscripciones.push(
-      this.fuenteFinanciacionService.findAll().subscribe(
-        (res: SgiRestListResult<IFuenteFinanciacion>) => {
-          this.fuenteFinanciacionFiltered = res.items;
-          this.fuenteFinanciacion$ = this.formGroup.controls.fuenteFinanciacion.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroFuenteFinanciacion(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
-        }
-      )
-    );
-  }
-
-  /**
-   * Cargar ambitos geograficos
-   */
-  private loadAmbitosGeograficos() {
-    this.suscripciones.push(
-      this.tipoAmbitoGeograficoService.findAll().subscribe(
-        res => {
-          this.tipoAmbitoGeograficoFiltered = res.items;
-          this.tipoAmbitosGeograficos$ = this.formGroup.controls.ambitoGeografico.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroTipoAmbitoGeografico(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
-        }
-      )
-    );
-  }
-
-  /**
-   * Carga finalidades
-   */
-  private loadFinalidades() {
-    this.suscripciones.push(
-      this.tipoFinalidadService.findAll().subscribe(
-        res => {
-          this.finalidadFiltered = res.items;
-          this.finalidades$ = this.formGroup.controls.finalidad.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroFinalidades(value))
-            );
-        },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR_INIT);
-        }
-      )
-    );
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio
-   *
-   * @param value del input para autocompletar
-   */
-  private filtroFinalidades(value: string): ITipoFinalidad[] {
-    const filterValue = value?.toString().toLowerCase();
-    return this.finalidadFiltered.filter(finalidad => finalidad.nombre.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio
-   *
-   * @param value del input para autocompletar
-   */
-  private filtroTipoAmbitoGeografico(value: string): ITipoAmbitoGeografico[] {
-    const filterValue = value?.toString().toLowerCase();
-    return this.tipoAmbitoGeograficoFiltered.filter(
-      ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue)
-    );
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio
-   *
-   * @param value del input para autocompletar
-   */
-  private filtroFuenteFinanciacion(value: string): IFuenteFinanciacion[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.fuenteFinanciacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Filtra la lista devuelta area tematica
-   *
-   * @param value del input para autocompletar
-   */
-  private filtroAreaTematica(value: string): IAreaTematica[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.areaTematicaFiltered.filter(area => area.nombre.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Devuelve el nombre de una finalidad.
-   * @param finalidad finalidad.
-   * @returns nombre de una finalidad.
-   */
-  getFinalidad(finalidad?: ITipoFinalidad): string | undefined {
-    return typeof finalidad === 'string' ? finalidad : finalidad?.nombre;
-  }
-
-  /**
-   * Devuelve el nombre de un ámbito geográfico.
-   * @param tipoAmbitoGeografico ámbito geográfico.
-   * @returns nombre de un ámbito geográfico.
-   */
-  getTipoAmbitoGeografico(tipoAmbitoGeografico?: ITipoAmbitoGeografico): string | undefined {
-    return typeof tipoAmbitoGeografico === 'string' ? tipoAmbitoGeografico : tipoAmbitoGeografico?.nombre;
-  }
-
-  /**
-   * Devuelve el nombre de una fuente de financiacion.
-   * @param fuente de financiacion fuente de financiacion.
-   * @returns nombre de una fuente de financiacion
-   */
-  getFuenteFinanciacion(fuente?: IFuenteFinanciacion): string | undefined {
-    return typeof fuente === 'string' ? fuente : fuente?.nombre;
-  }
-
-  /**
-   * Devuelve el nombre de una area tematica
-   * @param area area tematica
-   * @returns nombre de area tematica
-   */
-  getAreaTematica(area?: IAreaTematica): string | undefined {
-    return typeof area === 'string' ? area : area?.nombre;
   }
 
   /**
@@ -414,10 +222,6 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue(!this.busquedaAvanzada);
     this.formGroup.controls.aplicarFiltro.setValue(!this.busquedaAvanzada);
     this.onSearch();
-  }
-
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
   }
 
 }

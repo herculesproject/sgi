@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
@@ -47,7 +48,6 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
   convocatoriaConceptoGastosFiltered: IConvocatoriaConceptoGasto[];
   convocatoriaConceptoGastos$: Observable<IConvocatoriaConceptoGasto[]>;
 
-  codigosEconomicosFiltered: ICodigoEconomico[];
   codigosEconomicos$: Observable<ICodigoEconomico[]>;
   textSaveOrUpdate: string;
 
@@ -56,10 +56,9 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
   title: string;
 
   constructor(
-    private logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoCodigoEcModalComponent>,
-    private codigoEconomicoService: CodigoEconomicoService,
+    codigoEconomicoService: CodigoEconomicoService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoCodigoEcModalComponent,
     private readonly translate: TranslateService
   ) {
@@ -69,13 +68,34 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
     this.fxLayoutProperties.layoutAlign = 'row';
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.xs = 'column';
+
+    this.codigosEconomicos$ = codigoEconomicoService.findByGastos().pipe(
+      map(response => response.items)
+    );
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.loadCodigosEconomicos();
     this.textSaveOrUpdate = this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef ? MSG_ACEPTAR : MSG_ANADIR;
+
+    this.subscriptions.push(this.codigosEconomicos$.subscribe(
+      (codigosEconomicos) => this.formGroup.controls.codigoEconomicoRef.setValidators(
+        SelectValidator.isSelectOption(codigosEconomicos.map(cod => cod.codigoEconomicoRef), true)
+      )
+    ));
+
+    this.subscriptions.push(this.formGroup.controls.codigoEconomicoRef.valueChanges.subscribe(
+      (value) => {
+        if (!this.formGroup.controls.codigoEconomicoRef.disabled
+          && !!!this.formGroup.controls.fechaInicio.value
+          && !!!this.formGroup.controls.fechaInicio.value
+        ) {
+          this.formGroup.controls.fechaInicio.setValue(value.fechaInicio);
+          this.formGroup.controls.fechaFin.setValue(value.fechaFin);
+        }
+      }
+    ));
   }
 
   private setupI18N(): void {
@@ -126,43 +146,23 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
     }
   }
 
-  private loadCodigosEconomicos() {
-    const subscription = this.codigoEconomicoService.findByGastos().subscribe(
-      (res: SgiRestListResult<ICodigoEconomico>) => {
-        this.codigosEconomicosFiltered = res.items;
-        this.formGroup.controls.codigoEconomicoRef.setValidators(SelectValidator.isSelectOption(
-          this.codigosEconomicosFiltered.map(cod => cod.codigoEconomicoRef), true));
-        this.codigosEconomicos$ = this.formGroup.controls.codigoEconomicoRef.valueChanges.pipe(
-          startWith(''),
-          map(value => this.filtroCodigoEconomico(value))
-        );
-      },
-      (error) => {
-        this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(error);
-      }
-    );
-    this.subscriptions.push(subscription);
-  }
-
-  filtroCodigoEconomico(value: string): ICodigoEconomico[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.codigosEconomicosFiltered
-      .filter(codigo => codigo.codigoEconomicoRef.toLowerCase().includes(filterValue));
-  }
-
-  getCodigoEconomico(codigoEconomico?: ICodigoEconomico): string {
-    if (this.formGroup.controls.fechaInicio.value === null && this.formGroup.controls.fechaInicio.value === null) {
-      this.formGroup.controls.fechaInicio.setValue(codigoEconomico.fechaInicio);
-      this.formGroup.controls.fechaFin.setValue(codigoEconomico.fechaFin);
+  comparerCodigoEconomico(o1: ICodigoEconomico, o2: ICodigoEconomico): boolean {
+    if (o1 && o2) {
+      return o1?.codigoEconomicoRef === o2?.codigoEconomicoRef;
     }
-    return codigoEconomico && typeof codigoEconomico === 'string'
-      ? codigoEconomico
-      : codigoEconomico?.codigoEconomicoRef;
+    return o1 === o2;
+  }
+
+  displayerCodigoEconomico(codigoEconomico: ICodigoEconomico) {
+    return codigoEconomico?.codigoEconomicoRef ?? '';
+  }
+
+  sorterCodigoEconomico(o1: SelectValue<ICodigoEconomico>, o2: SelectValue<ICodigoEconomico>): number {
+    return o1?.displayText.localeCompare(o2?.displayText);
   }
 
   protected getDatosForm(): IConvocatoriaConceptoGastoCodigoEcModalComponent {
-    this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef = this.formGroup.controls.codigoEconomicoRef.value;
+    this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef = this.formGroup.controls.codigoEconomicoRef.value?.codigoEconomicoRef;
     this.data.convocatoriaConceptoGastoCodigoEc.observaciones = this.formGroup.controls.observaciones.value;
     this.data.convocatoriaConceptoGastoCodigoEc.fechaInicio = this.formGroup.controls.fechaInicio.value;
     this.data.convocatoriaConceptoGastoCodigoEc.fechaFin = this.formGroup.controls.fechaFin.value;
@@ -170,9 +170,12 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
+    const codigoEconomico = this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef
+      ? { codigoEconomicoRef: this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef } as ICodigoEconomico
+      : null;
     const formGroup = new FormGroup(
       {
-        codigoEconomicoRef: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef),
+        codigoEconomicoRef: new FormControl(codigoEconomico),
         fechaInicio: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaInicio),
         fechaFin: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaFin),
         observaciones: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.observaciones),

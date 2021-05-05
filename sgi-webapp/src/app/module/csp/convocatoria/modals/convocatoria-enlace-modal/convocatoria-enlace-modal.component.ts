@@ -5,19 +5,15 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
-import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { StringValidator } from '@core/validators/string-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('error.load');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const CONVOCATORIA_ENLACE_KEY = marker('csp.convocatoria-enlace');
@@ -40,8 +36,7 @@ export class ConvocatoriaEnlaceModalComponent extends
   BaseModalComponent<ConvocatoriaEnlaceModalComponentData, ConvocatoriaEnlaceModalComponent> implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
 
-  modeloTiposEnlace$: Observable<IModeloTipoEnlace[]>;
-  private modeloTiposEnlaceFiltered: IModeloTipoEnlace[];
+  tiposEnlace$: Observable<ITipoEnlace[]>;
   textSaveOrUpdate: string;
 
   msgParamUrlEntity = {};
@@ -50,10 +45,9 @@ export class ConvocatoriaEnlaceModalComponent extends
   title: string;
 
   constructor(
-    private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaEnlaceModalComponent>,
-    private modeloEjecucionService: ModeloEjecucionService,
+    modeloEjecucionService: ModeloEjecucionService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEnlaceModalComponentData,
     private readonly translate: TranslateService
   ) {
@@ -61,15 +55,17 @@ export class ConvocatoriaEnlaceModalComponent extends
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
     this.fxLayoutProperties.layoutAlign = 'row';
+
+    this.tiposEnlace$ = modeloEjecucionService.findModeloTipoEnlace(this.data.idModeloEjecucion).pipe(
+      map(response => response.items.map(modeloTipoEnlace => modeloTipoEnlace.tipoEnlace))
+    );
   }
 
   ngOnInit() {
     super.ngOnInit();
     this.setupI18N();
-    this.loadTiposEnlaces();
     this.textSaveOrUpdate = this.data.enlace.url ? MSG_ACEPTAR : MSG_ANADIR;
   }
-
 
   private setupI18N(): void {
     this.translate.get(
@@ -105,38 +101,6 @@ export class ConvocatoriaEnlaceModalComponent extends
         })
       ).subscribe((value) => this.title = value);
     }
-
-  }
-
-  /**
-   * Carga todos los tipos de enlace
-   */
-  loadTiposEnlaces(): void {
-    this.subscriptions.push(this.modeloEjecucionService.findModeloTipoEnlace(this.data.idModeloEjecucion).subscribe(
-      (res) => {
-        this.modeloTiposEnlaceFiltered = res.items;
-        this.modeloTiposEnlace$ = this.formGroup.controls.tipoEnlace.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filtroTipoEnlace(value))
-          );
-      },
-      (error) => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR_INIT);
-      })
-    );
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio.
-   *
-   * @param value del input para autocompletar
-   */
-  filtroTipoEnlace(value: string): IModeloTipoEnlace[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.modeloTiposEnlaceFiltered.filter(modeloTipoLazoEnlace =>
-      modeloTipoLazoEnlace.tipoEnlace?.nombre.toLowerCase().includes(filterValue));
   }
 
   protected getDatosForm(): ConvocatoriaEnlaceModalComponentData {
@@ -153,7 +117,7 @@ export class ConvocatoriaEnlaceModalComponent extends
         StringValidator.notIn(this.data.selectedUrls.filter(url => url !== this.data.enlace.url))
       ]),
       descripcion: new FormControl(this.data.enlace.descripcion, [Validators.maxLength(250)]),
-      tipoEnlace: new FormControl(this.data.enlace.tipoEnlace, [IsEntityValidator.isValid()]),
+      tipoEnlace: new FormControl(this.data.enlace.tipoEnlace),
     });
     if (this.data.readonly) {
       formGroup.disable();
@@ -161,7 +125,4 @@ export class ConvocatoriaEnlaceModalComponent extends
     return formGroup;
   }
 
-  getNombreTipoEnlace(tipoEnlace?: ITipoEnlace): string | undefined {
-    return typeof tipoEnlace === 'string' ? tipoEnlace : tipoEnlace?.nombre;
-  }
 }
