@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
+
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
@@ -63,6 +64,15 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
         .append("/").append(String.format("%03d", numEvaluacion));
 
     peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
+
+    if (peticionEvaluacion.getExisteFinanciacion()) {
+      Assert.notNull(peticionEvaluacion.getFuenteFinanciacion(),
+          "PeticionEvaluacion fuenteFinanciacion no puede ser null si existeFinanciacion");
+      Assert.notNull(peticionEvaluacion.getEstadoFinanciacion(),
+          "PeticionEvaluacion estadoFinanciacion no puede ser null si existeFinanciacion");
+      Assert.notNull(peticionEvaluacion.getImporteFinanciacion(),
+          "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
+    }
 
     return peticionEvaluacionRepository.save(peticionEvaluacion);
   }
@@ -150,6 +160,15 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     Assert.notNull(peticionEvaluacionActualizar.getId(),
         "PeticionEvaluacion id no puede ser null para actualizar una petición de evaluación");
 
+    if (peticionEvaluacionActualizar.getExisteFinanciacion()) {
+      Assert.notNull(peticionEvaluacionActualizar.getFuenteFinanciacion(),
+          "PeticionEvaluacion fuenteFinanciacion no puede ser null si existeFinanciacion");
+      Assert.notNull(peticionEvaluacionActualizar.getEstadoFinanciacion(),
+          "PeticionEvaluacion estadoFinanciacion no puede ser null si existeFinanciacion");
+      Assert.notNull(peticionEvaluacionActualizar.getImporteFinanciacion(),
+          "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
+    }
+
     return peticionEvaluacionRepository.findById(peticionEvaluacionActualizar.getId()).map(peticionEvaluacion -> {
       peticionEvaluacion.setCodigo(peticionEvaluacionActualizar.getCodigo());
       peticionEvaluacion.setDisMetodologico(peticionEvaluacionActualizar.getDisMetodologico());
@@ -167,6 +186,9 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setPersonaRef(peticionEvaluacionActualizar.getPersonaRef());
       peticionEvaluacion.setValorSocial(peticionEvaluacionActualizar.getValorSocial());
       peticionEvaluacion.setActivo(peticionEvaluacionActualizar.getActivo());
+      peticionEvaluacion.setExisteFinanciacion(peticionEvaluacionActualizar.getExisteFinanciacion());
+      peticionEvaluacion.setEstadoFinanciacion(peticionEvaluacionActualizar.getEstadoFinanciacion());
+      peticionEvaluacion.setImporteFinanciacion(peticionEvaluacionActualizar.getImporteFinanciacion());
 
       PeticionEvaluacion returnValue = peticionEvaluacionRepository.save(peticionEvaluacion);
       log.debug("update(PeticionEvaluacion peticionEvaluacionActualizar) - end");

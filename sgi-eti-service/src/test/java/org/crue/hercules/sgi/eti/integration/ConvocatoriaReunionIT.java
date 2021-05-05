@@ -807,7 +807,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.parse("2021-07-09T23:59:59Z"));
     peticionEvaluacion.setFechaInicio(Instant.parse("2020-07-09T00:00:00Z"));
-    peticionEvaluacion.setFuenteFinanciacion("Fuente financiadora");
+    peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");
     peticionEvaluacion.setSolicitudConvocatoriaRef("Ref solicitud convocatoria");
@@ -882,7 +882,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.parse("2021-07-09T23:59:59Z"));
     peticionEvaluacion.setFechaInicio(Instant.parse("2020-07-09T00:00:00Z"));
-    peticionEvaluacion.setFuenteFinanciacion("Fuente financiadora");
+    peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
     peticionEvaluacion.setResumen("Resumen");
     peticionEvaluacion.setSolicitudConvocatoriaRef("Ref solicitud convocatoria");
@@ -962,7 +962,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.parse("2020-08-01T23:59:59Z"));
     peticionEvaluacion.setFechaInicio(Instant.parse("2020-08-01T00:00:00Z"));
-    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");

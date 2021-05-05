@@ -355,7 +355,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
-    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
+    peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);

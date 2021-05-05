@@ -610,14 +610,17 @@
             <column name="dis_metodologico" type="VARCHAR(2000)">
                 <constraints nullable="false"/>
             </column>
+            <column name="estado_financiacion" type="VARCHAR(50)"/>
+            <column name="existe_financiacion" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
             <column defaultValueBoolean="false" name="externo" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="fecha_fin" type="TIMESTAMP"/>
             <column name="fecha_inicio" type="TIMESTAMP"/>
-            <column name="fuente_financiacion" type="VARCHAR(250)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="fuente_financiacion" type="VARCHAR(250)"/>
+            <column name="importe_financiacion" type="DECIMAL(19, 2)"/>
             <column name="objetivos" type="VARCHAR(2000)">
                 <constraints nullable="false"/>
             </column>

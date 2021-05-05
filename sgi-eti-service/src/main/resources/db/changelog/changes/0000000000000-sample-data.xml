@@ -6,7 +6,7 @@
       <column name="codigo" value="PR_1" />
       <column name="titulo" value="PeticionEvaluacion1" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
-      <column name="fuente_financiacion" value="Fuente financiación" />
+      <column name="existe_financiacion" value="false" />
       <column name="fecha_inicio" value="2019-09-01T00:00:00Z" />
       <column name="fecha_fin" value="2019-10-01T23:59:59Z" />
       <column name="resumen" value="Resumen" />
@@ -23,7 +23,7 @@
       <column name="codigo" value="PR_2" />
       <column name="titulo" value="PeticionEvaluacion2" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
-      <column name="fuente_financiacion" value="Fuente financiación" />
+      <column name="existe_financiacion" value="false" />
       <column name="fecha_inicio" value="2020-07-09T00:00:00Z" />
       <column name="fecha_fin" value="2021-07-09T23:59:59Z" />
       <column name="resumen" value="Resumen" />
@@ -40,7 +40,7 @@
       <column name="codigo" value="PR_3" />
       <column name="titulo" value="PeticionEvaluacion3" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Práctica docente')" />
-      <column name="fuente_financiacion" value="Fuente financiación" />
+      <column name="existe_financiacion" value="false" />
       <column name="fecha_inicio" value="2020-07-09T00:00:00Z" />
       <column name="fecha_fin" value="2021-07-09T23:59:59Z" />
       <column name="resumen" value="Resumen" />
@@ -57,7 +57,7 @@
       <column name="codigo" value="PR_4" />
       <column name="titulo" value="PeticionEvaluacion4" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Práctica docente')" />
-      <column name="fuente_financiacion" value="Fuente financiación" />
+      <column name="existe_financiacion" value="false" />
       <column name="fecha_inicio" value="2020-07-09T00:00:00Z" />
       <column name="fecha_fin" value="2021-07-09T23:59:59Z" />
       <column name="resumen" value="Resumen" />

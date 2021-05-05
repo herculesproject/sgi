@@ -327,7 +327,7 @@ public class InformeServiceTest extends BaseServiceTest {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
-    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setResumen("Resumen");
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");

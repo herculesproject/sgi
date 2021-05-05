@@ -107,8 +107,8 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
    */
   private PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
-        tipoActividad, null, "Fuente financiación", Instant.now(), Instant.now(), "Resumen", "Valor social",
-        "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
+        tipoActividad, null, false, "Fuente financiación", null, null, Instant.now(), Instant.now(), "Resumen",
+        "Valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
   }
 
   /**

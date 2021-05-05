@@ -448,8 +448,9 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
   public PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad,
       TipoInvestigacionTutelada tipoInvestigacionTutelada) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
-        tipoActividad, tipoInvestigacionTutelada, "Fuente financiación", Instant.now(), Instant.now(), "Resumen",
-        "Valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
+        tipoActividad, tipoInvestigacionTutelada, false, "Fuente financiación", null, null, Instant.now(),
+        Instant.now(), "Resumen", "Valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE,
+        "user-001", Boolean.TRUE);
   }
 
   /**

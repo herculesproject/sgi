@@ -1,9 +1,12 @@
 package org.crue.hercules.sgi.eti.model;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +38,16 @@ public class PeticionEvaluacion extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
+  /** Estados de la Financiacion */
+  public enum EstadoFinanciacion {
+    /** Solicitado */
+    SOLICITADO,
+    /** Concedido */
+    CONCEDIDO,
+    /** Denegado */
+    DENEGADO;
+  }
 
   /** Id */
   @Id
@@ -64,9 +78,23 @@ public class PeticionEvaluacion extends BaseEntity {
   @JoinColumn(name = "tipo_investigacion_tutelada_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PETICIONEVALUACION_TIPOINVESTIGACIONTUTELADA"))
   private TipoInvestigacionTutelada tipoInvestigacionTutelada;
 
+  /** Existe financiacion */
+  @Column(name = "existe_financiacion", nullable = false)
+  private Boolean existeFinanciacion;
+
   /** Fuente financiacion */
-  @Column(name = "fuente_financiacion", length = 250, nullable = false)
+  @Column(name = "fuente_financiacion", length = 250, nullable = true)
   private String fuenteFinanciacion;
+
+  /** Estado Financiación */
+  @Column(name = "estado_financiacion", length = 50, nullable = true)
+  @Enumerated(EnumType.STRING)
+  private EstadoFinanciacion estadoFinanciacion;
+
+  /** Importe Financiación */
+  @Column(name = "importe_financiacion", nullable = true)
+  @Min(0)
+  private BigDecimal importeFinanciacion;
 
   /** Fecha Inicio. */
   @Column(name = "fecha_inicio")
