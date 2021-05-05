@@ -1,9 +1,6 @@
 <section class="convocatoria-reunion-datos-generales">
   <h2>{{'label.datos-generales' | translate}}</h2>
 
-  <mat-card *ngIf="disableCamposDatosGenerales">
-    {{'info.eti.convocatoria-reunion.campos.disabled' | translate}}</mat-card>
-
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
@@ -22,8 +19,7 @@
       <mat-form-field class="input-form">
         <mat-label>{{'label.eti.comite' | translate}}</mat-label>
         <input (click)="getConvocantesComite()" type="text" [placeholder]="'label.eti.comite' | translate"
-          arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite" required
-          [readOnly]="disableCamposDatosGenerales">
+          arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite" required>
         <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
           <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
             {{comite.comite}}
@@ -62,7 +58,6 @@
         <mat-label>{{'error.eti.convocatoria-reunion.fecha-limite' | translate}}
         </mat-label>
         <input matInput formControlName="fechaLimite" [ngxMatDatetimePicker]="pickerFechaLimite"
-          [readOnly]="disableCamposDatosGenerales"
           [placeholder]="'error.eti.convocatoria-reunion.fecha-limite' | translate" required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaLimite"></mat-datepicker-toggle>
         <ngx-mat-datetime-picker #pickerFechaLimite showSeconds="true" [defaultTime]="[0,0,0]">
@@ -79,8 +74,7 @@
       <mat-form-field>
         <mat-label>{{'eti.convocatoria-reunion.tipo' | translate}}
         </mat-label>
-        <input type="text" [readOnly]="disableCamposDatosGenerales"
-          [placeholder]="'eti.convocatoria-reunion.tipo' | translate" arial-label="Number" matInput
+        <input type="text" [placeholder]="'eti.convocatoria-reunion.tipo' | translate" arial-label="Number" matInput
           formControlName="tipoConvocatoriaReunion" [matAutocomplete]="autocompleteTipoConvocatoriaReunion" required>
         <mat-autocomplete #autocompleteTipoConvocatoriaReunion="matAutocomplete"
           [displayWith]="getTipoConvocatoriaReunion">

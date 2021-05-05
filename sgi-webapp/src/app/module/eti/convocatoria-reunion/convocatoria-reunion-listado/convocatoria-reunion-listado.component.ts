@@ -66,6 +66,7 @@ export class ConvocatoriaReunionListadoComponent
   private tiposConvocatoriaReunionSubscription: Subscription;
 
   mapEliminable: Map<number, boolean> = new Map();
+  mapModificable: Map<number, boolean> = new Map();
 
   constructor(
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
@@ -101,6 +102,9 @@ export class ConvocatoriaReunionListadoComponent
         convocatorias.forEach(convocatoriaReunion => {
           this.suscripciones.push(this.convocatoriaReunionService.eliminable(convocatoriaReunion.id).subscribe((value) => {
             this.mapEliminable.set(convocatoriaReunion.id, value);
+          }));
+          this.suscripciones.push(this.convocatoriaReunionService.modificable(convocatoriaReunion.id).subscribe((value) => {
+            this.mapModificable.set(convocatoriaReunion.id, value);
           }));
         });
         return response as SgiRestListResult<IConvocatoriaReunion>;

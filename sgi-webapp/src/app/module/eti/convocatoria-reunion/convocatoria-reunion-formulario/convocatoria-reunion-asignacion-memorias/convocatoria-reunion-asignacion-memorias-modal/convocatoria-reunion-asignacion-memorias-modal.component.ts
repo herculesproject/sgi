@@ -33,6 +33,7 @@ export interface ConvocatoriaReunionAsignacionMemoriasModalComponentData {
   memoriasAsignadas: IMemoria[];
   filterMemoriasAsignables: DatosAsignacionEvaluacion;
   evaluacion: IEvaluacionWithIsEliminable;
+  readonly: boolean;
 }
 
 @Component({
@@ -426,6 +427,10 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
       evaluador1: new FormControl(this.data.evaluacion.evaluador1),
       evaluador2: new FormControl(this.data.evaluacion.evaluador2),
     });
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
 
     return formGroup;
   }

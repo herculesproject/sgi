@@ -13,7 +13,7 @@ import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -96,6 +96,18 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    */
   eliminable(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/eliminable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si tiene permisos de edición de la convocatoria de reunión
+   *
+   * @param id Id de la convocatoria de reunión
+   */
+  modificable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/modificable`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );

@@ -10,14 +10,20 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { Subject } from 'rxjs';
+import { CONVOCATORIA_REUNION_DATA_KEY } from './convocatoria-reunion-data.resolver';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-listado/convocatoria-reunion-asignacion-memorias-listado.fragment';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.fragment';
+import { CONVOCATORIA_REUNION_ROUTE_PARAMS } from './convocatoria-reunion-route-params';
 
 export interface DatosAsignacionEvaluacion {
   idComite: number;
   idTipoConvocatoria: number;
   fechaLimite: DateTime;
+}
+
+export interface IConvocatoriaReunionData {
+  convocatoriaReunion: IConvocatoriaReunion;
+  readonly: boolean;
 }
 
 @Injectable()
@@ -32,8 +38,11 @@ export class ConvocatoriaReunionActionService extends ActionService {
   private datosGenerales: ConvocatoriaReunionDatosGeneralesFragment;
   private asignacionMemorias: ConvocatoriaReunionAsignacionMemoriasListadoFragment;
 
-  public disableAsignarMemorias: Subject<boolean> = new Subject<boolean>();
-  public disableCamposDatosGenerales: Subject<boolean> = new Subject<boolean>();
+  private readonly data: IConvocatoriaReunionData;
+
+  get readonly(): boolean {
+    return this.data?.readonly ?? false;
+  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -46,19 +55,15 @@ export class ConvocatoriaReunionActionService extends ActionService {
     evaluadorService: EvaluadorService
   ) {
     super();
-    this.convocatoriaReunion = {} as IConvocatoriaReunion;
-    if (route.snapshot.data.convocatoriaReunion) {
-      this.convocatoriaReunion = route.snapshot.data.convocatoriaReunion;
+    this.data = route.snapshot.data[CONVOCATORIA_REUNION_DATA_KEY];
+    const id = Number(route.snapshot.paramMap.get(CONVOCATORIA_REUNION_ROUTE_PARAMS.ID));
+    if (id) {
       this.enableEdit();
     }
     this.datosGenerales = new ConvocatoriaReunionDatosGeneralesFragment(
-      logger,
-      fb, this.convocatoriaReunion?.id,
-      service, asistenteService, personaService, evaluadorService);
+      logger, fb, id, service, asistenteService, personaService, evaluadorService, this.readonly);
     this.asignacionMemorias = new ConvocatoriaReunionAsignacionMemoriasListadoFragment(
-      logger,
-      this.convocatoriaReunion?.id,
-      evaluacionService, personaService, service);
+      logger, id, evaluacionService, personaService, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.ASIGNACION_MEMORIAS, this.asignacionMemorias);
@@ -97,61 +102,5 @@ export class ConvocatoriaReunionActionService extends ActionService {
    */
   hasMemoriasAssigned(): boolean {
     return this.asignacionMemorias.evaluaciones$.value.length > 0;
-  }
-
-  /**
-   * Actualiza el valor de disableCamposDatosGenerales utilizado para evitar que se
-   * modifiquen los datos del comité, del tipo de convocatoria y de la fecha límite
-   * de la convocatoria cuando ya tiene memorias asignadas.
-   *
-   * Si la convocatoria tiene Acta los campos ya estarán desactivados
-   *
-   * Los disable/enable se asignan desde aquí porque no se recomienda hacerlo en la plantilla.
-   *
-   */
-  onEnterDatosGenerales(): void {
-    // Si la convocatoria tiene Acta los campos ya estarán desactivados
-    if (this.datosGenerales.hasActa()) {
-      return;
-    }
-
-    let disable = true;
-    this.datosGenerales.getFormGroup().controls.comite.disable({ onlySelf: true });
-    this.datosGenerales.getFormGroup().controls.fechaLimite.disable({ onlySelf: true });
-    this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.disable({ onlySelf: true });
-
-    if (this.asignacionMemorias.evaluaciones$.value.length === 0) {
-      disable = false;
-      this.datosGenerales.getFormGroup().controls.comite.enable({ onlySelf: true });
-      this.datosGenerales.getFormGroup().controls.fechaLimite.enable({ onlySelf: true });
-      this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.enable({ onlySelf: true });
-    }
-
-    this.disableCamposDatosGenerales.next(disable);
-  }
-
-  /**
-   * Actualiza el valor de disableAsignarMemorias utilizado para evitar que se
-   * asignen memorias a la convocatoria cuando aún no se han asignado valores
-   * al comité, al tipo de convocatoria y ni a la fecha límite, ya que esos datos
-   * son necesarios para determinar las memorias que podrán ser asignadas a la
-   * convocatoria.
-   *
-   * Si la convocatoria tiene Acta siempre tendrá valor en los campos requeridos
-   */
-  onEnterAsignacionMemorias(): void {
-    // Si la convocatoria tiene Acta siempre tendrá valor en los campos requeridos
-    if (this.datosGenerales.hasActa()) {
-      return;
-    }
-
-    let disable = true;
-    if (this.datosGenerales.getFormGroup().controls.comite.value &&
-      this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.value &&
-      this.datosGenerales.getFormGroup().controls.fechaLimite.value) {
-      disable = false;
-    }
-
-    this.disableAsignarMemorias.next(disable);
   }
 }

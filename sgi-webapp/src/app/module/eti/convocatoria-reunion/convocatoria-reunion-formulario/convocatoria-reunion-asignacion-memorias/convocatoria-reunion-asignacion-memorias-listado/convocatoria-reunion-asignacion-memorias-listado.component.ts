@@ -4,7 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -50,6 +49,10 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     return MSG_PARAMS;
   }
 
+  get readonly(): boolean {
+    return this.actionService.readonly;
+  }
+
   constructor(
     private readonly matDialog: MatDialog,
     protected readonly evaluacionService: EvaluacionService,
@@ -73,12 +76,6 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     this.evaluaciones$.subscribe((evaluaciones) => {
       this.datasource.data = evaluaciones;
     });
-
-    this.subscriptions.push(this.actionService.disableAsignarMemorias.subscribe(
-      (value: boolean) => {
-        this.disableAsignarMemorias = value;
-      }
-    ));
 
     this.datasource.sortingDataAccessor =
       (wrapper: StatusWrapper<IEvaluacionWithIsEliminable>, property: string) => {
@@ -149,7 +146,8 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       idConvocatoria: this.listadoFragment.getKey() as number,
       filterMemoriasAsignables: this.actionService.getDatosAsignacion(),
       memoriasAsignadas: this.listadoFragment.evaluaciones$.value.map(evc => evc.value.memoria),
-      evaluacion
+      evaluacion,
+      readonly: this.actionService.readonly
     };
     const config = {
       panelClass: 'sgi-dialog-container',
@@ -195,7 +193,8 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       idConvocatoria: this.listadoFragment.getKey() as number,
       filterMemoriasAsignables: this.actionService.getDatosAsignacion(),
       memoriasAsignadas: this.listadoFragment.evaluaciones$.value.map(evc => evc.value.memoria),
-      evaluacion: evaluacion.value
+      evaluacion: evaluacion.value,
+      readonly: this.actionService.readonly
     };
     const config = {
       panelClass: 'sgi-dialog-container',
@@ -213,5 +212,4 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       }
     );
   }
-
 }

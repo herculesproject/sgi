@@ -8,12 +8,13 @@ import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { ConvocatoriaReunionCrearComponent } from './convocatoria-reunion-crear/convocatoria-reunion-crear.component';
+import { ConvocatoriaReunionDataResolver, CONVOCATORIA_REUNION_DATA_KEY } from './convocatoria-reunion-data.resolver';
 import { ConvocatoriaReunionEditarComponent } from './convocatoria-reunion-editar/convocatoria-reunion-editar.component';
 import { ConvocatoriaReunionAsignacionMemoriasListadoComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-listado/convocatoria-reunion-asignacion-memorias-listado.component';
 import { ConvocatoriaReunionDatosGeneralesComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
 import { ConvocatoriaReunionListadoComponent } from './convocatoria-reunion-listado/convocatoria-reunion-listado.component';
 import { CONVOCATORIA_REUNION_ROUTE_NAMES } from './convocatoria-reunion-route-names';
-import { ConvocatoriaReunionResolver } from './convocatoria-reunion.resolver';
+import { CONVOCATORIA_REUNION_ROUTE_PARAMS } from './convocatoria-reunion-route-params';
 
 const CONVOCATORIA_REUNION_KEY = marker('eti.convocatoria-reunion');
 const MSG_NEW_TITLE = marker('title.new.entity');
@@ -60,12 +61,12 @@ const routes: SgiRoutes = [
     ]
   },
   {
-    path: `:id`,
+    path: `:${CONVOCATORIA_REUNION_ROUTE_PARAMS.ID}`,
     component: ConvocatoriaReunionEditarComponent,
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     resolve: {
-      convocatoriaReunion: ConvocatoriaReunionResolver
+      [CONVOCATORIA_REUNION_DATA_KEY]: ConvocatoriaReunionDataResolver
     },
     data: {
       title: CONVOCATORIA_REUNION_KEY,

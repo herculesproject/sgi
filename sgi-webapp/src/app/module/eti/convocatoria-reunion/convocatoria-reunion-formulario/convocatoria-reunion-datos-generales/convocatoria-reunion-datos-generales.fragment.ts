@@ -30,7 +30,8 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
     private convocatoriaReunionService: ConvocatoriaReunionService,
     private asistenteService: AsistenteService,
     private personaService: PersonaService,
-    private evaluadorService: EvaluadorService
+    private evaluadorService: EvaluadorService,
+    private readonly: boolean
   ) {
     super(key);
     this.convocatoriaReunion = {} as IConvocatoriaReunionDatosGenerales;
@@ -57,6 +58,10 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
     // En control del código solo aparece al editar
     if (this.isEdit()) {
       fb.addControl('codigo', new FormControl({ value: '', disabled: true }));
+    }
+
+    if (this.readonly) {
+      fb.disable();
     }
 
     return fb;

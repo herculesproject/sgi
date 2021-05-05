@@ -52,7 +52,6 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
   formFragment: ConvocatoriaReunionDatosGeneralesFragment;
-  disableCamposDatosGenerales: boolean;
   disableComite: boolean;
   private subscriptions: Subscription[] = [];
 
@@ -103,12 +102,6 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     this.setupI18N();
     this.comites = [];
     this.tiposConvocatoriaReunion = [];
-
-    this.subscriptions.push(this.actionService.disableCamposDatosGenerales.subscribe(
-      (value: boolean) => {
-        this.disableCamposDatosGenerales = value;
-      }
-    ));
 
     if (this.actionService.hasMemoriasAssigned()) {
       this.formGroup.controls.comite.disable({ onlySelf: true });
