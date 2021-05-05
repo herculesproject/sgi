@@ -136,9 +136,11 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Predicate retrospectivaSecretaria = cb.equal(
         joinMemoriaRetrospectiva.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id),
         Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
+    Predicate pteCorrecciones = cb.equal(joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id),
+        Constantes.TIPO_ESTADO_MEMORIA_PENDIENTE_CORRECCIONES);
 
     Predicate memoriasConvocatoriaOrdinariaExtraordinaria = cb.and(comiteConvocatoriaReunionOrdExtraord,
-        cb.or(cb.and(memoriasSecretaria, fechaEnvioMenorFechaLimite), retrospectivaSecretaria));
+        cb.or(cb.and(memoriasSecretaria, fechaEnvioMenorFechaLimite), retrospectivaSecretaria, pteCorrecciones));
 
     // Memorias convocatoria seguimiento
     Predicate comiteConvocatoriaReunionSeguimiento = cb.equal(joinMemoriaComite.get(Comite_.id),
