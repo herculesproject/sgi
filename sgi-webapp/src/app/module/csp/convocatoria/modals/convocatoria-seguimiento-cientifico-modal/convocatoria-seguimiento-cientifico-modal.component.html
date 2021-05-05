@@ -79,7 +79,7 @@
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
       <div>
         <mat-form-field color="primary">
-          <mat-label>{{'csp.convocatoria-seguimiento-cientifico.fecha-inicio' | translate}}</mat-label>
+          <mat-label>{{'csp.convocatoria-seguimiento-cientifico.fecha-inicio-presentacion' | translate}}</mat-label>
           <input matInput formControlName="fechaInicio" [ngxMatDatetimePicker]="picker1">
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #picker1 showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
@@ -88,7 +88,7 @@
       <!-- Fecha fin -->
       <div>
         <mat-form-field color="primary">
-          <mat-label>{{'csp.convocatoria-seguimiento-cientifico.fecha-fin' | translate}}</mat-label>
+          <mat-label>{{'csp.convocatoria-seguimiento-cientifico.fecha-fin-presentacion' | translate}}</mat-label>
           <input matInput formControlName="fechaFin" [ngxMatDatetimePicker]="picker2">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #picker2 showSeconds="true" [defaultTime]="[23,59,59]"></ngx-mat-datetime-picker>
