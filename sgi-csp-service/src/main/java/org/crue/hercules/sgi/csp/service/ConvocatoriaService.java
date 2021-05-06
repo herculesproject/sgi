@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.TipoDocumento;
-import org.crue.hercules.sgi.csp.model.TipoEnlace;
-import org.crue.hercules.sgi.csp.model.TipoFase;
-import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -61,17 +57,6 @@ public interface ConvocatoriaService {
    * @return la entidad {@link Convocatoria} persistida.
    */
   Convocatoria disable(Long id);
-
-  /**
-   * Comprueba si existen datos vinculados a la {@link Convocatoria} de
-   * {@link TipoFase}, {@link TipoHito}, {@link TipoEnlace} y
-   * {@link TipoDocumento} con el fin de permitir la edición de los campos
-   * unidadGestionRef y modeloEjecucion.
-   *
-   * @param id Id del {@link Convocatoria}.
-   * @return true existen datos vinculados/false no existen datos vinculados.
-   */
-  Boolean tieneVinculaciones(Long id);
 
   /**
    * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}

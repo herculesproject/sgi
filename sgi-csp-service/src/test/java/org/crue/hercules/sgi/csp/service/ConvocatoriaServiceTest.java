@@ -2391,37 +2391,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
    */
 
   @Test
-  public void tieneVinculaciones_ConvocatoriaIdWithVinculaciones_ReturnsTRUE() throws Exception {
-    // given: existing id with vinculaciones
-    Long id = 1L;
-
-    BDDMockito.given(repository.tieneVinculaciones(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-
-    // when: check tieneVinculaciones by convocatoriaId
-    boolean responseData = service.tieneVinculaciones(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isTrue();
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
-  public void tieneVinculaciones_ConvocatoriaIdWithoutVinculaciones_ReturnsFALSE() throws Exception {
-    // given: given: existing id without vinculaciones
-    Long id = 1L;
-
-    BDDMockito.given(repository.tieneVinculaciones(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
-
-    // when: check tieneVinculaciones by convocatoriaId
-    boolean responseData = service.tieneVinculaciones(id);
-
-    // then: returns FALSE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isFalse();
-  }
-
-  @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
   public void modificable_ConvocatoriaIdWithoutSolicitudesOrProyectos_ReturnsTRUE() throws Exception {
     // given: existing id modificable

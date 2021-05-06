@@ -386,40 +386,6 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
-  public void vinculaciones_ConvocatoriaIdWithVinculaciones_Returns200() throws Exception {
-    // given: Existing id with vinculaciones
-    Long id = 1L;
-    BDDMockito.given(service.tieneVinculaciones(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-
-    // when: check vinculaciones by convocatoriaId
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VINCULACIONES, id)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 200 OK
-        .andExpect(MockMvcResultMatchers.status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
-  public void vinculaciones_ConvocatoriaIdWithoutVinculaciones_Returns204() throws Exception {
-    // given: Existing id without vinculaciones
-    Long id = 1L;
-    BDDMockito.given(service.tieneVinculaciones(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    // when: check vinculaciones by convocatoriaId
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VINCULACIONES, id)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 204 No Content
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
   public void modificable_ConvocatoriaRegistradaWithSolicitudesOrProyectosIsTrue_Returns204() throws Exception {
     // given: Existing id convocatoria registrada with Solicitudes or Proyectos
     Long id = 1L;

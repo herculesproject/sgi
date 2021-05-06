@@ -244,23 +244,6 @@ public class ConvocatoriaController {
   }
 
   /**
-   * Comprueba si existen datos vinculados a la {@link Convocatoria} de
-   * {@link TipoFase}, {@link TipoHito}, {@link TipoEnlace} y
-   * {@link TipoDocumento}
-   *
-   * @param id Id del {@link Convocatoria}.
-   * @return
-   */
-  @RequestMapping(path = "/{id}/vinculaciones", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
-  ResponseEntity<Convocatoria> vinculaciones(@PathVariable Long id) {
-    log.debug("vinculaciones(Long id) - start");
-    Boolean returnValue = service.tieneVinculaciones(id);
-    log.debug("vinculaciones(Long id) - end");
-    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
    * puede ser modificada.
    * 
@@ -516,6 +499,25 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Comprueba la existencia de {@link ConvocatoriaHito} relacionados con el id de
+   * Convocatoria recibido.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/convocatoriahitos", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ResponseEntity<?> hasConvocatoriaHitos(@PathVariable Long id) {
+    log.debug("Convocatoria hasConvocatoriaHitos(Long id) - start");
+    if (convocatoriaHitoService.existsByConvocatoriaId(id)) {
+      log.debug("Convocatoria hasConvocatoriaHitos(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Convocatoria hasConvocatoriaHitos(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
    * 
    * CONVOCATORIA ENTIDAD FINANCIADORA
    * 
@@ -608,6 +610,25 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Comprueba la existencia de {@link ConvocatoriaFase} relacionados con el id de
+   * Convocatoria recibido.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/convocatoriafases", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ResponseEntity<?> hasConvocatoriaFases(@PathVariable Long id) {
+    log.debug("Convocatoria hasConvocatoriaFases(Long id) - start");
+    if (convocatoriaFaseService.existsByConvocatoriaId(id)) {
+      log.debug("Convocatoria hasConvocatoriaFases(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Convocatoria hasConvocatoriaFases(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
    * 
    * CONVOCATORIA AREA TEMATICA
    * 
@@ -668,6 +689,25 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Comprueba la existencia de {@link ConvocatoriaDocumento} relacionados con el
+   * id de Convocatoria recibido.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/convocatoriadocumentos", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ResponseEntity<?> hasConvocatoriaDocumentos(@PathVariable Long id) {
+    log.debug("Convocatoria hasConvocatoriaDocumentos(Long id) - start");
+    if (convocatoriaDocumentoService.existsByConvocatoriaId(id)) {
+      log.debug("Convocatoria hasConvocatoriaDocumentos(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Convocatoria hasConvocatoriaDocumentos(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
    * 
    * CONVOCATORIA ENLACE
    * 
@@ -695,6 +735,25 @@ public class ConvocatoriaController {
 
     log.debug("findAllConvocatoriaEnlace(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba la existencia de {@link ConvocatoriaEnlace} relacionados con el id
+   * de Convocatoria recibido.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return HTTP 200 si existe alguna relación y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/convocatoriaenlaces", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  public ResponseEntity<?> hasConvocatoriaEnlaces(@PathVariable Long id) {
+    log.debug("Convocatoria hasConvocatoriaEnlaces(Long id) - start");
+    if (convocatoriaEnlaceService.existsByConvocatoriaId(id)) {
+      log.debug("Convocatoria hasConvocatoriaEnlaces(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Convocatoria hasConvocatoriaEnlaces(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**

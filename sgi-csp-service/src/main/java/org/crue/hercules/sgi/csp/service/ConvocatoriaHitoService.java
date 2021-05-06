@@ -54,4 +54,13 @@ public interface ConvocatoriaHitoService {
    */
   Page<ConvocatoriaHito> findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable);
 
+  /**
+   * Comprueba si existe algún {@link ConvocatoriaHito} relacionado con el Id de
+   * Convocatoria recibido
+   * 
+   * @param convocatoriaId Id de Convocatoria
+   * @return <code>true</code> Si existe algúna relación, <code>false</code> en
+   *         cualquier otro caso.
+   */
+  boolean existsByConvocatoriaId(Long convocatoriaId);
 }

@@ -333,4 +333,9 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     log.debug("Boolean isModificable(Long convocatoriaId, Long convocatoriaFaseId) - end");
     return returnValue;
   }
+
+  @Override
+  public boolean existsByConvocatoriaId(Long convocatoriaId) {
+    return repository.existsByConvocatoriaId(convocatoriaId);
+  }
 }

@@ -295,4 +295,9 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
 
     log.debug("validarRequeridosConvocatoriaDocumento(ConvocatoriaDocumento datosConvocatoriaDocumento) - end");
   }
+
+  @Override
+  public boolean existsByConvocatoriaId(Long convocatoriaId) {
+    return repository.existsByConvocatoriaId(convocatoriaId);
+  }
 }

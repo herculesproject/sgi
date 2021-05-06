@@ -232,8 +232,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    * @param id Id del {@link Convocatoria}.
    * @return true existen datos vinculados/false no existen datos vinculados.
    */
-  @Override
-  public Boolean tieneVinculaciones(Long id) {
+  private boolean tieneVinculaciones(Long id) {
     log.debug("vinculaciones(Long id) - start");
     boolean returnValue = repository.tieneVinculaciones(id);
     log.debug("vinculaciones(Long id) - end");

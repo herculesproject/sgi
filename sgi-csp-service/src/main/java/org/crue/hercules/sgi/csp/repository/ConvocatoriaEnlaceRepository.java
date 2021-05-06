@@ -18,4 +18,14 @@ public interface ConvocatoriaEnlaceRepository
    * @return una {@link ConvocatoriaEnlace}
    */
   Optional<ConvocatoriaEnlace> findByConvocatoriaIdAndUrl(Long convocatoriaId, String url);
+
+  /**
+   * Comprueba si existe algún {@link ConvocatoriaEnlace} relacionado con el Id de
+   * Convocatoria recibido
+   * 
+   * @param convocatoriaId Id de Convocatoria
+   * @return <code>true</code> Si existe algúna relación, <code>false</code> en
+   *         cualquier otro caso.
+   */
+  boolean existsByConvocatoriaId(Long convocatoriaId);
 }

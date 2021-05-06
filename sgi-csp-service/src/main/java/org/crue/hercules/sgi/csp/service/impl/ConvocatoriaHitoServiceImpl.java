@@ -245,4 +245,8 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
 
   }
 
+  @Override
+  public boolean existsByConvocatoriaId(Long convocatoriaId) {
+    return repository.existsByConvocatoriaId(convocatoriaId);
+  }
 }
