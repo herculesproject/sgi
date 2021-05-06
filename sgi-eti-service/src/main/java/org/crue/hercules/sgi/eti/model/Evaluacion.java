@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -91,6 +92,11 @@ public class Evaluacion extends BaseEntity {
   /** Es revisión mínima */
   @Column(name = "es_rev_minima", columnDefinition = "boolean default false", nullable = false)
   private Boolean esRevMinima;
+
+  /** Comentario */
+  @Column(name = "comentario", length = 2000, nullable = true)
+  @Size(max = 2000)
+  private String comentario;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

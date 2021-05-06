@@ -443,6 +443,7 @@
             <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
+            <column name="comentario" type="VARCHAR(2000)"/>
             <column defaultValueBoolean="false" name="es_rev_minima" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>

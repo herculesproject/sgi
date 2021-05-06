@@ -471,6 +471,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       evaluacion.setTipoEvaluacion(evaluacionActualizar.getTipoEvaluacion());
       evaluacion.setEvaluador1(evaluacionActualizar.getEvaluador1());
       evaluacion.setEvaluador2(evaluacionActualizar.getEvaluador2());
+      evaluacion.setComentario(evaluacionActualizar.getComentario());
 
       Evaluacion returnValue = evaluacionRepository.save(evaluacion);
       log.debug("update(Evaluacion evaluacionActualizar) - end");
