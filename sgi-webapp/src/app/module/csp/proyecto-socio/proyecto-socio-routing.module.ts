@@ -30,7 +30,7 @@ const routes: SgiRoutes = [
     data: {
       title: MSG_NEW_TITLE,
       titleParams: {
-        entity: PROYECTO_SOCIO_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+        entity: PROYECTO_SOCIO_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
       }
     },
     resolve: {
