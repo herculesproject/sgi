@@ -79,7 +79,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void create_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Nueva entidad sin Id
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(response);
@@ -115,7 +115,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
     String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(getMockData(1L, 1L, 1L));
 
     BDDMockito.given(convocatoriaReunionService.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
@@ -136,7 +136,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Entidad existente que se va a actualizar
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -175,7 +175,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Entidad a actualizar que no existe
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -202,7 +202,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Entidad existente
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -225,7 +225,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Id de una entidad que no existe
     ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -251,7 +251,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Entidad con un determinado Id
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -289,7 +289,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
 
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -316,7 +316,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Entidad con un determinado Id
     ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_WITH_DATOS_GENERALES)
         .toString();
@@ -356,7 +356,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
 
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_WITH_DATOS_GENERALES)
         .toString();
@@ -381,7 +381,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
     response.add(getMockData(1L, 1L, 1L));
@@ -411,7 +411,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito
         .given(convocatoriaReunionService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -428,7 +428,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void findAll_WithPaging_ReturnsConvocatoriaReunionSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<>();
     response.add(getMockData(1L, 1L, 1L));
@@ -467,7 +467,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -499,7 +499,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     response.add(getMockData(4L, 2L, 2L));
     response.add(getMockData(5L, 3L, 3L));
 
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     // search
     String query = "numeroActa<4%,id:3";
@@ -541,7 +541,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
     // @formatter:on
@@ -575,7 +575,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
     // @formatter:on
@@ -600,7 +600,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
     // @formatter:on
@@ -644,7 +644,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append("/asistentes")
         .toString();
     // @formatter:on
@@ -672,7 +672,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
     // @formatter:on
@@ -705,7 +705,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
     // @formatter:on
@@ -729,7 +729,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
     // @formatter:on
@@ -772,7 +772,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
     // @formatter:on
@@ -800,7 +800,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
     // @formatter:on
@@ -842,7 +842,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
     // @formatter:on
@@ -870,7 +870,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Sin datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
     // @formatter:on
@@ -893,7 +893,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
     // @formatter:on
@@ -927,7 +927,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     Evaluacion respoEvaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append("/" + response.getId().toString()).append("/evaluacion")
         .append("/" + respoEvaluacion.getId().toString())
         .toString();
@@ -949,7 +949,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
   public void findConvocatoriasSinActa() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
     response.add(getMockData(1L, 1L, 1L));
@@ -979,7 +979,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     // given: ConvocatoriaReunion empty
     List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
 
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
 
     BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa()).willReturn(response);
 

@@ -51,7 +51,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
   public void create_ReturnsRetrospectiva() throws Exception {
 
     // given: Nueva entidad sin Id
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     Retrospectiva response = getMockData(1L);
     String nuevoRetrospectivaJson = mapper.writeValueAsString(response);
@@ -76,7 +76,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
     String nuevoRetrospectivaJson = mapper.writeValueAsString(getMockData(1L));
 
     BDDMockito.given(service.create(ArgumentMatchers.<Retrospectiva>any())).willThrow(new IllegalArgumentException());
@@ -96,7 +96,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     // given: Entidad existente que se va a actualizar
     Retrospectiva response = getMockData(1L);
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -124,7 +124,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     // given: Entidad a actualizar que no existe
     Retrospectiva response = getMockData(1L);
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -150,7 +150,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     // given: Entidad existente
     Retrospectiva response = getMockData(1L);
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -173,7 +173,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     // given: Id de una entidad que no existe
     Retrospectiva retrospectiva = getMockData(1L);
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -196,7 +196,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     // given: Entidad con un determinado Id
     Retrospectiva response = getMockData(1L);
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -224,7 +224,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     Retrospectiva response = getMockData(1L);
 
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -247,7 +247,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
   public void findAll_Unlimited_ReturnsFullRetrospectivaList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     List<Retrospectiva> response = new LinkedList<Retrospectiva>();
     response.add(getMockData(1L));
@@ -276,7 +276,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
@@ -292,7 +292,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
   public void findAll_WithPaging_ReturnsRetrospectivaSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     List<Retrospectiva> response = new LinkedList<>();
     response.add(getMockData(1L));
@@ -330,7 +330,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     List<Retrospectiva> response = new LinkedList<Retrospectiva>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -361,7 +361,7 @@ public class RetrospectivaControllerTest extends BaseControllerTest {
     response.add(getMockData(4L));
     response.add(getMockData(5L));
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // search
     String query = "fechaRetrospectiva<=2020-07-03,id:3";

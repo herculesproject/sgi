@@ -55,7 +55,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     // given: Nueva entidad
     final EstadoRetrospectiva newEstadoRetrospectiva = getMockData(1L);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se crea la entidad
     final ResponseEntity<EstadoRetrospectiva> response = restTemplate.exchange(url, HttpMethod.POST,
@@ -77,7 +77,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     updatedEstadoRetrospectiva.setId(1L);
 
     // @formatter:off
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -98,7 +98,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     Long id = 1L;
 
     // @formatter:off
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -126,7 +126,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     final EstadoRetrospectiva estadoRetrospectiva = getMockData(1L);
 
     // @formatter:off
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -146,7 +146,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     // given: No existe entidad con el id indicado
     Long id = 6L;
     // @formatter:off
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -195,7 +195,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan los datos paginados
     final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.exchange(url, HttpMethod.GET,

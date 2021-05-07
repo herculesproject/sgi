@@ -181,7 +181,7 @@ public class FormularioControllerTest extends BaseControllerTest {
     // given: Existe el formulario pero no tiene bloques
 
     Long id = 3L;
-    final String url = new StringBuilder(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BLOQUES).toString();
 
     BDDMockito.given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
@@ -199,7 +199,7 @@ public class FormularioControllerTest extends BaseControllerTest {
   public void getBloquesValid() throws Exception {
     // given: Datos existentes con formulario
     Long id = 3L;
-    final String url = new StringBuilder(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BLOQUES).toString();
 
     List<Formulario> formularios = new ArrayList<>();

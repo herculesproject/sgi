@@ -253,7 +253,7 @@ public class TipoEvaluacionIT extends BaseIT {
     listaDictamenes.add(dictamen1);
     listaDictamenes.add(dictamen2);
 
-    final String url = new StringBuilder(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(DICTAMENES_REV_MINIMA).append(PATH_PARAMETER).toString();
 
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
@@ -275,7 +275,7 @@ public class TipoEvaluacionIT extends BaseIT {
     listaTipoEvaluacion.add(tipoEvaluacion1);
     listaTipoEvaluacion.add(tipoEvaluacion2);
 
-    final String url = new StringBuilder(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(MEMORIA_RETROSPECTIVA_PATH)
+    final String url = new StringBuffer(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(MEMORIA_RETROSPECTIVA_PATH)
         .toString();
 
     final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
@@ -297,7 +297,7 @@ public class TipoEvaluacionIT extends BaseIT {
     listaTipoEvaluacion.add(tipoEvaluacion1);
     listaTipoEvaluacion.add(tipoEvaluacion2);
 
-    final String url = new StringBuilder(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(SEGUIMIENT_ANUAL_FINAL_PATH)
+    final String url = new StringBuffer(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(SEGUIMIENT_ANUAL_FINAL_PATH)
         .toString();
 
     final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,

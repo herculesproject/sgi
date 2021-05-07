@@ -336,7 +336,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   public void findTipoMemoriaEmtyList() throws Exception {
     // given: El comité no tiene tipos de memoria asociados
     Long id = 3L;
-    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/tipo-memorias")
+    final String url = new StringBuffer(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/tipo-memorias")
         .toString();
 
     BDDMockito
@@ -355,7 +355,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   public void findTipoMemoriaValid() throws Exception {
     // given: Datos existentes
     Long id = 3L;
-    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/tipo-memorias")
+    final String url = new StringBuffer(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/tipo-memorias")
         .toString();
 
     List<TipoMemoria> tipoMemorias = new ArrayList<>();
@@ -393,7 +393,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   public void findMemoriasEmtyList() throws Exception {
     // given: El comité no tiene tipos de memoria asociados
     Long id = 3L;
-    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/memorias")
+    final String url = new StringBuffer(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/memorias")
         .toString();
 
     BDDMockito.given(memoriaService.findByComite(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
@@ -411,7 +411,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   public void findMemoriaSValid() throws Exception {
     // given: Datos existentes
     Long id = 3L;
-    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/memorias")
+    final String url = new StringBuffer(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID).append("/memorias")
         .toString();
 
     List<Memoria> memorias = new ArrayList<>();

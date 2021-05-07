@@ -59,7 +59,7 @@ public class RetrospectivaIT extends BaseIT {
     final Retrospectiva newRetrospectiva = getMockData(1L);
     newRetrospectiva.setId(null);
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se crea la entidad
     final ResponseEntity<Retrospectiva> response = restTemplate.exchange(url, HttpMethod.POST,
@@ -81,7 +81,7 @@ public class RetrospectivaIT extends BaseIT {
     updatedRetrospectiva.setId(4L);
 
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -102,7 +102,7 @@ public class RetrospectivaIT extends BaseIT {
     Long id = 3L;
 
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -128,7 +128,7 @@ public class RetrospectivaIT extends BaseIT {
     final Retrospectiva retrospectiva = getMockData(3L);
 
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -148,7 +148,7 @@ public class RetrospectivaIT extends BaseIT {
     // given: No existe entidad con el id indicado
     Long id = 9L;
     // @formatter:off
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -173,7 +173,7 @@ public class RetrospectivaIT extends BaseIT {
     response.add(getMockData(7L, 1L));
     response.add(getMockData(8L, 4L));
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan todos los datos
     final ResponseEntity<List<Retrospectiva>> result = restTemplate.exchange(url, HttpMethod.GET,
@@ -198,7 +198,7 @@ public class RetrospectivaIT extends BaseIT {
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
 
-    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan los datos paginados
     final ResponseEntity<List<Retrospectiva>> result = restTemplate.exchange(url, HttpMethod.GET,

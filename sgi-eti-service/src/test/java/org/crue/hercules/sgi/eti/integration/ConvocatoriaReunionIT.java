@@ -427,7 +427,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // given: Datos existentes
     Long convocatoriaReunionId = 2L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/asistentes").toString();
     // @formatter:on
@@ -458,7 +458,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Long convocatoriaReunionId = 2L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/asistentes").toString();
     // @formatter:on
@@ -506,7 +506,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // given: Datos existentes
     Long convocatoriaReunionId = 2L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
     // @formatter:on
@@ -540,7 +540,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Long convocatoriaReunionId = 2L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .append("/evaluaciones-activas").toString();
     // @formatter:on
@@ -593,7 +593,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     // given: Datos existentes
     Long convocatoriaReunionId = 2L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
     // @formatter:on
@@ -627,7 +627,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Long convocatoriaReunionId = 3L;
     // @formatter:off
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)
         .toString();
     // @formatter:on

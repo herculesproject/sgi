@@ -429,7 +429,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void getComentariosGestorEmptyList() throws Exception {
     // given: Existe la evaluación pero no tiene comentarios
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentarios-gestor").toString();
 
     BDDMockito
@@ -448,7 +448,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void getComentariosGestorValid() throws Exception {
     // given: Datos existentes con evaluacion
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentarios-gestor").toString();
 
     List<Comentario> response = new ArrayList<>();
@@ -478,7 +478,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void getComentariosEvaluadorEmptyList() throws Exception {
     // given: Existe la evaluación pero no tiene comentarios
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentarios-evaluador").toString();
 
     BDDMockito
@@ -498,7 +498,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void getComentariosEvaluadorValid() throws Exception {
     // given: Datos existentes con evaluacion
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentarios-evaluador").toString();
 
     List<Comentario> response = new ArrayList<>();
@@ -527,7 +527,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void createComentarioGestorValidComentarios() throws Exception {
     // given: Existe la evaluación y tiene comentarios
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-gestor").toString();
 
     Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
@@ -557,7 +557,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void createComentarioGestor_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-gestor").toString();
 
     String nuevoComentarioJson = mapper.writeValueAsString(generarMockComentario(1L, "Comentario1", 1L));
@@ -579,7 +579,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void createComentarioEvaluadorSuccess() throws Exception {
     // given: Existe la evaluación y tiene comentarios
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-gestor").toString();
 
     Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
@@ -606,7 +606,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void createComentarioEvaluador_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-evaluador").toString();
 
     String nuevoComentarioJson = mapper.writeValueAsString(generarMockComentario(1L, "Comentario1", 1L));
@@ -629,7 +629,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void updateComentarioGestor_Success() throws Exception {
     // given: Existe la evaluación
     Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-gestor").append("/{idComentario}").toString();
 
     Comentario comentario = generarMockComentario(1L, "Comentario Replace", 1L);
@@ -676,7 +676,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     // given: Existe la evaluación
     Long idEvaluacion = 3L;
     Long idComentario = 4L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-gestor").append("/{idComentario}").toString();
 
     // given: Listado de ids de comentario para eliminar
@@ -694,7 +694,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     // given: Existe la evaluación
     Long idEvaluacion = 3L;
     Long idComentario = 4L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/comentario-evaluador").append("/{idComentario}").toString();
 
     // given: Listado de ids de comentario para eliminar

@@ -465,7 +465,7 @@ public class MemoriaServiceImpl implements MemoriaService {
           // Si la memoria se cambió al estado anterior estando en evaluación, se
           // eliminará la evaluación.
           if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION) {
-            Evaluacion evaluacion = evaluacionRepository.findByMemoriaIdAndVersion(memoria.getId(),
+            Evaluacion evaluacion = evaluacionRepository.findByMemoriaIdAndVersionAndActivoTrue(memoria.getId(),
                 memoria.getVersion());
 
             Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
@@ -476,6 +476,7 @@ public class MemoriaServiceImpl implements MemoriaService {
             Assert.isTrue(comentarioRepository.countByEvaluacionId(evaluacion.getId()) == 0L,
                 "No se puede eliminar una memoria que tenga comentarios asociados");
 
+            memoria.setVersion(memoria.getVersion() - 1);
             evaluacion.setActivo(Boolean.FALSE);
             evaluacionRepository.save(evaluacion);
           }
@@ -748,65 +749,65 @@ public class MemoriaServiceImpl implements MemoriaService {
     String numMemoria = "001";
 
     switch (idTipoMemoria.intValue()) {
-    case 1: {
-      // NUEVA
-      // Se recupera la última memoria para el comité seleccionado
-      Memoria ultimaMemoriaComite = memoriaRepository
-          .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
-              String.valueOf(anioActual), 2L, comite.getId());
+      case 1: {
+        // NUEVA
+        // Se recupera la última memoria para el comité seleccionado
+        Memoria ultimaMemoriaComite = memoriaRepository
+            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+                String.valueOf(anioActual), 2L, comite.getId());
 
-      // Se incrementa el número de la memoria para el comité
-      if (ultimaMemoriaComite != null) {
-        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
-        numeroUltimaMemoria++;
-        numMemoria = String.format("%03d", numeroUltimaMemoria);
+        // Se incrementa el número de la memoria para el comité
+        if (ultimaMemoriaComite != null) {
+          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+          numeroUltimaMemoria++;
+          numMemoria = String.format("%03d", numeroUltimaMemoria);
+        }
+
+        break;
       }
+      case 2: {
+        // MODIFICACIÓN
 
-      break;
-    }
-    case 2: {
-      // MODIFICACIÓN
+        // Se recupera la última memoria modificada de la memoria de la que se realiza
+        // la copia y del comité de la memoria.
+        Memoria ultimaMemoriaComite = memoriaRepository
+            .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
 
-      // Se recupera la última memoria modificada de la memoria de la que se realiza
-      // la copia y del comité de la memoria.
-      Memoria ultimaMemoriaComite = memoriaRepository
-          .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
+        StringBuffer sbReferencia = new StringBuffer();
+        sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
+            .append("MR");
+        if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
+          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
+          numeroUltimaMemoria++;
+          sbReferencia.append(numeroUltimaMemoria);
 
-      StringBuilder sbReferencia = new StringBuilder();
-      sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
-          .append("MR");
-      if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
-        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
-        numeroUltimaMemoria++;
-        sbReferencia.append(numeroUltimaMemoria);
+        } else {
+          sbReferencia.append("1");
+        }
 
-      } else {
-        sbReferencia.append("1");
-      }
-
-      numMemoria = sbReferencia.toString();
-
-      break;
-    }
-    case 3: {
-      // RATIFICACIÓN
-      // Se recupera la última memoria para el comité seleccionado
-      Memoria ultimaMemoriaComite = memoriaRepository
-          .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
-              String.valueOf(anioActual), 2L, comite.getId());
-
-      // Se incrementa el número de la memoria para el comité
-      if (ultimaMemoriaComite != null) {
-        Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
-        numeroUltimaMemoria++;
-
-        StringBuilder sbReferencia = new StringBuilder();
-        sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
         numMemoria = sbReferencia.toString();
-      }
 
-      break;
-    }
+        break;
+      }
+      case 3: {
+        // RATIFICACIÓN
+        // Se recupera la última memoria para el comité seleccionado
+        Memoria ultimaMemoriaComite = memoriaRepository
+            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+                String.valueOf(anioActual), 2L, comite.getId());
+
+        // Se incrementa el número de la memoria para el comité
+        if (ultimaMemoriaComite != null) {
+          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+          numeroUltimaMemoria++;
+
+          StringBuffer sbReferencia = new StringBuffer();
+          sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
+          numMemoria = sbReferencia.toString();
+        }
+
+        break;
+      }
     }
     ;
 

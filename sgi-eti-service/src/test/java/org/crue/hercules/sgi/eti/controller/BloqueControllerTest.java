@@ -202,7 +202,7 @@ public class BloqueControllerTest extends BaseControllerTest {
   public void getApartadosEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
-    final String url = new StringBuilder(BLOQUE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(BLOQUE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_APARTADOS).toString();
 
     BDDMockito.given(apartadoService.findByBloqueId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
@@ -220,7 +220,7 @@ public class BloqueControllerTest extends BaseControllerTest {
   public void getApartadosValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
-    final String url = new StringBuilder(BLOQUE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(BLOQUE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_APARTADOS).toString();
 
     List<Apartado> apartados = new ArrayList<>();

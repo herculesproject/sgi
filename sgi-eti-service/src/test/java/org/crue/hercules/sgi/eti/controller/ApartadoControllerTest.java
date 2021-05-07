@@ -54,7 +54,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     // given: Entidad con un determinado Id
     Apartado response = getMockData(1L, 1L, null);
     // @formatter:off
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -83,7 +83,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     Apartado response = getMockData(1L, 1L, null);
 
     // @formatter:off
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH)
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
@@ -106,7 +106,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   public void findAll_Unlimited_ReturnsFullApartadoList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).toString();
 
     List<Apartado> response = new LinkedList<Apartado>();
     response.add(getMockData(1L, 1L, null));
@@ -135,7 +135,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
@@ -151,7 +151,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   public void findAll_WithPaging_ReturnsApartadoSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).toString();
 
     List<Apartado> response = new LinkedList<>();
     response.add(getMockData(1L, 1L, null));
@@ -189,7 +189,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).toString();
 
     List<Apartado> response = new LinkedList<Apartado>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -220,7 +220,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     response.add(getMockData(4L, 2L, null));
     response.add(getMockData(5L, 2L, 4L));
 
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).toString();
 
     // search
     String query = "nombre~Apartado0%,id:3";
@@ -259,7 +259,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   public void getHijosEmptyList() throws Exception {
     // given: Existe el apartado pero no tiene hijos
     Long id = 3L;
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_HIJOS).toString();
 
     BDDMockito.given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
@@ -277,7 +277,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   public void getHijosValid() throws Exception {
     // given: Datos existentes con apartado
     Long id = 3L;
-    final String url = new StringBuilder(APARTADO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_HIJOS).toString();
 
     List<Apartado> apartados = new ArrayList<>();

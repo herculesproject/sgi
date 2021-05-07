@@ -56,7 +56,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       numEvaluacion++;
     }
 
-    StringBuilder codigoPeticionEvaluacion = new StringBuilder();
+    StringBuffer codigoPeticionEvaluacion = new StringBuffer();
 
     codigoPeticionEvaluacion
         .append(String.valueOf(peticionEvaluacion.getFechaInicio().atZone(ZoneOffset.UTC).get(ChronoField.YEAR)))

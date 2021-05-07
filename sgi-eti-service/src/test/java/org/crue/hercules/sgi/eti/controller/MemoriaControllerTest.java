@@ -429,7 +429,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Existe la memoria pero no tiene evaluaciones
     Long idMemoria = 3L;
     Long idEvaluacion = 1L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/evaluaciones-anteriores").append("/{idEvaluacion}").toString();
 
     BDDMockito
@@ -453,7 +453,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     Long idMemoria = 3L;
     Long idEvaluacion = 1L;
 
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/evaluaciones-anteriores").append("/{idEvaluacion}").toString();
 
     List<EvaluacionWithNumComentario> evaluaciones = new ArrayList<>();
@@ -492,7 +492,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionesEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BY_DOCUMENTACION).toString();
 
     BDDMockito
@@ -512,7 +512,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionesValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BY_DOCUMENTACION).toString();
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -727,7 +727,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionFormularioEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-formulario").toString();
 
     BDDMockito.given(documentacionMemoriaService.findDocumentacionMemoria(ArgumentMatchers.anyLong(),
@@ -745,7 +745,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionFormularioValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-formulario").toString();
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -784,7 +784,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionSeguimientoAnualEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-seguimiento-anual").toString();
 
     BDDMockito.given(documentacionMemoriaService.findDocumentacionSeguimientoAnual(ArgumentMatchers.anyLong(),
@@ -802,7 +802,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionSeguimientoAnualValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-seguimiento-anual").toString();
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -841,7 +841,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionSeguimientoFinalEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-seguimiento-final").toString();
 
     BDDMockito.given(documentacionMemoriaService.findDocumentacionSeguimientoFinal(ArgumentMatchers.anyLong(),
@@ -859,7 +859,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionSeguimientoFinalValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-seguimiento-final").toString();
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -898,7 +898,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionRetrospectivaEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-retrospectiva").toString();
 
     BDDMockito.given(documentacionMemoriaService.findDocumentacionRetrospectiva(ArgumentMatchers.anyLong(),
@@ -916,7 +916,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void getDocumentacionRetrospectivaValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-retrospectiva").toString();
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -1233,7 +1233,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     Long idMemoria = 3L;
     Long idTipoEvaluacion = 1L;
 
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BY_DOCUMENTACION).append("/{idTipoEvaluacion}").toString();
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -1277,7 +1277,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Documentacion empty
     Long idMemoria = 3L;
     Long idTipoEvaluacion = 1L;
-    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+    final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BY_DOCUMENTACION).append("/{idTipoEvaluacion}").toString();
 
     BDDMockito

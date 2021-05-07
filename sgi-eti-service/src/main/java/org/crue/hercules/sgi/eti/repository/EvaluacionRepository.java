@@ -58,7 +58,7 @@ public interface EvaluacionRepository
    * @param version   el número de versión
    * @return el objeto {@link Evaluacion}
    */
-  Evaluacion findByMemoriaIdAndVersion(Long idMemoria, Integer version);
+  Evaluacion findByMemoriaIdAndVersionAndActivoTrue(Long idMemoria, Integer version);
 
   /**
    * Comprueba si existen {@link Evaluacion} asociadas a una
