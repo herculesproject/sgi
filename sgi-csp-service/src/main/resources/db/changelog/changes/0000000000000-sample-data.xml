@@ -562,231 +562,231 @@
 
   <changeSet context="dev" author="master" id="0000000000000-programa">
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 1 -->
       <column name="nombre" value="Plan Estatal 2017-2020" />
       <column name="descripcion" value="Plan Estatal de Investigación Científica y Técnica y de Innovación 2017-2020" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 2 -->
       <column name="nombre" value="Generación del conocimiento y fortalecimiento" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 3 -->
       <column name="nombre" value="Fortalecimiento institucional" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="2" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 4 -->
       <column name="nombre" value="Generación del conocimiento" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="2" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 5 -->
       <column name="nombre" value="Infraestructuras de investigación y equipamiento" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="2" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 6 -->
       <column name="nombre" value="Liderazgo empresarial en IDI" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 7 -->
       <column name="nombre" value="IDI Empresarial" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="6" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 8 -->
       <column name="nombre" value="Impulso a las tecnologías habilitadoras" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="6" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 9 -->
       <column name="nombre" value="Promoción del talento y su empleabilidad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 10 -->
       <column name="nombre" value="Formación en IDI" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="9" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 11 -->
       <column name="nombre" value="Incorporación" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="9" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 12 -->
       <column name="nombre" value="Movilidad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="9" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 13 -->
       <column name="nombre" value="Retos de la sociedad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Bioeconomía: sostenibilidad de los sistemas " />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 14 -->
+      <column name="nombre" value="R2: Bioeconomía: sostenibilidad de los sistemas " />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Cambio climático" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 15 -->
+      <column name="nombre" value="R5: Cambio climático" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Economía, sociedad y cultura digital" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 16 -->
+      <column name="nombre" value="R7: Economía, sociedad y cultura digital" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Energía segura, eficiente y  limpia" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 17 -->
+      <column name="nombre" value="R3: Energía segura, eficiente y  limpia" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Salud, cambio demográfico y bienestar" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 18 -->
+      <column name="nombre" value="R1: Salud, cambio demográfico y bienestar" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Seguridad y calidad alimentaria" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 19 -->
+      <column name="nombre" value="R6: Ciencias sociales humanidades ciencia" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Seguridad, protección y defensa" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 20 -->
+      <column name="nombre" value="R8: Seguridad, protección y defensa" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
-      <column name="nombre" value="Transporte sostenible" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 21 -->
+      <column name="nombre" value="R4: Transporte sostenible" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 22 -->
       <column name="nombre" value="Horizonte 2020" />
-      <column name="descripcion" value="Programa marco de investigación e innovación de la UE" />
+      <column name="descripcion" value="Programa Marco de Investigación e Innovación de la UE 2014-2020" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 23 -->
       <column name="nombre" value="Ciencia excelente" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="22" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 24 -->
       <column name="nombre" value="Liderazgo industrial" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="22" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 25 -->
       <column name="nombre" value="Retos sociales" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="22" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 26 -->
       <column name="nombre" value="Clima, medio ambiente, eficiencia de los recursos" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 27 -->
       <column name="nombre" value="Energía segura, limpia y eficiente" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 28 -->
       <column name="nombre" value="Salud, cambio demográfico y sociedad" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 29 -->
       <column name="nombre" value="Seguridad alimentaria, invest marina y bioeconomía" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 30 -->
       <column name="nombre" value="Sociedades inclusivas, innovadoras y reflexivas" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 31 -->
       <column name="nombre" value="Sociedades seguras" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 32 -->
       <column name="nombre" value="Transporte inteligente, ecológico e integrado" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="25" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 33 -->
       <column name="nombre" value="LC-SC3-EE-1-2018-2019-2020" />
       <column name="descripcion" value="Decarbonisation of the EU building stock: innovative
 approaches and affordable solutions changing the market for buildings renovation" />
@@ -794,14 +794,14 @@ approaches and affordable solutions changing the market for buildings renovation
       <column name="activo" value="false" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 34 -->
       <column name="nombre" value="Energy efficiency" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 35 -->
       <column name="nombre" value="LC-SC3-EE-1-2018-2019-2020:" />
       <column name="descripcion" value="Decarbonisation of the EU building stock: innovative
 approaches and affordable solutions changing the market for buildings renovation" />
@@ -809,63 +809,63 @@ approaches and affordable solutions changing the market for buildings renovation
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 36 -->
       <column name="nombre" value="LC-SC3-EE-2-2018-2019 " />
       <column name="descripcion" value="Integrated home renovation services" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 37 -->
       <column name="nombre" value="LC-SC3-EE-3-2019-2020" />
       <column name="descripcion" value="Stimulating demand for sustainable energy skills in the construction sector" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 38 -->
       <column name="nombre" value="LC-SC3-EE-4-2019-2020" />
       <column name="descripcion" value="Upgrading smartness of existing buildings through innovations for legacy equipment" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 39 -->
       <column name="nombre" value="LC-SC3-EE-5-2018-2019-2020 " />
       <column name="descripcion" value="Next-generation of Energy Performance Assessment and Certification" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 40 -->
       <column name="nombre" value="LC-SC3-EE-6-2018-2019-2020" />
       <column name="descripcion" value="Business case for industrial waste heat/cold recovery" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 41 -->
       <column name="nombre" value="LC-SC3-EE-8-2018-2019" />
       <column name="descripcion" value="Capacity building programmes to support implementation of energy audits" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 42 -->
       <column name="nombre" value="LC-SC3-EE-9-2018-2019" />
       <column name="descripcion" value="Innovative financing for energy efficiency investments" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 43 -->
       <column name="nombre" value="LC-SC3-EE-10-2018-2019-2020" />
       <column name="descripcion" value="Mainstreaming energy efficiency finance" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 44 -->
       <column name="nombre" value="LC-SC3-EE-13-2018-2019-2020" />
       <column name="descripcion" value="Enabling next-generation of smart energy services
 valorising energy efficiency and flexibility at demand-side as energy resource" />
@@ -873,231 +873,231 @@ valorising energy efficiency and flexibility at demand-side as energy resource" 
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 45 -->
       <column name="nombre" value="LC-SC3-EE-11-2018-2019-2020" />
       <column name="descripcion" value="Aggregation - Project Development Assistance" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 46 -->
       <column name="nombre" value="LC-SC3-EE-14-2018-2019-2020" />
       <column name="descripcion" value="Socio-economic research conceptualising and modelling energy efficiency and energy demand" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 47 -->
       <column name="nombre" value="LC-SC3-EE-15-2018" />
       <column name="descripcion" value="New energy label driving and boosting innovation in products energy efficiency" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 48 -->
       <column name="nombre" value="LC-SC3-EE-16-2018-2019-2020" />
       <column name="descripcion" value="Supporting public authorities to implement the Energy Union" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 49 -->
       <column name="nombre" value="LC-SC3-EE-17-2019" />
       <column name="descripcion" value="European City Facility - European cities as key innovation hubs to unlock finance for energy efficiency" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 50 -->
       <column name="nombre" value="LC-SC3-EE-18-2019" />
       <column name="descripcion" value="Bioclimatic approaches for improving energy performance in buildings in Africa and Europe" />
       <column name="programa_padre_id" value="34" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 51 -->
       <column name="nombre" value="Buildings in energy transition (B4E)" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 52 -->
       <column name="nombre" value="LC-SC3-B4E-1-2020" />
       <column name="descripcion" value="Towards highly energy efficient and decarbonised buildings" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 53 -->
       <column name="nombre" value="LC-SC3-B4E-2-2020" />
       <column name="descripcion" value="Stimulating demand for sustainable energy skills in the building sector" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 54 -->
       <column name="nombre" value="LC-SC3-B4E-3-2020" />
       <column name="descripcion" value="Upgrading smartness of existing buildings through innovations for legacy equipment" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 55 -->
       <column name="nombre" value="LC-SC3-B4E-4-2020" />
       <column name="descripcion" value="Next-generation of Energy Performance Assessment and Certification" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 56 -->
       <column name="nombre" value="LC-SC3-B4E-5-2020" />
       <column name="descripcion" value="Integrated design concepts for energy-efficient ICT in buildings" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 57 -->
       <column name="nombre" value="LC-SC3-B4E-6-2020" />
       <column name="descripcion" value="Big data for buildings" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 58 -->
       <column name="nombre" value="LC-SC3-B4E-10-2020" />
       <column name="descripcion" value="Self-assessment and self-optimisation of buildings and appliances for a better energy performance" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 59 -->
       <column name="nombre" value="LC-SC3-B4E-7-2020" />
       <column name="descripcion" value="European building stock data 4.0" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 60 -->
       <column name="nombre" value="LC-SC3-B4E-8-2020" />
       <column name="descripcion" value="Renewable and energy efficient solutions for heating and/or cooling, and domestic hot water production in multi-apartment residential buildings" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 61 -->
       <column name="nombre" value="LC-SC3-B4E-9-2020" />
       <column name="descripcion" value="Support to the coordination of European smart buildings innovation community" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 62 -->
       <column name="nombre" value="LC-SC3-B4E-11-2020" />
       <column name="descripcion" value="Financing for energy efficiency investments - Smart Finance for Smart Buildings" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 63 -->
       <column name="nombre" value="LC-SC3-B4E-12-2020" />
       <column name="descripcion" value="National roundtables to implement the Smart Finance for Smart Buildings initiative" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 64 -->
       <column name="nombre" value="LC-SC3-B4E-13-2020" />
       <column name="descripcion" value="Aggregation - Project Development Assistance" />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 65 -->
       <column name="nombre" value="LC-SC3-B4E-14-2020" />
       <column name="descripcion" value="Enabling next-generation of smart energy services valorising energy efficiency and flexibility at demand-side " />
       <column name="programa_padre_id" value="51" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 66 -->
       <column name="nombre" value="Global leadership in renewables" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 67 -->
       <column name="nombre" value="LC-SC3-RES-1-2019-2020" />
       <column name="descripcion" value="Developing the next generation of renewable energy technologies" />
       <column name="programa_padre_id" value="66" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 68 -->
       <column name="nombre" value="LC-SC3-RES-2-2018" />
       <column name="descripcion" value="Disruptive innovation in clean energy technologies" />
       <column name="programa_padre_id" value="66" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 69 -->
       <column name="nombre" value="LC-SC3-RES-29-2019" />
       <column name="descripcion" value="Converting Sunlight to storable chemical energy" />
       <column name="programa_padre_id" value="66" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 70 -->
       <column name="nombre" value="LC-SC3-RES-3-2020" />
       <column name="descripcion" value="International Cooperation with USA and/or China on alternative renewable fuels from sunlight for energy, transport and chemical storage" />
       <column name="programa_padre_id" value="66" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 71 -->
       <column name="nombre" value="Smart and clean energy for consumers" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 72 -->
       <column name="nombre" value="Smart Cities and Communities" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 73 -->
       <column name="nombre" value="Smart citizen-centred energy system" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 74 -->
       <column name="nombre" value="Cross-cutting issues" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 75 -->
       <column name="nombre" value="Joint Actions" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 76 -->
       <column name="nombre" value="Smart Airports" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="27" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 77 -->
       <column name="nombre" value="near-zero CO2 emissions" />
       <column name="descripcion" value="Enabling near-zero CO2 emissions from fossil fuel power plants and carbon intensive
 industries" />
@@ -1105,52 +1105,367 @@ industries" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 78 -->
       <column name="nombre" value="INTERREG" />
       <column name="descripcion" value="INTERREG" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 79 -->
       <column name="nombre" value="PROGRAMA LIFE" />
       <column name="descripcion" value="PROGRAMA EUROPEO LIFE PARA LA CONSERVACIÓN DEL MEDIO AMBIENTE Y ACCIÓN POR EL CLIMA" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 80 -->
       <column name="nombre" value="H2020" />
       <column name="descripcion" value="" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 81 -->
       <column name="nombre" value="ciencia excelente" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="80" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 82 -->
       <column name="nombre" value="msca" />
       <column name="descripcion" value="null" />
       <column name="programa_padre_id" value="81" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 83 -->
       <column name="nombre" value="Plan 1" />
       <column name="descripcion" value="Plan 1" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
-      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 84 -->
       <column name="nombre" value="programa 1" />
       <column name="descripcion" value="programa 1" />
       <column name="programa_padre_id" value="83" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 85 -->
+      <column name="nombre" value="PROGRAMA LIFE A" />
+      <column name="descripcion" value="PROGRAMA A DENTRO DE UN PLAN DE INVESTIGACIÓN" />
+      <column name="programa_padre_id" value="79" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 86 -->
+      <column name="nombre" value="PROGRAMA LIFE B" />
+      <column name="descripcion" value="PROGRAMA LIFE B" />
+      <column name="programa_padre_id" value="79" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 87 -->
+      <column name="nombre" value="PROGRAMA LIFE C" />
+      <column name="descripcion" value="PROGRAMA LIFE C" />
+      <column name="programa_padre_id" value="79" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 88 -->
+      <column name="nombre" value="Acción estratégica economía y sociedad digital" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="13" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 89 -->
+      <column name="nombre" value="Acción estratégica salud" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="13" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 90 -->
+      <column name="nombre" value="Proyectos IDI" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="13" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 91 -->
+      <column name="nombre" value="Acciones de dinamización" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="13" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 92 -->
+      <column name="nombre" value="Retos investigación" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="90" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 93 -->
+      <column name="nombre" value="Pruebas de Concepto" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="90" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 94 -->
+      <column name="nombre" value="Retos Colaboración" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="90" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 95 -->
+      <column name="nombre" value="Incorporación de Jóvenes Investigadores" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="90" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 96 -->
+      <column name="nombre" value="Programación Conjunta Internacional" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="90" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 97 -->
+      <column name="nombre" value="Consorcios de Investigación Empresarial Nacional" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="90" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 98 -->
+      <column name="nombre" value="Ayudas Plataformas Tecnológicas y de Innovación" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="91" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 99 -->
+      <column name="nombre" value="Colaboración científico-técnica internacional" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="91" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 100 -->
+      <column name="nombre" value="Fomento Cultura Científica e Innovación" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="91" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 101 -->
+      <column name="nombre" value="ERC" />
+      <column name="descripcion" value="European Research Council" />
+      <column name="programa_padre_id" value="23" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 102 -->
+      <column name="nombre" value="FET" />
+      <column name="descripcion" value="Future and Emerging Technologies" />
+      <column name="programa_padre_id" value="23" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 103 -->
+      <column name="nombre" value="MSCA" />
+      <column name="descripcion" value="Marie-Sklodowska-Curie Actions" />
+      <column name="programa_padre_id" value="23" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 104 -->
+      <column name="nombre" value="RI" />
+      <column name="descripcion" value="Research Infrastructures" />
+      <column name="programa_padre_id" value="23" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 105 -->
+      <column name="nombre" value="LEIT" />
+      <column name="descripcion" value="Leadership in enabling and industrial technologies" />
+      <column name="programa_padre_id" value="24" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 106 -->
+      <column name="nombre" value="ARF" />
+      <column name="descripcion" value="Access to risk finance" />
+      <column name="programa_padre_id" value="24" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 107 -->
+      <column name="nombre" value="ISME" />
+      <column name="descripcion" value="Innovation in SMEs" />
+      <column name="programa_padre_id" value="24" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 108 -->
+      <column name="nombre" value="COFUND" />
+      <column name="descripcion" value="Acción Marie-Sklodowska Curie Co-funding of regional, national and International Programmes" />
+      <column name="programa_padre_id" value="103" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 109 -->
+      <column name="nombre" value="IF" />
+      <column name="descripcion" value="Acción Marie Sklodowska-Curie Individual Fellowships" />
+      <column name="programa_padre_id" value="103" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 110 -->
+      <column name="nombre" value="ITN" />
+      <column name="descripcion" value="Acción Marie Sklodowska Curie Innovative Training Networks " />
+      <column name="programa_padre_id" value="103" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 111 -->
+      <column name="nombre" value="RISE" />
+      <column name="descripcion" value="Acción Marie Sklodowska-Curie Research and Innovation Staff Exchange" />
+      <column name="programa_padre_id" value="103" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 112 -->
+      <column name="nombre" value="AdG" />
+      <column name="descripcion" value="Advanced Grants" />
+      <column name="programa_padre_id" value="101" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 113 -->
+      <column name="nombre" value="CoG" />
+      <column name="descripcion" value="Consolidator Grant" />
+      <column name="programa_padre_id" value="101" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 114 -->
+      <column name="nombre" value="PoC" />
+      <column name="descripcion" value="Proof of Concept" />
+      <column name="programa_padre_id" value="101" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 115 -->
+      <column name="nombre" value="StG" />
+      <column name="descripcion" value="Starting Grants" />
+      <column name="programa_padre_id" value="101" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 116 -->
+      <column name="nombre" value="SyG" />
+      <column name="descripcion" value="Synergy Grants" />
+      <column name="programa_padre_id" value="101" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 117 -->
+      <column name="nombre" value="FET  FLAGSHIPS" />
+      <column name="descripcion" value="Iniciativas emblemáticas" />
+      <column name="programa_padre_id" value="102" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 118 -->
+      <column name="nombre" value="Graphene" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="117" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 119 -->
+      <column name="nombre" value="Human Brain Project" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="117" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 120 -->
+      <column name="nombre" value="FET OPEN" />
+      <column name="descripcion" value=" Apoyo a nuevas ideas" />
+      <column name="programa_padre_id" value="102" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 121 -->
+      <column name="nombre" value="FET PROACTIVE" />
+      <column name="descripcion" value="Fomento de temas y comunidades emergentes" />
+      <column name="programa_padre_id" value="102" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 122 -->
+      <column name="nombre" value="ERIC" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="104" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 123 -->
+      <column name="nombre" value="ESFRI" />
+      <column name="descripcion" value="Foro Estratégico Europeo sobre Infraestructuras de Investigación" />
+      <column name="programa_padre_id" value="104" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 124 -->
+      <column name="nombre" value="European Fellowships" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="109" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 125 -->
+      <column name="nombre" value=" EF - ST" />
+      <column name="descripcion" value="Standard European Fellowship" />
+      <column name="programa_padre_id" value="124" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 126 -->
+      <column name="nombre" value="EF - CAR" />
+      <column name="descripcion" value="Career Restart Panel" />
+      <column name="programa_padre_id" value="124" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 127 -->
+      <column name="nombre" value="EF - RI" />
+      <column name="descripcion" value="Reintegration Panel " />
+      <column name="programa_padre_id" value="124" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 128 -->
+      <column name="nombre" value="EF - SE" />
+      <column name="descripcion" value="Society and Entreprise Panel" />
+      <column name="programa_padre_id" value="124" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" /> <!-- 129 -->
+      <column name="nombre" value="Global Fellowships" />
+      <column name="descripcion" value="null" />
+      <column name="programa_padre_id" value="109" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
