@@ -3,7 +3,6 @@ import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { SgiAuthService } from '@sgi/framework/auth/public-api';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -14,12 +13,14 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   public readonly: boolean;
   public isTipoInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  public mostrarCamposFinanciacion$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(
     private fb: FormBuilder,
     key: number,
     private service: PeticionEvaluacionService,
     sgiAuthService: SgiAuthService,
-    readonly: boolean
+    readonly: boolean,
   ) {
     super(key);
     this.peticionEvaluacion = {} as IPeticionEvaluacion;
@@ -31,12 +32,15 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   }
 
   protected buildFormGroup(): FormGroup {
-    return this.fb.group({
+    const form = this.fb.group({
       codigo: [{ value: '', disabled: true }, Validators.required],
       titulo: [{ value: '', disabled: this.readonly }, Validators.required],
-      tipoActividad: [{ value: '', disabled: this.readonly }, new NullIdValidador().isValid()],
-      tipoInvestigacionTutelada: [{ value: '', disabled: this.readonly }, []],
-      financiacion: [{ value: '', disabled: this.readonly }, Validators.required],
+      tipoActividad: [{ value: null, disabled: this.readonly }, Validators.required],
+      tipoInvestigacionTutelada: [{ value: null, disabled: this.readonly }],
+      existeFinanciacion: [{ value: null, disabled: this.readonly }, Validators.required],
+      financiacion: [{ value: '', disabled: this.readonly }],
+      importeFinanciacion: [{ value: '', disabled: this.readonly }],
+      estadoFinanciacion: [{ value: null, disabled: this.readonly }],
       fechaInicio: [{ value: null, disabled: this.readonly }, Validators.required],
       fechaFin: [{ value: null, disabled: this.readonly }, Validators.required],
       resumen: [{ value: '', disabled: this.readonly }, Validators.required],
@@ -44,6 +48,12 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       objetivosCientificos: [{ value: '', disabled: this.readonly }, Validators.required],
       disenioMetodologico: [{ value: '', disabled: this.readonly }, Validators.required],
     });
+
+    this.subscriptions.push(form.controls.existeFinanciacion.valueChanges.subscribe((value: boolean) => {
+      this.addValidations(value);
+    }));
+
+    return form;
   }
 
   protected initializer(key: number): Observable<IPeticionEvaluacion> {
@@ -60,12 +70,16 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   }
 
   protected buildPatch(value: IPeticionEvaluacion): { [key: string]: any; } {
+    this.addValidations(value.existeFinanciacion);
     return {
       codigo: value.codigo,
       titulo: value.titulo,
       tipoActividad: value.tipoActividad,
       tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
+      existeFinanciacion: value.existeFinanciacion,
       financiacion: value.fuenteFinanciacion,
+      estadoFinanciacion: value.estadoFinanciacion,
+      importeFinanciacion: value.importeFinanciacion,
       fechaInicio: value.fechaInicio,
       fechaFin: value.fechaFin,
       resumen: value.resumen,
@@ -81,7 +95,16 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     this.peticionEvaluacion.titulo = form.titulo ? form.titulo : this.getFormGroup().controls.titulo.value;
     this.peticionEvaluacion.tipoActividad = form.tipoActividad;
     this.peticionEvaluacion.tipoInvestigacionTutelada = form.tipoInvestigacionTutelada;
-    this.peticionEvaluacion.fuenteFinanciacion = form.financiacion;
+    this.peticionEvaluacion.existeFinanciacion = form.existeFinanciacion;
+    if (form.existeFinanciacion) {
+      this.peticionEvaluacion.fuenteFinanciacion = form.financiacion;
+      this.peticionEvaluacion.estadoFinanciacion = form.estadoFinanciacion;
+      this.peticionEvaluacion.importeFinanciacion = form.importeFinanciacion;
+    } else {
+      this.peticionEvaluacion.fuenteFinanciacion = null;
+      this.peticionEvaluacion.estadoFinanciacion = null;
+      this.peticionEvaluacion.importeFinanciacion = null;
+    }
     this.peticionEvaluacion.fechaInicio = form.fechaInicio;
     this.peticionEvaluacion.fechaFin = form.fechaFin;
     this.peticionEvaluacion.resumen = form.resumen;
@@ -105,5 +128,29 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
         return this.peticionEvaluacion.id;
       })
     );
+  }
+
+  private addValidations(value: boolean) {
+    const form = this.getFormGroup().controls;
+    if (!this.readonly) {
+      if (value) {
+        this.mostrarCamposFinanciacion$.next(true);
+        form.financiacion.setValidators([Validators.required]);
+        form.estadoFinanciacion.setValidators([Validators.required]);
+        form.importeFinanciacion.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]);
+      } else {
+        this.mostrarCamposFinanciacion$.next(false);
+        form.financiacion.clearValidators();
+        form.estadoFinanciacion.clearValidators();
+        form.importeFinanciacion.clearValidators();
+      }
+      form.financiacion.updateValueAndValidity();
+      form.estadoFinanciacion.updateValueAndValidity();
+      form.importeFinanciacion.updateValueAndValidity();
+    }
   }
 }

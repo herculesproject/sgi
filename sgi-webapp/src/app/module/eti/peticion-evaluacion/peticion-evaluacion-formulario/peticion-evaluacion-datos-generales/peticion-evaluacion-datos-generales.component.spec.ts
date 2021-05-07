@@ -5,10 +5,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-datos-generales.component';
-import { SgiAuthService } from '@sgi/framework/auth';
 
 
 describe('PeticionEvaluacionDatosGeneralesComponent', () => {
@@ -26,7 +27,8 @@ describe('PeticionEvaluacionDatosGeneralesComponent', () => {
         RouterTestingModule,
         TestUtils.getIdiomas(),
         MaterialDesignModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        SharedModule
       ],
       providers: [
         PeticionEvaluacionActionService,

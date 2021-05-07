@@ -21,7 +21,6 @@ import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memori
 import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
 
-
 @Injectable()
 export class PeticionEvaluacionActionService extends ActionService {
   public readonly FRAGMENT = {

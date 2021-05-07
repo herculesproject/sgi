@@ -1,3 +1,4 @@
+import { EstadoFinanciacion } from '../peticion-evaluacion';
 import { ITipoActividad } from '../tipo-actividad';
 import { ITipoInvestigacionTutelada } from '../tipo-investigacion-tutelada';
 
@@ -14,8 +15,14 @@ export interface IPeticionEvaluacionBackend {
   tipoActividad: ITipoActividad;
   /** Tipo de investigacion tutelada */
   tipoInvestigacionTutelada: ITipoInvestigacionTutelada;
+  /** Existe fuente financiacion */
+  existeFinanciacion: boolean;
   /** Referencia fuente financiacion */
   fuenteFinanciacion: string;
+  /** Estado fuente financiacion */
+  estadoFinanciacion: EstadoFinanciacion;
+  /** Importe fuente financiacion */
+  importeFinanciacion: boolean;
   /** Fecha Inicio. */
   fechaInicio: string;
   /** Fecha Fin. */

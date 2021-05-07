@@ -1,178 +1,166 @@
 <section class="peticionEvaluacion-datos-generales">
-
   <h2>{{'label.datos-generales' | translate}}</h2>
-
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-
+    <!-- Código-->
     <ng-container *ngIf="this.fragment.isEdit()">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field class="input-form">
-          <mat-label>{{'eti.peticion-evaluacion.codigo' | translate}}</mat-label>
-          <input matInput formControlName="codigo" type="text" id="codigo"
-            placeholder="{{'eti.peticion-evaluacion.codigo' | translate}}" required maxlength="100">
-          <mat-error
-            *ngIf="FormGroupUtil.checkError(formGroup, 'codigo') && (formGroup.get('codigo').errors.vacio || formGroup.get('codigo').errors.required)">
-            {{'error.required.entity' | translate:msgParamCodigoEntity}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-    </ng-container>
-
-
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
-        <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
-        <input matInput formControlName="titulo" type="text" id="titulo"
-          placeholder="{{'eti.peticion-evaluacion.titulo' | translate}}" required maxlength="100">
+        <mat-label>{{'eti.peticion-evaluacion.codigo' | translate}}</mat-label>
+        <input matInput formControlName="codigo" type="text" required maxlength="100">
         <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'titulo') && (formGroup.get('titulo').errors.vacio || formGroup.get('titulo').errors.required)">
-          {{'error.required.entity' | translate:msgParamTituloEntity}}
+          *ngIf="FormGroupUtil.checkError(formGroup, 'codigo') && (formGroup.get('codigo').errors.vacio || formGroup.get('codigo').errors.required)">
+          {{'error.required.entity' | translate:msgParamCodigoEntity}}
         </mat-error>
       </mat-form-field>
-    </div>
-
-
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-
-
-      <mat-form-field class="input-form">
-        <mat-label>{{'eti.peticion-evaluacion.tipo-actividad' | translate}}</mat-label>
-        <input type="text" placeholder="{{'eti.peticion-evaluacion.tipo-actividad' | translate}}" arial-label="Number"
-          matInput formControlName="tipoActividad" [matAutocomplete]="auto" required>
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoActividad"
-          (optionSelected)="selectTipoActividad($event.option.value)">
-          <mat-option *ngFor="let tipoActividad of filteredTipoActividad | async" [value]="tipoActividad">
-            {{tipoActividad.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-
-      <ng-container *ngIf="isInvestigacionTutelada$.getValue()">
-        <mat-form-field class="input-form">
-          <mat-label>{{'eti.peticion-evaluacion.tipo-investigacion-tutelada' | translate}}</mat-label>
-          <input type="text" placeholder="{{'eti.peticion-evaluacion.tipo-investigacion-tutelada' | translate}}"
-            arial-label="Number" matInput formControlName="tipoInvestigacionTutelada"
-            [matAutocomplete]="autoInvestigacion" [required]="isInvestigacionTutelada$.getValue()">
-          <mat-autocomplete #autoInvestigacion="matAutocomplete" [displayWith]="getTipoInvestigacionTutelada">
-            <mat-option *ngFor="let tipoInvestigacionTutelada of filteredTipoInvestigacionTutelada | async"
-              [value]="tipoInvestigacionTutelada">
-              {{tipoInvestigacionTutelada.nombre}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </ng-container>
-
-      <mat-form-field class="input-form">
-        <mat-label>{{'eti.peticion-evaluacion.financiacion' | translate}}</mat-label>
-        <input #nombre matInput formControlName="financiacion" type="text" id="financiacion"
-          placeholder="{{'eti.peticion-evaluacion.financiacion' | translate}}" required maxlength="100">
+    </ng-container>
+    <!-- Título-->
+    <mat-form-field class="input-form">
+      <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
+      <input matInput formControlName="titulo" type="text" required maxlength="100">
+      <mat-error
+        *ngIf="FormGroupUtil.checkError(formGroup, 'titulo') && (formGroup.get('titulo').errors.vacio || formGroup.get('titulo').errors.required)">
+        {{'error.required.entity' | translate:msgParamTituloEntity}}
+      </mat-error>
+    </mat-form-field>
+    <!-- Tipo de actividad-->
+    <mat-form-field class="input-form">
+      <mat-label>{{'eti.peticion-evaluacion.tipo-actividad' | translate}}</mat-label>
+      <sgi-select-entity formControlName="tipoActividad" [options]="tipoActividades$ | async" required>
+      </sgi-select-entity>
+      <mat-error *ngIf="formGroup.controls.tipoActividad.errors?.required">
+        {{'error.required.entity' | translate:msgParamTipoActividadEntity}}
+      </mat-error>
+    </mat-form-field>
+    <!-- Tipo de Investigacion tutelada-->
+    <ng-container *ngIf="isInvestigacionTutelada$.getValue()">
+      <mat-form-field>
+        <mat-label>{{'eti.peticion-evaluacion.tipo-investigacion-tutelada' | translate}}</mat-label>
+        <sgi-select-entity formControlName="tipoInvestigacionTutelada" [options]="tipoInvestigacionTuteladas$ | async"
+          [required]="isInvestigacionTutelada$.getValue()">
+        </sgi-select-entity>
         <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'financiacion') && (formGroup.get('financiacion').errors.vacio || formGroup.get('financiacion').errors.required)">
+          *ngIf="isInvestigacionTutelada$.getValue() && formGroup.controls.tipoInvestigacionTutelada.errors?.required">
+          {{'error.required.entity' | translate:msgParamTipoInvestigacionTuteladaEntity}}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+    <!-- Existe financiación -->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.existe-financiacion' | translate}}</mat-label>
+      <sgi-select-boolean formControlName="existeFinanciacion" required></sgi-select-boolean>
+      <mat-error *ngIf="formGroup.controls.existeFinanciacion.errors?.required">
+        {{'error.required.entity' | translate:msgParamExisteFinanciacionEntity}}
+      </mat-error>
+    </mat-form-field>
+    <ng-container *ngIf="peticionEvaluacionFragment.mostrarCamposFinanciacion$.getValue()">
+      <!-- Órgano financiador-->
+      <mat-form-field>
+        <mat-label>{{'eti.peticion-evaluacion.organo-financiador' | translate}}</mat-label>
+        <input #nombre matInput formControlName="financiacion" type="text"
+          [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="100">
+        <mat-error *ngIf="formGroup.controls.financiacion.errors?.required">
           {{'error.required.entity' | translate:msgParamFinanciacionEntity}}
         </mat-error>
       </mat-form-field>
-
-    </div>
-
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+        [fxLayoutGap]="fxLayoutProperties.gap">
+        <div>
+          <!-- Estado financiación -->
+          <mat-form-field>
+            <mat-label>{{'eti.peticion-evaluacion.estado-financiacion' | translate}}</mat-label>
+            <sgi-select-enum formControlName="estadoFinanciacion" [enumMap]="ESTADO_FINANCIACION_MAP"
+              [required]="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required')"></sgi-select-enum>
+            <mat-error
+              *ngIf="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required') && formGroup.controls.estadoFinanciacion.errors?.required">
+              {{'error.required.entity' | translate:msgParamEstadoFinanciacionEntity}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <!-- Importe financiación-->
+          <mat-form-field>
+            <mat-label>{{'eti.peticion-evaluacion.importe-financiacion' | translate}}</mat-label>
+            <input matInput formControlName="importeFinanciacion" type="number"
+              [required]="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required')" min="0">
+            <mat-error
+              *ngIf="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required') && formGroup.controls.importeFinanciacion.errors?.required">
+              {{'error.required.entity' | translate:msgParamImporteFinanciacionEntity}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.min">
+              {{'error.min.digit' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.max">
+              {{'error.max.digit' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </ng-container>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field color="primary">
-        <mat-label>{{'eti.peticion-evaluacion.fecha-inicio'| translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
-        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
-        </ngx-mat-datetime-picker>
-      </mat-form-field>
-      <mat-error
-        *ngIf="FormGroupUtil.checkError(formGroup, 'fechaInicio') && formGroup.get('fechaInicio').errors.required">
-        {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
+      [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      [fxLayoutGap]="fxLayoutProperties.gap">
+      <div>
+        <!-- Fecha de inicio -->
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.fecha-inicio'| translate}}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaInicio showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
+          <mat-error
+            *ngIf="FormGroupUtil.checkError(formGroup, 'fechaInicio') && formGroup.get('fechaInicio').errors.required">
+            {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <!-- Fecha de Fin -->
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.fecha-fin'| translate}}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
+          <mat-error
+            *ngIf="FormGroupUtil.checkError(formGroup, 'fechaFin') && formGroup.get('fechaFin').errors.required">
+            {{'error.required.entity' | translate:msgParamFechaFinEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Resumen-->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.resumen' | translate}}</mat-label>
+      <textarea #resumen matInput formControlName="resumen" type="text" maxlength="8000" required></textarea>
+      <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
+      <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
+        {{'error.required.entity' | translate:msgParamResumenEntity}}
       </mat-error>
-
-
-      <mat-form-field color="primary">
-        <mat-label>{{'eti.peticion-evaluacion.fecha-fin'| translate}}</mat-label>
-        <input matInput [ngxMatDatetimePicker]="pickerFechaFin" formControlName="fechaFin" required>
-        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
-        </ngx-mat-datetime-picker>
-      </mat-form-field>
-      <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'fechaFin') && formGroup.get('fechaFin').errors.required">
-        {{'error.required.entity' | translate:msgParamFechaFinEntity}}
+    </mat-form-field>
+    <!-- Valor social -->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
+      <textarea matInput formControlName="valorSocial" type="text" id="valorSocial" required></textarea>
+      <mat-error *ngIf="formGroup.controls.valorSocial.errors?.required">
+        {{'error.required.entity' | translate:msgParamValorSocialEntity}}
       </mat-error>
-
-    </div>
-
-    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
-      <mat-form-field fxFill>
-        <mat-label>{{'eti.peticion-evaluacion.resumen' | translate}}</mat-label>
-        <textarea #resumen matInput formControlName="resumen" type="text" id="resumen"
-          placeholder="{{'eti.peticion-evaluacion.resumen' | translate}}" maxlength="8000" required>
-        </textarea>
-        <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
-        <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'resumen') && (formGroup.get('resumen').errors.vacio || formGroup.get('resumen').errors.required)">
-          {{'error.required.entity' | translate:msgParamResumenEntity}}
-        </mat-error>
-
-      </mat-form-field>
-
-    </div>
-
-    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
-      <mat-form-field fxFill>
-        <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
-        <textarea matInput formControlName="valorSocial" type="text" id="valorSocial"
-          placeholder="{{'eti.peticion-evaluacion.valor-social' | translate}}" required>
-                  </textarea>
-
-        <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'valorSocial') && (formGroup.get('valorSocial').errors.vacio || formGroup.get('valorSocial').errors.required)">
-          {{'error.required.entity' | translate:msgParamValorSocialEntity}}
-        </mat-error>
-
-      </mat-form-field>
-    </div>
-
-    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
-      <mat-form-field fxFill>
-        <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate}}</mat-label>
-        <textarea matInput formControlName="objetivosCientificos" type="text" id="objetivosCientificos"
-          placeholder="{{'eti.peticion-evaluacion.objetivo-cientifico' | translate}}" required>
-                          </textarea>
-
-        <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'objetivosCientificos') && (formGroup.get('objetivosCientificos').errors.vacio || formGroup.get('objetivosCientificos').errors.required)">
-          {{'error.required.entity' | translate:msgParamObjetivoCientificoEntity}}
-        </mat-error>
-
-
-      </mat-form-field>
-    </div>
-
-    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
-      <mat-form-field fxFill>
-        <mat-label>{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}</mat-label>
-        <textarea matInput formControlName="disenioMetodologico" type="text" id="disenioMetodologico"
-          placeholder="{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}" required>
-                              </textarea>
-
-        <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'disenioMetodologico') && (formGroup.get('disenioMetodologico').errors.vacio || formGroup.get('disenioMetodologico').errors.required)">
-          {{'error.required.entity' | translate:msgParamDisenioMetodologicoEntity}}
-        </mat-error>
-
-      </mat-form-field>
-    </div>
-
-
+    </mat-form-field>
+    <!-- Objetivos científicos -->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate}}</mat-label>
+      <textarea matInput formControlName="objetivosCientificos" type="text" required></textarea>
+      <mat-error *ngIf="formGroup.controls.objetivosCientificos.errors?.required">
+        {{'error.required.entity' | translate:msgParamObjetivoCientificoEntity}}
+      </mat-error>
+    </mat-form-field>
+    <!-- Diseño metodológico -->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}</mat-label>
+      <textarea matInput formControlName="disenioMetodologico" type="text" required></textarea>
+      <mat-error *ngIf="formGroup.controls.disenioMetodologico.errors?.required">
+        {{'error.required.entity' | translate:msgParamDisenioMetodologicoEntity}}
+      </mat-error>
+    </mat-form-field>
   </form>
 </section>
