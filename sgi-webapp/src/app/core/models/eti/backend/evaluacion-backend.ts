@@ -28,6 +28,8 @@ export interface IEvaluacionBackend {
   fechaDictamen: string;
   /** Es revisión mínima */
   esRevMinima: boolean;
+  /** Comentario */
+  comentario: string;
   /** Activo */
   activo: boolean;
 }

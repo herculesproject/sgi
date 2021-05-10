@@ -2,7 +2,6 @@
   <h2>{{'eti.evaluacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-
     <!--Comité-->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
@@ -12,7 +11,6 @@
           formControlName="comite">
       </mat-form-field>
     </div>
-
     <!--Fecha Evaluación-->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
@@ -23,7 +21,6 @@
         <ngx-mat-datetime-picker #fechaEvaluacion showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
       </mat-form-field>
     </div>
-
     <!--Referencia Memoria-->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
@@ -32,7 +29,6 @@
         <input matInput formControlName="referenciaMemoria" placeholder="{{'eti.memoria.referencia' | translate}}">
       </mat-form-field>
     </div>
-
     <!--Solicitante-->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
@@ -41,7 +37,6 @@
         <input matInput formControlName="solicitante" placeholder="{{'eti.solicitante' | translate}}">
       </mat-form-field>
     </div>
-
     <!--Versión-->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
@@ -51,20 +46,14 @@
           placeholder="{{'eti.evaluacion-evaluador.memoria.version' | translate}}">
       </mat-form-field>
     </div>
-
     <!-- Dictamen -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <div fxLayout="row">
         <mat-form-field class="input-form">
           <mat-label>{{'eti.dictamen' | translate}}</mat-label>
-          <input type="text" [placeholder]="'eti.dictamen' | translate" arial-label="Number" matInput
-            formControlName="dictamen" [matAutocomplete]="autocompleteDictamen" required>
-          <mat-autocomplete #autocompleteDictamen="matAutocomplete" [displayWith]="getDictamen">
-            <mat-option *ngFor="let dictamen of dictamenListado" [value]="dictamen">
-              {{dictamen.nombre}}
-            </mat-option>
-          </mat-autocomplete>
+          <sgi-select-entity formControlName="dictamen" [options]="dictamenes$ | async" required>
+          </sgi-select-entity>
           <mat-error *ngIf="formGroup.controls.dictamen.errors?.required">
             {{'error.required.entity' | translate:msgParamDictamenEntity}}
           </mat-error>
@@ -78,7 +67,18 @@
         </div>
       </div>
     </div>
-
+    <!--Comentario-->
+    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexPropertiesInline.md"
+      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexProperties.order"
+      *ngIf="this.formPart.mostrarComentario$.getValue()">
+      <mat-form-field>
+        <mat-label>{{'eti.evaluacion-evaluador.comentario' | translate}}</mat-label>
+        <textarea matInput formControlName="comentario" type="text"></textarea>
+        <mat-error *ngIf="formGroup.controls.comentario.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
   <sgi-evaluacion-listado-anterior-memoria #evaluaciones></sgi-evaluacion-listado-anterior-memoria>
 </section>

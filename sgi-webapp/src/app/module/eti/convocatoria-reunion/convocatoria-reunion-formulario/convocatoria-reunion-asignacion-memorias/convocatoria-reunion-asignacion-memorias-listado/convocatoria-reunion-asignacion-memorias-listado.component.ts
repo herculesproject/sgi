@@ -139,6 +139,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
       memoria: null,
       tipoEvaluacion: null,
       version: null,
+      comentario: null,
       eliminable: true
     };
 

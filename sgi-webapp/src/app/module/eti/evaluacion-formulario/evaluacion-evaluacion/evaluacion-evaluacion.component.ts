@@ -3,14 +3,14 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IDictamen } from '@core/models/eti/dictamen';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IMemoria } from '@core/models/eti/memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 import {
   EvaluacionListadoAnteriorMemoriaComponent
@@ -18,6 +18,7 @@ import {
 import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion.fragment';
 
 const EVALUACION_DICTAMEN_KEY = marker('eti.dictamen');
+const EVALUACION_COMENTARIO_KEY = marker('eti.evaluacion-evaluador.comentario');
 
 @Component({
   selector: 'sgi-evaluacion-evaluacion',
@@ -32,13 +33,13 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
   @ViewChild('evaluaciones') evaluaciones: EvaluacionListadoAnteriorMemoriaComponent;
 
-  dictamenListado: IDictamen[];
-  filteredDictamenes: Observable<IDictamen[]>;
   suscriptions: Subscription[] = [];
+  dictamenes$: Observable<IDictamen[]>;
 
   formPart: EvaluacionEvaluacionFragment;
 
   msgParamDictamenEntity = {};
+  msgParamComentarioEntity = {};
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -46,7 +47,7 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
   constructor(
     private actionService: EvaluacionFormularioActionService,
-    private tipoEvaluacionService: TipoEvaluacionService,
+    protected tipoEvaluacionService: TipoEvaluacionService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
@@ -68,6 +69,20 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     this.fxLayoutProperties.xs = 'column';
 
     this.formPart = this.fragment as EvaluacionEvaluacionFragment;
+
+    this.dictamenes$ = this.formPart.evaluacion$.pipe(
+      switchMap(evaluacion => {
+        if (evaluacion) {
+          return tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(
+            evaluacion.tipoEvaluacion.id,
+            evaluacion.esRevMinima
+          ).pipe(
+            map(response => response.items)
+          );
+        }
+        return of([]);
+      })
+    );
   }
 
   ngOnInit() {
@@ -76,11 +91,6 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     this.suscriptions.push(this.formGroup.controls.dictamen.valueChanges.subscribe((dictamen) => {
       this.actionService.setDictamen(dictamen);
     }));
-    this.suscriptions.push((this.fragment as EvaluacionEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
-      if (evaluacion) {
-        this.loadDictamenes(evaluacion);
-      }
-    }));
   }
 
   private setupI18N(): void {
@@ -88,6 +98,11 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
       EVALUACION_DICTAMEN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamDictamenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      EVALUACION_COMENTARIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   ngAfterViewInit(): void {
@@ -103,29 +118,6 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     else if (idTipoMemoria === 3) {
       openInformeFavorableTipoRatificacion(this.actionService.getEvaluacion()?.id);
     }
-  }
-
-  /**
-   * Devuelve el nombre de un dictamen.
-   * @param dictamen dictamen
-   * returns nombre dictamen
-   */
-  getDictamen(dictamen: IDictamen): string {
-    return dictamen?.nombre;
-  }
-
-  /**
-   * Recupera un listado de los dictamenes que hay en el sistema.
-   */
-  loadDictamenes(evaluacion: IEvaluacion): void {
-    /**
-     * Devuelve el listado de dictámenes dependiendo del tipo de Evaluación y si es de Revisión Mínima
-     */
-    this.suscriptions.push(this.tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(
-      evaluacion.tipoEvaluacion.id, evaluacion.esRevMinima).subscribe(
-        (response) => {
-          this.dictamenListado = response.items;
-        }));
   }
 
   ngOnDestroy(): void {

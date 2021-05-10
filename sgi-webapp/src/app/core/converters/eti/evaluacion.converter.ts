@@ -23,6 +23,7 @@ class EvaluacionConverter extends SgiBaseConverter<IEvaluacionBackend, IEvaluaci
       evaluador2: EVALUADOR_CONVERTER.toTarget(value.evaluador2),
       fechaDictamen: LuxonUtils.fromBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
+      comentario: value.comentario,
       activo: value.activo
     };
   }
@@ -43,6 +44,7 @@ class EvaluacionConverter extends SgiBaseConverter<IEvaluacionBackend, IEvaluaci
       evaluador2: EVALUADOR_CONVERTER.fromTarget(value.evaluador2),
       fechaDictamen: LuxonUtils.toBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
+      comentario: value.comentario,
       activo: value.activo
     };
   }

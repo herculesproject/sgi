@@ -1,19 +1,20 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { EvaluacionEvaluacionComponent } from './evaluacion-evaluacion.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import TestUtils from '@core/utils/test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
+import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
+import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
+import { EvaluacionEvaluacionComponent } from './evaluacion-evaluacion.component';
+
 
 describe('EvaluacionEvaluacionComponent', () => {
   let component: EvaluacionEvaluacionComponent;
@@ -35,7 +36,8 @@ describe('EvaluacionEvaluacionComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        SgiAuthModule
+        SgiAuthModule,
+        SharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

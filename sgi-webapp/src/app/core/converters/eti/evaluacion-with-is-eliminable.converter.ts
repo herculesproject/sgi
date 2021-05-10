@@ -24,6 +24,7 @@ class EvaluacionWithIsEliminableConverter extends SgiBaseConverter<IEvaluacionWi
       fechaDictamen: LuxonUtils.fromBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
       activo: value.activo,
+      comentario: value.comentario,
       eliminable: value.eliminable
     };
   }
@@ -45,6 +46,7 @@ class EvaluacionWithIsEliminableConverter extends SgiBaseConverter<IEvaluacionWi
       fechaDictamen: LuxonUtils.toBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
       activo: value.activo,
+      comentario: value.comentario,
       eliminable: value.eliminable
     };
   }
