@@ -82,10 +82,6 @@ public class SolicitudProyectoSocioPeriodoPagoServiceImpl implements SolicitudPr
     log.debug(
         "updateConvocatoriaPeriodoJustificacionesConvocatoria(Long solicitudProyectoSocioId, List<SolicitudProyectoSocioPeriodoPago> solicitudPeriodoPagos) - start");
 
-    if (solicitudPeriodoPagos.isEmpty()) {
-      return new ArrayList<>();
-    }
-
     SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
