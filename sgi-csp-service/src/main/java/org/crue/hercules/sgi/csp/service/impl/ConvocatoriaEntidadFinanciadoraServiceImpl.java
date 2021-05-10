@@ -190,6 +190,8 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
               .setTipoFinanciacion(convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion());
           convocatoriaEntidadFinanciadora
               .setPorcentajeFinanciacion(convocatoriaEntidadFinanciadoraActualizar.getPorcentajeFinanciacion());
+          convocatoriaEntidadFinanciadora
+              .setImporteFinanciacion(convocatoriaEntidadFinanciadoraActualizar.getImporteFinanciacion());
 
           ConvocatoriaEntidadFinanciadora returnValue = repository.save(convocatoriaEntidadFinanciadora);
           log.debug("update(ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadoraActualizar) - end");

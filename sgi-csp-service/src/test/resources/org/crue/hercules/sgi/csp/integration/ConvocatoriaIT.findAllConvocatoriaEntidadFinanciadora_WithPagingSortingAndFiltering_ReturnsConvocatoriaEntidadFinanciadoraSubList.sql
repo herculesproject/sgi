@@ -41,21 +41,21 @@ INSERT INTO csp.fuente_financiacion (id, nombre, descripcion, fondo_estructural,
 INSERT INTO csp.tipo_financiacion (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
 
 -- CONVOCATORIA ENTIDAD FINANCIADORA
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (1, 1, 'entidad-001', 1, 1, 20);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (2, 1, 'entidad-002', null, null, 30);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (3, 1, 'entidad-003', 1, null , 40);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (4, 1, 'entidad-4', 1, 1, 10);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (5, 2, 'entidad-001', 1, 1, 20);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion)
-  VALUES (6, 2, 'entidad-002', null, null, 30);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (7, 2, 'entidad-003', 1, null , 40);
-INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (8, 2, 'entidad-004', 1, 1, 10);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (1, 1, 'entidad-001', 1, 1, 20, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (2, 1, 'entidad-002', null, null, 30, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (3, 1, 'entidad-003', 1, null, 40, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (4, 1, 'entidad-4', 1, 1, 10, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (5, 2, 'entidad-001', 1, 1, 20, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion)
+  VALUES (6, 2, 'entidad-002', null, null, 30, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (7, 2, 'entidad-003', 1, null , 40, 1000);
+INSERT INTO csp.convocatoria_entidad_financiadora (id, convocatoria_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (8, 2, 'entidad-004', 1, 1, 10, 1000);
 
 

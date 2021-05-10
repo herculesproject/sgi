@@ -117,6 +117,8 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
               .setTipoFinanciacion(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getTipoFinanciacion());
           solicitudProyectoEntidadFinanciadoraAjena.setPorcentajeFinanciacion(
               solicitudProyectoEntidadFinanciadoraAjenaActualizar.getPorcentajeFinanciacion());
+          solicitudProyectoEntidadFinanciadoraAjena
+              .setImporteFinanciacion(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getImporteFinanciacion());
 
           SolicitudProyectoEntidadFinanciadoraAjena returnValue = repository
               .save(solicitudProyectoEntidadFinanciadoraAjena);

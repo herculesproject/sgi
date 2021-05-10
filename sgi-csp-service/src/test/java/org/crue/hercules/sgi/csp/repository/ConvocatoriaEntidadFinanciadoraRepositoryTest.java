@@ -49,13 +49,13 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // 5 elements to convocatoria 1
     for (int i = 1; i <= 5; i++) {
       ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria1.getId(),
-          "entidadRef-" + i, null, null, null);
+          "entidadRef-" + i, null, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
     // 5 elements to convocatoria 2
     for (int i = 1; i <= 5; i++) {
       ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria2.getId(),
-          "entidadRef-" + i, null, null, null);
+          "entidadRef-" + i, null, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
 
@@ -104,13 +104,13 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // 5 elements to convocatoria 1
     for (int i = 1; i <= 5; i++) {
       ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria1.getId(),
-          "entidadRef-" + i, null, null, null);
+          "entidadRef-" + i, null, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
     // 5 elements to convocatoria 2
     for (int i = 1; i <= 5; i++) {
       ConvocatoriaEntidadFinanciadora entidad = new ConvocatoriaEntidadFinanciadora(null, convocatoria2.getId(),
-          "entidadRef-" + i, null, null, null);
+          "entidadRef-" + i, null, null, null, null);
       persistList.add(entityManager.persistAndFlush(entidad));
     }
 

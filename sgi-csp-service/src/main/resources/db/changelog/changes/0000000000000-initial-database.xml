@@ -465,6 +465,7 @@
             <column name="entidad_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="importe_financiacion" type="DECIMAL(19, 2)"/>
             <column name="porcentaje_financiacion" type="INT"/>
             <column name="fuente_financiacion_id" type="BIGINT"/>
             <column name="tipo_financiacion_id" type="BIGINT"/>
@@ -988,6 +989,7 @@
             <column name="entidad_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="importe_financiacion" type="DECIMAL(19, 2)"/>
             <column name="porcentaje_financiacion" type="INT"/>
             <column name="proyecto_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -1566,6 +1568,7 @@
             <column name="entidad_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="importe_financiacion" type="DECIMAL(19, 2)"/>
             <column name="porcentaje_financiacion" type="INT"/>
             <column name="solicitud_proyecto_id" type="BIGINT">
                 <constraints nullable="false"/>

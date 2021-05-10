@@ -75,13 +75,13 @@ INSERT INTO csp.fuente_financiacion (id, nombre, descripcion, fondo_estructural,
 INSERT INTO csp.tipo_financiacion (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
 
 -- SOLICITUD PROYECTO ENTIDAD FINANCIADORA AJENA
-INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (1, 1, 'entidad-001', 1, 1, 20);
-INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (2, 1, 'entidad-002', null, null, 30);
-INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (3, 1, 'entidad-003', null, null, 20);
-INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (4, 2, 'entidad-004', null, null, 10);
-INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion) 
-  VALUES (11, 1, 'entidad-011', null, null, 10);
+INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (1, 1, 'entidad-001', 1, 1, 20, 1000);
+INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (2, 1, 'entidad-002', null, null, 30, 1000);
+INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (3, 1, 'entidad-003', null, null, 20, 1000);
+INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (4, 2, 'entidad-004', null, null, 10, 1000);
+INSERT INTO csp.solicitud_proyecto_entidad_financiadora_ajena (id, solicitud_proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion) 
+  VALUES (11, 1, 'entidad-011', null, null, 10, 1000);

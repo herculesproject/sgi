@@ -99,6 +99,7 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
     old.setFuenteFinanciacion(proyectoEntidadFinanciadora.getFuenteFinanciacion());
     old.setPorcentajeFinanciacion(proyectoEntidadFinanciadora.getPorcentajeFinanciacion());
     old.setTipoFinanciacion(proyectoEntidadFinanciadora.getTipoFinanciacion());
+    old.setImporteFinanciacion(proyectoEntidadFinanciadora.getImporteFinanciacion());
 
     ProyectoEntidadFinanciadora returnValue = repository.save(old);
     log.debug("update(ProyectoEntidadFinanciadora proyectoEntidadFinanciadora) - end");

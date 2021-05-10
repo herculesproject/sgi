@@ -613,6 +613,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       entidadProyecto.setFuenteFinanciacion(entidadConvocatoria.getFuenteFinanciacion());
       entidadProyecto.setTipoFinanciacion(entidadConvocatoria.getTipoFinanciacion());
       entidadProyecto.setPorcentajeFinanciacion(entidadConvocatoria.getPorcentajeFinanciacion());
+      entidadProyecto.setImporteFinanciacion(entidadConvocatoria.getImporteFinanciacion());
       entidadProyecto.setAjena(DEFAULT_COPY_ENTIDAD_FINANCIADORA_AJENA_VALUE);
 
       this.proyectoEntidadFinanciadoraService.create(entidadProyecto);
@@ -825,6 +826,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       entidadProyecto.setFuenteFinanciacion(entidadSolicitud.getFuenteFinanciacion());
       entidadProyecto.setTipoFinanciacion(entidadSolicitud.getTipoFinanciacion());
       entidadProyecto.setPorcentajeFinanciacion(entidadSolicitud.getPorcentajeFinanciacion());
+      entidadProyecto.setImporteFinanciacion(entidadSolicitud.getImporteFinanciacion());
       entidadProyecto.setAjena(Boolean.TRUE);
 
       this.proyectoEntidadFinanciadoraService.create(entidadProyecto);

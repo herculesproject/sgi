@@ -19,5 +19,5 @@
 */
 
 INSERT INTO csp.proyecto_entidad_financiadora 
-(id, proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, ajena) 
-VALUES (1, 1, 'entidad-001', 1, 1, 20, false);
+(id, proyecto_id, entidad_ref, fuente_financiacion_id, tipo_financiacion_id, porcentaje_financiacion, importe_financiacion, ajena) 
+VALUES (1, 1, 'entidad-001', 1, 1, 20, 1000, false);

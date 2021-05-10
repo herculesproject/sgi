@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -72,6 +74,10 @@ public class ProyectoEntidadFinanciadora extends BaseEntity {
   @Column(name = "porcentaje_financiacion", nullable = true)
   @Min(0)
   private Integer porcentajeFinanciacion;
+
+  /** Importe financiacion */
+  @Column(name = "importe_financiacion", nullable = true)
+  private BigDecimal importeFinanciacion;
 
   /** Ajena */
   @Column(name = "ajena", nullable = false)

@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -68,6 +70,10 @@ public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
   @Column(name = "porcentaje_financiacion", nullable = true)
   @Min(0)
   private Integer porcentajeFinanciacion;
+
+  /** Importe financiacion */
+  @Column(name = "importe_financiacion", nullable = true)
+  private BigDecimal importeFinanciacion;
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
