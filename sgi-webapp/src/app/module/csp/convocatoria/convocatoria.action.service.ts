@@ -25,7 +25,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { CONVOCATORIA_DATA_KEY } from './convocatoria-data.resolver';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
@@ -88,6 +88,10 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   public readonly id: number;
 
   public readonly hasModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private readonly hasEnlaces$ = new BehaviorSubject<boolean>(false);
+  private readonly hasPlazos$ = new BehaviorSubject<boolean>(false);
+  private readonly hasHitos$ = new BehaviorSubject<boolean>(false);
+  private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
 
   private modeloEjecucion: IModeloEjecucion;
   get modeloEjecucionId(): number {
@@ -179,13 +183,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.addFragment(this.FRAGMENT.REQUISITOS_EQUIPO, this.requisitosEquipo);
     this.addFragment(this.FRAGMENT.CONFIGURACION_SOLICITUDES, this.configuracionSolicitudes);
 
-    if (this.isEdit()) {
-      if (this.readonly) {
-        this.datosGenerales.getFormGroup()?.disable();
-        this.requisitosEquipo.getFormGroup()?.disable();
-      }
-    }
-
     this.subscriptions.push(this.configuracionSolicitudes.initialized$.subscribe(value => {
       if (value) {
         this.plazosFases.initialize();
@@ -205,6 +202,48 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
         this.hasModeloEjecucion$.next(Boolean(modeloEjecucion));
       }
     ));
+
+    // Sincronización de las vinculaciones sobre modelo de ejecución
+    if (this.isEdit() && !this.readonly) {
+      // Checks on init
+      this.subscriptions.push(
+        this.convocatoriaService.hasConvocatoriaEnlaces(this.id).subscribe(value => this.hasEnlaces$.next(value))
+      );
+      this.subscriptions.push(
+        this.convocatoriaService.hasConvocatoriaFases(this.id).subscribe(value => this.hasPlazos$.next(value))
+      );
+      this.subscriptions.push(
+        this.convocatoriaService.hasConvocatoriaHitos(this.id).subscribe(value => this.hasHitos$.next(value))
+      );
+      this.subscriptions.push(
+        this.convocatoriaService.hasConvocatoriaDocumentos(this.id).subscribe(value => this.hasDocumentos$.next(value))
+      );
+
+      // Propagate changes
+      this.subscriptions.push(
+        merge(
+          this.hasEnlaces$,
+          this.hasPlazos$,
+          this.hasHitos$,
+          this.hasDocumentos$
+        ).subscribe(
+          () => {
+            this.datosGenerales.vinculacionesModeloEjecucion$.next(
+              this.hasEnlaces$.value
+              || this.hasPlazos$.value
+              || this.hasHitos$.value
+              || this.hasDocumentos$.value
+            );
+          }
+        )
+      );
+
+      // Syncronize changes
+      this.subscriptions.push(this.enlaces.enlace$.subscribe(value => this.hasEnlaces$.next(!!value.length)));
+      this.subscriptions.push(this.plazosFases.plazosFase$.subscribe(value => this.hasPlazos$.next(!!value.length)));
+      this.subscriptions.push(this.hitos.hitos$.subscribe(value => this.hasHitos$.next(!!value.length)));
+      this.subscriptions.push(this.documentos.documentos$.subscribe(value => this.hasDocumentos$.next(!!value.length)));
+    }
 
     // Inicializamos los datos generales
     this.datosGenerales.initialize();

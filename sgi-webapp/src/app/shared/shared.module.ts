@@ -10,6 +10,7 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
 import { ActionFragmentMenuGroupComponent } from './action-fragment-menu-group/action-fragment-menu-group.component';
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { FieldInfoComponent } from './field-info/field-info.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
 import { LuxonDatePipe } from './luxon-date-pipe';
@@ -42,7 +43,8 @@ import { SelectComponent } from './select/select.component';
     SelectBooleanComponent,
     SelectComponent,
     SelectEntityComponent,
-    SelectEnumComponent
+    SelectEnumComponent,
+    FieldInfoComponent
   ],
   imports: [
     CommonModule,
@@ -68,7 +70,8 @@ import { SelectComponent } from './select/select.component';
     SelectBooleanComponent,
     SelectComponent,
     SelectEntityComponent,
-    SelectEnumComponent
+    SelectEnumComponent,
+    FieldInfoComponent
   ]
 })
 export class SharedModule { }

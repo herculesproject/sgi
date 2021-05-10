@@ -30,6 +30,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
   readonly modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
+  readonly vinculacionesModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly logger: NGXLogger,
@@ -78,6 +79,23 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         this.modeloEjecucion$.next(value);
       })
     );
+
+    if (!this.readonly) {
+      this.subscriptions.push(
+        this.vinculacionesModeloEjecucion$.subscribe(
+          value => {
+            if (value) {
+              form.controls.unidadGestion.disable();
+              form.controls.modeloEjecucion.disable();
+            }
+            else {
+              form.controls.unidadGestion.enable();
+              form.controls.modeloEjecucion.enable();
+            }
+          }
+        )
+      );
+    }
 
     this.checkEstado(form, this.convocatoria);
     return form;
@@ -152,17 +170,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
             else {
               return of(convocatoria);
             }
-          })
-        );
-      }),
-      switchMap(convocatoria => {
-        return this.convocatoriaService.vinculaciones(key).pipe(
-          map(status => {
-            if (status) {
-              this.getFormGroup().controls.unidadGestion.disable();
-              this.getFormGroup().controls.modeloEjecucion.disable();
-            }
-            return convocatoria;
           })
         );
       }),

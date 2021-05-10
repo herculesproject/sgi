@@ -24,9 +24,13 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
-        <mat-label>{{'csp.convocatoria.unidad-gestion' | translate}}</mat-label>
+        <mat-label>{{'csp.convocatoria.unidad-gestion' | translate}}
+        </mat-label>
         <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion" required>
         </sgi-select-unidad-gestion>
+        <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
+          message="{{'msg.csp.convocatoria.modelo-ejecucion.vinculaciones' | translate}}">
+        </sgi-field-info>
         <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
           {{ 'error.required.entity' | translate:msgParamUnidadGestionEntity }}
         </mat-error>
@@ -46,6 +50,9 @@
         <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
           {{ 'error.required.entity' | translate:msgParamModeloEjecucionEntity }}
         </mat-error>
+        <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
+          message="{{'msg.csp.convocatoria.modelo-ejecucion.vinculaciones' | translate}}">
+        </sgi-field-info>
       </mat-form-field>
     </div>
 

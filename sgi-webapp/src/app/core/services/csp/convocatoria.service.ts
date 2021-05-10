@@ -123,6 +123,19 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
   }
 
   /**
+   * Indica si la convocatoria tiene relacionados algún enlace
+   *
+   * @param id Id de la convocatoria
+   * @returns **true** si tiene relaciones, **false** en cualquier otro caso
+   */
+  hasConvocatoriaEnlaces(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/convocatoriaenlaces`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
    * Recupera listado de seguimiento científicos.
    * @param id seguimiento científicos
    * @param options opciones de búsqueda.
@@ -157,6 +170,19 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     );
   }
 
+  /**
+   * Indica si la convocatoria tiene relacionados algún hito
+   *
+   * @param id Id de la convocatoria
+   * @returns **true** si tiene relaciones, **false** en cualquier otro caso
+   */
+  hasConvocatoriaHitos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/convocatoriahitos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
   findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
     return this.find<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante>(
@@ -171,6 +197,19 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       `${this.endpointUrl}/${id}/convocatoriafases`,
       options,
       CONVOCATORIA_FASE_CONVERTER
+    );
+  }
+
+  /**
+   * Indica si la convocatoria tiene relacionados algúna fase
+   *
+   * @param id Id de la convocatoria
+   * @returns **true** si tiene relaciones, **false** en cualquier otro caso
+   */
+  hasConvocatoriaFases(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/convocatoriafases`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
     );
   }
 
@@ -201,6 +240,19 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       `${this.endpointUrl}/${id}/convocatoriadocumentos`,
       options,
       CONVOCATORIA_DOCUMENTO_CONVERTER
+    );
+  }
+
+  /**
+   * Indica si la convocatoria tiene relacionados algún documento
+   *
+   * @param id Id de la convocatoria
+   * @returns **true** si tiene relaciones, **false** en cualquier otro caso
+   */
+  hasConvocatoriaDocumentos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/convocatoriadocumentos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
     );
   }
 
@@ -298,19 +350,6 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    */
   modificable(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/modificable`;
-    return this.http.head(url, { observe: 'response' }).pipe(
-      map(response => response.status === 200)
-    );
-  }
-
-  /**
-   * Comprueba si una convocatoria tiene tipos de fase, tipos de hito, tipo de enlaces
-   * y tipos de documentos relacionados
-   *
-   * @param id Id de la convocatoria
-   */
-  vinculaciones(id: number): Observable<boolean> {
-    const url = `${this.endpointUrl}/${id}/vinculaciones`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
     );

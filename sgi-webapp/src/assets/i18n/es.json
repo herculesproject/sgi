@@ -993,6 +993,7 @@
   "msg.csp.convocatoria-concepto-gasto.listado.codigo-economico.delete": "Existen códigos económicos asignados al concepto de gasto de la convocatoria. ¿Desea eliminar el concepto de gasto asignado a la convocatoria?",
   "msg.csp.convocatoria-entidad-convocante.sin-plan": "No se ha especificado el Plan para la convocatoria. ¿Desea continuar?",
   "msg.csp.convocatoria-entidad-convocante.sin-programa": "No se ha especificado el programa para la convocatoria. Estarán disponibles todos los Programas del Plan seleccionado. ¿Desea continuar?",
+  "msg.csp.convocatoria.modelo-ejecucion.vinculaciones": "No se puede modificar el campo porque tiene dependencias en enlaces, fases, hitos o documentos. Si desea modificar el valor del campo tendrá que ir primero a eliminar dichos registros",
   "msg.csp.convocatoria.registrar": "¿Desea registrar la convocatoria?",
   "msg.csp.convocatoria.registrar.success": "La convocatoria ha sido registrada correctamente",
   "msg.csp.deactivate.success": "{entity} desactivad{gender,select,male{a} female{o} other{a/o}} correctamente",
