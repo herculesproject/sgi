@@ -47,7 +47,6 @@ public class ConvocatoriaIT extends BaseIT {
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
-  private static final String PATH_PARAMETER_VINCULACIONES = "/vinculaciones";
   private static final String PATH_PARAMETER_MODIFICABLE = "/modificable";
   private static final String PATH_PARAMETER_REGISTRABLE = "/registrable";
   private static final String PATH_PARAMETER_UNIDAD_GESTION = "/unidadgestion";
@@ -238,43 +237,6 @@ public class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(convocatoria.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(convocatoria.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
 
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void convocatoria_WithVinculaciones_Returns200() throws Exception {
-
-    // given: existing Convocatoria with vinculaciones enlaces, hitos, fases or
-    // documentos
-    Long id = 1L;
-
-    // when: check vinculaciones
-    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VINCULACIONES, HttpMethod.HEAD,
-        buildRequest(null, null), Convocatoria.class, id);
-
-    // then: Response is 200 OK
-    Assertions.assertThat(response).isNotNull();
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void convocatoria_WithoutVinculaciones_Returns204() throws Exception {
-
-    // given: existing Convocatoria without vinculaciones enlaces, hitos, fases or
-    // documentos
-    Long id = 1L;
-
-    // when: check vinculaciones
-    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_VINCULACIONES, HttpMethod.HEAD,
-        buildRequest(null, null), Convocatoria.class, id);
-
-    // then: Response is 204 No Content
-    Assertions.assertThat(response).isNotNull();
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
