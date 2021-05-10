@@ -128,7 +128,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required, IsEntityValidator.isValid()]),
       modeloEjecucion: new FormControl('', [
         Validators.required, IsEntityValidator.isValid()]),
-      finalidad: new FormControl(''),
+      finalidad: new FormControl('', [
+        Validators.required, IsEntityValidator.isValid()]),
       ambitoGeografico: new FormControl(''),
       confidencial: new FormControl(null),
       clasificacionCVN: new FormControl(null),

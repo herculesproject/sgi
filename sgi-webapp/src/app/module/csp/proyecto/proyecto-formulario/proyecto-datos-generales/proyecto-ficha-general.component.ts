@@ -405,6 +405,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    * Listado de finalidades
    */
   loadFinalidades(): void {
+    this.clearFinalidad();
     const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
     if (modeloEjecucion) {
       const id = modeloEjecucion.id;
