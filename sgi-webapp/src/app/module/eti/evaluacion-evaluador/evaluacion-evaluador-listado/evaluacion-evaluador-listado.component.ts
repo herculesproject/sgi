@@ -265,7 +265,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
         'convocatoriaReunion.fechaEvaluacion',
         SgiRestFilterOperator.LOWER_OR_EQUAL,
         LuxonUtils.toBackend(controls.fechaEvaluacionFin.value)
-      ).and('memoria.numReferencia', SgiRestFilterOperator.EQUALS, controls.memoriaNumReferencia.value)
+      ).and('memoria.numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.memoriaNumReferencia.value)
       .and('convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterOperator.EQUALS, controls.tipoConvocatoria.value?.id?.toString())
       .and('tipoEvaluacion.id', SgiRestFilterOperator.EQUALS, controls.tipoEvaluacion.value?.id?.toString());
 
