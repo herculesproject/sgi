@@ -31,7 +31,8 @@ const routes: SgiRoutes = [
       title: MSG_NEW_TITLE,
       titleParams: {
         entity: PROYECTO_SOCIO_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+      },
+      hasAuthorityForAnyUO: 'CSP-PRO-E'
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver
@@ -70,7 +71,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     data: {
-      title: PROYECTO_SOCIO_KEY
+      title: PROYECTO_SOCIO_KEY,
+      hasAuthorityForAnyUO: 'CSP-PRO-E'
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver
@@ -107,7 +109,8 @@ const routes: SgiRoutes = [
     path: `:${PROYECTO_SOCIO_ROUTE_PARAMS.ID}`,
     canActivate: [SgiAuthGuard],
     data: {
-      title: PROYECTO_SOCIO_KEY
+      title: PROYECTO_SOCIO_KEY,
+      hasAuthorityForAnyUO: 'CSP-PRO-E'
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver

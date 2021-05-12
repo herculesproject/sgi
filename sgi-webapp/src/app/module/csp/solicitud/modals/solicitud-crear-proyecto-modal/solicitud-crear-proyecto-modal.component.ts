@@ -148,7 +148,7 @@ export class SolicitudCrearProyectoModalComponent
       filter: new RSQLSgiRestFilter(
         'unidadGestionRef',
         SgiRestFilterOperator.EQUALS,
-        this.data?.solicitud?.unidadGestion?.acronimo
+        String(this.data?.solicitud?.unidadGestion?.id)
       )
     };
     const subcription = this.unidadModeloService.findAll(options).subscribe(

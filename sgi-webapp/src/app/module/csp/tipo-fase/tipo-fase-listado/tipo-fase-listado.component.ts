@@ -11,6 +11,7 @@ import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
@@ -60,7 +61,8 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
     private readonly tipoFaseService: TipoFaseService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly authService: SgiAuthService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -221,7 +223,11 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   protected initColumns(): void {
-    this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+    if (this.authService.hasAuthority('CSP-TFASE-R')) {
+      this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+    } else {
+      this.columnas = ['nombre', 'descripcion', 'acciones'];
+    }
   }
 
   protected loadTable(reset?: boolean): void {
@@ -278,7 +284,7 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
               },
               (error) => {
                 this.logger.error(error);
-                this.snackBarService.showError(this.textoSuccessDesactivar);
+                this.snackBarService.showError(this.textoCrearError);
               }
             );
           }
@@ -335,7 +341,7 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
         (error) => {
           this.logger.error(error);
           tipoFase.activo = false;
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          this.snackBarService.showError(this.textoErrorReactivar);
         }
       );
     this.suscripciones.push(subcription);

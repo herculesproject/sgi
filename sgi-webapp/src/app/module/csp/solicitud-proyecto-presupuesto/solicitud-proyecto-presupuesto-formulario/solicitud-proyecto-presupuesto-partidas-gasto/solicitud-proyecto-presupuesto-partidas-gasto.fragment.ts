@@ -165,7 +165,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoFragment extends Fragment 
     current
       .filter(value => value.partidaGasto.value.conceptoGasto.id === partidaGasto.conceptoGasto.id)
       .map(value => {
-        value.importeTotalConceptoGasto = solicitudProyectoPresupuestoTotalesConceptoGasto?.importeTotal
+        value.importeTotalConceptoGasto = solicitudProyectoPresupuestoTotalesConceptoGasto?.importeTotal;
       });
   }
 

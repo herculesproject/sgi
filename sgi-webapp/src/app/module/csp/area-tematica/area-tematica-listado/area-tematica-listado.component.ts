@@ -179,7 +179,7 @@ export class AreaTematicaListadoComponent extends AbstractTablePaginationCompone
   protected initColumns(): void {
     let columns = ['nombre', 'descripcion', 'activo', 'acciones'];
 
-    if (!this.authService.hasAuthorityForAnyUO('CSP-AT-ACT')) {
+    if (!this.authService.hasAuthorityForAnyUO('CSP-AREA-R')) {
       columns = columns.filter(column => column !== 'activo');
     }
 

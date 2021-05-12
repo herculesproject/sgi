@@ -38,7 +38,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: CONVOCATORIA_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthorityForAnyUO: ['CSP-CON-V', 'CSP-CON-C', 'CSP-CON-E', 'CSP-CON-B', 'CSP-CON-R'],
     }
   },
   {
@@ -49,8 +50,9 @@ const routes: SgiRoutes = [
     data: {
       title: MSG_NEW_TITLE,
       titleParams: {
-        entity: CONVOCATORIA_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+        entity: CONVOCATORIA_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR,
+      },
+      hasAuthorityForAnyUO: 'CSP-CON-C'
     },
     children: [
       {
@@ -61,7 +63,7 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: ConvocatoriaDatosGeneralesComponent,
-        canDeactivate: [FragmentGuard]
+        canDeactivate: [FragmentGuard],
       },
       {
         path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
@@ -134,7 +136,8 @@ const routes: SgiRoutes = [
     },
     data: {
       title: CONVOCATORIA_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthorityForAnyUO: ['CSP-CON-V', 'CSP-CON-E']
     },
     children: [
       {

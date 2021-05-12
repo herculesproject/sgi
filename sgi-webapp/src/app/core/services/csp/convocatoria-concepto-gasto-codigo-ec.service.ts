@@ -4,7 +4,7 @@ import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converter
 import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiReadOnlyMutableRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ConvocatoriaConceptoGastoCodigoEcService extends
-  SgiMutableRestService<number, IConvocatoriaConceptoGastoCodigoEcBackend, IConvocatoriaConceptoGastoCodigoEc> {
+  SgiReadOnlyMutableRestService<number, IConvocatoriaConceptoGastoCodigoEcBackend, IConvocatoriaConceptoGastoCodigoEc> {
   private static readonly MAPPING = '/convocatoriaconceptogastocodigoecs';
 
   constructor(protected http: HttpClient) {

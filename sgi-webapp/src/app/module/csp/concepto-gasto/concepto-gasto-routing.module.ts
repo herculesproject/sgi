@@ -13,7 +13,8 @@ const routes: SgiRoutes = [
     component: ConceptoGastoListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_LISTADO_TITLE
+      title: MSG_LISTADO_TITLE,
+      hasAnyAuthority: ['CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E', 'CSP-TGTO-B', 'CSP-TGTO-R']
     }
   }
 ];

@@ -80,11 +80,11 @@ export class SelectUnidadGestionComponent extends SelectServiceComponent<IUnidad
           const authorities = this.authorities;
           if (Array.isArray(authorities)) {
             return response.items.filter(
-              unidad => authorities.some((authority) => this.authService.hasAuthority(`${authority}_${unidad.acronimo}`))
+              unidad => authorities.some((authority) => this.authService.hasAuthority(`${authority}_${unidad.id}`))
             );
           }
           else {
-            return response.items.filter(unidad => this.authService.hasAuthority(`${authorities}_${unidad.acronimo}`));
+            return response.items.filter(unidad => this.authService.hasAuthority(`${authorities}_${unidad.id}`));
           }
         }
         return response.items;

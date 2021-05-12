@@ -12,7 +12,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
     }
     return {
       id: value.id,
-      unidadGestion: { acronimo: value.unidadGestionRef } as IUnidadGestion,
+      unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       modeloEjecucion: value.modeloEjecucion,
       codigo: value.codigo,
       fechaPublicacion: LuxonUtils.fromBackend(value.fechaPublicacion),
@@ -39,7 +39,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
     }
     return {
       id: value.id,
-      unidadGestionRef: value.unidadGestion?.acronimo,
+      unidadGestionRef: String(value.unidadGestion?.id),
       modeloEjecucion: value.modeloEjecucion,
       codigo: value.codigo,
       fechaPublicacion: LuxonUtils.toBackend(value.fechaPublicacion),

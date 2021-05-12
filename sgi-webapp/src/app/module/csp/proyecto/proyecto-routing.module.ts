@@ -40,7 +40,8 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: PROYECTO_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R']
     }
   },
   {
@@ -52,7 +53,8 @@ const routes: SgiAuthRoutes = [
       title: MSG_NEW_TITLE,
       titleParams: {
         entity: PROYECTO_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+      },
+      hasAuthorityForAnyUO: 'CSP-PRO-C'
     },
     children: [
       {
@@ -77,7 +79,8 @@ const routes: SgiAuthRoutes = [
     },
     data: {
       title: PROYECTO_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E']
     },
     children: [
       {
@@ -161,7 +164,8 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: PROYECTO_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAuthorityForAnyUO: 'CSP-PRO-E'
     },
     resolve: {
       [PROYECTO_DATA_KEY]: ProyectoDataResolver
@@ -186,7 +190,8 @@ const routes: SgiAuthRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: PROYECTO_PERIODOS_SEGUIMIENTO_KEY
+          title: PROYECTO_PERIODOS_SEGUIMIENTO_KEY,
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
         }
       },
       {
@@ -197,7 +202,8 @@ const routes: SgiAuthRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: PROYECTO_PRORROGA_KEY
+          title: PROYECTO_PRORROGA_KEY,
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
         }
       }
     ]

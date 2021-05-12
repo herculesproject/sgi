@@ -5,7 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -23,6 +23,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
@@ -91,6 +92,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     return MSG_PARAMS;
   }
 
+  get Estado() {
+    return Estado;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private dialogService: DialogService,
@@ -102,7 +107,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private proyectoService: ProyectoService,
     private matDialog: MatDialog,
     private readonly translate: TranslateService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    private authService: SgiAuthService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -266,17 +272,22 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
             const personas = result.items;
 
             solicitudes.forEach((solicitud) => {
-              this.suscripciones.push(this.solicitudService.isPosibleCrearProyecto(solicitud.id).subscribe((value) => {
-                this.mapCrearProyecto.set(solicitud.id, value);
-              }));
+              if (this.authService.hasAuthorityForAnyUO('CSP-PRO-C')) {
+                this.suscripciones.push(this.solicitudService.isPosibleCrearProyecto(solicitud.id).subscribe((value) => {
+                  this.mapCrearProyecto.set(solicitud.id, value);
+                }));
+              }
+
+
               solicitud.solicitante = personas.find((persona) =>
                 solicitud.solicitante.id === persona.id);
+              if (this.authService.hasAnyAuthorityForAnyUO(['CSP-SOL-E', 'CSP-SOL-V'])) {
+                this.suscripciones.push(this.solicitudService.modificable(solicitud.id).subscribe((value) => {
+                  this.mapModificable.set(solicitud.id, value);
+                }));
 
-              this.suscripciones.push(this.solicitudService.modificable(solicitud.id).subscribe((value) => {
-                this.mapModificable.set(solicitud.id, value);
-              }));
+              }
             });
-
             return response;
           }),
           catchError(() => of(response))
@@ -290,17 +301,30 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   }
 
   protected initColumns(): void {
-    this.columnas = [
-      'codigoRegistroInterno',
-      'codigoExterno',
-      'convocatoria.titulo',
-      'referencia',
-      'solicitante',
-      'estado.estado',
-      'estado.fechaEstado',
-      'activo',
-      'acciones'
-    ];
+    if (this.authService.hasAuthorityForAnyUO('CSP-SOL-R')) {
+      this.columnas = [
+        'codigoRegistroInterno',
+        'codigoExterno',
+        'convocatoria.titulo',
+        'referencia',
+        'solicitante',
+        'estado.estado',
+        'estado.fechaEstado',
+        'activo',
+        'acciones'
+      ];
+    } else {
+      this.columnas = [
+        'codigoRegistroInterno',
+        'codigoExterno',
+        'convocatoria.titulo',
+        'referencia',
+        'solicitante',
+        'estado.estado',
+        'estado.fechaEstado',
+        'acciones'
+      ];
+    }
   }
 
   protected loadTable(reset?: boolean): void {
@@ -325,8 +349,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       filter
         .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id)
         .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value)
-        .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
-        .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaHasta.value))
+        .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL,
+          LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
+        .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL,
+          LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaHasta.value))
         .and('convocatoria.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloConvocatoria.value)
         .and('convocatoria.entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.id)
         .and('convocatoria.entidadesConvocantes.programa.id',

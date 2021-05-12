@@ -111,11 +111,12 @@
     <!-- FIN Visualizacion crear/editar/detalle -->
   </div>
 
-  <div class="separation-button">
-    <button color="three" aria-label="Center Align" mat-button mat-raised-button (click)="switchToNew()">
-      <mat-icon color="accent">add_circle</mat-icon>
-      {{ 'btn.add.entity' | translate:msgParamEntity }}
-    </button>
-  </div>
-
+  <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+    <div class="separation-button">
+      <button color="three" aria-label="Center Align" mat-button mat-raised-button (click)="switchToNew()">
+        <mat-icon color="accent">add_circle</mat-icon>
+        {{ 'btn.add.entity' | translate:msgParamEntity }}
+      </button>
+    </div>
+  </ng-container>
 </section>

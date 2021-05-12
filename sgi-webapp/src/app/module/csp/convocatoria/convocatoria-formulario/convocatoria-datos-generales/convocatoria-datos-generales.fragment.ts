@@ -147,7 +147,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   protected initializer(key: number): Observable<IConvocatoria> {
     return this.convocatoriaService.findById(key).pipe(
       switchMap((convocatoria) => {
-        return this.unidadGestionService.findByAcronimo(convocatoria.unidadGestion.acronimo).pipe(
+        return this.unidadGestionService.findById(convocatoria.unidadGestion.id).pipe(
           map(unidadGestion => {
             convocatoria.unidadGestion = unidadGestion;
             return convocatoria;

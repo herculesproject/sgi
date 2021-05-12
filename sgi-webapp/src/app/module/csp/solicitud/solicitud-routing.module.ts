@@ -37,7 +37,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: SOLICITUD_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthorityForAnyUO: ['CSP-SOL-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-B', 'CSP-SOL-R', 'CSP-PRO-C']
     }
   },
   {
@@ -49,7 +50,8 @@ const routes: SgiRoutes = [
       title: MSG_NEW_TITLE,
       titleParams: {
         entity: SOLICITUD_KEY, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+      },
+      hasAuthorityForAnyUO: 'CSP-SOL-C'
     },
     children: [
       {
@@ -74,7 +76,8 @@ const routes: SgiRoutes = [
     },
     data: {
       title: SOLICITUD_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthorityForAnyUO: ['CSP-SOL-E', 'CSP-SOL-V']
     },
     children: [
       {
@@ -147,7 +150,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: SOLICITUD_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthorityForAnyUO: ['CSP-SOL-E', 'CSP-SOL-V']
     },
     resolve: {
       [SOLICITUD_DATA_KEY]: SolicitudDataResolver

@@ -34,7 +34,7 @@
     "@ngx-formly/schematics": "^5.10.13",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
-    "@sgi/framework": "0.0.4",
+    "@sgi/framework": "0.0.5",
     "fontsource-poppins": "^3.0.3",
     "keycloak-js": "11.0.0",
     "luxon": "^1.26.0",

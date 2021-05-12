@@ -14,7 +14,8 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthority: ['CSP-TENL-V', 'CSP-TENL-C', 'CSP-TENL-E', 'CSP-TENL-B', 'CSP-TENL-R']
     }
   }
 ];

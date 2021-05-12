@@ -19,7 +19,8 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
     key: number,
     private proyectoService: ProyectoService,
     private proyectoEntidadGestoraService: ProyectoEntidadGestoraService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
+    public readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -50,7 +51,7 @@ export class ProyectoEntidadGestoraFragment extends FormFragment<IProyectoEntida
     const form = this.fb.group({
       entidadGestora: new FormControl({
         value: null,
-        disabled: false
+        disabled: this.readonly
       }),
       identificadorFiscal: new FormControl({
         value: '',

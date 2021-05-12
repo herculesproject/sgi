@@ -76,7 +76,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         );
       }),
       switchMap((solicitud) => {
-        return this.getUnidadGestion(solicitud.unidadGestion.acronimo).pipe(
+        return this.getUnidadGestion(solicitud.unidadGestion.id).pipe(
           map(unidadGestion => {
             solicitud.unidadGestion = unidadGestion;
             return solicitud;
@@ -367,7 +367,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.getFormGroup().controls.convocatoriaExterna.setValue('', { emitEvent: false });
 
       this.subscriptions.push(
-        this.unidadGestionService.findByAcronimo(convocatoria.unidadGestion.acronimo).subscribe(unidadGestion => {
+        this.unidadGestionService.findById(convocatoria.unidadGestion.id).subscribe(unidadGestion => {
           this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
         })
       );
@@ -397,20 +397,16 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   /**
    * Carga los datos de la unidad de gestion en la solicitud
    *
-   * @param acronimo Identificador de la unidad de gestion
+   * @param id Identificador de la unidad de gestion
    * @returns observable para recuperar los datos
    */
-  private getUnidadGestion(acronimo: string): Observable<IUnidadGestion> {
-    const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, acronimo)
-    };
-
-    return this.unidadGestionService.findAll(options).pipe(
+  private getUnidadGestion(id: number): Observable<IUnidadGestion> {
+    return this.unidadGestionService.findById(id).pipe(
       map(result => {
-        if (result.items.length > 0) {
-          return result.items[0];
+        if (result) {
+          return result;
         }
-        return { acronimo } as IUnidadGestion;
+        return { id } as IUnidadGestion;
       })
     );
   }

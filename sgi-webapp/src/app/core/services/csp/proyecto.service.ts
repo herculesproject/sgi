@@ -78,7 +78,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda.
    */
   findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyecto>> {
-    return this.find<IProyecto, IProyecto>(`${this.endpointUrl}/todos`, options);
+    return this.find<IProyectoBackend, IProyecto>(`${this.endpointUrl}/todos`, options, PROYECTO_CONVERTER);
   }
 
   /**

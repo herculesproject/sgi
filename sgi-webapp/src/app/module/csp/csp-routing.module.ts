@@ -48,7 +48,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIA_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['CSP-CON-V', 'CSP-CON-C', 'CSP-CON-E', 'CSP-CON-B', 'CSP-CON-R']
         }
       },
       {
@@ -60,7 +61,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_SOLICITUD_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['CSP-SOL-V', 'CSP-SOL-E', 'CSP-SOL-C', 'CSP-SOL-B', 'CSP-SOL-R', 'CSP-PRO-C']
         }
       },
       {
@@ -72,7 +74,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: PROYECTO_KEY,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R']
         }
       },
       {
@@ -84,7 +87,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_TIPO_DOCUMENTO_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-TDOC-V', 'CSP-TDOC-C', 'CSP-TDOC-E', 'CSP-TDOC-B', 'CSP-TDOC-R']
         }
       },
       {
@@ -96,7 +100,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_TIPO_FINALIDAD_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-TFIN-V', 'CSP-TFIN-C', 'CSP-TFIN-E', 'CSP-TFIN-B', 'CSP-TFIN-R']
         }
       },
       {
@@ -107,7 +112,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_MODELO_EJECUCION_TITLE
+          title: MSG_MODELO_EJECUCION_TITLE,
+          hasAnyAuthorityForAnyUO: ['CSP-ME-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-ME-B', 'CSP-ME-R']
         }
       },
       {
@@ -119,7 +125,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_TIPO_ENLACE_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-TENL-V', 'CSP-TENL-C', 'CSP-TENL-E', 'CSP-TENL-B', 'CSP-TENL-R']
         }
 
       },
@@ -132,7 +139,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_TIPO_HITO_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-THITO-V', 'CSP-THITO-C', 'CSP-THITO-E', 'CSP-THITO-B', 'CSP-THITO-R']
         }
       },
       {
@@ -144,7 +152,8 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIA_TITLE,
-          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E', 'CSP-TFASE-B', 'CSP-TFASE-R']
         }
       },
       {
@@ -155,7 +164,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_PLAN_INVESTIGACION_TITLE
+          title: MSG_PLAN_INVESTIGACION_TITLE,
+          hasAnyAuthority: ['CSP-PRG-V', 'CSP-PRG-C', 'CSP-PRG-E', 'CSP-PRG-B', 'CSP-PRG-R']
         }
       },
       {
@@ -166,7 +176,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_GESTION_CONCEPTO_GASTO_TITLE
+          title: MSG_GESTION_CONCEPTO_GASTO_TITLE,
+          hasAnyAuthority: ['CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E', 'CSP-TGTO-B', 'CSP-TGTO-R']
         }
       },
       {
@@ -177,7 +188,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_TIPO_FINANCIACION_TITLE
+          title: MSG_TIPO_FINANCIACION_TITLE,
+          hasAnyAuthority: ['CSP-TFNA-V', 'CSP-TFNA-C', 'CSP-TFNA-E', 'CSP-TFNA-B', 'CSP-TFNA-R']
         }
       },
       {
@@ -188,7 +200,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_FUENTE_FINANCIACION_TITLE
+          title: MSG_FUENTE_FINANCIACION_TITLE,
+          hasAnyAuthority: ['CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R']
         }
       },
       {
@@ -199,7 +212,8 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_AREA_TEMATICA_TITLE
+          title: MSG_AREA_TEMATICA_TITLE,
+          hasAnyAuthority: ['CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R']
         }
       },
       { path: '**', component: null }

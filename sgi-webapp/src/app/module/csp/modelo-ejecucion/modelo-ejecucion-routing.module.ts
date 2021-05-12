@@ -30,7 +30,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MODELO_EJECUCION_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthorityForAnyUO: ['CSP-ME-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-ME-B', 'CSP-ME-R']
     },
   },
   {
@@ -42,7 +43,8 @@ const routes: SgiRoutes = [
       title: MSG_NEW_TITLE,
       titleParams: {
         entity: MODELO_EJECUCION_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+      },
+      hasAuthorityForAnyUO: 'CSP-ME-C'
     },
     children: [
       {
@@ -97,7 +99,8 @@ const routes: SgiRoutes = [
     },
     data: {
       title: MODELO_EJECUCION_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAuthorityForAnyUO: 'CSP-ME-E'
     },
     children: [
       {

@@ -22,6 +22,7 @@ import { ModeloEjecucionTipoFaseModalComponent } from './modals/modelo-ejecucion
 import { ModeloEjecucionTipoUnidadGestionComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-unidad-gestion/modelo-ejecucion-tipo-unidad-gestion.component';
 import { ModeloEjecucionTipoUnidadGestionModalComponent } from './modals/modelo-ejecucion-tipo-unidad-gestion-modal/modelo-ejecucion-tipo-unidad-gestion-modal.component';
 import { ModeloEjecucionTipoHitoModalComponent } from './modals/modelo-ejecucion-tipo-hito-modal/modelo-ejecucion-tipo-hito-modal.component';
+import { SgiAuthModule } from '@sgi/framework/auth';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ModeloEjecucionTipoHitoModalComponent } from './modals/modelo-ejecucion
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    SgiAuthModule
   ],
   providers: [
     ModeloEjecucionResolver

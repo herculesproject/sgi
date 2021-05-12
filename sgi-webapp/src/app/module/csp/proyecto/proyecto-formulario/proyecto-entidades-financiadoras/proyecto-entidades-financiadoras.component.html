@@ -55,18 +55,18 @@
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}</th>
           <td mat-cell *matCellDef="let wrapper">
-            <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="formPart.readonly"
-              (click)="openModal(true, wrapper)">
-              <mat-icon color="primary">visibility</mat-icon>
-            </button>
-            <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
-              (click)="openModal(true, wrapper)">
-              <mat-icon color="primary">border_color</mat-icon>
-            </button>
-            <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
-              (click)="deleteEntidadFinanciadora(true, wrapper)">
-              <mat-icon color="warn">highlight_off</mat-icon>
-            </button>
+            <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+              <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
+                (click)="openModal(true, wrapper)">
+                <mat-icon color="primary">border_color</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+              <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
+                (click)="deleteEntidadFinanciadora(true, wrapper)">
+                <mat-icon color="warn">highlight_off</mat-icon>
+              </button>
+            </ng-container>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="columnsPropias"></tr>
@@ -75,12 +75,14 @@
       <mat-paginator #paginatorPropias [pageSizeOptions]="elementsPagePropias" showFirstLastButtons>
       </mat-paginator>
     </div>
-    <div class="separation-button">
-      <button color="three" mat-button mat-raised-button *ngIf="!formPart.readonly" (click)="openModal(true)">
-        <mat-icon color="accent">add_circle</mat-icon>
-        {{ 'btn.add.entity' | translate:msgParamEntity }}
-      </button>
-    </div>
+    <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+      <div class="separation-button">
+        <button color="three" mat-button mat-raised-button *ngIf="!formPart.readonly" (click)="openModal(true)">
+          <mat-icon color="accent">add_circle</mat-icon>
+          {{ 'btn.add.entity' | translate:msgParamEntity }}
+        </button>
+      </div>
+    </ng-container>
   </div>
 
   <div style="padding-top:15px;">
@@ -138,18 +140,18 @@
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}</th>
           <td mat-cell *matCellDef="let wrapper">
-            <button mat-button matTooltip="{{'btn.view' | translate}}" *ngIf="formPart.readonly"
-              (click)="openModal(false, wrapper)">
-              <mat-icon color="primary">visibility</mat-icon>
-            </button>
-            <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
-              (click)="openModal(false, wrapper)">
-              <mat-icon color="primary">border_color</mat-icon>
-            </button>
-            <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
-              (click)="deleteEntidadFinanciadora(false, wrapper)">
-              <mat-icon color="warn">highlight_off</mat-icon>
-            </button>
+            <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+              <button mat-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.readonly"
+                (click)="openModal(false, wrapper)">
+                <mat-icon color="primary">border_color</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+              <button mat-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.readonly"
+                (click)="deleteEntidadFinanciadora(false, wrapper)">
+                <mat-icon color="warn">highlight_off</mat-icon>
+              </button>
+            </ng-container>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="columnsAjenas"></tr>
@@ -158,11 +160,13 @@
       <mat-paginator #paginatorAjenas [pageSizeOptions]="elementsPageAjenas" showFirstLastButtons>
       </mat-paginator>
     </div>
-    <div class="separation-button">
-      <button color="three" mat-button mat-raised-button *ngIf="!formPart.readonly" (click)="openModal(false)">
-        <mat-icon color="accent">add_circle</mat-icon>
-        {{ 'btn.add.entity' | translate:msgParamEntityAjena }}
-      </button>
-    </div>
+    <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+      <div class="separation-button">
+        <button color="three" mat-button mat-raised-button *ngIf="!formPart.readonly" (click)="openModal(false)">
+          <mat-icon color="accent">add_circle</mat-icon>
+          {{ 'btn.add.entity' | translate:msgParamEntityAjena }}
+        </button>
+      </div>
+    </ng-container>
   </div>
 </section>

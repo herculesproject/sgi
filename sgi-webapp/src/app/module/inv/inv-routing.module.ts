@@ -88,7 +88,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIAS_TITLE,
-          // hasAuthorityForAnyUO: 'ETI-PEV-VR-INV'
+          hasAuthorityForAnyUO: 'CSP-CON-INV-V'
         }
       },
       { path: '**', component: null }

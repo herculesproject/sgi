@@ -151,7 +151,7 @@ export class SolicitudProyectoSocioPeriodoJustificacionModalComponent
     );
 
     if (this.data.readonly) {
-      this.formGroup.disable();
+      formGroup.disable();
     }
 
     return formGroup;

@@ -11,6 +11,7 @@ import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service'
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -60,7 +61,8 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
     private readonly conceptoGastoService: ConceptoGastoService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private authService: SgiAuthService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -175,7 +177,6 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);
 
-
     this.translate.get(
       CONCEPTO_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -200,7 +201,6 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
 
-
     this.translate.get(
       CONCEPTO_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -222,7 +222,12 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
   }
 
   protected initColumns(): void {
-    this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+    if (this.authService.hasAuthority('CSP-TGTO-R')) {
+      this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+    } else {
+      this.columnas = ['nombre', 'descripcion', 'acciones'];
+    }
+
   }
 
   protected createFilter(): SgiRestFilter {

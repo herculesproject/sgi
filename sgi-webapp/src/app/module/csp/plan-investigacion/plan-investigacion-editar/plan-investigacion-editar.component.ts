@@ -87,7 +87,6 @@ export class PlanInvestigacionEditarComponent extends ActionComponent {
     ).subscribe((value) => this.textoUpdateError = value);
   }
 
-
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },

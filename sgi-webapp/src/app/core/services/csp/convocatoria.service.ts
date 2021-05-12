@@ -39,7 +39,6 @@ import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
-import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
@@ -57,14 +56,6 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       `${environment.serviceServers.csp}${ConvocatoriaService.MAPPING}`,
       http,
       CONVOCATORIA_CONVERTER
-    );
-  }
-
-  findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    return this.find<IConvocatoriaBackend, IConvocatoria>(
-      `${this.endpointUrl}/todos`,
-      options,
-      this.converter
     );
   }
 
@@ -355,15 +346,6 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     );
   }
 
-  getUnidadGestionRef(id: number): Observable<string> {
-    const url = `${this.endpointUrl}/${id}/unidadgestion`;
-    return this.http.get(url, { responseType: 'text' });
-  }
-
-  getModeloEjecucion(id: number): Observable<IModeloEjecucion> {
-    const url = `${this.endpointUrl}/${id}/modeloejecucion`;
-    return this.http.get<IModeloEjecucion>(url);
-  }
 
   registrable(id: number): Observable<boolean> {
     return this.http.head(`${this.endpointUrl}/${id}/registrable`, { observe: 'response' }).pipe(
@@ -384,16 +366,4 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     );
   }
 
-  /**
-   * Comprueba si Convocatoria tiene convocatoriaentidadfinanciadora
-   * relacionado
-   *
-   * @param id Convocatoria
-   */
-  hasConvocatoriaEntidad(id: number): Observable<boolean> {
-    const url = `${this.endpointUrl}/${id}/convocatoriaentidad`;
-    return this.http.head(url, { observe: 'response' }).pipe(
-      map(response => response.status === 200)
-    );
-  }
 }

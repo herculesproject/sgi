@@ -44,8 +44,8 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field fxFill>
         <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
-        <sgi-select-convocatoria placeholder="{{'csp.solicitud.convocatoria' | translate}}"
-          formControlName="convocatoria" [required]="formPart.convocatoriaRequired">
+        <sgi-select-convocatoria authorities="CSP-SOL-C" placeholder="{{'csp.solicitud.convocatoria' | translate}}"
+          formControlName="convocatoria" [required]="formPart.convocatoriaRequired" [disabled]="this.formPart.isEdit()">
         </sgi-select-convocatoria>
       </mat-form-field>
     </div>

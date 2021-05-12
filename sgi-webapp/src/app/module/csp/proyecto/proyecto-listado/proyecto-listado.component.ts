@@ -86,6 +86,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     return ESTADO_MAP;
   }
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
@@ -192,7 +196,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);
 
-
     this.translate.get(
       PROYECTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -216,7 +219,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         );
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
-
 
     this.translate.get(
       PROYECTO_KEY,
@@ -242,12 +244,21 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   protected createObservable(): Observable<SgiRestListResult<IProyecto>> {
-    const observable$ = this.proyectoService.findAll(this.getFindOptions());
+    let observable$ = null;
+    if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
+      observable$ = this.proyectoService.findTodos(this.getFindOptions());
+    } else {
+      observable$ = this.proyectoService.findAll(this.getFindOptions());
+    }
     return observable$;
   }
 
   protected initColumns(): void {
-    this.columnas = ['titulo', 'acronimo', 'fechaInicio', 'fechaFin', 'estado', 'activo', 'acciones'];
+    if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
+      this.columnas = ['titulo', 'acronimo', 'fechaInicio', 'fechaFin', 'estado', 'activo', 'acciones'];
+    } else {
+      this.columnas = ['titulo', 'acronimo', 'fechaInicio', 'fechaFin', 'estado', 'acciones'];
+    }
   }
 
   protected loadTable(reset?: boolean): void {
@@ -551,9 +562,4 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       }
     );
   }
-
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
-
 }

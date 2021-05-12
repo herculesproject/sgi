@@ -35,6 +35,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_CONVOCATORIAS_TITLE,
+      hasAuthorityForAnyUO: 'CSP-CON-INV-V',
     }
   },
   {
@@ -47,6 +48,7 @@ const routes: SgiRoutes = [
     },
     data: {
       title: MSG_CONVOCATORIAS_VER_TITLE,
+      hasAuthorityForAnyUO: 'CSP-CON-INV-V',
     },
     children: [
       {
@@ -131,7 +133,8 @@ const routes: SgiRoutes = [
     path: `:${CONVOCATORIA_ROUTE_PARAMS.ID}`,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_CONVOCATORIAS_VER_TITLE
+      title: MSG_CONVOCATORIAS_VER_TITLE,
+      hasAuthorityForAnyUO: 'CSP-CON-INV-V',
     },
     resolve: {
       [CONVOCATORIA_DATA_KEY]: ConvocatoriaDataResolver

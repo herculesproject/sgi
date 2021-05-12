@@ -13,7 +13,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      // hasAuthorityForAnyUO: 'CSP-FFIN-V'
+      hasAnyAuthority: ['CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R']
     }
   }
 ];

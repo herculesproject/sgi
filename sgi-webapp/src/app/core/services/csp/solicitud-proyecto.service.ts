@@ -48,18 +48,4 @@ export class SolicitudProyectoService extends SgiMutableRestService<number, ISol
       map(response => response.status === 200)
     );
   }
-
-  /**
-   * Comprueba si SolicitudProyectoDatos tiene SolicitudEntidadFinanciadora
-   * relacionado
-   *
-   * @param id solicitudProyectoDatos
-   */
-  hasSolicitudEntidadFinanciadora(id: number): Observable<boolean> {
-    const url = `${this.endpointUrl}/${id}/solicitudentidadfinanciadora`;
-    return this.http.head(url, { observe: 'response' }).pipe(
-      map(response => response.status === 200)
-    );
-  }
-
 }

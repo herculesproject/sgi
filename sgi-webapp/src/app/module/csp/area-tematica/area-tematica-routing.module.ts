@@ -25,7 +25,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: AREA_TEMATICA_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthority: ['CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R']
     },
   },
   {
@@ -37,7 +38,8 @@ const routes: SgiRoutes = [
       title: MSG_NEW_TITLE,
       titleParams: {
         entity: AREA_TEMATICA_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+      },
+      hasAnyAuthority: ['CSP-AREA-C']
     },
     children: [
       {
@@ -67,7 +69,8 @@ const routes: SgiRoutes = [
     },
     data: {
       title: AREA_TEMATICA_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAnyAuthority: ['CSP-AREA-E']
     },
     children: [
       {

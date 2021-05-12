@@ -40,7 +40,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       finalista: value.finalista,
       limitativo: value.limitativo,
       anualidades: value.anualidades,
-      unidadGestion: { acronimo: value.unidadGestionRef } as IUnidadGestion,
+      unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones,
       comentario: value.estado.comentario
     };
@@ -58,7 +58,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       codigoExterno: value.codigoExterno,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
-      unidadGestionRef: value.unidadGestion?.acronimo,
+      unidadGestionRef: String(value.unidadGestion?.id),
       modeloEjecucion: value.modeloEjecucion,
       finalidad: value.finalidad,
       convocatoriaId: value.convocatoriaId,

@@ -18,9 +18,10 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
-
 const MSG_LISTADO_ERROR = marker('error.load');
-
+export interface SearchConvocatoriaModalData {
+  unidadesGestion: string[];
+}
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
@@ -29,40 +30,32 @@ interface IConvocatoriaListado {
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
   entidadFinanciadoraEmpresa: IEmpresa;
 }
-
 @Component({
   templateUrl: './search-convocatoria.component.html',
   styleUrls: ['./search-convocatoria.component.scss']
 })
 export class SearchConvocatoriaModalComponent implements AfterViewInit {
-
   formGroup: FormGroup;
-
   displayedColumns = ['codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
     'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
     'fuenteFinanciacion'];
   elementosPagina = [5, 10, 25, 100];
   totalElementos = 0;
-
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-
   convocatorias$: Observable<IConvocatoriaListado[]> = of();
-
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
-
   constructor(
     private readonly logger: NGXLogger,
     public dialogRef: MatDialogRef<SearchConvocatoriaModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IConvocatoria,
+    @Inject(MAT_DIALOG_DATA) public data: SearchConvocatoriaModalData,
     private readonly convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
     private readonly snackBarService: SnackBarService
   ) {
   }
-
   ngOnInit(): void {
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
@@ -72,7 +65,6 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
       abiertoPlazoPresentacionSolicitud: new FormControl(''),
     });
   }
-
   ngAfterViewInit(): void {
     merge(
       this.paginator.page,
@@ -82,14 +74,10 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
         this.buscarConvocatorias();
       })
     ).subscribe();
-
   }
-
   buscarConvocatorias(reset?: boolean) {
-
     this.convocatorias$ = this.convocatoriaService
       .findAllRestringidos(
-
         {
           page: {
             index: reset ? 0 : this.paginator.pageIndex,
@@ -188,14 +176,16 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
         })
       );
   }
-
   private buildFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    return new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+    const filter = new RSQLSgiRestFilter('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
       .and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
       .and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value?.toString());
+    if (this.data.unidadesGestion?.length) {
+      filter.and('unidadGestionRef', SgiRestFilterOperator.IN, this.data.unidadesGestion);
+    }
+    return filter;
   }
-
 }

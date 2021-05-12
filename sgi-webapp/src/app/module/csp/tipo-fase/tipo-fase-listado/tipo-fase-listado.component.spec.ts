@@ -8,9 +8,10 @@ import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-
 import { TipoFaseListadoComponent } from './tipo-fase-listado.component';
+
 
 describe('TipoFaseListadoComponent', () => {
   let component: TipoFaseListadoComponent;
@@ -30,11 +31,12 @@ describe('TipoFaseListadoComponent', () => {
         TestUtils.getIdiomas(),
         FlexLayoutModule,
         FormsModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        TipoFaseService
+        TipoFaseService,
+        SgiAuthService
       ]
     })
       .compileComponents();

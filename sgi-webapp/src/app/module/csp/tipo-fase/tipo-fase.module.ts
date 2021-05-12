@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { TipoFaseListadoComponent } from './tipo-fase-listado/tipo-fase-listado.component';
 import { TipoFaseModalComponent } from './tipo-fase-modal/tipo-fase-modal.component';
 import { TipoFaseRoutingModule } from './tipo-fase-routing.module';
-import { TipoFaseListadoComponent } from './tipo-fase-listado/tipo-fase-listado.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TipoFaseListadoComponent } from './tipo-fase-listado/tipo-fase-listado.
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    SgiAuthModule
   ],
   providers: [
   ]

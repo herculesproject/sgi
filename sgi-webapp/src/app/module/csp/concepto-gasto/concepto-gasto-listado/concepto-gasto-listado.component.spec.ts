@@ -8,6 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('ConceptoGastoListadoComponent', () => {
   let component: ConceptoGastoListadoComponent;
@@ -26,7 +27,8 @@ describe('ConceptoGastoListadoComponent', () => {
       declarations: [ConceptoGastoListadoComponent],
       providers: [
         ConceptoGastoService,
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() }
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        SgiAuthService
       ]
     })
       .compileComponents();

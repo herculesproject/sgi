@@ -80,7 +80,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     this.translate.get(
       PERIODO_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamObservacionesEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   ngOnDestroy(): void {

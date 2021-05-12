@@ -13,7 +13,8 @@ const routes: SgiRoutes = [
     component: TipoFinanciacionListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_LISTADO_TITLE
+      title: MSG_LISTADO_TITLE,
+      hasAnyAuthority: ['CSP-TFNA-V', 'CSP-TFNA-C', 'CSP-TFNA-E', 'CSP-TFNA-B', 'CSP-TFNA-R']
     }
   }
 ];

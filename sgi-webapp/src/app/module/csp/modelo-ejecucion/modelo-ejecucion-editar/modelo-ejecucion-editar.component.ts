@@ -48,7 +48,6 @@ export class ModeloEjecucionEditarComponent extends ActionComponent {
     this.setupI18N();
   }
 
-
   private setupI18N(): void {
 
     this.translate.get(

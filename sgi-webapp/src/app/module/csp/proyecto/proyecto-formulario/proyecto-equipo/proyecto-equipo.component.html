@@ -52,12 +52,12 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
       <td mat-cell *matCellDef="let equipo; let i = index">
-        <ng-container>
+        <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
           <button mat-button matTooltip="{{'btn.edit' | translate}}" (click)="openModal(equipo, i)">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>
-        <ng-container>
+        <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
           <button mat-button matTooltip="{{'btn.delete' | translate}}" (click)="deleteEquipo(equipo)">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
@@ -72,11 +72,13 @@
   <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
   </mat-paginator>
 
-  <div class="separation-button">
-    <!-- Botón añadir equipos -->
-    <button color="three" mat-button mat-raised-button (click)="openModal()">
-      <mat-icon color="accent">add_circle</mat-icon>
-      {{ 'btn.add.entity' | translate:msgParamEntity }}
-    </button>
-  </div>
+  <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+    <div class="separation-button">
+      <!-- Botón añadir equipos -->
+      <button color="three" mat-button mat-raised-button (click)="openModal()">
+        <mat-icon color="accent">add_circle</mat-icon>
+        {{ 'btn.add.entity' | translate:msgParamEntity }}
+      </button>
+    </div>
+  </ng-container>
 </section>

@@ -25,7 +25,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: PLAN_INVESTIGACION_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL
+      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      hasAnyAuthority: ['CSP-PRG-V', 'CSP-PRG-C', 'CSP-PRG-E', 'CSP-PRG-B', 'CSP-PRG-R']
     },
   },
   {
@@ -37,7 +38,8 @@ const routes: SgiRoutes = [
       title: MSG_NEW_TITLE,
       titleParams: {
         entity: PLAN_INVESTIGACION_KEY, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
-      }
+      },
+      hasAuthority: 'CSP-PRG-C'
     },
     children: [
       {
@@ -67,7 +69,8 @@ const routes: SgiRoutes = [
     },
     data: {
       title: PLAN_INVESTIGACION_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR
+      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+      hasAuthority: 'CSP-PRG-E'
     },
     children: [
       {

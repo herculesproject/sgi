@@ -21,6 +21,9 @@ const routes: SgiRoutes = [
     component: ConvocatoriaConceptoGastoCrearComponent,
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
+    data: {
+      hasAuthorityForAnyUO: 'CSP-CON-E'
+    },
     resolve: {
       [CONVOCATORIA_CONCEPTO_GASTO_DATA_KEY]: ConvocatoriaConceptoGastoDataResolver
     },
@@ -28,12 +31,13 @@ const routes: SgiRoutes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES.DATOS_GENERALES
+        redirectTo: CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES.DATOS_GENERALES,
       },
       {
         path: CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES.DATOS_GENERALES,
         component: ConvocatoriaConceptoGastoDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
+
       },
       {
         path: CONVOCATORIA_CONCEPTO_GASTO_ROUTE_NAMES.CODIGOS_ECONOMICOS,
@@ -47,6 +51,9 @@ const routes: SgiRoutes = [
     component: ConvocatoriaConceptoGastoEditarComponent,
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
+    data: {
+      hasAnyAuthorityForAnyUO: ['CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V']
+    },
     resolve: {
       [CONVOCATORIA_CONCEPTO_GASTO_DATA_KEY]: ConvocatoriaConceptoGastoDataResolver
     },

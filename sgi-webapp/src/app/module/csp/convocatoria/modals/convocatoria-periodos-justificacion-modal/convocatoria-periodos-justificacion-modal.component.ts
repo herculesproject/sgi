@@ -107,7 +107,8 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     this.translate.get(
       CONVOCATORIA_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamObservacionesEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       CONVOCATORIA_PERIODO_JUSTIFICACION_MES_INICIO_KEY,

@@ -2,29 +2,24 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { environment } from '@env';
-import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
-export class UnidadGestionService extends SgiRestService<number, IUnidadGestion> {
+export class UnidadGestionService extends SgiMutableRestService<number, IUnidadGestion, IUnidadGestion> {
 
   private static readonly MAPPING = '/unidades';
-
-
   constructor(private readonly logger: NGXLogger, protected http: HttpClient) {
     super(
       UnidadGestionService.name,
       `${environment.serviceServers.usr}${UnidadGestionService.MAPPING}`,
-      http
+      http, null
     );
   }
-
 
   /**
    * Recupera las unidades de gestión restringidas por los permisos del usuario logueado.
@@ -35,18 +30,18 @@ export class UnidadGestionService extends SgiRestService<number, IUnidadGestion>
   }
 
   /**
-   * Recupera una unidad de gestión por el acrónimo recibido.
-   * @param unidadGestionRef acrónimo de la unidad de gestión.
+   * Recupera una unidad de gestión por el id recibido.
+   * @param id id de la unidad de gestión.
    * @returns unidad de gestión.
    */
-  findByAcronimo(unidadGestionRef: string): Observable<IUnidadGestion> {
-    return this.http.get<IUnidadGestion>(`${this.endpointUrl}/acronimo/${unidadGestionRef}`).pipe(
+  findById(id: number): Observable<IUnidadGestion> {
+    return this.http.get<IUnidadGestion>(`${this.endpointUrl}/${id}`).pipe(
       catchError((error: HttpErrorResponse) => {
         this.logger.error(error);
         return throwError(error);
       }),
       map(response => {
-        return this.converter.toTarget(response);
+        return response;
       })
     );
 

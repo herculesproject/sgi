@@ -107,7 +107,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
-
     this.translate.get(
       FUENTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -192,7 +191,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
       })
     ).subscribe((value) => this.textoSuccessDesactivar = value);
 
-
     this.translate.get(
       FUENTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -217,7 +215,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
 
-
     this.translate.get(
       FUENTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -241,7 +238,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     let columns = ['nombre', 'descripcion', 'tipoAmbitoGeografico.nombre',
       'tipoOrigenFuenteFinanciacion.nombre', 'fondoEstructural', 'activo', 'acciones'];
 
-    if (!this.authService.hasAuthorityForAnyUO('CSP-FF-ACT')) {
+    if (!this.authService.hasAuthorityForAnyUO('CSP-FNT-R')) {
       columns = columns.filter(column => column !== 'activo');
     }
 

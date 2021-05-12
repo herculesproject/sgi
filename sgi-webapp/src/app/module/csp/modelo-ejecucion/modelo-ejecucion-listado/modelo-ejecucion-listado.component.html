@@ -15,12 +15,14 @@
         </div>
 
         <!-- Activo -->
+        <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-R'">
         <div class="col">
           <mat-form-field>
             <mat-label>{{'label.activo' | translate}}</mat-label>
             <sgi-select-boolean formControlName="activo"></sgi-select-boolean>
           </mat-form-field>
         </div>
+        </ng-container>
       </div>
 
       <div class="buttons-final">
@@ -54,7 +56,7 @@
       </ng-container>
 
       <!-- Activo -->
-      <ng-container matColumnDef="activo">
+      <ng-container matColumnDef="activo" *sgiHasAuthorityForAnyUO="'CSP-ME-R'">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'label.activo' | translate}}
         </th>
         <td mat-cell *matCellDef="let modeloEjecucion">
@@ -66,18 +68,24 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let modeloEjecucion">
-          <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
-            [routerLink]="[modeloEjecucion.id]">
-            <mat-icon color="primary">border_color</mat-icon>
-          </button>
-          <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
-            (click)="deactivateModeloEjecucion(modeloEjecucion)">
-            <mat-icon color="warn">highlight_off</mat-icon>
-          </button>
-          <button *ngIf="modeloEjecucion.activo === false" mat-button matTooltip="{{'btn.recover' | translate}}"
-            (click)="activateModeloEjecucion(modeloEjecucion)">
-            <mat-icon color="accent">add_circle_outline</mat-icon>
-          </button>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-E'">
+            <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+              [routerLink]="[modeloEjecucion.id]">
+              <mat-icon color="primary">border_color</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-B'">
+            <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'btn.edit' | translate}}"
+              (click)="deactivateModeloEjecucion(modeloEjecucion)">
+              <mat-icon color="warn">highlight_off</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-R'">
+            <button *ngIf="modeloEjecucion.activo === false" mat-button matTooltip="{{'btn.recover' | translate}}"
+              (click)="activateModeloEjecucion(modeloEjecucion)">
+              <mat-icon color="accent">add_circle_outline</mat-icon>
+            </button>
+          </ng-container>
         </td>
       </ng-container>
 
@@ -88,4 +96,6 @@
     </mat-paginator>
   </section>
 </div>
-<sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW"></sgi-footer-crear>
+<ng-container *sgiHasAuthorityForAnyUO="'CSP-ME-C'">
+  <sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW"></sgi-footer-crear>
+</ng-container>

@@ -179,7 +179,7 @@ export class ProyectoDocumentosFragment extends Fragment {
       ).subscribe(
         (nodes) => {
           const current = this.documentos$.value;
-          this.publishNodes(current.concat(nodes))
+          this.publishNodes(current.concat(nodes));
         }
       )
     );

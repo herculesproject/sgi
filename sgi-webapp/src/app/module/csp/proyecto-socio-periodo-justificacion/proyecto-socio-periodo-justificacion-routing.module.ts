@@ -27,7 +27,8 @@ const routes: SgiRoutes = [
     data: {
       title: MSG_NEW_TITLE,
       titleParams: {
-        entity: MSG_EDIT_TITLE, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+        entity: MSG_EDIT_TITLE, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR,
+        hasAuthorityForAnyUO: 'CSP-PRO-E'
       }
     },
     resolve: {
@@ -57,7 +58,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     data: {
-      title: MSG_EDIT_TITLE
+      title: MSG_EDIT_TITLE,
+      hasAuthorityForAnyUO: 'CSP-PRO-E'
     },
     resolve: {
       [PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DATA_KEY]: ProyectoSocioPeriodoJustificacionDataResolver

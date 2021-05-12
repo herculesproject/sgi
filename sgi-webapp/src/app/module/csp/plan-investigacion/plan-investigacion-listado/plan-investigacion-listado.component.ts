@@ -182,7 +182,7 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
   protected initColumns(): void {
     let columns = ['nombre', 'descripcion', 'activo', 'acciones'];
 
-    if (!this.authService.hasAuthorityForAnyUO('CSP-PI-ACT')) {
+    if (!this.authService.hasAuthorityForAnyUO('CSP-PRG-R')) {
       columns = columns.filter(column => column !== 'activo');
     }
 

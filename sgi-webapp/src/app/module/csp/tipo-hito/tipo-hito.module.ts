@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { TipoHitoRoutingModule } from './tipo-hito-routing.module';
-import { TipoHitoModalComponent } from './tipo-hito-modal/tipo-hito-modal.component';
 import { TipoHitoListadoComponent } from './tipo-hito-listado/tipo-hito-listado.component';
+import { TipoHitoModalComponent } from './tipo-hito-modal/tipo-hito-modal.component';
+import { TipoHitoRoutingModule } from './tipo-hito-routing.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TipoHitoListadoComponent } from './tipo-hito-listado/tipo-hito-listado.
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    SgiAuthModule
   ],
   providers: [
   ]

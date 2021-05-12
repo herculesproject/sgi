@@ -64,7 +64,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         return proyecto as IProyectoDatosGenerales;
       }),
       switchMap((proyecto) => {
-        return this.getUnidadGestion(proyecto.unidadGestion.acronimo).pipe(
+        return this.getUnidadGestion(proyecto.unidadGestion.id).pipe(
           map(unidadGestion => {
             proyecto.unidadGestion = unidadGestion;
             return proyecto;
@@ -278,7 +278,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
       if (!this.proyecto.unidadGestion || !this.isEdit()) {
         this.subscriptions.push(
-          this.unidadGestionService.findByAcronimo(convocatoria.unidadGestion.acronimo).subscribe(unidadGestion => {
+          this.unidadGestionService.findById(convocatoria.unidadGestion.id).subscribe(unidadGestion => {
             this.getFormGroup().controls.unidadGestion.setValue(unidadGestion);
           })
         );
@@ -402,11 +402,11 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   /**
    * Carga los datos de la unidad de gestion en la proyecto
    *
-   * @param acronimo Identificador de la unidad de gestion
+   * @param id Identificador de la unidad de gestion
    * @returns observable para recuperar los datos
    */
-  private getUnidadGestion(acronimo: string): Observable<IUnidadGestion> {
-    return this.unidadGestionService.findByAcronimo(acronimo);
+  private getUnidadGestion(id: number): Observable<IUnidadGestion> {
+    return this.unidadGestionService.findById(id);
   }
 
   checkFechas(): void {

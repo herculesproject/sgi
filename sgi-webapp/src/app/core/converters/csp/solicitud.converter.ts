@@ -22,7 +22,7 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       creador: { id: value.creadorRef } as IPersona,
       solicitante: { id: value.solicitanteRef } as IPersona,
       formularioSolicitud: value.formularioSolicitud,
-      unidadGestion: { acronimo: value.unidadGestionRef } as IUnidadGestion,
+      unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones
     };
   }
@@ -42,7 +42,7 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       creadorRef: value.creador?.id,
       solicitanteRef: value.solicitante?.id,
       formularioSolicitud: value.formularioSolicitud,
-      unidadGestionRef: value.unidadGestion?.acronimo,
+      unidadGestionRef: String(value.unidadGestion?.id),
       observaciones: value.observaciones
     };
   }

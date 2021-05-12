@@ -12,9 +12,9 @@ class ModeloUnidadConverter extends SgiBaseConverter<IModeloUnidadBackend, IMode
     return {
       id: value.id,
       unidadGestion: {
-        id: null,
+        id: +value.unidadGestionRef,
         nombre: null,
-        acronimo: value.unidadGestionRef,
+        acronimo: null,
         descripcion: null,
         activo: null
       } as IUnidadGestion,
@@ -30,7 +30,7 @@ class ModeloUnidadConverter extends SgiBaseConverter<IModeloUnidadBackend, IMode
     }
     return {
       id: value.id,
-      unidadGestionRef: value.unidadGestion.acronimo,
+      unidadGestionRef: String(value.unidadGestion.id),
       modeloEjecucion: value.modeloEjecucion,
       activo: value.activo,
     };

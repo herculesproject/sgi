@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
+import { Estado, ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
@@ -68,14 +68,18 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     return ESTADO_MAP;
   }
 
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
+  get Estado() {
+    return Estado;
+  }
+
   mapModificable: Map<number, boolean> = new Map();
 
   msgParamEntity = {};
   msgParamAreaTematicaEntity = {};
-
-  get MSG_PARAMS() {
-    return MSG_PARAMS;
-  }
 
   constructor(
     private readonly logger: NGXLogger,
@@ -240,12 +244,15 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       switchMap((result) => {
         return from(result.items).pipe(
           mergeMap(element => {
-            return this.convocatoriaService.modificable(element.convocatoria.id).pipe(
-              map((value) => {
-                this.mapModificable.set(element.convocatoria.id, value);
-                return element;
-              })
-            );
+            if (this.authService.hasAnyAuthorityForAnyUO(['CSP-CON-E', 'CSP-CON-V'])) {
+              return this.convocatoriaService.modificable(element.convocatoria.id).pipe(
+                map((value) => {
+                  this.mapModificable.set(element.convocatoria.id, value);
+                  return element;
+                })
+              );
+            }
+            return of(element);
           }),
           map((convocatoriaListado) => {
             return this.convocatoriaService.findEntidadesFinanciadoras(convocatoriaListado.convocatoria.id).pipe(
@@ -309,11 +316,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   }
 
   protected initColumns(): void {
-    this.columnas = [
-      'titulo', 'codigo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
-      'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
-      'fuenteFinanciacion', 'estado', 'activo', 'acciones'
-    ];
+    if (this.authService.hasAuthorityForAnyUO('CSP-CON-R')) {
+      this.columnas = [
+        'titulo', 'codigo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
+        'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
+        'fuenteFinanciacion', 'estado', 'activo', 'acciones'
+      ];
+    } else {
+      this.columnas = [
+        'titulo', 'codigo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
+        'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
+        'fuenteFinanciacion', 'estado', 'acciones'
+      ];
+    }
   }
 
   protected loadTable(reset?: boolean): void {
@@ -409,6 +424,11 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
         }
       );
     this.suscripciones.push(suscription);
+  }
+
+  hasAuthorityDelete(unidadGestionId: number): boolean {
+    return this.authService.hasAuthorityForAnyUO('CSP-CON-B') ||
+      this.authService.hasAuthorityForAnyUO('CSP-CON-B_' + unidadGestionId);
   }
 
 }

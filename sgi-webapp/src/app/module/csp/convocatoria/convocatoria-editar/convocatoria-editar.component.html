@@ -29,8 +29,8 @@
         [title]="'csp.convocatoria-seguimiento-cientifico' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-CONV-C']"
-        [route]="[CONVOCATORIA_ROUTE_NAMES.HITOS]" [title]="'csp.hito' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.HITOS]"
+        [title]="'csp.hito' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.DOCUMENTOS]"
@@ -49,7 +49,7 @@
         [title]="'csp.convocatoria-elegibilidad' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-CONV-C']"
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-CON-C', 'CSP-CON-E']"
         [route]="[CONVOCATORIA_ROUTE_NAMES.CONFIGURACION_SOLICITUDES]"
         [title]="'csp.convocatoria-configuracion-solicitud' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES)">

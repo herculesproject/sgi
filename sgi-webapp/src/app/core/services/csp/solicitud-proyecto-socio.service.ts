@@ -93,7 +93,7 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
 
   /**
    * Comprueba si un ISolicitudProyectoSocio tiene ISolicitudProyectoSocioEquipo,
-   * ISolicitudProyectoSocioPeriodoPago y/o ISolicitudProyectoSocioPeriodoJustificacion 
+   * ISolicitudProyectoSocioPeriodoPago y/o ISolicitudProyectoSocioPeriodoJustificacion
    * relacionados
    *
    *  @param id Id deL proyecto

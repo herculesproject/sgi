@@ -262,18 +262,6 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }
 
   /**
-   * Comprueba si existe una solicitudProyectoDatos asociada a una solicitud
-   *
-   * @param id Id de la solicitud
-   */
-  hasPresupuestoPorEntidades(id: number): Observable<boolean> {
-    const url = `${this.endpointUrl}/${id}/presupuestoporentidades`;
-    return this.http.head(url, { observe: 'response' }).pipe(
-      map(response => response.status === 200)
-    );
-  }
-
-  /**
    * Recupera los ISolicitudProyectoPresupuesto de la entidad de la convocatoria de la solicitud
    *
    * @param id Id de la solicitud

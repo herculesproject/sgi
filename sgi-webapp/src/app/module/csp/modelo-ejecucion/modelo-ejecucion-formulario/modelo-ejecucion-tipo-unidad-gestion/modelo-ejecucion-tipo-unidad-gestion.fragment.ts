@@ -32,12 +32,10 @@ export class ModeloEjecucionTipoUnidadGestionFragment extends Fragment {
 
           const modeloUnidadObservable = response.items.
             map(modeloTipoHito => {
-              const options: SgiRestFindOptions = {
-                filter: new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.EQUALS, modeloTipoHito.unidadGestion.acronimo)
-              };
-              return this.unidadGestionService.findAll(options).pipe(
+
+              return this.unidadGestionService.findById(modeloTipoHito.unidadGestion.id).pipe(
                 map(unidadesGestion => {
-                  modeloTipoHito.unidadGestion = unidadesGestion.items[0];
+                  modeloTipoHito.unidadGestion = unidadesGestion;
                   return modeloTipoHito;
                 }),
               );

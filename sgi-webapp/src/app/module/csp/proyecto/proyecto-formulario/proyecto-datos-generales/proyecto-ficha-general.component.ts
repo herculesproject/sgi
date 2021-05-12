@@ -381,7 +381,8 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
    */
   loadModelosEjecucion(): void {
     const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('unidadGestionRef', SgiRestFilterOperator.EQUALS, this.formGroup.controls.unidadGestion.value?.acronimo)
+      filter: new RSQLSgiRestFilter('unidadGestionRef',
+        SgiRestFilterOperator.EQUALS, String(this.formGroup.controls.unidadGestion.value?.id))
     };
     const subcription = this.unidadModeloService.findAll(options).subscribe(
       res => {
