@@ -27,7 +27,7 @@ public class UnidadSpecifications {
    */
   public static Specification<Unidad> acronimosIn(List<String> acronimos) {
     return (root, query, cb) -> {
-      return root.get(Unidad_.acronimo).in(acronimos);
+      return root.get(Unidad_.id).in(acronimos);
     };
   }
 
