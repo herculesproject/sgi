@@ -458,7 +458,7 @@ public class ConvocatoriaIT extends BaseIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V_1")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V_2")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
 
