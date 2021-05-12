@@ -98,7 +98,7 @@ public class SgiSecurityContextHolder {
   public static List<String> getUOsForAnyAuthority(String[] authorities) {
     return SgiSecurityContextHolder.getAuthorities().stream()
         .filter((userAuthority) -> Arrays.asList(authorities).stream()
-            .anyMatch((authority) -> authority.matches("^" + authority + "_.+$")))
+            .anyMatch((authority) -> userAuthority.matches("^" + authority + "_.+$")))
         .map((filtered) -> filtered.replaceAll("^.+_", "")).distinct().collect(Collectors.toList());
   }
 }
