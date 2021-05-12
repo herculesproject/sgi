@@ -33,7 +33,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/proyectopaquetetrabajos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsProyectoPaqueteTrabajo() throws Exception {
     // given: new ProyectoPaqueteTrabajo
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
@@ -66,7 +66,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoPaqueteTrabajo with id filled
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
@@ -136,7 +136,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -154,7 +154,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -173,39 +173,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
-  public void existsById_WithExistingId_Returns200() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.given(service.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-
-    // when: exists by id
-    mockMvc
-        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 200 OK
-        .andExpect(MockMvcResultMatchers.status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
-  public void existsById_WithNoExistingId_Returns204() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    BDDMockito.given(service.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    // when: exists by id
-    mockMvc
-        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 204 No Content
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsProyectoPaqueteTrabajo() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -233,7 +201,7 @@ public class ProyectoPaqueteTrabajoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocument
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +50,7 @@ public class ProyectoSocioPeriodoJustificacionDocumentoController {
    *         id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoSocioPeriodoJustificacionDocumento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoSocioPeriodoJustificacionDocumento returnValue = service.findById(id);
@@ -72,7 +73,7 @@ public class ProyectoSocioPeriodoJustificacionDocumentoController {
    *         {@link ProyectoSocioPeriodoJustificacionDocumento}.
    */
   @PatchMapping("/{proyectoSocioPeriodoJustificacionId}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<List<ProyectoSocioPeriodoJustificacionDocumento>> update(
       @PathVariable Long proyectoSocioPeriodoJustificacionId,
       @Valid @RequestBody List<ProyectoSocioPeriodoJustificacionDocumento> proyectoSocioPeriodoJustificacionDocumentoes) {

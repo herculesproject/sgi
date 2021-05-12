@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,7 @@ public class TipoFaseController {
    * @return la lista de entidades {@link TipoFase} paginadas
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E')")
   ResponseEntity<Page<TipoFase>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -65,7 +66,7 @@ public class TipoFaseController {
    * @return la lista de entidades {@link TipoFase} paginadas
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
+  @PreAuthorize("hasAnyAuthority('CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E', 'CSP-TFASE-B','CSP-TFASE-R')")
   ResponseEntity<Page<TipoFase>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -87,7 +88,7 @@ public class TipoFaseController {
    * @return returnTipoFase {@link TipoFase} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-C')")
+  @PreAuthorize("hasAuthority('CSP-TFASE-C')")
   public ResponseEntity<TipoFase> create(@Valid @RequestBody TipoFase nuevoTipoFase) {
     log.debug("createTipoFase(TipoFase nuevoTipoFase) - start");
     TipoFase returnTipoFase = tipoFaseService.create(nuevoTipoFase);
@@ -102,7 +103,7 @@ public class TipoFaseController {
    * @return returnTipoFase {@link TipoFase} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   TipoFase findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoFase returnTipoFase = tipoFaseService.findById(id);
@@ -118,7 +119,7 @@ public class TipoFaseController {
    * @return {@link TipoFase} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-E')")
+  @PreAuthorize("hasAuthority('CSP-TFASE-E')")
   TipoFase update(@PathVariable Long id, @Valid @RequestBody TipoFase updatedTipoFase) {
     log.debug("updateTipoFase(Long id, TipoFase updatedTipoFase) - start");
     updatedTipoFase.setId(id);
@@ -134,7 +135,7 @@ public class TipoFaseController {
    * @return {@link TipoFase} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-R')")
+  @PreAuthorize("hasAuthority('CSP-TFASE-R')")
   TipoFase reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     TipoFase returnValue = tipoFaseService.enable(id);
@@ -149,7 +150,7 @@ public class TipoFaseController {
    * @return {@link TipoFase} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-B')")
+  @PreAuthorize("hasAuthority('CSP-TFASE-B')")
   TipoFase desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     TipoFase returnValue = tipoFaseService.disable(id);

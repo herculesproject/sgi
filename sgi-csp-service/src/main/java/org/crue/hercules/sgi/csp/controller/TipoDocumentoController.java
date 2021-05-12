@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -53,7 +54,7 @@ public class TipoDocumentoController {
    * @param paging pageable.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E')")
   ResponseEntity<Page<TipoDocumento>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -75,7 +76,7 @@ public class TipoDocumentoController {
    * @param paging pageable.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-TDOC-V', 'CSP-TDOC-C', 'CSP-TDOC-E', 'CSP-TDOC-B', 'CSP-TDOC-R')")
   ResponseEntity<Page<TipoDocumento>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -97,7 +98,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   TipoDocumento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoDocumento returnValue = tipoDocumentoService.findById(id);
@@ -112,7 +113,7 @@ public class TipoDocumentoController {
    * @return Nuevo {@link TipoDocumento} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-C')")
+  @PreAuthorize("hasAuthority('CSP-TDOC-C')")
   ResponseEntity<TipoDocumento> create(@Valid @RequestBody TipoDocumento tipoDocumento) {
     log.debug("create(TipoDocumento tipoDocumento) - start");
     TipoDocumento returnValue = tipoDocumentoService.create(tipoDocumento);
@@ -128,7 +129,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
+  @PreAuthorize("hasAuthority('CSP-TDOC-E')")
   TipoDocumento update(@Validated({ Update.class, Default.class }) @RequestBody TipoDocumento tipoDocumento,
       @PathVariable Long id) {
     log.debug("update(TipoDocumento tipoDocumento, Long id) - start");
@@ -145,7 +146,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-R')")
+  @PreAuthorize("hasAuthority('CSP-TDOC-R')")
   TipoDocumento reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     TipoDocumento returnValue = tipoDocumentoService.enable(id);
@@ -160,7 +161,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-B')")
+  @PreAuthorize("hasAuthority('CSP-TDOC-B')")
   TipoDocumento desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     TipoDocumento returnValue = tipoDocumentoService.disable(id);

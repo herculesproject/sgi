@@ -96,7 +96,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsProyectoEntidadConvocante() throws Exception {
     // given: new ProyectoEntidadConvocanteDto
     Long proyectoId = 1L;
@@ -130,7 +130,7 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "'CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoEntidadConvocanteDto with id filled
     Long proyectoId = 1L;
@@ -248,54 +248,6 @@ public class ProyectoEntidadConvocanteControllerTest extends BaseControllerTest 
         .andDo(MockMvcResultHandlers.print())
         // then: 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void findById_WithNoExistingId_Returns404() throws Exception {
-    // given: no existing id
-    Long proyectoId = 1L;
-    Long entidadConvocanteId = 1L;
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new NotFoundException();
-    });
-
-    // when: find by non existing id
-    mockMvc.perform(MockMvcRequestBuilders
-        .get(ProyectoEntidadConvocanteController.REQUEST_MAPPING
-            + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE, proyectoId, entidadConvocanteId)
-        .accept(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).
-    // then: HTTP code 404 NotFound pressent
-        andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  public void findById_WithExistingId_ReturnsProyectoEntidadConvocante() throws Exception {
-    // given: existing id
-    Long proyectoId = 1L;
-    Long entidadConvocanteId = 1L;
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer(new Answer<ProyectoEntidadConvocante>() {
-      @Override
-      public ProyectoEntidadConvocante answer(InvocationOnMock invocation) throws Throwable {
-        Long id = invocation.getArgument(0, Long.class);
-        ProyectoEntidadConvocante entidadConvocante = ProyectoEntidadConvocante.builder().id(id).proyectoId(proyectoId)
-            .build();
-        return entidadConvocante;
-      }
-    });
-
-    // when: find by existing id
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ProyectoEntidadConvocanteController.REQUEST_MAPPING
-                + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE, proyectoId, entidadConvocanteId)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: response is OK
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested ProyectoEntidadConvocanteDto is resturned as JSON object
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1));
   }
 
 }

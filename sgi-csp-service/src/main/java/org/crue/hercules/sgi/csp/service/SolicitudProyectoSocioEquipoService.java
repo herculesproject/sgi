@@ -27,14 +27,6 @@ public interface SolicitudProyectoSocioEquipoService {
       List<SolicitudProyectoSocioEquipo> solicitudProyectoEquipoSocios);
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyectoSocioEquipo} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudProyectoSocioEquipo}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link SolicitudProyectoSocioEquipo} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudProyectoSocioEquipo}.

@@ -43,7 +43,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tipohitos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-C" })
   public void create_ReturnsTipoHito() throws Exception {
     // given: Un TipoHito nuevo
     String tipoHitoJson = "{ \"nombre\": \"nombre-1\", \"descripcion\": \"descripcion-1\", \"activo\": \"true\" }";
@@ -67,7 +67,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: Un TipoHito que produce un error al crearse porque ya tiene id
     String tipoHitoJson = "{ \"id\": \"1\", \"nombre\": \"nombre-1\", \"descripcion\": \"descripcion-1\" }";
@@ -84,7 +84,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-E" })
   public void update_ReturnsTipoHito() throws Exception {
     // given: Un TipoHito a modificar
     String tipoHitoJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
@@ -105,7 +105,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-E" })
   public void update_WithIdNotExist_ReturnsNotFound() throws Exception {
     // given: Un TipoHito a modificar
     String replaceTipoHitoJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
@@ -122,7 +122,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-E" })
   public void update_WithNombreRepetido_Returns400() throws Exception {
     // given: Un TipoHito que produce un error porque ya existe otro con el
     // mismo nombre
@@ -140,7 +140,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 TipoHito
     List<TipoHito> tiposHito = new ArrayList<>();
@@ -149,8 +149,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito.given(tipoHitoService.findAll(
-        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -189,14 +188,13 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de TipoHito
     List<TipoHito> tiposHito = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito.given(tipoHitoService.findAll(
-        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -216,7 +214,8 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-V", "CSP-THITO-C", "CSP-THITO-E", "CSP-THITO-B",
+      "CSP-THITO-R", "CSP-ME-C", "CSP-ME-E" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 TipoHito
     List<TipoHito> tiposHito = new ArrayList<>();
@@ -264,14 +263,14 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-V", "CSP-THITO-C", "CSP-THITO-E", "CSP-THITO-B",
+      "CSP-THITO-R", "CSP-ME-C", "CSP-ME-E" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de TipoHito
     List<TipoHito> tiposHito = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
-    BDDMockito.given(tipoHitoService.findAllTodos(
-        ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(tipoHitoService.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<TipoHito>>() {
           @Override
           public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
@@ -291,7 +290,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_ReturnsTipoHito() throws Exception {
     // given: Un TipoHito con el id buscado
     Long idBuscado = 1L;
@@ -309,7 +308,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-R" })
   public void reactivar_WithExistingId_ReturnTipoHito() throws Exception {
     // given: existing id
     TipoHito tipoHito = generarMockTipoHito(1L);
@@ -336,7 +335,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -355,7 +354,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-B" })
   public void desactivar_WithExistingId_ReturnTipoHito() throws Exception {
     // given: existing id
     Long idBuscado = 1L;
@@ -384,7 +383,7 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-THITO-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;

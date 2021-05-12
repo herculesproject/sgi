@@ -45,7 +45,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/tipofinanciaciones";
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-C" })
   public void create_ReturnsTipoFinanciacion() throws Exception {
     // given: Un TipoFinanciacion nuevo
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(null);
@@ -68,7 +68,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-C" })
   public void create_WithId_Returns400() throws Exception {
 
     // given: Un TipoFinanciacion que produce un error al crearse porque ya tiene id
@@ -87,7 +87,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-E" })
   public void update_ReturnsTipoFinanciacion() throws Exception {
     // given: Un TipoFinanciacion a modificar
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
@@ -107,7 +107,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-E" })
   public void update_WithIdNotExist_ReturnsNotFound() throws Exception {
     // given: Un TipoFinanciacion a modificar
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
@@ -126,7 +126,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-E" })
   public void update_WithIdActivoFalse_ReturnsIllegalArgumentException() throws Exception {
     // given: Un TipoFinanciacion a modificar
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
@@ -143,7 +143,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsTipoFinanciacion() throws Exception {
 
     // given: Entidad con un determinado Id
@@ -164,7 +164,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -181,7 +181,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-R" })
   public void reactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
     // given: existing id
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
@@ -208,7 +208,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -226,7 +226,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-B" })
   public void desactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
     // given: existing id
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
@@ -251,7 +251,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -270,7 +270,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAll_WithPaging_ReturnsTipoRegimenConcurrenciaSubList() throws Exception {
     // given: One hundred TipoRegimenConcurrencia
     List<TipoFinanciacion> data = new ArrayList<>();
@@ -319,7 +319,7 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
     BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -338,7 +338,8 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-V", "CSP-TFNA-C", "CSP-TFNA-E", "CSP-TFNA-B",
+      "CSP-TFNA-R" })
   public void findAllTodos_WithPaging_ReturnsTipoRegimenConcurrenciaSubList() throws Exception {
     // given: One hundred TipoRegimenConcurrencia
     List<TipoFinanciacion> data = new ArrayList<>();
@@ -388,7 +389,8 @@ public class TipoFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFNA-V", "CSP-TFNA-C", "CSP-TFNA-E", "CSP-TFNA-B",
+      "CSP-TFNA-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
     BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))

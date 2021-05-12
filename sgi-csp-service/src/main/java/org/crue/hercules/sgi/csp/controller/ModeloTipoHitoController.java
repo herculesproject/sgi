@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.service.ModeloTipoHitoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +44,7 @@ public class ModeloTipoHitoController {
    * @return Nuevo {@link ModeloTipoHito} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E')")
   public ResponseEntity<ModeloTipoHito> create(@Valid @RequestBody ModeloTipoHito modeloTipoHito) {
     log.debug("create(ModeloTipoHito modeloTipoHito) - start");
     ModeloTipoHito returnValue = service.create(modeloTipoHito);
@@ -60,7 +61,7 @@ public class ModeloTipoHitoController {
    */
 
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
   public ModeloTipoHito update(@RequestBody ModeloTipoHito modeloTipoHito, @PathVariable Long id) {
     log.debug("update(ModeloTipoHito modeloTipoHito, Long id) - start");
     modeloTipoHito.setId(id);
@@ -76,7 +77,7 @@ public class ModeloTipoHitoController {
    * @param id Identificador de {@link ModeloTipoHito}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -91,7 +92,7 @@ public class ModeloTipoHitoController {
    * @return ModeloTipoHito {@link ModeloTipoHito} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ModeloTipoHito findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ModeloTipoHito returnValue = service.findById(id);

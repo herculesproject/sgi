@@ -37,16 +37,6 @@ public interface ModeloUnidadService {
   Page<ModeloUnidad> findAll(String query, Pageable pageable);
 
   /**
-   * Obtiene los {@link ModeloUnidad}.
-   *
-   * @param query    la información del filtro.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link ModeloUnidad} del
-   *         {@link ModeloEjecucion} paginadas.
-   */
-  Page<ModeloUnidad> findAllTodos(String query, Pageable pageable);
-
-  /**
    * Obtiene una entidad {@link ModeloUnidad} por id.
    * 
    * @param id Identificador de la entidad {@link ModeloUnidad}.

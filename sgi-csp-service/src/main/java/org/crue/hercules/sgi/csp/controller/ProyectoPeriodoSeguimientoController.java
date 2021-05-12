@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +63,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return Nuevo {@link ProyectoPeriodoSeguimiento} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ProyectoPeriodoSeguimiento> create(
       @Valid @RequestBody ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento) {
     log.debug("create(ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento) - start");
@@ -81,7 +82,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return {@link ProyectoPeriodoSeguimiento} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoPeriodoSeguimiento update(
       @Validated({ Update.class, Default.class }) @RequestBody ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento,
       @PathVariable Long id) {
@@ -98,7 +99,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @param id Identificador de {@link ProyectoPeriodoSeguimiento}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -114,7 +115,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<?> exists(@PathVariable Long id) {
     log.debug("ProyectoPeriodoSeguimiento exists(Long id) - start");
     if (service.existsById(id)) {
@@ -132,7 +133,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return {@link ProyectoPeriodoSeguimiento} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoPeriodoSeguimiento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoPeriodoSeguimiento returnValue = service.findById(id);
@@ -150,7 +151,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoperiodoseguimientodocumentos")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProyectoPeriodoSeguimientoDocumento>> findAllProyectoPeriodoSeguimientoDocumentos(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -175,7 +176,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return true/false
    */
   @RequestMapping(path = "/{id}/proyectoperiodoseguimientodocumentos", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<?> existsDocumentos(@PathVariable Long id) {
     log.debug("existsDocumentos(Long id) - start");
     boolean returnValue = proyectoPeriodoSeguimientoDocumentoService.existsByProyectoPeriodoSeguimiento(id);

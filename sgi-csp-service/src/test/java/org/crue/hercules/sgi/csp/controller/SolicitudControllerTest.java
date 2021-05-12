@@ -109,13 +109,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
     // given: new Solicitud
     Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Solicitud newSolicitud = new Solicitud();
-          BeanUtils.copyProperties(invocation.getArgument(0), newSolicitud);
-          newSolicitud.setId(1L);
-          return newSolicitud;
-        });
+    BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any())).willAnswer((InvocationOnMock invocation) -> {
+      Solicitud newSolicitud = new Solicitud();
+      BeanUtils.copyProperties(invocation.getArgument(0), newSolicitud);
+      newSolicitud.setId(1L);
+      return newSolicitud;
+    });
 
     // when: create Solicitud
     mockMvc
@@ -141,8 +140,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     // given: a Solicitud with id filled
     Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
-        .willThrow(new IllegalArgumentException());
+    BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any())).willThrow(new IllegalArgumentException());
 
     // when: create Solicitud
     mockMvc
@@ -162,7 +160,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Solicitud solicitud = generarMockSolicitud(1L);
     solicitud.setObservaciones("observaciones actualizadas");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
+    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: update Solicitud
@@ -191,8 +189,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     Long id = 1L;
     Solicitud solicitud = generarMockSolicitud(1L);
 
-    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).update(ArgumentMatchers.<Solicitud>any(),
-        ArgumentMatchers.<String>anyList());
+    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).update(ArgumentMatchers.<Solicitud>any());
 
     // when: update Solicitud
     mockMvc
@@ -205,19 +202,18 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-R" })
   public void reactivar_WithExistingId_ReturnSolicitud() throws Exception {
     // given: existing id
     Solicitud solicitud = generarMockSolicitud(1L);
     solicitud.setActivo(false);
 
-    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>anyList()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Solicitud solicitudDisabled = new Solicitud();
-          BeanUtils.copyProperties(solicitud, solicitudDisabled);
-          solicitudDisabled.setActivo(true);
-          return solicitudDisabled;
-        });
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      Solicitud solicitudDisabled = new Solicitud();
+      BeanUtils.copyProperties(solicitud, solicitudDisabled);
+      solicitudDisabled.setActivo(true);
+      return solicitudDisabled;
+    });
 
     // when: reactivar by id
     mockMvc
@@ -231,13 +227,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<String>anyList());
+    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
 
     // when: reactivar by non existing id
     mockMvc
@@ -254,13 +249,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
   public void desactivar_WithExistingId_ReturnSolicitud() throws Exception {
     // given: existing id
     Solicitud solicitud = generarMockSolicitud(1L);
-    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>anyList()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Solicitud solicitudDisabled = new Solicitud();
-          BeanUtils.copyProperties(solicitud, solicitudDisabled);
-          solicitudDisabled.setActivo(false);
-          return solicitudDisabled;
-        });
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      Solicitud solicitudDisabled = new Solicitud();
+      BeanUtils.copyProperties(solicitud, solicitudDisabled);
+      solicitudDisabled.setActivo(false);
+      return solicitudDisabled;
+    });
 
     // when: desactivar by id
     mockMvc
@@ -279,8 +273,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<String>anyList());
+    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
     // when: desactivar by non existing id
     mockMvc
@@ -296,10 +289,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
   public void findById_WithExistingId_ReturnsSolicitud() throws Exception {
     // given: existing id
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>anyList()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          return generarMockSolicitud(invocation.getArgument(0));
-        });
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
+      return generarMockSolicitud(invocation.getArgument(0));
+    });
 
     // when: find by existing id
     mockMvc
@@ -316,17 +308,16 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value("usr-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value("usr-002"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-001"))
-        .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value("OPE"));
+        .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value("2"));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>anyList()))
-        .will((InvocationOnMock invocation) -> {
-          throw new SolicitudNotFoundException(1L);
-        });
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new SolicitudNotFoundException(1L);
+    });
 
     // when: find by non existing id
     mockMvc
@@ -338,7 +329,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 Solicitud
     List<Solicitud> solicitudes = new ArrayList<>();
@@ -347,8 +338,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -383,11 +374,11 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data Solicitud
-    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Solicitud>>() {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Solicitud>>() {
           @Override
           public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
             Page<Solicitud> page = new PageImpl<>(Collections.emptyList());
@@ -405,7 +396,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-R" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 Solicitud
     List<Solicitud> solicitudes = new ArrayList<>();
@@ -414,8 +405,8 @@ public class SolicitudControllerTest extends BaseControllerTest {
     }
     Integer page = 3;
     Integer pageSize = 10;
-    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -451,11 +442,11 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data Solicitud
-    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Solicitud>>() {
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Solicitud>>() {
           @Override
           public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
             Page<Solicitud> page = new PageImpl<>(Collections.emptyList());
@@ -480,7 +471,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudModalidad_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudModalidad para la Solicitud
     Long solicitudId = 1L;
@@ -536,7 +527,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudModalidad_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudModalidad para la
     // Solicitud
@@ -573,7 +564,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllEstadoSolicitud_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudModalidad para la Solicitud
     Long solicitudId = 1L;
@@ -629,7 +620,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllEstadoSolicitud_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de EstadoSolicitud para la
     // Solicitud
@@ -666,7 +657,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudDocumento_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudDocumentos para la Solicitud
     Long solicitudId = 1L;
@@ -723,7 +714,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudDocumento_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudDocumentos para la
     // Solicitud
@@ -760,7 +751,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudHito_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudHito para la Solicitud
     Long solicitudId = 1L;
@@ -813,7 +804,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudHito_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudHito para la
     // Solicitud
@@ -921,7 +912,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoSocio_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudProyectoEquipo para la Solicitud
     Long solicitudId = 1L;
@@ -1049,7 +1040,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoSocio_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudProyectoSocio para la
     // Solicitud
@@ -1146,7 +1137,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoPresupuesto_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudProyectoPresupuesto para la Solicitud
     Long solicitudId = 1L;
@@ -1195,7 +1186,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitud.setSolicitanteRef("usr-002");
     solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
     solicitud.setConvocatoriaExterna(null);
-    solicitud.setUnidadGestionRef("OPE");
+    solicitud.setUnidadGestionRef("2");
     solicitud.setFormularioSolicitud(FormularioSolicitud.RRHH);
     solicitud.setActivo(true);
 

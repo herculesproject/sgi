@@ -173,8 +173,8 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
     Proyecto proyecto = proyectoRepository.findById(proyectoEntidadFinanciadora.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadFinanciadora.getProyectoId()));
 
-    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
-        "La Unidad de Gestión no es gestionable por el usuario");
+    Assert.isTrue(SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-C", "CSP-PRO-E" },
+        proyecto.getUnidadGestionRef()), "La Unidad de Gestión no es gestionable por el usuario");
 
     Assert.isTrue(
         proyecto.getEstado().getEstado() != EstadoProyecto.Estado.FINALIZADO

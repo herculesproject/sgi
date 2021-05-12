@@ -29,9 +29,8 @@ public class ProyectoHelper {
    * @param proyecto el {@link Proyecto} sobre el que realizar las comprobaciones
    */
   public static void checkCanRead(Proyecto proyecto) {
-    // TODO: Comprobar authorities correctas
     Assert.isTrue(
-        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-V-INV" },
+        SgiSecurityContextHolder.hasAnyAuthorityForUO(new String[] { "CSP-PRO-V", "CSP-PRO-E" },
             proyecto.getUnidadGestionRef()),
         "El proyecto no pertenece a una Unidad de Gestión gestionable por el usuario");
   }

@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -16,73 +14,61 @@ public interface SolicitudService {
   /**
    * Guarda la entidad {@link Solicitud}.
    * 
-   * @param solicitud         la entidad {@link Solicitud} a guardar.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param solicitud la entidad {@link Solicitud} a guardar.
    * @return solicitud la entidad {@link Solicitud} persistida.
    */
-  Solicitud create(Solicitud solicitud, List<String> unidadGestionRefs);
+  Solicitud create(Solicitud solicitud);
 
   /**
    * Actualiza los datos del {@link Solicitud}.
    * 
-   * @param solicitud         {@link Solicitud} con los datos actualizados.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param solicitud {@link Solicitud} con los datos actualizados.
    * @return solicitud {@link Solicitud} actualizado.
    */
-  Solicitud update(final Solicitud solicitud, List<String> unidadGestionRefs);
+  Solicitud update(final Solicitud solicitud);
 
   /**
    * Reactiva el {@link Solicitud}.
    *
-   * @param id                Id del {@link Solicitud}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
    */
-  Solicitud enable(Long id, List<String> unidadGestionRefs);
+  Solicitud enable(Long id);
 
   /**
    * Desactiva el {@link Solicitud}.
    *
-   * @param id                Id del {@link Solicitud}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
    */
-  Solicitud disable(Long id, List<String> unidadGestionRefs);
+  Solicitud disable(Long id);
 
   /**
    * Obtiene una entidad {@link Solicitud} por id.
    * 
-   * @param id                Identificador de la entidad {@link Solicitud}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Identificador de la entidad {@link Solicitud}.
    * @return Solicitud la entidad {@link Solicitud}.
    */
-  Solicitud findById(final Long id, List<String> unidadGestionRefs);
+  Solicitud findById(final Long id);
 
   /**
    * Obtiene todas las entidades {@link Solicitud} activas paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Solicitud} activas paginadas y
    *         filtradas.
    */
-  Page<Solicitud> findAllRestringidos(String query, Pageable paging, List<String> unidadGestionRefs);
+  Page<Solicitud> findAllRestringidos(String query, Pageable paging);
 
   /**
    * Obtiene todas las entidades {@link Solicitud} paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Solicitud} paginadas y filtradas.
    */
-  Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging, List<String> unidadGestionRefs);
+  Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging);
 
   /**
    * Comprueba si la soliciutd está asociada a una convocatoria SGI.
@@ -102,7 +88,7 @@ public interface SolicitudService {
    * @param id Id del {@link Solicitud}.
    * @return true si puede ser modificada / false si no puede ser modificada
    */
-  Boolean modificable(Long id);
+  boolean modificable(Long id);
 
   /**
    * Hace las comprobaciones necesarias para determinar si se puede crear un
@@ -111,7 +97,7 @@ public interface SolicitudService {
    * @param id Id de la {@link Solicitud}.
    * @return true si se permite la creación / false si no se permite creación
    */
-  Boolean isPosibleCrearProyecto(Long id);
+  boolean isPosibleCrearProyecto(Long id);
 
   /**
    * Se hace el cambio de estado de "Borrador" a "Presentada".

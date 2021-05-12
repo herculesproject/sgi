@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.service.RequisitoEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ public class RequisitoEquipoController {
    * @return Nuevo {@link RequisitoEquipo} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C','CSP-CON-E')")
   ResponseEntity<RequisitoEquipo> create(@Valid @RequestBody RequisitoEquipo requisitoEquipo) {
     log.debug("create(RequisitoEquipo requisitoEquipo) - start");
     RequisitoEquipo returnValue = service.create(requisitoEquipo);
@@ -64,7 +65,7 @@ public class RequisitoEquipoController {
    * @return {@link RequisitoEquipo} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   RequisitoEquipo update(@Validated({ Update.class, Default.class }) @RequestBody RequisitoEquipo requisitoEquipo,
       @PathVariable Long id) {
     log.debug("update(RequisitoEquipo requisitoEquipo, Long id) - start");
@@ -80,7 +81,7 @@ public class RequisitoEquipoController {
    * @return el {@link RequisitoEquipo}
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   ResponseEntity<RequisitoEquipo> findByConvocatoriaId(@PathVariable Long id) {
     log.debug("RequisitoEquipo findByConvocatoriaId(Long id) - start");
     RequisitoEquipo returnValue = service.findByConvocatoriaId(id);

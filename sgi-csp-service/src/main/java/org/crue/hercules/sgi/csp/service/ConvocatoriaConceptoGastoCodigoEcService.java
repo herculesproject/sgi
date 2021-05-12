@@ -15,36 +15,6 @@ import org.springframework.data.domain.Pageable;
 public interface ConvocatoriaConceptoGastoCodigoEcService {
 
   /**
-   * Guarda la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.
-   * 
-   * @param convocatoriaConceptoGastoCodigoEc la entidad
-   *                                          {@link ConvocatoriaConceptoGastoCodigoEc}
-   *                                          a guardar.
-   * @return ConvocatoriaConceptoGastoCodigoEc la entidad
-   *         {@link ConvocatoriaConceptoGastoCodigoEc} persistida.
-   */
-  ConvocatoriaConceptoGastoCodigoEc create(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc);
-
-  /**
-   * Actualiza la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.
-   * 
-   * @param convocatoriaConceptoGastoCodigoEcActualizar la entidad
-   *                                                    {@link ConvocatoriaConceptoGastoCodigoEc}
-   *                                                    a guardar.
-   * @return ConvocatoriaConceptoGastoCodigoEc la entidad
-   *         {@link ConvocatoriaConceptoGastoCodigoEc} persistida.
-   */
-  ConvocatoriaConceptoGastoCodigoEc update(
-      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar);
-
-  /**
-   * Elimina la {@link ConvocatoriaConceptoGastoCodigoEc}.
-   *
-   * @param id Id del {@link ConvocatoriaConceptoGastoCodigoEc}.
-   */
-  void delete(Long id);
-
-  /**
    * Obtiene {@link ConvocatoriaConceptoGastoCodigoEc} por su id.
    *
    * @param id el id de la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.

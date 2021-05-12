@@ -33,8 +33,8 @@ public class AreaTematicaIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-ARTM-C", "CSP-ARTM-E", "CSP-ARTM-B", "CSP-ARTM-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V", "CSP-CON-C",
+        "CSP-CON-INV-V", "CSP-AREA-C", "CSP-AREA-E", "CSP-AREA-R")));
 
     HttpEntity<AreaTematica> request = new HttpEntity<>(entity, headers);
     return request;
@@ -142,7 +142,6 @@ public class AreaTematicaIT extends BaseIT {
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ARTM-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre,desc";
@@ -244,7 +243,6 @@ public class AreaTematicaIT extends BaseIT {
   @Test
   public void findAllHijosAreaTematica_WithPagingSortingAndFiltering_ReturnsAreaTematicaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre,desc";

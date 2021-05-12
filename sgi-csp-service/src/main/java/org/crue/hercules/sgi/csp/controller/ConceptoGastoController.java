@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,7 +52,7 @@ public class ConceptoGastoController {
    * @param paging pageable.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-SOL-E', 'CSP-SOL-V')")
   ResponseEntity<Page<ConceptoGasto>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -73,7 +74,7 @@ public class ConceptoGastoController {
    * @param paging pageable.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-V')")
+  @PreAuthorize("hasAnyAuthority('CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E', 'CSP-TGTO-B', 'CSP-TGTO-R')")
   ResponseEntity<Page<ConceptoGasto>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -95,7 +96,7 @@ public class ConceptoGastoController {
    * @return {@link ConceptoGasto} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConceptoGasto findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConceptoGasto returnValue = service.findById(id);
@@ -110,7 +111,7 @@ public class ConceptoGastoController {
    * @return Nuevo {@link ConceptoGasto} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-C')")
+  @PreAuthorize("hasAuthority('CSP-TGTO-C')")
   ResponseEntity<ConceptoGasto> create(@Valid @RequestBody ConceptoGasto conceptoGasto) {
     log.debug("create(ConceptoGasto conceptoGasto) - start");
     ConceptoGasto returnValue = service.create(conceptoGasto);
@@ -126,7 +127,7 @@ public class ConceptoGastoController {
    * @return {@link ConceptoGasto} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-E')")
+  @PreAuthorize("hasAuthority('CSP-TGTO-E')")
   ConceptoGasto update(@Validated({ Update.class, Default.class }) @RequestBody ConceptoGasto conceptoGasto,
       @PathVariable Long id) {
     log.debug("update(ConceptoGasto conceptoGasto, Long id) - start");
@@ -143,7 +144,7 @@ public class ConceptoGastoController {
    * @return {@link ConceptoGasto} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-R')")
+  @PreAuthorize("hasAuthority('CSP-TGTO-R')")
   ConceptoGasto reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     ConceptoGasto returnValue = service.enable(id);
@@ -157,7 +158,7 @@ public class ConceptoGastoController {
    * @param id Identificador de {@link ConceptoGasto}.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-B')")
+  @PreAuthorize("hasAuthority('CSP-TGTO-B')")
   ConceptoGasto desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     ConceptoGasto returnValue = service.disable(id);

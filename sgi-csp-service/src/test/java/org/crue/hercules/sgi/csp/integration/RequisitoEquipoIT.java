@@ -40,8 +40,8 @@ public class RequisitoEquipoIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-C", "CSP-CONV-V")));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "CSP-CON-C", "CSP-CON-V", "CSP-CON-E", "CSP-CON-INV-V")));
 
     HttpEntity<RequisitoEquipo> request = new HttpEntity<>(entity, headers);
     return request;

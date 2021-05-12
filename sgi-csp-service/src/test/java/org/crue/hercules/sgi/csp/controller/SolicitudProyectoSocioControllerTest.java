@@ -61,7 +61,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyectosocio";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_ReturnsSolicitudProyectoSocio() throws Exception {
     // given: new SolicitudProyectoSocio
     SolicitudProyectoSocio solicitudProyectoSocio = generarSolicitudProyectoSocio(null, 1L, 1L);
@@ -99,7 +99,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a SolicitudProyectoSocio with id filled
     SolicitudProyectoSocio solicitudProyectoSocio = generarSolicitudProyectoSocio(1L, 1L, 1L);
@@ -118,7 +118,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithExistingId_ReturnsSolicitudProyectoSocio() throws Exception {
     // given: existing SolicitudProyectoSocio
     SolicitudProyectoSocio updatedSolicitudProyectoSocio = generarSolicitudProyectoSocio(1L, 1L, 1L);
@@ -156,7 +156,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: a SolicitudProyectoSocio with non existing id
     SolicitudProyectoSocio updatedSolicitudProyectoSocio = generarSolicitudProyectoSocio(1L, 1L, 1L);
@@ -178,7 +178,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -193,7 +193,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithoutId_Return404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -212,7 +212,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findById_WithExistingId_ReturnsSolicitudProyectoSocio() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -236,7 +236,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -261,7 +261,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoSocioPeriodoPago_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudProyectoSocioPeriodoPago para la
     // SolicitudProyectoSocio
@@ -329,7 +329,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoSocioEquipo_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudProyectoEquipo para la Solicitud
     Long solicitudId = 1L;
@@ -387,7 +387,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoSocioEquipo_Returns204() throws Exception {
     // given: Una lista vacia de SolicitudProyectoSocio para la
     // Solicitud
@@ -424,7 +424,7 @@ public class SolicitudProyectoSocioControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllSolicitudProyectoSocioPeriodoJustificacion_ReturnsPage() throws Exception {
     // given: Una lista con 37 SolicitudProyectoSocioPeriodoJustificacion para la
     // SolicitudProyectoSocio

@@ -40,14 +40,6 @@ public interface ProyectoPaqueteTrabajoService {
   void delete(Long id);
 
   /**
-   * Comprueba la existencia del {@link ProyectoPaqueteTrabajo} por id.
-   *
-   * @param id el id de la entidad {@link ProyectoPaqueteTrabajo}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene {@link ProyectoPaqueteTrabajo} por su id.
    *
    * @param id el id de la entidad {@link ProyectoPaqueteTrabajo}.

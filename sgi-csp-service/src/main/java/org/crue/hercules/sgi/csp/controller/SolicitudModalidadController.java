@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,7 @@ public class SolicitudModalidadController {
    * @return Nuevo {@link SolicitudModalidad} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   public ResponseEntity<SolicitudModalidad> create(@Valid @RequestBody SolicitudModalidad solicitudModalidad) {
     log.debug("create(SolicitudModalidad solicitudModalidad) - start");
     SolicitudModalidad returnValue = service.create(solicitudModalidad);
@@ -62,7 +63,7 @@ public class SolicitudModalidadController {
    * @return SolicitudModalidad {@link SolicitudModalidad} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   public SolicitudModalidad update(@Valid @RequestBody SolicitudModalidad solicitudModalidad, @PathVariable Long id) {
     log.debug("update(SolicitudModalidad solicitudModalidad, Long id) - start");
     solicitudModalidad.setId(id);
@@ -77,7 +78,7 @@ public class SolicitudModalidadController {
    * @param id Identificador de {@link SolicitudModalidad}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -92,7 +93,7 @@ public class SolicitudModalidadController {
    * @return SolicitudModalidad {@link SolicitudModalidad} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   SolicitudModalidad findById(@PathVariable Long id) {
     log.debug("SolicitudModalidad findById(Long id) - start");
     SolicitudModalidad returnValue = service.findById(id);

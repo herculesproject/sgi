@@ -46,7 +46,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   private static final String CONTROLLER_BASE_PATH = "/proyectosocioperiodojustificaciones";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsProyectoSocioPeriodoJustificacion() throws Exception {
     // given: new ProyectoSocioPeriodoJustificacion
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
@@ -80,7 +80,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoSocioPeriodoJustificacion with id filled
     ProyectoSocioPeriodoJustificacion newProyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacion(
@@ -100,7 +100,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void update_ReturnsProyectoSocioPeriodoJustificacionList() throws Exception {
     // given: ProyectoSocioPeriodoJustificacion / actualizado,
 
@@ -123,7 +123,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void updateProyectoSocioPeriodoJustificacionesProyectoSocio_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -145,7 +145,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithExistingId_ReturnsProyectoSocioPeriodoJustificacion() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -172,7 +172,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -195,7 +195,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllProyectoSocioPeriodoJustificacionDocumento_ReturnsPage() throws Exception {
     // given: Una lista con 37 ProyectoSocioPeriodoJustificacionDocumento para la
     // ProyectoSocioPeriodoJustificacion
@@ -257,7 +257,7 @@ public class ProyectoSocioPeriodoJustificacionControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllProyectoSocioPeriodoJustificacion_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ProyectoSocioPeriodoJustificacion para la
     // ProyectoSocio

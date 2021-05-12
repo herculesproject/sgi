@@ -133,7 +133,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void create_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -177,7 +177,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void createWithConvocatoria_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -224,7 +224,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void createWithConvocatoriaAndConvocatoriaAreaTematica_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -271,7 +271,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void create_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -286,7 +286,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto que ya tiene id
     Proyecto proyecto = generarMockProyecto(1L);
@@ -311,7 +311,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void create_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -327,7 +327,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void create_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -349,7 +349,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void create_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
@@ -371,7 +371,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   public void update_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Proyecto proyecto = generarMockProyecto(1L);
@@ -405,7 +405,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   public void updateWithConvocatoria_ReturnsProyecto() {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Long convocatoriaId = 1L;
@@ -443,7 +443,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   public void update_WithNotCorrectEstado_ThrowsIllegalArgumentException() {
     // given: Actualizar un proyecto con estado Finalizado
     Proyecto proyecto = generarMockProyecto(1L);
@@ -461,7 +461,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void update_WithConvocatoriaNotExists_ThrowsIllegalArgumentException() {
     // given: Actualizar proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -492,7 +492,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void update_WithoutModeloUnidad_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -508,7 +508,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   public void update_WithDistinctConvocatoria_ThrowsIllegalArgumentException() {
     // given: Actualizar Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -534,7 +534,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void update_WithCosteHoraAndWithoutTimesheetTrue_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -556,7 +556,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void update_WithCosteHoraAndWithoutTipoHorasAnuales_ThrowsIllegalArgumentException() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(1L);
@@ -578,7 +578,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-R_2" })
   public void enable_ReturnsProyecto() {
     // given: Un nuevo Proyecto inactivo
     Proyecto proyecto = generarMockProyecto(1L);
@@ -599,7 +599,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void enable_WithIdNotExist_ThrowsProyectoNotFoundException() {
     // given: Un id de un Proyecto que no existe
     Long idNoExiste = 1L;
@@ -610,7 +610,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-B_2" })
   public void disable_ReturnsProyecto() {
     // given: Un Proyecto activo
     Proyecto proyecto = generarMockProyecto(1L);
@@ -630,7 +630,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void disable_WithIdNotExist_ThrowsProyectoNotFoundException() {
     // given: Un id de un Proyecto que no existe
     Long idNoExiste = 1L;
@@ -641,70 +641,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
-  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
-    // given: existing Proyecto id
-    Proyecto proyectoExistente = generarMockProyecto(1L);
-    proyectoExistente.getModeloEjecucion().setId(99L);
-
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-    BDDMockito.given(repository.getModeloEjecucion(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(proyectoExistente.getModeloEjecucion()));
-
-    // when: getModeloEjecucion by id Proyecto
-    ModeloEjecucion modeloEjecucion = service.getModeloEjecucion(proyectoExistente.getId());
-
-    // then: returns ModeloEjecucion
-    Assertions.assertThat(modeloEjecucion).isNotNull();
-    Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(99L);
-
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
-  public void getModeloEjecucion_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing Proyecto id
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: getModeloEjecucion by id Proyecto
-        () -> service.getModeloEjecucion(1L))
-        // then: NotFoundException is thrown
-        .isInstanceOf(ProyectoNotFoundException.class);
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
-  public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-
-    // when: exists by id
-    boolean responseData = service.existsById(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isTrue();
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
-  public void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    // when: exists by id
-    boolean responseData = service.existsById(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isFalse();
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
   public void findById_ReturnsProyecto() {
     // given: Un Proyecto con el id buscado
     Long idBuscado = 1L;
@@ -719,12 +656,12 @@ public class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(proyecto.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(proyecto.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
     Assertions.assertThat(proyecto.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
-    Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("OPE");
+    Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("2");
     Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void findById_WithIdNotExist_ThrowsProyectoNotFoundException() throws Exception {
     // given: Ningun Proyecto con el id buscado
     Long idBuscado = 1L;
@@ -736,7 +673,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void findAll_ReturnsPage() {
     // given: Una lista con 37 Proyecto
     List<Proyecto> proyectos = new ArrayList<>();
@@ -777,7 +714,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_OPE" })
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
   public void findAllTodos_ReturnsPage() {
     // given: Una lista con 37 Proyecto
     List<Proyecto> proyectos = new ArrayList<>();
@@ -840,7 +777,7 @@ public class ProyectoServiceTest extends BaseServiceTest {
     proyecto.setTitulo("PRO" + (id != null ? id : 1));
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
-    proyecto.setUnidadGestionRef("OPE");
+    proyecto.setUnidadGestionRef("2");
     proyecto.setFechaInicio(Instant.now());
     proyecto.setFechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1))));
     proyecto.setModeloEjecucion(modeloEjecucion);

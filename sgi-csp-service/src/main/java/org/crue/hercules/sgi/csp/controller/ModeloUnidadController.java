@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class ModeloUnidadController {
    * @param paging pageable.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-C', 'CSP-CON-E', 'CSP-CON-INV-V', 'CSP-PRO-C', 'CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ModeloUnidad>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -62,35 +63,13 @@ public class ModeloUnidadController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link ModeloUnidad}.
-   * 
-   * @param query  filtro de búsqueda.
-   * @param paging pageable.
-   */
-  @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
-  ResponseEntity<Page<ModeloUnidad>> findAllTodos(@RequestParam(name = "q", required = false) String query,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllTodos(String query, Pageable paging) - start");
-    Page<ModeloUnidad> page = service.findAllTodos(query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllTodos(String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllTodos(String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
    * Crea nuevo {@link ModeloUnidad}.
    * 
    * @param modeloUnidad {@link ModeloUnidad} que se quiere crear.
    * @return Nuevo {@link ModeloUnidad} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E')")
   public ResponseEntity<ModeloUnidad> create(@Valid @RequestBody ModeloUnidad modeloUnidad) {
     log.debug("create( ModeloUnidad modeloUnidad) - start");
     ModeloUnidad returnValue = service.create(modeloUnidad);
@@ -104,7 +83,7 @@ public class ModeloUnidadController {
    * @param id Identificador de {@link ModeloUnidad}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -119,7 +98,7 @@ public class ModeloUnidadController {
    * @return ModeloTipoEnlace {@link ModeloTipoEnlace} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ModeloUnidad findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ModeloUnidad returnValue = service.findById(id);

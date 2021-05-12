@@ -31,7 +31,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/solicitudmodalidades";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void create_ReturnsSolicitudModalidad() throws Exception {
     // given: new SolicitudModalidad
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
@@ -59,7 +59,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void create_WithId_Returns400() throws Exception {
     // given: a SolicitudModalidad with id filled
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
@@ -78,7 +78,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void update_ReturnsSolicitudModalidad() throws Exception {
     // given: Existing SolicitudModalidad to be updated
     SolicitudModalidad solicitudModalidadExistente = generarMockSolicitudModalidad(1L);
@@ -106,7 +106,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -126,7 +126,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -141,7 +141,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void delete_WithoutId_Return404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -160,7 +160,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsSolicitudModalidad() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -182,7 +182,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

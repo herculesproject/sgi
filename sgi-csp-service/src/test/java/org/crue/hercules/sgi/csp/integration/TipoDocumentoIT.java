@@ -33,8 +33,8 @@ public class TipoDocumentoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-TDOC-B", "CSP-TDOC-C", "CSP-TDOC-E", "CSP-TDOC-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-PRO-E",
+        "CSP-TDOC-V", "CSP-TDOC-C", "CSP-TDOC-E", "CSP-TDOC-B", "CSP-TDOC-R", "CSP-ME-C", "CSP-ME-E")));
 
     HttpEntity<TipoDocumento> request = new HttpEntity<>(entity, headers);
     return request;
@@ -139,7 +139,6 @@ public class TipoDocumentoIT extends BaseIT {
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoDocumentoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre,desc";
@@ -173,7 +172,6 @@ public class TipoDocumentoIT extends BaseIT {
   @Test
   public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoDocumentoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre,desc";

@@ -1,16 +1,11 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadFinanciadoraNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
@@ -84,7 +79,7 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     // comprobar si convocatoria es modificable
     Assert.isTrue(
         convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef()),
+            convocatoria.getUnidadGestionRef(), new String[] { "CSP-CON-C", "CSP-CON-E" }),
         "No se puede crear ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     if (convocatoriaEntidadFinanciadora.getFuenteFinanciacion() != null) {
@@ -184,7 +179,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
           }
 
           // comprobar si convocatoria es modificable
-          Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null),
+          Assert.isTrue(
+              convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null,
+                  new String[] { "CSP-CON-E" }),
               "No se puede modificar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
           convocatoriaEntidadFinanciadora
@@ -217,7 +214,9 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
     repository.findById(id).map(convocatoriaEntidadFinanciadora -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaEntidadFinanciadora.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaEntidadFinanciadora. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaEntidadFinanciadora;
@@ -260,22 +259,6 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
 
     Page<ConvocatoriaEntidadFinanciadora> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
-   * Obtiene el {@link SolicitudProyectoEntidadFinanciadoraAjena} de la
-   * {@link Convocatoria}.
-   * 
-   * @param id {@link Convocatoria}.
-   * @return {@link SolicitudProyectoEntidadFinanciadoraAjena}.
-   */
-  @Override
-  public Boolean hasConvocatoriaEntidad(Long id) {
-    log.debug("hasConvocatoriaEntidad(Long id) - start");
-    final List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadora = repository.findByConvocatoriaId(id);
-    Boolean returnValue = CollectionUtils.isNotEmpty(convocatoriaEntidadFinanciadora);
-    log.debug("hasSolicitudEntidadFinanciadora(Long id) - end");
     return returnValue;
   }
 

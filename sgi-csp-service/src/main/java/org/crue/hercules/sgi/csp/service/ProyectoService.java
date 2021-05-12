@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.domain.Page;
@@ -42,22 +41,6 @@ public interface ProyectoService {
    * @return la entidad {@link Proyecto} persistida.
    */
   Proyecto disable(Long id);
-
-  /**
-   * Comprueba la existencia del {@link Proyecto} por id.
-   *
-   * @param id el id de la entidad {@link Proyecto}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
-   * Obtiene el {@link ModeloEjecucion} asignado al {@link Proyecto}.
-   * 
-   * @param id Id del {@link Proyecto}.
-   * @return {@link ModeloEjecucion} asignado
-   */
-  ModeloEjecucion getModeloEjecucion(Long id);
 
   /**
    * Obtiene una entidad {@link Proyecto} por id.

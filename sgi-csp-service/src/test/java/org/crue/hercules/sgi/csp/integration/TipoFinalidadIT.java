@@ -33,8 +33,8 @@ public class TipoFinalidadIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-TFIN-B", "CSP-TFIN-C", "CSP-TFIN-E", "CSP-TFIN-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TFIN-C", "CSP-TFIN-E",
+        "CSP-TFIN-R", "CSP-TFIN-B", "CSP-CON-INV-V", "CSP-ME-C", "CSP-ME-E", "CSP-PRO-C")));
 
     HttpEntity<TipoFinalidad> request = new HttpEntity<>(entity, headers);
     return request;
@@ -145,7 +145,6 @@ public class TipoFinalidadIT extends BaseIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TFIN-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre,desc";
@@ -184,7 +183,6 @@ public class TipoFinalidadIT extends BaseIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TFIN-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre,desc";

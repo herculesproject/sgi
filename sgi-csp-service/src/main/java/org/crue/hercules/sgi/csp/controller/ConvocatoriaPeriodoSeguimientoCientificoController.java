@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +55,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoController {
    *         {@link ConvocatoriaPeriodoSeguimientoCientifico}.
    */
   @PatchMapping("/{convocatoriaId}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   public ResponseEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(
       @PathVariable Long convocatoriaId,
       @Valid @RequestBody List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos) {
@@ -78,7 +79,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoController {
    *         id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaPeriodoSeguimientoCientifico findById(@PathVariable Long id) {
     log.debug("ConvocatoriaPeriodoSeguimientoCientifico findById(Long id) - start");
     ConvocatoriaPeriodoSeguimientoCientifico returnValue = service.findById(id);

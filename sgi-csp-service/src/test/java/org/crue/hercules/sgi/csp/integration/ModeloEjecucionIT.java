@@ -40,7 +40,9 @@ public class ModeloEjecucionIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-B", "CSP-ME-C", "CSP-ME-E", "CSP-ME-V")));
+        String.format("bearer %s",
+            tokenBuilder.buildToken("user", "CSP-ME-V", "CSP-ME-C", "CSP-ME-E", "CSP-ME-B", "CSP-ME-R", "CSP-PRO-C",
+                "CSP-CON-C", "CSP-CON-E", "CSP-CON-V", "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V", "AUTH")));
 
     HttpEntity<ModeloEjecucion> request = new HttpEntity<>(entity, headers);
     return request;
@@ -146,7 +148,6 @@ public class ModeloEjecucionIT extends BaseIT {
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre,desc";
@@ -180,7 +181,6 @@ public class ModeloEjecucionIT extends BaseIT {
   @Test
   public void findAllTodos_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre,desc";
@@ -220,7 +220,6 @@ public class ModeloEjecucionIT extends BaseIT {
   @Test
   public void findAllModeloTipoEnlaces_WithPagingSortingAndFiltering_ReturnsModeloTipoEnlaceSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoEnlace.nombre,desc";
@@ -263,7 +262,6 @@ public class ModeloEjecucionIT extends BaseIT {
   @Test
   public void findAllModeloTipoFases_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoFase.nombre,desc";
@@ -301,7 +299,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoFasesConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoFase.nombre,desc";
@@ -339,7 +336,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoFasesProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoFase.nombre,desc";
@@ -383,7 +379,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoDocumentos_WithPagingSortingAndFiltering_ReturnsModeloTipoDocumentoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoDocumento.nombre,desc";
@@ -427,7 +422,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoFinalidades_WithPagingSortingAndFiltering_ReturnsModeloTipoFinalidadSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoFinalidad.nombre,desc";
@@ -470,7 +464,6 @@ public class ModeloEjecucionIT extends BaseIT {
   @Test
   public void findAllModeloTipoHitos_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoHito.nombre,desc";
@@ -508,7 +501,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoHitosConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoHito.nombre,desc";
@@ -546,7 +538,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoHitosProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoHito.nombre,desc";
@@ -584,7 +575,6 @@ public class ModeloEjecucionIT extends BaseIT {
   public void findAllModeloTipoHitosSolicitud_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoHito.nombre,desc";
@@ -627,7 +617,6 @@ public class ModeloEjecucionIT extends BaseIT {
   @Test
   public void findAllModeloUnidades_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "unidadGestionRef,desc";

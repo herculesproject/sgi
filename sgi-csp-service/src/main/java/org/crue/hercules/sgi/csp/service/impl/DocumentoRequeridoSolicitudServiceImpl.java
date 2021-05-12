@@ -72,7 +72,7 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
 
     Assert.isNull(documentoRequeridoSolicitud.getId(), "Id tiene que ser null para crear DocumentoRequeridoSolicitud");
 
-    validarDocumentoRequeridoSolicitud(documentoRequeridoSolicitud, null);
+    validarDocumentoRequeridoSolicitud(documentoRequeridoSolicitud, null, new String[] { "CSP-CON-E", "CSP-CON-C" });
 
     DocumentoRequeridoSolicitud returnValue = repository.save(documentoRequeridoSolicitud);
 
@@ -98,7 +98,7 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
 
     return repository.findById(documentoRequeridoSolicitud.getId()).map((datosOriginales) -> {
 
-      validarDocumentoRequeridoSolicitud(documentoRequeridoSolicitud, datosOriginales);
+      validarDocumentoRequeridoSolicitud(documentoRequeridoSolicitud, datosOriginales, new String[] { "CSP-CON-E" });
 
       datosOriginales.setTipoDocumento(documentoRequeridoSolicitud.getTipoDocumento());
       datosOriginales.setObservaciones(documentoRequeridoSolicitud.getObservaciones());
@@ -128,7 +128,9 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
           .findById(convocatoriaAreaTematica.getConfiguracionSolicitudId())
           .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(
               convocatoriaAreaTematica.getConfiguracionSolicitudId()));
-      Assert.isTrue(convocatoriaService.modificable(configuracionSolicitud.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(configuracionSolicitud.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede eliminar DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaAreaTematica;
@@ -181,9 +183,10 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
    *
    * @param datosDocumentoRequeridoSolicitud
    * @param datosOriginales
+   * @param authorities
    */
   private void validarDocumentoRequeridoSolicitud(DocumentoRequeridoSolicitud documentoRequeridoSolicitud,
-      DocumentoRequeridoSolicitud datosOriginales) {
+      DocumentoRequeridoSolicitud datosOriginales, String[] authorities) {
     log.debug(
         "validarDocumentoRequeridoSolicitud(DocumentoRequeridoSolicitud datosDocumentoRequeridoSolicitud, DocumentoRequeridoSolicitud datosOriginales) - start");
 
@@ -204,9 +207,9 @@ public class DocumentoRequeridoSolicitudServiceImpl implements DocumentoRequerid
             documentoRequeridoSolicitud.getConfiguracionSolicitudId()));
 
     // comprobar si convocatoria es modificable
-    Assert.isTrue(convocatoriaService.modificable(configuracionSolicitud.getConvocatoriaId(), null), "No se puede "
-        + ((datosOriginales != null) ? "modificar" : "crear")
-        + " DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+    Assert.isTrue(convocatoriaService.modificable(configuracionSolicitud.getConvocatoriaId(), null, authorities),
+        "No se puede " + ((datosOriginales != null) ? "modificar" : "crear")
+            + " DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
     Convocatoria convocatoria = convocatoriaRepository.findById(configuracionSolicitud.getConvocatoriaId())

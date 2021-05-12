@@ -38,7 +38,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   private static final String CONTROLLER_BASE_PATH = "/proyectoentidadfinanciadoras";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsModeloProyectoEntidadFinanciadora() throws Exception {
     // given: new ProyectoEntidadFinanciadora
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(1L);
@@ -72,7 +72,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoEntidadFinanciadora with id filled
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadora = generarMockProyectoEntidadFinanciadora(1L);
@@ -91,7 +91,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void update_ReturnsProyectoEntidadFinanciadora() throws Exception {
     // given: Existing ProyectoEntidadFinanciadora to be updated
     ProyectoEntidadFinanciadora proyectoEntidadFinanciadoraExistente = generarMockProyectoEntidadFinanciadora(1L);
@@ -126,7 +126,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -146,7 +146,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -164,7 +164,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -183,7 +183,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsProyectoEntidadFinanciadora() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -208,7 +208,7 @@ public class ProyectoEntidadFinanciadoraControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

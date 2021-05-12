@@ -36,7 +36,7 @@ public class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         .acronimo("PR1")
         .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
         .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion1)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion1)
         .activo(Boolean.TRUE)
         .build());
 

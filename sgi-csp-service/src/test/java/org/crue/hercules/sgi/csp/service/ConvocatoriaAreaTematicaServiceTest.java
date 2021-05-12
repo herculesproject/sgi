@@ -7,13 +7,10 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaAreaTematicaNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaAreaTematicaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +30,7 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;
-  @Mock
-  private ConvocatoriaRepository convocatoriaRepository;
+
   @Mock
   private AreaTematicaRepository areaTematicaRepository;
   @Mock
@@ -44,20 +40,18 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaAreaTematicaServiceImpl(convocatoriaAreaTematicaRepository, convocatoriaRepository,
-        areaTematicaRepository, convocatoriaService);
+    service = new ConvocatoriaAreaTematicaServiceImpl(convocatoriaAreaTematicaRepository, areaTematicaRepository,
+        convocatoriaService);
   }
 
   @Test
   public void create_ReturnsConvocatoriaAreaTematica() {
     // given: new ConvocatoriaAreaTematica
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematica()));
     BDDMockito.given(convocatoriaAreaTematicaRepository
@@ -130,29 +124,13 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingConvocatoria_404() {
-    // given: a ConvocatoriaAreaTematica with non existing Convocatoria
-    ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaAreaTematica
-        () -> service.create(newConvocatoriaAreaTematica))
-        // then: throw exception as Convocatoria is not found
-        .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  @Test
   public void create_WithNoExistingAreaTematica_404() {
     // given: a ConvocatoriaAreaTematica with non existing AreaTematica
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
@@ -167,14 +145,12 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     // given: a ConvocatoriaAreaTematica assigned with same
     // Convocatoria And EntidadRef
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
     ConvocatoriaAreaTematica ConvocatoriaAreaTematicaExistente = generarConvocatoriaAreaTematica(1L, convocatoriaId,
         1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematica()));
     BDDMockito.given(convocatoriaAreaTematicaRepository
@@ -194,13 +170,10 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaAreaTematica when modificable returns False
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, convocatoriaId, 1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaAreaTematica
@@ -217,8 +190,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaAreaTematica));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(convocatoriaAreaTematicaRepository.save(ArgumentMatchers.<ConvocatoriaAreaTematica>any()))
         .willAnswer(new Answer<ConvocatoriaAreaTematica>() {
           @Override
@@ -278,8 +251,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
     BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaAreaTematica));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaAreaTematica
@@ -296,8 +269,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarConvocatoriaAreaTematica(1L, 1L, 1L)));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(convocatoriaAreaTematicaRepository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -342,8 +315,8 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaAreaTematicaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarConvocatoriaAreaTematica(1L, 1L, 1L)));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatCode(
         // when: delete by existing id
@@ -434,10 +407,6 @@ public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
       Assertions.assertThat(ConvocatoriaAreaTematica.getAreaTematica().getId()).isEqualTo(i);
       Assertions.assertThat(ConvocatoriaAreaTematica.getObservaciones()).isEqualTo("observaciones-" + i);
     }
-  }
-
-  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).build();
   }
 
   /**

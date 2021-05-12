@@ -70,7 +70,7 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     // comprobar si convocatoria es modificable
     Assert.isTrue(
         convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef()),
+            convocatoria.getUnidadGestionRef(), new String[] { "CSP-CON-E", "CSP-CON-C" }),
         "No se puede crear ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     Assert.isTrue(
@@ -114,7 +114,9 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     return repository.findById(convocatoriaEntidadConvocanteActualizar.getId()).map(convocatoriaEntidadConvocante -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede modificar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       repository.findByConvocatoriaIdAndEntidadRef(convocatoriaEntidadConvocanteActualizar.getConvocatoriaId(),
@@ -160,7 +162,9 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
     repository.findById(id).map(convocatoriaEntidadConvocante -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaEntidadConvocante.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaEntidadConvocante;

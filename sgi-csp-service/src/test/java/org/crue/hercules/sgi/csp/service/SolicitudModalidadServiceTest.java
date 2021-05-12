@@ -443,7 +443,7 @@ public class SolicitudModalidadServiceTest extends BaseServiceTest {
     Solicitud solicitud = new Solicitud();
     solicitud.setId(solicitudId);
     solicitud.setConvocatoriaId(1L);
-    solicitud.setUnidadGestionRef("OPE");
+    solicitud.setUnidadGestionRef("2");
 
     return solicitud;
   }

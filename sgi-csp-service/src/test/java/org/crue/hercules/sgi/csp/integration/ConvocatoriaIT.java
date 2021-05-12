@@ -49,8 +49,6 @@ public class ConvocatoriaIT extends BaseIT {
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String PATH_PARAMETER_MODIFICABLE = "/modificable";
   private static final String PATH_PARAMETER_REGISTRABLE = "/registrable";
-  private static final String PATH_PARAMETER_UNIDAD_GESTION = "/unidadgestion";
-  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/convocatoriadocumentos";
@@ -70,8 +68,8 @@ public class ConvocatoriaIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "SYSADMIN", "CSP-TFAS-B",
-        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V", "CSP-CENL-V_OPE", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-C", "CSP-CON-B",
+        "CSP-CON-R", "CSP-CON-E", "CSP-CON-INV-V", "CSP-CON-V", "AUTH")));
 
     HttpEntity<Convocatoria> request = new HttpEntity<>(entity, headers);
     return request;
@@ -239,6 +237,7 @@ public class ConvocatoriaIT extends BaseIT {
 
   }
 
+  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void modificable_WhenModificableReturnsTrue_Returns200() throws Exception {
@@ -337,43 +336,6 @@ public class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void getUnidadGestionRef_ReturnsUnidadGestionRef() throws Exception {
-
-    // given: Convocatoria id
-    Long id = 1L;
-    // when: getUnidadGestionRef by Convocatoria id
-    final ResponseEntity<String> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_UNIDAD_GESTION, HttpMethod.GET,
-        buildRequest(null, null), String.class, id);
-
-    // then: returns UnidadGestionRef assigned to Convocatoria
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    String responseData = response.getBody();
-    Assertions.assertThat(responseData).as("getUnidadGestionRef()").isEqualTo("OPE");
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void getModeloEjecucion_ReturnsModeloEjecucion() throws Exception {
-
-    // given: Convocatoria id
-    Long id = 1L;
-    // when: getModeloEjecucion by Convocatoria id
-    final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, HttpMethod.GET,
-        buildRequest(null, null), ModeloEjecucion.class, id);
-
-    // then: returns ModeloEjecucion assigned to Convocatoria
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    ModeloEjecucion responseData = response.getBody();
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1L);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void findById_ReturnsConvocatoria() throws Exception {
     Long id = 1L;
 
@@ -418,7 +380,7 @@ public class ConvocatoriaIT extends BaseIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "codigo,desc";
@@ -451,76 +413,13 @@ public class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
-
-    // given: data for Convocatoria
-
-    // first page, 3 elements per page sorted by nombre desc
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "3");
-    String sort = "codigo,desc";
-    String filter = "titulo=ke=00";
-
-    // when: find Convocatoria
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
-        .queryParam("q", filter).build(false).toUri();
-    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
-        });
-
-    // given: Convocatoria data filtered and sorted
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Convocatoria> responseData = response.getBody();
-    Assertions.assertThat(responseData.size()).isEqualTo(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(responseData.get(0).getCodigo()).as("get(0).getCodigo())")
-        .isEqualTo("codigo-" + String.format("%03d", 6));
-    Assertions.assertThat(responseData.get(1).getCodigo()).as("get(1).getCodigo())")
-        .isEqualTo("codigo-" + String.format("%03d", 2));
-    Assertions.assertThat(responseData.get(2).getCodigo()).as("get(2).getCodigo())")
-        .isEqualTo("codigo-" + String.format("%03d", 1));
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findAllTodos_EmptyList_Returns204() throws Exception {
-
-    // given: no data for Convocatoria
-    // when: find Convocatoria
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "3");
-    String sort = "codigo,desc";
-    String filter = "titulo=ke=00";
-
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
-        .queryParam("q", filter).build(false).toUri();
-
-    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
-        });
-
-    // then: 204 no content
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void findAllRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
 
     // given: data for Convocatoria
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V_1")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "codigo,desc";
@@ -559,9 +458,13 @@ public class ConvocatoriaIT extends BaseIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V_1")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    HttpEntity<Convocatoria> request = new HttpEntity<>(null, headers);
     String sort = "codigo,desc";
     String filter = "titulo=ke=00";
 
@@ -569,8 +472,8 @@ public class ConvocatoriaIT extends BaseIT {
     URI uri = UriComponentsBuilder
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS + PATH_PARAMETER_RESTRINGIDOS).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
-    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET, request,
+        new ParameterizedTypeReference<List<Convocatoria>>() {
         });
 
     // given: Convocatoria data filtered and sorted
@@ -597,7 +500,7 @@ public class ConvocatoriaIT extends BaseIT {
     // given: no data for Convocatoria
     // when: find Convocatoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "codigo,desc";
@@ -799,7 +702,7 @@ public class ConvocatoriaIT extends BaseIT {
   public void findAllConvocatoriaDocumento_WithPagingSortingAndFiltering_ReturnsConvocatoriaDocumentoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
@@ -1181,7 +1084,7 @@ public class ConvocatoriaIT extends BaseIT {
 
     Convocatoria convocatoria = Convocatoria.builder()
         .id(convocatoriaId)
-        .unidadGestionRef((unidadGestionId == null) ? null : "OPE")
+        .unidadGestionRef((unidadGestionId == null) ? null : "2")
         .modeloEjecucion(modeloEjecucion)
         .codigo("codigo-" + String.format("%03d", convocatoriaId))
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))

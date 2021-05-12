@@ -51,7 +51,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   private static final String PATH_ENTIDAD_DOCUMENTO = "/prorrogadocumentos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsProyectoProrroga() throws Exception {
     // given: new ProyectoProrroga
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
@@ -85,7 +85,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoProrroga with id filled
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
@@ -154,7 +154,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -172,7 +172,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -190,7 +190,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void existsById_WithExistingId_Returns200() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -206,7 +206,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void existsById_WithNoExistingId_Returns204() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -222,7 +222,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithExistingId_ReturnsProyectoProrroga() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -250,7 +250,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -273,7 +273,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllProrrogaDocumento_ReturnsPage() throws Exception {
     // given: Una lista con 37 ProrrogaDocumento para la Prorroga
     Long proyectoProrrogaId = 1L;
@@ -331,7 +331,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllProrrogaDocumento_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ProrrogaDocumento para la Prorroga
     Long proyectoProrrogaId = 1L;

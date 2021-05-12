@@ -327,7 +327,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
       if (configuraciSolicitud.get().getFasePresentacionSolicitudes() != null
           && configuraciSolicitud.get().getFasePresentacionSolicitudes().getId() == convocatoriaFaseId) {
 
-        returnValue = convocatoriaService.modificable(convocatoriaId, null);
+        returnValue = convocatoriaService.modificable(convocatoriaId, null, new String[] { "CSP-CON-E" });
       }
     }
     log.debug("Boolean isModificable(Long convocatoriaId, Long convocatoriaFaseId) - end");

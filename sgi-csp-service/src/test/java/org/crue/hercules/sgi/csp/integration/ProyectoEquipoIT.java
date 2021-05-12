@@ -35,8 +35,7 @@ public class ProyectoEquipoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH")));
 
     HttpEntity<ProyectoEquipo> request = new HttpEntity<>(entity, headers);
     return request;
@@ -47,8 +46,7 @@ public class ProyectoEquipoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-PRO-E")));
 
     HttpEntity<List<ProyectoEquipo>> request = new HttpEntity<>(entity, headers);
     return request;
@@ -113,7 +111,6 @@ public class ProyectoEquipoIT extends BaseIT {
         .isEqualTo(newProyectoEquipo.getRolProyecto().getId());
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "fechaInicio,asc";

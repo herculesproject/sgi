@@ -9,9 +9,9 @@ INSERT INTO csp.tipo_ambito_geografico (id, nombre, activo) VALUES (1, 'nombre-0
 
 -- PROYECTO
 INSERT INTO csp.proyecto (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)
-  VALUES (1, 'PRO1', 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', 'OPE', 1, 1, 1, false, 'observaciones 1', null, true);
+  VALUES (1, 'PRO1', 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', '2', 1, 1, 1, false, 'observaciones 1', null, true);
 INSERT INTO csp.proyecto (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)
-  VALUES (2, 'PRO2', 'cod-externo-002', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', 'OPE', 1, 1, 1, false, 'observaciones 2', null, true);
+  VALUES (2, 'PRO2', 'cod-externo-002', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', '2', 1, 1, 1, false, 'observaciones 2', null, true);
 
 -- ESTADO PROYECTO
 INSERT INTO csp.estado_proyecto (id, proyecto_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');

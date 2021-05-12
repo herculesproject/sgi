@@ -33,8 +33,8 @@ public class TipoEnlaceIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-TENL-B", "CSP-TENL-C", "CSP-TENL-E", "CSP-TENL-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TENL-V", "CSP-TENL-C",
+        "CSP-TENL-E", "CSP-TENL-B", "CSP-ME-C", "CSP-ME-E", "CSP-TENL-R", "AUTH")));
 
     HttpEntity<TipoEnlace> request = new HttpEntity<>(entity, headers);
     return request;

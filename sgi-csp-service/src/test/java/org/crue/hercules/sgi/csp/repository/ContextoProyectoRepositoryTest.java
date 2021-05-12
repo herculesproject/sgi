@@ -71,7 +71,7 @@ public class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(modeloEjecucion);
 
     Proyecto proyecto = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.now()).activo(Boolean.TRUE)

@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +49,7 @@ public class ProyectoEntidadFinanciadoraController {
    * @return {@link ProyectoEntidadFinanciadora} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoEntidadFinanciadora findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoEntidadFinanciadora returnValue = service.findById(id);
@@ -64,7 +65,7 @@ public class ProyectoEntidadFinanciadoraController {
    * @return Nuevo {@link ProyectoEntidadFinanciadora} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<ProyectoEntidadFinanciadora> create(
       @Valid @RequestBody ProyectoEntidadFinanciadora proyectoEntidadFinanciadora) {
     log.debug("create(ProyectoEntidadFinanciadora proyectoEntidadFinanciadora) - start");
@@ -83,7 +84,7 @@ public class ProyectoEntidadFinanciadoraController {
    * @return {@link ProyectoEntidadFinanciadora} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoEntidadFinanciadora update(
       @Validated({ Update.class, Default.class }) @RequestBody ProyectoEntidadFinanciadora proyectoEntidadFinanciadora,
       @PathVariable Long id) {
@@ -100,7 +101,7 @@ public class ProyectoEntidadFinanciadoraController {
    * @param id Identificador de {@link ProyectoEntidadFinanciadora}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

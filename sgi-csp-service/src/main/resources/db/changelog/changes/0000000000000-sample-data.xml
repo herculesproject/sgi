@@ -542,19 +542,19 @@
   <changeSet context="dev" author="master" id="0000000000000-modelo_unidad">
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
-      <column name="unidad_gestion_ref" value="UGI" />
+      <column name="unidad_gestion_ref" value="3" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
-      <column name="unidad_gestion_ref" value="OTRI" />
+      <column name="unidad_gestion_ref" value="1" />
       <column name="modelo_ejecucion_id" value="2" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="activo" value="true" />
     </insert>
@@ -2150,7 +2150,7 @@ industries" />
   <changeSet context="dev" author="master" id="0000000000000-convocatoria">
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="UGI" />
+      <column name="unidad_gestion_ref" value="3" />
       <column name="modelo_ejecucion_id" value="1" />
       <column name="codigo" value="CGF/UGI-01" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2170,7 +2170,7 @@ industries" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-01" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2190,7 +2190,7 @@ industries" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-02" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2210,7 +2210,7 @@ industries" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-03" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2230,7 +2230,7 @@ industries" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="CGF/OPE-04" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2250,7 +2250,7 @@ industries" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="H2020-MSCA-IF-2020" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2270,7 +2270,7 @@ industries" />
     </insert>
     <insert tableName="convocatoria">
       <column name="id" valueSequenceNext="convocatoria_seq" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="codigo" value="LIFE 2020- CLIMATE ACTION- CCA" />
       <column name="fecha_publicacion" value="2021-02-14T23:00:00Z" />
@@ -2685,7 +2685,7 @@ industries" />
       <column name="solicitante_ref" value="1" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
-      <column name="unidad_gestion_ref" value="UGI" />
+      <column name="unidad_gestion_ref" value="3" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2699,7 +2699,7 @@ industries" />
       <column name="solicitante_ref" value="2" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
-      <column name="unidad_gestion_ref" value="UGI" />
+      <column name="unidad_gestion_ref" value="3" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2713,7 +2713,7 @@ industries" />
       <column name="solicitante_ref" value="1" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2727,7 +2727,7 @@ industries" />
       <column name="solicitante_ref" value="3" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2741,7 +2741,7 @@ industries" />
       <column name="solicitante_ref" value="4" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2755,7 +2755,7 @@ industries" />
       <column name="solicitante_ref" value="1" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="LIFE 2020- CLIMATE ACTION- CCA" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2769,7 +2769,7 @@ industries" />
       <column name="solicitante_ref" value="4" />
       <column name="observaciones" value="" />
       <column name="convocatoria_externa" value="" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="formulario_solicitud" value="ESTANDAR" />
       <column name="activo" value="true" />
     </insert>
@@ -2989,7 +2989,7 @@ industries" />
       <column name="codigo_externo" value="PCGFOPE1" />
       <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
       <column name="fecha_fin" value="2022-12-31T22:59:59Z" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="convocatoria_id" value="2" />
@@ -3021,7 +3021,7 @@ industries" />
       <column name="codigo_externo" value="PCGFOPE2" />
       <column name="fecha_inicio" value="2021-01-31T23:00:00Z" />
       <column name="fecha_fin" value="2023-12-05T22:59:59Z" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="convocatoria_id" value="3" />
@@ -3053,7 +3053,7 @@ industries" />
       <column name="codigo_externo" value="PCOPE-3" />
       <column name="fecha_inicio" value="2021-02-01T23:00:00Z" />
       <column name="fecha_fin" value="2021-04-30T21:59:59Z" />
-      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="unidad_gestion_ref" value="2" />
       <column name="modelo_ejecucion_id" value="7" />
       <column name="tipo_finalidad_id" value="1" />
       <column name="convocatoria_id" value="4" />

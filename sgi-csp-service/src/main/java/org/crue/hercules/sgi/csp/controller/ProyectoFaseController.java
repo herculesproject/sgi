@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,7 +49,7 @@ public class ProyectoFaseController {
    * @return Nuevo {@link ProyectoFase} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ProyectoFase> create(@Valid @RequestBody ProyectoFase proyectoFase) {
     log.debug("create(ProyectoFase proyectoFase) - start");
     ProyectoFase returnValue = service.create(proyectoFase);
@@ -65,7 +65,7 @@ public class ProyectoFaseController {
    * @return {@link ProyectoFase} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoFase update(@Validated({ Update.class, Default.class }) @RequestBody ProyectoFase proyectoFase,
       @PathVariable Long id) {
     log.debug("update(ProyectoFase proyectoFase, Long id) - start");
@@ -81,30 +81,12 @@ public class ProyectoFaseController {
    * @param id Identificador de {@link ProyectoFase}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
-  }
-
-  /**
-   * Comprueba la existencia del {@link ProyectoFase} con el id indicado.
-   * 
-   * @param id Identificador de {@link ProyectoFase}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("ProyectoFase exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("ProyectoFase exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("ProyectoFase exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -114,7 +96,7 @@ public class ProyectoFaseController {
    * @return {@link ProyectoFase} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFAS-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoFase findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoFase returnValue = service.findById(id);

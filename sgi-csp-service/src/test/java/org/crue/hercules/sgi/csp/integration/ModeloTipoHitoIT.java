@@ -30,7 +30,7 @@ public class ModeloTipoHitoIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-B", "CSP-ME-C", "CSP-ME-E", "CSP-ME-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-ME-C", "CSP-ME-E")));
 
     HttpEntity<ModeloTipoHito> request = new HttpEntity<>(entity, headers);
     return request;

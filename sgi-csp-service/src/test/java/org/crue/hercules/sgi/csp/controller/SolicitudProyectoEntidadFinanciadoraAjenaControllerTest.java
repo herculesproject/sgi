@@ -38,7 +38,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyectoentidadfinanciadoraajenas";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_ReturnsModeloSolicitudProyectoEntidadFinanciadoraAjena() throws Exception {
     // given: new SolicitudProyectoEntidadFinanciadoraAjena
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
@@ -74,7 +74,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with id filled
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
@@ -155,7 +155,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -173,7 +173,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -192,7 +192,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsSolicitudProyectoEntidadFinanciadoraAjena() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -217,7 +217,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaControllerTest extends Bas
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

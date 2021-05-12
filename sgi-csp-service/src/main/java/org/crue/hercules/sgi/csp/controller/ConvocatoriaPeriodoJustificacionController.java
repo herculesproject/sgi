@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class ConvocatoriaPeriodoJustificacionController {
    * @return {@link ConvocatoriaPeriodoJustificacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaPeriodoJustificacion findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaPeriodoJustificacion returnValue = service.findById(id);
@@ -66,7 +67,7 @@ public class ConvocatoriaPeriodoJustificacionController {
    * @return Lista actualizada con los {@link ConvocatoriaPeriodoJustificacion}.
    */
   @PatchMapping("/{convocatoriaId}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   public ResponseEntity<List<ConvocatoriaPeriodoJustificacion>> updateConvocatoriaPeriodoJustificacionesConvocatoria(
       @PathVariable Long convocatoriaId,
       @Valid @RequestBody List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) {

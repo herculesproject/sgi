@@ -110,22 +110,6 @@ public class ModeloUnidadServiceImpl implements ModeloUnidadService {
   }
 
   /**
-   * Obtiene los {@link ModeloUnidad}.
-   *
-   * @param query    la información del filtro.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link ModeloUnidad} del
-   *         {@link ModeloEjecucion} paginadas.
-   */
-  public Page<ModeloUnidad> findAllTodos(String query, Pageable pageable) {
-    log.debug("findAllTodos(String query, Pageable pageable) - start");
-    Specification<ModeloUnidad> specs = SgiRSQLJPASupport.toSpecification(query);
-    Page<ModeloUnidad> returnValue = modeloUnidadRepository.findAll(specs, pageable);
-    log.debug("findAllTodos(String query, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene una entidad {@link ModeloTipoEnlace} por id.
    * 
    * @param id Identificador de la entidad {@link ModeloTipoEnlace}.

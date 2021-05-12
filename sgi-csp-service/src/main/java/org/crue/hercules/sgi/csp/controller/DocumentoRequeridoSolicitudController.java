@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class DocumentoRequeridoSolicitudController {
    * @return Nuevo {@link DocumentoRequeridoSolicitud} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   public ResponseEntity<DocumentoRequeridoSolicitud> create(
       @Valid @RequestBody DocumentoRequeridoSolicitud documentoRequeridoSolicitud) {
     log.debug("create(DocumentoRequeridoSolicitud documentoRequeridoSolicitud) - start");
@@ -65,7 +66,7 @@ public class DocumentoRequeridoSolicitudController {
    * @return {@link DocumentoRequeridoSolicitud} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   DocumentoRequeridoSolicitud update(@Valid @RequestBody DocumentoRequeridoSolicitud documentoRequeridoSolicitud,
       @PathVariable Long id) {
     log.debug("update(DocumentoRequeridoSolicitud documentoRequeridoSolicitud, Long id) - start");
@@ -81,7 +82,7 @@ public class DocumentoRequeridoSolicitudController {
    * @param id Identificador de {@link DocumentoRequeridoSolicitud}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -96,7 +97,7 @@ public class DocumentoRequeridoSolicitudController {
    * @return {@link DocumentoRequeridoSolicitud} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   DocumentoRequeridoSolicitud findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     DocumentoRequeridoSolicitud returnValue = service.findById(id);

@@ -38,7 +38,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/convocatoriahitos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsConvocatoriaHito() throws Exception {
     // given: new ConvocatoriaHito
 
@@ -70,7 +70,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ConvocatoriaHito with id filled
     ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(1L);
@@ -89,7 +89,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_ReturnsConvocatoriaHito() throws Exception {
     // given: Existing ConvocatoriaHito to be updated
     ConvocatoriaHito convocatoriaHitoExistente = generarMockConvocatoriaHito(1L);
@@ -115,7 +115,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -135,7 +135,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -153,7 +153,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -171,7 +171,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsConvocatoriaHito() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -194,7 +194,7 @@ public class ConvocatoriaHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CHIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

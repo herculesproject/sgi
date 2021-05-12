@@ -40,7 +40,7 @@ public class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseReposit
         .titulo("proyecto")
         .fechaInicio(Instant.parse("2020-09-18T00:00:00Z"))
         .fechaFin(Instant.parse("2022-10-11T23:59:59Z"))
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .activo(Boolean.TRUE)
         .build();

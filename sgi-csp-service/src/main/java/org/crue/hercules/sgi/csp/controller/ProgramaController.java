@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,7 +52,7 @@ public class ProgramaController {
    * @return {@link Programa} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO ('CSP-PRG-E')")
   Programa findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     Programa returnValue = service.findById(id);
@@ -66,7 +67,7 @@ public class ProgramaController {
    * @return Nuevo {@link Programa} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-C')")
+  @PreAuthorize("hasAuthorityForAnyUO ('CSP-PRG-C')")
   ResponseEntity<Programa> create(@Valid @RequestBody Programa programa) {
     log.debug("create(Programa programa) - start");
     Programa returnValue = service.create(programa);
@@ -82,7 +83,7 @@ public class ProgramaController {
    * @return {@link Programa} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
+  @PreAuthorize("hasAuthorityForAnyUO ('CSP-PRG-E')")
   Programa update(@Validated({ Update.class, Default.class }) @RequestBody Programa programa, @PathVariable Long id) {
     log.debug("update(Programa programa, Long id) - start");
     programa.setId(id);
@@ -98,7 +99,7 @@ public class ProgramaController {
    * @return {@link Programa} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-R')")
+  @PreAuthorize("hasAuthorityForAnyUO ('CSP-PRG-R')")
   Programa reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     Programa returnValue = service.enable(id);
@@ -113,7 +114,7 @@ public class ProgramaController {
    * @return {@link Programa} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-B')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO ('CSP-PRG-B', 'CSP-PRG-E')")
   Programa desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     Programa returnValue = service.disable(id);
@@ -129,7 +130,7 @@ public class ProgramaController {
    * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAuthorityForAnyUO ('AUTH')")
   ResponseEntity<Page<Programa>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -153,7 +154,7 @@ public class ProgramaController {
    * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping("/plan")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO ('CSP-CON-C', 'CSP-CON-E','CSP-CON-V','CSP-CON-INV-V', 'CSP-SOL-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-B', 'CSP-SOL-R', 'CSP-PRO-C', 'CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R')")
   ResponseEntity<Page<Programa>> findAllPlan(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllPlan(String query, Pageable paging) - start");
@@ -177,7 +178,7 @@ public class ProgramaController {
    * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping("/plan/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAnyAuthority ('CSP-PRG-V', 'CSP-PRG-C', 'CSP-PRG-E', 'CSP-PRG-B', 'CSP-PRG-R')")
   ResponseEntity<Page<Programa>> findAllTodosPlan(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodosPlan(String query, Pageable paging) - start");
@@ -201,7 +202,7 @@ public class ProgramaController {
    * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping("/{id}/hijos")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO ('CSP-CON-C', 'CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-E', 'CSP-PRG-E')")
   ResponseEntity<Page<Programa>> findAllHijosPrograma(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllHijosPrograma(String query, Pageable paging) - start");

@@ -42,7 +42,7 @@ public class DocumentoRequeridoSolicitudIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CONV-C", "CSP-CONV-E", "CSP-CONV-B", "CSP-CONV-V")));
+        tokenBuilder.buildToken("user", "CSP-CON-C", "CSP-CON-E", "CSP-CON-B", "CSP-CON-V", "AUTH")));
 
     HttpEntity<DocumentoRequeridoSolicitud> request = new HttpEntity<>(entity, headers);
     return request;

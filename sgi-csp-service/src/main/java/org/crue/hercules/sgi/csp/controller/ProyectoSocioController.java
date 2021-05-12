@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,7 +79,7 @@ public class ProyectoSocioController {
    * @return Nuevo {@link ProyectoSocio} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<ProyectoSocio> create(@Valid @RequestBody ProyectoSocio proyectoSocio) {
     log.debug("create(ProyectoSocio proyectoSocio) - start");
     ProyectoSocio returnValue = service.create(proyectoSocio);
@@ -94,7 +95,7 @@ public class ProyectoSocioController {
    * @return {@link ProyectoSocio} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ProyectoSocio update(@Valid @RequestBody ProyectoSocio proyectoSocio, @PathVariable Long id) {
     log.debug("update(ProyectoSocio proyectoSocio, Long id) - start");
     proyectoSocio.setId(id);
@@ -109,7 +110,7 @@ public class ProyectoSocioController {
    * @param id Identificador de {@link ProyectoSocio}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -124,7 +125,7 @@ public class ProyectoSocioController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<?> exists(@PathVariable Long id) {
     log.debug("exists(Long id) - start");
     if (service.existsById(id)) {
@@ -142,7 +143,7 @@ public class ProyectoSocioController {
    * @return {@link ProyectoSocio} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoSocio findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoSocio returnValue = service.findById(id);
@@ -159,7 +160,7 @@ public class ProyectoSocioController {
    */
 
   @GetMapping("/{id}/proyectosocioequipos")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProyectoSocioEquipo>> findAllProyectoSocioEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioEquipo(Long id, String query, Pageable paging) - start");
@@ -182,7 +183,7 @@ public class ProyectoSocioController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectosocioperiodopagos")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProyectoSocioPeriodoPago>> findAllProyectoSocioPeriodoPago(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioPeriodoPago(Long id, String query, Pageable paging) - start");
@@ -206,7 +207,7 @@ public class ProyectoSocioController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectosocioperiodojustificaciones")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProyectoSocioPeriodoJustificacion>> findAllProyectoSocioPeriodoJustificaciones(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -237,6 +238,7 @@ public class ProyectoSocioController {
    *         contrario false
    */
   @RequestMapping(path = "/{id}/vinculaciones", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Boolean> vinculaciones(@PathVariable Long id) {
     log.debug("vinculaciones(Long id) - start");
     Boolean returnValue = service.vinculaciones(id);

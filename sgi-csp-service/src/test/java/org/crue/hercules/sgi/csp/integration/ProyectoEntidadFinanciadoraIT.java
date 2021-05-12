@@ -59,7 +59,7 @@ public class ProyectoEntidadFinanciadoraIT extends BaseIT {
 
     // when: create ProyectoEntidadFinanciadora
     final ResponseEntity<ProyectoEntidadFinanciadora> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
-        HttpMethod.POST, buildRequest(null, newProyectoEntidadFinanciadora, "CSP-PRO-C"),
+        HttpMethod.POST, buildRequest(null, newProyectoEntidadFinanciadora, "AUTH", "CSP-PRO-E", "AUTH"),
         ProyectoEntidadFinanciadora.class);
 
     // then: new ProyectoEntidadFinanciadora is created
@@ -105,7 +105,7 @@ public class ProyectoEntidadFinanciadoraIT extends BaseIT {
 
     final ResponseEntity<ProyectoEntidadFinanciadora> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
-        buildRequest(null, proyectoEntidadFinanciadora, "CSP-PRO-C"), ProyectoEntidadFinanciadora.class,
+        buildRequest(null, proyectoEntidadFinanciadora, "CSP-PRO-E"), ProyectoEntidadFinanciadora.class,
         idProyectoEntidadFinanciadora);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -150,7 +150,7 @@ public class ProyectoEntidadFinanciadoraIT extends BaseIT {
 
     // when: delete ProyectoEntidadFinanciadora
     final ResponseEntity<ProyectoEntidadFinanciadora> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null, "CSP-PRO-C"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null, "CSP-PRO-E"),
         ProyectoEntidadFinanciadora.class, id);
 
     // then: ProyectoEntidadFinanciadora deleted
@@ -180,7 +180,7 @@ public class ProyectoEntidadFinanciadoraIT extends BaseIT {
     Long idProyectoEntidadFinanciadora = 1L;
 
     final ResponseEntity<ProyectoEntidadFinanciadora> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null, "CSP-PRO-C"),
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null, "AUTH"),
         ProyectoEntidadFinanciadora.class, idProyectoEntidadFinanciadora);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -32,7 +32,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
     // given: 10 ProyectoPeriodoSeguimientoDocumento with same ProyectoSeguimientoId
     // @formatter:off
     Proyecto proyecto1 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3))))
@@ -43,7 +43,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
 
     // @formatter:off
     Proyecto proyecto2 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -81,7 +81,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
 
     // given: 10 ProyectoPeriodoSeguimientoDocumento with same ProyectoSeguimientoId
     Proyecto proyecto1 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -89,7 +89,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
     entityManager.persistAndFlush(proyecto1);
 
     Proyecto proyecto2 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -141,7 +141,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
 
     // given: 10 ProyectoPeriodoSeguimientoDocumento with same ProyectoSeguimientoId
     Proyecto proyecto1 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -149,7 +149,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
     entityManager.persistAndFlush(proyecto1);
 
     Proyecto proyecto2 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +61,7 @@ public class ConvocatoriaConceptoGastoController {
    * @return {@link ConvocatoriaConceptoGasto} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   ConvocatoriaConceptoGasto findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaConceptoGasto returnValue = service.findById(id);
@@ -76,7 +77,7 @@ public class ConvocatoriaConceptoGastoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   public ResponseEntity<?> exists(@PathVariable Long id) {
     log.debug("exists(Long id) - start");
     if (service.existsById(id)) {
@@ -96,7 +97,7 @@ public class ConvocatoriaConceptoGastoController {
    *         filtradas.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
   ResponseEntity<Page<ConvocatoriaConceptoGasto>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query,Pageable paging) - start");
@@ -118,7 +119,7 @@ public class ConvocatoriaConceptoGastoController {
    * @return Nuevo {@link ConvocatoriaConceptoGasto} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ResponseEntity<ConvocatoriaConceptoGasto> create(
       @Valid @RequestBody ConvocatoriaConceptoGasto convocatoriaConceptoGasto) {
     log.debug("create(ConvocatoriaConceptoGasto convocatoriaConceptoGasto) - start");
@@ -137,7 +138,7 @@ public class ConvocatoriaConceptoGastoController {
    * @return {@link ConvocatoriaConceptoGasto} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ConvocatoriaConceptoGasto update(
       @Validated({ Update.class, Default.class }) @RequestBody ConvocatoriaConceptoGasto convocatoriaConceptoGasto,
       @PathVariable Long id) {
@@ -154,7 +155,7 @@ public class ConvocatoriaConceptoGastoController {
    * @param id Identificador de {@link ConvocatoriaConceptoGasto}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -177,7 +178,7 @@ public class ConvocatoriaConceptoGastoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriagastocodigoec")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E','CSP-CON-V','CSP-CON-INV-V')")
   ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEc>> findAllConvocatoriaGastosCodigoEc(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - start");
@@ -200,7 +201,7 @@ public class ConvocatoriaConceptoGastoController {
    * @return true/false
    */
   @RequestMapping(path = "/{id}/convocatoriagastocodigoec", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   public ResponseEntity<?> existsCodigosEconomicos(@PathVariable Long id) {
     log.debug("existsCodigosEconomicos(Long id) - start");
     boolean returnValue = convocatoriaConceptoGastoCodigoEcService.existsByConvocatoriaConceptoGasto(id);

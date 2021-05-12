@@ -35,7 +35,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/convocatoria-requisitoequipos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void create_ReturnsModeloRequisitoEquipo() throws Exception {
     // given: new RequisitoEquipo
     RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L);
@@ -61,7 +61,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a RequisitoEquipo with id filled
     RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L);
@@ -79,7 +79,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_ReturnsRequisitoEquipo() throws Exception {
     // given: Existing RequisitoEquipo to be updated
     RequisitoEquipo requisitoEquipoExistente = generarMockRequisitoEquipo(1L);
@@ -103,7 +103,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -123,7 +123,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findByConvocatoriaRequisitoEquipo_WithExistingId_ReturnsRequisitoEquipo() throws Exception {
     // given: existing id
     RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(1L);
@@ -141,7 +141,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findByConvocatoriaRequisitoEquipo_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findByConvocatoriaId(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -158,7 +158,7 @@ public class RequisitoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findByConvocatoriaRequisitoEquipo_WithNoExistingRequisitoEquipo_Returns204() throws Exception {
     // given: Existing convocatoriaId and no existing RequisitoEquipo
     BDDMockito.given(service.findByConvocatoriaId(ArgumentMatchers.<Long>any())).willReturn(null);

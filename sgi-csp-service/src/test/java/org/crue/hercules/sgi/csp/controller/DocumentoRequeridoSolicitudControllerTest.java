@@ -36,7 +36,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   private static final String CONTROLLER_BASE_PATH = "/documentorequiridosolicitudes";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsModeloDocumentoRequeridoSolicitud() throws Exception {
     // given: new DocumentoRequeridoSolicitud
     DocumentoRequeridoSolicitud documentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
@@ -68,7 +68,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a DocumentoRequeridoSolicitud with id filled
     DocumentoRequeridoSolicitud documentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L);
@@ -87,7 +87,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_ReturnsDocumentoRequeridoSolicitud() throws Exception {
     // given: Existing DocumentoRequeridoSolicitud to be updated
     DocumentoRequeridoSolicitud documentoRequeridoSolicitudExistente = generarMockDocumentoRequeridoSolicitud(1L);
@@ -117,7 +117,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -137,7 +137,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -155,7 +155,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -174,7 +174,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsDocumentoRequeridoSolicitud() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -201,7 +201,7 @@ public class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTes
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

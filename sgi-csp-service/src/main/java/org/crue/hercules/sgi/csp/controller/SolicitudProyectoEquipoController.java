@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +48,7 @@ public class SolicitudProyectoEquipoController {
    * @return Nuevo {@link SolicitudProyectoEquipo} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public ResponseEntity<SolicitudProyectoEquipo> create(
       @Valid @RequestBody SolicitudProyectoEquipo solicitudProyectoEquipo) {
     log.debug("create(SolicitudProyectoEquipo solicitudProyectoEquipo) - start");
@@ -67,7 +67,7 @@ public class SolicitudProyectoEquipoController {
    * @return SolicitudProyectoEquipo {@link SolicitudProyectoEquipo} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public SolicitudProyectoEquipo update(@Valid @RequestBody SolicitudProyectoEquipo solicitudProyectoEquipo,
       @PathVariable Long id, Authentication authentication) {
     log.debug("update(SolicitudProyectoEquipo solicitudProyectoEquipo, Long id) - start");
@@ -78,25 +78,6 @@ public class SolicitudProyectoEquipoController {
   }
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyectoEquipo} con el id
-   * indicado.
-   * 
-   * @param id Identificador de {@link SolicitudProyectoEquipo}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("SolicitudProyectoEquipo exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("SolicitudProyectoEquipo exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("SolicitudProyectoEquipo exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Devuelve el {@link SolicitudProyectoEquipo} con el id indicado.
    * 
    * @param id Identificador de {@link SolicitudProyectoEquipo}.
@@ -104,7 +85,7 @@ public class SolicitudProyectoEquipoController {
    *         correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   SolicitudProyectoEquipo findById(@PathVariable Long id) {
     log.debug("SolicitudProyectoEquipo findById(Long id) - start");
     SolicitudProyectoEquipo returnValue = service.findById(id);
@@ -118,7 +99,7 @@ public class SolicitudProyectoEquipoController {
    * @param id Identificador de {@link SolicitudProyectoEquipo}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

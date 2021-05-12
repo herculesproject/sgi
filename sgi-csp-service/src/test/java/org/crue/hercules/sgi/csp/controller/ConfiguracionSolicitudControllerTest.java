@@ -61,7 +61,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/convocatoria-configuracionsolicitudes";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsConfiguracionSolicitud() throws Exception {
     // given: new ConfiguracionSolicitud
     ConfiguracionSolicitud newConfiguracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
@@ -100,7 +100,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ConfiguracionSolicitud with id filled
     ConfiguracionSolicitud newConfiguracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
@@ -119,7 +119,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithExistingId_ReturnsConfiguracionSolicitud() throws Exception {
     // given: existing ConfiguracionSolicitud
     ConfiguracionSolicitud configuracionSolicitudExistente = generarMockConfiguracionSolicitud(1L, 1L, 1L);
@@ -154,7 +154,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: a ConfiguracionSolicitud with non existing id
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, 1L, 1L);
@@ -175,7 +175,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findByConvocatoriaId_WithExistingId_ReturnsConfiguracionSolicitud() throws Exception {
     // given: existing convocatoriaId
     ConfiguracionSolicitud configuracionSolicitudExistente = generarMockConfiguracionSolicitud(2L, 1L, 1L);
@@ -195,7 +195,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing convocatoriaId
     BDDMockito.given(service.findByConvocatoriaId(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -212,7 +212,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findById_WithNoExistingConfiguracionSolicitudByConvocatoria_Returns204() throws Exception {
     // given: no existing convocatoriaId
     BDDMockito.given(service.findByConvocatoriaId(ArgumentMatchers.<Long>any())).willReturn(null);
@@ -227,7 +227,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllDocumentoRequeridoSolicitud_ReturnsPage() throws Exception {
     // given: Una lista con 37 DocumentoRequeridoSolicitud para la Convocatoria
     Long convocatoriaId = 1L;
@@ -288,7 +288,7 @@ public class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllDocumentoRequeridoSolicitud_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de DocumentoRequeridoSolicitud para la Convocatoria
     Long convocatoriaId = 1L;

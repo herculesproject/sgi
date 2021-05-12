@@ -33,9 +33,10 @@ public class TipoFinanciacionIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V", "CSP-CON-INV-V", "CSP-SOL-E",
+            "CSP-SOL-V", "CSP-PRO-E", "CSP-TFNA-V", "CSP-TFNA-C", "CSP-TFNA-E", "CSP-TFNA-B", "CSP-TFNA-R", "AUTH")));
     // "CSP-TFAS-B", "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V"
-
     HttpEntity<TipoFinanciacion> request = new HttpEntity<>(entity, headers);
     return request;
   }
@@ -141,7 +142,6 @@ public class TipoFinanciacionIT extends BaseIT {
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre,desc";
@@ -175,7 +175,7 @@ public class TipoFinanciacionIT extends BaseIT {
   @Test
   public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre,desc";

@@ -27,14 +27,6 @@ public interface SolicitudProyectoService {
   SolicitudProyecto update(final SolicitudProyecto solicitudProyecto);
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyecto} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudProyecto}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link SolicitudProyecto} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudProyecto}.
@@ -65,13 +57,5 @@ public interface SolicitudProyectoService {
    * @return Indicador de si existe o no solicitud datos proyecto.
    */
   boolean existsBySolicitudId(Long id);
-
-  /**
-   * Comprueba si tiene presupuesto por entidades.
-   * 
-   * @param solicitudId Identificador de la {@link Solicitud}
-   * @return Indicador de si tiene o no presupuesto por entidades.
-   */
-  boolean hasPresupuestoPorEntidades(Long solicitudId);
 
 }

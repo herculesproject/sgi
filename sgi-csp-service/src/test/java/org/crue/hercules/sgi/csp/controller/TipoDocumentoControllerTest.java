@@ -155,7 +155,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-R" })
   public void reactivar_WithExistingId_ReturnTipoDocumento() throws Exception {
     // given: existing id
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -184,7 +184,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -252,7 +252,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 TipoDocumento
     List<TipoDocumento> tiposDocumento = new ArrayList<>();
@@ -305,7 +305,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de TipoDocumento
     List<TipoDocumento> tiposDocumento = new ArrayList<>();
@@ -334,7 +334,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 TipoDocumento
     List<TipoDocumento> tiposDocumento = new ArrayList<>();
@@ -388,7 +388,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de TipoDocumento
     List<TipoDocumento> tiposDocumento = new ArrayList<>();
@@ -418,7 +418,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_ReturnsTipoDocumento() throws Exception {
     // given: Un TipoDocumento con el id buscado
     Long idBuscado = 1L;
@@ -438,7 +438,7 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithIdNotExist_Returns404() throws Exception {
     // given: Ningun TipoDocumento con el id buscado
     Long idBuscado = 1L;

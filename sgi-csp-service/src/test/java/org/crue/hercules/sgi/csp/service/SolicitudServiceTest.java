@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +89,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void create_WithConvocatoria_ReturnsSolicitud() {
     // given: Un nuevo Solicitud
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
@@ -115,8 +115,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
         });
 
     // when: Creamos el Solicitud
-    Solicitud solicitudCreado = service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()));
-
+    Solicitud solicitudCreado = service.create(solicitud);
     // then: El Solicitud se crea correctamente
     Assertions.assertThat(solicitudCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudCreado.getId()).as("getId()").isEqualTo(1L);
@@ -139,6 +138,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void create_WithConvocatoriaExterna_ReturnsSolicitud() {
     // given: Un nuevo Solicitud
     Solicitud solicitud = generarMockSolicitud(null, null, "externa");
@@ -160,7 +160,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
         });
 
     // when: Creamos el Solicitud
-    Solicitud solicitudCreado = service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()));
+    Solicitud solicitudCreado = service.create(solicitud);
 
     // then: El Solicitud se crea correctamente
     Assertions.assertThat(solicitudCreado).as("isNotNull()").isNotNull();
@@ -184,18 +184,19 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que ya tiene id
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud ya tiene id
-    Assertions.assertThatThrownBy(() -> service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Solicitud id tiene que ser null para crear una Solicitud");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void create_WithoutCreadorRef_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
@@ -203,12 +204,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions.assertThatThrownBy(() -> service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("CreadorRef no puede ser null para crear una Solicitud");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void create_WithoutConvocatoriaAndConvocatoriaExterna_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene convocatoria ni convocatoria externa
     Solicitud solicitud = generarMockSolicitud(null, null, null);
@@ -216,12 +217,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene convocatoria ni convocatoria
     // externa
-    Assertions.assertThatThrownBy(() -> service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Convocatoria o Convocatoria externa tienen que ser distinto de null para crear una Solicitud");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
   public void create_WithNoExistingConvocatoria_ThrowsProgramaNotFoundException() {
     // given: Un nuevo Solicitud que tiene una convocatoria que no existe
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
@@ -231,16 +232,17 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
+    Assertions.assertThatThrownBy(() -> service.create(solicitud))
         .isInstanceOf(ConfiguracionSolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C_2" })
   public void create_WithConvocatoriaWithNotAllowedUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que tiene convocatoria con una unidad de gestion no
     // permitida para el usuario
     Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, "OTRA");
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, "1");
     Solicitud solicitud = generarMockSolicitud(null, 1L, null);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
@@ -251,12 +253,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque tiene convocatoria con una unidad de gestion
     // no
     // permitida para el usuario
-    Assertions.assertThatThrownBy(() -> service.create(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C_2" })
   public void create_WithConvocatoriaExternaAndNotAllowedUnidadGestion_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene convocatoria ni convocatoria externa
     Solicitud solicitud = generarMockSolicitud(null, null, "externa");
@@ -264,13 +266,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene convocatoria ni convocatoria
     // externa
-    Assertions.assertThatThrownBy(() -> service.create(solicitud, Arrays.asList("OTRA")))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_ReturnsSolicitud() {
     // given: Un nuevo Solicitud con las observaciones actualizadas
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -283,8 +284,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Actualizamos el Solicitud
-    Solicitud solicitudActualizada = service.update(solicitudoObservacionesActualizadas,
-        Arrays.asList(solicitud.getUnidadGestionRef()));
+    Solicitud solicitudActualizada = service.update(solicitudoObservacionesActualizadas);
 
     // then: El Solicitud se actualiza correctamente.
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
@@ -308,7 +308,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithIdNotExist_ThrowsSolicitudNotFoundException() {
     // given: Un Solicitud actualizado con un id que no existe
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -317,11 +317,11 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Actualizamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud no existe
-    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(SolicitudNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.update(solicitud)).isInstanceOf(SolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_ConvocatoriaNull_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -330,12 +330,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_SolicitanteRefNull_ThrowsIllegalArgumentException() {
     // given: Un nuevo Solicitud que no tiene creadorRef
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -343,12 +343,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
-        .isInstanceOf(IllegalArgumentException.class)
+    Assertions.assertThatThrownBy(() -> service.update(solicitud)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El solicitante no puede ser null para actualizar Solicitud");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-R" })
   public void enable_ReturnsSolicitud() {
     // given: Un nuevo Solicitud inactivo
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -360,7 +360,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Activamos el Solicitud
-    Solicitud programaActualizado = service.enable(solicitud.getId(), Arrays.asList(solicitud.getUnidadGestionRef()));
+    Solicitud programaActualizado = service.enable(solicitud.getId());
 
     // then: El Solicitud se activa correctamente.
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
@@ -369,17 +369,18 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-R" })
   public void enable_WithIdNotExist_ThrowsSolicitudNotFoundException() {
     // given: Un id de un Solicitud que no existe
     Long idNoExiste = 1L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     // when: activamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud no existe
-    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste, Arrays.asList("OPE")))
-        .isInstanceOf(SolicitudNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste)).isInstanceOf(SolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
   public void disable_ReturnsSolicitud() {
     // given: Un Solicitud activo
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
@@ -390,7 +391,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Desactivamos el Solicitud
-    Solicitud solicitudActualizada = service.disable(solicitud.getId(), Arrays.asList(solicitud.getUnidadGestionRef()));
+    Solicitud solicitudActualizada = service.disable(solicitud.getId());
 
     // then: El Solicitud se desactivan correctamente
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
@@ -399,17 +400,18 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
   public void disable_WithIdNotExist_ThrowsSolicitudNotFoundException() {
     // given: Un id de un Solicitud que no existe
     Long idNoExiste = 1L;
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     // when: desactivamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud no existe
-    Assertions.assertThatThrownBy(() -> service.disable(idNoExiste, Arrays.asList("OPE")))
-        .isInstanceOf(SolicitudNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.disable(idNoExiste)).isInstanceOf(SolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
   public void findById_ReturnsSoliciud() {
     // given: Un Solicitud con el id buscado
     Long idBuscado = 1L;
@@ -417,7 +419,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(solicitudBuscada));
 
     // when: Buscamos el Solicitud por su id
-    Solicitud solicitud = service.findById(idBuscado, Arrays.asList(solicitudBuscada.getUnidadGestionRef()));
+    Solicitud solicitud = service.findById(idBuscado);
 
     // then: el Solicitud
     Assertions.assertThat(solicitud).as("isNotNull()").isNotNull();
@@ -431,11 +433,12 @@ public class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
     Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
     Assertions.assertThat(solicitud.getConvocatoriaExterna()).as("getConvocatoriaExterna()").isEqualTo(null);
-    Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("OPE");
+    Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("1");
     Assertions.assertThat(solicitud.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
   public void findById_WithIdNotExist_ThrowsProgramaNotFoundException() throws Exception {
     // given: Ningun Solicitud con el id buscado
     Long idBuscado = 1L;
@@ -443,11 +446,11 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Buscamos el Solicitud por su id
     // then: lanza un SolicitudNotFoundException
-    Assertions.assertThatThrownBy(() -> service.findById(idBuscado, Arrays.asList("OPE")))
-        .isInstanceOf(SolicitudNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.findById(idBuscado)).isInstanceOf(SolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
   public void findAll_ReturnsPage() {
     // given: Una lista con 37 Solicitud
     List<Solicitud> solicitudes = new ArrayList<>();
@@ -474,7 +477,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Solicitud> page = service.findAllRestringidos(null, paging, Arrays.asList("OPE"));
+    Page<Solicitud> page = service.findAllRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
     Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
@@ -488,6 +491,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
   public void findAllTodos_ReturnsPage() {
     // given: Una lista con 37 Solicitud
     List<Solicitud> solicitudes = new ArrayList<>();
@@ -514,7 +518,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Solicitud> page = service.findAllTodosRestringidos(null, paging, Arrays.asList("OPE"));
+    Page<Solicitud> page = service.findAllTodosRestringidos(null, paging);
 
     // then: Devuelve la pagina 3 con los Programa del 31 al 37
     Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
@@ -551,7 +555,7 @@ public class SolicitudServiceTest extends BaseServiceTest {
     solicitud.setSolicitanteRef("usr-002");
     solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
     solicitud.setConvocatoriaExterna(convocatoriaExterna);
-    solicitud.setUnidadGestionRef("OPE");
+    solicitud.setUnidadGestionRef("1");
     solicitud.setActivo(true);
 
     if (id != null) {

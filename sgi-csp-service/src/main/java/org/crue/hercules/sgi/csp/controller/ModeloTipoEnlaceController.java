@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.service.ModeloTipoEnlaceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +42,7 @@ public class ModeloTipoEnlaceController {
    * @return Nuevo {@link ModeloTipoEnlace} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E')")
   public ResponseEntity<ModeloTipoEnlace> create(@Valid @RequestBody ModeloTipoEnlace modeloTipoEnlace) {
     log.debug("create(ModeloTipoEnlace modeloTipoEnlace) - start");
     ModeloTipoEnlace returnValue = service.create(modeloTipoEnlace);
@@ -55,7 +56,7 @@ public class ModeloTipoEnlaceController {
    * @param id Identificador de {@link ModeloTipoEnlace}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -70,7 +71,7 @@ public class ModeloTipoEnlaceController {
    * @return ModeloTipoEnlace {@link ModeloTipoEnlace} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ModeloTipoEnlace findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ModeloTipoEnlace returnValue = service.findById(id);

@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoServ
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +50,7 @@ public class ProyectoPeriodoSeguimientoDocumentoController {
    * @return Nuevo {@link ProyectoPeriodoSeguimientoDocumento} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<ProyectoPeriodoSeguimientoDocumento> create(
       @Valid @RequestBody ProyectoPeriodoSeguimientoDocumento ProyectoPeriodoSeguimientoDocumento) {
     log.debug("create(ProyectoPeriodoSeguimientoDocumento ProyectoPeriodoSeguimientoDocumento) - start");
@@ -72,7 +72,7 @@ public class ProyectoPeriodoSeguimientoDocumentoController {
    *         {@link ProyectoPeriodoSeguimientoDocumento} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ProyectoPeriodoSeguimientoDocumento update(
       @Valid @RequestBody ProyectoPeriodoSeguimientoDocumento ProyectoPeriodoSeguimientoDocumento,
       @PathVariable Long id, Authentication authentication) {
@@ -84,25 +84,6 @@ public class ProyectoPeriodoSeguimientoDocumentoController {
   }
 
   /**
-   * Comprueba la existencia del {@link ProyectoPeriodoSeguimientoDocumento} con
-   * el id indicado.
-   * 
-   * @param id Identificador de {@link ProyectoPeriodoSeguimientoDocumento}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("ProyectoPeriodoSeguimientoDocumento exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("ProyectoPeriodoSeguimientoDocumento exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("ProyectoPeriodoSeguimientoDocumento exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Devuelve el {@link ProyectoPeriodoSeguimientoDocumento} con el id indicado.
    * 
    * @param id Identificador de {@link ProyectoPeriodoSeguimientoDocumento}.
@@ -110,7 +91,7 @@ public class ProyectoPeriodoSeguimientoDocumentoController {
    *         {@link ProyectoPeriodoSeguimientoDocumento} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoPeriodoSeguimientoDocumento findById(@PathVariable Long id) {
     log.debug("ProyectoPeriodoSeguimientoDocumento findById(Long id) - start");
     ProyectoPeriodoSeguimientoDocumento returnValue = service.findById(id);
@@ -124,7 +105,7 @@ public class ProyectoPeriodoSeguimientoDocumentoController {
    * @param id Identificador de {@link ProyectoPeriodoSeguimientoDocumento}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

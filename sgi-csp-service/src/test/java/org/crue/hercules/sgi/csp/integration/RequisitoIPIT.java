@@ -27,8 +27,8 @@ public class RequisitoIPIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "AUTH", "CSP-CON-C", "CSP-CON-E", "CSP-CON-V", "CSP-CON-INV-V")));
 
     HttpEntity<RequisitoIP> request = new HttpEntity<>(entity, headers);
     return request;

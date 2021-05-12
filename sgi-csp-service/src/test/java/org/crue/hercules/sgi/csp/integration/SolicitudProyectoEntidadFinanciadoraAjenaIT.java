@@ -31,7 +31,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "AUTH")));
 
     HttpEntity<SolicitudProyectoEntidadFinanciadoraAjena> request = new HttpEntity<>(entity, headers);
     return request;

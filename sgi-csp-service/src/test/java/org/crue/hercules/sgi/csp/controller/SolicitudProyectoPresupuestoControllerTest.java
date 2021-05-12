@@ -35,7 +35,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyectopresupuestos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_ReturnsSolicitudProyectoPresupuesto() throws Exception {
     // given: new SolicitudProyectoPresupuesto
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(null, 1L, 1L);
@@ -73,7 +73,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a SolicitudProyectoPresupuesto with id filled
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(1L, 1L, 1L);
@@ -154,7 +154,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -169,7 +169,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithoutId_Return404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -188,7 +188,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsSolicitudProyectoPresupuesto() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -213,7 +213,7 @@ public class SolicitudProyectoPresupuestoControllerTest extends BaseControllerTe
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;

@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class ConvocatoriaEntidadConvocanteController {
    * @return {@link ConvocatoriaEntidadConvocante} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaEntidadConvocante findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaEntidadConvocante returnValue = service.findById(id);
@@ -62,7 +63,7 @@ public class ConvocatoriaEntidadConvocanteController {
    * @return Nuevo {@link ConvocatoriaEntidadConvocante} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   public ResponseEntity<ConvocatoriaEntidadConvocante> create(
       @Valid @RequestBody ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante) {
     log.debug("create(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante) - start");
@@ -81,7 +82,7 @@ public class ConvocatoriaEntidadConvocanteController {
    * @return {@link ConvocatoriaEntidadConvocante} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ConvocatoriaEntidadConvocante update(@Valid @RequestBody ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante, Long id) - start");
@@ -97,7 +98,7 @@ public class ConvocatoriaEntidadConvocanteController {
    * @param id Identificador de {@link ConvocatoriaEntidadConvocante}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

@@ -33,7 +33,7 @@ public class SolicitudProyectoPresupuestoIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V")));
+        tokenBuilder.buildToken("user", "CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "AUTH")));
 
     HttpEntity<SolicitudProyectoPresupuesto> request = new HttpEntity<>(entity, headers);
     return request;

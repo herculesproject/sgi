@@ -83,7 +83,8 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
 
       // comprobar si convocatoria es modificable
       Assert.isTrue(
-          convocatoriaService.modificable(requisitoEquipo.getConvocatoriaId(), convocatoria.getUnidadGestionRef()),
+          convocatoriaService.modificable(requisitoEquipo.getConvocatoriaId(), convocatoria.getUnidadGestionRef(),
+              new String[] { "CSP-CON-E" }),
           "No se puede modificar RequisitoEquipo. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       requisitoEquipo.setAniosNivelAcademico(requisitoEquipoActualizar.getAniosNivelAcademico());

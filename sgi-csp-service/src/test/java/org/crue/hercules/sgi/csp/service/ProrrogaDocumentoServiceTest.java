@@ -592,34 +592,6 @@ public class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-
-    // when: exists by id
-    boolean responseData = service.existsById(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isTrue();
-  }
-
-  @Test
-  public void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
-
-    // when: exists by id
-    boolean responseData = service.existsById(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isFalse();
-  }
-
-  @Test
   public void findById_ReturnsProrrogaDocumento() {
     // given: existing ProrrogaDocumento
     Long idBuscado = 1L;

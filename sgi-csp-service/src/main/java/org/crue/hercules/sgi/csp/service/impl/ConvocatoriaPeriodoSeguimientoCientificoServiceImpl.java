@@ -76,7 +76,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
 
     // comprobar si convocatoria es modificable
-    Assert.isTrue(convocatoriaService.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef()),
+    Assert.isTrue(
+        convocatoriaService.modificable(convocatoria.getId(), convocatoria.getUnidadGestionRef(),
+            new String[] { "CSP-CON-E", "CSP-CON-C" }),
         "No se puede modificar ConvocatoriaPeriodoSeguimientoCientifico. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoesBD = repository

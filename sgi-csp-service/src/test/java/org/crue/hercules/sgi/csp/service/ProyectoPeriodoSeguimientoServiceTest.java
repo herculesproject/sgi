@@ -620,7 +620,7 @@ public class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyecto.setTitulo("PRO" + (id != null ? id : 1));
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
-    proyecto.setUnidadGestionRef("OPE");
+    proyecto.setUnidadGestionRef("2");
     proyecto.setFechaInicio(Instant.parse("2020-01-01T00:00:00Z"));
     proyecto.setFechaFin(Instant.parse("2021-01-01T23:59:59Z"));
     proyecto.setModeloEjecucion(modeloEjecucion);

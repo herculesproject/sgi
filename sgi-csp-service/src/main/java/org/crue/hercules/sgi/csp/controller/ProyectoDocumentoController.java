@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +47,7 @@ public class ProyectoDocumentoController {
    * @return Nuevo {@link ProyectoDocumento} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ProyectoDocumento> create(@Valid @RequestBody ProyectoDocumento proyectoDocumento) {
     log.debug("create(ProyectoDocumento proyectoDocumento) - start");
     ProyectoDocumento returnValue = service.create(proyectoDocumento);
@@ -62,7 +63,7 @@ public class ProyectoDocumentoController {
    * @return {@link ProyectoDocumento} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoDocumento update(@Validated({ Update.class, Default.class }) @RequestBody ProyectoDocumento proyectoDocumento,
       @PathVariable Long id) {
     log.debug("update(ProyectoDocumento proyectoDocumento, Long id) - start");
@@ -78,7 +79,7 @@ public class ProyectoDocumentoController {
    * @param id Identificador de {@link ProyectoDocumento}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -93,7 +94,7 @@ public class ProyectoDocumentoController {
    * @return ProyectoDocumento {@link ProyectoDocumento} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoDocumento findById(@PathVariable Long id) {
     log.debug("ProyectoDocumento findById(Long id) - start");
     ProyectoDocumento returnValue = service.findById(id);

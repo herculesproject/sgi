@@ -52,7 +52,7 @@ public class ConfiguracionSolicitudIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CONV-C", "CSP-CONV-E", "CSP-CONV-B", "CSP-CONV-V")));
+        tokenBuilder.buildToken("user", "CSP-CON-C", "CSP-CON-E", "CSP-CON-B", "CSP-CON-V")));
 
     HttpEntity<ConfiguracionSolicitud> request = new HttpEntity<>(entity, headers);
     return request;
@@ -156,7 +156,7 @@ public class ConfiguracionSolicitudIT {
   public void findAllDocumentoRequeridoSolicitud_WithPagingSortingAndFiltering_ReturnsDocumentoRequeridoSolicitudSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";

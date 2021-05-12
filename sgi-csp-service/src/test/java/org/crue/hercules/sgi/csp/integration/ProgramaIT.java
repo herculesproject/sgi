@@ -33,7 +33,11 @@ public class ProgramaIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PLAN-B")));
+    headers.set("Authorization",
+        String.format("bearer %s",
+            tokenBuilder.buildToken("user", "CSP-PRG-C", "CSP-CON-C", "CSP-CON-E", "CSP-CON-V", "CSP-CON-INV-V",
+                "CSP-SOL-V", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-B", "CSP-SOL-R", "CSP-PRO-C", "CSP-PRO-V", "CSP-PRO-E",
+                "CSP-PRO-B", "CSP-PRO-R", "CSP-PRG-R", "CSP-PRG-E", "CSP-PRG-B", "AUTH")));
 
     HttpEntity<Programa> request = new HttpEntity<>(entity, headers);
     return request;
@@ -140,7 +144,7 @@ public class ProgramaIT extends BaseIT {
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsProgramaSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre,desc";

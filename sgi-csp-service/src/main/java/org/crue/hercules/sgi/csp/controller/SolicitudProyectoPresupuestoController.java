@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,7 +49,7 @@ public class SolicitudProyectoPresupuestoController {
    * @return Nuevo {@link SolicitudProyectoPresupuesto} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public ResponseEntity<SolicitudProyectoPresupuesto> create(
       @Valid @RequestBody SolicitudProyectoPresupuesto solicitudProyectoPresupuesto) {
     log.debug("create(SolicitudProyectoPresupuesto solicitudProyectoPresupuesto) - start");
@@ -71,7 +71,7 @@ public class SolicitudProyectoPresupuestoController {
    *         actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public SolicitudProyectoPresupuesto update(
       @Valid @RequestBody SolicitudProyectoPresupuesto solicitudProyectoPresupuesto, @PathVariable Long id,
       Authentication authentication) {
@@ -84,25 +84,6 @@ public class SolicitudProyectoPresupuestoController {
   }
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyectoPresupuesto} con el id
-   * indicado.
-   * 
-   * @param id Identificador de {@link SolicitudProyectoPresupuesto}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Devuelve el {@link SolicitudProyectoPresupuesto} con el id indicado.
    * 
    * @param id Identificador de {@link SolicitudProyectoPresupuesto}.
@@ -110,7 +91,7 @@ public class SolicitudProyectoPresupuestoController {
    *         correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   SolicitudProyectoPresupuesto findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     SolicitudProyectoPresupuesto returnValue = service.findById(id);
@@ -124,7 +105,7 @@ public class SolicitudProyectoPresupuestoController {
    * @param id Identificador de {@link SolicitudProyectoPresupuesto}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

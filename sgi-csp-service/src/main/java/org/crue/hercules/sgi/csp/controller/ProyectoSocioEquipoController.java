@@ -9,12 +9,12 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class ProyectoSocioEquipoController {
    * @return {@link ProyectoSocioEquipo} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoSocioEquipo findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoSocioEquipo returnValue = service.findById(id);
@@ -63,31 +63,13 @@ public class ProyectoSocioEquipoController {
    * @return Lista actualizada con los {@link ProyectoSocioEquipo}.
    */
   @PatchMapping("/{proyectoSocioId}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<List<ProyectoSocioEquipo>> update(@PathVariable Long proyectoSocioId,
       @Valid @RequestBody List<ProyectoSocioEquipo> proyectoSocioEquipo) {
     log.debug("update(Long convocatoriaId, List<ProyectoSocioEquipo> proyectoSocioEquipoes) - start");
     List<ProyectoSocioEquipo> returnValue = service.update(proyectoSocioId, proyectoSocioEquipo);
     log.debug("update(Long convocatoriaId, List<ProyectoSocioEquipo> proyectoSocioEquipoes) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Comprueba la existencia del {@link ProyectoSocioEquipo} con el id indicado.
-   * 
-   * @param id Identificador de {@link ProyectoSocioEquipo}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("ProyectoSocioEquipo exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("ProyectoSocioEquipo exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("ProyectoSocioEquipo exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +66,7 @@ public class ConfiguracionSolicitudController {
    * @return Nuevo {@link ConfiguracionSolicitud} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   public ResponseEntity<ConfiguracionSolicitud> create(
       @Valid @RequestBody ConfiguracionSolicitud configuracionSolicitud) {
     log.debug("create(ConfiguracionSolicitud configuracionSolicitud) - start");
@@ -83,7 +84,7 @@ public class ConfiguracionSolicitudController {
    * @return ConfiguracionSolicitud {@link ConfiguracionSolicitud} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   public ConfiguracionSolicitud update(@Valid @RequestBody ConfiguracionSolicitud configuracionSolicitud,
       @PathVariable Long id) {
     log.debug("update(ConfiguracionSolicitud configuracionSolicitud, Long id) - start");
@@ -100,7 +101,7 @@ public class ConfiguracionSolicitudController {
    * @return ConfiguracionSolicitud la entidad {@link ConfiguracionSolicitud}.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V')")
   ResponseEntity<ConfiguracionSolicitud> findByConvocatoriaId(@PathVariable Long id) {
     log.debug("ConfiguracionSolicitud findByConvocatoriaId(Long id) - start");
     ConfiguracionSolicitud returnValue = service.findByConvocatoriaId(id);
@@ -129,7 +130,7 @@ public class ConfiguracionSolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/documentorequiridosolicitudes")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-SOL-E', 'CSP-SOL-V')")
   ResponseEntity<Page<DocumentoRequeridoSolicitud>> findAllConvocatoriaDocumentoRequeridoSolicitud(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -156,7 +157,7 @@ public class ConfiguracionSolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/tipodocumentofasepresentaciones")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
   ResponseEntity<Page<TipoDocumento>> findAllTipoDocumentosFasePresentacion(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTipoDocumentosFasePresentacion(Long id, Pageable paging) - start");

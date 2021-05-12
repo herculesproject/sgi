@@ -30,7 +30,7 @@ public class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTe
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
         .solicitanteRef("user-002")
-        .unidadGestionRef("OTRI")
+        .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());

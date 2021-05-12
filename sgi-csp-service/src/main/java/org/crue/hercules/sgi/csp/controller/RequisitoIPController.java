@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.service.RequisitoIPService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class RequisitoIPController {
    * @return Nuevo {@link RequisitoIP} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   ResponseEntity<RequisitoIP> create(@Valid @RequestBody RequisitoIP requisitoIP) {
     log.debug("create(RequisitoIP requisitoIP) - start");
     RequisitoIP returnValue = service.create(requisitoIP);
@@ -62,7 +63,7 @@ public class RequisitoIPController {
    * @return {@link RequisitoIP} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   RequisitoIP update(@Validated({ Update.class, Default.class }) @RequestBody RequisitoIP requisitoIP,
       @PathVariable Long id) {
     log.debug("update(RequisitoIP requisitoIP, Long id) - start");
@@ -78,7 +79,7 @@ public class RequisitoIPController {
    * @return el {@link RequisitoIP}
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   ResponseEntity<RequisitoIP> findByConvocatoriaId(@PathVariable Long id) {
     log.debug("RequisitoIP findByConvocatoriaId(Long id) - start");
     RequisitoIP returnValue = service.findByConvocatoria(id);

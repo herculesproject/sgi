@@ -32,7 +32,7 @@ public class ConvocatoriaEntidadFinanciadoraIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-C", "AUTH", "CSP-CON-E")));
 
     HttpEntity<ConvocatoriaEntidadFinanciadora> request = new HttpEntity<>(entity, headers);
     return request;

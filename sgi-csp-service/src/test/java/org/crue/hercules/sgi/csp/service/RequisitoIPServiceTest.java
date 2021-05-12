@@ -109,8 +109,8 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(repository.save(ArgumentMatchers.<RequisitoIP>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -131,8 +131,8 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     // when: Actualizamos el RequisitoIP
     // then: Lanza una excepcion porque el RequisitoIP no existe
@@ -150,8 +150,8 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(requisitoIP));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: update RequisitoIP

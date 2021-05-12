@@ -60,8 +60,8 @@ public class SolicitudIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V_OPE")));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "AUTH", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V_OPE", "CSP-SOL-B", "CSP-SOL-R")));
 
     HttpEntity<Solicitud> request = new HttpEntity<>(entity, headers);
     return request;
@@ -190,7 +190,7 @@ public class SolicitudIT {
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
     Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones 1");
     Assertions.assertThat(solicitud.getConvocatoriaExterna()).as("getConvocatoriaExterna()").isEqualTo(null);
-    Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("OPE");
+    Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("2");
   }
 
   @Sql
@@ -202,11 +202,10 @@ public class SolicitudIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "observaciones,desc";
-    String filter = "unidadGestionRef==OPE";
+    String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -241,11 +240,10 @@ public class SolicitudIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "observaciones,desc";
-    String filter = "unidadGestionRef==OPE";
+    String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
@@ -635,7 +633,7 @@ public class SolicitudIT {
     solicitud.setSolicitanteRef("usr-002");
     solicitud.setObservaciones("observaciones");
     solicitud.setConvocatoriaExterna(null);
-    solicitud.setUnidadGestionRef("OPE");
+    solicitud.setUnidadGestionRef("2");
     solicitud.setFormularioSolicitud(FormularioSolicitud.ESTANDAR);
     solicitud.setActivo(true);
 

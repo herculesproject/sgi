@@ -33,7 +33,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   private static final String CONTROLLER_BASE_PATH = "/proyectoperiodoseguimientodocumentos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsProyectoPeriodoSeguimientoDocumento() throws Exception {
     // given: new ProyectoPeriodoSeguimientoDocumento
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
@@ -73,7 +73,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoPeriodoSeguimientoDocumento with id filled
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
@@ -159,7 +159,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -174,7 +174,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_WithoutId_Return404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -193,7 +193,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsProyectoPeriodoSeguimientoDocumento() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -219,7 +219,7 @@ public class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseContr
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;

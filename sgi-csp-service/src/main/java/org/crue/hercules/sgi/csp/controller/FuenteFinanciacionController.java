@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,7 +52,7 @@ public class FuenteFinanciacionController {
    * @param paging pageable.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V','CSP-CON-E','CSP-CON-C','CSP-CON-INV-V','CSP-SOL-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-B', 'CSP-PRO-C', 'CSP-SOL-R', 'CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R')")
   ResponseEntity<Page<FuenteFinanciacion>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -73,7 +74,7 @@ public class FuenteFinanciacionController {
    * @param paging pageable.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAnyAuthority('CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R')")
   ResponseEntity<Page<FuenteFinanciacion>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -95,7 +96,7 @@ public class FuenteFinanciacionController {
    * @return {@link FuenteFinanciacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   FuenteFinanciacion findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     FuenteFinanciacion returnValue = service.findById(id);
@@ -110,7 +111,7 @@ public class FuenteFinanciacionController {
    * @return Nuevo {@link FuenteFinanciacion} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-C')")
+  @PreAuthorize("hasAuthority('CSP-FNT-C')")
   ResponseEntity<FuenteFinanciacion> create(@Valid @RequestBody FuenteFinanciacion fuenteFinanciacion) {
     log.debug("create(FuenteFinanciacion fuenteFinanciacion) - start");
     FuenteFinanciacion returnValue = service.create(fuenteFinanciacion);
@@ -126,7 +127,7 @@ public class FuenteFinanciacionController {
    * @return {@link FuenteFinanciacion} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
+  @PreAuthorize("hasAuthority('CSP-FNT-E')")
   FuenteFinanciacion update(
       @Validated({ Update.class, Default.class }) @RequestBody FuenteFinanciacion fuenteFinanciacion,
       @PathVariable Long id) {
@@ -144,7 +145,7 @@ public class FuenteFinanciacionController {
    * @return {@link FuenteFinanciacion} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-R')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-FNT-R')")
   FuenteFinanciacion reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     FuenteFinanciacion returnValue = service.enable(id);
@@ -158,7 +159,7 @@ public class FuenteFinanciacionController {
    * @param id Identificador de {@link FuenteFinanciacion}.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-B')")
+  @PreAuthorize("hasAuthority('CSP-FNT-B')")
   FuenteFinanciacion desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     FuenteFinanciacion returnValue = service.disable(id);

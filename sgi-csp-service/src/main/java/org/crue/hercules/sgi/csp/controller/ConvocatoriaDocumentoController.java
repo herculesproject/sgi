@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class ConvocatoriaDocumentoController {
    * @return Nuevo {@link ConvocatoriaDocumento} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C','CSP-CON-E')")
   ResponseEntity<ConvocatoriaDocumento> create(@Valid @RequestBody ConvocatoriaDocumento convocatoriaDocumento) {
     log.debug("create(ConvocatoriaDocumento convocatoriaDocumento) - start");
     ConvocatoriaDocumento returnValue = service.create(convocatoriaDocumento);
@@ -65,7 +66,7 @@ public class ConvocatoriaDocumentoController {
    * @return {@link ConvocatoriaDocumento} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ConvocatoriaDocumento update(
       @Validated({ Update.class, Default.class }) @RequestBody ConvocatoriaDocumento convocatoriaDocumento,
       @PathVariable Long id) {
@@ -82,7 +83,7 @@ public class ConvocatoriaDocumentoController {
    * @param id Identificador de {@link ConvocatoriaDocumento}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -97,7 +98,7 @@ public class ConvocatoriaDocumentoController {
    * @return {@link ConvocatoriaDocumento} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaDocumento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaDocumento returnValue = service.findById(id);

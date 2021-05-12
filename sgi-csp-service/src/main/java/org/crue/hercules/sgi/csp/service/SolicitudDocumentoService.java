@@ -29,14 +29,6 @@ public interface SolicitudDocumentoService {
   SolicitudDocumento update(final SolicitudDocumento solicitudDocumento);
 
   /**
-   * Comprueba la existencia del {@link SolicitudDocumento} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudDocumento}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link SolicitudDocumento} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudDocumento}.

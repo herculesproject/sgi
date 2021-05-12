@@ -78,6 +78,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsConvocatoria() {
     // given: new Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -111,11 +112,8 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
       }
     });
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     // when: create Convocatoria
-    Convocatoria created = service.create(convocatoria, acronimos);
+    Convocatoria created = service.create(convocatoria);
 
     // then: new Convocatoria is created
     Assertions.assertThat(created).isNotNull();
@@ -140,13 +138,14 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithMinimumRequiredData_ReturnsConvocatoria() {
     // given: new Convocatoria with minimum required data
     // @formatter:off
     Convocatoria convocatoria = Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .build();
@@ -162,11 +161,8 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
       }
     });
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     // when: create Convocatoria
-    Convocatoria created = service.create(convocatoria, acronimos);
+    Convocatoria created = service.create(convocatoria);
 
     // then: new Convocatoria is created with minimum required data
     Assertions.assertThat(created).isNotNull();
@@ -190,58 +186,53 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with id filled
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Id tiene que ser null para crear la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_BorradorWithoutUnidadRef_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without UnidadRef
     Convocatoria convocatoria = generarMockConvocatoria(null, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C_1" })
   public void create_UnidadGestionInvalid_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
     Convocatoria convocatoria = generarMockConvocatoria(null, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
-    convocatoria.setUnidadGestionRef("OPE");
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OTRI");
+    convocatoria.setUnidadGestionRef("2");
 
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithModeloEjecucionNotAsignedToUnidad_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with ModeloEjecucion not asigned to given UnidadGestion
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -250,12 +241,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyString())).willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as ModeloEjecucion is not asigned to given
         // UnidadGestion
         .isInstanceOf(IllegalArgumentException.class)
@@ -264,6 +252,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithModeloUnidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with ModeloUnidad disabled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -275,12 +264,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
             convocatoria.getUnidadGestionRef(), Boolean.FALSE)));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as ModeloUnidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '%s' no está activo para la UnidadGestion %s",
@@ -288,6 +274,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithModeloEjecucionDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with ModeloEjecucion disabled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -300,70 +287,62 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
             convocatoria.getUnidadGestionRef(), Boolean.TRUE)));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as ModeloEjecucion is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '%s' no está activo", convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_BorradorWithoutFechaPublicacion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without FechaPublicacion
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setFechaPublicacion(null);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as Fecha Publicacion is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Fecha publicación no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_BorradorWithoutTitulo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without Titulo
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setTitulo(null);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as Titulo is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_BorradorWithTipoFinalidadAndWithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador with TipoFinalidad without ModeloEjecucion
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, null, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion requerido para obtener TipoFinalidad");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithTipoFinalidadNotAsignedToModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with TipoFinalidad not asigned to given ModeloEjecucion
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -378,12 +357,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloTipoFinalidadRepository.findByModeloEjecucionIdAndTipoFinalidadId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as TipoFinalidad is not asigned to given
         // ModeloEjecucion
         .isInstanceOf(IllegalArgumentException.class)
@@ -392,6 +368,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithModeloTipoFinalidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with ModeloTipoFinalidad disabled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -407,12 +384,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloTipoFinalidadRepository.findByModeloEjecucionIdAndTipoFinalidadId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.of(modeloTipoFinalidad));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as ModeloTipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFinalidad '%s' no está activo para el ModeloEjecucion %s",
@@ -420,6 +394,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithTipoFinalidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with TipoFinalidad disabled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -437,18 +412,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoFinalidad(convocatoria, Boolean.TRUE)));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as TipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoFinalidad '%s' no está activo", convocatoria.getFinalidad().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithNoExistingTipoRegimenConcurrencia_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with no existing TipoRegimenConcurrencia
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -468,18 +441,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia does not exist
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("RegimenConcurrencia '%s' no disponible", convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithTipoRegimenConcurrenciaDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with a TipoRegimenConcurrencia disabled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -500,18 +471,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoria.getRegimenConcurrencia()));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("RegimenConcurrencia '%s' no está activo", convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithNoExistingTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with no existing TipoAmbitoGeografico
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -533,18 +502,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as TipoAmbitoGeografico does not exist
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("AmbitoGeografico '%s' no disponible", convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithTipoAmbitoGeograficoDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with a TipoAmbitoGeografico disabled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -568,19 +535,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoria.getAmbitoGeografico()));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
+        () -> service.create(convocatoria))
         // then: throw exception as TipoAmbitoGeografico is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("AmbitoGeografico '%s' no está activo", convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithExistingId_ReturnsConvocatoria() {
     // given: existing Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -617,11 +581,8 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
       }
     });
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     // when: update Convocatoria
-    Convocatoria updated = service.update(convocatoria, acronimos);
+    Convocatoria updated = service.update(convocatoria);
 
     // then: Convocatoria is updated
     Assertions.assertThat(updated).isNotNull();
@@ -648,7 +609,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void updateBorrador_WithMinimumRequiredData_ReturnsConvocatoria() {
     // given: existing Convocatoria is updated to estado Borrador with minimum
     // required data
@@ -659,7 +620,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .id(convocatoria.getId())
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .build();
@@ -668,11 +629,8 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.save(ArgumentMatchers.any())).willReturn(convocatoriaBorrador);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     // when: update Convocatoria
-    Convocatoria updated = service.update(convocatoriaBorrador, acronimos);
+    Convocatoria updated = service.update(convocatoriaBorrador);
 
     // then: Convocatoria is updated to Borrador with minimum required data
     Assertions.assertThat(updated).isNotNull();
@@ -695,64 +653,55 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update non existing Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithoutId_ThrowsIllegalArgumentException() {
     // given: a Convocatoria without id filled
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as id must be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Id no puede ser null para actualizar Convocatoria");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Modificable returns false
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.REGISTRADA);
     convocatoria.setObservaciones("observaciones-modificadas");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(configuracionSolicitud));
     BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong()))
         .willReturn(Boolean.TRUE);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede modificar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutUnidadRef_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without UnidadRef
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -761,18 +710,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_BorradorWithoutUnidadRef_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without UnidadRef
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -783,19 +730,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E_1" })
   public void update_UnidadGestionInvalid_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -804,26 +748,23 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    convocatoria.setUnidadGestionRef("OPE");
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OTRI");
+    convocatoria.setUnidadGestionRef("2");
 
     Assertions.assertThatThrownBy(
         // when: Update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
+            "No se puede modificar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_UnidadGestionWithVinculaciones_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated UnidadGestion and vinculaciones
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setUnidadGestionRef("OTRI");
+    convocatoria.setUnidadGestionRef("1");
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
 
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -833,20 +774,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.tieneVinculaciones(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-    acronimos.add("OTRI");
-
     Assertions.assertThatThrownBy(
         // when: Update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede modificar la unidad de gestión al existir registros dependientes en las pantallas Enlaces, Plazos y fases, Hitos o Documentos");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_ModeloEjecucionWithVinculaciones_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated ModeloEjecucion and vinculaciones
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -861,48 +798,40 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.tieneVinculaciones(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: Update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede modificar el modelo de ejecución al existir registros dependientes en las pantallas Enlaces, Plazos y fases, Hitos o Documentos");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without ModeloEjecucion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, null, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setObservaciones("observaciones-modificadas");
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion no puede ser null en la Convocatoria");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithModeloEjecucionNotAsignedToUnidad_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with ModeloEjecucion not asigned to given UnidadGestion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setObservaciones("observaciones-modificadas");
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -914,7 +843,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as ModeloEjecucion is not asigned to given
         // UnidadGestion
         .isInstanceOf(IllegalArgumentException.class)
@@ -923,7 +852,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithSameModeloUnidadDisabled_ReturnsConvocatoria() {
     // given: a Convocatoria with the same ModeloUnidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -955,18 +884,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willReturn(convocatoria);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception as disabled ModeloUnidad is the same
         .doesNotThrowAnyException();
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithModeloUnidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated ModeloEjecucion ModeloUnidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -985,12 +911,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
             convocatoria.getUnidadGestionRef(), Boolean.FALSE)));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as ModeloUnidad with updated ModeloEjecucion is
         // disabled
         .isInstanceOf(IllegalArgumentException.class)
@@ -999,7 +922,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithSameModeloEjecucionDisabled_ReturnsConvocatoria() {
     // given: a Convocatoria with the same ModeloEjecucion disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1032,18 +955,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willReturn(convocatoria);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception as disabled ModeloEjecucion is the same
         .doesNotThrowAnyException();
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithModeloEjecucionDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated ModeloEjecucion disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1051,9 +971,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     convocatoria.getModeloEjecucion().setActivo(Boolean.FALSE);
     convocatoria.setObservaciones("observaciones-modificadas");
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -1068,13 +985,14 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as updated ModeloEjecucion is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion '%s' no está activo", convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutFechaPublicacion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without FechaPubliacion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1084,18 +1002,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as Fecha Publicacion is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Fecha publicación no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_BorradorWithoutFechaPublicacion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without Fecha Publicacion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1107,18 +1023,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as Fecha Publicación is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Fecha publicación no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutTitulo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without Titulo
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1127,18 +1041,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     convocatoria.setObservaciones("observaciones-modificadas");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as Titulo is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_BorradorWithoutTitulo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador without Titulo
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1150,17 +1061,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as Titulo is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutModeloTipoFinalidad_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without ModeloTipoFinalidad
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1169,18 +1078,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as ModeloTipoFinalidad is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Finalidad no puede ser null en la Convocatoria");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_BorradorWithTipoFinalidadAndWithoutModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador with TipoFinalidad without ModeloEjecucion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1189,21 +1095,18 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setObservaciones("observaciones-modificadas");
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloEjecucion requerido para obtener TipoFinalidad");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithTipoFinalidadNotAsignedToModeloEjecucion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with TipoFinalidad not asigned to given ModeloEjecucion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1225,12 +1128,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloTipoFinalidadRepository.findByModeloEjecucionIdAndTipoFinalidadId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as TipoFinalidad is not asigned to given
         // ModeloEjecucion
         .isInstanceOf(IllegalArgumentException.class)
@@ -1239,7 +1139,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithSameModeloTipoFinalidadDisabled_ReturnsConvocatoria() {
     // given: a Convocatoria with updated ModeloTipoFinalidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1272,18 +1172,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willReturn(convocatoria);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception as disabled ModeloTipoFinalidad is the same
         .doesNotThrowAnyException();
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithModeloTipoFinalidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated ModeloTipoFinalidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1308,12 +1205,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoFinalidad(convocatoria, Boolean.FALSE)));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as updated ModeloTipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("ModeloTipoFinalidad '%s' no está activo para el ModeloEjecucion %s",
@@ -1321,7 +1215,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithSameTipoFinalidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with same TipoFinalidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1354,18 +1248,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willReturn(convocatoria);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception as disabled ModeloTipoFinalidad is the same
         .doesNotThrowAnyException();
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithTipoFinalidadDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated TipoFinalidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1390,19 +1281,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoFinalidad(convocatoria, Boolean.TRUE)));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as updated TipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("TipoFinalidad '%s' no está activo", convocatoria.getFinalidad().getNombre());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingTipoRegimenConcurrencia_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with no existing TipoRegimenConcurrencia
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1429,19 +1317,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia does not exist
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("RegimenConcurrencia '%s' no disponible", convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithSameTipoRegimenConcurrenciaDisabled_ReturnsConvocatoria() {
     // given: a Convocatoria with updated TipoRegimenConcurrencia disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1479,18 +1364,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willReturn(convocatoria);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception as disabled TipoRegimenConcurrencia is the same
         .doesNotThrowAnyException();
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithTipoRegimenConcurrenciaDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated TipoRegimenConcurrencia disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1518,18 +1400,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoria.getRegimenConcurrencia()));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("RegimenConcurrencia '%s' no está activo", convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without TipoAmbitoGeografico
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1538,19 +1418,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as TipoAmbitoGeografico is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("AmbitoGeografico no puede ser null en la Convocatoria");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with no existing TipoAmbitoGeografico
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1579,19 +1456,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as TipoAmbitoGeografico does not exist
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("AmbitoGeografico '%s' no disponible", convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithSameTipoAmbitoGeograficoDisabled_ReturnsConvocatoria() {
     // given: a Convocatoria with updated TipoAmbitoGeografico disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1624,18 +1498,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willReturn(convocatoria);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception as disabled TipoAmbitoGeografico is the same
         .doesNotThrowAnyException();
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithTipoAmbitoGeograficoDisabled_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated TipoAmbitoGeografico disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1666,19 +1537,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoria.getAmbitoGeografico()));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as updated TipoAmbitoGeografico is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("AmbitoGeografico '%s' no está activo", convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithDuracionLowerConvocatoriaPeriodoJustificacionMesFinal_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with updated TipoAmbitoGeografico disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1716,19 +1584,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             .findFirstByConvocatoriaIdOrderByNumPeriodoDesc(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaPeriodoJustificacion));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as duracion no valid
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Hay ConvocatoriaPeriodoJustificacion con mesFinal inferior a la nueva duracion");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithDuracionLowerConvocatoriaPeriodoSeguimientoCientifico_ThrowsIllegalArgumentException() {
     // given: a Periodos from MesInicial 3 to MesFinal 12 and Convocatoria with
     // duracion < 12
@@ -1779,12 +1644,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             .findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
         .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as duracion no valid
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Existen periodos de seguimiento científico con una duración en meses superior a la indicada");
@@ -1795,6 +1657,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
    */
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutConfiguracionSolicitud_ThrowsNotFoundException() {
     // given: a Convocatoria Registrada without ConfiguracionSolicitud
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1806,17 +1669,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.empty());
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as ConfiguracionSolicitud is not found
         .isInstanceOf(ConfiguracionSolicitudNotFoundException.class);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutTramitacionSGI_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without TramitacionSGI at
     // ConfiguracionSolicitud
@@ -1831,18 +1692,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(configuracionSolicitud));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as TramitacionSGI is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithTramitacionSGITrueANDWithoutFasePresentacionSolicitudes_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada With TramitacionSGI = true and without
     // FasePresentacionSolicitudes at
@@ -1859,19 +1718,16 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(configuracionSolicitud));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as FasePresentacionSolicitudes is not present
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Plazo presentación solicitudes no puede ser null cuando se establece presentacion SGI");
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithTramitacionSGIFalseANDWithoutFasePresentacionSolicitudes_DoesNotThrowAnyException() {
     // given: a Convocatoria Registrada With TramitacionSGI = false and without
     // FasePresentacionSolicitudes at
@@ -1914,17 +1770,15 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
       }
     });
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatCode(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: No exception thrown
         .doesNotThrowAnyException();
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_RegistradaWithoutFormularioSolicitud_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without FormularioSolicitud at
     // ConfiguracionSolicitud
@@ -1939,12 +1793,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(configuracionSolicitud));
 
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
+        () -> service.update(convocatoria))
         // then: throw exception as FormularioSolicitud is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
@@ -1955,6 +1806,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
    */
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-R" })
   public void enable_WithExistingId_ReturnsConvocatoria() {
     // given: existing Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.FALSE);
@@ -2000,7 +1852,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-R" })
   public void enable_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.FALSE);
@@ -2015,7 +1867,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-B" })
   public void disable_WithExistingId_ReturnsConvocatoria() {
     // given: existing Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2061,7 +1913,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-B" })
   public void disable_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2076,7 +1928,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-B" })
   public void disable_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Modificable returns false
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2144,7 +1996,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrar_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2187,7 +2039,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrar_WithEstadoBorradorAndWithoutUnidadGestion_ThrowsIllegalArgumentException() {
     // given: a Convocatoria without UnidadGestion
     Convocatoria convocatoria = generarMockConvocatoria(1L, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2391,17 +2243,17 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void modificable_ConvocatoriaIdWithoutSolicitudesOrProyectos_ReturnsTRUE() throws Exception {
     // given: existing id modificable
     Long id = 1L;
-    String unidadGestionRef = "OPE";
+    String unidadGestionRef = "2";
 
     BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any()))
         .willReturn(Boolean.FALSE);
 
     // when: check modificable
-    boolean responseData = service.modificable(id, unidadGestionRef);
+    boolean responseData = service.modificable(id, unidadGestionRef, new String[] { "CSP-CON-V" });
 
     // then: returns TRUE
     Assertions.assertThat(responseData).isNotNull();
@@ -2409,17 +2261,17 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void modificable_ConvocatoriaIdWithSolicitudesOrProyectos_ReturnsFALSE() throws Exception {
     // given: given: existing id not modificable
     Long id = 1L;
-    String unidadGestionRef = "OPE";
+    String unidadGestionRef = "2";
 
     BDDMockito.given(repository.esRegistradaConSolicitudesOProyectos(ArgumentMatchers.<Long>any()))
         .willReturn(Boolean.TRUE);
 
     // when: check modificable
-    boolean responseData = service.modificable(id, unidadGestionRef);
+    boolean responseData = service.modificable(id, unidadGestionRef, new String[] { "CSP-CON-E" });
 
     // then: returns FALSE
     Assertions.assertThat(responseData).isNotNull();
@@ -2427,7 +2279,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WhenIsRegistrable_ReturnsTRUE() throws Exception {
     // given: existing id registrable
     Long id = 1L;
@@ -2448,7 +2300,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutId_ReturnsFalse() throws Exception {
     // given: no id
     Long id = null;
@@ -2462,7 +2314,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithNoExistingId_ReturnsFalse() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -2477,7 +2329,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithEstadoRegistrada_ReturnsFalse() throws Exception {
     // given: existing id with Estado Registrada
     Long id = 1L;
@@ -2495,7 +2347,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutUnidadGestionRef_ReturnsFalse() throws Exception {
     // given: existing id without UnidadGestionRef
     Long id = 1L;
@@ -2514,7 +2366,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutModeloEjecucion_ReturnsFalse() throws Exception {
     // given: existing id without ModeloEjecucion
     Long id = 1L;
@@ -2552,7 +2404,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutTitulo_ReturnsFalse() throws Exception {
     // given: existing id without Titulo
     Long id = 1L;
@@ -2571,7 +2423,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutFinalidad_ReturnsFalse() throws Exception {
     // given: existing id without Finalidad
     Long id = 1L;
@@ -2609,7 +2461,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutConfiguracionSolicitud_ReturnsFalse() throws Exception {
     // given: existing id without ConfiguracionSolicitud
     Long id = 1L;
@@ -2629,7 +2481,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutTramitacionSGI_ReturnsFalse() throws Exception {
     // given: existing id without TramitacionSGI
     Long id = 1L;
@@ -2651,7 +2503,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutFormularioSolicitud_ReturnsFalse() throws Exception {
     // given: existing id without FormularioSolicitud
     Long id = 1L;
@@ -2673,7 +2525,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void registrable_WithoutFasePresentacionSolicitudesWhenTramitacionSGIIsTrue_ReturnsFalse() throws Exception {
     // given: existing id without BaremacionRef
     Long id = 1L;
@@ -2724,67 +2576,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void getUnidadGestionRef_WithExistingId_ReturnsUnidadGestionRef() throws Exception {
-    // given: existing Convocatoria id
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaExistente.setUnidadGestionRef("OPE");
-
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-    BDDMockito.given(repository.getUnidadGestionRef(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaExistente.getUnidadGestionRef()));
-
-    // when: getUnidadGestionRef by id Convocatoria
-    String unidadGestionRef = service.getUnidadGestionRef(convocatoriaExistente.getId());
-
-    // then: returns unidadGestionRef
-    Assertions.assertThat(unidadGestionRef).isEqualTo(convocatoriaExistente.getUnidadGestionRef());
-
-  }
-
-  @Test
-  public void getUnidadGestionRef_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing Convocatoria id
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: getUnidadGestionRef by id Convocatoria
-        () -> service.getUnidadGestionRef(1L))
-        // then: NotFoundException is thrown
-        .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  @Test
-  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
-    // given: existing Convocatoria id
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaExistente.getModeloEjecucion().setId(99L);
-
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-    BDDMockito.given(repository.getModeloEjecucion(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaExistente.getModeloEjecucion()));
-
-    // when: getModeloEjecucion by id Convocatoria
-    ModeloEjecucion modeloEjecucion = service.getModeloEjecucion(convocatoriaExistente.getId());
-
-    // then: returns ModeloEjecucion
-    Assertions.assertThat(modeloEjecucion).isNotNull();
-    Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(99L);
-
-  }
-
-  @Test
-  public void getModeloEjecucion_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing Convocatoria id
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: getModeloEjecucion by id Convocatoria
-        () -> service.getModeloEjecucion(1L))
-        // then: NotFoundException is thrown
-        .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findById_WithExistingId_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -2821,6 +2613,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findById_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
@@ -2833,6 +2626,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAll_WithPaging_ReturnsPage() {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -2878,6 +2672,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllTodos_WithPaging_ReturnsPage() {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -2922,6 +2717,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllRestringidos_WithPaging_ReturnsPage() {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -2947,12 +2743,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
           }
         });
 
-    List<String> acronimosUnidadGestion = new ArrayList<>();
-    acronimosUnidadGestion.add("OPE");
-
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Convocatoria> page = service.findAllRestringidos(null, paging, acronimosUnidadGestion);
+    Page<Convocatoria> page = service.findAllRestringidos(null, paging);
 
     // then: A Page with ten Convocatoria are returned containing
     // Nombre='nombre-31' to
@@ -2969,6 +2762,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllTodosRestringidos_WithPaging_ReturnsPage() {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -2994,12 +2788,9 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
           }
         });
 
-    List<String> acronimosUnidadGestion = new ArrayList<>();
-    acronimosUnidadGestion.add("OPE");
-
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Convocatoria> page = service.findAllTodosRestringidos(null, paging, acronimosUnidadGestion);
+    Page<Convocatoria> page = service.findAllTodosRestringidos(null, paging);
 
     // then: A Page with ten Convocatoria are returned containing
     // Nombre='nombre-31' to
@@ -3053,7 +2844,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
             .build();
 
     Convocatoria convocatoria = Convocatoria.builder().id(convocatoriaId)
-        .unidadGestionRef((unidadGestionId == null) ? null : "OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef((unidadGestionId == null) ? null : "2").modeloEjecucion(modeloEjecucion)
         .codigo("codigo-" + String.format("%03d", convocatoriaId))
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z")).fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z")).titulo("titulo-" + String.format("%03d", convocatoriaId))

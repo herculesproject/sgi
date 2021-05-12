@@ -34,7 +34,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/modelotipoenlaces";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void create_ReturnsModeloTipoEnlace() throws Exception {
     // given: new ModeloTipoEnlace
     ModeloTipoEnlace modeloTipoEnlace = generarMockModeloTipoEnlace(null);
@@ -67,7 +67,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ModeloTipoEnlace with id filled
     ModeloTipoEnlace modeloTipoEnlace = generarMockModeloTipoEnlace(1L);
@@ -86,7 +86,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void create_WithNonExistingModeloEjecucionId_Returns404() throws Exception {
     // given: a ModeloTipoEnlace with non existing ModeloEjecucionId
     ModeloTipoEnlace modeloTipoEnlace = generarMockModeloTipoEnlace(1L);
@@ -105,7 +105,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     ModeloTipoEnlace modeloTipoEnlace = generarMockModeloTipoEnlace(1L);
@@ -121,7 +121,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   public void delete_NonExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -140,7 +140,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsModeloTipoEnlace() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer(new Answer<ModeloTipoEnlace>() {
@@ -163,7 +163,7 @@ public class ModeloTipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

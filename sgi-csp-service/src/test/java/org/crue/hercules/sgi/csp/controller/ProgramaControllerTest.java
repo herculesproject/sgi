@@ -43,7 +43,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/programas";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-C" })
   public void create_ReturnsPrograma() throws Exception {
     // given: new Programa
     Programa programa = generarMockPrograma(1L);
@@ -70,7 +70,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a Programa with id filled
     Programa programa = generarMockPrograma(1L);
@@ -88,7 +88,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-E" })
   public void update_ReturnsPrograma() throws Exception {
     // given: Existing Programa to be updated
     Programa programaExistente = generarMockPrograma(1L);
@@ -113,7 +113,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -132,7 +132,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-R" })
   public void reactivar_WithExistingId_ReturnPrograma() throws Exception {
     // given: existing id
     Programa programa = generarMockPrograma(1L);
@@ -159,7 +159,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -177,7 +177,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-B" })
   public void desactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
     // given: existing id
     Programa programa = generarMockPrograma(1L);
@@ -202,7 +202,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -220,7 +220,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-E" })
   public void findById_WithExistingId_ReturnsPrograma() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -242,7 +242,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -259,7 +259,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 Programa
     List<Programa> programas = new ArrayList<>();
@@ -304,7 +304,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Programa
     List<Programa> programas = new ArrayList<>();
@@ -326,7 +326,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void findAllPlan_ReturnsPage() throws Exception {
     // given: Una lista con 37 Programa
     List<Programa> programas = new ArrayList<>();
@@ -372,7 +372,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void findAllPlan_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Programa
     List<Programa> programas = new ArrayList<>();
@@ -395,7 +395,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-V", "CSP-PRG-C", "CSP-PRG-E", "CSP-PRG-B", "CSP-PRG-R" })
   public void findAllTodosPlan_ReturnsPage() throws Exception {
     // given: Una lista con 37 Programa
     List<Programa> programas = new ArrayList<>();
@@ -441,7 +441,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRG-V", "CSP-PRG-C", "CSP-PRG-E", "CSP-PRG-B", "CSP-PRG-R" })
   public void findAllTodosPlan_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Programa
     List<Programa> programas = new ArrayList<>();
@@ -464,7 +464,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void findAllHijosPrograma_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
     Long convocatoriaId = 1L;
@@ -516,7 +516,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void findAllHijosPrograma_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de Programa
     Long programaId = 1L;

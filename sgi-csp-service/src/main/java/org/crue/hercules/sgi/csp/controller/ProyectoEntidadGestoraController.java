@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,7 @@ public class ProyectoEntidadGestoraController {
    * @return Nuevo {@link ProyectoEntidadGestora} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<ProyectoEntidadGestora> create(
       @Valid @RequestBody ProyectoEntidadGestora proyectoEntidadGestora) {
     log.debug("create(ProyectoEntidadGestora proyectoEntidadGestora) - start");
@@ -53,7 +54,7 @@ public class ProyectoEntidadGestoraController {
   }
 
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ProyectoEntidadGestora update(@RequestBody ProyectoEntidadGestora modeloTipoHito, @PathVariable Long id) {
     log.debug("update(ProyectoEntidadGestora modeloTipoHito, Long id) - start");
     modeloTipoHito.setId(id);
@@ -68,7 +69,7 @@ public class ProyectoEntidadGestoraController {
    * @param id Identificador de {@link ProyectoEntidadGestora}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

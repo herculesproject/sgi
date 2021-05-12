@@ -68,7 +68,7 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
     Convocatoria convocatoria = Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-00" + index)
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)

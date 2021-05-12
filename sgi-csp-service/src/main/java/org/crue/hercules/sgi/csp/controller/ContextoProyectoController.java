@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class ContextoProyectoController {
    * @return Nuevo {@link ContextoProyecto} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ContextoProyecto> create(@Valid @RequestBody ContextoProyecto contextoProyecto) {
     log.debug("create(ContextoProyecto contextoProyecto) - start");
     ContextoProyecto returnValue = service.create(contextoProyecto);
@@ -63,7 +64,7 @@ public class ContextoProyectoController {
    * @return {@link ContextoProyecto} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ContextoProyecto update(@Validated({ Update.class, Default.class }) @RequestBody ContextoProyecto contextoProyecto,
       @PathVariable Long id) {
     log.debug("update(ContextoProyecto contextoProyecto, Long id) - start");
@@ -79,7 +80,7 @@ public class ContextoProyectoController {
    * @return el {@link ContextoProyecto}
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
   ResponseEntity<ContextoProyecto> findByProyecto(@PathVariable Long id) {
     log.debug("ContextoProyecto findByProyecto(Long id) - start");
     ContextoProyecto returnValue = service.findByProyecto(id);

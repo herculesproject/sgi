@@ -33,7 +33,7 @@ public class SolicitudProyectoRepositoryTest {
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
         .solicitanteRef("user-002")
-        .unidadGestionRef("OTRI")
+        .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
@@ -46,7 +46,7 @@ public class SolicitudProyectoRepositoryTest {
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
         .solicitanteRef("user-002")
-        .unidadGestionRef("OTRI")
+        .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
@@ -76,7 +76,7 @@ public class SolicitudProyectoRepositoryTest {
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
         .solicitanteRef("user-002")
-        .unidadGestionRef("OTRI")
+        .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());
@@ -87,7 +87,7 @@ public class SolicitudProyectoRepositoryTest {
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
         .solicitanteRef("user-002")
-        .unidadGestionRef("OTRI")
+        .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.AYUDAS_GRUPOS)
         .activo(Boolean.TRUE)
         .build());

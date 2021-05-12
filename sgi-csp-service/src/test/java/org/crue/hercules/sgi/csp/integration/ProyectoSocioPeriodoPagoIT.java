@@ -35,7 +35,7 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-C", "CSP-SOL-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-E", "AUTH")));
 
     HttpEntity<ProyectoSocioPeriodoPago> request = new HttpEntity<>(entity, headers);
     return request;
@@ -47,7 +47,7 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-C", "CSP-SOL-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-E")));
 
     HttpEntity<List<ProyectoSocioPeriodoPago>> request = new HttpEntity<>(entity, headers);
     return request;
@@ -85,7 +85,6 @@ public class ProyectoSocioPeriodoPagoIT extends BaseIT {
     List<ProyectoSocioPeriodoPago> responseData = response.getBody();
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
 

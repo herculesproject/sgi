@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoCodigoEcNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -35,180 +34,12 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
 
   private final ConvocatoriaConceptoGastoCodigoEcRepository repository;
   private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
-  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaConceptoGastoCodigoEcServiceImpl(ConvocatoriaConceptoGastoCodigoEcRepository repository,
       ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository,
       ConvocatoriaService convocatoriaService) {
     this.repository = repository;
     this.convocatoriaConceptoGastoRepository = convocatoriaConceptoGastoRepository;
-    this.convocatoriaService = convocatoriaService;
-  }
-
-  /**
-   * Guarda la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.
-   * 
-   * @param convocatoriaConceptoGastoCodigoEc la entidad
-   *                                          {@link ConvocatoriaConceptoGastoCodigoEc}
-   *                                          a guardar.
-   * @return ConvocatoriaConceptoGastoCodigoEc la entidad
-   *         {@link ConvocatoriaConceptoGastoCodigoEc} persistida.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaConceptoGastoCodigoEc create(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) {
-    log.debug("create(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) - start");
-
-    // comprobar campos
-    Assert.isNull(convocatoriaConceptoGastoCodigoEc.getId(),
-        "Id tiene que ser null para crear ConvocatoriaConceptoGastoCodigoEc");
-
-    Assert.notNull(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId(),
-        "ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
-
-    Assert.isTrue(StringUtils.isNotBlank(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()),
-        "CodigoEconomicoRef es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
-
-    if (convocatoriaConceptoGastoCodigoEc.getFechaInicio() != null
-        && convocatoriaConceptoGastoCodigoEc.getFechaFin() != null) {
-      Assert.isTrue(
-          convocatoriaConceptoGastoCodigoEc.getFechaFin().isAfter(convocatoriaConceptoGastoCodigoEc.getFechaInicio()),
-          "La fecha de fin debe ser posterior a la fecha de inicio");
-    }
-
-    // recuperar ConvocatoriaConceptoGasto
-    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoRepository
-        .findById(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId())
-        .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
-            convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId()));
-
-    // Comprobar si convocatoria es modificable
-    Assert.isTrue(convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null),
-        "No se puede crear ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
-
-    // Unicidad código económico y solapamiento de fechas
-    Assert.isTrue(
-        !existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEc,
-            convocatoriaConceptoGasto.getPermitido()),
-        "El código económico '" + convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()
-            + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
-
-    ConvocatoriaConceptoGastoCodigoEc returnValue = repository.save(convocatoriaConceptoGastoCodigoEc);
-
-    log.debug("create(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc) - end");
-    return returnValue;
-  }
-
-  /**
-   * Actualiza la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.
-   * 
-   * @param convocatoriaConceptoGastoCodigoEcActualizar la entidad
-   *                                                    {@link ConvocatoriaConceptoGastoCodigoEc}
-   *                                                    a guardar.
-   * @return ConvocatoriaConceptoGastoCodigoEc la entidad
-   *         {@link ConvocatoriaConceptoGastoCodigoEc} persistida.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaConceptoGastoCodigoEc update(
-      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar) {
-    log.debug("update(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar) - start");
-
-    // comprobar campos
-    Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getId(),
-        "ConvocatoriaConceptoGastoCodigoEc id no puede ser null para actualizar un ConvocatoriaConceptoGastoCodigoEc");
-
-    Assert.notNull(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId(),
-        "ConvocatoriaConceptoGasto es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
-
-    Assert.isTrue(StringUtils.isNotBlank(convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef()),
-        "CodigoEconomicoRef es un campo obligatorio en ConvocatoriaConceptoGastoCodigoEc");
-
-    if (convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio() != null
-        && convocatoriaConceptoGastoCodigoEcActualizar.getFechaFin() != null) {
-      Assert.isTrue(
-          convocatoriaConceptoGastoCodigoEcActualizar.getFechaFin()
-              .isAfter(convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio()),
-          "La fecha de fin debe ser posterior a la fecha de inicio");
-    }
-
-    // recuperar ConvocatoriaConceptoGasto
-    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoRepository
-        .findById(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId())
-        .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
-            convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId()));
-
-    return repository.findById(convocatoriaConceptoGastoCodigoEcActualizar.getId())
-        .map(convocatoriaConceptoGastoCodigoEc -> {
-
-          // Si no es modificable solo se permitirá cambiar las fechas
-          boolean esConvocatoriaModificable = convocatoriaService
-              .modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null);
-
-          if (!esConvocatoriaModificable) {
-            Assert.isTrue(
-                convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId()
-                    .equals(convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId())
-                    && StringUtils.equals(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef(),
-                        convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef())
-                    && StringUtils.equals(convocatoriaConceptoGastoCodigoEc.getObservaciones(),
-                        convocatoriaConceptoGastoCodigoEcActualizar.getObservaciones()),
-                "No se puede modificar ConvocatoriaConceptoGastoCodigoEc. Solo está permitido modificar las fechas de inicio y fin. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
-          }
-
-          // Unicidad código económico y solapamiento de fechas
-          Assert.isTrue(
-              !existsConvocatoriaConceptoGastoCodigoEcConFechasSolapadas(convocatoriaConceptoGastoCodigoEcActualizar,
-                  convocatoriaConceptoGasto.getPermitido()),
-              "El código económico '" + convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef()
-                  + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
-
-          convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGastoId(
-              convocatoriaConceptoGastoCodigoEcActualizar.getConvocatoriaConceptoGastoId());
-          convocatoriaConceptoGastoCodigoEc
-              .setCodigoEconomicoRef(convocatoriaConceptoGastoCodigoEcActualizar.getCodigoEconomicoRef());
-          convocatoriaConceptoGastoCodigoEc
-              .setFechaInicio(convocatoriaConceptoGastoCodigoEcActualizar.getFechaInicio());
-          convocatoriaConceptoGastoCodigoEc.setFechaFin(convocatoriaConceptoGastoCodigoEcActualizar.getFechaFin());
-          convocatoriaConceptoGastoCodigoEc
-              .setObservaciones(convocatoriaConceptoGastoCodigoEcActualizar.getObservaciones());
-
-          ConvocatoriaConceptoGastoCodigoEc returnValue = repository.save(convocatoriaConceptoGastoCodigoEc);
-          log.debug("update(ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEcActualizar) - end");
-          return returnValue;
-        }).orElseThrow(() -> new ConvocatoriaConceptoGastoCodigoEcNotFoundException(
-            convocatoriaConceptoGastoCodigoEcActualizar.getId()));
-
-  }
-
-  /**
-   * Elimina la {@link ConvocatoriaConceptoGastoCodigoEc}.
-   *
-   * @param id Id del {@link ConvocatoriaConceptoGastoCodigoEc}.
-   */
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
-
-    Assert.notNull(id,
-        "ConvocatoriaConceptoGastoCodigoEc id no puede ser null para eliminar un ConvocatoriaConceptoGastoCodigoEc");
-
-    repository.findById(id).map(convocatoriaConceptoGastoCodigoEc -> {
-
-      // comprobar si convocatoria es modificable
-      ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoRepository
-          .findById(convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId())
-          .orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(
-              convocatoriaConceptoGastoCodigoEc.getConvocatoriaConceptoGastoId()));
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null),
-          "No se puede eliminar ConvocatoriaConceptoGastoCodigoEc. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o convocatoriaConceptoGastos asociados");
-
-      return convocatoriaConceptoGastoCodigoEc;
-    }).orElseThrow(() -> new ConvocatoriaConceptoGastoCodigoEcNotFoundException(id));
-
-    repository.deleteById(id);
-    log.debug("delete(Long id) - end");
   }
 
   /**

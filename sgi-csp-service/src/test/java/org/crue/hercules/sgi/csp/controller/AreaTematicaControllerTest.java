@@ -46,7 +46,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/areatematicas";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-C" })
   public void create_ReturnsModeloAreaTematica() throws Exception {
     // given: new AreaTematica
     AreaTematica areaTematica = generarMockAreaTematica(1L);
@@ -74,7 +74,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a AreaTematica with id filled
     AreaTematica areaTematica = generarMockAreaTematica(1L);
@@ -92,7 +92,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-E" })
   public void update_ReturnsAreaTematica() throws Exception {
     // given: Existing AreaTematica to be updated
     AreaTematica areaTematicaExistente = generarMockAreaTematica(1L);
@@ -118,7 +118,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -138,7 +138,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-R" })
   public void reactivar_WithExistingId_ReturnAreaTematica() throws Exception {
     // given: existing id
     AreaTematica areaTematica = generarMockAreaTematica(1L);
@@ -166,7 +166,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -184,7 +184,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-B" })
   public void desactivar_WithExistingId_ReturnAreaTematica() throws Exception {
     // given: existing id
     AreaTematica areaTematica = generarMockAreaTematica(1L);
@@ -211,7 +211,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -229,7 +229,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-E" })
   public void findById_WithExistingId_ReturnsAreaTematica() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -252,7 +252,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ARTM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -269,7 +269,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-INV-V" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 AreaTematica
     List<AreaTematica> areasTematicas = new ArrayList<>();
@@ -314,7 +314,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-INV-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de AreaTematica
     List<AreaTematica> areasTematicas = new ArrayList<>();
@@ -336,7 +336,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-C", "CSP-CON-V" })
   public void findAllGrupo_ReturnsPage() throws Exception {
     // given: Una lista con 37 AreaTematica
     List<AreaTematica> areasTematicas = new ArrayList<>();
@@ -382,7 +382,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-C", "CSP-CON-V" })
   public void findAllGrupo_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de AreaTematica
     List<AreaTematica> AreaTematicas = new ArrayList<>();
@@ -405,7 +405,8 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-V", "CSP-AREA-C", "CSP-AREA-E", "CSP-AREA-B",
+      "CSP-AREA-R" })
   public void findAllTodosGrupo_ReturnsPage() throws Exception {
     // given: Una lista con 37 AreaTematica
     List<AreaTematica> areasTematicas = new ArrayList<>();
@@ -451,7 +452,8 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-AREA-V", "CSP-AREA-C", "CSP-AREA-E", "CSP-AREA-B",
+      "CSP-AREA-R" })
   public void findAllTodosGrupo_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de AreaTematica
     List<AreaTematica> areasTematicas = new ArrayList<>();
@@ -474,7 +476,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C", "CSP-CON-E" })
   public void findAllHijosAreaTematica_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
     Long convocatoriaId = 1L;
@@ -527,7 +529,7 @@ public class AreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C", "CSP-CON-E" })
   public void findAllHijosAreaTematica_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de AreaTematica
     Long AreaTematicaId = 1L;

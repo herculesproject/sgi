@@ -36,7 +36,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   private static final String CONTROLLER_BASE_PATH = "/convocatoriaperiodoseguimientocientificos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_ReturnsConvocatoriaPeriodoSeguimientoCientificoList()
       throws Exception {
     // given: una lista con uno de los ConvocatoriaPeriodoSeguimientoCientifico
@@ -106,7 +106,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithNoExistingId_Returns404()
       throws Exception {
     // given: No existing Id
@@ -130,7 +130,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
     // given: existing id
     Long convocatoriaPeriodoSeguimientoCientificoId = 1L;
@@ -158,7 +158,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long convocatoriaPeriodoSeguimientoCientificoId = 1L;

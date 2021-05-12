@@ -261,45 +261,6 @@ public class ModeloUnidadServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findAllTodos_ReturnsPage() {
-    // given: Una lista con 37 ModeloUnidad
-    List<ModeloUnidad> modelosUnidadModeloEjecucion = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      modelosUnidadModeloEjecucion.add(generarMockModeloUnidad(i));
-    }
-
-    BDDMockito.given(modeloUnidadRepository.findAll(ArgumentMatchers.<Specification<ModeloUnidad>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ModeloUnidad>>() {
-          @Override
-          public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            toIndex = toIndex > modelosUnidadModeloEjecucion.size() ? modelosUnidadModeloEjecucion.size() : toIndex;
-            List<ModeloUnidad> content = modelosUnidadModeloEjecucion.subList(fromIndex, toIndex);
-            Page<ModeloUnidad> page = new PageImpl<>(content, pageable, modelosUnidadModeloEjecucion.size());
-            return page;
-          }
-        });
-
-    // when: Get page=3 with pagesize=10
-    Pageable paging = PageRequest.of(3, 10);
-    Page<ModeloUnidad> page = service.findAllTodos(null, paging);
-
-    // then: Devuelve la pagina 3 con los ModeloUnidad del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
-    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
-    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
-    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
-    for (int i = 31; i <= 37; i++) {
-      ModeloUnidad modeloUnidad = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(modeloUnidad.getUnidadGestionRef()).isEqualTo("ModeloUnidad" + String.format("%03d", i));
-    }
-  }
-
-  @Test
   public void findAllByModeloEjecucion_ReturnsPage() {
     // given: Una lista con 37 ModeloUnidad para el ModeloEjecucion
     Long idModeloEjecucion = 1L;

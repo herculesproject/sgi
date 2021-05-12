@@ -53,7 +53,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
         .entidadRef("Entidad").build();
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
+        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
             .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoEntidadConvocante>any()))
@@ -105,7 +105,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(ProyectoEntidadConvocante
         .builder().id(proyectoEntidadConvocanteId).proyectoId(proyectoId).entidadRef("Entidad").build()));
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
+        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
             .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoEntidadConvocante>any()))
@@ -190,7 +190,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(ProyectoEntidadConvocante
         .builder().id(proyectoEntidadConvocanteId).proyectoId(proyectoId).entidadRef("Entidad").build()));
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
+        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
             .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
@@ -199,19 +199,6 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
         () -> service.delete(1L))
         // then: no exception is thrown
         .doesNotThrowAnyException();
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-E" })
-  public void findById_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing id
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: find by non existing id
-        () -> service.findById(1L))
-        // then: NotFoundException is thrown
-        .isInstanceOf(NotFoundException.class);
   }
 
   @Test
@@ -229,7 +216,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ProyectoEntidadConvocante>>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(proyectoEntidadConvocantes));
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
+        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
             .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     // when: find unlimited
@@ -269,7 +256,7 @@ public class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
           }
         });
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("OPE")
+        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
             .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     // when: Get page=3 with pagesize=10

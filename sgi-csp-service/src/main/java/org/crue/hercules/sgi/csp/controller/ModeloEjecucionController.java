@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -98,7 +99,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ResponseEntity<Page<ModeloEjecucion>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -120,7 +121,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-ME-B', 'CSP-ME-R')")
   ResponseEntity<Page<ModeloEjecucion>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -142,7 +143,7 @@ public class ModeloEjecucionController {
    * @return {@link ModeloEjecucion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-ME-E')")
   ModeloEjecucion findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ModeloEjecucion returnValue = modeloEjecucionService.findById(id);
@@ -157,7 +158,7 @@ public class ModeloEjecucionController {
    * @return Nuevo {@link ModeloEjecucion} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-C')")
   ResponseEntity<ModeloEjecucion> create(@Valid @RequestBody ModeloEjecucion modeloEjecucion) {
     log.debug("create(ModeloEjecucion modeloEjecucion) - start");
     ModeloEjecucion returnValue = modeloEjecucionService.create(modeloEjecucion);
@@ -173,7 +174,7 @@ public class ModeloEjecucionController {
    * @return {@link ModeloEjecucion} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
   ModeloEjecucion update(@Validated({ Update.class, Default.class }) @RequestBody ModeloEjecucion modeloEjecucion,
       @PathVariable Long id) {
     log.debug("update(ModeloEjecucion modeloEjecucion, Long id) - start");
@@ -190,7 +191,7 @@ public class ModeloEjecucionController {
    * @return {@link ModeloEjecucion} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-R')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-R')")
   ModeloEjecucion reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     ModeloEjecucion returnValue = modeloEjecucionService.enable(id);
@@ -205,7 +206,7 @@ public class ModeloEjecucionController {
    * @return {@link ModeloEjecucion} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-B')")
   ModeloEjecucion desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     ModeloEjecucion returnValue = modeloEjecucionService.disable(id);
@@ -228,7 +229,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipoenlaces")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E', 'CSP-CON-V', 'CSP-ME-E')")
   ResponseEntity<Page<ModeloTipoEnlace>> findAllModeloTipoEnlaces(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoEnlaces(Long id, String query, Pageable paging) - start");
@@ -258,7 +259,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipofases")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-PRO-E', 'CSP-ME-E')")
   ResponseEntity<Page<ModeloTipoFase>> findAllModeloTipoFases(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoFases(Long id, String query, Pageable paging) - start");
@@ -282,7 +283,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipofases/convocatoria")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-ME-E')")
   ResponseEntity<Page<ModeloTipoFase>> findAllModeloTipoFasesConvocatoria(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoFasesConvocatoria(Long id, String query, Pageable paging) - start");
@@ -306,7 +307,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipofases/proyecto")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ModeloTipoFase>> findAllModeloTipoFasesProyecto(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoFasesProyecto(Long id, String query, Pageable paging) - start");
@@ -336,7 +337,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipodocumentos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C','CSP-CON-E','CSP-CON-V','CSP-CON-INV-V', 'CSP-PRO-V', 'CSP-PRO-E', 'CSP-ME-E')")
   ResponseEntity<Page<ModeloTipoDocumento>> findAllModeloTipoDocumentos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoDocumentos(Long id, String query, Pageable paging) - start");
@@ -366,7 +367,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipofinalidades")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-V', 'CSP-CON-E', 'CSP-CON-INV-V', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-ME-E')")
   ResponseEntity<Page<ModeloTipoFinalidad>> findAllModeloTipoFinalidades(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoFinalidades(Long id, String query, Pageable paging) - start");
@@ -396,7 +397,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipohitos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
   ResponseEntity<Page<ModeloTipoHito>> findAllModeloTipoHitos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoHitos(Long id, String query, Pageable paging) - start");
@@ -420,7 +421,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipohitos/convocatoria")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
   ResponseEntity<Page<ModeloTipoHito>> findAllModeloTipoHitosConvocatoria(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoHitosConvocatoria(Long id, String query, Pageable paging) - start");
@@ -444,7 +445,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipohitos/proyecto")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ModeloTipoHito>> findAllModeloTipoHitosProyecto(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoHitosProyecto(Long id, String query, Pageable paging) - start");
@@ -468,7 +469,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelotipohitos/solicitud")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
   ResponseEntity<Page<ModeloTipoHito>> findAllModeloTipoHitosSolicitud(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllModeloTipoHitosSolicitud(Long id, String query, Pageable paging) - start");
@@ -498,7 +499,7 @@ public class ModeloEjecucionController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/modelounidades")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-ME-E')")
   ResponseEntity<Page<ModeloUnidad>> findAllModeloUnidades(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllUnidades(Long id, String query, Pageable paging) - start");

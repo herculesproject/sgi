@@ -107,7 +107,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
 
     ModeloUnidad modeloUnidad = ModeloUnidad.builder()
         .modeloEjecucion(modeloEjecucion)
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(modeloUnidad);
@@ -116,7 +116,7 @@ public class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .acronimo("PR" + suffix)
         .codigoExterno("COD" + suffix)
         .titulo("titulo" + suffix)
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .finalidad(tipoFinalidad)
         .ambitoGeografico(tipoAmbitoGeografico)

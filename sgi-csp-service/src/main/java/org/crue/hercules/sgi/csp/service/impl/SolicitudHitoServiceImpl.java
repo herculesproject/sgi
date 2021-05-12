@@ -138,20 +138,6 @@ public class SolicitudHitoServiceImpl implements SolicitudHitoService {
   }
 
   /**
-   * Comprueba la existencia del {@link SolicitudHito} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudHito}.
-   * @return true si existe y false en caso contrario.
-   */
-  @Override
-  public boolean existsById(final Long id) {
-    log.debug("existsById(final Long id)  - start", id);
-    final boolean existe = repository.existsById(id);
-    log.debug("existsById(final Long id)  - end", id);
-    return existe;
-  }
-
-  /**
    * Obtiene una entidad {@link SolicitudHito} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudHito}.

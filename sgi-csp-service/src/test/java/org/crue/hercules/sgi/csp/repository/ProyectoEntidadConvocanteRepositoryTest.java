@@ -32,7 +32,7 @@ public class ProyectoEntidadConvocanteRepositoryTest extends BaseRepositoryTest 
     Proyecto proyecto = entityManager.persistAndFlush(
       Proyecto.builder()
         .titulo("titulo")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
@@ -78,7 +78,7 @@ public class ProyectoEntidadConvocanteRepositoryTest extends BaseRepositoryTest 
     Proyecto proyecto = entityManager.persistAndFlush(
       Proyecto.builder()
         .titulo("titulo")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))

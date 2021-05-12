@@ -32,8 +32,8 @@ public class ModeloUnidadIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-TENL-B", "CSP-TENL-C", "CSP-TENL-E", "CSP-TENL-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-CON-V",
+        "CSP-CON-C", "CSP-CON-E", "CSP-CON-INV-V", "CSP-ME-C", "CSP-ME-E")));
 
     HttpEntity<ModeloUnidad> request = new HttpEntity<>(entity, headers);
     return request;
@@ -114,40 +114,6 @@ public class ModeloUnidadIT extends BaseIT {
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
-
-    final ResponseEntity<List<ModeloUnidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloUnidad>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloUnidad> modeloUnidades = response.getBody();
-    Assertions.assertThat(modeloUnidades.size()).isEqualTo(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(modeloUnidades.get(0).getUnidadGestionRef()).as("get(0).getUnidadGestionRef()")
-        .isEqualTo("3");
-    Assertions.assertThat(modeloUnidades.get(1).getUnidadGestionRef()).as("get(1).getUnidadGestionRef()")
-        .isEqualTo("2");
-    Assertions.assertThat(modeloUnidades.get(2).getUnidadGestionRef()).as("get(2).getUnidadGestionRef()")
-        .isEqualTo("1");
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "unidadGestionRef,desc";
-    String filter = "modeloEjecucion.descripcion=ke=00";
-
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
-        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<ModeloUnidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloUnidad>>() {

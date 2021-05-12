@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +46,7 @@ public class ConvocatoriaEntidadGestoraController {
    * @return Nuevo {@link ConvocatoriaEntidadGestora} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-C')")
   public ResponseEntity<ConvocatoriaEntidadGestora> create(
       @Valid @RequestBody ConvocatoriaEntidadGestora convocatoriaEntidadGestora) {
     log.debug("create(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) - start");
@@ -55,7 +56,7 @@ public class ConvocatoriaEntidadGestoraController {
   }
 
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   public ConvocatoriaEntidadGestora update(@RequestBody ConvocatoriaEntidadGestora modeloTipoHito,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaEntidadGestora modeloTipoHito, Long id) - start");
@@ -71,7 +72,7 @@ public class ConvocatoriaEntidadGestoraController {
    * @param id Identificador de {@link ConvocatoriaEntidadGestora}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

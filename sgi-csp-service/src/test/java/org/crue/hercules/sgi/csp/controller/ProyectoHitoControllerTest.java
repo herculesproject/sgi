@@ -38,7 +38,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/proyectohitos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_ReturnsProyectoHito() throws Exception {
     // given: new ProyectoHito
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
@@ -68,7 +68,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ProyectoHito with id filled
     ProyectoHito proyectoHito = generarMockProyectoHito(1L);
@@ -86,7 +86,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void update_ReturnsProyectoHito() throws Exception {
     // given: Existing ProyectoHito to be updated
     ProyectoHito proyectoHitoExistente = generarMockProyectoHito(1L);
@@ -112,7 +112,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -132,7 +132,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -150,7 +150,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -168,39 +168,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
-  public void existsById_WithExistingId_Returns200() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.given(service.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-
-    // when: exists by id
-    mockMvc
-        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 200 OK
-        .andExpect(MockMvcResultMatchers.status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
-  public void existsById_WithNoExistingId_Returns204() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    BDDMockito.given(service.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    // when: exists by id
-    mockMvc
-        .perform(MockMvcRequestBuilders.head(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 204 No Content
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsProyectoHito() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -225,7 +193,7 @@ public class ProyectoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

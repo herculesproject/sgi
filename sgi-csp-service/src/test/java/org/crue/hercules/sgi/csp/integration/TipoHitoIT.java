@@ -33,8 +33,8 @@ public class TipoHitoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-THIT-B", "CSP-THIT-C", "CSP-THIT-E", "CSP-THIT-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-THITO-V",
+        "CSP-THITO-C", "CSP-THITO-E", "CSP-THITO-B", "CSP-THITO-R", "CSP-ME-C", "CSP-ME-E", "AUTH")));
 
     HttpEntity<TipoHito> request = new HttpEntity<>(entity, headers);
     return request;

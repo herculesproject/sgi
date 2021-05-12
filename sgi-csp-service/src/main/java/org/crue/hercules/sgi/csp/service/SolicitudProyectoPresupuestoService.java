@@ -39,14 +39,6 @@ public interface SolicitudProyectoPresupuestoService {
   SolicitudProyectoPresupuesto update(final SolicitudProyectoPresupuesto solicitudProyectoPresupuesto);
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyectoPresupuesto} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudProyectoPresupuesto}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link SolicitudProyectoPresupuesto} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudProyectoPresupuesto}.

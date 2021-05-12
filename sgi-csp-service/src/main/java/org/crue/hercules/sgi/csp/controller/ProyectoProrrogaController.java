@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,7 +62,7 @@ public class ProyectoProrrogaController {
    * @return Nuevo {@link ProyectoProrroga} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ProyectoProrroga> create(@Valid @RequestBody ProyectoProrroga proyectoProrroga) {
     log.debug("create(ProyectoProrroga proyectoProrroga) - start");
     ProyectoProrroga returnValue = service.create(proyectoProrroga);
@@ -77,7 +78,7 @@ public class ProyectoProrrogaController {
    * @return {@link ProyectoProrroga} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoProrroga update(@Validated({ Update.class, Default.class }) @RequestBody ProyectoProrroga proyectoProrroga,
       @PathVariable Long id) {
     log.debug("update(ProyectoProrroga proyectoProrroga, Long id) - start");
@@ -93,7 +94,7 @@ public class ProyectoProrrogaController {
    * @param id Identificador de {@link ProyectoProrroga}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -108,7 +109,7 @@ public class ProyectoProrrogaController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<?> exists(@PathVariable Long id) {
     log.debug("ProyectoProrroga exists(Long id) - start");
     if (service.existsById(id)) {
@@ -126,7 +127,7 @@ public class ProyectoProrrogaController {
    * @return {@link ProyectoProrroga} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoProrroga findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoProrroga returnValue = service.findById(id);
@@ -149,7 +150,7 @@ public class ProyectoProrrogaController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/prorrogadocumentos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProrrogaDocumento>> findAllProrrogaDocumento(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProrrogaDocumento(Long id, String query, Pageable paging) - start");

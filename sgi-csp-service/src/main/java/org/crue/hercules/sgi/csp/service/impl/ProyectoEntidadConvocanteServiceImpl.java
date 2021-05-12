@@ -131,25 +131,6 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
   }
 
   /**
-   * Obtiene {@link ProyectoEntidadConvocante} por su id.
-   *
-   * @param id el id de la entidad {@link ProyectoEntidadConvocante}.
-   * @return la entidad {@link ProyectoEntidadConvocante}.
-   */
-  @Override
-  public ProyectoEntidadConvocante findById(Long id) {
-    log.debug("findById(Long id)  - start");
-    Assert.notNull(id, "ProyectoEntidadConvocante id no puede ser null");
-    final ProyectoEntidadConvocante returnValue = repository.findById(id)
-        .orElseThrow(() -> new ProyectoEntidadConvocanteNotFoundException(id));
-    Proyecto proyecto = proyectoRepository.findById(returnValue.getProyectoId())
-        .orElseThrow(() -> new ProyectoNotFoundException(returnValue.getProyectoId()));
-    ProyectoHelper.checkCanRead(proyecto);
-    log.debug("findById(Long id)  - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene las {@link ProyectoEntidadConvocante} para una {@link Proyecto}.
    *
    * @param idProyecto el id de la {@link Proyecto}.

@@ -30,8 +30,7 @@ public class ProyectoPaqueteTrabajoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-PRO-B", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-PRO-E")));
 
     HttpEntity<ProyectoPaqueteTrabajo> request = new HttpEntity<>(entity, headers);
     return request;
@@ -52,18 +51,6 @@ public class ProyectoPaqueteTrabajoIT extends BaseIT {
         HttpMethod.HEAD, buildRequest(null, null), Proyecto.class, id);
     // then: 200 OK
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void existsById_Returns204() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    // when: exists by id
-    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.HEAD, buildRequest(null, null), Proyecto.class, id);
-    // then: 204 No Content
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",

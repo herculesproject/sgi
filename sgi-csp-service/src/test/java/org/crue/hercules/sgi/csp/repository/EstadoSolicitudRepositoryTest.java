@@ -37,7 +37,7 @@ public class EstadoSolicitudRepositoryTest extends BaseRepositoryTest {
     Solicitud solicitud = new Solicitud();
     solicitud.setCreadorRef("usr-001");
     solicitud.setSolicitanteRef("usr-002");
-    solicitud.setUnidadGestionRef("OPE");
+    solicitud.setUnidadGestionRef("2");
     solicitud.setFormularioSolicitud(FormularioSolicitud.RRHH);
     solicitud.setActivo(true);
 

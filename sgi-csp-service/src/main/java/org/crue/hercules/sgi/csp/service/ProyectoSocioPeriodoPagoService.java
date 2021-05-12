@@ -15,14 +15,6 @@ import org.springframework.data.domain.Pageable;
 public interface ProyectoSocioPeriodoPagoService {
 
   /**
-   * Comprueba la existencia del {@link ProyectoSocioPeriodoPago} por id.
-   *
-   * @param id el id de la entidad {@link ProyectoSocioPeriodoPago}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link ProyectoSocioPeriodoPago} por id.
    * 
    * @param id Identificador de la entidad {@link ProyectoSocioPeriodoPago}.

@@ -38,14 +38,6 @@ public interface ProrrogaDocumentoService {
   void delete(Long id);
 
   /**
-   * Comprueba la existencia del {@link ProrrogaDocumento} por id.
-   *
-   * @param id el id de la entidad {@link ProrrogaDocumento}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene {@link ProrrogaDocumento} por su id.
    *
    * @param id el id de la entidad {@link ProrrogaDocumento}.

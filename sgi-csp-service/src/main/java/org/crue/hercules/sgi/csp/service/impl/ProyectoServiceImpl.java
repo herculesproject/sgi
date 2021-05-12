@@ -21,7 +21,6 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
@@ -38,10 +37,10 @@ import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -56,10 +55,10 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
@@ -85,6 +84,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -200,7 +200,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Proyecto create(Proyecto proyecto) {
     log.debug("create(Proyecto proyecto) - start");
     Assert.isNull(proyecto.getId(), "Proyecto id tiene que ser null para crear un Proyecto");
-    // TODO: Add right authority
+
     Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
         "La Unidad de Gestión no es gestionable por el usuario");
 
@@ -300,8 +300,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     Assert.notNull(id, "Proyecto id no puede ser null para reactivar un Proyecto");
 
     return repository.findById(id).map(proyecto -> {
-      // TODO: Add right authority
-      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
+      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-R", proyecto.getUnidadGestionRef()),
           "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       if (proyecto.getActivo()) {
@@ -331,8 +330,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     Assert.notNull(id, "Proyecto id no puede ser null para desactivar un Proyecto");
 
     return repository.findById(id).map(proyecto -> {
-      // TODO: Add right authority
-      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
+      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-B", proyecto.getUnidadGestionRef()),
           "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       if (!proyecto.getActivo()) {
@@ -346,40 +344,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
-  }
-
-  /**
-   * Comprueba la existencia del {@link Proyecto} por id.
-   *
-   * @param id el id de la entidad {@link Proyecto}.
-   * @return true si existe y false en caso contrario.
-   */
-  @Override
-  public boolean existsById(final Long id) {
-    log.debug("existsById(final Long id)  - start", id);
-    final boolean existe = repository.existsById(id);
-    log.debug("existsById(final Long id)  - end", id);
-    return existe;
-  }
-
-  /**
-   * Obtiene el {@link ModeloEjecucion} asignada al {@link Proyecto}.
-   * 
-   * @param id Id del {@link Proyecto}.
-   * @return {@link ModeloEjecucion} asignado
-   */
-  @Override
-  public ModeloEjecucion getModeloEjecucion(Long id) {
-    log.debug("getModeloEjecucion(Long id) - start");
-
-    Optional<ModeloEjecucion> returnValue = null;
-    if (repository.existsById(id)) {
-      returnValue = repository.getModeloEjecucion(id);
-    } else {
-      throw (new ProyectoNotFoundException(id));
-    }
-    log.debug("getModeloEjecucion(Long id) - end");
-    return returnValue.isPresent() ? returnValue.get() : null;
   }
 
   /**
@@ -412,11 +376,12 @@ public class ProyectoServiceImpl implements ProyectoService {
     Specification<Proyecto> specs = ProyectoSpecifications.activos()
         .and(SgiRSQLJPASupport.toSpecification(query, ProyectoPredicateResolver.getInstance(programaRepository)));
 
-    // TODO: Add right authority
     // No tiene acceso a todos los UO
-    if (!SgiSecurityContextHolder.hasAuthority("CSP-PRO-C")) {
-      Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
-          .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
+
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications.unidadGestionRefIn(unidadesGestion);
       specs = specs.and(specByUnidadGestionRefIn);
     }
 
@@ -438,15 +403,13 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     Specification<Proyecto> specs = SgiRSQLJPASupport.toSpecification(query);
 
-    // TODO: Add right authority
-    // No tiene acceso a todos los UO
-    if (!SgiSecurityContextHolder.hasAuthority("CSP-PRO-C")) {
-      Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications
-          .unidadGestionRefIn(SgiSecurityContextHolder.getUOsForAuthority("CSP-PRO-C"));
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
+
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      Specification<Proyecto> specByUnidadGestionRefIn = ProyectoSpecifications.unidadGestionRefIn(unidadesGestion);
       specs = specs.and(specByUnidadGestionRefIn);
     }
-
-    // TODO implementar buscador avanzado
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");
@@ -877,21 +840,23 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   private void copyMiembrosEquipo(Proyecto proyecto, Long solicitudProyectoId) {
     log.debug("copyMiembrosEquipo(Proyecto proyecto) - start");
-    List<SolicitudProyectoEquipo> entidadesSolicitud = solicitudEquipoRepository
+    List<SolicitudProyectoEquipo> solicitudesProyectoEquipo = solicitudEquipoRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
     List<ProyectoEquipo> proyectoEquipos = new ArrayList<ProyectoEquipo>();
-    entidadesSolicitud.stream().forEach((entidadSolicitud) -> {
-      log.debug("Copy SolicitudProyectoEquipo with id: {0}", entidadSolicitud.getId());
+    solicitudesProyectoEquipo.stream().forEach((solicitudProyectoEquipo) -> {
+      log.debug("Copy SolicitudProyectoEquipo with id: {0}", solicitudProyectoEquipo.getId());
       ProyectoEquipo proyectoEquipo = new ProyectoEquipo();
       proyectoEquipo.setProyectoId(proyecto.getId());
-      if (entidadSolicitud.getMesInicio() != null && entidadSolicitud.getMesFin() != null) {
+      if (solicitudProyectoEquipo.getMesInicio() != null) {
         proyectoEquipo.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
-            .plus(Period.ofMonths(entidadSolicitud.getMesInicio() - 1))));
-        proyectoEquipo.setFechaFin(Instant.from(
-            proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesFin() - 1))));
+            .plus(Period.ofMonths(solicitudProyectoEquipo.getMesInicio() - 1))));
       }
-      proyectoEquipo.setRolProyecto(entidadSolicitud.getRolProyecto());
-      proyectoEquipo.setPersonaRef(entidadSolicitud.getPersonaRef());
+      if (solicitudProyectoEquipo.getMesFin() != null) {
+        proyectoEquipo.setFechaFin(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(solicitudProyectoEquipo.getMesFin() - 1))));
+      }
+      proyectoEquipo.setRolProyecto(solicitudProyectoEquipo.getRolProyecto());
+      proyectoEquipo.setPersonaRef(solicitudProyectoEquipo.getPersonaRef());
       proyectoEquipos.add(proyectoEquipo);
     });
     this.proyectoEquipoService.update(proyecto.getId(), proyectoEquipos);
@@ -1045,7 +1010,6 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     proyecto = this.copyDatosGeneralesSolicitudToProyecto(proyecto, solicitud, solicitudProyecto);
 
-    // TODO: Add right authority
     Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
         "La Unidad de Gestión no es gestionable por el usuario");
 

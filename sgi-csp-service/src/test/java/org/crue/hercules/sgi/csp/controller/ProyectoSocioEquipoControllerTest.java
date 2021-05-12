@@ -38,7 +38,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/proyectosocioequipos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void updateProyectoSocioEquipoesConvocatoria_ReturnsProyectoSocioEquipoList() throws Exception {
     // given: una lista con uno de los ProyectoSocioEquipo actualizado,
     // otro nuevo y sin los otros 3 periodos existentes
@@ -90,7 +90,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void updateProyectoSocioEquipoesConvocatoria_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -110,7 +110,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsProyectoSocioEquipo() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -132,7 +132,7 @@ public class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

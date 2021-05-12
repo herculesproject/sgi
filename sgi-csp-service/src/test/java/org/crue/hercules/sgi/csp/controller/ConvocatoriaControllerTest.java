@@ -109,11 +109,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
-  private static final String PATH_PARAMETER_VINCULACIONES = "/vinculaciones";
   private static final String PATH_PARAMETER_MODIFICABLE = "/modificable";
   private static final String PATH_PARAMETER_REGISTRABLE = "/registrable";
-  private static final String PATH_PARAMETER_UNIDAD_GESTION = "/unidadgestion";
-  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/convocatoriadocumentos";
@@ -130,13 +127,12 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_RESTRINGIDOS = "/restringidos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a Convocatoria with id filled
     Convocatoria newConvocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<Convocatoria>any(), ArgumentMatchers.<String>anyList()))
-        .willThrow(new IllegalArgumentException());
+    BDDMockito.given(service.create(ArgumentMatchers.<Convocatoria>any())).willThrow(new IllegalArgumentException());
 
     // when: create Convocatoria
     mockMvc
@@ -149,7 +145,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithExistingId_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -158,14 +154,13 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoria.setObservaciones("observaciones-modificadas");
 
     BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(convocatoriaExistente);
-    BDDMockito.given(service.update(ArgumentMatchers.<Convocatoria>any(), ArgumentMatchers.<String>anyList()))
-        .willAnswer(new Answer<Convocatoria>() {
-          @Override
-          public Convocatoria answer(InvocationOnMock invocation) throws Throwable {
-            Convocatoria givenData = invocation.getArgument(0, Convocatoria.class);
-            return givenData;
-          }
-        });
+    BDDMockito.given(service.update(ArgumentMatchers.<Convocatoria>any())).willAnswer(new Answer<Convocatoria>() {
+      @Override
+      public Convocatoria answer(InvocationOnMock invocation) throws Throwable {
+        Convocatoria givenData = invocation.getArgument(0, Convocatoria.class);
+        return givenData;
+      }
+    });
 
     // when: update Convocatoria
     mockMvc
@@ -203,14 +198,14 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: a Convocatoria with non existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
     BDDMockito.willThrow(new ConvocatoriaNotFoundException(convocatoria.getId())).given(service)
         .findById(ArgumentMatchers.<Long>any());
-    BDDMockito.given(service.update(ArgumentMatchers.<Convocatoria>any(), ArgumentMatchers.<String>anyList()))
+    BDDMockito.given(service.update(ArgumentMatchers.<Convocatoria>any()))
         .willThrow(new ConvocatoriaNotFoundException(convocatoria.getId()));
 
     // when: update Convocatoria
@@ -224,7 +219,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void registrar_WithEstadoBorradorAnddExistingId_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria with estado Borrador
     Convocatoria convocatoriaBorradorExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -275,7 +270,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void registrar_WithEstadoBorradorAndNoExistingId_Returns404() throws Exception {
     // given: a Convocatoria with non existing id
     Convocatoria convocatoriaBorradorExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -299,7 +294,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-R" })
   public void enable_WithExistingId_Return204() throws Exception {
     // given: existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.FALSE);
@@ -324,7 +319,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-R" })
   public void enable_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -342,7 +337,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-B" })
   public void disable_WithExistingId_Return204() throws Exception {
     // given: existing id
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -367,7 +362,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-B" })
   public void disable_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -385,12 +380,12 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void modificable_ConvocatoriaRegistradaWithSolicitudesOrProyectosIsTrue_Returns204() throws Exception {
     // given: Existing id convocatoria registrada with Solicitudes or Proyectos
     Long id = 1L;
-    BDDMockito.given(service.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(service.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     // when: check modificable by convocatoriaId
     mockMvc
@@ -402,12 +397,12 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void modificable_ConvocatoriaRegistradaOrWithSolicitudesOrProyectosIsFalse_Returns200() throws Exception {
     // given: Existing id in any Estado without Solicitudes or Proyectos
     Long id = 1L;
-    BDDMockito.given(service.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(service.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     // when: check modificable by convocatoriaId
     mockMvc
@@ -419,7 +414,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void registrable_ConvocatoriaRegistrable_Returns200() throws Exception {
     // given: Existing id convocatoria registrable
     Long id = 1L;
@@ -435,7 +430,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void registrable_ConvocatoriaNoRegistrable_Returns204() throws Exception {
     // given: Existing id convocatoria NO registrable
     Long id = 1L;
@@ -451,7 +446,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void existsById_WithExistingId_Returns200() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -467,7 +462,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void existsById_WithNoExistingId_Returns204() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -483,85 +478,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
-  public void getUnidadGestionRef_WithExistingId_ReturnsUnidadGestionRef() throws Exception {
-    // given: existing Convocatoria id
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaExistente.setUnidadGestionRef("OPE");
-    BDDMockito.given(service.getUnidadGestionRef(ArgumentMatchers.<Long>any()))
-        .willReturn(convocatoriaExistente.getUnidadGestionRef());
-
-    // when: getUnidadGestionRef by existing Convocatoria id
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_UNIDAD_GESTION, 1L)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: response is OK
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested Convocatoria is resturned as JSON object
-        .andExpect(MockMvcResultMatchers.content().string(convocatoriaExistente.getUnidadGestionRef()));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
-  public void getUnidadGestionRef_WithNoExistingId_Returns404() throws Exception {
-    // given: no existing Convocatoria id
-    BDDMockito.given(service.getUnidadGestionRef(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ConvocatoriaNotFoundException(1L);
-    });
-
-    // when: getUnidadGestionRef by non existing Convocatoria id
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_UNIDAD_GESTION, 1L)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).
-        // then: HTTP code 404 NotFound pressent
-        andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
-  public void getModeloEjecucion_WithExistingId_ReturnsModeloEjecucion() throws Exception {
-    // given: existing Convocatoria id
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaExistente.getModeloEjecucion().setId(99L);
-    BDDMockito.given(service.getModeloEjecucion(ArgumentMatchers.<Long>any()))
-        .willReturn(convocatoriaExistente.getModeloEjecucion());
-
-    // when: getModeloEjecucion by existing Convocatoria id
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, 1L)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: response is OK
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested ModeloEjecucion is resturned as JSON object
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(99L));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
-  public void getModeloEjecucion_WithNoExistingId_Returns404() throws Exception {
-    // given: no existing Convocatoria id
-    BDDMockito.given(service.getModeloEjecucion(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ConvocatoriaNotFoundException(1L);
-    });
-
-    // when: getModeloEjecucion by non existing Convocatoria id
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, 1L)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).
-        // then: HTTP code 404 NotFound pressent
-        andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findById_WithExistingId_ReturnsConvocatoria() throws Exception {
     // given: existing id
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -579,7 +496,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -596,7 +513,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_WithPaging_ReturnsConvocatoriaSubList() throws Exception {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -650,60 +567,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "SYSADMIN" })
-  public void findAllTodos_WithPaging_ReturnsConvocatoriaSubList() throws Exception {
-    // given: One hundred Convocatoria
-    List<Convocatoria> convocatorias = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      convocatorias.add(
-          generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
-    }
-
-    BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Convocatoria>>() {
-          @Override
-          public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<Convocatoria> content = convocatorias.subList(fromIndex, toIndex);
-            Page<Convocatoria> page = new PageImpl<>(content, pageable, convocatorias.size());
-            return page;
-          }
-        });
-
-    // when: get page=3 with pagesize=10
-    MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: the asked Convocatoria are returned with the right page information in
-        // headers
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
-
-    // this uses a TypeReference to inform Jackson about the Lists's generic type
-    List<Convocatoria> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Convocatoria>>() {
-        });
-
-    // containing Codigo='codigo-31' to 'codigo-40'
-    for (int i = 0, j = 31; i < 10; i++, j++) {
-      Convocatoria item = actual.get(i);
-      Assertions.assertThat(item.getCodigo()).isEqualTo("codigo-" + String.format("%03d", j));
-      Assertions.assertThat(item.getActivo()).isEqualTo((j % 2 == 0 ? Boolean.TRUE : Boolean.FALSE));
-    }
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "SYSADMIN" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllTodosRestringidos_WithPaging_ReturnsConvocatoriaSubList() throws Exception {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -712,8 +576,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
           generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
     }
 
-    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Convocatoria>>() {
+    BDDMockito.given(service.findAllTodosRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -756,7 +620,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data Convocatoria
     BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -778,7 +642,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "SYSADMIN" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllRestringidos_WithPaging_ReturnsConvocatoriaSubList() throws Exception {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();
@@ -787,8 +651,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
           generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
     }
 
-    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Convocatoria>>() {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -831,11 +695,11 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllRestringidos_EmptyList_Returns204() throws Exception {
     // given: no data Convocatoria
-    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any(),
-        ArgumentMatchers.<List<String>>any())).willAnswer(new Answer<Page<Convocatoria>>() {
+    BDDMockito.given(service.findAllRestringidos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Convocatoria>>() {
           @Override
           public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
             Page<Convocatoria> page = new PageImpl<>(Collections.emptyList());
@@ -860,7 +724,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEntidadGestora_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadGestora para la Convocatoria
     Long convocatoriaId = 1L;
@@ -920,7 +784,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEntidadGestora_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaEntidadGestora para la Convocatoria
     Long convocatoriaId = 1L;
@@ -959,7 +823,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaFase_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaFase para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1016,7 +880,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaFase_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaFase para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1075,7 +939,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEntidadFinanciadora_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadFinanciadora para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1134,7 +998,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEntidadFinanciadora_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaEntidadFinanciadora para la
     // Convocatoria
@@ -1172,7 +1036,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaDocumento_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaDocumento para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1230,7 +1094,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaDocumento_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaDocumento para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1269,7 +1133,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEnlace_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEnlace para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1327,7 +1191,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEnlace_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaEnlace para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1366,7 +1230,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEntidadConvocantes_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1424,7 +1288,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaEntidadConvocantes_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaEntidadConvocante para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1455,22 +1319,21 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsConvocatoria() throws Exception {
     // given: new Convocatoria
     Convocatoria newConvocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<Convocatoria>any(), ArgumentMatchers.<String>anyList()))
-        .willAnswer(new Answer<Convocatoria>() {
-          @Override
-          public Convocatoria answer(InvocationOnMock invocation) throws Throwable {
-            Convocatoria givenData = invocation.getArgument(0, Convocatoria.class);
-            Convocatoria newData = new Convocatoria();
-            BeanUtils.copyProperties(givenData, newData);
-            newData.setId(newConvocatoria.getId());
-            return newData;
-          }
-        });
+    BDDMockito.given(service.create(ArgumentMatchers.<Convocatoria>any())).willAnswer(new Answer<Convocatoria>() {
+      @Override
+      public Convocatoria answer(InvocationOnMock invocation) throws Throwable {
+        Convocatoria givenData = invocation.getArgument(0, Convocatoria.class);
+        Convocatoria newData = new Convocatoria();
+        BeanUtils.copyProperties(givenData, newData);
+        newData.setId(newConvocatoria.getId());
+        return newData;
+      }
+    });
 
     // when: create Convocatoria
     mockMvc
@@ -1513,7 +1376,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaPeriodoJustificacion_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1572,7 +1435,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaPeriodoJustificacion_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaPeriodoJustificacion para la
     // Convocatoria
@@ -1610,7 +1473,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaPeriodoSeguimientoCientifico_ReturnsPage() throws Exception {
     // given: Una lista con 100 ConvocatoriaPeriodoSeguimientoCientifico para la
     // Convocatoria
@@ -1683,7 +1546,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaPeriodoSeguimientoCientifico_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaPeriodoSeguimientoCientifico para la
     // Convocatoria
@@ -1820,7 +1683,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaAreaTematica_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaAreaTematica para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1880,7 +1743,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaAreaTematica_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaAreaTematica para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1919,7 +1782,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllConvocatoriaHito_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaHito para la Convocatoria
     Long convocatoriaId = 1L;
@@ -1976,7 +1839,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaHito_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaHito para la Convocatoria
     Long convocatoriaId = 1L;
@@ -2014,7 +1877,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaConceptoGastoPermitido_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaConceptoGasto para la Convocatoria
     Long convocatoriaId = 1L;
@@ -2057,7 +1920,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaConceptoGastoPermitido_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaConceptoGasto para la Convocatoria
 
@@ -2076,7 +1939,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaConceptoGastoNoPermitido_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaConceptoGasto para la Convocatoria
     Long convocatoriaId = 1L;
@@ -2119,7 +1982,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllConvocatoriaConceptoGastoNoPermitido_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConvocatoriaConceptoGasto para la Convocatoria
 

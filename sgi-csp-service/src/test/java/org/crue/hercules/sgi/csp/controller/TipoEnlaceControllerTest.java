@@ -176,7 +176,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-TENL-R" })
   public void reactivar_WithExistingId_ReturnTipoEnlace() throws Exception {
     // given: existing id
     TipoEnlace tipoEnlace = generarMockTipoEnlace(1L, Boolean.FALSE);
@@ -203,7 +203,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-TENL-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -266,7 +266,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsTipoEnlace() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer(new Answer<TipoEnlace>() {
@@ -289,7 +289,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -306,7 +306,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void findAll_WithPaging_ReturnsTipoEnlaceSubList() throws Exception {
     // given: One hundred TipoEnlace
     List<TipoEnlace> data = new ArrayList<>();
@@ -356,7 +356,7 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data TipoEnlace
     BDDMockito.given(service.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -378,7 +378,8 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-TENL-V", "CSP-TENL-C", "CSP-TENL-E", "CSP-TENL-B",
+      "CSP-TENL-R" })
   public void findAllTodos_WithPaging_ReturnsTipoEnlaceSubList() throws Exception {
     // given: One hundred TipoEnlace
     List<TipoEnlace> data = new ArrayList<>();
@@ -429,7 +430,8 @@ public class TipoEnlaceControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-TENL-V", "CSP-TENL-C", "CSP-TENL-E", "CSP-TENL-B",
+      "CSP-TENL-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data TipoEnlace
     BDDMockito.given(service.findAllTodos(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))

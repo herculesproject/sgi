@@ -43,7 +43,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   private static final String TIPO_FASE_CONTROLLER_BASE_PATH = "/tipofases";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-C" })
   public void create_ReturnsTipoFase() throws Exception {
     // given: Un TipoFase nuevo
     String tipoFaseJson = "{ \"nombre\": \"nombre-1\", \"descripcion\": \"descripcion-1\",  \"activo\": \"true\"  }";
@@ -67,7 +67,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: Un TipoFase que produce un error al crearse porque ya tiene id
     String tipoFaseJson = "{ \"id\": \"1\", \"nombre\": \"nombre-1\", \"descripcion\": \"descripcion-1\" }";
@@ -84,7 +84,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-E" })
   public void update_ReturnsTipoFase() throws Exception {
     // given: Un TipoFase a modificar
     String tipoFaseJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
@@ -105,7 +105,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-E" })
   public void update_WithIdNotExist_ReturnsNotFound() throws Exception {
     // given: Un TipoFase a modificar
     String replaceTipoFaseJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
@@ -122,7 +122,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-E" })
   public void update_WithNombreRepetido_Returns400() throws Exception {
     // given: Un TipoFase que produce un error porque ya existe otro con el
     // mismo nombre
@@ -140,7 +140,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 TipoFase
     List<TipoFase> tiposFase = new ArrayList<>();
@@ -188,7 +188,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de TipoFase
     List<TipoFase> tiposFase = new ArrayList<>();
@@ -214,7 +214,8 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-V", "CSP-TFASE-C", "CSP-TFASE-E", "CSP-TFASE-B",
+      "CSP-TFASE-R" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 TipoFase
     List<TipoFase> tiposFase = new ArrayList<>();
@@ -262,7 +263,8 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-V", "CSP-TFASE-C", "CSP-TFASE-E", "CSP-TFASE-B",
+      "CSP-TFASE-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de TipoFase
     List<TipoFase> tiposFase = new ArrayList<>();
@@ -288,7 +290,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_ReturnsTipoFase() throws Exception {
     // given: Un TipoFase con el id buscado
     Long idBuscado = 1L;
@@ -306,7 +308,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-R" })
   public void reactivar_WithExistingId_ReturnTipoFase() throws Exception {
     // given: existing id
     TipoFase tipoFase = generarMockTipoFase(1L);
@@ -333,7 +335,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -352,7 +354,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-B" })
   public void desactivar_WithExistingId_ReturnTipoFase() throws Exception {
     // given: existing id
     Long idBuscado = 1L;
@@ -381,7 +383,7 @@ public class TipoFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TFASE-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;

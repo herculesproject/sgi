@@ -36,7 +36,7 @@ public class SolicitudProyectoSocioPeriodoPagoControllerTest extends BaseControl
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyectosocioperiodopago";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithExistingId_ReturnsSolicitudProyectoSocioPeriodoPago() throws Exception {
     // given: una lista con uno de los SolicitudProyectoSocioPeriodoPago
     // actualizado,
@@ -93,7 +93,7 @@ public class SolicitudProyectoSocioPeriodoPagoControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -116,7 +116,7 @@ public class SolicitudProyectoSocioPeriodoPagoControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void findById_WithExistingId_ReturnsSolicitudProyectoSocioPeriodoPago() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -142,7 +142,7 @@ public class SolicitudProyectoSocioPeriodoPagoControllerTest extends BaseControl
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;

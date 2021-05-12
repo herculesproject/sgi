@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,8 +35,7 @@ public class ProyectoSocioEquipoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH")));
 
     HttpEntity<ProyectoSocioEquipo> request = new HttpEntity<>(entity, headers);
     return request;
@@ -47,8 +46,7 @@ public class ProyectoSocioEquipoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-E")));
 
     HttpEntity<List<ProyectoSocioEquipo>> request = new HttpEntity<>(entity, headers);
     return request;
@@ -69,7 +67,8 @@ public class ProyectoSocioEquipoIT extends BaseIT {
     ProyectoSocioEquipo updatedProyectoSocioEquipo = generarMockProyectoSocioEquipo(3L);
     updatedProyectoSocioEquipo.setProyectoSocioId(1L);
 
-    List<ProyectoSocioEquipo> proyectoSocioEquipos = Arrays.asList(updatedProyectoSocioEquipo);
+    List<ProyectoSocioEquipo> proyectoSocioEquipos = new ArrayList<ProyectoSocioEquipo>();
+    proyectoSocioEquipos.add(updatedProyectoSocioEquipo);
 
     // when: updateProyectoSocioEquipo
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID)
@@ -96,7 +95,6 @@ public class ProyectoSocioEquipoIT extends BaseIT {
         .isEqualTo(updatedProyectoSocioEquipo.getRolProyecto().getId());
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "fechaInicio,asc";

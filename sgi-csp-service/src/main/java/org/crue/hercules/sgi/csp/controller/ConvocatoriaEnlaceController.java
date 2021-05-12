@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class ConvocatoriaEnlaceController {
    * @return {@link ConvocatoriaEnlace} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENL-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaEnlace findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaEnlace returnValue = service.findById(id);
@@ -63,7 +63,7 @@ public class ConvocatoriaEnlaceController {
    * @return Nuevo {@link ConvocatoriaEnlace} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENL-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   ResponseEntity<ConvocatoriaEnlace> create(@Valid @RequestBody ConvocatoriaEnlace convocatoriaEnlace) {
     log.debug("create(ConvocatoriaEnlace convocatoriaEnlace) - start");
     ConvocatoriaEnlace returnValue = service.create(convocatoriaEnlace);
@@ -79,7 +79,7 @@ public class ConvocatoriaEnlaceController {
    * @return {@link ConvocatoriaEnlace} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ConvocatoriaEnlace update(
       @Validated({ Update.class, Default.class }) @RequestBody ConvocatoriaEnlace convocatoriaEnlace,
       @PathVariable Long id) {
@@ -96,8 +96,7 @@ public class ConvocatoriaEnlaceController {
    * @param id Identificador de {@link ConvocatoriaEnlace}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENL-B')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
     service.delete(id);

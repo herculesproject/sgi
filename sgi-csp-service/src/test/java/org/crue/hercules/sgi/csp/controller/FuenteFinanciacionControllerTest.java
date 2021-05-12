@@ -46,7 +46,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/fuentefinanciaciones";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-C" })
   public void create_ReturnsFuenteFinanciacion() throws Exception {
     // given: new FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
@@ -79,7 +79,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a FuenteFinanciacion with id filled
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
@@ -98,7 +98,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-E" })
   public void update_ReturnsFuenteFinanciacion() throws Exception {
     // given: Existing TipoAmbitoGeografico to be updated
     FuenteFinanciacion fuenteFinanciacionExistente = generarMockFuenteFinanciacion(1L);
@@ -129,7 +129,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -149,7 +149,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-R" })
   public void reactivar_WithExistingId_ReturnFuenteFinanciacion() throws Exception {
     // given: existing id
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
@@ -181,7 +181,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -200,7 +200,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-B" })
   public void desactivar_WithExistingId_ReturnFuenteFinanciacion() throws Exception {
     // given: existing id
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
@@ -230,7 +230,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -249,7 +249,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-E", "CSP-CON-C", "CSP-CON-INV-V" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 FuenteFinanciacion
     List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
@@ -298,7 +298,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V", "CSP-CON-E", "CSP-CON-C", "CSP-CON-INV-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de FuenteFinanciacion
     List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
@@ -323,7 +323,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-V", "CSP-FNT-C", "CSP-FNT-E", "CSP-FNT-B", "CSP-FNT-R" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 FuenteFinanciacion
     List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
@@ -373,7 +373,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-FNT-V", "CSP-FNT-C", "CSP-FNT-E", "CSP-FNT-B", "CSP-FNT-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de FuenteFinanciacion
     List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
@@ -399,7 +399,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsTipoAmbitoGeografico() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -418,7 +418,7 @@ public class FuenteFinanciacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

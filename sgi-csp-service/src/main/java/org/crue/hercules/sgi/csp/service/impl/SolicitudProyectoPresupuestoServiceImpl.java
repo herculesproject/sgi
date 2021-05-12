@@ -105,20 +105,6 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
   }
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyectoPresupuesto} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudProyectoPresupuesto}.
-   * @return true si existe y false en caso contrario.
-   */
-  @Override
-  public boolean existsById(final Long id) {
-    log.debug("existsById(final Long id)  - start", id);
-    final boolean existe = repository.existsById(id);
-    log.debug("existsById(final Long id)  - end", id);
-    return existe;
-  }
-
-  /**
    * Obtiene una entidad {@link SolicitudProyectoPresupuesto} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudProyectoPresupuesto}.

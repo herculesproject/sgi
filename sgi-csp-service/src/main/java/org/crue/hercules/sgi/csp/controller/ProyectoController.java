@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
@@ -34,6 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -141,7 +140,7 @@ public class ProyectoController {
    * @return Nuevo {@link Proyecto} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
   public ResponseEntity<Proyecto> create(@Valid @RequestBody Proyecto proyecto) {
     log.debug("create(Proyecto proyecto) - start");
 
@@ -158,7 +157,7 @@ public class ProyectoController {
    * @return Proyecto {@link Proyecto} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public Proyecto update(@Valid @RequestBody Proyecto proyecto, @PathVariable Long id) {
     log.debug("update(Proyecto proyecto, Long id) - start");
 
@@ -175,7 +174,7 @@ public class ProyectoController {
    * @return {@link Proyecto} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-R')")
   Proyecto reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     Proyecto returnValue = service.enable(id);
@@ -190,45 +189,12 @@ public class ProyectoController {
    * @return {@link Proyecto} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
   Proyecto desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
 
     Proyecto returnValue = service.disable(id);
     log.debug("desactivar(Long id) - end");
-    return returnValue;
-  }
-
-  /**
-   * Comprueba la existencia del {@link Proyecto} con el id indicado.
-   * 
-   * @param id Identificador de {@link Proyecto}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("Proyecto exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("Proyecto exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("Proyecto exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
-   * Obtiene el {@link ModeloEjecucion} asignada al {@link Proyecto}.
-   * 
-   * @param id Id del {@link Proyecto}.
-   * @return {@link ModeloEjecucion} asignado
-   */
-  @GetMapping("/{id}/modeloejecucion")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
-  public ModeloEjecucion getModeloEjecucion(@PathVariable Long id) {
-    log.debug("getModeloEjecucion(Long id) - start");
-    ModeloEjecucion returnValue = service.getModeloEjecucion(id);
-    log.debug("getModeloEjecucion(Long id) - end");
     return returnValue;
   }
 
@@ -239,7 +205,7 @@ public class ProyectoController {
    * @return Proyecto {@link Proyecto} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   Proyecto findById(@PathVariable Long id) {
     log.debug("Proyecto findById(Long id) - start");
 
@@ -258,7 +224,7 @@ public class ProyectoController {
    *         filtradas.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B')")
   ResponseEntity<Page<Proyecto>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -283,7 +249,7 @@ public class ProyectoController {
    *         filtradas.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R')")
   ResponseEntity<Page<Proyecto>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -313,7 +279,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectohitos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-THIT-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProyectoHito>> findAllProyectoHito(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoHito(Long id, String query, Pageable paging) - start");
@@ -343,7 +309,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectofases")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-THIT-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<Page<ProyectoFase>> findAllProyectoFase(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoFase(Long id, String query, Pageable paging) - start");
@@ -373,7 +339,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectopaquetetrabajos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoPaqueteTrabajo>> findAllProyectoPaqueteTrabajo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoPaqueteTrabajo(Long id, String query, Pageable paging) - start");
@@ -403,7 +369,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectosocios")
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoSocio>> findAllProyectoSocio(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocio(Long id, String query, Pageable paging) - start");
@@ -433,7 +399,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoentidadfinanciadoras")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoEntidadFinanciadora>> findAllProyectoEntidadFinanciadora(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEntidadFinanciadora(Long id, String query, Pageable paging) - start");
@@ -462,7 +428,7 @@ public class ProyectoController {
    * @param id Identificador del {@link Proyecto}.
    */
   @GetMapping("/{id}/documentos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoDocumento>> findAllDocumentos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllDocumentos(Long id String query, Pageable paging) - start");
@@ -493,7 +459,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoperiodoseguimientos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoPeriodoSeguimiento>> findAllProyectoPeriodoSeguimiento(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoPeriodoSeguimiento(Long id, String query, Pageable paging) - start");
@@ -523,7 +489,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoentidadgestoras")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoEntidadGestora>> findAllProyectoEntidadGestora(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEntidadGestora(Long id, String query, Pageable paging) - start");
@@ -553,7 +519,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoequipos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoEquipo>> findAllProyectoEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEquipo(Long id, String query, Pageable paging) - start");
@@ -584,7 +550,7 @@ public class ProyectoController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/proyectoprorrogas")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoProrroga>> findAllProyectoProrroga(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoProrroga(Long id, String query, Pageable paging) - start");
@@ -613,7 +579,7 @@ public class ProyectoController {
    */
 
   @GetMapping("/{id}/estadoproyectos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<EstadoProyecto>> findAllEstadoProyecto(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEstadoProyecto(Long id, Pageable paging) - start");
@@ -643,7 +609,7 @@ public class ProyectoController {
    * @return Nuevo {@link Proyecto} creado.
    */
   @PostMapping("/{id}/solicitud")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
   public ResponseEntity<Proyecto> createProyectoBySolicitud(@PathVariable Long id, @RequestBody Proyecto proyecto) {
     log.debug("createProyectoBySolicitud(@PathVariable Long id) - start");
 

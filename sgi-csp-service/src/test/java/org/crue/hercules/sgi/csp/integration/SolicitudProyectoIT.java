@@ -39,7 +39,8 @@ public class SolicitudProyectoIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-C", "CSP-SOL-E")));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-SOL-C", "CSP-SOL-E")));
 
     HttpEntity<SolicitudProyecto> request = new HttpEntity<>(entity, headers);
     return request;

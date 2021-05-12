@@ -35,14 +35,6 @@ public interface ProyectoFaseService {
   void delete(Long id);
 
   /**
-   * Comprueba la existencia del {@link ProyectoFase} por id.
-   *
-   * @param id el id de la entidad {@link ProyectoFase}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene {@link ProyectoFase} por su id.
    *
    * @param id el id de la entidad {@link ProyectoFase}.

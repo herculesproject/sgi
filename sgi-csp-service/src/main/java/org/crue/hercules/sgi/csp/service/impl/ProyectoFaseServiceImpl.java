@@ -117,20 +117,6 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
   }
 
   /**
-   * Comprueba la existencia del {@link ProyectoFase} por id.
-   *
-   * @param id el id de la entidad {@link ProyectoFase}.
-   * @return true si existe y false en caso contrario.
-   */
-  @Override
-  public boolean existsById(final Long id) {
-    log.debug("existsById(final Long id)  - start", id);
-    final boolean existe = repository.existsById(id);
-    log.debug("existsById(final Long id)  - end", id);
-    return existe;
-  }
-
-  /**
    * Obtiene {@link ProyectoFase} por su id.
    *
    * @param id el id de la entidad {@link ProyectoFase}.

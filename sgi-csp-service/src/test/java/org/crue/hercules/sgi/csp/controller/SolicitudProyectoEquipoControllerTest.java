@@ -32,7 +32,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyectoequipo";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_ReturnsSolicitudProyectoEquipo() throws Exception {
     // given: new SolicitudProyectoEquipo
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(null, 1L, 1L);
@@ -68,7 +68,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a SolicitudProyectoEquipo with id filled
     SolicitudProyectoEquipo solicitudProyectoEquipo = generarSolicitudProyectoEquipo(1L, 1L, 1L);
@@ -87,7 +87,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithExistingId_ReturnsSolicitudProyectoEquipo() throws Exception {
     // given: existing SolicitudProyectoEquipo
     SolicitudProyectoEquipo updatedSolicitudProyectoEquipo = generarSolicitudProyectoEquipo(1L, 1L, 1L);
@@ -121,7 +121,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: a SolicitudProyectoEquipo with non existing id
     SolicitudProyectoEquipo updatedSolicitudProyectoEquipo = generarSolicitudProyectoEquipo(1L, 1L, 1L);
@@ -143,7 +143,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -158,7 +158,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   public void delete_WithoutId_Return404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -177,7 +177,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsSolicitudProyectoEquipo() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -201,7 +201,7 @@ public class SolicitudProyectoEquipoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;

@@ -39,14 +39,6 @@ public interface ProyectoEntidadConvocanteService {
   void delete(Long id);
 
   /**
-   * Obtiene {@link ProyectoEntidadConvocante} por su id.
-   *
-   * @param id el id de la entidad {@link ProyectoEntidadConvocante}.
-   * @return la entidad {@link ProyectoEntidadConvocante}.
-   */
-  ProyectoEntidadConvocante findById(Long id);
-
-  /**
    * Obtiene las {@link ProyectoEntidadConvocante} para una {@link Proyecto}.
    *
    * @param idProyecto el id de la {@link Proyecto}.

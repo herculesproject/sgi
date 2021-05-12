@@ -32,7 +32,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/convocatoriadocumentos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsConvocatoriaDocumento() throws Exception {
     // given: new ConvocatoriaDocumento
     ConvocatoriaDocumento convocatoriaDocumento = generarMockConvocatoriaDocumento(1L);
@@ -66,7 +66,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ConvocatoriaDocumento with id filled
     ConvocatoriaDocumento convocatoriaDocumento = generarMockConvocatoriaDocumento(1L);
@@ -85,7 +85,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_ReturnsConvocatoriaDocumento() throws Exception {
     // given: Existing ConvocatoriaDocumento to be updated
     ConvocatoriaDocumento convocatoriaDocumentoExistente = generarMockConvocatoriaDocumento(1L);
@@ -121,7 +121,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -141,7 +141,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_WithoutId_Return400() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -161,7 +161,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -180,7 +180,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsConvocatoriaDocumento() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -199,7 +199,7 @@ public class ConvocatoriaDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

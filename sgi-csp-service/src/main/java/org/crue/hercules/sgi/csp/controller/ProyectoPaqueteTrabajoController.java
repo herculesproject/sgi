@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +50,7 @@ public class ProyectoPaqueteTrabajoController {
    * @return Nuevo {@link ProyectoPaqueteTrabajo} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ResponseEntity<ProyectoPaqueteTrabajo> create(@Valid @RequestBody ProyectoPaqueteTrabajo proyectoPaqueteTrabajo) {
     log.debug("create(ProyectoPaqueteTrabajo proyectoPaqueteTrabajo) - start");
     ProyectoPaqueteTrabajo returnValue = service.create(proyectoPaqueteTrabajo);
@@ -66,7 +66,7 @@ public class ProyectoPaqueteTrabajoController {
    * @return {@link ProyectoPaqueteTrabajo} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoPaqueteTrabajo update(
       @Validated({ Update.class, Default.class }) @RequestBody ProyectoPaqueteTrabajo proyectoPaqueteTrabajo,
       @PathVariable Long id) {
@@ -83,31 +83,12 @@ public class ProyectoPaqueteTrabajoController {
    * @param id Identificador de {@link ProyectoPaqueteTrabajo}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
     service.delete(id);
     log.debug("deleteById(Long id) - end");
-  }
-
-  /**
-   * Comprueba la existencia del {@link ProyectoPaqueteTrabajo} con el id
-   * indicado.
-   * 
-   * @param id Identificador de {@link ProyectoPaqueteTrabajo}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("ProyectoPaqueteTrabajo exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("ProyectoPaqueteTrabajo exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("ProyectoPaqueteTrabajo exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -117,7 +98,7 @@ public class ProyectoPaqueteTrabajoController {
    * @return {@link ProyectoPaqueteTrabajo} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ProyectoPaqueteTrabajo findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoPaqueteTrabajo returnValue = service.findById(id);

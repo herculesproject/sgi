@@ -173,7 +173,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void update_WithNombreRepetido_Returns400() throws Exception {
     // given: Un ModeloEjecucion que produce un error porque ya existe otro con el
     // mismo nombre
@@ -193,7 +193,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-R" })
   public void reactivar_WithExistingId_ReturnModeloEjecucion() throws Exception {
     // given: existing id
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L);
@@ -222,7 +222,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-X" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -242,7 +242,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B", "CSP-PRO-V" })
   public void desactivar_WithExistingId_ReturnModeloEjecucion() throws Exception {
     // given: existing id
     Long idBuscado = 1L;
@@ -290,7 +290,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloEjecucion
     List<ModeloEjecucion> modelosEjecucion = new ArrayList<>();
@@ -343,7 +343,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloEjecucion
     List<ModeloEjecucion> modelosEjecucion = new ArrayList<>();
@@ -372,7 +372,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V", "CSP-ME-C", "CSP-ME-E", "CSP-ME-B", "CSP-ME-R" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloEjecucion
     List<ModeloEjecucion> modelosEjecucion = new ArrayList<>();
@@ -426,7 +426,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V", "CSP-ME-C", "CSP-ME-E", "CSP-ME-B", "CSP-ME-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloEjecucion
     List<ModeloEjecucion> modelosEjecucion = new ArrayList<>();
@@ -456,7 +456,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
   public void findById_ReturnsModeloEjecucion() throws Exception {
     // given: Un ModeloEjecucion con el id buscado
     Long idBuscado = 1L;
@@ -476,7 +476,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })
   public void findById_WithIdNotExist_Returns404() throws Exception {
     // given: Ningun ModeloEjecucion con el id buscado
     Long idBuscado = 1L;
@@ -501,7 +501,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoEnlaces_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoEnlace para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -560,7 +560,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllModeloTipoEnlaces_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoEnlace del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -599,7 +599,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllModeloTipoFases_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoFase para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -657,7 +657,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoFases_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoFase del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -690,7 +690,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoFasesConvocatoria_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoFase para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -749,7 +749,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoFasesConvocatoria_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoFase del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -783,7 +783,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllModeloTipoFasesProyecto_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoFase para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -842,7 +842,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllModeloTipoFasesProyecto_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoFase del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -882,7 +882,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoDocumentos_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoDocumento para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -941,7 +941,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoDocumentos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoDocumento del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -980,7 +980,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoFinalidades_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoFinalidad para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1040,7 +1040,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoFinalidades_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoFinalidad del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1080,7 +1080,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   public void findAllModeloTipoHitos_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoHito para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1138,7 +1138,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   public void findAllModeloTipoHitos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoHito del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1171,7 +1171,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
   public void findAllModeloTipoHitosConvocatoria_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoHito para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1230,7 +1230,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void findAllModeloTipoHitosConvocatoria_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoHito del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1264,7 +1264,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllModeloTipoHitosProyecto_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoHito para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1323,7 +1323,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
   public void findAllModeloTipoHitosProyecto_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoHito del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1357,7 +1357,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllModeloTipoHitosSolicitud_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloTipoHito para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1416,7 +1416,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E", "CSP-SOL-V" })
   public void findAllModeloTipoHitosSolicitud_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloTipoHito del ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1456,7 +1456,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findAllModeloUnidades_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloUnidad para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -1514,7 +1514,7 @@ public class ModeloEjecucionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findAllModeloUnidades_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloUnidad del ModeloEjecucion
     Long idModeloEjecucion = 1L;

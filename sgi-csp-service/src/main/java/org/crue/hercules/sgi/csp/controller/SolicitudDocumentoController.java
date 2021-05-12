@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +47,7 @@ public class SolicitudDocumentoController {
    * @return Nuevo {@link SolicitudDocumento} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public ResponseEntity<SolicitudDocumento> create(@Valid @RequestBody SolicitudDocumento solicitudDocumento) {
     log.debug("create(SolicitudDocumento solicitudDocumento) - start");
     SolicitudDocumento returnValue = service.create(solicitudDocumento);
@@ -65,7 +65,7 @@ public class SolicitudDocumentoController {
    * @return SolicitudDocumento {@link SolicitudDocumento} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public SolicitudDocumento update(@Valid @RequestBody SolicitudDocumento solicitudDocumento, @PathVariable Long id,
       Authentication authentication) {
     log.debug("update(SolicitudDocumento solicitudDocumento, Long id) - start");
@@ -76,31 +76,13 @@ public class SolicitudDocumentoController {
   }
 
   /**
-   * Comprueba la existencia del {@link SolicitudDocumento} con el id indicado.
-   * 
-   * @param id Identificador de {@link SolicitudDocumento}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("SolicitudDocumento exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("SolicitudDocumento exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("SolicitudDocumento exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Devuelve el {@link SolicitudDocumento} con el id indicado.
    * 
    * @param id Identificador de {@link SolicitudDocumento}.
    * @return SolicitudDocumento {@link SolicitudDocumento} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   SolicitudDocumento findById(@PathVariable Long id) {
     log.debug("SolicitudDocumento findById(Long id) - start");
     SolicitudDocumento returnValue = service.findById(id);
@@ -114,7 +96,7 @@ public class SolicitudDocumentoController {
    * @param id Identificador de {@link SolicitudDocumento}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

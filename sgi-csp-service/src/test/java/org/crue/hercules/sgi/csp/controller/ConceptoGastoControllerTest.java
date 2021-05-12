@@ -43,7 +43,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/conceptogastos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-C" })
   public void create_ReturnsConceptoGasto() throws Exception {
     // given: new ConceptoGasto
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
@@ -71,7 +71,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ConceptoGasto with id filled
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
@@ -89,7 +89,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-E" })
   public void update_ReturnsConceptoGasto() throws Exception {
     // given: Existing ConceptoGasto to be updated
     ConceptoGasto conceptoGastoExistente = generarMockConceptoGasto(1L);
@@ -113,7 +113,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -133,7 +133,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-R" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-R" })
   public void reactivar_ReturnsConvocatoria() throws Exception {
     // given: existing ConceptoGasto disabled
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
@@ -162,7 +162,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-R" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-R" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -180,7 +180,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-B" })
   public void desactivar_WithExistingId_ReturnConceptoGasto() throws Exception {
     // given: existing id
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
@@ -206,7 +206,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -224,7 +224,8 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONGAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E", "CSP-CON-V", "CSP-CON-INV-V", "CSP-SOL-E",
+      "CSP-SOL-V" })
   public void findAll_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConceptoGasto
     List<ConceptoGasto> conceptoGastoes = new ArrayList<>();
@@ -273,7 +274,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONGAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E", "CSP-CON-V", "CSP-CON-INV-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConceptoGasto
     List<ConceptoGasto> conceptoGastoes = new ArrayList<>();
@@ -298,7 +299,8 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONGAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-V", "CSP-TGTO-C", "CSP-TGTO-E", "CSP-TGTO-B",
+      "CSP-TGTO-R" })
   public void findAllTodos_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConceptoGasto
     List<ConceptoGasto> conceptoGastoes = new ArrayList<>();
@@ -348,7 +350,8 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONGAS-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-TGTO-V", "CSP-TGTO-C", "CSP-TGTO-E", "CSP-TGTO-B", "CSP-TGTO-R",
+      "CSP-TGTO-R" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ConceptoGasto
     List<ConceptoGasto> conceptoGastoes = new ArrayList<>();
@@ -374,7 +377,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsConceptoGasto() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -393,7 +396,7 @@ public class ConceptoGastoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

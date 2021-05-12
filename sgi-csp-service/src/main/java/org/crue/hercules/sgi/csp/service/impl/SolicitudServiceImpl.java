@@ -39,12 +39,10 @@ import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSoli
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.security.access.expression.SgiMethodSecurityExpressionRoot;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -97,14 +95,12 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Guarda la entidad {@link Solicitud}.
    * 
-   * @param solicitud         la entidad {@link Solicitud} a guardar.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param solicitud la entidad {@link Solicitud} a guardar.
    * @return solicitud la entidad {@link Solicitud} persistida.
    */
   @Override
   @Transactional
-  public Solicitud create(Solicitud solicitud, List<String> unidadGestionRefs) {
+  public Solicitud create(Solicitud solicitud) {
     log.debug("create(Solicitud solicitud) - start");
 
     Assert.isNull(solicitud.getId(), "Solicitud id tiene que ser null para crear una Solicitud");
@@ -113,6 +109,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Assert.isTrue((solicitud.getConvocatoriaId() != null) || solicitud.getConvocatoriaExterna() != null,
         "Convocatoria o Convocatoria externa tienen que ser distinto de null para crear una Solicitud");
 
+    String authority = "CSP-SOL-C";
     if (solicitud.getConvocatoriaId() != null) {
       ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
           .findByConvocatoriaId(solicitud.getConvocatoriaId())
@@ -122,16 +119,16 @@ public class SolicitudServiceImpl implements SolicitudService {
           .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoriaId()));
 
       Assert.isTrue(
-          unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(convocatoria.getUnidadGestionRef())),
+          SgiSecurityContextHolder.hasAuthority(authority)
+              || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef()),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
       solicitud.setFormularioSolicitud(configuracionSolicitud.getFormularioSolicitud());
     } else {
       Assert.isTrue(
-          unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(solicitud.getUnidadGestionRef())),
+          SgiSecurityContextHolder.hasAuthority(authority)
+              || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
           "La Unidad de Gestión no es gestionable por el usuario");
     }
 
@@ -155,15 +152,14 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Actualiza los datos del {@link Solicitud}.
    * 
-   * @param solicitud         solicitudActualizar {@link Solicitud} con los datos
-   *                          actualizados.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param solicitud solicitudActualizar {@link Solicitud} con los datos
+   *                  actualizados.
+   * 
    * @return {@link Solicitud} actualizado.
    */
   @Override
   @Transactional
-  public Solicitud update(Solicitud solicitud, List<String> unidadGestionRefs) {
+  public Solicitud update(Solicitud solicitud) {
     log.debug("update(Solicitud solicitud) - start");
 
     Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
@@ -182,8 +178,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
       Assert.isTrue(solicitud.getActivo(), "Solicitud tiene que estar activo para actualizarse");
 
-      Assert.isTrue(
-          unidadGestionRefs.stream().anyMatch(unidadGestionRef -> unidadGestionRef.equals(data.getUnidadGestionRef())),
+      Assert.isTrue(this.hasPermisosEdicion(solicitud.getUnidadGestionRef()),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
@@ -207,23 +202,19 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Reactiva el {@link Solicitud}.
    *
-   * @param id                Id del {@link Solicitud}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
    */
   @Override
   @Transactional
-  public Solicitud enable(Long id, List<String> unidadGestionRefs) {
+  public Solicitud enable(Long id) {
     log.debug("enable(Long id) - start");
 
     Assert.notNull(id, "Solicitud id no puede ser null para reactivar un Solicitud");
 
     return repository.findById(id).map(solicitud -> {
 
-      Assert.isTrue(
-          unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(solicitud.getUnidadGestionRef())),
+      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-R", solicitud.getUnidadGestionRef()),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       if (solicitud.getActivo()) {
@@ -242,22 +233,21 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Desactiva el {@link Solicitud}.
    *
-   * @param id                Id del {@link Solicitud}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
    */
   @Override
   @Transactional
-  public Solicitud disable(Long id, List<String> unidadGestionRefs) {
+  public Solicitud disable(Long id) {
     log.debug("disable(Long id) - start");
 
     Assert.notNull(id, "Solicitud id no puede ser null para desactivar un Solicitud");
 
     return repository.findById(id).map(solicitud -> {
+      String authority = "CSP-SOL-B";
       Assert.isTrue(
-          unidadGestionRefs.stream()
-              .anyMatch(unidadGestionRef -> unidadGestionRef.equals(solicitud.getUnidadGestionRef())),
+          SgiSecurityContextHolder.hasAuthority(authority)
+              || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       if (!solicitud.getActivo()) {
@@ -276,19 +266,20 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Obtiene una entidad {@link Solicitud} por id.
    * 
-   * @param id                Identificador de la entidad {@link Solicitud}.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param id Identificador de la entidad {@link Solicitud}.
    * @return Solicitud la entidad {@link Solicitud}.
    */
   @Override
-  public Solicitud findById(Long id, List<String> unidadGestionRefs) {
+  public Solicitud findById(Long id) {
     log.debug("findById(Long id) - start");
     final Solicitud returnValue = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    String authorityVisualizar = "CSP-SOL-V";
+
     Assert.isTrue(
-        unidadGestionRefs.stream()
-            .anyMatch(unidadGestionRef -> unidadGestionRef.equals(returnValue.getUnidadGestionRef())),
+        hasPermisosEdicion(returnValue.getUnidadGestionRef())
+            || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar)
+                || SgiSecurityContextHolder.hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),
         "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
     log.debug("findById(Long id) - end");
@@ -298,42 +289,46 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Obtiene todas las entidades {@link Solicitud} activas paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Solicitud} activas paginadas y
    *         filtradas.
    */
   @Override
-  public Page<Solicitud> findAllRestringidos(String query, Pageable paging, List<String> unidadGestionRefs) {
-    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - start");
+  public Page<Solicitud> findAllRestringidos(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
 
     Specification<Solicitud> specs = SolicitudSpecifications.activos()
-        .and(SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs))
         .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - end");
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 
   /**
    * Obtiene todas las entidades {@link Solicitud} paginadas y filtradas.
    *
-   * @param query             información del filtro.
-   * @param paging            información de paginación.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link Solicitud} paginadas y filtradas.
    */
   @Override
-  public Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging, List<String> unidadGestionRefs) {
-    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - start");
+  public Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Solicitud> specs = SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs)
-        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
+    Specification<Solicitud> specs = SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance());
+
+    List<String> unidadesGestion = SgiSecurityContextHolder
+        .getUOsForAnyAuthority(new String[] { "CSP-CON-INV-V", "CSP-CON-V" });
+
+    if (!CollectionUtils.isEmpty(unidadesGestion)) {
+      Specification<Solicitud> specByUnidadGestionRefIn = SolicitudSpecifications.unidadGestionRefIn(unidadesGestion);
+      specs = specs.and(specByUnidadGestionRefIn);
+    }
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
-    log.debug("findAll(String query, Pageable paging, List<String> unidadGestionRefs) - end");
+    log.debug("findAll(String query, Pageable paging");
     return returnValue;
   }
 
@@ -371,6 +366,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
     // VALIDACIONES
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR,
@@ -444,6 +443,10 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
+
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA,
         "La solicitud no se encuentra en un estado correcto.");
@@ -473,6 +476,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("admitirDefinitivamente(Long idSolicitud) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(
@@ -506,6 +513,10 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
+
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA,
         "La solicitud no se encuentra en un estado correcto.");
@@ -536,6 +547,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("conceder(Long idSolicitud) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(
@@ -569,6 +584,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("exlcluirProvisionalmente(Long idSolicitud, String comentario) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA,
@@ -605,6 +624,10 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
+
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL,
         "La solicitud no se encuentra en un estado correcto.");
@@ -640,6 +663,10 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
+
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION,
         "La solicitud no se encuentra en un estado correcto.");
@@ -673,6 +700,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("denegarProvisionalmente(Long idSolicitud, String comentario) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA,
@@ -709,6 +740,10 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
+
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL,
         "La solicitud no se encuentra en un estado correcto.");
@@ -743,6 +778,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("denegar(Long idSolicitud, String comentario) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION,
@@ -779,6 +818,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("desistir(Long idSolicitud, String comentario) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     // Estado
     Assert.isTrue(
@@ -817,7 +860,15 @@ public class SolicitudServiceImpl implements SolicitudService {
   @Override
   public Boolean cumpleValidacionesPresentada(Long id) {
     log.debug("cumpleValidacionesPresentada(Long id) - start");
-    Solicitud solicitud = repository.findById(id).get();
+
+    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    // Permisos
+    Assert.isTrue(
+        SgiSecurityContextHolder.hasAuthority("CSP-SOL-V")
+            || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef())
+            || hasPermisosEdicion(solicitud.getUnidadGestionRef()),
+        "El usuario no tiene permisos para presentar la solicitud.");
 
     if (solicitud == null || solicitud.getEstado().getEstado() != EstadoSolicitud.Estado.BORRADOR) {
       log.debug("cumpleValidacionesPresentada(Long id) - end");
@@ -983,63 +1034,33 @@ public class SolicitudServiceImpl implements SolicitudService {
    * @return true si se permite la creación / false si no se permite creación
    */
   @Override
-  public Boolean isPosibleCrearProyecto(Long id) {
-    Boolean posibleCrearProyecto = true;
+  public boolean isPosibleCrearProyecto(Long id) {
 
     final Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
     // Si la solicitud no está en estado CONCEDIDA no se puede crear el proyecto a
     // partir de la misma
     if (!solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCECIDA)) {
-      posibleCrearProyecto = false;
+      return false;
     }
 
     // Si la solicitud ya está asignada a un proyecto no se podrá crear otro
     // proyecto para la solicitud
-    if (posibleCrearProyecto && proyectoRepository.existsBySolicitudId(solicitud.getId())) {
-      posibleCrearProyecto = false;
+    if (proyectoRepository.existsBySolicitudId(solicitud.getId())) {
+      return false;
     }
 
     // Si el formulario de la solicitud no es de tipo ESTANDAR no se podrá crear el
     // proyecto a partir de ella
-    if (posibleCrearProyecto && solicitud.getFormularioSolicitud() != FormularioSolicitud.ESTANDAR) {
-      posibleCrearProyecto = false;
+    if (solicitud.getFormularioSolicitud() != FormularioSolicitud.ESTANDAR) {
+      return false;
     }
 
     // Si no hay datos del proyecto en la solicitud, no se podrá crear el proyecto
-    if (posibleCrearProyecto && !solicitudProyectoRepository.existsBySolicitudId(solicitud.getId())) {
-      posibleCrearProyecto = false;
+    if (!solicitudProyectoRepository.existsBySolicitudId(solicitud.getId())) {
+      return false;
     }
 
-    return posibleCrearProyecto;
-  }
-
-  /**
-   * Hace las comprobaciones para determinar si el usuario tiene la autorización
-   * indicada tanto de manera independiente como dentro de la unidad organizativa
-   * indicada.
-   *
-   * @param authority Permiso a comprobar.
-   * @param unidad    unidad organizativa
-   * @return true tiene autorización / false no tiene autorización
-   */
-  protected Boolean checkAuthority(String authority, String unidad) {
-    log.debug("checkAuthority(String authority, String unidad) - start");
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    SgiMethodSecurityExpressionRoot sgiMethodSecurityExpressionRoot = new SgiMethodSecurityExpressionRoot(
-        authentication);
-
-    Boolean returnValue = Boolean.FALSE;
-
-    if (StringUtils.isBlank(unidad)) {
-      returnValue = sgiMethodSecurityExpressionRoot.hasAuthority(authority);
-    } else {
-      returnValue = (sgiMethodSecurityExpressionRoot.hasAuthority(authority)
-          || sgiMethodSecurityExpressionRoot.hasAuthority(authority + "_" + unidad));
-    }
-
-    log.debug("checkAuthority(String authority, String unidad) - end");
-    return returnValue;
+    return true;
   }
 
   /**
@@ -1052,28 +1073,20 @@ public class SolicitudServiceImpl implements SolicitudService {
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   @Override
-  public Boolean modificable(Long id) {
+  public boolean modificable(Long id) {
     log.debug("modificable(Long id) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
-    String unidadGestionSolicitud = solicitud.getUnidadGestionRef();
-
-    // solicitud activa para poder modificar
-    boolean returnValue = solicitud.getActivo();
-
-    // Se comprueba si el usuario tiene el permiso correspondiente
-    Boolean isAdministradorOrGestor = checkAuthority("CSP-SOL-C", unidadGestionSolicitud);
-    Boolean isInvestigador = checkAuthority("CSP-SOL-C-INV", unidadGestionSolicitud);
-
     // Si no tiene permisos ni de administrador o gestor ni investigador no se podrá
     // realizar la acción
-    if (returnValue && !isAdministradorOrGestor && !isInvestigador) {
-      returnValue = Boolean.FALSE;
-    }
+    if (!solicitud.getActivo()) {
+      return false;
+    } else if (!this.hasPermisosEdicion(solicitud.getUnidadGestionRef())) {
+      return false;
+    } else if (this.hasPermisosEdicion(solicitud.getUnidadGestionRef())) {
 
-    if (returnValue && isAdministradorOrGestor) {
-      returnValue = (solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR
+      return (solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR
           || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA
           || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
           || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION
@@ -1082,14 +1095,32 @@ public class SolicitudServiceImpl implements SolicitudService {
           || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION);
     }
 
-    if (returnValue && isInvestigador) {
-      returnValue = (solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL);
-    }
+    // TODO Permisos investigador
+    // if (returnValue && isInvestigador) {
+    // returnValue = (solicitud.getEstado().getEstado() ==
+    // EstadoSolicitud.Estado.BORRADOR
+    // || solicitud.getEstado().getEstado() ==
+    // EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL
+    // || solicitud.getEstado().getEstado() ==
+    // EstadoSolicitud.Estado.DENEGADA_PROVISIONAL);
+    // }
 
     log.debug("modificable(Long id) - end");
-    return returnValue;
+    return true;
+  }
+
+  /**
+   * Comprueba si el usuario logueado tiene los permisos globales de edición o el
+   * de la unidad de gestión de la solicitud.
+   * 
+   * @param unidadGestionRef Unidad de gestión de la solicitud
+   * @return <code>true</code> si tiene el permiso de edición; <code>false</code>
+   *         caso contrario.
+   */
+  private boolean hasPermisosEdicion(String unidadGestionRef) {
+    String authority = "CSP-SOL-E";
+    return SgiSecurityContextHolder.hasAuthority(authority)
+        || SgiSecurityContextHolder.hasAuthorityForUO(authority, unidadGestionRef);
   }
 
 }

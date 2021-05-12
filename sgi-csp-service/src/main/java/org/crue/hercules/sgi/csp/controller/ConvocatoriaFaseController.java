@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +49,7 @@ public class ConvocatoriaFaseController {
    * @return {@link ConvocatoriaFase} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaFase findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaFase returnValue = service.findById(id);
@@ -63,7 +64,7 @@ public class ConvocatoriaFaseController {
    * @return Nuevo {@link ConvocatoriaFase} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C','CSP-CON-E')")
   ResponseEntity<ConvocatoriaFase> create(@Valid @RequestBody ConvocatoriaFase convocatoriaFase) {
     log.debug("create(ConvocatoriaFase convocatoriaFase) - start");
     ConvocatoriaFase returnValue = service.create(convocatoriaFase);
@@ -79,7 +80,7 @@ public class ConvocatoriaFaseController {
    * @return {@link ConvocatoriaFase} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ConvocatoriaFase update(@Validated({ Update.class, Default.class }) @RequestBody ConvocatoriaFase convocatoriaFase,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaFase convocatoriaFase, Long id) - start");
@@ -95,7 +96,7 @@ public class ConvocatoriaFaseController {
    * @param id Identificador de {@link ConvocatoriaFase}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

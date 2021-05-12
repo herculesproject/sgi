@@ -2,12 +2,10 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaAreaTematicaNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaAreaTematicaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
@@ -30,15 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTematicaService {
 
   private final ConvocatoriaAreaTematicaRepository repository;
-  private final ConvocatoriaRepository convocatoriaRepository;
   private final AreaTematicaRepository areaTematicaRepository;
   private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaAreaTematicaServiceImpl(ConvocatoriaAreaTematicaRepository repository,
-      ConvocatoriaRepository convocatoriaRepository, AreaTematicaRepository areaTematicaRepository,
-      ConvocatoriaService convocatoriaService) {
+      AreaTematicaRepository areaTematicaRepository, ConvocatoriaService convocatoriaService) {
     this.repository = repository;
-    this.convocatoriaRepository = convocatoriaRepository;
     this.areaTematicaRepository = areaTematicaRepository;
     this.convocatoriaService = convocatoriaService;
   }
@@ -64,13 +59,10 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
     Assert.notNull(convocatoriaAreaTematica.getAreaTematica().getId(),
         "Id AreaTematica no puede ser null para crear ConvocatoriaAreaTematica");
 
-    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaAreaTematica.getConvocatoriaId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaAreaTematica.getConvocatoriaId()));
-
     // comprobar si convocatoria es modificable
     Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef()),
+        convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null,
+            new String[] { "CSP-CON-E", "CSP-CON-C" }),
         "No se puede crear ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     convocatoriaAreaTematica
@@ -107,7 +99,9 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
     return repository.findById(convocatoriaAreaTematicaActualizar.getId()).map(convocatoriaAreaTematica -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede modificar ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       convocatoriaAreaTematica.setObservaciones(convocatoriaAreaTematicaActualizar.getObservaciones());
@@ -132,7 +126,9 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
     repository.findById(id).map(convocatoriaAreaTematica -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaAreaTematica.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaAreaTematica. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaAreaTematica;

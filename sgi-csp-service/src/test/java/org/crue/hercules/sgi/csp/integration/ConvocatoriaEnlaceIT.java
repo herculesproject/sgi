@@ -28,8 +28,7 @@ public class ConvocatoriaEnlaceIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-CENL-B", "CSP-CENL-C", "CSP-CENL-E", "CSP-CENL-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-E", "AUTH")));
 
     HttpEntity<ConvocatoriaEnlace> request = new HttpEntity<>(entity, headers);
     return request;
@@ -82,16 +81,15 @@ public class ConvocatoriaEnlaceIT extends BaseIT {
 
   }
 
-  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  public void delete_Return404() throws Exception {
     Long idConvocatoriaEnlace = 1L;
 
     final ResponseEntity<ConvocatoriaEnlace> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.DELETE, buildRequest(null, null), ConvocatoriaEnlace.class, idConvocatoriaEnlace);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   @Sql

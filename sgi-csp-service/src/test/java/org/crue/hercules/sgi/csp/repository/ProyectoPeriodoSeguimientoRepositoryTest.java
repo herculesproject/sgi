@@ -31,7 +31,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
 
     // given: 10 ProyectoPeriodoSeguimiento with same ProyectoId
     Proyecto proyecto1 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -39,7 +39,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
     entityManager.persistAndFlush(proyecto1);
 
     Proyecto proyecto2 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -49,7 +49,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
 
     for (int i = 11; i > 1; i--) {
       // @formatter:off
-      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
+      ProyectoPeriodoSeguimiento ProyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
           .builder()
           .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
@@ -57,7 +57,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
           .build();
       // @formatter:on
-      entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
+      entityManager.persistAndFlush(ProyectoPeriodoSeguimientoCientifico);
     }
     Long proyectoIdBuscado = proyecto1.getId();
 
@@ -87,7 +87,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
 
     // given: 10 ProyectoPeriodoSeguimiento with same ProyectoId
     Proyecto proyecto1 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO1")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -95,7 +95,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
     entityManager.persistAndFlush(proyecto1);
 
     Proyecto proyecto2 = Proyecto.builder()
-        .unidadGestionRef("OPE").modeloEjecucion(modeloEjecucion)
+        .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
         .titulo("PRO2")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3)))).activo(Boolean.TRUE)
@@ -105,7 +105,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
 
     for (int i = 11; i > 1; i--) {
       // @formatter:off
-      ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
+      ProyectoPeriodoSeguimiento ProyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
           .builder()
           .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
@@ -116,7 +116,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
         // @formatter:on
 
       if (i % 2 == 0) {
-        entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
+        entityManager.persistAndFlush(ProyectoPeriodoSeguimientoCientifico);
       }
     }
     Long proyectoIdBuscado = proyecto1.getId();

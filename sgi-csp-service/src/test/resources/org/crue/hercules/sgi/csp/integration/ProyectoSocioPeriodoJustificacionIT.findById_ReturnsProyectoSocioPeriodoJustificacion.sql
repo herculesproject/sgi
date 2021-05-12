@@ -12,7 +12,7 @@ INSERT INTO csp.estado_proyecto (id, proyecto_id, estado, fecha_estado, comentar
 
 -- PROYECTO
 INSERT INTO csp.proyecto (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)
- VALUES (1, 'PRO1', 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', 'OPE', 1, 1, 1, false, 'observaciones 1', 1, true);
+ VALUES (1, 'PRO1', 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', '2', 1, 1, 1, false, 'observaciones 1', 1, true);
 
 -- ROL SOCIO
 INSERT INTO csp.rol_socio (id, abreviatura, nombre, descripcion, coordinador, activo) VALUES (1, '001', 'nombre-001', 'descripcion-001' , false, true);

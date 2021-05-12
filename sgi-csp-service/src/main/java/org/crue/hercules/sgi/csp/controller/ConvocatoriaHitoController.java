@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +49,7 @@ public class ConvocatoriaHitoController {
    * @return {@link ConvocatoriaHito} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CHIT-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaHito findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaHito returnValue = service.findById(id);
@@ -63,7 +64,7 @@ public class ConvocatoriaHitoController {
    * @return Nuevo {@link ConvocatoriaHito} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CHIT-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   ResponseEntity<ConvocatoriaHito> create(@Valid @RequestBody ConvocatoriaHito convocatoriaHito) {
     log.debug("create(ConvocatoriaHito convocatoriaHito) - start");
     ConvocatoriaHito returnValue = service.create(convocatoriaHito);
@@ -79,7 +80,7 @@ public class ConvocatoriaHitoController {
    * @return {@link ConvocatoriaHito} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CHIT-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   ConvocatoriaHito update(@Validated({ Update.class, Default.class }) @RequestBody ConvocatoriaHito convocatoriaHito,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaHito convocatoriaHito, Long id) - start");
@@ -95,7 +96,7 @@ public class ConvocatoriaHitoController {
    * @param id Identificador de {@link ConvocatoriaHito}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CHIT-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

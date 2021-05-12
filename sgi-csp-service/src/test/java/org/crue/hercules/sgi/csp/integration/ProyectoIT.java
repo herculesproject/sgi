@@ -53,7 +53,6 @@ public class ProyectoIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
-  private static final String PATH_PARAMETER_MODELO_EJECUCION = "/modeloejecucion";
   private static final String CONTROLLER_BASE_PATH = "/proyectos";
   private static final String PATH_TODOS = "/todos";
   private static final String PATH_HITOS = "/proyectohitos";
@@ -68,8 +67,8 @@ public class ProyectoIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-C_OPE")));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "CSP-PRO-C", "AUTH", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R")));
 
     HttpEntity<Proyecto> request = new HttpEntity<>(entity, headers);
     return request;
@@ -172,28 +171,6 @@ public class ProyectoIT {
       "classpath:scripts/estado_proyecto.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void getModeloEjecucion_ReturnsModeloEjecucion() throws Exception {
-
-    // given: Proyecto id
-    Long id = 1L;
-    // when: getModeloEjecucion by Proyecto id
-    final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_MODELO_EJECUCION, HttpMethod.GET,
-        buildRequest(null, null), ModeloEjecucion.class, id);
-
-    // then: returns ModeloEjecucion assigned to Proyecto
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    ModeloEjecucion responseData = response.getBody();
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1L);
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
-      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql", "classpath:scripts/proyecto.sql",
-      "classpath:scripts/estado_proyecto.sql" })
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void existsById_Returns200() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -202,18 +179,6 @@ public class ProyectoIT {
         HttpMethod.HEAD, buildRequest(null, null), Proyecto.class, id);
     // then: 200 OK
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void existsById_Returns204() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    // when: exists by id
-    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.HEAD, buildRequest(null, null), Proyecto.class, id);
-    // then: 204 No Content
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
@@ -233,7 +198,7 @@ public class ProyectoIT {
     Assertions.assertThat(proyecto.getId()).as("getId()").isEqualTo(idProyecto);
     Assertions.assertThat(proyecto.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
     Assertions.assertThat(proyecto.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-proyecto-001");
-    Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("OPE");
+    Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("2");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
@@ -248,11 +213,10 @@ public class ProyectoIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "observaciones,desc";
-    String filter = "unidadGestionRef==OPE";
+    String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -290,11 +254,10 @@ public class ProyectoIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-PRO-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "observaciones,desc";
-    String filter = "unidadGestionRef==OPE";
+    String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
@@ -655,7 +618,7 @@ public class ProyectoIT {
     proyecto.setTitulo("PRO" + (id != null ? id : 1));
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
-    proyecto.setUnidadGestionRef("OPE");
+    proyecto.setUnidadGestionRef("2");
     proyecto.setFechaInicio(Instant.now());
     proyecto.setFechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3))));
     proyecto.setModeloEjecucion(modeloEjecucion);

@@ -26,7 +26,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // @formatter:off
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
@@ -37,7 +37,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // @formatter:off
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
@@ -81,7 +81,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // @formatter:off
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
@@ -92,7 +92,7 @@ public class ConvocatoriaEntidadFinanciadoraRepositoryTest extends BaseRepositor
     // @formatter:off
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)

@@ -85,7 +85,7 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     // comprobar si convocatoria es modificable
     Assert.isTrue(
         convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef()),
+            convocatoria.getUnidadGestionRef(), new String[] { "CSP-CON-E" }),
         "No se puede crear ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
     if (convocatoriaConceptoGasto.getMesInicial() != null && convocatoria.getDuracion() != null) {
@@ -173,7 +173,9 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     return repository.findById(convocatoriaConceptoGastoActualizar.getId()).map(convocatoriaConceptoGasto -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede modificar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       convocatoriaConceptoGasto.setConceptoGasto(convocatoriaConceptoGastoActualizar.getConceptoGasto());
@@ -208,7 +210,9 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     repository.findById(id).map(convocatoriaConvocatoriaConceptoGasto -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(convocatoriaConvocatoriaConceptoGasto.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(convocatoriaConvocatoriaConceptoGasto.getConvocatoriaId(), null,
+              new String[] { "CSP-CON-E" }),
           "No se puede eliminar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaConvocatoriaConceptoGasto;

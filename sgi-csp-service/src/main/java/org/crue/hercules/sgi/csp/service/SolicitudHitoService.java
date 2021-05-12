@@ -31,14 +31,6 @@ public interface SolicitudHitoService {
   SolicitudHito update(final SolicitudHito solicitudHito, Boolean isAdministradorOrGestor);
 
   /**
-   * Comprueba la existencia del {@link SolicitudHito} por id.
-   *
-   * @param id el id de la entidad {@link SolicitudHito}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link SolicitudHito} por id.
    * 
    * @param id Identificador de la entidad {@link SolicitudHito}.

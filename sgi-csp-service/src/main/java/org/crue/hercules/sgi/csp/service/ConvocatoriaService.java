@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,22 +13,18 @@ public interface ConvocatoriaService {
   /**
    * Guarda la entidad {@link Convocatoria}.
    * 
-   * @param convocatoria           la entidad {@link Convocatoria} a guardar.
-   * @param acronimosUnidadGestion listado de acrónimos asociados a las unidades
-   *                               de gestión del usuario logueado.
+   * @param convocatoria la entidad {@link Convocatoria} a guardar.
    * @return Convocatoria la entidad {@link Convocatoria} persistida.
    */
-  Convocatoria create(Convocatoria convocatoria, List<String> acronimosUnidadGestion);
+  Convocatoria create(Convocatoria convocatoria);
 
   /**
    * Actualiza los datos del {@link Convocatoria}.
    * 
-   * @param convocatoria           {@link Convocatoria} con los datos
-   *                               actualizados.
-   * @param acronimosUnidadGestion lista de acronimos
+   * @param convocatoria {@link Convocatoria} con los datos actualizados.
    * @return Convocatoria {@link Convocatoria} actualizado.
    */
-  Convocatoria update(final Convocatoria convocatoria, List<String> acronimosUnidadGestion);
+  Convocatoria update(final Convocatoria convocatoria);
 
   /**
    * Registra una {@link Convocatoria} actualizando su estado de 'Borrador' a
@@ -66,9 +59,10 @@ public interface ConvocatoriaService {
    *
    * @param id                 Id del {@link Convocatoria}.
    * @param unidadConvocatoria unidadGestionRef {@link Convocatoria}.
+   * @param authorities        Authorities a validar
    * @return true si puede ser modificada / false si no puede ser modificada
    */
-  Boolean modificable(Long id, String unidadConvocatoria);
+  boolean modificable(Long id, String unidadConvocatoria, String[] authorities);
 
   /**
    * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
@@ -77,7 +71,7 @@ public interface ConvocatoriaService {
    * @param id Id del {@link Convocatoria}.
    * @return true si puede ser registrada / false si no puede ser registrada
    */
-  Boolean registrable(Long id);
+  boolean registrable(Long id);
 
   /**
    * Comprueba la existencia del {@link Convocatoria} por id.
@@ -86,22 +80,6 @@ public interface ConvocatoriaService {
    * @return true si existe y false en caso contrario.
    */
   boolean existsById(Long id);
-
-  /**
-   * Obtiene la Unidad de Gestión asignada a la {@link Convocatoria}.
-   * 
-   * @param id Id del {@link Convocatoria}.
-   * @return unidadGestionRef asignada
-   */
-  String getUnidadGestionRef(Long id);
-
-  /**
-   * Obtiene el {@link ModeloEjecucion} asignada a la {@link Convocatoria}.
-   * 
-   * @param id Id de la {@link Convocatoria}.
-   * @return {@link ModeloEjecucion} asignado
-   */
-  ModeloEjecucion getModeloEjecucion(Long id);
 
   /**
    * Obtiene una entidad {@link Convocatoria} por id.
@@ -134,36 +112,24 @@ public interface ConvocatoriaService {
   Page<Convocatoria> findAllInvestigador(String query, Pageable paging);
 
   /**
-   * Obtiene todas las entidades {@link Convocatoria} paginadas y filtradas.
-   *
+   * Devuelve todas las convocatorias activas registradas que se encuentren dentro
+   * de la unidad de gestión del usuario logueado.
+   * 
    * @param query  información del filtro.
    * @param paging información de paginación.
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
-  Page<Convocatoria> findAllTodos(String query, Pageable paging);
-
-  /**
-   * Devuelve todas las convocatorias activas registradas que se encuentren dentro
-   * de la unidad de gestión del usuario logueado.
-   * 
-   * @param query                  información del filtro.
-   * @param paging                 información de paginación.
-   * @param acronimosUnidadGestion lista de acronimos de unidad de gestion a los
-   *                               que se restringe la busqueda.
-   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
-   */
-  Page<Convocatoria> findAllRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion);
+  Page<Convocatoria> findAllRestringidos(String query, Pageable paging);
 
   /**
    * Devuelve todas las convocatorias activas que se encuentren dentro de la
    * unidad de gestión del usuario logueado.
    * 
-   * @param query                  información del filtro.
-   * @param paging                 información de paginación.
-   * @param acronimosUnidadGestion lista de acronimos de unidad de gestion a los
-   *                               que se restringe la busqueda.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * 
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
-  Page<Convocatoria> findAllTodosRestringidos(String query, Pageable paging, List<String> acronimosUnidadGestion);
+  Page<Convocatoria> findAllTodosRestringidos(String query, Pageable paging);
 
 }

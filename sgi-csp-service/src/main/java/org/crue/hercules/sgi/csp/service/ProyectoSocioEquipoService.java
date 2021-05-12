@@ -24,14 +24,6 @@ public interface ProyectoSocioEquipoService {
   List<ProyectoSocioEquipo> update(Long proyectoSocioId, List<ProyectoSocioEquipo> proyectoSocioEquipoServices);
 
   /**
-   * Comprueba la existencia del {@link ProyectoSocioEquipo} por id.
-   *
-   * @param id el id de la entidad {@link ProyectoSocioEquipo}.
-   * @return true si existe y false en caso contrario.
-   */
-  boolean existsById(Long id);
-
-  /**
    * Obtiene una entidad {@link ProyectoSocioEquipo} por id.
    * 
    * @param id Identificador de la entidad {@link ProyectoSocioEquipo}.

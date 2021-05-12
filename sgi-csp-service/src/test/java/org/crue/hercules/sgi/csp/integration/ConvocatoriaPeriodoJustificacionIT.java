@@ -34,8 +34,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH")));
 
     HttpEntity<ConvocatoriaPeriodoJustificacion> request = new HttpEntity<>(entity, headers);
     return request;
@@ -46,8 +45,7 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-C", "CSP-CENTGES-V", "CSP-CONV-C")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-E", "CSP-CON-C")));
 
     HttpEntity<List<ConvocatoriaPeriodoJustificacion>> request = new HttpEntity<>(entity, headers);
     return request;
@@ -118,7 +116,6 @@ public class ConvocatoriaPeriodoJustificacionIT extends BaseIT {
         .isEqualTo(newConvocatoriaPeriodoJustificacion.getTipo());
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "mesInicial,asc";

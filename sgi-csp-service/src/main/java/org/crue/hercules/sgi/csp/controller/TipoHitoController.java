@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,7 @@ public class TipoHitoController {
    * @return la lista de entidades {@link TipoHito} paginadas
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAuthority('AUTH')")
   ResponseEntity<Page<TipoHito>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -65,7 +66,7 @@ public class TipoHitoController {
    * @return la lista de entidades {@link TipoHito} paginadas
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAnyAuthority('CSP-THITO-V', 'CSP-THITO-C', 'CSP-THITO-E', 'CSP-THITO-B', 'CSP-THITO-R', 'CSP-ME-C', 'CSP-ME-E')")
   ResponseEntity<Page<TipoHito>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
@@ -87,7 +88,7 @@ public class TipoHitoController {
    * @return returnTipoHito {@link TipoHito} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-C')")
+  @PreAuthorize("hasAuthority('CSP-THITO-C')")
   public ResponseEntity<TipoHito> create(@Valid @RequestBody TipoHito nuevoTipoHito) {
     log.debug("createTipoHito(TipoHito nuevoTipoHito) - start");
     TipoHito returnTipoHito = tipoHitoService.create(nuevoTipoHito);
@@ -102,7 +103,7 @@ public class TipoHitoController {
    * @return returnTipoHito {@link TipoHito} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  @PreAuthorize("hasAuthority('AUTH')")
   TipoHito findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoHito returnTipoHito = tipoHitoService.findById(id);
@@ -118,7 +119,7 @@ public class TipoHitoController {
    * @return {@link TipoHito} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-E')")
+  @PreAuthorize("hasAuthority('CSP-THITO-E')")
   TipoHito update(@PathVariable Long id, @Valid @RequestBody TipoHito updatedTipoHito) {
     log.debug("updateTipoHito(Long id, TipoHito updatedTipoHito) - start");
     updatedTipoHito.setId(id);
@@ -134,7 +135,7 @@ public class TipoHitoController {
    * @return {@link TipoHito} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-THIT-R')")
+  @PreAuthorize("hasAuthority('CSP-THITO-R')")
   TipoHito reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     TipoHito returnValue = tipoHitoService.enable(id);
@@ -149,7 +150,7 @@ public class TipoHitoController {
    * @return {@link TipoHito} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-THIT-B')")
+  @PreAuthorize("hasAuthority('CSP-THITO-B')")
   TipoHito desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     TipoHito returnValue = tipoHitoService.disable(id);

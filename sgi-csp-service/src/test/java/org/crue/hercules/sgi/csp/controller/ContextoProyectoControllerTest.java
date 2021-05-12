@@ -120,7 +120,7 @@ public class ContextoProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findByProyectoContextoProyecto_WithExistingId_ReturnsContextoProyecto() throws Exception {
     // given: existing id
     ContextoProyecto contextoProyecto = generarMockContextoProyecto(1L);
@@ -138,7 +138,7 @@ public class ContextoProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findByProyectoContextoProyecto_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findByProyecto(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -155,7 +155,7 @@ public class ContextoProyectoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-V" })
   public void findByProyectoContextoProyecto_WithNoExistingContextoProyecto_Returns204() throws Exception {
     // given: Existing proyectoId and no existing ContextoProyecto
     BDDMockito.given(service.findByProyecto(ArgumentMatchers.<Long>any())).willReturn(null);

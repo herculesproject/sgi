@@ -38,7 +38,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/convocatoriafases";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsModeloConvocatoriaFase() throws Exception {
     // given: new ConvocatoriaFase
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
@@ -67,7 +67,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ConvocatoriaFase with id filled
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
@@ -86,7 +86,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_ReturnsConvocatoriaFase() throws Exception {
     // given: Existing ConvocatoriaFase to be updated
     ConvocatoriaFase convocatoriaFaseExistente = generarMockConvocatoriaFase(1L);
@@ -114,7 +114,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
@@ -134,7 +134,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -152,7 +152,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -170,7 +170,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsConvocatoriaFase() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
@@ -193,7 +193,7 @@ public class ConvocatoriaFaseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CFAS-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

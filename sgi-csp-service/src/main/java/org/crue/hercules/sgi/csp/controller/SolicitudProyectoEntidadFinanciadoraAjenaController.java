@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaController {
    *         id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   SolicitudProyectoEntidadFinanciadoraAjena findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     SolicitudProyectoEntidadFinanciadoraAjena returnValue = service.findById(id);
@@ -67,7 +68,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaController {
    * @return Nuevo {@link SolicitudProyectoEntidadFinanciadoraAjena} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public ResponseEntity<SolicitudProyectoEntidadFinanciadoraAjena> create(
       @Valid @RequestBody SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena) {
     log.debug("create(SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena) - start");
@@ -88,7 +89,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaController {
    * @return {@link SolicitudProyectoEntidadFinanciadoraAjena} actualizado.
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   SolicitudProyectoEntidadFinanciadoraAjena update(@Validated({ Update.class,
       Default.class }) @RequestBody SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena,
       @PathVariable Long id) {
@@ -108,7 +109,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaController {
    * @param id Identificador de {@link SolicitudProyectoEntidadFinanciadoraAjena}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

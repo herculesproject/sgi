@@ -63,7 +63,7 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
     // when: create ProyectoEntidadConvocanteDto
     final ResponseEntity<ProyectoEntidadConvocanteDto> response = restTemplate.exchange(
         ProyectoEntidadConvocanteController.REQUEST_MAPPING, HttpMethod.POST,
-        buildRequest(null, proyectoEntidadConvocante, "CSP-PRO-C"), ProyectoEntidadConvocanteDto.class, proyectoId);
+        buildRequest(null, proyectoEntidadConvocante, "CSP-PRO-E"), ProyectoEntidadConvocanteDto.class, proyectoId);
 
     // then: new ProyectoEntidadConvocanteDto is created
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -138,39 +138,6 @@ public class ProyectoEntidadConvocanteIT extends BaseIT {
 
     // then: 204
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-      // @formatter:off
-      "classpath:scripts/modelo_ejecucion.sql",
-      "classpath:scripts/modelo_unidad.sql",
-      "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql",
-      "classpath:scripts/proyecto.sql",
-      "classpath:scripts/estado_proyecto.sql",
-      "classpath:scripts/programa.sql",
-      "classpath:scripts/proyecto_entidad_convocante.sql"
-      // @formatter:on
-  })
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findById_WithExistingId_ReturnsProyectoEntidadConvocante() throws Exception {
-    // given: existing id
-    Long proyectoId = 1L;
-    Long proyectoEntidadConvocanteId = 1L;
-
-    // when: find by existing id
-    final ResponseEntity<ProyectoEntidadConvocanteDto> response = restTemplate.exchange(
-        ProyectoEntidadConvocanteController.REQUEST_MAPPING
-            + ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE,
-        HttpMethod.GET, buildRequest(null, (ProyectoEntidadConvocanteDto) null, "CSP-PRO-E"),
-        ProyectoEntidadConvocanteDto.class, proyectoId, proyectoEntidadConvocanteId);
-
-    // then: response is OK
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    // and the requested ProyectoEntidadConvocanteDto is resturned
-    ProyectoEntidadConvocanteDto proyectoEntidadConvocante = response.getBody();
-    Assertions.assertThat(proyectoEntidadConvocante.getId()).as("getId()").isEqualTo(proyectoEntidadConvocanteId);
   }
 
 }

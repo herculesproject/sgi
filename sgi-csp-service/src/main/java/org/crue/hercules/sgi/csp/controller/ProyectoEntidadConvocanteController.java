@@ -18,7 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -69,7 +69,7 @@ public class ProyectoEntidadConvocanteController {
    * @param paging pageable.
    */
   @GetMapping
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoEntidadConvocanteDto>> findAllEntidadConvocantes(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEntidadConvocantes(Long id, String query, Pageable paging) - start");
@@ -86,25 +86,6 @@ public class ProyectoEntidadConvocanteController {
   }
 
   /**
-   * Devuelve el {@link ProyectoEntidadConvocante} con el id indicado.
-   * 
-   * @param id Identificador de {@link ProyectoEntidadConvocante}.
-   * @return {@link ProyectoEntidadConvocante} correspondiente al id.
-   */
-  @GetMapping(ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE)
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E')")
-  ProyectoEntidadConvocanteDto findEntidadConvocanteById(@PathVariable Long id,
-      @PathVariable Long entidadConvocanteId) {
-    log.debug("findById(Long id) - start");
-    ProyectoEntidadConvocante proyectoEntidadConvocante = service.findById(entidadConvocanteId);
-    Assert.isTrue(proyectoEntidadConvocante.getProyectoId().equals(id),
-        "La entidad convocante no pertenece al proyecto.");
-    ProyectoEntidadConvocanteDto returnValue = convert(proyectoEntidadConvocante);
-    log.debug("findById(Long id) - end");
-    return returnValue;
-  }
-
-  /**
    * Crea nuevo {@link ProyectoEntidadConvocante}.
    * 
    * @param id                identificador del {@link Proyecto} al que se añade
@@ -114,7 +95,7 @@ public class ProyectoEntidadConvocanteController {
    * @return Nuevo {@link ProyectoEntidadConvocanteDto} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C'")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<ProyectoEntidadConvocanteDto> createEntidadConvocante(@PathVariable Long id,
       @Valid @RequestBody ProyectoEntidadConvocanteDto entidadConvocante) {
     log.debug("createEntidadConvocante(ProyectoEntidadConvocanteDto entidadConvocante) - start");
@@ -132,7 +113,7 @@ public class ProyectoEntidadConvocanteController {
    * @return {@link ProyectoEntidadConvocante} actualizado.
    */
   @PatchMapping(ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE_PROGRAMA)
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   ProyectoEntidadConvocante setPrograma(@PathVariable Long id, @PathVariable Long entidadConvocanteId,
       @RequestBody(required = false) Programa programa) {
     log.debug("update(ProyectoEntidadConvocante proyectoEntidadConvocante, Long id) - start");
@@ -147,7 +128,7 @@ public class ProyectoEntidadConvocanteController {
    * @param id Identificador de {@link ProyectoEntidadConvocante}.
    */
   @DeleteMapping(ProyectoEntidadConvocanteController.PATH_ENTIDADCONVOCANTE)
-  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id, @PathVariable Long entidadConvocanteId) {
     log.debug("deleteById(Long id) - start");

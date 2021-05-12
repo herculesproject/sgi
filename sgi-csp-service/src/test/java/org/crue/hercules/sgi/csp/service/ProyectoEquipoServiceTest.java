@@ -315,7 +315,7 @@ public class ProyectoEquipoServiceTest extends BaseServiceTest {
       .acronimo("PR2")
       .fechaInicio(Instant.parse("2020-01-20T00:00:00Z"))
       .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-      .unidadGestionRef("OPE")
+      .unidadGestionRef("2")
       .activo(Boolean.TRUE)
       .build();
     // @formatter:on

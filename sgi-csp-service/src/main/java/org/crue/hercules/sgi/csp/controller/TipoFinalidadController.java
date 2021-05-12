@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class TipoFinalidadController {
    * @return Nuevo {@link TipoFinalidad} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFIN-C')")
+  @PreAuthorize("hasAuthority('CSP-TFIN-C')")
   public ResponseEntity<TipoFinalidad> create(@Valid @RequestBody TipoFinalidad tipoFinalidad) {
     log.debug("create(TipoFinalidad tipoFinalidad) - start");
     TipoFinalidad returnValue = service.create(tipoFinalidad);
@@ -62,7 +63,7 @@ public class TipoFinalidadController {
    * @return TipoFinalidad {@link TipoFinalidad} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFIN-E')")
+  @PreAuthorize("hasAuthority('CSP-TFIN-E')")
   public TipoFinalidad update(@Valid @RequestBody TipoFinalidad tipoFinalidad, @PathVariable Long id) {
     log.debug("update(TipoFinalidad tipoFinalidad, Long id) - start");
     tipoFinalidad.setId(id);
@@ -78,7 +79,7 @@ public class TipoFinalidadController {
    * @return {@link TipoFinalidad} actualizado.
    */
   @PatchMapping("/{id}/reactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-R')")
+  @PreAuthorize("hasAuthority('CSP-TFIN-R')")
   TipoFinalidad reactivar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
     TipoFinalidad returnValue = service.enable(id);
@@ -93,7 +94,7 @@ public class TipoFinalidadController {
    * @return {@link TipoFinalidad} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-B')")
+  @PreAuthorize("hasAuthority('CSP-TFIN-B')")
   TipoFinalidad desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
     TipoFinalidad returnValue = service.disable(id);
@@ -109,7 +110,7 @@ public class TipoFinalidadController {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @GetMapping()
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-INV-V', 'CSP-ME-C', 'CSP-ME-E')")
   ResponseEntity<Page<TipoFinalidad>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
@@ -131,7 +132,7 @@ public class TipoFinalidadController {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @GetMapping("/todos")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFIN-V')")
+  @PreAuthorize("hasAnyAuthority('CSP-TFIN-V','CSP-TFIN-C','CSP-TFIN-E', 'CSP-TFIN-B', 'CSP-TFIN-R')")
   ResponseEntity<Page<TipoFinalidad>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query,Pageable paging) - start");
@@ -152,7 +153,7 @@ public class TipoFinalidadController {
    * @return TipoFinalidad {@link TipoFinalidad} correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFIN-V')")
+  @PreAuthorize("hasAuthority('CSP-PRO-C')")
   TipoFinalidad findById(@PathVariable Long id) {
     log.debug("TipoFinalidad findById(Long id) - start");
     TipoFinalidad returnValue = service.findById(id);

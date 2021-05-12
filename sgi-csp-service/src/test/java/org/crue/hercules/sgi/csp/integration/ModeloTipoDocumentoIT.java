@@ -32,8 +32,8 @@ public class ModeloTipoDocumentoIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "CSP-TENL-B", "CSP-TENL-C", "CSP-TENL-E", "CSP-TENL-V")));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-ME-C", "CSP-ME-E")));
 
     HttpEntity<ModeloTipoDocumento> request = new HttpEntity<>(entity, headers);
     return request;

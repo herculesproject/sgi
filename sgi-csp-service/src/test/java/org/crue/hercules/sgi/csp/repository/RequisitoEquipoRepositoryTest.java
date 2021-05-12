@@ -31,7 +31,7 @@ public class RequisitoEquipoRepositoryTest {
     Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
@@ -42,7 +42,7 @@ public class RequisitoEquipoRepositoryTest {
 
     // @formatter:on
     Convocatoria convocatoria2 = entityManager.persistAndFlush(
-        Convocatoria.builder().estado(Convocatoria.Estado.BORRADOR).codigo("codigo-2").unidadGestionRef("OPE")
+        Convocatoria.builder().estado(Convocatoria.Estado.BORRADOR).codigo("codigo-2").unidadGestionRef("2")
             .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z")).titulo("titulo").activo(Boolean.TRUE).build());
     // @formatter:on
     entityManager.persistAndFlush(new RequisitoEquipo(null, convocatoria2.getId(), "na-001", 4, 48, 6, false, "mc-001",
@@ -71,7 +71,7 @@ public class RequisitoEquipoRepositoryTest {
     Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)
@@ -85,7 +85,7 @@ public class RequisitoEquipoRepositoryTest {
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
-        .unidadGestionRef("OPE")
+        .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo("titulo")
         .activo(Boolean.TRUE)

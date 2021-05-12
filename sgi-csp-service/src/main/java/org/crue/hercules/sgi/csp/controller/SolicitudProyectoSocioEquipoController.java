@@ -9,12 +9,12 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioEquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class SolicitudProyectoSocioEquipoController {
    * @return Lista actualizada con los {@link SolicitudProyectoSocioEquipo}.
    */
   @PatchMapping("/{proyectoSolictudSocioId}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   public ResponseEntity<List<SolicitudProyectoSocioEquipo>> updateConvocatoriaPeriodoJustificacionesConvocatoria(
       @PathVariable Long proyectoSolictudSocioId,
       @Valid @RequestBody List<SolicitudProyectoSocioEquipo> solicitudProyectoEquipoSocios) {
@@ -66,25 +66,6 @@ public class SolicitudProyectoSocioEquipoController {
   }
 
   /**
-   * Comprueba la existencia del {@link SolicitudProyectoSocioEquipo} con el id
-   * indicado.
-   * 
-   * @param id Identificador de {@link SolicitudProyectoSocioEquipo}.
-   * @return HTTP 200 si existe y HTTP 204 si no.
-   */
-  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
-  public ResponseEntity<?> exists(@PathVariable Long id) {
-    log.debug("SolicitudProyectoSocioEquipo exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("SolicitudProyectoSocioEquipo exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("SolicitudProyectoSocioEquipo exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Devuelve el {@link SolicitudProyectoSocioEquipo} con el id indicado.
    * 
    * @param id Identificador de {@link SolicitudProyectoSocioEquipo}.
@@ -92,7 +73,7 @@ public class SolicitudProyectoSocioEquipoController {
    *         correspondiente al id
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
   SolicitudProyectoSocioEquipo findById(@PathVariable Long id) {
     log.debug("SolicitudProyectoSocioEquipo findById(Long id) - start");
     SolicitudProyectoSocioEquipo returnValue = service.findById(id);

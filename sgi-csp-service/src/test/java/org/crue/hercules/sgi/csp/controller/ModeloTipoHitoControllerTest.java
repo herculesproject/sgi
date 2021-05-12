@@ -34,7 +34,7 @@ public class ModeloTipoHitoControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/modelotipohitos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void create_ReturnsModeloTipoHito() throws Exception {
     // given: new ModeloTipoHito
     ModeloTipoHito data = generarModeloTipoHito(null, 1L, 1L);
@@ -68,7 +68,7 @@ public class ModeloTipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C", "CSP-ME-E" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ModeloTipoHito with id filled
     ModeloTipoHito data = generarModeloTipoHito(1L, 1L, 1L);
@@ -145,7 +145,7 @@ public class ModeloTipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     ModeloTipoHito data = generarModeloTipoHito(1L, 1L, 1L);
@@ -161,7 +161,7 @@ public class ModeloTipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
@@ -180,7 +180,7 @@ public class ModeloTipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsModeloTipoHito() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer(new Answer<ModeloTipoHito>() {
@@ -203,7 +203,7 @@ public class ModeloTipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {

@@ -81,7 +81,8 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
     return repository.findByConvocatoriaId(idConvocatoria).map(requisitoIP -> {
 
       // comprobar si convocatoria es modificable
-      Assert.isTrue(convocatoriaService.modificable(requisitoIP.getConvocatoriaId(), null),
+      Assert.isTrue(
+          convocatoriaService.modificable(requisitoIP.getConvocatoriaId(), null, new String[] { "CSP-CON-E" }),
           "No se puede modificar RequisitoIP. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       requisitoIP.setAniosNivelAcademico(requisitoIPActualizar.getAniosNivelAcademico());

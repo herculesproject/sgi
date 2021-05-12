@@ -29,8 +29,8 @@ public class ModeloTipoFaseIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
-    // "CSP-TFAS-B", "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V"
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-C", "CSP-ME-E", "AUTH")));
 
     HttpEntity<ModeloTipoFase> request = new HttpEntity<>(entity, headers);
     return request;

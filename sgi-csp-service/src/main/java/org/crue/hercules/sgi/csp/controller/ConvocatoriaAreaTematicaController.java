@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class ConvocatoriaAreaTematicaController {
    * @return Nuevo {@link ConvocatoriaAreaTematica} creado.
    */
   @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
   public ResponseEntity<ConvocatoriaAreaTematica> create(
       @Valid @RequestBody ConvocatoriaAreaTematica convocatoriaAreaTematica) {
     log.debug("create(ConvocatoriaAreaTematica convocatoriaAreaTematica) - start");
@@ -66,7 +67,7 @@ public class ConvocatoriaAreaTematicaController {
    * @return ConvocatoriaAreaTematica {@link ConvocatoriaAreaTematica} actualizado
    */
   @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   public ConvocatoriaAreaTematica update(@Valid @RequestBody ConvocatoriaAreaTematica convocatoriaAreaTematica,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaAreaTematica convocatoriaAreaTematica, Long id) - start");
@@ -82,7 +83,7 @@ public class ConvocatoriaAreaTematicaController {
    * @param id Identificador de {@link ConvocatoriaAreaTematica}.
    */
   @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-CON-E')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -97,7 +98,7 @@ public class ConvocatoriaAreaTematicaController {
    * @return {@link ConvocatoriaAreaTematica} correspondiente al id.
    */
   @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
   ConvocatoriaAreaTematica findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ConvocatoriaAreaTematica returnValue = service.findById(id);

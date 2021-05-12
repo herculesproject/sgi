@@ -71,8 +71,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
         .willReturn(peridosJustificiacionExistentes);
@@ -169,8 +169,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
         .willReturn(new ArrayList<>());
@@ -196,8 +196,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico));
@@ -223,8 +223,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico));
@@ -251,8 +251,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
         .willReturn(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico));
@@ -279,8 +279,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.TRUE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong())).willReturn(
         Arrays.asList(convocatoriaPeriodoSeguimientoCientifico1, convocatoriaPeriodoSeguimientoCientifico2));
@@ -303,8 +303,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any()))
-        .willReturn(Boolean.FALSE);
+    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>any(),
+        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaPeriodoSeguimientoCientifico

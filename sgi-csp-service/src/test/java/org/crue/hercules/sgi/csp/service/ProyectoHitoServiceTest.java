@@ -630,34 +630,6 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void existsById_WithExistingId_ReturnsTRUE() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-
-    // when: exists by id
-    boolean responseData = service.existsById(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isTrue();
-  }
-
-  @Test
-  public void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
-
-    // when: exists by id
-    boolean responseData = service.existsById(id);
-
-    // then: returns TRUE
-    Assertions.assertThat(responseData).isNotNull();
-    Assertions.assertThat(responseData).isFalse();
-  }
-
-  @Test
   public void findById_ReturnsProyectoHito() {
     // given: Un ProyectoHito con el id buscado
     Long idBuscado = 1L;
@@ -746,7 +718,7 @@ public class ProyectoHitoServiceTest extends BaseServiceTest {
     proyecto.setTitulo("PRO" + (id != null ? id : 1));
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-proyecto-" + String.format("%03d", id));
-    proyecto.setUnidadGestionRef("OPE");
+    proyecto.setUnidadGestionRef("2");
     proyecto.setFechaInicio(Instant.now());
     proyecto.setFechaFin(Instant.now());
     proyecto.setModeloEjecucion(modeloEjecucion);

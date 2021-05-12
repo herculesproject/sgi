@@ -33,7 +33,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/convocatoriaareatematicas";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_ReturnsConvocatoriaAreaTematica() throws Exception {
     // given: new ConvocatoriaAreaTematica
     ConvocatoriaAreaTematica convocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
@@ -66,7 +66,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a ConvocatoriaAreaTematica with id filled
     ConvocatoriaAreaTematica convocatoriaAreaTematica = generarConvocatoriaAreaTematica(1L, 1L, 1L);
@@ -85,7 +85,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithExistingId_ReturnsConvocatoriaAreaTematica() throws Exception {
     // given: existing ConvocatoriaAreaTematica
     ConvocatoriaAreaTematica updatedConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(1L, 1L, 1L);
@@ -119,7 +119,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: a ConvocatoriaAreaTematica with non existing id
     ConvocatoriaAreaTematica updatedConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(1L, 1L, 1L);
@@ -141,7 +141,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -156,7 +156,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
   public void delete_WithoutId_Return404() throws Exception {
     // given: no existing id
     Long id = 1L;
@@ -175,7 +175,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithExistingId_ReturnsConvocatoriaAreaTematica() throws Exception {
     // given: existing id
     Long id = 1L;
@@ -199,7 +199,7 @@ public class ConvocatoriaAreaTematicaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CATEM-V" })
+  @WithMockUser(username = "user", authorities = { "AUTH" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     Long id = 1L;

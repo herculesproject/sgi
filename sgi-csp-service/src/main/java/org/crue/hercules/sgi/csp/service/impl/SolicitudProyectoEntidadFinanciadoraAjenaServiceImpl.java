@@ -1,9 +1,5 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.List;
-
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
@@ -237,22 +233,4 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
     log.debug(
         "validateData(SolicitudProyectoEntidadFinanciadoraAjena updateData, SolicitudProyectoEntidadFinanciadoraAjena currentData) - end");
   }
-
-  /**
-   * Obtiene el {@link SolicitudProyectoEntidadFinanciadoraAjena} de la
-   * {@link SolicitudProyecto}.
-   * 
-   * @param id {@link SolicitudProyecto}.
-   * @return {@link SolicitudProyectoEntidadFinanciadoraAjena}.
-   */
-  @Override
-  public Boolean hasSolicitudEntidadFinanciadora(Long id) {
-    log.debug("hasSolicitudEntidadFinanciadora(Long id) - start");
-    final List<SolicitudProyectoEntidadFinanciadoraAjena> solicitudProyectoEntidadFinanciadoraAjena = repository
-        .findBySolicitudProyectoId(id);
-    Boolean returnValue = CollectionUtils.isNotEmpty(solicitudProyectoEntidadFinanciadoraAjena);
-    log.debug("hasSolicitudEntidadFinanciadora(Long id) - end");
-    return returnValue;
-  }
-
 }
