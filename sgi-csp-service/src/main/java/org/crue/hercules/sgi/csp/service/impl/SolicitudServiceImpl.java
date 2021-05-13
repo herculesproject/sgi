@@ -320,7 +320,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     Specification<Solicitud> specs = SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance());
 
     List<String> unidadesGestion = SgiSecurityContextHolder
-        .getUOsForAnyAuthority(new String[] { "CSP-CON-INV-V", "CSP-CON-V" });
+        .getUOsForAnyAuthority(new String[] { "CSP-SOL-E","CSP-SOL-V","CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-R", "CSP-PRO-C" });
 
     if (!CollectionUtils.isEmpty(unidadesGestion)) {
       Specification<Solicitud> specByUnidadGestionRefIn = SolicitudSpecifications.unidadGestionRefIn(unidadesGestion);
