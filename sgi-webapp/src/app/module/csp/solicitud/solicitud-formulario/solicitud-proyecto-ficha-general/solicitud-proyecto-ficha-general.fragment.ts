@@ -92,7 +92,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
    * Deshabilitar presupuesto por entidades
    */
   disablePresupuestoPorEntidades(value: boolean): void {
-    if (value) {
+    if (value || this.readonly) {
       this.getFormGroup()?.controls.presupuestoPorEntidades.disable();
     } else {
       this.getFormGroup()?.controls.presupuestoPorEntidades.enable();
@@ -105,7 +105,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
    * Socio colaboradores
    */
   disableSocioColaborador(value: boolean): void {
-    if (value) {
+    if (value || this.readonly) {
       this.getFormGroup()?.controls.colaborativo.disable();
     } else {
       this.getFormGroup()?.controls.colaborativo.enable();

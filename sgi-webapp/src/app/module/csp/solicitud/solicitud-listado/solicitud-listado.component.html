@@ -392,7 +392,7 @@
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>
           </ng-container>
-          <ng-container *sgiHasAuthority="'CSP-PRO-C'">
+          <ng-container *sgiHasAnyAuthority="['CSP-PRO-C', 'CSP-PRO-C_' + element.unidadGestion.id ]">
             <button color="primary" aria-label="Center Align" mat-raised-button *ngIf="mapCrearProyecto.get(element.id)"
               (click)="crearProyectoModal(element)">
               {{'csp.solicitud.listado.crear.proyecto' | translate}}
