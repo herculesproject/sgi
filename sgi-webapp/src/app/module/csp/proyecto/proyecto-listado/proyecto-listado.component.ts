@@ -434,7 +434,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   private loadUnidadesGestion() {
     this.subscriptions.push(
       // TODO Debería filtrar por el rol
-      this.unidadGestionService.findAll().subscribe(
+      this.unidadGestionService.findAllRestringidos().subscribe(
         res => {
           this.unidadGestionFiltered = res.items;
           this.unidadesGestion$ = this.formGroup.controls.unidadGestion.valueChanges
