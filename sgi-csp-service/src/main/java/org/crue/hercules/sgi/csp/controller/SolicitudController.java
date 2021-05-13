@@ -533,7 +533,7 @@ public class SolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos/entidadajena/{entidadRef}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
   ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuestoEntidadAjena(
       @PathVariable Long id, @PathVariable String entidadRef, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -570,7 +570,7 @@ public class SolicitudController {
   }
 
   @GetMapping("/{id}/solicitudproyectopresupuestos/totalesconceptogasto")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
   public ResponseEntity<List<SolicitudProyectoPresupuestoTotalConceptoGasto>> findAllSolicitudProyectoPresupuestoTotalConceptoGastos(
       @PathVariable Long id) {
     log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long id) - start");
