@@ -23,4 +23,8 @@ export interface IEntidadFinanciadora {
    * Porcentaje de financiación
    */
   porcentajeFinanciacion: number;
+  /**
+   * Importe de financiación
+   */
+  importeFinanciacion: number;
 }

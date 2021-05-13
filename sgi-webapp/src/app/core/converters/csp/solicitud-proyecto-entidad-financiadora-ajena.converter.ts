@@ -16,7 +16,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
       solicitudProyectoId: value.solicitudProyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
-      porcentajeFinanciacion: value.porcentajeFinanciacion
+      porcentajeFinanciacion: value.porcentajeFinanciacion,
+      importeFinanciacion: value.importeFinanciacion
     };
   }
 
@@ -30,7 +31,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
       solicitudProyectoId: value.solicitudProyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
-      porcentajeFinanciacion: value.porcentajeFinanciacion
+      porcentajeFinanciacion: value.porcentajeFinanciacion,
+      importeFinanciacion: value.importeFinanciacion
     };
   }
 }

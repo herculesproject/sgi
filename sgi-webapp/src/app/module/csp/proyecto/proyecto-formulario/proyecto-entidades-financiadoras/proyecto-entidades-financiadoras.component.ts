@@ -31,7 +31,7 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
   private subscriptions: Subscription[] = [];
 
   private columns = ['nombre', 'cif', 'fuenteFinanciacion', 'ambito', 'tipoFinanciacion',
-    'porcentajeFinanciacion', 'acciones'];
+    'porcentajeFinanciacion', 'importeFinanciacion', 'acciones'];
   private elementsPage = [5, 10, 25, 100];
 
   msgParamEntity = {};

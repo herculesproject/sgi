@@ -25,6 +25,7 @@ const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const ENTIDAD_FINANCIADORA_KEY = marker('csp.entidad-financiadora');
 const ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY = marker('csp.entidad-financiadora.porcentaje-financiacion');
+const ENTIDAD_FINANCIADORA_IMPORTE_FINANCIACION_KEY = marker('csp.entidad-financiadora.importe-financiacion');
 
 @Component({
   templateUrl: './entidad-financiadora-modal.component.html',
@@ -37,7 +38,8 @@ export class EntidadFinanciadoraModalComponent extends
   textSaveOrUpdate: string;
   title: string;
 
-  msgParamPorcentajeFinanciacionoEntity = {};
+  msgParamPorcentajeFinanciacionEntity = {};
+  msgParamImporteFinanciacionEntity = {};
   msgParamEmpresaEntity = {};
 
   constructor(
@@ -73,7 +75,12 @@ export class EntidadFinanciadoraModalComponent extends
     this.translate.get(
       ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPorcentajeFinanciacionoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamPorcentajeFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      ENTIDAD_FINANCIADORA_IMPORTE_FINANCIACION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamImporteFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   protected getDatosForm(): IEntidadFinanciadora {
@@ -82,6 +89,7 @@ export class EntidadFinanciadoraModalComponent extends
     entidad.fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
     entidad.tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
+    entidad.importeFinanciacion = this.formGroup.get('importeFinanciacion').value;
     return entidad;
   }
 
@@ -98,6 +106,10 @@ export class EntidadFinanciadoraModalComponent extends
       porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion, [
         Validators.min(0),
         Validators.max(100)
+      ]),
+      importeFinanciacion: new FormControl(this.data.entidad.importeFinanciacion, [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
       ])
     });
     if (this.data.readonly) {

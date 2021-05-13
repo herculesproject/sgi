@@ -8,4 +8,5 @@ export interface IConvocatoriaEntidadFinanciadoraBackend {
   fuenteFinanciacion: IFuenteFinanciacion;
   tipoFinanciacion: ITipoFinanciacion;
   porcentajeFinanciacion: number;
+  importeFinanciacion: number;
 }

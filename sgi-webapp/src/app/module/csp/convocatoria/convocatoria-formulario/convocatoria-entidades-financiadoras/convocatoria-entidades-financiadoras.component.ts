@@ -32,7 +32,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   private subscriptions: Subscription[] = [];
 
   columns = ['nombre', 'cif', 'fuenteFinanciacion', 'ambito', 'tipoFinanciacion',
-    'porcentajeFinanciacion', 'acciones'];
+    'porcentajeFinanciacion', 'importeFinanciacion', 'acciones'];
   elementsPage = [5, 10, 25, 100];
 
   msgParamEntity = {};

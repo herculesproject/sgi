@@ -8,5 +8,6 @@ export interface IProyectoEntidadFinanciadoraBackend {
   fuenteFinanciacion: IFuenteFinanciacion;
   tipoFinanciacion: ITipoFinanciacion;
   porcentajeFinanciacion: number;
+  importeFinanciacion: number;
   ajena: boolean;
 }

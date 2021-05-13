@@ -47,7 +47,8 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     'fuenteFinanciacion',
     'ambito',
     'tipoFinanciacion',
-    'porcentajeFinanciacion'
+    'porcentajeFinanciacion',
+    'importeFinanciacion'
   ];
 
   displayedColumnsEntidadesFinanciadorasAjenas = [
@@ -57,6 +58,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     'ambito',
     'tipoFinanciacion',
     'porcentajeFinanciacion',
+    'importeFinanciacion',
     'acciones'
   ];
 
@@ -120,6 +122,8 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
             return entidadFinanciadora.tipoFinanciacion?.nombre;
           case 'porcentajeFinanciacion':
             return entidadFinanciadora.porcentajeFinanciacion;
+          case 'importeFinanciacion':
+            return entidadFinanciadora.importeFinanciacion;
           default:
             return entidadFinanciadora[property];
         }

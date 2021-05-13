@@ -16,6 +16,7 @@ class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEnt
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
       porcentajeFinanciacion: value.porcentajeFinanciacion,
+      importeFinanciacion: value.importeFinanciacion,
       ajena: value.ajena
     };
   }
@@ -31,6 +32,7 @@ class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEnt
       fuenteFinanciacion: value.fuenteFinanciacion,
       tipoFinanciacion: value.tipoFinanciacion,
       porcentajeFinanciacion: value.porcentajeFinanciacion,
+      importeFinanciacion: value.importeFinanciacion,
       ajena: value.ajena
     };
   }

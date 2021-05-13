@@ -22,10 +22,11 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
     );
 
     if (!this.ajena) {
-      form.addControl('fuenteFinanciacion', new FormControl({ value: '', disabled: true }));
-      form.addControl('ambito', new FormControl({ value: '', disabled: true }));
-      form.addControl('tipoFinanciacion', new FormControl({ value: '', disabled: true }));
-      form.addControl('porcentajeFinanciacion', new FormControl({ value: '', disabled: true }));
+      form.addControl('fuenteFinanciacion', new FormControl({ value: undefined, disabled: true }));
+      form.addControl('ambito', new FormControl({ value: undefined, disabled: true }));
+      form.addControl('tipoFinanciacion', new FormControl({ value: undefined, disabled: true }));
+      form.addControl('porcentajeFinanciacion', new FormControl({ value: undefined, disabled: true }));
+      form.addControl('importeFinanciacion', new FormControl({ value: undefined, disabled: true }));
     }
 
     return form;
@@ -39,7 +40,8 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
       fuenteFinanciacion: entidadFinanciadora?.fuenteFinanciacion?.nombre,
       ambito: entidadFinanciadora?.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre,
       tipoFinanciacion: entidadFinanciadora?.tipoFinanciacion?.nombre,
-      porcentajeFinanciacion: entidadFinanciadora?.porcentajeFinanciacion
+      porcentajeFinanciacion: entidadFinanciadora?.porcentajeFinanciacion,
+      importeFinanciacion: entidadFinanciadora?.importeFinanciacion
     };
 
     return result;
