@@ -34,6 +34,8 @@ export class EvaluacionActionService extends EvaluacionFormularioActionService {
     this.addFragment(this.FRAGMENT.COMENTARIOS, this.comentarios);
     this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
     this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
+
+    this.comentarios.initialize();
     this.evaluaciones.setComentarios(this.comentarios.comentarios$);
   }
 
