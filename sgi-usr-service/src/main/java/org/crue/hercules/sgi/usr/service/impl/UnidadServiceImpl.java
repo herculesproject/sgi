@@ -68,7 +68,8 @@ public class UnidadServiceImpl implements UnidadService {
     Specification<Unidad> specs = SgiRSQLJPASupport.toSpecification(query);
 
     List<String> unidadesGestion = SgiSecurityContextHolder
-        .getUOsForAnyAuthority(new String[] { "CSP-CON-C", "CSP-CON-V" });
+        .getUOsForAnyAuthority(new String[] { "CSP-CON-V", "CSP-CON-C", "CSP-CON-E", "CSP-SOL-C", "CSP-SOL-E",
+            "CSP-SOL-V", "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
 
     if (!CollectionUtils.isEmpty(unidadesGestion)) {
       Specification<Unidad> specByUnidadGestionRefIn = UnidadSpecifications.acronimosIn(unidadesGestion);
