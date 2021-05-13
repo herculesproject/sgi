@@ -467,4 +467,13 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
+  /**
+   * Devuelve el listado de solicitudes que puede ver un investigador
+   *
+   * @param options opciones de búsqueda.
+   */
+  findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
+    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/investigador`, options, SOLICITUD_CONVERTER);
+  }
+
 }

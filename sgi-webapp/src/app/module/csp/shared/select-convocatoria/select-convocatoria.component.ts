@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,6 +7,7 @@ import { SelectDialogComponent } from '@core/component/select-dialog/select-dial
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SearchConvocatoriaModalComponent, SearchConvocatoriaModalData } from './dialog/search-convocatoria.component';
+
 @Component({
   selector: 'sgi-select-convocatoria',
   templateUrl: '../../../../core/component/select-dialog/select-dialog.component.html',
@@ -55,6 +57,18 @@ export class SelectConvocatoriaComponent extends SelectDialogComponent<SearchCon
   }
   // tslint:disable-next-line: variable-name
   private _authorities: string[] = [];
+
+  @Input()
+  get investigador(): boolean {
+    return this._investigador;
+  }
+  set investigador(value: boolean) {
+    this._investigador = coerceBooleanProperty(value);
+  }
+  // tslint:disable-next-line: variable-name
+  private _investigador = false;
+
+
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     elementRef: ElementRef,
@@ -65,6 +79,14 @@ export class SelectConvocatoriaComponent extends SelectDialogComponent<SearchCon
     dialog: MatDialog) {
     super(changeDetectorRef, elementRef, parentFormField, ngControl, tabIndex, dialog, SearchConvocatoriaModalComponent);
   }
+
+  protected getDialogData(): SearchConvocatoriaModalData {
+    return {
+      unidadesGestion: this.getFilterUnidadesGestion(),
+      investigador: this.investigador
+    };
+  }
+
   get displayValue(): string {
     if (this.empty) {
       return '';
@@ -84,11 +106,7 @@ export class SelectConvocatoriaComponent extends SelectDialogComponent<SearchCon
     });
     return unidadesGestion;
   }
-  getDialogData(): SearchConvocatoriaModalData {
-    return {
-      unidadesGestion: this.getFilterUnidadesGestion()
-    };
-  }
+
   private getUnidadGestion(authority: string): string {
     const match = authority.match(/(?<=_)(.+)/gm);
     if (match.length === 1) {

@@ -91,6 +91,18 @@ const routes: SgiRoutes = [
           hasAuthorityForAnyUO: 'CSP-CON-INV-V'
         }
       },
+      {
+        path: INV_ROUTE_NAMES.SOLICITUDES,
+        loadChildren: () =>
+          import('../csp/solicitud/solicitud-inv.module').then(
+            (m) => m.SolicitudInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONVOCATORIAS_TITLE,
+          hasAuthorityForAnyUO: 'CSP-SOL-INV-V'
+        }
+      },
       { path: '**', component: null }
     ]
   }

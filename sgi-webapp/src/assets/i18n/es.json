@@ -902,6 +902,7 @@
   "inv.convocatoria.listado.titulo": "Búsqueda de convocatorias",
   "inv.convocatoria.ver.titulo": "Detalles de la convocatoria",
   "inv.root.title": "Inicio",
+  "inv.solicitud.listado.titulo": "Búsqueda de solicitudes",
   "label.actions": "Acciones",
   "label.activo": "Activo",
   "label.csp.convocatoria-elegibilidad.codigo-economico.no-permitido": "Correspondencia de conceptos de gastos no permitidos de la convocatoria y códigos económicos del SGE",

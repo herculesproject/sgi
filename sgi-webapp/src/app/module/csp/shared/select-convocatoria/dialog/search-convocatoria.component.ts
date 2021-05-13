@@ -14,14 +14,20 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import {
+  RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection
+} from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+
 const MSG_LISTADO_ERROR = marker('error.load');
+
 export interface SearchConvocatoriaModalData {
   unidadesGestion: string[];
+  investigador: boolean;
 }
+
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
   fase: IConvocatoriaFase;
@@ -30,6 +36,7 @@ interface IConvocatoriaListado {
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
   entidadFinanciadoraEmpresa: IEmpresa;
 }
+
 @Component({
   templateUrl: './search-convocatoria.component.html',
   styleUrls: ['./search-convocatoria.component.scss']
@@ -76,17 +83,23 @@ export class SearchConvocatoriaModalComponent implements AfterViewInit {
     ).subscribe();
   }
   buscarConvocatorias(reset?: boolean) {
-    this.convocatorias$ = this.convocatoriaService
-      .findAllRestringidos(
-        {
-          page: {
-            index: reset ? 0 : this.paginator.pageIndex,
-            size: this.paginator.pageSize
-          },
-          // TODO: Add sorts
-          filter: this.buildFilter()
-        }
-      )
+    const options: SgiRestFindOptions = {
+      page: {
+        index: reset ? 0 : this.paginator.pageIndex,
+        size: this.paginator.pageSize
+      },
+      sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+      filter: this.buildFilter()
+    };
+
+    let convocatoriaFindAll$: Observable<SgiRestListResult<IConvocatoria>>;
+    if (this.data.investigador) {
+      convocatoriaFindAll$ = this.convocatoriaService.findAllInvestigador(options);
+    } else {
+      convocatoriaFindAll$ = this.convocatoriaService.findAllRestringidos(options);
+    }
+
+    this.convocatorias$ = convocatoriaFindAll$
       .pipe(
         map(result => {
           const convocatorias = result.items.map((convocatoria) => {
