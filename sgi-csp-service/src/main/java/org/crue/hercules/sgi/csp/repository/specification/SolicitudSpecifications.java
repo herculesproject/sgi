@@ -33,4 +33,16 @@ public class SolicitudSpecifications {
     };
   }
 
+  /**
+   * {@link Solicitud} en las que la persona es el solicitante.
+   * 
+   * @return specification para obtener las {@link Solicitud} en las que la
+   *         persona es el solicitante.
+   */
+  public static Specification<Solicitud> bySolicitante(String personaRef) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(Solicitud_.solicitanteRef), personaRef);
+    };
+  }
+
 }

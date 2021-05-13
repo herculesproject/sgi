@@ -43,6 +43,8 @@ import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextH
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -244,11 +246,20 @@ public class SolicitudServiceImpl implements SolicitudService {
     Assert.notNull(id, "Solicitud id no puede ser null para desactivar un Solicitud");
 
     return repository.findById(id).map(solicitud -> {
-      String authority = "CSP-SOL-B";
-      Assert.isTrue(
-          SgiSecurityContextHolder.hasAuthority(authority)
-              || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
-          "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+      String authorityInv = "CSP-SOL-BR-INV";
+      boolean hasAuthorityInv = SgiSecurityContextHolder.hasAuthority(authorityInv);
+
+      if (hasAuthorityInv) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Assert.isTrue(solicitud.getCreadorRef().equals(authentication.getName()),
+            "El usuario no es el creador de la Solicitud");
+      } else {
+        String authority = "CSP-SOL-B";
+        Assert.isTrue(
+            SgiSecurityContextHolder.hasAuthority(authority)
+                || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
+            "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+      }
 
       if (!solicitud.getActivo()) {
         // Si no esta activo no se hace nada
@@ -319,8 +330,8 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Specification<Solicitud> specs = SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance());
 
-    List<String> unidadesGestion = SgiSecurityContextHolder
-        .getUOsForAnyAuthority(new String[] { "CSP-SOL-E","CSP-SOL-V","CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-R", "CSP-PRO-C" });
+    List<String> unidadesGestion = SgiSecurityContextHolder.getUOsForAnyAuthority(
+        new String[] { "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B", "CSP-SOL-C", "CSP-SOL-R", "CSP-PRO-C" });
 
     if (!CollectionUtils.isEmpty(unidadesGestion)) {
       Specification<Solicitud> specByUnidadGestionRefIn = SolicitudSpecifications.unidadGestionRefIn(unidadesGestion);
@@ -329,6 +340,29 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(String query, Pageable paging");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link Solicitud} que puede visualizar un
+   * investigador paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link Solicitud} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  @Override
+  public Page<Solicitud> findAllInvestigador(String query, Pageable paging) {
+    log.debug("findAll(String query, Pageable paging) - start");
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    Specification<Solicitud> specs = SolicitudSpecifications.activos()
+        .and(SolicitudSpecifications.bySolicitante(authentication.getName()))
+        .and(SgiRSQLJPASupport.toSpecification(query, SolicitudPredicateResolver.getInstance()));
+
+    Page<Solicitud> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }
 

@@ -71,6 +71,17 @@ public interface SolicitudService {
   Page<Solicitud> findAllTodosRestringidos(String query, Pageable paging);
 
   /**
+   * Obtiene todas las entidades {@link Solicitud} que puede visualizar un
+   * investigador paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link Solicitud} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  Page<Solicitud> findAllInvestigador(String query, Pageable paging);
+
+  /**
    * Comprueba si la soliciutd está asociada a una convocatoria SGI.
    * 
    * @param id Identificador de {@link Solicitud}.

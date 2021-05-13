@@ -178,7 +178,7 @@ public class SolicitudController {
    * @return {@link Solicitud} actualizado.
    */
   @PatchMapping("/{id}/desactivar")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-B')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-B', 'CSP-SOL-BR-INV')")
   Solicitud desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
 
@@ -606,7 +606,7 @@ public class SolicitudController {
    *         modificación
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-V')")
   ResponseEntity<Solicitud> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     Boolean returnValue = service.modificable(id);
@@ -842,5 +842,29 @@ public class SolicitudController {
 
     log.debug("desistir(Long id, String comentario) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Solicitud} que puede visualizar
+   * un investigador paginadas y filtradas.
+   * 
+   * @param query  filtro de búsqueda.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Solicitud} que puede visualizar un
+   *         investigador paginadas y filtradas.
+   */
+  @GetMapping("/investigador")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-V')")
+  ResponseEntity<Page<Solicitud>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllInvestigador(String query, Pageable paging) - start");
+    Page<Solicitud> page = service.findAllInvestigador(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllInvestigador(String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllInvestigador(String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 }
