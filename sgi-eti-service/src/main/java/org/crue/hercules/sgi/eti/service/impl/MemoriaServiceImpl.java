@@ -636,6 +636,7 @@ public class MemoriaServiceImpl implements MemoriaService {
           evaluacionNueva.setId(null);
           evaluacionNueva.setVersion(memoria.getVersion() + 1);
           evaluacionNueva.setEsRevMinima(true);
+          evaluacionNueva.setDictamen(null);
           evaluacionRepository.save(evaluacionNueva);
 
           return evaluacionNueva;
