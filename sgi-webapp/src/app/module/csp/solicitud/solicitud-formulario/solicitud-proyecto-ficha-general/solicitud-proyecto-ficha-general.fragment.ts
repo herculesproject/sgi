@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
-import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { ISolicitudProyecto, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
@@ -21,7 +21,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
   areasTematicas$ = new BehaviorSubject<AreaTematicaSolicitudData[]>([]);
   hasConvocatoria = false;
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(false);
-  readonly presupuestoPorEntidades$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly tipoDesglosePresupuesto$: Subject<TipoPresupuesto> = new Subject<TipoPresupuesto>();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -54,7 +54,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       duracion: new FormControl(null, [Validators.min(1), Validators.max(9999)]),
       colaborativo: new FormControl(undefined, [Validators.required]),
       coordinadorExterno: new FormControl(undefined, [Validators.required]),
-      presupuestoPorEntidades: new FormControl(undefined, [Validators.required]),
+      tipoDesglosePresupuesto: new FormControl(undefined, [Validators.required]),
       objetivos: new FormControl(null, [Validators.maxLength(2000)]),
       intereses: new FormControl(null, [Validators.maxLength(2000)]),
       resultadosPrevistos: new FormControl(null, [Validators.maxLength(2000)]),
@@ -81,21 +81,21 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     );
 
     this.subscriptions.push(
-      form.controls.presupuestoPorEntidades.valueChanges.subscribe((value) => {
-        this.presupuestoPorEntidades$.next(value);
+      form.controls.tipoDesglosePresupuesto.valueChanges.subscribe((value) => {
+        this.tipoDesglosePresupuesto$.next(value);
       })
     );
     return form;
   }
 
   /**
-   * Deshabilitar presupuesto por entidades
+   * Deshabilitar tipo desglose presupuesto
    */
-  disablePresupuestoPorEntidades(value: boolean): void {
+  disableTipoDesglosePresupuesto(value: boolean): void {
     if (value || this.readonly) {
-      this.getFormGroup()?.controls.presupuestoPorEntidades.disable();
+      this.getFormGroup()?.controls.tipoDesglosePresupuesto.disable();
     } else {
-      this.getFormGroup()?.controls.presupuestoPorEntidades.enable();
+      this.getFormGroup()?.controls.tipoDesglosePresupuesto.enable();
     }
   }
 
@@ -123,7 +123,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       duracion: solicitudProyecto?.duracion,
       colaborativo: solicitudProyecto?.colaborativo,
       coordinadorExterno: solicitudProyecto?.coordinadorExterno,
-      presupuestoPorEntidades: solicitudProyecto?.presupuestoPorEntidades,
+      tipoDesglosePresupuesto: solicitudProyecto?.tipoPresupuesto,
       objetivos: solicitudProyecto?.objetivos,
       intereses: solicitudProyecto?.intereses,
       resultadosPrevistos: solicitudProyecto?.resultadosPrevistos,
@@ -152,7 +152,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         if (solicitudProyecto?.id) {
           return this.solicitudProyectoService.hasSolicitudPresupuesto(solicitudProyecto.id).pipe(
             map(hasSolicitudPresupuesto => {
-              this.disablePresupuestoPorEntidades(hasSolicitudPresupuesto);
+              this.disableTipoDesglosePresupuesto(hasSolicitudPresupuesto);
               return solicitudProyecto;
             })
           );
@@ -228,7 +228,7 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
     this.solicitudProyecto.intereses = form.intereses.value;
     this.solicitudProyecto.resultadosPrevistos = form.resultadosPrevistos.value;
     this.solicitudProyecto.envioEtica = form.envioEtica.value;
-    this.solicitudProyecto.presupuestoPorEntidades = Boolean(form.presupuestoPorEntidades.value);
+    this.solicitudProyecto.tipoPresupuesto = form.tipoDesglosePresupuesto.value;
     return this.solicitudProyecto;
   }
 

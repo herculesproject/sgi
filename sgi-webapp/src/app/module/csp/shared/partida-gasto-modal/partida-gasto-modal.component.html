@@ -23,35 +23,96 @@
         <mat-label>
           {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigos-economicos-permitidos' | translate}}
         </mat-label>
-        <ul *ngFor="let conceptoGasto of conceptosGastosPermitidos">
-          <li>
-            {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto-info' |
-            translate:conceptoGasto}}
-            <ul *ngFor="let codigoEconomico of conceptoGasto.codigosEconomicos">
-              <li>
-                {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico-info' |
-                translate:codigoEconomico}}
-              </li>
-            </ul>
-          </li>
-        </ul>
+
+        <table class="mat-elevation-z8" mat-table [dataSource]="dataSourceCodigosEconomicosPermitidos" matSort
+          #sortCodigosEconomicosPermitidos="matSort" matSortActive="permitidoDesde" matSortDirection="asc"
+          matSortDisableClear>
+          <ng-container matColumnDef="conceptoGasto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.conceptoGasto.nombre}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="importeMaximo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-maximo' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.importeMaximo}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="permitidoDesde">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.permitido-desde' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.mesInicial}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="permitidoHasta">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.permitido-hasta' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.mesFinal}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="codigoEconomico">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.codigoEconomicoRef}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnsCodigosEconomicosPermitidos"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsCodigosEconomicosPermitidos;"></tr>
+        </table>
       </div>
       <div>
         <mat-label>
           {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigos-economicos-no-permitidos' | translate}}
         </mat-label>
-        <ul *ngFor="let conceptoGasto of conceptosGastosNoPermitidos">
-          <li>
-            {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto-info-sin-importe' |
-            translate:conceptoGasto}}
-            <ul *ngFor="let codigoEconomico of conceptoGasto.codigosEconomicos">
-              <li>
-                {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico-info' |
-                translate:codigoEconomico}}
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <table class="mat-elevation-z8" mat-table [dataSource]="dataSourceCodigosEconomicosNoPermitidos" matSort
+          #sortCodigosEconomicosNoPermitidos="matSort" matSortActive="noPermitidoDesde" matSortDirection="asc"
+          matSortDisableClear>
+          <ng-container matColumnDef="conceptoGasto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.conceptoGasto.nombre}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="noPermitidoDesde">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.no-permitido-desde' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.mesInicial}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="noPermitidoHasta">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.no-permitido-hasta' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.convocatoriaConceptoGasto?.mesFinal}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="codigoEconomico">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let data">
+              {{data.codigoEconomicoRef}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnsCodigosEconomicosNoPermitidos"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsCodigosEconomicosNoPermitidos;"></tr>
+        </table>
       </div>
     </div>
     <!-- Anualidad -->

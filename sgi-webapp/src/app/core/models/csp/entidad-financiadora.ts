@@ -1,16 +1,8 @@
-import { IEmpresa } from '../sgemp/empresa';
+import { IEntidad } from './entidad';
 import { IFuenteFinanciacion } from './fuente-financiacion';
 import { ITipoFinanciacion } from './tipos-configuracion';
 
-export interface IEntidadFinanciadora {
-  /**
-   * ID
-   */
-  id: number;
-  /**
-   * Empresa
-   */
-  empresa: IEmpresa;
+export interface IEntidadFinanciadora extends IEntidad {
   /**
    * Fuente de financiación
    */

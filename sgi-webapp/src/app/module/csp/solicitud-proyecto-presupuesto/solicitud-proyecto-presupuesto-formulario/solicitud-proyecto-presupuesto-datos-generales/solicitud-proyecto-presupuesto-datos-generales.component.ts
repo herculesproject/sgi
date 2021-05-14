@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
+import { IEntidad } from '@core/models/csp/entidad';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -12,7 +12,7 @@ import { SolicitudProyectoPresupuestoDatosGeneralesFragment } from './solicitud-
   templateUrl: './solicitud-proyecto-presupuesto-datos-generales.component.html',
   styleUrls: ['./solicitud-proyecto-presupuesto-datos-generales.component.scss']
 })
-export class SolicitudProyectoPresupuestoDatosGeneralesComponent extends FormFragmentComponent<IEntidadFinanciadora>
+export class SolicitudProyectoPresupuestoDatosGeneralesComponent extends FormFragmentComponent<IEntidad>
   implements OnInit {
   formPart: SolicitudProyectoPresupuestoDatosGeneralesFragment;
   fxLayoutProperties: FxLayoutProperties;

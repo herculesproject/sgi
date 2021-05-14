@@ -8,7 +8,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
-import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { ISolicitudProyecto, TIPO_PRESUPUESTO_MAP } from '@core/models/csp/solicitud-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -23,7 +23,7 @@ const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_ACRONIMO_KEY = marker('csp.solicitu
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COD_EXTERNO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.codigo-externo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COLABORATIVO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.proyecto-colaborativo');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADOR_EXTERNO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.coordinador-externo');
-const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_PRESUPUESTO_ENTIDADES_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.presupuesto-entidades');
+const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_TIPO_DESGLOSE_PRESUPUESTO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.tipo-desglose-presupuesto');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_TITULO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.titulo');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 const AREA_KEY = marker('csp.area');
@@ -43,7 +43,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
   msgParamAcronimoEntity = {};
   msgParamColaborativoEntity = {};
   msgParamCoordinadorExternoEntity = {};
-  msgParamPresupuestoEntidadesEntity = {};
+  msgParamTipoDesglosePresupuestoEntity = {};
   msgParamTituloEntity = {};
   msgParamAreaTematicaEntities = {};
   msgParamAreaEntities: {};
@@ -91,6 +91,10 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     this.setupI18N();
   }
 
+  get TIPO_PRESUPUESTO_MAP() {
+    return TIPO_PRESUPUESTO_MAP;
+  }
+
   private setupI18N(): void {
     this.translate.get(
       AREA_KEY,
@@ -105,7 +109,8 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     this.translate.get(
       SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COD_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) =>
+      this.msgParamCodExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COLABORATIVO_KEY,
@@ -123,9 +128,9 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
-      SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_PRESUPUESTO_ENTIDADES_KEY,
+      SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_TIPO_DESGLOSE_PRESUPUESTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPresupuestoEntidadesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTipoDesglosePresupuestoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
       AREA_TEMATICA_KEY,

@@ -113,17 +113,15 @@
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-      <!-- Presupuesto por Entidades -->
+      <!-- Tipo desglose presupuesto-->
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
-          <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.presupuesto-entidades' | translate}}</mat-label>
-          <mat-select matNativeControl formControlName="presupuestoPorEntidades" required>
-            <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-            <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.presupuestoPorEntidades.errors?.required">
-            {{'error.required.entity' | translate:msgParamPresupuestoEntidadesEntity}}
+          <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.tipo-desglose-presupuesto' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipoDesglosePresupuesto" [enumMap]="TIPO_PRESUPUESTO_MAP">
+          </sgi-select-enum>
+          <mat-error *ngIf="formGroup.controls.tipoDesglosePresupuesto.errors?.required">
+            {{'error.required.entity' | translate:msgParamTipoDesglosePresupuestoEntity}}
           </mat-error>
         </mat-form-field>
       </div>

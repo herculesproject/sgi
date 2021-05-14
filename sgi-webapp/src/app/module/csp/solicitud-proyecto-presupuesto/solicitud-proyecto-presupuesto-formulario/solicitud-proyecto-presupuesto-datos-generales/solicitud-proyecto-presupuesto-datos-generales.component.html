@@ -28,8 +28,8 @@
       </div>
     </div>
 
-    <!-- Campos visibles solo si es de la convocatoria -->
-    <ng-container *ngIf="!formPart.ajena">
+    <!-- Campos visibles solo si es una entidad financiadora -->
+    <ng-container *ngIf="formPart.financiadora">
       <!-- Fuente financiacion -->
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">

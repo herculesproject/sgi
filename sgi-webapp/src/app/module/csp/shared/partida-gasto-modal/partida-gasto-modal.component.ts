@@ -1,6 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -18,21 +20,6 @@ import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@s
 import { DateTime } from 'luxon';
 import { merge, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
-
-interface CodigoEconomicoInfo {
-  codigoEconomicoRef: string;
-  fechaInicio: DateTime;
-  fechaFin: DateTime;
-}
-
-interface ConceptoGastoInfo {
-  id: number;
-  nombre: string;
-  mesInicio: string;
-  mesFin: string;
-  importeMaximo: string;
-  codigosEconomicos: CodigoEconomicoInfo[];
-}
 
 export interface ConceptoGastoCodigoEc {
   id: number;
@@ -70,8 +57,13 @@ export class PartidaGastoModalComponent extends
   private conceptosGastoCodigoEcPermitidos = [] as ConceptoGastoCodigoEc[];
   private conceptosGastoCodigoEcNoPermitidos = [] as ConceptoGastoCodigoEc[];
 
-  conceptosGastosPermitidos: ConceptoGastoInfo[];
-  conceptosGastosNoPermitidos: ConceptoGastoInfo[];
+  dataSourceCodigosEconomicosPermitidos = new MatTableDataSource<ConceptoGastoCodigoEc>();
+  dataSourceCodigosEconomicosNoPermitidos = new MatTableDataSource<ConceptoGastoCodigoEc>();
+  columnsCodigosEconomicosPermitidos = ['conceptoGasto', 'importeMaximo', 'permitidoDesde', 'permitidoHasta', 'codigoEconomico'];
+  columnsCodigosEconomicosNoPermitidos = ['conceptoGasto', 'noPermitidoDesde', 'noPermitidoHasta', 'codigoEconomico'];
+  @ViewChild('sortCodigosEconomicosPermitidos') sortCodigosEconomicosPermitidos: MatSort;
+  @ViewChild('sortCodigosEconomicosNoPermitidos') sortCodigosEconomicosNoPermitidos: MatSort;
+
   showCodigosEconomicosInfo = false;
 
   fxFlexProperties: FxFlexProperties;
@@ -144,16 +136,19 @@ export class PartidaGastoModalComponent extends
 
       this.subscriptions.push(this.formGroup.controls.conceptoGasto.valueChanges.subscribe(
         (conceptoGasto) => {
-          this.conceptosGastosPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcPermitidos
-            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id));
+          this.dataSourceCodigosEconomicosPermitidos.data = this.conceptosGastoCodigoEcPermitidos
+            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id);
+          this.dataSourceCodigosEconomicosNoPermitidos.data = this.conceptosGastoCodigoEcNoPermitidos
+            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id);
 
-          this.conceptosGastosNoPermitidos = this.toConceptoGastoInfo(this.conceptosGastoCodigoEcNoPermitidos
-            .filter(codigoEconomico => conceptoGasto.id === codigoEconomico.convocatoriaConceptoGasto?.conceptoGasto?.id));
+          this.showCodigosEconomicosInfo = this.dataSourceCodigosEconomicosPermitidos.data.length > 0
+            || this.dataSourceCodigosEconomicosNoPermitidos.data.length > 0;
 
-          if (this.conceptosGastosPermitidos.length > 0 && this.conceptosGastosNoPermitidos.length > 0) {
-            this.showCodigosEconomicosInfo = true;
+          if (this.showCodigosEconomicosInfo) {
+            setTimeout(() => {
+              this.setTablesSort();
+            }, 0);
           }
-
         })
       );
     }
@@ -269,7 +264,7 @@ export class PartidaGastoModalComponent extends
         return conceptoGatosCodigoEc.items.map(conceptoGasto => {
           const data: ConceptoGastoCodigoEc = {
             codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
-            convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.id),
+            convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.convocatoriaConceptoGastoId),
             fechaFin: conceptoGasto.fechaFin,
             fechaInicio: conceptoGasto.fechaInicio,
             id: conceptoGasto.id,
@@ -295,7 +290,7 @@ export class PartidaGastoModalComponent extends
         return conceptoGatosCodigoEc.items.map(conceptoGasto => {
           const data: ConceptoGastoCodigoEc = {
             codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
-            convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.id),
+            convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.convocatoriaConceptoGastoId),
             fechaFin: conceptoGasto.fechaFin,
             fechaInicio: conceptoGasto.fechaInicio,
             id: conceptoGasto.id,
@@ -307,35 +302,41 @@ export class PartidaGastoModalComponent extends
     );
   }
 
-  private toConceptoGastoInfo(convocatoriaConceptoGastos: ConceptoGastoCodigoEc[]): ConceptoGastoInfo[] {
-    const conceptosGastosInfo: ConceptoGastoInfo[] = [];
-    convocatoriaConceptoGastos.forEach(codigoEconomico => {
-      let conceptoGastoInfo = conceptosGastosInfo.find(c => c.id === codigoEconomico.convocatoriaConceptoGasto.id);
-
-      if (!conceptoGastoInfo) {
-        conceptoGastoInfo = {
-          id: codigoEconomico.convocatoriaConceptoGasto.id,
-          nombre: codigoEconomico.convocatoriaConceptoGasto.conceptoGasto.nombre,
-          importeMaximo: codigoEconomico.convocatoriaConceptoGasto?.importeMaximo?.toString(),
-          mesInicio: codigoEconomico.convocatoriaConceptoGasto?.mesInicial?.toString(),
-          // TODO: recuperar cuando se haga el cambio en ConvocatoriaConceptoGasto
-          mesFin: codigoEconomico.convocatoriaConceptoGasto?.mesFinal?.toString(),
-          codigosEconomicos: []
-        };
-
-        conceptosGastosInfo.push(conceptoGastoInfo);
-      }
-
-      const codigoEconomicoInfo: CodigoEconomicoInfo = {
-        codigoEconomicoRef: codigoEconomico.codigoEconomicoRef,
-        fechaInicio: codigoEconomico.fechaInicio,
-        fechaFin: codigoEconomico.fechaFin
+  private setTablesSort() {
+    this.dataSourceCodigosEconomicosPermitidos.sortingDataAccessor =
+      (conceptoGastoCodigoEc: ConceptoGastoCodigoEc, property: string) => {
+        switch (property) {
+          case 'conceptoGasto':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre;
+          case 'importeMaximo':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.importeMaximo;
+          case 'permitidoDesde':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesInicial;
+          case 'permitidoHasta':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesFinal;
+          case 'codigoEconomico':
+            return conceptoGastoCodigoEc.codigoEconomicoRef;
+          default:
+            return conceptoGastoCodigoEc[property];
+        }
       };
-
-      conceptoGastoInfo.codigosEconomicos.push(codigoEconomicoInfo);
-    });
-
-    return conceptosGastosInfo;
+    this.dataSourceCodigosEconomicosPermitidos.sort = this.sortCodigosEconomicosPermitidos;
+    this.dataSourceCodigosEconomicosNoPermitidos.sortingDataAccessor =
+      (conceptoGastoCodigoEc: ConceptoGastoCodigoEc, property: string) => {
+        switch (property) {
+          case 'conceptoGasto':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre;
+          case 'noPermitidoDesde':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesInicial;
+          case 'noPermitidoHasta':
+            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesFinal;
+          case 'codigoEconomico':
+            return conceptoGastoCodigoEc.codigoEconomicoRef;
+          default:
+            return conceptoGastoCodigoEc[property];
+        }
+      };
+    this.dataSourceCodigosEconomicosNoPermitidos.sort = this.sortCodigosEconomicosNoPermitidos;
   }
 
 }

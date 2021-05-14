@@ -22,7 +22,7 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       areaTematica: value.areaTematica,
       checkListRef: value.checkListRef,
       envioEtica: value.envioEtica,
-      presupuestoPorEntidades: value.presupuestoPorEntidades
+      tipoPresupuesto: value.tipoPresupuesto
     };
   }
 
@@ -44,7 +44,7 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       areaTematica: value.areaTematica,
       checkListRef: value.checkListRef,
       envioEtica: value.envioEtica,
-      presupuestoPorEntidades: value.presupuestoPorEntidades
+      tipoPresupuesto: value.tipoPresupuesto
     };
   }
 }

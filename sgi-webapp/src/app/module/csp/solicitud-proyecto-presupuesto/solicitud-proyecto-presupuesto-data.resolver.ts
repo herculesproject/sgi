@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IEntidad } from '@core/models/csp/entidad';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -20,6 +21,7 @@ const MSG_NOT_FOUND = marker('error.load');
 
 export const SOLICITUD_PROYECTO_PRESUPUESTO_DATA_KEY = 'solicitudProyectoPresupuestoData';
 export const SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY = 'ajena';
+export const SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY = 'financiadora';
 
 @Injectable()
 export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolver<ISolicitudProyectoPresupuestoData> {
@@ -39,21 +41,32 @@ export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolve
     const solicitudData: ISolicitudData = route.parent.data[SOLICITUD_DATA_KEY];
     const empresaRef = route.paramMap.get(SOLICITUD_PROYECTO_PRESUPUESTO_ROUTE_PARAMS.EMPRESA_REF);
     const ajena = route.parent.routeConfig.data[SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY];
-    const loadEntidadFinanciadora$ = ajena
-      ? this.getEntidadFinanciadoraSolicitud(solicitudData.solicitud.id, empresaRef)
-      : this.getEntidadFinanciadoraConvocatoria(solicitudData.solicitud.convocatoriaId, empresaRef);
-    return loadEntidadFinanciadora$.pipe(
-      map(entidadFinanciadora => {
+    const financiadora = route.parent.routeConfig.data[SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY];
+
+    let loadEntidad$: Observable<IEntidad>;
+    if (ajena) {
+      loadEntidad$ = this.getEntidadFinanciadoraSolicitud(solicitudData.solicitud.id, empresaRef);
+    } else {
+      if (financiadora) {
+        loadEntidad$ = this.getEntidadFinanciadoraConvocatoria(solicitudData.solicitud.convocatoriaId, empresaRef);
+      } else {
+        loadEntidad$ = this.getEntidadGestoraConvocatoria(solicitudData.solicitud.convocatoriaId, empresaRef);
+      }
+    }
+
+    return loadEntidad$.pipe(
+      map(entidad => {
         return {
-          entidadFinanciadora,
+          entidad,
           ajena,
+          financiadora,
           readonly: solicitudData.readonly
         };
       }),
       switchMap(data => {
-        return this.empresaService.findById(data.entidadFinanciadora.empresa.id).pipe(
+        return this.empresaService.findById(data.entidad.empresa.id).pipe(
           map(empresa => {
-            data.entidadFinanciadora.empresa = empresa;
+            data.entidad.empresa = empresa;
             return data;
           })
         );
@@ -61,7 +74,7 @@ export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolve
     );
   }
 
-  private getEntidadFinanciadoraConvocatoria(convocatoriaId: number, empresaRef: string): Observable<IEntidadFinanciadora> {
+  private getEntidadFinanciadoraConvocatoria(convocatoriaId: number, empresaRef: string): Observable<IEntidad> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('entidadRef', SgiRestFilterOperator.EQUALS, empresaRef)
     };
@@ -82,7 +95,7 @@ export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolve
     );
   }
 
-  private getEntidadFinanciadoraSolicitud(solicitudId: number, empresaRef: string): Observable<IEntidadFinanciadora> {
+  private getEntidadFinanciadoraSolicitud(solicitudId: number, empresaRef: string): Observable<IEntidad> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('entidadRef', SgiRestFilterOperator.EQUALS, empresaRef)
     };
@@ -98,6 +111,27 @@ export class SolicitudProyectoPresupuestoDataResolver extends SgiResolverResolve
           return throwError('NOT_FOUND');
         }
         return of(entidadFinanciadora);
+      })
+    );
+  }
+
+  private getEntidadGestoraConvocatoria(convocatoriaId: number, empresaRef: string): Observable<IEntidad> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('entidadRef', SgiRestFilterOperator.EQUALS, empresaRef)
+    };
+
+    return this.convocatoriaService.findAllConvocatoriaEntidadGestora(convocatoriaId, options).pipe(
+      map(response => {
+        if (response.items.length > 0) {
+          return response.items[0];
+        }
+        return null;
+      }),
+      switchMap(entidadGestora => {
+        if (!entidadGestora) {
+          return throwError('NOT_FOUND');
+        }
+        return of(entidadGestora);
       })
     );
   }

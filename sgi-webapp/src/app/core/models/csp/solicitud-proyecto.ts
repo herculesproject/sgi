@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IAreaTematica } from './area-tematica';
 
 export interface ISolicitudProyecto {
@@ -14,5 +15,17 @@ export interface ISolicitudProyecto {
   areaTematica: IAreaTematica;
   checkListRef: string;
   envioEtica: boolean;
-  presupuestoPorEntidades: boolean;
+  tipoPresupuesto: TipoPresupuesto;
 }
+
+export enum TipoPresupuesto {
+  GLOBAL = 'GLOBAL',
+  MIXTO = 'MIXTO',
+  INDIVIDUAL = 'INDIVIDUAL'
+}
+
+export const TIPO_PRESUPUESTO_MAP: Map<TipoPresupuesto, string> = new Map([
+  [TipoPresupuesto.GLOBAL, marker(`csp.solicitud-proyecto.tipo-presupuesto.GLOBAL`)],
+  [TipoPresupuesto.MIXTO, marker(`csp.solicitud-proyecto.tipo-presupuesto.MIXTO`)],
+  [TipoPresupuesto.INDIVIDUAL, marker(`csp.solicitud-proyecto.tipo-presupuesto.INDIVIDUAL`)]
+]);

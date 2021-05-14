@@ -1,6 +1,5 @@
-import { IEmpresa } from '../sgemp/empresa';
-export interface IConvocatoriaEntidadGestora {
-  id: number;
+import { IEntidad } from './entidad';
+
+export interface IConvocatoriaEntidadGestora extends IEntidad {
   convocatoriaId: number;
-  empresa: IEmpresa;
 }

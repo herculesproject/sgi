@@ -7,7 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
-import { SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY } from '../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto-data.resolver';
+import { SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY, SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY } from '../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto-data.resolver';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudDataResolver, SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
@@ -136,11 +136,15 @@ const routes: SgiRoutes = [
         canDeactivate: [FragmentGuard]
       },
       {
-        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_CONVOCATORIA,
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_CONVOCATORIA,
         redirectTo: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES
       },
       {
-        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_SOLICITUD,
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_SOLICITUD,
+        redirectTo: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA,
         redirectTo: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES
       }
     ]
@@ -169,7 +173,7 @@ const routes: SgiRoutes = [
         }
       },
       {
-        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_CONVOCATORIA,
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_CONVOCATORIA,
         loadChildren: () =>
           import('../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto.module').then(
             (m) => m.SolicitudProyectoPresupuestoModule
@@ -177,11 +181,12 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           [SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY]: false,
+          [SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY]: true,
           title: PROYECTO_PRESUPUESTO_KEY
         }
       },
       {
-        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_SOLICITUD,
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_SOLICITUD,
         loadChildren: () =>
           import('../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto.module').then(
             (m) => m.SolicitudProyectoPresupuestoModule
@@ -189,6 +194,20 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           [SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY]: true,
+          [SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY]: true,
+          title: PROYECTO_PRESUPUESTO_KEY
+        }
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA,
+        loadChildren: () =>
+          import('../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto.module').then(
+            (m) => m.SolicitudProyectoPresupuestoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          [SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY]: false,
+          [SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY]: false,
           title: PROYECTO_PRESUPUESTO_KEY
         }
       }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
+import { IEntidad } from '@core/models/csp/entidad';
 import { ActionService } from '@core/services/action-service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -10,8 +10,9 @@ import { SolicitudProyectoPresupuestoDatosGeneralesFragment } from './solicitud-
 import { SolicitudProyectoPresupuestoPartidasGastoFragment } from './solicitud-proyecto-presupuesto-formulario/solicitud-proyecto-presupuesto-partidas-gasto/solicitud-proyecto-presupuesto-partidas-gasto.fragment';
 
 export interface ISolicitudProyectoPresupuestoData {
-  entidadFinanciadora: IEntidadFinanciadora;
+  entidad: IEntidad;
   ajena: boolean;
+  financiadora: boolean;
   readonly: boolean;
 }
 
@@ -40,9 +41,9 @@ export class SolicitudProyectoPresupuestoActionService extends ActionService {
     this.enableEdit();
 
     this.datosGenerales = new SolicitudProyectoPresupuestoDatosGeneralesFragment(
-      solicitudId, this.data.entidadFinanciadora, this.data.ajena);
+      solicitudId, this.data.entidad, this.data.financiadora);
     this.partidasGasto = new SolicitudProyectoPresupuestoPartidasGastoFragment(
-      solicitudId, this.data.entidadFinanciadora.empresa, this.data.ajena, solicitudService,
+      solicitudId, this.data.entidad.empresa, this.data.ajena, solicitudService,
       solicitudProyectoPresupuestoService, this.data.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);

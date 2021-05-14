@@ -4,6 +4,7 @@ import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
+import { TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { ActionService } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
@@ -207,16 +208,17 @@ export class SolicitudActionService extends ActionService {
           }
         ));
 
-        this.subscriptions.push(this.proyectoDatos.presupuestoPorEntidades$.subscribe(
+        this.subscriptions.push(this.proyectoDatos.tipoDesglosePresupuesto$.subscribe(
           (value) => {
-            this.showDesglosePresupuestoEntidad$.next(value);
-            this.showDesglosePresupuestoGlobal$.next(!value);
+            this.showDesglosePresupuestoEntidad$.next(value !== TipoPresupuesto.GLOBAL);
+            this.showDesglosePresupuestoGlobal$.next(value === TipoPresupuesto.GLOBAL);
+            this.desglosePresupuestoEntidades.tipoPresupuesto$.next(value);
           }
         ));
 
         this.subscriptions.push(this.desglosePresupuestoGlobal.partidasGastos$.subscribe((value) => {
           const rowTableData = value.length > 0;
-          this.proyectoDatos.disablePresupuestoPorEntidades(rowTableData);
+          this.proyectoDatos.disableTipoDesglosePresupuesto(rowTableData);
         }));
 
         this.subscriptions.push(this.socio.proyectoSocios$.subscribe((value) => {

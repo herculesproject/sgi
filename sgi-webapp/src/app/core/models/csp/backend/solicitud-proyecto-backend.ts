@@ -1,4 +1,5 @@
 import { IAreaTematica } from '../area-tematica';
+import { TipoPresupuesto } from '../solicitud-proyecto';
 
 export interface ISolicitudProyectoBackend {
   id: number;
@@ -14,5 +15,5 @@ export interface ISolicitudProyectoBackend {
   areaTematica: IAreaTematica;
   checkListRef: string;
   envioEtica: boolean;
-  presupuestoPorEntidades: boolean;
+  tipoPresupuesto: TipoPresupuesto;
 }

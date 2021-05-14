@@ -19,7 +19,7 @@ describe('SolicitudProyectoPresupuestoDatosGeneralesComponent', () => {
   let fixture: ComponentFixture<SolicitudProyectoPresupuestoDatosGeneralesComponent>;
   const routeData: Data = {
     [SOLICITUD_PROYECTO_PRESUPUESTO_DATA_KEY]: {
-      entidadFinanciadora: {
+      entidad: {
         empresa: {}
       },
       ajena: true,

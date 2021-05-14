@@ -9,6 +9,7 @@ export const SOLICITUD_ROUTE_NAMES = {
   ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
   DESGLOSE_PRESUPUESTO_GLOBAL: 'desglose-presupuesto-global',
   DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglose-presupuesto-entidades',
-  DESGLOSE_PRESUPUESTO_ENTIDADES_CONVOCATORIA: 'desglose-presupuesto-entidades-convocatoria',
-  DESGLOSE_PRESUPUESTO_ENTIDADES_SOLICITUD: 'desglose-presupuesto-entidades-solicitud'
+  DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_CONVOCATORIA: 'desglose-presupuesto-entidades-financiadoras-convocatoria',
+  DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_SOLICITUD: 'desglose-presupuesto-entidades-financiadoras-solicitud',
+  DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA: 'desglose-presupuesto-entidades-gestoras-convocatoria'
 };

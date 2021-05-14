@@ -11,6 +11,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SOLICITUD_DATA_KEY } from '../../solicitud-data.resolver';
 import { ISolicitudData, SolicitudActionService } from '../../solicitud.action.service';
@@ -44,6 +45,7 @@ describe('SolicitudProyectoFichaGeneralComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
+        SharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

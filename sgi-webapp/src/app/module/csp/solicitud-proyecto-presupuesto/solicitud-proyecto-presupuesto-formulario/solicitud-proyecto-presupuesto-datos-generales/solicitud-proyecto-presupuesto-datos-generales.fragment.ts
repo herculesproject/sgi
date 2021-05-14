@@ -1,14 +1,15 @@
 import { FormControl, FormGroup } from '@angular/forms';
+import { IEntidad } from '@core/models/csp/entidad';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { FormFragment } from '@core/services/action-service';
 import { Observable, of } from 'rxjs';
 
-export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFragment<IEntidadFinanciadora> {
+export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFragment<IEntidad> {
 
   constructor(
     solicitudId: number,
-    private entidadFinanciadora: IEntidadFinanciadora,
-    public ajena: boolean,
+    private entidad: IEntidad,
+    public financiadora: boolean,
   ) {
     super(solicitudId);
   }
@@ -21,7 +22,7 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
       }
     );
 
-    if (!this.ajena) {
+    if (this.financiadora) {
       form.addControl('fuenteFinanciacion', new FormControl({ value: undefined, disabled: true }));
       form.addControl('ambito', new FormControl({ value: undefined, disabled: true }));
       form.addControl('tipoFinanciacion', new FormControl({ value: undefined, disabled: true }));
@@ -33,7 +34,7 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
   }
 
   protected buildPatch(entidadFinanciadora: IEntidadFinanciadora): { [key: string]: any; } {
-    this.entidadFinanciadora = entidadFinanciadora;
+    this.entidad = entidadFinanciadora;
     const result = {
       nombre: entidadFinanciadora?.empresa?.nombre,
       cif: entidadFinanciadora?.empresa?.numeroIdentificacion,
@@ -47,12 +48,12 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
     return result;
   }
 
-  protected initializer(key: number): Observable<IEntidadFinanciadora> {
-    return of(this.entidadFinanciadora);
+  protected initializer(key: number): Observable<IEntidad> {
+    return of(this.entidad);
   }
 
-  getValue(): IEntidadFinanciadora {
-    return this.entidadFinanciadora;
+  getValue(): IEntidad {
+    return this.entidad;
   }
 
   saveOrUpdate(): Observable<number> {
