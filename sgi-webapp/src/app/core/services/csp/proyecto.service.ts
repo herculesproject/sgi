@@ -342,4 +342,40 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     );
   }
 
+  /**
+   * Comprueba si Proyecto tiene ProyectoDocumento relacionado
+   *
+   * @param id Proyecto
+   */
+  hasProyectoDocumentos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/documentos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si Proyecto tiene ProyectoFase relacionado
+   *
+   * @param id Proyecto
+   */
+  hasProyectoFases(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/proyectofases`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Comprueba si Proyecto tiene ProyectoHito relacionado
+   *
+   * @param id Proyecto
+   */
+  hasProyectoHitos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/proyectohitos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

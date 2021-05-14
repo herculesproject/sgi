@@ -39,6 +39,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
+  readonly vinculacionesModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private logger: NGXLogger,
@@ -50,7 +51,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private tipoFinalidadService: TipoFinalidadService,
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private convocatoriaService: ConvocatoriaService,
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+    public readonly: boolean
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -166,6 +168,22 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.colaborativo$.next(value);
       })
     );
+    if (!this.readonly) {
+      this.subscriptions.push(
+        this.vinculacionesModeloEjecucion$.subscribe(
+          value => {
+            if (value) {
+              form.controls.unidadGestion.disable();
+              form.controls.modeloEjecucion.disable();
+            }
+            else {
+              form.controls.unidadGestion.enable();
+              form.controls.modeloEjecucion.enable();
+            }
+          }
+        )
+      );
+    }
     return form;
   }
 

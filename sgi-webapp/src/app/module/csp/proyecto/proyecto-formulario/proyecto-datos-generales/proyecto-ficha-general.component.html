@@ -163,6 +163,9 @@
               {{unidadGestion.nombre}}
             </mat-option>
           </mat-autocomplete>
+          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
+            message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
             {{'error.required.entity' | translate:msgParamUnidadGestionEntity}}
           </mat-error>
@@ -185,6 +188,9 @@
               {{modeloEjecucion.nombre}}
             </mat-option>
           </mat-autocomplete>
+          <sgi-field-info matSuffix [visible]="!formPart.readonly && (formPart.vinculacionesModeloEjecucion$ | async)"
+            message="{{'msg.csp.proyecto.modelo-ejecucion.vinculaciones' | translate}}">
+          </sgi-field-info>
           <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
             {{'error.required.entity' | translate:msgParamModeloEjecucionEntity}}
           </mat-error>

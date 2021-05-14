@@ -27,7 +27,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
@@ -89,6 +89,9 @@ export class ProyectoActionService extends ActionService {
 
   public readonly showPaquetesTrabajo$: Subject<boolean> = new BehaviorSubject(false);
   public readonly disableAddSocios$ = new BehaviorSubject<boolean>(false);
+  private readonly hasFases$ = new BehaviorSubject<boolean>(false);
+  private readonly hasHitos$ = new BehaviorSubject<boolean>(false);
+  private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
 
   get proyecto(): IProyecto {
     return this.fichaGeneral.getValue();
@@ -140,7 +143,7 @@ export class ProyectoActionService extends ActionService {
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(
       logger, fb, id, proyectoService, unidadGestionService,
-      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService
+      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, this.data.readonly
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -189,6 +192,42 @@ export class ProyectoActionService extends ActionService {
       this.subscriptions.push(this.fichaGeneral.permitePaquetesTrabajo$.subscribe((value) => {
         this.showPaquetesTrabajo$.next(Boolean(value));
       }));
+
+      // Sincronización de las vinculaciones sobre modelo de ejecución
+      if (this.isEdit() && !this.readonly) {
+        // Checks on init
+        this.subscriptions.push(
+          proyectoService.hasProyectoFases(id).subscribe(value => this.hasFases$.next(value))
+        );
+        this.subscriptions.push(
+          proyectoService.hasProyectoHitos(id).subscribe(value => this.hasHitos$.next(value))
+        );
+        this.subscriptions.push(
+          proyectoService.hasProyectoDocumentos(id).subscribe(value => this.hasDocumentos$.next(value))
+        );
+
+        // Propagate changes
+        this.subscriptions.push(
+          merge(
+            this.hasFases$,
+            this.hasHitos$,
+            this.hasDocumentos$
+          ).subscribe(
+            () => {
+              this.fichaGeneral.vinculacionesModeloEjecucion$.next(
+                this.hasFases$.value
+                || this.hasHitos$.value
+                || this.hasDocumentos$.value
+              );
+            }
+          )
+        );
+
+        // Syncronize changes
+        this.subscriptions.push(this.plazos.plazos$.subscribe(value => this.hasFases$.next(!!value.length)));
+        this.subscriptions.push(this.hitos.hitos$.subscribe(value => this.hasHitos$.next(!!value.length)));
+        this.subscriptions.push(this.documentos.documentos$.subscribe(value => this.hasDocumentos$.next(!!value.length)));
+      }
 
       // Inicializamos la ficha general de forma predeterminada
       this.fichaGeneral.initialize();
