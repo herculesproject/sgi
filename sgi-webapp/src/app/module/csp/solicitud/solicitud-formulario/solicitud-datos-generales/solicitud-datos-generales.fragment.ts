@@ -198,7 +198,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   saveOrUpdate(): Observable<number> {
     const datosGenerales = this.getValue();
-    const obs = this.isEdit() ? this.service.update(datosGenerales.id, datosGenerales) : this.service.create(datosGenerales);
+    const obs = this.isEdit() ? this.service.update(datosGenerales.id, datosGenerales) :
+      this.service.create(datosGenerales);
     return obs.pipe(
       tap((value) => {
         this.solicitud = value;
@@ -210,6 +211,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
           this.updateSolicitudModalidades()
         );
       }),
+      takeLast(1),
       map(() => {
         return this.solicitud.id;
       })

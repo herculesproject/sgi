@@ -21,7 +21,8 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
@@ -243,6 +244,61 @@ export class SolicitudActionService extends ActionService {
       if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
         this.proyectoDatos.initialize();
       }
+    }
+  }
+
+  saveOrUpdate(): Observable<void> {
+    this.performChecks(true);
+    if (this.hasErrors()) {
+      return throwError('Errores');
+    }
+    if (this.isEdit()) {
+      let cascade = of(void 0);
+      if (this.datosGenerales.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.datosGenerales.saveOrUpdate().pipe(tap(() => this.datosGenerales.refreshInitialState(true))))
+        );
+      }
+      if (this.proyectoDatos.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true))))
+        );
+      }
+      if (this.equipoProyecto.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.equipoProyecto.saveOrUpdate().pipe(tap(() => this.equipoProyecto.refreshInitialState(true))))
+        );
+      }
+      return cascade.pipe(
+        switchMap(() => super.saveOrUpdate())
+      );
+    } else {
+      let cascade = of(void 0);
+      if (this.datosGenerales.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.datosGenerales.saveOrUpdate().pipe(
+            tap((key) => {
+              this.datosGenerales.refreshInitialState(true);
+              if (typeof key === 'string' || typeof key === 'number') {
+                this.onKeyChange(key);
+              }
+            })
+          ))
+        );
+      }
+      if (this.proyectoDatos.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true))))
+        );
+      }
+      if (this.equipoProyecto.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.equipoProyecto.saveOrUpdate().pipe(tap(() => this.equipoProyecto.refreshInitialState(true))))
+        );
+      }
+      return cascade.pipe(
+        switchMap(() => super.saveOrUpdate())
+      );
     }
   }
 
