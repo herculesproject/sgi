@@ -1,9 +1,12 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
+import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { Fragment } from '@core/services/action-service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -11,10 +14,11 @@ import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/pro
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 const SIN_TIPO_FASE = marker('label.csp.documentos.sin-fase');
 const SIN_TIPO_DOCUMENTO = marker('label.csp.documentos.sin-tipo-documento');
@@ -26,11 +30,16 @@ const SEGUIMIENTO_PERIODO_TITLE = marker('label.csp.documentos.periodo-seguimien
 const PERIODO_JUSTIFICACION_TITLE = marker('label.csp.documentos.periodo-justificacion.socios');
 const SEGUIMIENTO_TITLE = marker('label.csp.documentos.periodo-seguimiento');
 
+const DOCUMENTO_CONVOCATORIA_TITLE = marker('label.csp.documentos.convocatoria');
+const DOCUMENTO_SOLICITUD_TITLE = marker('label.csp.documentos.solicitud');
+
 enum TIPO_DOCUMENTO {
   PROYECTO = '0',
   SEGUIMIENTO = '1',
+  PERIODO_JUSTIFICACION = '2',
   PRORROGA = '3',
-  PERIODO_JUSTIFICACION = '2'
+  CONVOCATORIA = '4',
+  SOLICITUD = '5'
 }
 
 interface IDocumentoData {
@@ -38,10 +47,13 @@ interface IDocumentoData {
   nombre: string;
   tipoFase?: ITipoFase;
   tipoDocumento: ITipoDocumento;
-  comentario: string;
+  comentario?: string;
   documentoRef: string;
-  visible: boolean;
+  visible?: boolean;
   proyectoId?: number;
+  convocatoriaId?: number;
+  observaciones?: string;
+  publico?: boolean;
 }
 
 export class NodeDocumento {
@@ -71,7 +83,7 @@ export class NodeDocumento {
     this.title = title;
 
     this._level = level;
-    if (level === 0 && !title) {
+    if (((level === 0 || (level === 1 && key.startsWith('4'))) && !title)) {
       this.title = SIN_TIPO_FASE;
     } else if ((level === 1 || level === 2 || level === 3) && !title) {
       this.title = SIN_TIPO_DOCUMENTO;
@@ -152,9 +164,13 @@ export class ProyectoDocumentosFragment extends Fragment {
   msgParamPeriodoJustificacionTitle: string;
   msgParamProrrogaPeriodoTitle: string;
   msgParamProrrogaTitle: string;
+  msgParamConvocatoriaTitle: string;
+  msgParamSolicitudTitle: string;
 
   constructor(
     proyectoId: number,
+    private convocatoriaService: ConvocatoriaService,
+    private solicitudService: SolicitudService,
     private proyectoService: ProyectoService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     private proyectoSocioService: ProyectoSocioService,
@@ -173,6 +189,8 @@ export class ProyectoDocumentosFragment extends Fragment {
     this.subscriptions.push(
       merge(
         this.loadProyectoDocumentos(),
+        this.loadConvocatoriaDocumentos(),
+        this.loadSolicitudDocumentos(),
         this.loadProyectoPeriodoSeguimientoDocumentos(),
         this.loadProyectoSocioPeriodoJustificacionDocumentos(),
         this.loadProyectoProrrogaDocumentos()
@@ -198,21 +216,110 @@ export class ProyectoDocumentosFragment extends Fragment {
             this.nodeLookup.set(keyTipoFase, faseNode);
             nodes.push(faseNode);
           }
-
           const keyTipoDocumento = `${keyTipoFase}-${documento.tipoDocumento ? documento.tipoDocumento.id : 0}`;
-          let tipoDococumentoNode = this.nodeLookup.get(keyTipoDocumento);
-          if (!tipoDococumentoNode) {
-            tipoDococumentoNode = new NodeDocumento(keyTipoDocumento, documento.tipoDocumento?.nombre, 1);
-            this.nodeLookup.set(keyTipoDocumento, tipoDococumentoNode);
-            faseNode.addChild(tipoDococumentoNode);
+          let tipoDocumentoNode = this.nodeLookup.get(keyTipoDocumento);
+          if (!tipoDocumentoNode) {
+            tipoDocumentoNode = new NodeDocumento(keyTipoDocumento, documento.tipoDocumento?.nombre, 1);
+            this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
+            faseNode.addChild(tipoDocumentoNode);
           }
-
           const documentoNode = new NodeDocumento(null, documento.nombre, 2, new StatusWrapper<IDocumentoData>(documento), false);
-          tipoDococumentoNode.addChild(documentoNode);
+          tipoDocumentoNode.addChild(documentoNode);
         });
         return nodes;
       })
     );
+  }
+
+  private loadConvocatoriaDocumentos(): Observable<NodeDocumento[]> {
+    return this.proyectoService.findById(this.getKey() as number).pipe(
+      switchMap((proyecto) => {
+        if (proyecto.convocatoriaId) {
+          return this.convocatoriaService.findDocumentos(proyecto.convocatoriaId).pipe(
+            map(response => response.items)
+          );
+        }
+        return of([]);
+      }),
+      map((response => {
+        if (response) {
+          response = response.filter(documento => documento.publico);
+          const keyTipo = TIPO_DOCUMENTO.CONVOCATORIA;
+          const nodes: NodeDocumento[] = [];
+          response.forEach((documento) => {
+            documento.comentario = documento.observaciones;
+            documento.visible = documento.publico;
+            let tipoNode = this.nodeLookup.get(keyTipo);
+            if (!tipoNode) {
+              tipoNode = new NodeDocumento(keyTipo, this.msgParamConvocatoriaTitle, 0);
+              this.nodeLookup.set(keyTipo, tipoNode);
+              nodes.push(tipoNode);
+            }
+
+            const keyTipoFase = `${keyTipo}-${documento.tipoFase ? documento.tipoFase.id : 0}`;
+            let faseNode = this.nodeLookup.get(keyTipoFase);
+            if (!faseNode) {
+              faseNode = new NodeDocumento(keyTipoFase, documento.tipoFase?.nombre, 1);
+              this.nodeLookup.set(keyTipoFase, faseNode);
+              tipoNode.addChild(faseNode);
+            }
+
+            const keyTipoDocumento = `${keyTipoFase}-${documento.tipoDocumento ? documento.tipoDocumento.id : 0}`;
+            let tipoDocumentoNode = this.nodeLookup.get(keyTipoDocumento);
+            if (!tipoDocumentoNode) {
+              tipoDocumentoNode = new NodeDocumento(keyTipoDocumento, documento.tipoDocumento?.nombre, 2);
+              this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
+              faseNode.addChild(tipoDocumentoNode);
+            }
+
+            const documentoNode = new NodeDocumento(null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documento), false);
+            documentoNode.readonly = true;
+            tipoDocumentoNode.addChild(documentoNode);
+          });
+          return nodes;
+        }
+      })
+      ));
+  }
+
+  private loadSolicitudDocumentos(): Observable<NodeDocumento[]> {
+    return this.proyectoService.findById(this.getKey() as number).pipe(
+      switchMap((proyecto) => {
+        if (proyecto.solicitudId) {
+          return this.solicitudService.findDocumentos(proyecto.solicitudId).pipe(
+            map(response => response.items)
+          );
+        }
+        return of([]);
+      }),
+      map((response => {
+        if (response) {
+          const keyTipo = TIPO_DOCUMENTO.SOLICITUD;
+          const nodes: NodeDocumento[] = [];
+          response.forEach((documento) => {
+            let tipoNode = this.nodeLookup.get(keyTipo);
+            if (!tipoNode) {
+              tipoNode = new NodeDocumento(keyTipo, this.msgParamSolicitudTitle, 0);
+              this.nodeLookup.set(keyTipo, tipoNode);
+              nodes.push(tipoNode);
+            }
+
+            const keyTipoDocumento = `${keyTipo}-${documento.tipoDocumento ? documento.tipoDocumento.id : 0}`;
+            let tipoDocumentoNode = this.nodeLookup.get(keyTipoDocumento);
+            if (!tipoDocumentoNode) {
+              tipoDocumentoNode = new NodeDocumento(keyTipoDocumento, documento.tipoDocumento?.nombre, 1);
+              this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
+              tipoNode.addChild(tipoDocumentoNode);
+            }
+
+            const documentoNode = new NodeDocumento(null, documento.nombre, 2, new StatusWrapper<IDocumentoData>(documento), false);
+            documentoNode.readonly = true;
+            tipoDocumentoNode.addChild(documentoNode);
+          });
+          return nodes;
+        }
+      })
+      ));
   }
 
   private loadProyectoPeriodoSeguimientoDocumentos(): Observable<NodeDocumento[]> {
@@ -402,6 +509,12 @@ export class ProyectoDocumentosFragment extends Fragment {
       PRORROGA_PERIODO_TITLE,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamProrrogaTitle = value);
+    this.translate.get(
+      DOCUMENTO_CONVOCATORIA_TITLE
+    ).subscribe((value) => this.msgParamConvocatoriaTitle = value);
+    this.translate.get(
+      DOCUMENTO_SOLICITUD_TITLE
+    ).subscribe((value) => this.msgParamSolicitudTitle = value);
   }
 
   publishNodes(rootNodes?: NodeDocumento[]) {

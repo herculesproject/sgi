@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ActionService } from '@core/services/action-service';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
@@ -164,7 +165,7 @@ export class ProyectoActionService extends ActionService {
       this.prorrogas = new ProyectoProrrogasFragment(id, proyectoService, proyectoProrrogaService, documentoService);
       this.historicoEstados = new ProyectoHistoricoEstadosFragment(id, proyectoService);
       this.documentos = new ProyectoDocumentosFragment(
-        id, proyectoService, proyectoPeriodoSeguimientoService, proyectoSocioService,
+        id, convocatoriaService, solicitudService, proyectoService, proyectoPeriodoSeguimientoService, proyectoSocioService,
         proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaService, translate);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
