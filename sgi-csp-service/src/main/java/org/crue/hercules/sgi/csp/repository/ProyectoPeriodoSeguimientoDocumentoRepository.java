@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -25,4 +26,13 @@ public interface ProyectoPeriodoSeguimientoDocumentoRepository
    * @param id el id de la entidad {@link ProyectoPeriodoSeguimiento}
    */
   void deleteByProyectoPeriodoSeguimientoId(Long id);
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoPeriodoSeguimientoDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsByProyectoPeriodoSeguimientoProyectoId(Long proyectoId);
 }

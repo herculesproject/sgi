@@ -210,4 +210,15 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
     return returnValue;
   }
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoPeriodoSeguimientoDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    return repository.existsByProyectoPeriodoSeguimientoProyectoId(proyectoId);
+  }
 }

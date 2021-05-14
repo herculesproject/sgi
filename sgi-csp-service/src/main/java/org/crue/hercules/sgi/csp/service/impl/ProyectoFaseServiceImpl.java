@@ -269,4 +269,16 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
 
   }
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoFase}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    return repository.existsByProyectoId(proyectoId);
+  }
+
 }

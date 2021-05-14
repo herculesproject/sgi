@@ -23,4 +23,13 @@ public interface ProyectoHitoRepository
    */
   Optional<ProyectoHito> findByProyectoIdAndFechaAndTipoHitoId(Long proyectoId, Instant fecha, Long tipoHitoId);
 
+  /**
+   * Comprueba si existe algun {@link ProyectoHito} asociado a algún
+   * {@link Proyecto}.
+   * 
+   * @param proyectoId id del {@link Proyecto}.
+   * @return true si existe, false si no existe.
+   */
+  boolean existsByProyectoId(Long proyectoId);
+
 }

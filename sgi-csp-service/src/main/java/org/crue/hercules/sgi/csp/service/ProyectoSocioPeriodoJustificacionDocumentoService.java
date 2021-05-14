@@ -66,4 +66,12 @@ public interface ProyectoSocioPeriodoJustificacionDocumentoService {
    */
   List<ProyectoSocioPeriodoJustificacionDocumento> findAllByProyecto(Long idProyecto);
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoSocioPeriodoJustificacionDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsByProyecto(Long proyectoId);
 }

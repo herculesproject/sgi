@@ -243,4 +243,16 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
     log.debug("validarRequeridosProrrogaDocumento(ProrrogaDocumento datosProrrogaDocumento) - end");
   }
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProrrogaDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    return repository.existsByProyectoProrrogaProyectoId(proyectoId);
+  }
+
 }

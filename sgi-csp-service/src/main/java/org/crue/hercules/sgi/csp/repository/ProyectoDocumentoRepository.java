@@ -23,4 +23,13 @@ public interface ProyectoDocumentoRepository
    */
   List<ProyectoDocumento> findAllByProyectoId(Long proyectoId);
 
+  /**
+   * Comprueba si existe algun {@link ProyectoDocumento} asociado a algún
+   * {@link Proyecto}.
+   * 
+   * @param proyectoId id del {@link Proyecto}.
+   * @return true si existe, false si no existe.
+   */
+  boolean existsByProyectoId(Long proyectoId);
+
 }

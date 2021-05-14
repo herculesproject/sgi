@@ -24,6 +24,6 @@ public interface ContextoProyectoRepository
    * @param id identificador de la {@link Proyecto}
    * @return si existe la entidad {@link ContextoProyecto}
    */
-  Boolean existsByProyectoId(Long id);
+  boolean existsByProyectoId(Long id);
 
 }

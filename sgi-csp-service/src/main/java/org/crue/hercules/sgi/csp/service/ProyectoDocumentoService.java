@@ -52,4 +52,13 @@ public interface ProyectoDocumentoService {
    *         {@link Proyecto} paginadas.
    */
   Page<ProyectoDocumento> findAllByProyectoId(Long proyectoId, String query, Pageable pageable);
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return
+   */
+  boolean existsByProyecto(Long proyectoId);
 }

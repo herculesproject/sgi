@@ -68,4 +68,13 @@ public interface ProrrogaDocumentoService {
    */
   List<ProrrogaDocumento> findAllByProyecto(Long id);
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProrrogaDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsByProyecto(Long proyectoId);
+
 }

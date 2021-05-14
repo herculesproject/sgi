@@ -53,4 +53,13 @@ public interface ProyectoFaseService {
    */
   Page<ProyectoFase> findAllByProyecto(Long proyectoId, String query, Pageable pageable);
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoFase}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return
+   */
+  boolean existsByProyecto(Long proyectoId);
+
 }

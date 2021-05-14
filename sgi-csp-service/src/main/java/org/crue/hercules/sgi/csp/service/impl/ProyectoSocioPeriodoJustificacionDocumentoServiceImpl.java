@@ -174,4 +174,16 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceImpl
     return returnValue;
   }
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoSocioPeriodoJustificacionDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si existe y false en caso contrario.
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    return repository.existsByProyectoSocioPeriodoJustificacionProyectoSocioProyectoId(proyectoId);
+  }
+
 }

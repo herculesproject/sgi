@@ -292,4 +292,16 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
 
     log.debug("validarProyectoDcoumento(ProyectoDocumento proyectoDocumento, ProyectoDocumento datosOriginales) - end");
   }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoDocumento}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    return repository.existsByProyectoId(proyectoId);
+  }
 }

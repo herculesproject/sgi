@@ -224,4 +224,16 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
 
   }
 
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoHito}
+   *
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    return repository.existsByProyectoId(proyectoId);
+  }
+
 }
