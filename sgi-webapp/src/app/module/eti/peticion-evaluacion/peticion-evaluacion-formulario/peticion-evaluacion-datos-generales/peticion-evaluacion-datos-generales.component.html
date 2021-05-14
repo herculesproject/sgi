@@ -141,11 +141,22 @@
     <!-- Valor social -->
     <mat-form-field>
       <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
-      <textarea matInput formControlName="valorSocial" type="text" id="valorSocial" required></textarea>
+      <sgi-select-enum formControlName="valorSocial" [enumMap]="TIPO_VALOR_SOCIAL_MAP" required></sgi-select-enum>
       <mat-error *ngIf="formGroup.controls.valorSocial.errors?.required">
         {{'error.required.entity' | translate:msgParamValorSocialEntity}}
       </mat-error>
     </mat-form-field>
+    <!-- Otro valor social -->
+    <ng-container *ngIf="peticionEvaluacionFragment.mostrarCampoEspecificarValorSocial$.getValue()">
+      <mat-form-field>
+        <mat-label>{{'eti.peticion-evaluacion.otro-valor-social' | translate}}</mat-label>
+        <textarea #resumen matInput formControlName="otroValorSocial" type="text" maxlength="2000" required></textarea>
+        <mat-hint>{{resumen.value.length}} / 2000</mat-hint>
+        <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.required">
+          {{'error.required.entity' | translate:msgParamOtroValorSocialEntity}}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
     <!-- Objetivos científicos -->
     <mat-form-field>
       <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate}}</mat-label>

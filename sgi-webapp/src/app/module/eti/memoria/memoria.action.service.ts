@@ -17,6 +17,7 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { map } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
@@ -60,7 +61,8 @@ export class MemoriaActionService extends ActionService {
     bloqueService: BloqueService,
     apartadoService: ApartadoService,
     respuestaService: RespuestaService,
-    evaluacionService: EvaluacionService
+    evaluacionService: EvaluacionService,
+    translateService: TranslateService
   ) {
     super();
     this.memoria = {} as IMemoria;
@@ -76,7 +78,7 @@ export class MemoriaActionService extends ActionService {
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaService,
       peticionEvaluacionService);
     this.formularios = new MemoriaFormularioFragment(logger, this.readonly, this.memoria?.id, this.memoria?.comite, formularioService,
-      bloqueService, apartadoService, respuestaService, service, evaluacionService);
+      bloqueService, apartadoService, respuestaService, service, evaluacionService, translateService);
     this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, this.readonly, service, documentoService);
     this.evaluaciones = new MemoriaEvaluacionesFragment(this.memoria?.id, service);
     this.versiones = new MemoriaInformesFragment(this.memoria?.id, service);
@@ -129,6 +131,5 @@ export class MemoriaActionService extends ActionService {
     this.memoria.comite = comite;
     this.formularios.setComite(comite);
   }
-
 
 }

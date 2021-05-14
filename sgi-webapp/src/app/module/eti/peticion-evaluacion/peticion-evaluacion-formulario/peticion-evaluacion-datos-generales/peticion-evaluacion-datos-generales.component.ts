@@ -4,7 +4,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ESTADO_FINANCIACION_MAP, IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { ESTADO_FINANCIACION_MAP, IPeticionEvaluacion, TIPO_VALOR_SOCIAL_MAP } from '@core/models/eti/peticion-evaluacion';
 import { ITipoActividad } from '@core/models/eti/tipo-actividad';
 import { ITipoInvestigacionTutelada } from '@core/models/eti/tipo-investigacion-tutelada';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -32,6 +32,7 @@ const PETICION_EVALUACION_TIPO_INVESTIGACION_TUTELADA_KEY = marker('eti.peticion
 const PETICION_EVALUACION_EXISTE_FINANCIACION_KEY = marker('eti.peticion-evaluacion.existe-financiacion');
 const PETICION_EVALUACION_ESTADO_FINANCIACION_KEY = marker('eti.peticion-evaluacion.estado-financiacion');
 const PETICION_EVALUACION_IMPORTE_FINANCIACION_KEY = marker('eti.peticion-evaluacion.importe-financiacion');
+const PETICION_EVALUACION_OTRO_VALOR_SOCIAL_KEY = marker('eti.peticion-evaluacion.otro-valor-social');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-datos-generales',
@@ -67,9 +68,14 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   msgParamExisteFinanciacionEntity = {};
   msgParamEstadoFinanciacionEntity = {};
   msgParamImporteFinanciacionEntity = {};
+  msgParamOtroValorSocialEntity = {};
 
   get ESTADO_FINANCIACION_MAP() {
     return ESTADO_FINANCIACION_MAP;
+  }
+
+  get TIPO_VALOR_SOCIAL_MAP() {
+    return TIPO_VALOR_SOCIAL_MAP;
   }
 
   constructor(
@@ -180,6 +186,11 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
       PETICION_EVALUACION_IMPORTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamImporteFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PETICION_EVALUACION_OTRO_VALOR_SOCIAL_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamOtroValorSocialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
   }
 

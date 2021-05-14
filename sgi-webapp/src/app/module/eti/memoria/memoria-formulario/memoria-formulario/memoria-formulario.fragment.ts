@@ -5,7 +5,7 @@ import { IComentario } from '@core/models/eti/comentario';
 import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IMemoria, isFormularioEditable } from '@core/models/eti/memoria';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacion, TIPO_VALOR_SOCIAL_MAP } from '@core/models/eti/peticion-evaluacion';
 import { IRespuesta } from '@core/models/eti/respuesta';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { Fragment, Group } from '@core/services/action-service';
@@ -17,9 +17,9 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { FormlyFormOptions } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 
 export interface IBlock {
@@ -70,7 +70,8 @@ export class MemoriaFormularioFragment extends Fragment {
     private apartadoService: ApartadoService,
     private respuestaService: RespuestaService,
     private memoriaService: MemoriaService,
-    private evaluacionService: EvaluacionService
+    private evaluacionService: EvaluacionService,
+    private translateService: TranslateService,
   ) {
     super(key);
     this.readonly = readonly;
@@ -249,6 +250,9 @@ export class MemoriaFormularioFragment extends Fragment {
   private toBlocks(bloques: IBloque[]): IBlock[] {
     const blocks: IBlock[] = [];
     const bloqueModels: any[] = [];
+
+    const valorSocial = this.translateService.instant(TIPO_VALOR_SOCIAL_MAP.get(this.memoria.peticionEvaluacion.valorSocial));
+
     bloques.forEach((bloque) => {
       const block: IBlock = {
         bloque,
@@ -266,7 +270,8 @@ export class MemoriaFormularioFragment extends Fragment {
       block.formlyData.options.formState = {
         mainModel: block.formlyData.model,
         memoria: this.memoria,
-        bloques: bloqueModels
+        bloques: bloqueModels,
+        valorSocial
       };
       blocks.push(block);
     });

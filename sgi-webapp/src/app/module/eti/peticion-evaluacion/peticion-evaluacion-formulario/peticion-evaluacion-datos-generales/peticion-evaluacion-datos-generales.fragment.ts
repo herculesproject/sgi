@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacion, TipoValorSocial } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
@@ -14,6 +14,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   public isTipoInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public mostrarCamposFinanciacion$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public mostrarCampoEspecificarValorSocial$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private fb: FormBuilder,
@@ -44,13 +45,18 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       fechaInicio: [{ value: null, disabled: this.readonly }, Validators.required],
       fechaFin: [{ value: null, disabled: this.readonly }, Validators.required],
       resumen: [{ value: '', disabled: this.readonly }, Validators.required],
-      valorSocial: [{ value: '', disabled: this.readonly }, Validators.required],
+      valorSocial: [{ value: null, disabled: this.readonly }, Validators.required],
+      otroValorSocial: [{ value: '', disabled: this.readonly }],
       objetivosCientificos: [{ value: '', disabled: this.readonly }, Validators.required],
       disenioMetodologico: [{ value: '', disabled: this.readonly }, Validators.required],
     });
 
     this.subscriptions.push(form.controls.existeFinanciacion.valueChanges.subscribe((value: boolean) => {
-      this.addValidations(value);
+      this.addFinanciacionValidations(value);
+    }));
+
+    this.subscriptions.push(form.controls.valorSocial.valueChanges.subscribe((value: string) => {
+      this.addValorSocialValidations(value);
     }));
 
     return form;
@@ -70,7 +76,8 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   }
 
   protected buildPatch(value: IPeticionEvaluacion): { [key: string]: any; } {
-    this.addValidations(value.existeFinanciacion);
+    this.addFinanciacionValidations(value.existeFinanciacion);
+    this.addValorSocialValidations(value.otroValorSocial);
     return {
       codigo: value.codigo,
       titulo: value.titulo,
@@ -84,6 +91,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       fechaFin: value.fechaFin,
       resumen: value.resumen,
       valorSocial: value.valorSocial,
+      otroValorSocial: value.otroValorSocial,
       objetivosCientificos: value.objetivos,
       disenioMetodologico: value.disMetodologico
     };
@@ -109,6 +117,11 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     this.peticionEvaluacion.fechaFin = form.fechaFin;
     this.peticionEvaluacion.resumen = form.resumen;
     this.peticionEvaluacion.valorSocial = form.valorSocial;
+    if (this.peticionEvaluacion.valorSocial === TipoValorSocial.OTRA_FINALIDAD) {
+      this.peticionEvaluacion.otroValorSocial = form.otroValorSocial;
+    } else {
+      this.peticionEvaluacion.otroValorSocial = null;
+    }
     this.peticionEvaluacion.objetivos = form.objetivosCientificos;
     this.peticionEvaluacion.disMetodologico = form.disenioMetodologico;
 
@@ -130,7 +143,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     );
   }
 
-  private addValidations(value: boolean) {
+  private addFinanciacionValidations(value: boolean) {
     const form = this.getFormGroup().controls;
     if (!this.readonly) {
       if (value) {
@@ -151,6 +164,20 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       form.financiacion.updateValueAndValidity();
       form.estadoFinanciacion.updateValueAndValidity();
       form.importeFinanciacion.updateValueAndValidity();
+    }
+  }
+
+  private addValorSocialValidations(value: string) {
+    const form = this.getFormGroup().controls;
+    if (!this.readonly) {
+      if (value === TipoValorSocial.OTRA_FINALIDAD) {
+        this.mostrarCampoEspecificarValorSocial$.next(true);
+        form.otroValorSocial.setValidators([Validators.required]);
+      } else {
+        this.mostrarCampoEspecificarValorSocial$.next(false);
+        form.otroValorSocial.clearValidators();
+      }
+      form.otroValorSocial.updateValueAndValidity();
     }
   }
 }

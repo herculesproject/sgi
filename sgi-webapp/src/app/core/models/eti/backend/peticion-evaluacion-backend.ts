@@ -1,4 +1,4 @@
-import { EstadoFinanciacion } from '../peticion-evaluacion';
+import { EstadoFinanciacion, TipoValorSocial } from '../peticion-evaluacion';
 import { ITipoActividad } from '../tipo-actividad';
 import { ITipoInvestigacionTutelada } from '../tipo-investigacion-tutelada';
 
@@ -30,7 +30,9 @@ export interface IPeticionEvaluacionBackend {
   /** Resumen */
   resumen: string;
   /** Valor social */
-  valorSocial: number;
+  valorSocial: TipoValorSocial;
+  /** Otro valor social */
+  otroValorSocial: string;
   /** Objetivos */
   objetivos: string;
   /** Diseño metodológico */
