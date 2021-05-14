@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.repository.custom.CustomConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
@@ -71,6 +72,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
   @MockBean
   private DocumentacionMemoriaService documentacionMemoriaService;
+
+  @MockBean
+  private CustomConvocatoriaReunionRepository convocatoriaReunionRepository;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_ASIGNABLES = "/asignables/{idConvocatoria}";

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.groups.Default;
@@ -8,6 +9,7 @@ import javax.validation.groups.Default;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -15,6 +17,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.repository.custom.CustomConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
@@ -59,22 +62,28 @@ public class MemoriaController {
   /** Informe service */
   private final InformeService informeService;
 
+  /** ConvocatoriaReunion repository */
+  private final CustomConvocatoriaReunionRepository convocatoriaReunionRepository;
+
   /**
    * Instancia un nuevo MemoriaController.
    * 
-   * @param service                     {@link MemoriaService}
-   * @param evaluacionService           {@link EvaluacionService}
-   * @param documentacionMemoriaService {@link DocumentacionMemoriaService}
-   * @param informeService              {@link InformeService}
+   * @param service                       {@link MemoriaService}
+   * @param evaluacionService             {@link EvaluacionService}
+   * @param documentacionMemoriaService   {@link DocumentacionMemoriaService}
+   * @param informeService                {@link InformeService}
+   * @param convocatoriaReunionRepository {@link CustomConvocatoriaReunionRepository}
    */
   public MemoriaController(MemoriaService service, EvaluacionService evaluacionService,
-      DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService) {
+      DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService,
+      CustomConvocatoriaReunionRepository convocatoriaReunionRepository) {
     log.debug(
         "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService) - start");
     this.service = service;
     this.evaluacionService = evaluacionService;
     this.documentacionMemoriaService = documentacionMemoriaService;
     this.informeService = informeService;
+    this.convocatoriaReunionRepository = convocatoriaReunionRepository;
     log.debug(
         "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService) - end");
   }
@@ -710,4 +719,23 @@ public class MemoriaController {
     log.debug("deleteDocumentacionRetrospectiva(Long id, Long idDocumentacionMemoria) - end");
   }
 
+  /**
+   * Recupera la próxima convocatoria de reunión sin acta finalizada asignada con
+   * comité igual al de la memoria
+   * 
+   * @param idComite Id del {@link Comite}.
+   * @return la {@link ConvocatoriaReunion}
+   */
+  @GetMapping("/{idComite}/convocatoria-reunion/proxima")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  ResponseEntity<ConvocatoriaReunion> getConvocatoriaReunionProxima(@PathVariable Long idComite) {
+    log.debug("getConvocatoriaReunionProxima(Long id) - start");
+    Optional<ConvocatoriaReunion> result = convocatoriaReunionRepository
+        .findFirstConvocatoriaReunionSinActaFinalizadaByComiteOrderByFechaEvaluacionAsc(idComite);
+    log.debug("getConvocatoriaReunionProxima(Long id) - end");
+    if (!result.isPresent()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(result.get(), HttpStatus.OK);
+  }
 }

@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -17,10 +20,16 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Acta_;
+import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa_;
+import org.crue.hercules.sgi.eti.util.Constantes;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -114,6 +123,48 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
   }
 
   /**
+   * Devuelve una lista de convocatorias de reunión que no tengan acta en estado
+   * finalizada
+   *
+   * @return la lista de convocatorias de reunión
+   */
+  @Override
+  public Optional<ConvocatoriaReunion> findFirstConvocatoriaReunionSinActaFinalizadaByComiteOrderByFechaEvaluacionAsc(
+      Long idComite) {
+    log.debug("findFirstConvocatoriaReunionSinActaFinalizadaByComiteOrderByFechaEvaluacionAsc() - start");
+
+    // Create Query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<ConvocatoriaReunion> cq = cb.createQuery(ConvocatoriaReunion.class);
+
+    // Definir FROM clause
+    Root<ConvocatoriaReunion> root = cq.from(ConvocatoriaReunion.class);
+
+    List<Predicate> listPredicates = new ArrayList<Predicate>();
+
+    listPredicates.add(cb.equal(root.get(ConvocatoriaReunion_.activo), Boolean.TRUE));
+    listPredicates.add(root.get(ConvocatoriaReunion_.id).in(getConvocatoriasActaFinalizada(cb, cq, root)).not());
+    listPredicates.add(cb.equal(root.get(ConvocatoriaReunion_.comite).get(Comite_.id), idComite));
+    listPredicates.add(root.get(ConvocatoriaReunion_.tipoConvocatoriaReunion).get(TipoConvocatoriaReunion_.id).in(Arrays
+        .asList(Constantes.TIPO_CONVOCATORIA_REUNION_ORDINARIA, Constantes.TIPO_CONVOCATORIA_REUNION_EXTRAORDINARIA)));
+    listPredicates.add(cb.greaterThan(root.get(ConvocatoriaReunion_.fechaLimite), Instant.now()));
+
+    // Filtros
+    cq.where(listPredicates.toArray(new Predicate[] {}));
+    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.ASC, ConvocatoriaReunion_.FECHA_EVALUACION), root,
+        cb);
+    cq.orderBy(orders);
+
+    TypedQuery<ConvocatoriaReunion> typedQuery = entityManager.createQuery(cq);
+    Optional<ConvocatoriaReunion> result = typedQuery.getResultList().stream().findFirst();
+
+    log.debug("findFirstConvocatoriaReunionSinActaFinalizadaByComiteOrderByFechaEvaluacionAsc() - end");
+
+    return result;
+
+  }
+
+  /**
    * Subquery para obtener el número de {@link Evaluacion} de una
    * {@link ConvocatoriaReunion} activas y que no son revisión mínima
    * 
@@ -166,6 +217,35 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
         "getActaConvocatoria(Root<ConvocatoriaReunion> root, CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunionDatosGenerales> cq, Long idConvocatoria) - end");
 
     return queryGetActa;
+  }
+
+  /**
+   * Devuelve una subconsulta con el listado de Convocatorias de Reunión que
+   * tienen actas finalizadas asociadas y que además esté activa
+   * 
+   * @param cb   Criteria builder
+   * @param cq   criteria query
+   * @param root root a ConvocatoriaReunion
+   * 
+   * @return Subquery<Long> Listado de Convocatorias de Reunión que tienen acta
+   *         finalizada
+   * 
+   */
+  private Subquery<Long> getConvocatoriasActaFinalizada(CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunion> cq,
+      Root<ConvocatoriaReunion> root) {
+
+    log.debug("getConvocatoriasActaFinalizada : {} - start");
+
+    Subquery<Long> queryActasConvocatoria = cq.subquery(Long.class);
+    Root<Acta> subqRoot = queryActasConvocatoria.from(Acta.class);
+    queryActasConvocatoria.select(subqRoot.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id))
+        .where(cb.and(
+            cb.equal(subqRoot.get(Acta_.estadoActual).get(TipoEstadoActa_.id), Constantes.TIPO_ESTADO_ACTA_FINALIZADA),
+            cb.equal(subqRoot.get(Acta_.activo), Boolean.TRUE)));
+
+    log.debug("getConvocatoriasActaFinalizada : {} - end");
+
+    return queryActasConvocatoria;
   }
 
   /**
