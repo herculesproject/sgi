@@ -642,7 +642,7 @@ public class SolicitudController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
   ResponseEntity<Solicitud> presentable(@PathVariable Long id) {
     log.debug("presentable(Long id) - start");
-    Boolean returnValue = service.cumpleValidacionesPresentada(id);
+    boolean returnValue = service.isValidPresentar(id);
     log.debug("presentable(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

@@ -892,8 +892,8 @@ public class SolicitudServiceImpl implements SolicitudService {
    *         <code>false</code>No cumple condiciones.
    */
   @Override
-  public Boolean cumpleValidacionesPresentada(Long id) {
-    log.debug("cumpleValidacionesPresentada(Long id) - start");
+  public boolean isValidPresentar(Long id) {
+    log.debug("isValidPresentar(Long id) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
 
@@ -905,46 +905,50 @@ public class SolicitudServiceImpl implements SolicitudService {
         "El usuario no tiene permisos para presentar la solicitud.");
 
     if (solicitud == null || solicitud.getEstado().getEstado() != EstadoSolicitud.Estado.BORRADOR) {
-      log.debug("cumpleValidacionesPresentada(Long id) - end");
-      return Boolean.FALSE;
+      log.debug("isValidPresentar(Long id) - end");
+      return false;
     }
 
     if (solicitud.getConvocatoriaId() != null
         && (!hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId())
             || !hasModalidadEntidadesConvocantes(solicitud.getConvocatoriaId()))) {
-      log.debug("cumpleValidacionesPresentada(Long id) - end");
-      return Boolean.FALSE;
+      log.debug("isValidPresentar(Long id) - end");
+      return false;
     }
 
     // Si el formulario es de tipo Estándar
     if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
 
       SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitud.getId())
-          .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitud.getId()));
+          .orElse(null);
+      if (solicitudProyecto == null) {
+        log.debug("isValidPresentar(Long id) - end");
+        return false;
+      }
 
       // En caso de que no tenga titulo o sea colaborativo y no tenga coordinador
       // externo releno
       if (StringUtils.isEmpty(solicitudProyecto.getTitulo())
           || (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null)) {
-        log.debug("cumpleValidacionesPresentada(Long id) - end");
-        return Boolean.FALSE;
+        log.debug("isValidPresentar(Long id) - end");
+        return false;
       }
 
       if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
-        log.debug("cumpleValidacionesPresentada(Long id) - end");
-        return Boolean.FALSE;
+        log.debug("isValidPresentar(Long id) - end");
+        return false;
       }
 
       if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
         List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
             .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
-        log.debug("cumpleValidacionesPresentada(Long id) - end");
+        log.debug("isValidPresentar(Long id) - end");
         return !CollectionUtils.isEmpty(solicitudProyectoSocios);
 
       }
     }
-    log.debug("cumpleValidacionesPresentada(Long id) - end");
-    return Boolean.TRUE;
+    log.debug("isValidPresentar(Long id) - end");
+    return true;
   }
 
   /**

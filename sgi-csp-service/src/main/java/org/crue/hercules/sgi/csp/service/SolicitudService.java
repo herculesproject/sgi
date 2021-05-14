@@ -168,7 +168,7 @@ public interface SolicitudService {
    * @return <code>true</code> Cumple condiciones para el cambio de estado.
    *         <code>false</code>No cumple condiciones.
    */
-  Boolean cumpleValidacionesPresentada(Long id);
+  boolean isValidPresentar(Long id);
 
   /**
    * Cambio de estado de "Excluida provisional" a "Alegada admisión".
