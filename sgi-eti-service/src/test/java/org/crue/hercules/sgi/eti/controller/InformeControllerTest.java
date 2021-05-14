@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
@@ -324,7 +325,7 @@ public class InformeControllerTest extends BaseControllerTest {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
     peticionEvaluacion.setPersonaRef("user-001");
-    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");

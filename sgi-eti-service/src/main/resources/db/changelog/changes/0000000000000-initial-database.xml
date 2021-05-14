@@ -625,6 +625,7 @@
             <column name="objetivos" type="VARCHAR(2000)">
                 <constraints nullable="false"/>
             </column>
+            <column name="otro_valor_social" type="VARCHAR(2000)"/>
             <column name="persona_ref" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>

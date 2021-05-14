@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -815,7 +816,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion2");
     peticionEvaluacion.setPersonaRef("user");
-    peticionEvaluacion.setValorSocial(" valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
@@ -890,7 +891,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion2");
     peticionEvaluacion.setPersonaRef("user");
-    peticionEvaluacion.setValorSocial(" valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
@@ -970,7 +971,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
     peticionEvaluacion.setPersonaRef("user-001");
-    peticionEvaluacion.setValorSocial("valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");

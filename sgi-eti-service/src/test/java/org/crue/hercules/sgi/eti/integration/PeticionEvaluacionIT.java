@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
@@ -517,7 +518,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial("valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

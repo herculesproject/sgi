@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
@@ -363,7 +364,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

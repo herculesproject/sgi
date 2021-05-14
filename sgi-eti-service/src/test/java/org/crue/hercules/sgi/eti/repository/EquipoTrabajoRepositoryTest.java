@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +111,7 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("Titulo");
     peticionEvaluacion.setPersonaRef("user-00");
-    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

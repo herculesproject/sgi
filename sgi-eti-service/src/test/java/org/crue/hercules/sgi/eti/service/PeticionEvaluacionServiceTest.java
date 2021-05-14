@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.PeticionEvaluacionServiceImpl;
@@ -342,7 +343,7 @@ public class PeticionEvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

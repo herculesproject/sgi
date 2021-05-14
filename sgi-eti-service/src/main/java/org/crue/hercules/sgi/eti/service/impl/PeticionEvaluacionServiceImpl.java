@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.predicate.PeticionEvaluacionPredicateResolver;
 import org.crue.hercules.sgi.eti.repository.specification.PeticionEvaluacionSpecifications;
@@ -72,6 +73,11 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
           "PeticionEvaluacion estadoFinanciacion no puede ser null si existeFinanciacion");
       Assert.notNull(peticionEvaluacion.getImporteFinanciacion(),
           "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
+    }
+
+    if (peticionEvaluacion.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
+      Assert.notNull(peticionEvaluacion.getOtroValorSocial(),
+          "PeticionEvaluacion otroValorSocial no puede ser null si TipoValorSocial.OTRA_FINALIDAD");
     }
 
     return peticionEvaluacionRepository.save(peticionEvaluacion);
@@ -169,6 +175,11 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
           "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
     }
 
+    if (peticionEvaluacionActualizar.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
+      Assert.notNull(peticionEvaluacionActualizar.getOtroValorSocial(),
+          "PeticionEvaluacion otroValorSocial no puede ser null si TipoValorSocial.OTRA_FINALIDAD");
+    }
+
     return peticionEvaluacionRepository.findById(peticionEvaluacionActualizar.getId()).map(peticionEvaluacion -> {
       peticionEvaluacion.setCodigo(peticionEvaluacionActualizar.getCodigo());
       peticionEvaluacion.setDisMetodologico(peticionEvaluacionActualizar.getDisMetodologico());
@@ -185,6 +196,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setTitulo(peticionEvaluacionActualizar.getTitulo());
       peticionEvaluacion.setPersonaRef(peticionEvaluacionActualizar.getPersonaRef());
       peticionEvaluacion.setValorSocial(peticionEvaluacionActualizar.getValorSocial());
+      peticionEvaluacion.setOtroValorSocial(peticionEvaluacionActualizar.getOtroValorSocial());
       peticionEvaluacion.setActivo(peticionEvaluacionActualizar.getActivo());
       peticionEvaluacion.setExisteFinanciacion(peticionEvaluacionActualizar.getExisteFinanciacion());
       peticionEvaluacion.setEstadoFinanciacion(peticionEvaluacionActualizar.getEstadoFinanciacion());

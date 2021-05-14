@@ -7,18 +7,18 @@
 
 --PETICION EVALUACION
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(2, 'PeticionEvaluacion2', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(2, 'PeticionEvaluacion2', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(3, 'PeticionEvaluacion3', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(3, 'PeticionEvaluacion3', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(4, 'PeticionEvaluacion4', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(4, 'PeticionEvaluacion4', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(5, 'PeticionEvaluacion5', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(5, 'PeticionEvaluacion5', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(6, 'PeticionEvaluacion6', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(6, 'PeticionEvaluacion6', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(7, 'PeticionEvaluacion7', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(7, 'PeticionEvaluacion7', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, existe_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
- VALUES(8, 'PeticionEvaluacion8', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user', true);
+ VALUES(8, 'PeticionEvaluacion8', 'Codigo', 'Ref solicitud convocatoria', 1, false, '2020-07-09T00:00:00Z', '2021-07-09T23:59:59Z', 'Resumen',  'INVESTIGACION_FUNDAMENTAL', 'Objetivos', 'Metodologico', false, false, 'user', true);
 
 ALTER SEQUENCE eti.peticion_evaluacion_seq RESTART WITH 9;

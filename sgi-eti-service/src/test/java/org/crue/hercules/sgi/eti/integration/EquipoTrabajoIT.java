@@ -8,6 +8,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -207,7 +208,7 @@ public class EquipoTrabajoIT extends BaseIT {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

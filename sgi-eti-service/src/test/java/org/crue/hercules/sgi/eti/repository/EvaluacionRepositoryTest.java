@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -449,8 +450,8 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
       TipoInvestigacionTutelada tipoInvestigacionTutelada) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
         tipoActividad, tipoInvestigacionTutelada, false, "Fuente financiación", null, null, Instant.now(),
-        Instant.now(), "Resumen", "Valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE,
-        "user-001", Boolean.TRUE);
+        Instant.now(), "Resumen", TipoValorSocial.ENSENIANZA_SUPERIOR, "Otro valor social", "Objetivos",
+        "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
   }
 
   /**

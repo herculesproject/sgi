@@ -49,6 +49,30 @@ public class PeticionEvaluacion extends BaseEntity {
     DENEGADO;
   }
 
+  /** Tipo valor social */
+  public enum TipoValorSocial {
+    /** INVESTIGACION_FUNDAMENTAL */
+    INVESTIGACION_FUNDAMENTAL,
+    /** INVESTIGACION_PREVENCION */
+    INVESTIGACION_PREVENCION,
+    /** INVESTIGACION_EVALUACIÓN */
+    INVESTIGACION_EVALUACION,
+    /** INVESTIGACION_DESARROLLO */
+    INVESTIGACION_DESARROLLO,
+    /** INVESTIGACION_PROTECCION */
+    INVESTIGACION_PROTECCION,
+    /** INVESTIGACION_BIENESTAR */
+    INVESTIGACION_BIENESTAR,
+    /** INVESTIGACION_CONSERVACION */
+    INVESTIGACION_CONSERVACION,
+    /** ENSEÑANZA_SUPERIOR */
+    ENSENIANZA_SUPERIOR,
+    /** INVESTIGACION_JURIDICA */
+    INVESTIGACION_JURIDICA,
+    /** OTRA FINALIDAD */
+    OTRA_FINALIDAD
+  }
+
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
@@ -110,7 +134,12 @@ public class PeticionEvaluacion extends BaseEntity {
 
   /** Valor social */
   @Column(name = "valor_social", length = 2000, nullable = false)
-  private String valorSocial;
+  @Enumerated(EnumType.STRING)
+  private TipoValorSocial valorSocial;
+
+  /** Otro valor social */
+  @Column(name = "otro_valor_social", length = 2000, nullable = true)
+  private String otroValorSocial;
 
   /** Objetivos */
   @Column(name = "objetivos", length = 2000, nullable = false)

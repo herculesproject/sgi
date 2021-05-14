@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.hamcrest.Matchers;
@@ -228,7 +229,7 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial("Valor social");
+    peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

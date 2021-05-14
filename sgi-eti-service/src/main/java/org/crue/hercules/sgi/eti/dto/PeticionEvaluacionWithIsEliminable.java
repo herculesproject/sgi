@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 
@@ -52,7 +53,7 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
   private String resumen;
 
   /** Valor social */
-  private String valorSocial;
+  private TipoValorSocial valorSocial;
 
   /** Objetivos */
   private String objetivos;
