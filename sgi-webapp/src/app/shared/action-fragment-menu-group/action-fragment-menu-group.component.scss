@@ -1,7 +1,13 @@
 @import "colors.scss";
 @import "typography.scss";
 
-.mat-expansion-panel {
+// TODO: Buscar alternativa para no usar ng-deep y no tener que cambiar la encapsulación del componente
+:host ::ng-deep .mat-expansion-panel-body {
+  padding: 0;
+  padding-left: 14px;
+}
+
+mat-expansion-panel {
   background-color: transparent;
   box-shadow: none;
   border-radius: 0;
@@ -15,28 +21,24 @@
     box-shadow: none;
   }
 
-  .mat-expansion-panel-header {
+  mat-expansion-panel-header {
     padding: 0 16px;
     font-size: mat-font-size($custom-typography, body-1);
-    .mat-content {
+    div {
+      display: flex;
       flex-direction: row;
       justify-content: space-between;
+      width: 100%;
       padding-right: 14px;
       align-items: center;
-    }
 
-    .warning-icon {
-      color: map-get($custom-colors, warning);
-    }
+      .warning-icon {
+        color: map-get($custom-colors, warning);
+      }
 
-    .danger-icon {
-      color: map-get($custom-colors, danger);
-    }
-  }
-  .mat-expansion-panel-content {
-    .mat-expansion-panel-body {
-      padding: 0;
-      padding-left: 14px;
+      .danger-icon {
+        color: map-get($custom-colors, danger);
+      }
     }
   }
 }

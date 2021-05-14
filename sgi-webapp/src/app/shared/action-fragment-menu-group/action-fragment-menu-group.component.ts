@@ -1,6 +1,17 @@
-import { AfterContentChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Input, OnDestroy, QueryList, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  QueryList,
+  ViewChild
+} from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { NavigationEnd, Router, Event } from '@angular/router';
+import { Event, NavigationEnd, Router } from '@angular/router';
 import { ActionFragmentMenuItemComponent } from '@shared/action-fragment-menu-item/action-fragment-menu-item.component';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
@@ -13,7 +24,6 @@ interface Status {
   selector: 'sgi-action-fragment-menu-group',
   templateUrl: './action-fragment-menu-group.component.html',
   styleUrls: ['./action-fragment-menu-group.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionFragmentMenuGroupComponent implements AfterViewInit, AfterContentChecked, OnDestroy {

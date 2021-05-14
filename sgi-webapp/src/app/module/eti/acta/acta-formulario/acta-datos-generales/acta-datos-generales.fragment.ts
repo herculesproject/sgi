@@ -23,7 +23,9 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
 
   protected buildFormGroup(): FormGroup {
     const fb = this.fb.group({
-      convocatoriaReunion: ['', new NullIdValidador().isValid()],
+      convocatoriaReunion: [null],
+      fechaInicio: [null],
+      fechaFin: [null],
       horaInicio: ['', new HoraValidador().isValid()],
       minutoInicio: ['', new MinutoValidador().isValid()],
       horaFin: ['', new HoraValidador().isValid()],

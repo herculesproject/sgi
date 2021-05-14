@@ -16,24 +16,6 @@ body {
 /**/
 
 /**/
-/** Layout estructura */
-/**/
-
-.layout-components {
-   section {
-    h2 {
-      font-weight: bold;
-    }
-    padding: 15px 25px 25px 25px;
-  }
-}
-
-
-/**/
-/** FIN Layout estructura */
-/**/
-
-/**/
 /** Layout contenido */
 /**/
 
@@ -144,66 +126,6 @@ body {
     }
   }
 }
-
-/**/
-/** MENU DERECHO SIDENAV */
-/**/
-
-/**/
-/** Tabs verticales */
-/**/
-
-.mat-drawer-content-panel {
-  max-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight} - #{$footerHeight});
-}
-
-.mat-drawer-tabs {
-  min-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight});
-  max-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight});
-  .tabs {
-    background-color: map-get($palette-primary, 50);
-    border-right-width: 0;
-    min-width: 227px;
-    .opciones-menu {
-      padding: 0px;
-      .item-tab {
-        span {
-          font-size: mat-font-size($custom-typography, body-1);
-        }
-        text-decoration-line: none;
-        .mat-list-item-content {
-          flex-direction: row;
-          justify-content: space-between;
-        }
-        &.is-active {
-          background-color: map-get($custom-colors, white);
-          span {
-            font-weight: bold;
-          }
-        }
-        .warning-icon {
-          color: map-get($custom-colors, warning);
-        }
-        .danger-icon {
-          color: map-get($custom-colors, danger);
-        }
-      }
-    }
-    .enlaces-menu {
-      padding-left: 1em;
-      padding-right: 1em;
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
-      border-top-style: solid;
-      border-top-width: 1px;
-      border-top-color: #ebedf3;
-    }
-  }
-}
-
-/**/
-/** FIN Tabs verticales */
-/**/
 
 /**/
 /** TABLES */
@@ -361,15 +283,6 @@ mat-form-field {
 /**/
 /** FIN BOTONES */
 /**/
-
-/* Borrar la clase demo y este CSS una vez pasada la demo*/
-
-.demo a{
-  background-color: #f3f6f9!important;
-  span{
-  font-weight: normal!important;
-  }
-}
 
 /**/
 /** MODALES */
