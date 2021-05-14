@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoServiceImpl;
@@ -65,8 +66,6 @@ public class SolicitudProyectoServiceTest {
         .isEqualTo(solicitudProyecto.getTitulo());
     Assertions.assertThat(solicitudProyectoCreado.getColaborativo()).as("getColaborativo()")
         .isEqualTo(solicitudProyecto.getColaborativo());
-    Assertions.assertThat(solicitudProyectoCreado.getPresupuestoPorEntidades()).as("getPresupuestoPorEntidades()")
-        .isEqualTo(solicitudProyecto.getPresupuestoPorEntidades());
   }
 
   @Test
@@ -104,19 +103,6 @@ public class SolicitudProyectoServiceTest {
     // then: Lanza una excepcion porque no tiene colaborativo
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Colaborativo no puede ser null para realizar la acción sobre SolicitudProyecto");
-  }
-
-  @Test
-  public void create_WithoutPresupuestoPorEntidades_ThrowsIllegalArgumentException() {
-    // given: Un nuevo SolicitudProyecto que no tiene presupuesto por entidades
-    SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(1L);
-
-    solicitudProyecto.setPresupuestoPorEntidades(null);
-
-    // when: Creamos el SolicitudProyecto
-    // then: Lanza una excepcion porque no tiene presupuesto por entidades
-    Assertions.assertThatThrownBy(() -> service.create(solicitudProyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Presupuesto por entidades no puede ser null para realizar la acción sobre SolicitudProyecto");
   }
 
   @Test
@@ -217,19 +203,6 @@ public class SolicitudProyectoServiceTest {
   }
 
   @Test
-  public void update_WithoutPresupuestoPorEntidades_ThrowsIllegalArgumentException() {
-    // given: Un nuevo SolicitudProyecto que no tiene presupuesto por entidades
-    SolicitudProyecto solicitudProyecto = generarSolicitudProyecto(1L);
-
-    solicitudProyecto.setPresupuestoPorEntidades(null);
-
-    // when: Actualizamos el SolicitudProyecto
-    // then: Lanza una excepcion porque no tiene presupuesto por entidades
-    Assertions.assertThatThrownBy(() -> service.update(solicitudProyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Presupuesto por entidades no puede ser null para realizar la acción sobre SolicitudProyecto");
-  }
-
-  @Test
   public void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing SolicitudProyecto
     Long id = 1L;
@@ -323,7 +296,7 @@ public class SolicitudProyectoServiceTest {
 
     SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
         .titulo("titulo-" + solicitudProyectoId).acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE)
-        .presupuestoPorEntidades(Boolean.TRUE).build();
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL).build();
 
     return solicitudProyecto;
   }

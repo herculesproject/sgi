@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -64,8 +65,6 @@ public class SolicitudProyectoIT {
         .isEqualTo(solicitudProyecto.getTitulo());
     Assertions.assertThat(solicitudProyectoCreado.getColaborativo()).as("getColaborativo()")
         .isEqualTo(solicitudProyecto.getColaborativo());
-    Assertions.assertThat(solicitudProyectoCreado.getPresupuestoPorEntidades()).as("getPresupuestoPorEntidades()")
-        .isEqualTo(solicitudProyecto.getPresupuestoPorEntidades());
   }
 
   @Sql
@@ -129,7 +128,7 @@ public class SolicitudProyectoIT {
 
     SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
         .titulo("titulo-" + solicitudProyectoId).acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE)
-        .presupuestoPorEntidades(Boolean.TRUE).build();
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL).build();
 
     return solicitudProyecto;
   }

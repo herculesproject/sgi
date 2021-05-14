@@ -3162,7 +3162,7 @@ industries" />
       <column name="area_tematica_id" value="null" />
       <column name="check_list_ref" value="null" />
       <column name="envio_etica" value="null" />
-      <column name="presupuesto_por_entidades" value="false" />
+      <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="2" />
@@ -3177,7 +3177,7 @@ industries" />
       <column name="area_tematica_id" value="null" />
       <column name="check_list_ref" value="null" />
       <column name="envio_etica" value="null" />
-      <column name="presupuesto_por_entidades" value="false" />
+      <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="3" />
@@ -3192,7 +3192,7 @@ industries" />
       <column name="area_tematica_id" value="null" />
       <column name="check_list_ref" value="null" />
       <column name="envio_etica" value="null" />
-      <column name="presupuesto_por_entidades" value="false" />
+      <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="4" />
@@ -3207,7 +3207,7 @@ industries" />
       <column name="area_tematica_id" value="62" />
       <column name="check_list_ref" value="null" />
       <column name="envio_etica" value="null" />
-      <column name="presupuesto_por_entidades" value="false" />
+      <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
     <insert tableName="solicitud_proyecto">
       <column name="id" value="6" />
@@ -3222,7 +3222,7 @@ industries" />
       <column name="area_tematica_id" value="null" />
       <column name="check_list_ref" value="null" />
       <column name="envio_etica" value="null" />
-      <column name="presupuesto_por_entidades" value="false" />
+      <column name="tipo_presupuesto" value="GLOBAL" />
     </insert>
   </changeSet>
 

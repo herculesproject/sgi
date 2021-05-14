@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -32,6 +34,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class SolicitudProyecto extends BaseEntity {
+
+  /**
+   * Enumerado tipo estado de las solicitudes.
+   *
+   */
+  public enum TipoPresupuesto {
+    /** Global */
+    GLOBAL,
+    /** Mixto */
+    MIXTO,
+    /** Individual */
+    INDIVIDUAL;
+  }
 
   /**
    * Serial version
@@ -102,10 +117,11 @@ public class SolicitudProyecto extends BaseEntity {
   @Column(name = "envio_etica", nullable = true)
   private Boolean envioEtica;
 
-  /** Presupuesto por entidades */
-  @Column(name = "presupuesto_por_entidades", columnDefinition = "boolean default false", nullable = false)
+  /** Tipo presupuesto */
+  @Column(name = "tipo_presupuesto", length = 50, nullable = false)
+  @Enumerated(EnumType.STRING)
   @NotNull
-  private Boolean presupuestoPorEntidades;
+  private TipoPresupuesto tipoPresupuesto;
 
   // Relation mappings for JPA metamodel generation only
   @OneToOne

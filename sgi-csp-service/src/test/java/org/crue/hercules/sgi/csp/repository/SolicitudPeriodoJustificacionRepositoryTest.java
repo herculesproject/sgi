@@ -10,8 +10,9 @@ import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -39,7 +40,7 @@ public class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryT
     // @formatter:on
     SolicitudProyecto solicitudProyecto = entityManager
         .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE,
-            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL));
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()

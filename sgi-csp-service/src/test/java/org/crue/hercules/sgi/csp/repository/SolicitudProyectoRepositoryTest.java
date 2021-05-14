@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -40,7 +41,7 @@ public class SolicitudProyectoRepositoryTest {
     // @formatter:on
     SolicitudProyecto solicitudProyecto1 = entityManager
         .persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null, Boolean.TRUE,
-            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+            Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL));
 
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
@@ -52,7 +53,7 @@ public class SolicitudProyectoRepositoryTest {
         .build());
     // @formatter:on
     entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL));
 
     Long convocatoriaIdBuscada = solicitud1.getId();
 
@@ -82,7 +83,7 @@ public class SolicitudProyectoRepositoryTest {
         .build());
     // @formatter:on
     entityManager.persistAndFlush(new SolicitudProyecto(solicitud1.getId(), "solicitud1", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL));
     // @formatter:off
     Solicitud solicitud2 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
@@ -93,7 +94,7 @@ public class SolicitudProyectoRepositoryTest {
         .build());
     // @formatter:on
     entityManager.persistAndFlush(new SolicitudProyecto(solicitud2.getId(), "solicitud2", null, null, null,
-        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, Boolean.TRUE));
+        Boolean.TRUE, Boolean.TRUE, null, null, null, null, null, Boolean.FALSE, TipoPresupuesto.GLOBAL));
 
     Long solicitudIdBuscada = 99999L;
 

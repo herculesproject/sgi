@@ -55,10 +55,10 @@ UPDATE csp.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
 UPDATE csp.solicitud SET estado_solicitud_id = 2 WHERE id = 2;
 
 -- SOLICITUD PROYECTO DATOS
-INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, presupuesto_por_entidades ) 
-  VALUES (1, 'titulo-1', true, true);
-INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, presupuesto_por_entidades ) 
-  VALUES (2, 'titulo-2', true, true);
+INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, tipo_presupuesto ) 
+  VALUES (1, 'titulo-1', true, 'GLOBAL');
+INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, tipo_presupuesto ) 
+  VALUES (2, 'titulo-2', true, 'GLOBAL');
 
 -- ROL PROYECTO
 INSERT INTO csp.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, responsable_economico, equipo, activo) 

@@ -1546,10 +1546,10 @@
             <column name="envio_etica" type="BOOLEAN"/>
             <column name="intereses" type="VARCHAR(2000)"/>
             <column name="objetivos" type="VARCHAR(2000)"/>
-            <column defaultValueBoolean="false" name="presupuesto_por_entidades" type="BOOLEAN">
+            <column name="resultados_previstos" type="VARCHAR(2000)"/>
+            <column name="tipo_presupuesto" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="resultados_previstos" type="VARCHAR(2000)"/>
             <column name="titulo" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>

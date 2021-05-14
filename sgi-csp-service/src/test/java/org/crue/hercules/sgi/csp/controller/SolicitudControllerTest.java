@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -851,7 +852,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("titulo-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("colaborativo").value(Boolean.TRUE))
-        .andExpect(MockMvcResultMatchers.jsonPath("presupuestoPorEntidades").value(Boolean.TRUE));
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoPresupuesto").value(TipoPresupuesto.GLOBAL.toString()));
   }
 
   @Test
@@ -1281,7 +1282,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
     SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
         .titulo("titulo-" + solicitudProyectoId).acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE)
-        .presupuestoPorEntidades(Boolean.TRUE).build();
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL).build();
 
     return solicitudProyecto;
   }

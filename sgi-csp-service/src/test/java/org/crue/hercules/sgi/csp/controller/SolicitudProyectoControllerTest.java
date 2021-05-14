@@ -2,9 +2,10 @@ package org.crue.hercules.sgi.csp.controller;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -67,9 +68,8 @@ public class SolicitudProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value(solicitudProyecto.getTitulo()))
-        .andExpect(MockMvcResultMatchers.jsonPath("colaborativo").value(solicitudProyecto.getColaborativo()))
-        .andExpect(MockMvcResultMatchers.jsonPath("presupuestoPorEntidades")
-            .value(solicitudProyecto.getPresupuestoPorEntidades()));
+        .andExpect(MockMvcResultMatchers.jsonPath("colaborativo").value(solicitudProyecto.getColaborativo())).andExpect(
+            MockMvcResultMatchers.jsonPath("tipoPresupuesto").value(solicitudProyecto.getTipoPresupuesto().toString()));
   }
 
   @Test
@@ -117,8 +117,8 @@ public class SolicitudProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value(updatedSolicitudProyecto.getTitulo()))
         .andExpect(MockMvcResultMatchers.jsonPath("colaborativo").value(updatedSolicitudProyecto.getColaborativo()))
-        .andExpect(MockMvcResultMatchers.jsonPath("presupuestoPorEntidades")
-            .value(updatedSolicitudProyecto.getPresupuestoPorEntidades()));
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoPresupuesto")
+            .value(updatedSolicitudProyecto.getTipoPresupuesto().toString()));
   }
 
   @Test
@@ -230,7 +230,7 @@ public class SolicitudProyectoControllerTest extends BaseControllerTest {
 
     SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
         .titulo("titulo-" + solicitudProyectoId).acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE)
-        .presupuestoPorEntidades(Boolean.TRUE).build();
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL).build();
 
     return solicitudProyecto;
   }

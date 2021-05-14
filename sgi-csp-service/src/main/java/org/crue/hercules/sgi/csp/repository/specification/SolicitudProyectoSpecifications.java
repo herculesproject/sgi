@@ -21,16 +21,4 @@ public class SolicitudProyectoSpecifications {
     };
   }
 
-  /**
-   * {@link SolicitudProyecto} con presupuestoPorEntidades true.
-   * 
-   * @return specification para obtener los {@link SolicitudProyecto} con
-   *         presupuestoPorEntidades true.
-   */
-  public static Specification<SolicitudProyecto> presupuestoPorEntidades() {
-    return (root, query, cb) -> {
-      return cb.isTrue(root.get(SolicitudProyecto_.presupuestoPorEntidades));
-    };
-  }
-
 }

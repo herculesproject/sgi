@@ -89,7 +89,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
       solicitudProyectoExistente.setAreaTematica(solicitudProyecto.getAreaTematica());
       solicitudProyectoExistente.setCheckListRef(solicitudProyecto.getCheckListRef());
       solicitudProyectoExistente.setEnvioEtica(solicitudProyecto.getEnvioEtica());
-      solicitudProyectoExistente.setPresupuestoPorEntidades(solicitudProyecto.getPresupuestoPorEntidades());
+      solicitudProyectoExistente.setTipoPresupuesto(solicitudProyecto.getTipoPresupuesto());
       SolicitudProyecto returnValue = repository.save(solicitudProyectoExistente);
 
       log.debug("update(SolicitudProyecto solicitudProyecto) - end");
@@ -183,8 +183,8 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
     Assert.notNull(solicitudProyecto.getColaborativo(),
         "Colaborativo no puede ser null para realizar la acción sobre SolicitudProyecto");
 
-    Assert.notNull(solicitudProyecto.getPresupuestoPorEntidades(),
-        "Presupuesto por entidades no puede ser null para realizar la acción sobre SolicitudProyecto");
+    Assert.notNull(solicitudProyecto.getTipoPresupuesto(),
+        "Tipo presupuesto no puede ser null para realizar la acción sobre SolicitudProyecto");
 
     if (!solicitudRepository.existsById(solicitudProyecto.getId())) {
       throw new SolicitudNotFoundException(solicitudProyecto.getId());

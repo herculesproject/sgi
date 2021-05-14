@@ -53,5 +53,5 @@ INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, coment
 UPDATE csp.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
 
 -- SOLICITUD PROYECTO DATOS
-INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, presupuesto_por_entidades ) 
-VALUES (1, 'titulo-1', true, true);
+INSERT INTO csp.solicitud_proyecto (id, titulo, colaborativo, tipo_presupuesto) 
+VALUES (1, 'titulo-1', true, 'GLOBAL');
