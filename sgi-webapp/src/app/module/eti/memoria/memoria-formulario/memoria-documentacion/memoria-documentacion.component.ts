@@ -9,7 +9,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { ESTADO_MEMORIA, TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -267,13 +267,11 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    *
    */
   hasPermisoUpdateDocumentacionInicial(): boolean {
-    if (this.actionService.readonly) {
-      return false;
-    } else {
-      return this.estadoMemoria.id === 1 || this.estadoMemoria.id === 2
-        || this.estadoMemoria.id === 6 || this.estadoMemoria.id === 7
-        || this.estadoMemoria.id === 8;
-    }
+
+    return this.actionService.readonly || this.estadoMemoria.id === ESTADO_MEMORIA.NO_PROCEDE_EVALUAR
+      ? false
+      : this.estadoMemoria.id === 1 || this.estadoMemoria.id === 2
+      || this.estadoMemoria.id === 6 || this.estadoMemoria.id === 7;
   }
 
   /**
