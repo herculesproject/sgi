@@ -187,7 +187,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_TITULO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_CODIGO_EXTERNO_KEY,
@@ -197,12 +197,12 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_ACRONIMO_KEY,
@@ -217,73 +217,73 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_UNIDAD_GESTION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_MODELO_EJECUCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamModeloEjecucionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FINALIDAD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFinalidadEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamFinalidadEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamAmbitoGeograficoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamAmbitoGeograficoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_CONFIDENCIAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamConfidencialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamConfidencialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_PROYECTO_COLABORATIVO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamProyectoColaborativoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamProyectoColaborativoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_COORDINADOR_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCoordinadorExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamCoordinadorExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_TIMESHEET_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTimesheetEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTimesheetEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_PAQUETE_TRABAJO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPaqueteTrabajoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamPaqueteTrabajoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_CALCULO_COSTE_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamCalculoCosteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamCalculoCosteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       PROYECTO_HORAS_ANUALES_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamHorasAnualesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamHorasAnualesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       PROYECTO_CONTRATACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamContratacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamContratacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_FACTURACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFacturacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFacturacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
 
     this.translate.get(
       PROYECTO_IVA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamIvaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamIvaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
 

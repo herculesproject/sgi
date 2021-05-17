@@ -61,7 +61,7 @@ export class ActaAsistentesEditarModalComponent extends
     this.translate.get(
       ACTA_ASISTENTE_MOTIVO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamMotivoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamMotivoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.asistente.asistencia) {
       this.translate.get(

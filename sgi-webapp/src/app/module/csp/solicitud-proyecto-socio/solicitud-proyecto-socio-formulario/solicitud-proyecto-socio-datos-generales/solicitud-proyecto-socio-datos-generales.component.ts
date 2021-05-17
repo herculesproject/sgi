@@ -116,12 +116,12 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
     this.translate.get(
       SOLICITUD_PROYECTO_SOCIO_ROL_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamRolSocioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamRolSocioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_PROYECTO_SOCIO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamSocioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamSocioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_PROYECTO_SOCIO_KEY,

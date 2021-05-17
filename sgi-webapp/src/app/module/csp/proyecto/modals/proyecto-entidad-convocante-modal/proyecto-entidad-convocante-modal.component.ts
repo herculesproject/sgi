@@ -152,13 +152,16 @@ export class ProyectoEntidadConvocanteModalComponent extends
   }
 
   private setupI18N(): void {
+
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEntity = { entity: value });
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_PLAN_KEY
     ).subscribe((value) => this.msgParamPlanEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_PROGRAMA_KEY
     ).subscribe((value) => this.msgParamProgramaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });

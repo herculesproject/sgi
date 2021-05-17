@@ -70,7 +70,7 @@ export class EntidadFinanciadoraModalComponent extends
     this.translate.get(
       ENTIDAD_FINANCIADORA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEmpresaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamEmpresaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY,

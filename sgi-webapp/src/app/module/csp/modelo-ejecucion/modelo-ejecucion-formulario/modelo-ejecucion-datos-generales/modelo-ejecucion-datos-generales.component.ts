@@ -54,7 +54,7 @@ export class ModeloEjecucionDatosGeneralesComponent extends FormFragmentComponen
     this.translate.get(
       MODELO_EJECUCION_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
 }

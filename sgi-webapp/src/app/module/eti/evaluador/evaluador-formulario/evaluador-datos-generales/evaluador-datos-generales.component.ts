@@ -59,12 +59,12 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
   }
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly comiteService: ComiteService,
-    private readonly cargoComiteService: CargoComiteService,
-    private readonly snackBarService: SnackBarService,
+    private logger: NGXLogger,
+    private comiteService: ComiteService,
+    private cargoComiteService: CargoComiteService,
+    private snackBarService: SnackBarService,
     actionService: EvaluadorActionService,
-    private readonly translate: TranslateService
+    private translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.datosGeneralesFragment = this.fragment as EvaluadorDatosGeneralesFragment;
@@ -100,17 +100,17 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
     this.translate.get(
       EVALUDADOR_COMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       EVALUADOR_CARGO_COMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCargoComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamCargoComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       EVALUADOR_FECHA_ALTA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaAltaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaAltaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       EVALUADOR_FECHA_BAJA_KEY,
@@ -124,8 +124,8 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
 
     this.translate.get(
       EVALUADOR_PERSONA_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   cargarSelectorComites() {

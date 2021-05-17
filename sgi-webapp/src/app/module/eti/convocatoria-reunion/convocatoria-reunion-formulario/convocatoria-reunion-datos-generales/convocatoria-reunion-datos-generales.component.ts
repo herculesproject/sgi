@@ -66,7 +66,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   msgParamConvocantesEntity = {};
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     private comiteService: ComiteService,
     private evaluadorService: EvaluadorService,
     private tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
@@ -74,7 +74,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     private personaService: PersonaService,
     private actionService: ConvocatoriaReunionActionService,
     private convocatoriaReunionService: ConvocatoriaReunionService,
-    private readonly translate: TranslateService
+    private translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formFragment = this.fragment as ConvocatoriaReunionDatosGeneralesFragment;
@@ -116,47 +116,47 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     this.translate.get(
       CONVOCATORIA_COMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamComiteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_FECHA_EVALUACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaEvaluacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaEvaluacionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_FECHA_LIMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaLimiteEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaLimiteEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_TIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_HORA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamHoraInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamHoraInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_MINUTO_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamMinutoInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamMinutoInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_ORDEN_DIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamOrdenDiaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamOrdenDiaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_LUGAR_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamLugarEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamLugarEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_CONVOCANTES_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamConvocantesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamConvocantesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   ngOnDestroy() {

@@ -63,7 +63,7 @@ export class ModeloEjecucionTipoUnidadGestionModalComponent extends
     this.translate.get(
       MODELO_EJECUCION_UNIDAD_GESTION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamUnidadGestionEntiy = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamUnidadGestionEntiy = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       MODELO_EJECUCION_UNIDAD_GESTION_KEY,

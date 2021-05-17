@@ -56,7 +56,7 @@ export class TipoHitoModalComponent extends
     this.translate.get(
       TIPO_HITO_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.tipoHito.nombre) {
       this.translate.get(

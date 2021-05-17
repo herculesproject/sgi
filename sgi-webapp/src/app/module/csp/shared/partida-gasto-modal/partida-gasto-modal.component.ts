@@ -179,7 +179,7 @@ export class PartidaGastoModalComponent extends
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_CONCEPTO_GASTO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParaConceptoGastoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParaConceptoGastoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES,
@@ -189,7 +189,7 @@ export class PartidaGastoModalComponent extends
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamImporteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamImporteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   protected getFormGroup(): FormGroup {

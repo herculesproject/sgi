@@ -67,14 +67,14 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
   }
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     public matDialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,
-    private readonly evaluadorService: EvaluadorService,
-    private readonly memoriaService: MemoriaService,
-    private readonly personaService: PersonaService,
-    protected readonly snackBarService: SnackBarService,
+    private evaluadorService: EvaluadorService,
+    private memoriaService: MemoriaService,
+    private personaService: PersonaService,
+    protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaReunionAsignacionMemoriasModalComponentData,
-    private readonly translate: TranslateService
+    private translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
 
@@ -110,17 +110,17 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
     this.translate.get(
       MEMORIA_EVALUADOR1_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEvaludador1Entity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamEvaludador1Entity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       MEMORIA_EVALUADOR2_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEvaludador2Entity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamEvaludador2Entity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       MEMORIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamMemoriaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamMemoriaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.data.evaluacion.memoria) {
       this.translate.get(

@@ -55,7 +55,7 @@ export class ConceptoGastoModalComponent extends
     this.translate.get(
       CONCEPTO_GASTO_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.conceptoGasto.nombre) {
       this.translate.get(

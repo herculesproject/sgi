@@ -167,7 +167,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     this.translate.get(
       CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_ENTIDAD_CONVOCANTE_PLAN_KEY,

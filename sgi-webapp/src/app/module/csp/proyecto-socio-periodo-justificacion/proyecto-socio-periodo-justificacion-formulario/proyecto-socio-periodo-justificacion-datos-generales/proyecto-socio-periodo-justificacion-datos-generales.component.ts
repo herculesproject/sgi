@@ -62,22 +62,22 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesComponent extends
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaFin = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaFin = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicio = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaInicio = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_FIN_PRESENTACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaFinPresentacion = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaFinPresentacion = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_INICIO_PRESENTACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicioPresentacion = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaInicioPresentacion = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY,

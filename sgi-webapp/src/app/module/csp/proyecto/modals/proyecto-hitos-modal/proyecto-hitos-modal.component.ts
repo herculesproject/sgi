@@ -94,7 +94,7 @@ export class ProyectoHitosModalComponent extends
     this.translate.get(
       PROYECTO_HITO_FECHA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamFechaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_HITO_COMENTARIO_KEY,
@@ -104,7 +104,7 @@ export class ProyectoHitosModalComponent extends
     this.translate.get(
       PROYECTO_HITO_TIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.data?.hito?.tipoHito) {
       this.translate.get(

@@ -158,12 +158,12 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FICHERO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFicheroEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamFicheroEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_COMENTARIO_KEY,

@@ -72,7 +72,7 @@ export class SolicitudProyectoSocioPeriodoPagoModalComponent extends
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_PAGO_MES_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamMesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamMesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_PAGO_IMPORTE_KEY,

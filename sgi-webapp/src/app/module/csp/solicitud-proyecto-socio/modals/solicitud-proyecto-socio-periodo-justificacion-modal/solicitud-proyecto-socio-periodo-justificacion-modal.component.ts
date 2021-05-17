@@ -72,12 +72,12 @@ export class SolicitudProyectoSocioPeriodoJustificacionModalComponent
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_MES_FINAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamMesFinalEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamMesFinalEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_MES_INICIAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamMesInicialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamMesInicialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY,

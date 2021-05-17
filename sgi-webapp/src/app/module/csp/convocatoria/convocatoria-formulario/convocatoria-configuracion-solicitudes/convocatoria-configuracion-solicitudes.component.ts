@@ -133,7 +133,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
     this.translate.get(
       CONVOCATORIA_CONFIGURACION_SOLICITUD_FASE_PRESENTACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFasePresentacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamFasePresentacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_CONFIGURACION_SOLICITUD_KEY,

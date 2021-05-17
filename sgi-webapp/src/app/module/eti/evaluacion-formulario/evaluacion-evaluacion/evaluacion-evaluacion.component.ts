@@ -97,7 +97,7 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     this.translate.get(
       EVALUACION_DICTAMEN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamDictamenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamDictamenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       EVALUACION_COMENTARIO_KEY,

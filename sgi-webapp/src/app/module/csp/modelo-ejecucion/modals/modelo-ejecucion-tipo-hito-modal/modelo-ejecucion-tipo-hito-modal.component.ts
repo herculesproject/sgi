@@ -88,12 +88,12 @@ export class ModeloEjecucionTipoHitoModalComponent extends
     this.translate.get(
       MODELO_EJECUCION_TIPO_HITO_PROYECTOS_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamProyectosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamProyectosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       MODELO_EJECUCION_TIPO_HITO_TIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTipoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   protected getDatosForm(): IModeloTipoHito {

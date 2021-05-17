@@ -51,7 +51,7 @@ export class TipoFinalidadModalComponent extends BaseModalComponent<ITipoFinalid
     this.translate.get(
       TIPO_FINALIDAD_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.tipoFinalidad.nombre) {
       this.translate.get(

@@ -168,7 +168,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     this.translate.get(
       SOLICITUD_CONVOCATORIA_EXTERNA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamConvocatoriaExternaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamConvocatoriaExternaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_OBSERVACIONES_KEY,
@@ -178,7 +178,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     this.translate.get(
       SOLICITUD_UNIDAD_GESTION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+    ).subscribe((value) => this.msgParamUnidadGestionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_ENTIDAD_CONVOCANTE_KEY,

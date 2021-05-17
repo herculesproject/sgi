@@ -81,7 +81,7 @@
             {{cargoComite.nombre}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.cargoComite.errors?.vacio">
+        <mat-error *ngIf="formGroup.controls.cargoComite.errors?.required">
           {{'error.required.entity' | translate:msgParamCargoComiteEntity}}
         </mat-error>
       </mat-form-field>

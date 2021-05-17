@@ -71,12 +71,12 @@ export class ConvocatoriaEnlaceModalComponent extends
     this.translate.get(
       CONVOCATORIA_ENLACE_URL_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamUrlEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamUrlEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       CONVOCATORIA_ENLACE_DESCRIPCION_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       CONVOCATORIA_ENLACE_TIPO_KEY,

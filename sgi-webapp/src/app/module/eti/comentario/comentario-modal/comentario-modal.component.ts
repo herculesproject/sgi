@@ -116,14 +116,14 @@ export class ComentarioModalComponent extends
   }
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly formularioService: FormularioService,
-    private readonly bloqueService: BloqueService,
-    private readonly apartadoService: ApartadoService,
-    protected readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ComentarioModalComponent>,
+    private logger: NGXLogger,
+    private formularioService: FormularioService,
+    private bloqueService: BloqueService,
+    private apartadoService: ApartadoService,
+    protected snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ComentarioModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ComentarioModalData,
-    private readonly translate: TranslateService
+    private translate: TranslateService
   ) {
     super(snackBarService, matDialogRef, data);
 
@@ -147,12 +147,12 @@ export class ComentarioModalComponent extends
     this.translate.get(
       COMENTARIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       COMENTARIO_BLOQUE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamBloqueEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamBloqueEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.data.comentario) {
       this.translate.get(

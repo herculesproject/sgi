@@ -129,7 +129,7 @@ export class ProyectoContextoModalComponent extends
           { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
-    ).subscribe((value) => this.msgParamListadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamListadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       AREA_TEMATICA_KEY,

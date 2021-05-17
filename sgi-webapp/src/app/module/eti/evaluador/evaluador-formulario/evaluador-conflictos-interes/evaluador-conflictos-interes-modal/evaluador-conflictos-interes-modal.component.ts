@@ -62,7 +62,7 @@ export class EvaluadorConflictosInteresModalComponent implements OnInit, OnDestr
     this.translate.get(
       EVALUADOR_PERSONA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamPersonaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
   /**
    * Inicializa el formGroup

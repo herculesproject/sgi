@@ -76,7 +76,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent
     this.translate.get(
       CONVOCATORIA_CONFIGURACION_SOLICITUD_TIPO_DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTipoDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.data?.documentoRequerido?.tipoDocumento) {
       this.translate.get(

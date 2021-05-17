@@ -64,7 +64,7 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
     this.translate.get(
       MODELO_EJECUCION_TIPO_ENLACE_TIPO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoEntiy = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTipoEntiy = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       MODELO_EJECUCION_TIPO_ENLACE,

@@ -102,7 +102,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodigoEconomigoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamCodigoEconomigoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_KEY,
