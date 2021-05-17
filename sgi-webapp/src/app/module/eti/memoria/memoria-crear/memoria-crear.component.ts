@@ -3,11 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { DialogService } from '@core/services/dialog.service';
+import { MemoriaService } from '@core/services/eti/memoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { MEMORIA_ROUTE_NAMES } from '../memoria-route-names';
 import { MemoriaActionService } from '../memoria.action.service';
 
@@ -15,6 +18,7 @@ const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_SUCCESS = marker('msg.save.entity.success');
 const MSG_ERROR = marker('error.save.entity');
 const MEMORIA_KEY = marker('eti.memoria');
+const MEMORIA_PROXIMA_EVALUACION_KEY = marker('eti.memoria.proxima-evaluacion');
 
 @Component({
   selector: 'sgi-memoria-crear',
@@ -38,7 +42,8 @@ export class MemoriaCrearComponent extends ActionComponent implements OnInit {
     route: ActivatedRoute,
     public actionService: MemoriaActionService,
     dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly memoriaService: MemoriaService
   ) {
     super(router, route, actionService, dialogService);
     this.from = history.state.from;
@@ -77,17 +82,56 @@ export class MemoriaCrearComponent extends ActionComponent implements OnInit {
   }
 
   saveOrUpdate(): void {
-    this.actionService.saveOrUpdate().subscribe(
-      () => { },
-      (error) => {
-        this.logger.error(error);
-        this.snackBarService.showError(this.textoActualizarError);
-      },
-      () => {
-        this.snackBarService.showSuccess(this.textoActualizarSuccess);
-        this.router.navigateByUrl(this.from);
-      }
-    );
+    const idComite = this.actionService.getComite()?.id;
+    if (idComite) {
+      this.memoriaService.findConvocatoriaReunionProxima(idComite).pipe(
+        switchMap((convocatoriaReunion: IConvocatoriaReunion) => {
+          return this.getTextoCrear(convocatoriaReunion)
+        }),
+      ).subscribe((value) => {
+        this.actionService.saveOrUpdate().subscribe(
+          () => { },
+          (error) => {
+            this.logger.error(error);
+            this.snackBarService.showError(this.textoActualizarError);
+          },
+          () => {
+            this.snackBarService.showSuccess(value);
+            this.router.navigateByUrl(this.from);
+          }
+        );
+      })
+    } else {
+      this.actionService.saveOrUpdate().subscribe(
+        () => { },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(this.textoActualizarError);
+        },
+        () => {
+          this.snackBarService.showSuccess(this.textoActualizarSuccess);
+          this.router.navigateByUrl(this.from);
+        }
+      );
+    }
+  }
+
+  private getTextoCrear(convocatoriaReunion: IConvocatoriaReunion): Observable<string> {
+    if (convocatoriaReunion) {
+      return this.translate.get(
+        MEMORIA_PROXIMA_EVALUACION_KEY,
+        {
+          fechaEvaluacion: convocatoriaReunion.fechaEvaluacion.toFormat('D'),
+          fechaLimite: convocatoriaReunion.fechaLimite.toFormat('D')
+        }
+      ).pipe(
+        map((value) => {
+          return this.textoActualizarSuccess + value;
+        })
+      );
+    } else {
+      return of(this.textoActualizarSuccess);
+    }
   }
 
   cancel(): void {

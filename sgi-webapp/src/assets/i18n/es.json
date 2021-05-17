@@ -846,6 +846,7 @@
   "eti.memoria.formulario": "Formulario",
   "eti.memoria.informe": "Informe",
   "eti.memoria.original": "Memoria original",
+  "eti.memoria.proxima-evaluacion": " .La próxima fecha de evaluación es {fechaEvaluacion} y la fecha límite {fechaLimite}",
   "eti.memoria.proyecto-titulo": "Título del proyecto",
   "eti.memoria.referencia": "Referencia Memoria",
   "eti.memoria.responsable": "Responsable memoria",

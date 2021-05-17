@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/convocatoria-reunion.converter';
 import { DOCUMENTACION_MEMORIA_CONVERTER } from '@core/converters/eti/documentacion-memoria.converter';
 import { EVALUACION_WITH_NUM_COMENTARIO_CONVERTER } from '@core/converters/eti/evaluacion-with-num-comentario.converter';
 import { EVALUACION_CONVERTER } from '@core/converters/eti/evaluacion.converter';
 import { INFORME_CONVERTER } from '@core/converters/eti/informe.converter';
 import { MEMORIA_PETICION_EVALUACION_CONVERTER } from '@core/converters/eti/memoria-peticion-evaluacion.converter';
 import { MEMORIA_CONVERTER } from '@core/converters/eti/memoria.converter';
+import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
 import { IDocumentacionMemoriaBackend } from '@core/models/eti/backend/documentacion-memoria-backend';
 import { IEvaluacionBackend } from '@core/models/eti/backend/evaluacion-backend';
 import { IEvaluacionWithNumComentarioBackend } from '@core/models/eti/backend/evaluacion-with-num-comentario-backend';
 import { IInformeBackend } from '@core/models/eti/backend/informe-backend';
 import { IMemoriaBackend } from '@core/models/eti/backend/memoria-backend';
 import { IMemoriaPeticionEvaluacionBackend } from '@core/models/eti/backend/memoria-peticion-evaluacion-backend';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentario';
@@ -366,6 +369,18 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
       this.converter.fromTarget(memoria)
     ).pipe(
       map(response => this.converter.toTarget(response))
+    );
+  }
+
+  /**
+   * Obtiene la convocatoria de reunión próxima con comité indicado
+   * @param idComite identificador del comite
+   */
+  findConvocatoriaReunionProxima(idComite: number): Observable<IConvocatoriaReunion> {
+    return this.http.get<IConvocatoriaReunionBackend>(
+      `${this.endpointUrl}/${idComite}/convocatoria-reunion/proxima`
+    ).pipe(
+      map(response => CONVOCATORIA_REUNION_CONVERTER.toTarget(response))
     );
   }
 
