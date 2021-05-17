@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
@@ -271,17 +272,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    *
    * @param idMemoria    Id de {@link Memoria}.
    * @param idEvaluacion Id de {@link Evaluacion}
+   * @param idTipoComentario Id de {@link TipoComentario}
    * @param pageable     la información de la paginación.
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @Override
-  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
       Pageable pageable) {
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - start");
     Assert.notNull(idMemoria, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
     Assert.notNull(idEvaluacion, "El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
     Page<EvaluacionWithNumComentario> returnValue = evaluacionRepository.findEvaluacionesAnterioresByMemoria(idMemoria,
-        idEvaluacion, pageable);
+        idEvaluacion, idTipoComentario, pageable);
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - end");
     return returnValue;
   }

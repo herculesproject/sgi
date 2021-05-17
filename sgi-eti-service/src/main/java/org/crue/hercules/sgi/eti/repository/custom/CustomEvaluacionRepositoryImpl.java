@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
+import org.crue.hercules.sgi.eti.model.TipoComentario_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -58,11 +59,12 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    *
    * @param idMemoria    id de la memoria.
    * @param idEvaluacion id de la evaluación.
+   * @param idTipoComentario id del tipo de comentario.
    * @param pageable     la información de la paginación.
    * @return la lista de entidades {@link EvaluacionWithNumComentario} paginadas
    *         y/o filtradas.
    */
-  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
       Pageable pageable) {
     log.debug("findEvaluacionesAnterioresByMemoria : {} - start");
 
@@ -79,7 +81,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Root<Evaluacion> rootCount = countQuery.from(Evaluacion.class);
     countQuery.select(cb.count(rootCount));
 
-    cq.multiselect(root.alias("evaluacion"), getNumComentarios(root, cb, cq).alias("numComentarios"));
+    cq.multiselect(root.alias("evaluacion"), getNumComentarios(root, cb, cq, idTipoComentario).alias("numComentarios"));
 
     cq.where(cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria),
         cb.notEqual(root.get(Evaluacion_.id), idEvaluacion), cb.isTrue(root.get(Evaluacion_.activo)));
@@ -419,14 +421,15 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   }
 
   private Subquery<Long> getNumComentarios(Root<Evaluacion> root, CriteriaBuilder cb,
-      CriteriaQuery<EvaluacionWithNumComentario> cq) {
+      CriteriaQuery<EvaluacionWithNumComentario> cq, Long idTipoComentario) {
 
     log.debug("getNumComentarios : {} - start");
 
     Subquery<Long> queryNumComentarios = cq.subquery(Long.class);
     Root<Comentario> subqRoot = queryNumComentarios.from(Comentario.class);
     queryNumComentarios.select(cb.count(subqRoot.get(Comentario_.id)))
-        .where(cb.equal(subqRoot.get(Comentario_.evaluacion).get(Evaluacion_.id), root.get(Evaluacion_.id)));
+        .where(cb.and(cb.equal(subqRoot.get(Comentario_.evaluacion).get(Evaluacion_.id), root.get(Evaluacion_.id)), 
+        cb.equal(subqRoot.get(Comentario_.tipoComentario).get(TipoComentario_.id), idTipoComentario)));
 
     log.debug("getNumComentarios : {} - end");
     return queryNumComentarios;

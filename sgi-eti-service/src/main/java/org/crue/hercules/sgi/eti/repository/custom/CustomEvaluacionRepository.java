@@ -19,12 +19,13 @@ public interface CustomEvaluacionRepository {
    *
    * @param idMemoria    id de la memoria.
    * @param idEvaluacion id de la evaluación.
+   * @param idTipoComentario id del tipo de comentario.
    * @param pageable     la información de la paginación.
    * 
    * @return la lista de entidades {@link EvaluacionWithNumComentario} paginadas
    *         y/o filtradas.
    */
-  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
       Pageable pageable);
 
   /**

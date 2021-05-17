@@ -430,18 +430,19 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Existe la memoria pero no tiene evaluaciones
     Long idMemoria = 3L;
     Long idEvaluacion = 1L;
+    Long idTipoComentario = 1L;
     final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append("/evaluaciones-anteriores").append("/{idEvaluacion}").toString();
+        .append("/evaluaciones-anteriores").append("/{idEvaluacion}").append("/{idTipoComentario}").toString();
 
     BDDMockito
         .given(evaluacionService.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
     mockMvc
         .perform(
-            MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion).with(SecurityMockMvcRequestPostProcessors.csrf()))
+            MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion, idTipoComentario).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -453,9 +454,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // given: Datos existentes con evaluacion
     Long idMemoria = 3L;
     Long idEvaluacion = 1L;
-
+    Long idTipoComentario = 1L;
     final String url = new StringBuffer(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append("/evaluaciones-anteriores").append("/{idEvaluacion}").toString();
+        .append("/evaluaciones-anteriores").append("/{idEvaluacion}").append("/{idTipoComentario}").toString();
 
     List<EvaluacionWithNumComentario> evaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -466,7 +467,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(evaluacionService.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+            ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<EvaluacionWithNumComentario>>() {
           @Override
           public Page<EvaluacionWithNumComentario> answer(InvocationOnMock invocation) throws Throwable {
@@ -480,7 +481,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         });
     // when: Se buscan todos las evaluaciones de esa memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion)
+        .perform(MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion, idTipoComentario)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recuperan todos las evaluaciones relacionadas

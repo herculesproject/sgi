@@ -275,15 +275,17 @@ public class MemoriaController {
    * determinada {@link Memoria} anterior al id de evaluación recibido.
    *
    * @param id       Id de {@link Memoria}.
+   * @param idEvaluacion Id de la {@link Evaluacion}.
+   * @param idTipoComentario Id del {@link TipoComentario}.
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
-  @GetMapping("/{id}/evaluaciones-anteriores/{idEvaluacion}")
+  @GetMapping("/{id}/evaluaciones-anteriores/{idEvaluacion}/{idTipoComentario}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<EvaluacionWithNumComentario>> getEvaluacionesAnteriores(@PathVariable Long id,
-      @PathVariable Long idEvaluacion, @RequestPageable(sort = "s") Pageable pageable) {
+      @PathVariable Long idEvaluacion, @PathVariable Long idTipoComentario, @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getEvaluaciones(Long id, Pageable pageable) - start");
-    Page<EvaluacionWithNumComentario> page = evaluacionService.findEvaluacionesAnterioresByMemoria(id, idEvaluacion,
+    Page<EvaluacionWithNumComentario> page = evaluacionService.findEvaluacionesAnterioresByMemoria(id, idEvaluacion, idTipoComentario,
         pageable);
 
     if (page.isEmpty()) {

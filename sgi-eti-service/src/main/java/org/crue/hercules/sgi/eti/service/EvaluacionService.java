@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -67,10 +68,11 @@ public interface EvaluacionService {
    *
    * @param idMemoria    Id de {@link Memoria}.
    * @param idEvaluacion Id de {@link Evaluacion}.
+   * @param idTipoComentario Id de {@link TipoComentario}.
    * @param pageable     la información de la paginación.
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
-  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion, Long idTipoComentario,
       Pageable pageable);
 
   /**
