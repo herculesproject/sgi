@@ -11,5 +11,6 @@ export const SOLICITUD_ROUTE_NAMES = {
   DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglose-presupuesto-entidades',
   DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_CONVOCATORIA: 'desglose-presupuesto-entidades-financiadoras-convocatoria',
   DESGLOSE_PRESUPUESTO_ENTIDADES_FINANCIADORAS_SOLICITUD: 'desglose-presupuesto-entidades-financiadoras-solicitud',
-  DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA: 'desglose-presupuesto-entidades-gestoras-convocatoria'
+  DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA: 'desglose-presupuesto-entidades-gestoras-convocatoria',
+  CLASIFICACIONES: 'clasificaciones'
 };

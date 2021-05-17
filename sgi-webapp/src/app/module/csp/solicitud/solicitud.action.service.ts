@@ -12,6 +12,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
+import { SolicitudProyectoClasificacionService } from '@core/services/csp/solicitud-proyecto-clasificacion.service';
 import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
@@ -20,6 +21,7 @@ import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
@@ -30,6 +32,7 @@ import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-do
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
 import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
 import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
+import { SolicitudProyectoClasificacionesFragment } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.fragment';
 import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.fragment';
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
 import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.fragment';
@@ -55,7 +58,8 @@ export class SolicitudActionService extends ActionService {
     SOCIOS: 'socios',
     ENTIDADES_FINANCIADORAS: 'entidadesFinanciadoras',
     DESGLOSE_PRESUPUESTO_GLOBAL: 'desglosePresupuestoGlobal',
-    DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades'
+    DESGLOSE_PRESUPUESTO_ENTIDADES: 'desglosePresupuestoEntidades',
+    CLASIFICACIONES: 'clasificaciones'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
@@ -68,6 +72,7 @@ export class SolicitudActionService extends ActionService {
   private entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
   private desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
   private desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
+  private clasificaciones: SolicitudProyectoClasificacionesFragment;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   readonly showHitos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -123,7 +128,9 @@ export class SolicitudActionService extends ActionService {
     solicitudProyectoEquipoService: SolicitudProyectoEquipoService,
     solicitudProyectoSocioService: SolicitudProyectoSocioService,
     solicitudEntidadFinanciadoraService: SolicitudProyectoEntidadFinanciadoraAjenaService,
-    solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService
+    solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
+    solicitudProyectoClasificacionService: SolicitudProyectoClasificacionService,
+    clasificacionService: ClasificacionService
   ) {
     super();
 
@@ -162,6 +169,8 @@ export class SolicitudActionService extends ActionService {
       solicitudProyectoPresupuestoService, empresaService, this.readonly);
     this.desglosePresupuestoEntidades = new SolicitudProyectoPresupuestoEntidadesFragment(this.data?.solicitud?.id,
       this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaService, this.readonly);
+    this.clasificaciones = new SolicitudProyectoClasificacionesFragment(this.data?.solicitud?.id, solicitudProyectoClasificacionService,
+      solicitudService, clasificacionService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     if (this.isEdit()) {
@@ -176,6 +185,7 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
+        this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
       }
 
       // Si se encuentra en estado borrador se debe comprobar si cumple las validacones para  hacer el cambio a "Presentada".

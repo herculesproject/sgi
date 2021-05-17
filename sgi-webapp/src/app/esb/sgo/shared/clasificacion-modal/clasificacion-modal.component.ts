@@ -25,6 +25,13 @@ export interface ClasificacionDataModal {
   tipoClasificacion?: TipoClasificacion;
 }
 
+interface ClasificacionListado {
+  clasificacion: IClasificacion;
+  niveles: IClasificacion[];
+  nivelesTexto: string;
+  nivelSeleccionado: IClasificacion;
+}
+
 class NodeClasificacion {
   disabled: boolean;
   parent: NodeClasificacion;
@@ -97,11 +104,11 @@ function sortByName(nodes: NodeClasificacion[]): NodeClasificacion[] {
   styleUrls: ['./clasificacion-modal.component.scss']
 })
 export class ClasificacionModalComponent
-  extends BaseModalComponent<IClasificacion[], ClasificacionModalComponent>
+  extends BaseModalComponent<ClasificacionListado[], ClasificacionModalComponent>
   implements OnInit {
 
   arbolesClasificaciones: Map<string, NodeClasificacion[]> = new Map();
-  readonly clasificaciones$: Observable<IClasificacion[]>;
+  readonly clasificaciones$ = new BehaviorSubject<IClasificacion[]>([]);
   clasificacionesTree$ = new BehaviorSubject<NodeClasificacion[]>([]);
   selectedClasificaciones = [] as IClasificacion[];
 
@@ -124,13 +131,15 @@ export class ClasificacionModalComponent
     private clasificacionService: ClasificacionService,
     protected readonly snackBarService: SnackBarService
   ) {
-    super(snackBarService, matDialogRef, data.selectedClasificaciones);
+    super(snackBarService, matDialogRef, null);
 
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<NodeClasificacion>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    this.clasificaciones$ = this.clasificacionService.findAllPadres(this.data.tipoClasificacion).pipe(
-      map(response => response.items)
+
+    this.subscriptions.push(
+      this.clasificacionService.findAllPadres(this.data.tipoClasificacion)
+        .subscribe(response => this.clasificaciones$.next(response.items))
     );
   }
 
@@ -161,8 +170,17 @@ export class ClasificacionModalComponent
     return formGroup;
   }
 
-  protected getDatosForm(): IClasificacion[] {
-    return this.selectedClasificaciones;
+  protected getDatosForm(): ClasificacionListado[] {
+    const selectedClasificacionesListado = this.selectedClasificaciones.map(clasificacion => {
+      const clasificacionListado: ClasificacionListado = {
+        clasificacion: undefined,
+        niveles: [clasificacion],
+        nivelesTexto: undefined,
+        nivelSeleccionado: clasificacion
+      };
+      return this.fillClasificacionListado(clasificacionListado);
+    });
+    return selectedClasificacionesListado;
   }
 
   /**
@@ -295,6 +313,32 @@ export class ClasificacionModalComponent
     }
 
     this.matTree.renderNodeChanges(nodes);
+  }
+
+  /**
+   * Rellena el objeto clasificacionListado con los niveles y la clasificacion.
+   *
+   * @param clasificacionListado un ClasificacionListado.
+   * @returns el ClasificacionListado relleno.
+   */
+  private fillClasificacionListado(clasificacionListado: ClasificacionListado): ClasificacionListado {
+    const lastLevel = clasificacionListado.niveles[clasificacionListado.niveles.length - 1];
+    if (!lastLevel.padreId) {
+      clasificacionListado.clasificacion = lastLevel;
+      clasificacionListado.nivelesTexto = clasificacionListado.niveles
+        .slice(1, clasificacionListado.niveles.length - 1)
+        .reverse()
+        .map(clasificacion => clasificacion.nombre).join(' - ');
+      return clasificacionListado;
+    }
+
+    let clasificacionPadre = this.treeControl.dataNodes.find(node => node.clasificacion.id === lastLevel.padreId)?.clasificacion;
+    if (!clasificacionPadre) {
+      clasificacionPadre = this.clasificaciones$.value.find(clasificacion => clasificacion.id === lastLevel.padreId);
+    }
+    clasificacionListado.niveles.push(clasificacionPadre);
+
+    return this.fillClasificacionListado(clasificacionListado);
   }
 
 }

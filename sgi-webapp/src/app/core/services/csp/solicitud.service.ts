@@ -4,6 +4,7 @@ import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitu
 import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
 import { SOLICITUD_HITO_CONVERTER } from '@core/converters/csp/solicitud-hito.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
+import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { SOLICITUD_PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-equipo.converter';
 import { SOLICITUD_PROYECTO_PRESUPUESTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-presupuesto.converter';
@@ -16,6 +17,7 @@ import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-d
 import { ISolicitudHitoBackend } from '@core/models/csp/backend/solicitud-hito-backend';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
+import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
 import { ISolicitudProyectoEquipoBackend } from '@core/models/csp/backend/solicitud-proyecto-equipo-backend';
 import { ISolicitudProyectoPresupuestoBackend } from '@core/models/csp/backend/solicitud-proyecto-presupuesto-backend';
@@ -26,6 +28,7 @@ import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { ISolicitudProyectoClasificacion } from '@core/models/csp/solicitud-proyecto-clasificacion';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
@@ -474,6 +477,22 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    */
   findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
     return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/investigador`, options, SOLICITUD_CONVERTER);
+  }
+
+  /**
+   * Recupera los ISolicitudProyectoClasificacion de la solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de ISolicitudProyectoClasificacion de la solicitud
+   */
+  findAllClasificacionesSolicitud(solicitudId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoClasificacion>> {
+    return this.find<ISolicitudProyectoClasificacionBackend, ISolicitudProyectoClasificacion>(
+      `${this.endpointUrl}/${solicitudId}/solicitud-proyecto-clasificaciones`,
+      options,
+      SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER
+    );
   }
 
 }

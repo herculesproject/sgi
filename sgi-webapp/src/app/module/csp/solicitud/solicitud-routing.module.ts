@@ -16,6 +16,7 @@ import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-d
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
+import { SolicitudProyectoClasificacionesComponent } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
@@ -146,7 +147,12 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES_GESTORAS_CONVOCATORIA,
         redirectTo: SOLICITUD_ROUTE_NAMES.DESGLOSE_PRESUPUESTO_ENTIDADES
-      }
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.CLASIFICACIONES,
+        component: SolicitudProyectoClasificacionesComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {

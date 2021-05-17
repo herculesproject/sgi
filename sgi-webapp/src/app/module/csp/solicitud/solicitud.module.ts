@@ -5,6 +5,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { CambioEstadoModalComponent } from './modals/cambio-estado-modal/cambio-estado-modal.component';
 import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
@@ -19,6 +20,7 @@ import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-d
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
+import { SolicitudProyectoClasificacionesComponent } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
@@ -47,6 +49,7 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudProyectoPresupuestoEntidadesComponent,
     SolicitudCrearProyectoModalComponent,
     CambioEstadoModalComponent,
+    SolicitudProyectoClasificacionesComponent
   ],
   imports: [
     CommonModule,
@@ -57,7 +60,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     TranslateModule,
     FormsModule,
     SgiAuthModule,
-    CspSharedModule
+    CspSharedModule,
+    SgoSharedModule
   ],
   providers: [
     SolicitudDataResolver
