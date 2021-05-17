@@ -298,7 +298,7 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
    * {@link ProyectoDocumento}
    *
    * @param proyectoId Id del {@link Proyecto}.
-   * @return
+   * @return si existe o no el proyecto
    */
   @Override
   public boolean existsByProyecto(Long proyectoId) {

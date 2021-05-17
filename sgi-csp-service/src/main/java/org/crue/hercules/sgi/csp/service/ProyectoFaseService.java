@@ -58,7 +58,7 @@ public interface ProyectoFaseService {
    * {@link ProyectoFase}
    *
    * @param proyectoId Id del {@link Proyecto}.
-   * @return
+   * @return si existe o no el proyecto
    */
   boolean existsByProyecto(Long proyectoId);
 

@@ -36,6 +36,7 @@ public class SolicitudSpecifications {
   /**
    * {@link Solicitud} en las que la persona es el solicitante.
    * 
+   * @param personaRef referencia de la persona
    * @return specification para obtener las {@link Solicitud} en las que la
    *         persona es el solicitante.
    */

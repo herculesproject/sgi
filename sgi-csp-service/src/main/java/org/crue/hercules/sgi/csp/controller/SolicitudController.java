@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
@@ -85,6 +87,9 @@ public class SolicitudController {
   /** SolicitudProyectoPresupuesto service */
   private final SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService;
 
+  /** SolicitudProyectoClasificacion service */
+  private final SolicitudProyectoClasificacionService solicitudProyectoClasificacionService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -98,6 +103,7 @@ public class SolicitudController {
    * @param solicitudProyectoEquipoService                   {@link SolicitudProyectoEquipoService}
    * @param solicitudProyectoEntidadFinanciadoraAjenaService {@link SolicitudProyectoEntidadFinanciadoraAjenaService}.
    * @param solicitudProyectoPresupuestoService              {@link SolicitudProyectoPresupuestoService}.
+   * @param solicitudProyectoClasificacionService            {@link SolicitudProyectoClasificacionService}.
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
@@ -105,7 +111,8 @@ public class SolicitudController {
       SolicitudProyectoSocioService solicitudProyectoSocioService,
       SolicitudProyectoEquipoService solicitudProyectoEquipoService,
       SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService,
-      SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService) {
+      SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService,
+      SolicitudProyectoClasificacionService solicitudProyectoClasificacionService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
@@ -116,6 +123,7 @@ public class SolicitudController {
     this.solicitudProyectoEquipoService = solicitudProyectoEquipoService;
     this.solicitudProyectoEntidadFinanciadoraAjenaService = solicitudProyectoEntidadFinanciadoraAjenaService;
     this.solicitudProyectoPresupuestoService = solicitudProyectoPresupuestoService;
+    this.solicitudProyectoClasificacionService = solicitudProyectoClasificacionService;
   }
 
   /**
@@ -867,4 +875,29 @@ public class SolicitudController {
     log.debug("findAllInvestigador(String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudProyectoClasificacion}
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitud-proyecto-clasificaciones")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
+  ResponseEntity<Page<SolicitudProyectoClasificacion>> findAllSolicitudProyectoClasificaciones(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudProyectoClasificaciones(Long id, String query, Pageable paging) - start");
+    Page<SolicitudProyectoClasificacion> page = solicitudProyectoClasificacionService.findAllBySolicitud(id, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudProyectoClasificaciones(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudProyectoClasificaciones(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }
