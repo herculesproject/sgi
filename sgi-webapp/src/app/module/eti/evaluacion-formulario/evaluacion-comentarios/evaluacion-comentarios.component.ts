@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ComentarioModalComponent, ComentarioModalData } from '../../comentario/comentario-modal/comentario-modal.component';
-import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario.action.service';
+import { EvaluacionFormularioActionService, Rol } from '../evaluacion-formulario.action.service';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
@@ -193,7 +193,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   }
 
   getTipoComentario(): Observable<TipoComentario> {
-    if (this.actionService.getGestion() === Gestion.GESTOR) {
+    if (this.actionService.getRol() === Rol.GESTOR) {
       this.tipoComentario$ = this.tipoComentarioService.findById(1);
     } else {
       this.tipoComentario$ = this.tipoComentarioService.findById(2);

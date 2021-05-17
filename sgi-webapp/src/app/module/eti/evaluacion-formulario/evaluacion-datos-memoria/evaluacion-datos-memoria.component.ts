@@ -26,7 +26,7 @@ export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemo
   }
 
   constructor(
-    private actionService: EvaluacionFormularioActionService
+    public actionService: EvaluacionFormularioActionService
   ) {
     super(actionService.FRAGMENT.MEMORIA, actionService);
 

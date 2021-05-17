@@ -103,7 +103,7 @@ export class ProyectoActionService extends ActionService {
   }
 
   get readonly(): boolean {
-    return this.data.readonly;
+    return this.data?.readonly;
   }
 
   constructor(
@@ -144,7 +144,7 @@ export class ProyectoActionService extends ActionService {
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(
       logger, fb, id, proyectoService, unidadGestionService,
-      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, this.data.readonly
+      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, this.data?.readonly
     );
 
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);

@@ -1,3 +1,8 @@
+export enum TIPO_COMENTARIO {
+  GESTOR = 1,
+  EVALUADOR = 2
+}
+
 export class TipoComentario {
   /** Id */
   id: number;

@@ -34,7 +34,7 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
   }
 
   constructor(
-    private actionService: SeguimientoFormularioActionService,
+    public actionService: SeguimientoFormularioActionService,
     private tipoEvaluacionService: TipoEvaluacionService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
@@ -54,6 +54,7 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
   }
 
   ngOnInit() {

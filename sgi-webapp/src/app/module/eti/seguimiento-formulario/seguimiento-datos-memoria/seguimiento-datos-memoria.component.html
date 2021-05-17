@@ -41,5 +41,6 @@
       </mat-form-field>
     </div>
   </form>
-  <sgi-seguimiento-listado-anterior-memoria #evaluaciones></sgi-seguimiento-listado-anterior-memoria>
+  <sgi-seguimiento-listado-anterior-memoria #evaluaciones [rol]="this.actionService.getRol()">
+  </sgi-seguimiento-listado-anterior-memoria>
 </section>

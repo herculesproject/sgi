@@ -46,7 +46,7 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
   }
 
   constructor(
-    private actionService: EvaluacionFormularioActionService,
+    public actionService: EvaluacionFormularioActionService,
     protected tipoEvaluacionService: TipoEvaluacionService,
     private readonly translate: TranslateService
   ) {

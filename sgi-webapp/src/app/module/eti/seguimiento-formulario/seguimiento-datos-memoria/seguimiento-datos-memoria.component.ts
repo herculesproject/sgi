@@ -19,7 +19,7 @@ export class SeguimientoDatosMemoriaComponent extends FormFragmentComponent<IMem
   @ViewChild('evaluaciones') evaluaciones: SeguimientoListadoAnteriorMemoriaComponent;
 
   constructor(
-    private actionService: SeguimientoFormularioActionService
+    public actionService: SeguimientoFormularioActionService
   ) {
     super(actionService.FRAGMENT.MEMORIA, actionService);
     this.fxFlexProperties = new FxFlexProperties();
@@ -38,6 +38,7 @@ export class SeguimientoDatosMemoriaComponent extends FormFragmentComponent<IMem
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
   }
 
   ngAfterViewInit(): void {

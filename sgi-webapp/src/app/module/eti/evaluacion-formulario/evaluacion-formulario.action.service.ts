@@ -1,12 +1,13 @@
-import { ActionService } from '@core/services/action-service';
+import { IDictamen } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { TIPO_COMENTARIO } from '@core/models/eti/tipo-comentario';
+import { ActionService } from '@core/services/action-service';
 import { EvaluacionComentarioFragment } from '../evaluacion-formulario/evaluacion-comentarios/evaluacion-comentarios.fragment';
 import { EvaluacionDatosMemoriaFragment } from '../evaluacion-formulario/evaluacion-datos-memoria/evaluacion-datos-memoria.fragment';
 import { EvaluacionDocumentacionFragment } from '../evaluacion-formulario/evaluacion-documentacion/evaluacion-documentacion.fragment';
 import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion/evaluacion-evaluacion.fragment';
-import { IDictamen } from '@core/models/eti/dictamen';
 
-export enum Gestion { EVALUADOR, GESTOR }
+export enum Rol { EVALUADOR = TIPO_COMENTARIO.EVALUADOR, GESTOR = TIPO_COMENTARIO.GESTOR }
 
 export abstract class EvaluacionFormularioActionService extends ActionService {
 
@@ -32,5 +33,5 @@ export abstract class EvaluacionFormularioActionService extends ActionService {
     this.comentarios.setDictamen(dictamen);
   }
 
-  abstract getGestion(): Gestion;
+  abstract getRol(): Rol;
 }

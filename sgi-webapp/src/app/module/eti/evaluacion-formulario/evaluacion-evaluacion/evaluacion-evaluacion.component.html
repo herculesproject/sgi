@@ -80,5 +80,6 @@
       </mat-form-field>
     </div>
   </form>
-  <sgi-evaluacion-listado-anterior-memoria #evaluaciones></sgi-evaluacion-listado-anterior-memoria>
+  <sgi-evaluacion-listado-anterior-memoria #evaluaciones [rol]="this.actionService.getRol()">
+  </sgi-evaluacion-listado-anterior-memoria>
 </section>

@@ -7,7 +7,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { EvaluacionComentarioFragment } from '../evaluacion-formulario/evaluacion-comentarios/evaluacion-comentarios.fragment';
 import { EvaluacionDatosMemoriaFragment } from '../evaluacion-formulario/evaluacion-datos-memoria/evaluacion-datos-memoria.fragment';
 import { EvaluacionDocumentacionFragment } from '../evaluacion-formulario/evaluacion-documentacion/evaluacion-documentacion.fragment';
-import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario/evaluacion-formulario.action.service';
+import { EvaluacionFormularioActionService, Rol } from '../evaluacion-formulario/evaluacion-formulario.action.service';
 
 
 @Injectable()
@@ -25,7 +25,7 @@ export class EvaluacionEvaluadorActionService extends EvaluacionFormularioAction
       this.evaluacion = route.snapshot.data.evaluacion;
       this.enableEdit();
     }
-    this.comentarios = new EvaluacionComentarioFragment(this.evaluacion?.id, Gestion.EVALUADOR, service);
+    this.comentarios = new EvaluacionComentarioFragment(this.evaluacion?.id, Rol.EVALUADOR, service);
     this.datosMemoria = new EvaluacionDatosMemoriaFragment(fb, this.evaluacion?.id, service, personaService);
     this.documentacion = new EvaluacionDocumentacionFragment(this.evaluacion?.id);
 
@@ -38,8 +38,8 @@ export class EvaluacionEvaluadorActionService extends EvaluacionFormularioAction
     return this.evaluacion;
   }
 
-  getGestion(): Gestion {
-    return Gestion.EVALUADOR;
+  getRol(): Rol {
+    return Rol.EVALUADOR;
   }
 
 }

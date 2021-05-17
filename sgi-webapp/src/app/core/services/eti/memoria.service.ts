@@ -73,10 +73,10 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
    * @param memoriaId id de la memoria.
    * @param evaluacionId id de la evaluacion.
    */
-  getEvaluacionesAnteriores(memoriaId: number, evaluacionId: number, options?: SgiRestFindOptions)
+  getEvaluacionesAnteriores(memoriaId: number, evaluacionId: number, tipoComentarioId: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IEvaluacionWithNumComentario>> {
     return this.find<IEvaluacionWithNumComentarioBackend, IEvaluacionWithNumComentario>(
-      `${this.endpointUrl}/${memoriaId}/evaluaciones-anteriores/${evaluacionId}`,
+      `${this.endpointUrl}/${memoriaId}/evaluaciones-anteriores/${evaluacionId}/${tipoComentarioId}`,
       options,
       EVALUACION_WITH_NUM_COMENTARIO_CONVERTER
     );

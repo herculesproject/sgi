@@ -23,8 +23,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
-        <input matInput formControlName="referenciaMemoria"
-          placeholder="{{'eti.memoria.referencia' | translate}}">
+        <input matInput formControlName="referenciaMemoria" placeholder="{{'eti.memoria.referencia' | translate}}">
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -43,5 +42,6 @@
       </mat-form-field>
     </div>
   </form>
-  <sgi-evaluacion-listado-anterior-memoria #evaluaciones></sgi-evaluacion-listado-anterior-memoria>
+  <sgi-evaluacion-listado-anterior-memoria #evaluaciones [rol]="this.actionService.getRol()">
+  </sgi-evaluacion-listado-anterior-memoria>
 </section>

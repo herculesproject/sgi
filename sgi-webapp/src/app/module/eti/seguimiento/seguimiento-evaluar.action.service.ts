@@ -8,7 +8,7 @@ import { NGXLogger } from 'ngx-logger';
 import { SeguimientoComentarioFragment } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.fragment';
 import { SeguimientoDatosMemoriaFragment } from '../seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.fragment';
 import { SeguimientoDocumentacionFragment } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
-import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario/seguimiento-formulario.action.service';
+import { Rol, SeguimientoFormularioActionService } from '../seguimiento-formulario/seguimiento-formulario.action.service';
 
 
 @Injectable()
@@ -27,7 +27,7 @@ export class SeguimientoEvaluarActionService extends SeguimientoFormularioAction
       this.evaluacion = route.snapshot.data.evaluacion;
       this.enableEdit();
     }
-    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Gestion.EVALUADOR, service);
+    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Rol.EVALUADOR, service);
     this.datosMemoria = new SeguimientoDatosMemoriaFragment(this.logger, fb, this.evaluacion?.id, service, personaService);
     this.documentacion = new SeguimientoDocumentacionFragment(this.evaluacion?.id);
 
@@ -40,7 +40,7 @@ export class SeguimientoEvaluarActionService extends SeguimientoFormularioAction
     return this.evaluacion;
   }
 
-  getGestion(): Gestion {
-    return Gestion.EVALUADOR;
+  getRol(): Rol {
+    return Rol.EVALUADOR;
   }
 }

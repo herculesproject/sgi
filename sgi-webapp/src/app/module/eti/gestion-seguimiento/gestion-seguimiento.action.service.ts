@@ -8,7 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { SeguimientoComentarioFragment } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.fragment';
 import { SeguimientoDocumentacionFragment } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
 import { SeguimientoEvaluacionFragment } from '../seguimiento-formulario/seguimiento-evaluacion/seguimiento-evaluacion.fragment';
-import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario/seguimiento-formulario.action.service';
+import { Rol, SeguimientoFormularioActionService } from '../seguimiento-formulario/seguimiento-formulario.action.service';
 
 @Injectable()
 export class GestionSeguimientoActionService extends SeguimientoFormularioActionService {
@@ -28,7 +28,7 @@ export class GestionSeguimientoActionService extends SeguimientoFormularioAction
     }
     this.evaluaciones = new SeguimientoEvaluacionFragment(
       fb, this.evaluacion?.id, snackBarService, service, personaService);
-    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Gestion.GESTOR, service);
+    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Rol.GESTOR, service);
     this.documentacion = new SeguimientoDocumentacionFragment(this.evaluacion?.id);
 
     this.addFragment(this.FRAGMENT.COMENTARIOS, this.comentarios);
@@ -43,7 +43,7 @@ export class GestionSeguimientoActionService extends SeguimientoFormularioAction
     return this.evaluacion;
   }
 
-  getGestion(): Gestion {
-    return Gestion.GESTOR;
+  getRol(): Rol {
+    return Rol.GESTOR;
   }
 }

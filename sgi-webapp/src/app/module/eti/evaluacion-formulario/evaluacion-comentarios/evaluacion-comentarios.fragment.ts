@@ -5,7 +5,7 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { endWith, map, mergeMap, takeLast, tap } from 'rxjs/operators';
-import { Gestion } from '../evaluacion-formulario.action.service';
+import { Rol } from '../evaluacion-formulario.action.service';
 
 export class EvaluacionComentarioFragment extends Fragment {
 
@@ -16,7 +16,7 @@ export class EvaluacionComentarioFragment extends Fragment {
 
   constructor(
     key: number,
-    private rol: Gestion,
+    private rol: Rol,
     private service: EvaluacionService) {
     super(key);
   }
@@ -24,7 +24,7 @@ export class EvaluacionComentarioFragment extends Fragment {
   protected onInitialize(): void {
     if (this.getKey()) {
       // Se muestran el listado de los comentarios del GESTOR
-      if (this.rol === Gestion.GESTOR) {
+      if (this.rol === Rol.GESTOR) {
         this.service.getComentariosGestor(this.getKey() as number).pipe(
           map((response) => {
             if (response.items) {
@@ -57,7 +57,7 @@ export class EvaluacionComentarioFragment extends Fragment {
   }
 
   saveOrUpdate(): Observable<void> {
-    if (this.rol === Gestion.GESTOR) {
+    if (this.rol === Rol.GESTOR) {
       return merge(
         this.deleteComentarioGestor(),
         this.updateComentarioGestor(),
