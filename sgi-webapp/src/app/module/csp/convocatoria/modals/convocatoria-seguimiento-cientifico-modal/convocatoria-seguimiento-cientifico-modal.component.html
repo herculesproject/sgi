@@ -20,9 +20,25 @@
       </mat-form-field>
     </div>
 
+    <!-- Tipo de Seguimiento-->
+    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <mat-form-field>
+        <mat-label>{{'csp.convocatoria-seguimiento-cientifico.tipo-seguimiento' | translate}}</mat-label>
+        <sgi-select-enum formControlName="tipoSeguimiento" required [enumMap]="TIPO_SEGUIMIENTO_MAP"></sgi-select-enum>
+        <mat-error *ngIf="formGroup.controls.tipoSeguimiento.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamTipoSeguimiento }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.tipoSeguimiento.errors?.notAllowed">
+          {{'error.csp.convocatoria-seguimiento-cientifico.tipoSeguimiento.duplicate' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <div class="fieldset-form">
       {{'label.csp.convocatoria-seguimiento-cientifico.periodo-justificar' | translate}}
     </div>
+
     <!-- Mes desde -->
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap">

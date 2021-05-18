@@ -1,3 +1,4 @@
+import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
 import { DateTime } from 'luxon';
 
 export interface IProyectoPeriodoSeguimiento {
@@ -8,5 +9,6 @@ export interface IProyectoPeriodoSeguimiento {
   fechaFin: DateTime;
   fechaInicioPresentacion: DateTime;
   fechaFinPresentacion: DateTime;
+  tipoSeguimiento: TipoSeguimiento;
   observaciones: string;
 }

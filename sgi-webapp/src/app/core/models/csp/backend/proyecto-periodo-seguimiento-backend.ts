@@ -1,3 +1,5 @@
+import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+
 export interface IProyectoPeriodoSeguimientoBackend {
   id: number;
   proyectoId: number;
@@ -6,5 +8,6 @@ export interface IProyectoPeriodoSeguimientoBackend {
   fechaFin: string;
   fechaInicioPresentacion: string;
   fechaFinPresentacion: string;
+  tipoSeguimiento: TipoSeguimiento;
   observaciones: string;
 }

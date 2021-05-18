@@ -17,6 +17,7 @@ class ConvocatoriaSeguimientoCientificoConverter extends
       mesFinal: value.mesFinal,
       fechaInicioPresentacion: LuxonUtils.fromBackend(value.fechaInicioPresentacion),
       fechaFinPresentacion: LuxonUtils.fromBackend(value.fechaFinPresentacion),
+      tipoSeguimiento: value.tipoSeguimiento,
       observaciones: value.observaciones,
       convocatoriaId: value.convocatoriaId
     };
@@ -33,6 +34,7 @@ class ConvocatoriaSeguimientoCientificoConverter extends
       mesFinal: value.mesFinal,
       fechaInicioPresentacion: LuxonUtils.toBackend(value.fechaInicioPresentacion),
       fechaFinPresentacion: LuxonUtils.toBackend(value.fechaFinPresentacion),
+      tipoSeguimiento: value.tipoSeguimiento,
       observaciones: value.observaciones,
       convocatoriaId: value.convocatoriaId
     };

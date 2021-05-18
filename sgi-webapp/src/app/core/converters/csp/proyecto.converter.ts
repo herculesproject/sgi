@@ -42,7 +42,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       anualidades: value.anualidades,
       unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones,
-      comentario: value.estado.comentario
+      comentario: value.estado.comentario,
+      tipoSeguimiento: value.tipoSeguimiento
     };
   }
 
@@ -80,7 +81,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       finalista: value.finalista,
       limitativo: value.limitativo,
       anualidades: value.anualidades,
-      activo: value.activo
+      activo: value.activo,
+      tipoSeguimiento: value.tipoSeguimiento
     };
   }
 }

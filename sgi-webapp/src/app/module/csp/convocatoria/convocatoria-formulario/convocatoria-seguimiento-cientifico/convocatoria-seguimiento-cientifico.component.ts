@@ -5,9 +5,11 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { TipoSeguimiento, TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -28,7 +30,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
   formPart: ConvocatoriaSeguimientoCientificoFragment;
   private subscriptions: Subscription[] = [];
 
-  columnas = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
+  columnas = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'tipoSeguimiento', 'observaciones', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
 
   msgParamEntity = {};
@@ -37,6 +39,10 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
   dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  get TIPO_SEGUIMIENTO_MAP() {
+    return TIPO_SEGUIMIENTO_MAP;
+  }
 
   constructor(
     protected actionService: ConvocatoriaActionService,
@@ -65,6 +71,8 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
             return wrapper.value.fechaInicioPresentacion;
           case 'fechaFin':
             return wrapper.value.fechaFinPresentacion;
+          case 'tipoSeguimiento':
+            return wrapper.value.tipoSeguimiento;
           default:
             return wrapper[property];
         }
@@ -113,7 +121,6 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
       panelClass: 'sgi-dialog-container',
       data: modalData,
     };
-
     const dialogRef = this.matDialog.open(ConvocatoriaSeguimientoCientificoModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (periodoJustificacionModal: IConvocatoriaPeriodoSeguimientoCientifico) => {
@@ -127,7 +134,6 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
           seguimientoCientificoActualizar.setEdited();
           this.formPart.setChanges(true);
         }
-
         this.recalcularNumPeriodos();
       }
     );

@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
 import { DateTime } from 'luxon';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IEstadoProyecto } from './estado-proyecto';
@@ -69,6 +70,8 @@ export interface IProyecto {
   anualidades: boolean;
   /** activo  */
   activo: boolean;
+  /**Tipo de Seguimiento */
+  tipoSeguimiento: TipoSeguimiento;
 }
 
 export enum TipoHorasAnuales {

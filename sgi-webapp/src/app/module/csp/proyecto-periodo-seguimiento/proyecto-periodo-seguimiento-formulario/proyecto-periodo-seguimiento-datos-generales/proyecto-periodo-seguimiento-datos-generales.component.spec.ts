@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Data } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -28,6 +29,9 @@ describe('ProyectoPeriodoSeguimientoDatosGeneralesComponent', () => {
           id: 1
         }
       },
+      proyectoPeriodosSeguimiento: [{
+        id: 1
+      } as IProyectoPeriodoSeguimiento] as IProyectoPeriodoSeguimiento[],
       readonly: false
     } as IProyectoPeriodoSeguimientoData
   };

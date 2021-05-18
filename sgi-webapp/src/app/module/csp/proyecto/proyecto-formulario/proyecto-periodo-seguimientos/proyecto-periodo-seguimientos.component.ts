@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
+import { TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -36,7 +37,7 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns = ['numPeriodo', 'fechaInicio', 'fechaFin', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'observaciones', 'acciones'];
+  displayedColumns = ['numPeriodo', 'fechaInicio', 'fechaFin', 'fechaInicioPresentacion', 'fechaFinPresentacion', 'tipoSeguimiento', 'observaciones', 'acciones'];
 
   msgParamEntity = {};
   textoDelete: string;
@@ -44,6 +45,10 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoPeriodoSeguimiento>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  get TIPO_SEGUIMIENTO_MAP() {
+    return TIPO_SEGUIMIENTO_MAP;
+  }
 
   constructor(
     public actionService: ProyectoActionService,

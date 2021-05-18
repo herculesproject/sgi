@@ -17,6 +17,7 @@ class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeri
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       fechaInicioPresentacion: LuxonUtils.fromBackend(value.fechaInicioPresentacion),
       fechaFinPresentacion: LuxonUtils.fromBackend(value.fechaFinPresentacion),
+      tipoSeguimiento: value.tipoSeguimiento,
       observaciones: value.observaciones
     };
   }
@@ -33,6 +34,7 @@ class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeri
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       fechaInicioPresentacion: LuxonUtils.toBackend(value.fechaInicioPresentacion),
       fechaFinPresentacion: LuxonUtils.toBackend(value.fechaFinPresentacion),
+      tipoSeguimiento: value.tipoSeguimiento,
       observaciones: value.observaciones
     };
   }

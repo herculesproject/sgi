@@ -49,6 +49,15 @@
       <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaFinPresentacion | luxon:'short'}} </td>
     </ng-container>
 
+    <!-- tipoSeguimiento Column -->
+    <ng-container matColumnDef="tipoSeguimiento">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.proyecto-periodo-seguimiento-cientifico.tipo-seguimiento' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let wrapper"> {{TIPO_SEGUIMIENTO_MAP.get(wrapper.value.tipoSeguimiento) | translate }}
+      </td>
+    </ng-container>
+
     <!-- Observaciones Column -->
     <ng-container matColumnDef="observaciones">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

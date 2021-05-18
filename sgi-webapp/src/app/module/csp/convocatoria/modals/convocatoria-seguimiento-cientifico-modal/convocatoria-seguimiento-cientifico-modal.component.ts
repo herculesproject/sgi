@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } fro
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
+import { TipoSeguimiento, TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -12,6 +13,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
 import { RangeValidator } from '@core/validators/range-validator';
+import { StringValidator } from '@core/validators/string-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 
@@ -28,6 +30,7 @@ const CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.convocatoria
 const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_MES_FIN_KEY = marker('csp.convocatoria-seguimiento-cientifico.mes-final');
 const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_MES_INICIO_KEY = marker('csp.convocatoria-seguimiento-cientifico.mes-inicial');
 const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_NUMERO_PERIODO_KEY = marker('csp.convocatoria-seguimiento-cientifico.numero-periodo');
+const CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_TIPO_SEGUIMIENTO_KEY = marker('csp.convocatoria-seguimiento-cientifico.tipo-seguimiento');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -46,7 +49,12 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
   msgParamNumeroPeriodoEntity = {};
   msgParamMesFinEntity = {};
   msgParamMesInicioEntity = {};
+  msgParamTipoSeguimiento = {};
   msgParamObservacionesEntity = {};
+
+  get TIPO_SEGUIMIENTO_MAP() {
+    return TIPO_SEGUIMIENTO_MAP;
+  }
 
   constructor(
     protected snackBarService: SnackBarService,
@@ -60,6 +68,7 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
   }
 
   ngOnInit(): void {
@@ -88,6 +97,11 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
       CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_MES_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamMesInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONVOCATORIA_SEGUIMIENTO_CIENTIFICO_TIPO_SEGUIMIENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoSeguimiento = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     if (this.data.convocatoriaSeguimientoCientifico?.numPeriodo) {
       this.translate.get(
@@ -119,6 +133,10 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
         };
       });
 
+    const periodoSeguimientoFinal = this.data.convocatoriaSeguimientoCientificoList
+      .find(periodoSeguimiento => periodoSeguimiento.value.tipoSeguimiento === TipoSeguimiento.FINAL
+        && periodoSeguimiento.value.mesInicial !== this.data.convocatoriaSeguimientoCientifico.mesInicial);
+
     const ultimoseguimientoCientificoNoFinal = this.data.convocatoriaSeguimientoCientificoList
       .filter(seguimientoCientifico => seguimientoCientifico.value.mesInicial !== this.data.convocatoriaSeguimientoCientifico.mesInicial)
       .sort((a, b) => (b.value.mesInicial > a.value.mesInicial) ? 1 : ((a.value.mesInicial > b.value.mesInicial) ? -1 : 0)).find(c => true);
@@ -132,6 +150,7 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
       hastaMes: new FormControl(this.data.convocatoriaSeguimientoCientifico?.mesFinal, [Validators.required, Validators.min(2)]),
       fechaInicio: new FormControl(this.data.convocatoriaSeguimientoCientifico?.fechaInicioPresentacion, []),
       fechaFin: new FormControl(this.data.convocatoriaSeguimientoCientifico?.fechaFinPresentacion, []),
+      tipoSeguimiento: new FormControl(this.data.convocatoriaSeguimientoCientifico?.tipoSeguimiento, [Validators.required]),
       observaciones: new FormControl(this.data.convocatoriaSeguimientoCientifico?.observaciones, [Validators.maxLength(2000)])
     }, {
       validators: [
@@ -152,6 +171,19 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
         formGroup.get('hastaMes').validator
       ]);
     }
+
+    // Si ya existe un periodo final tiene que ser el ultimo y solo puede haber uno
+    if (periodoSeguimientoFinal) {
+      formGroup.get('tipoSeguimiento').setValidators([
+        StringValidator.notIn([TipoSeguimiento.FINAL]),
+        formGroup.get('tipoSeguimiento').validator
+      ]);
+      formGroup.get('desdeMes').setValidators([
+        Validators.max(periodoSeguimientoFinal.value.mesInicial),
+        formGroup.get('desdeMes').validator
+      ]);
+    }
+
     return formGroup;
   }
 
@@ -162,7 +194,9 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     convocatoriaSeguimientoCientifico.mesFinal = this.formGroup.get('hastaMes').value;
     convocatoriaSeguimientoCientifico.fechaInicioPresentacion = this.formGroup.get('fechaInicio').value;
     convocatoriaSeguimientoCientifico.fechaFinPresentacion = this.formGroup.get('fechaFin').value;
+    convocatoriaSeguimientoCientifico.tipoSeguimiento = this.formGroup.get('tipoSeguimiento').value;
     convocatoriaSeguimientoCientifico.observaciones = this.formGroup.get('observaciones').value;
+
     return convocatoriaSeguimientoCientifico;
   }
 

@@ -1,4 +1,5 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
 import { TipoHorasAnuales } from '../proyecto';
 import { ITipoAmbitoGeografico } from '../tipo-ambito-geografico';
 import { IModeloEjecucion, ITipoFinalidad } from '../tipos-configuracion';
@@ -65,4 +66,6 @@ export interface IProyectoBackend {
   anualidades: boolean;
   /** activo  */
   activo: boolean;
+  /**Tipo de seguimiento */
+  tipoSeguimiento: TipoSeguimiento;
 }

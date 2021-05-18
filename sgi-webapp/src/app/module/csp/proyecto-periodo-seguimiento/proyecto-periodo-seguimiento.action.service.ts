@@ -35,10 +35,6 @@ export class ProyectoPeriodoSeguimientoActionService extends ActionService {
     return this.data.proyecto.modeloEjecucion.id;
   }
 
-  get proyectoPeriodoSeguimiento(): IProyectoPeriodoSeguimiento[] {
-    return this.data.proyectoPeriodosSeguimiento;
-  }
-
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
@@ -55,7 +51,7 @@ export class ProyectoPeriodoSeguimientoActionService extends ActionService {
     }
 
     this.datosGenerales = new ProyectoPeriodoSeguimientoDatosGeneralesFragment(
-      id, proyectoPeriodoSeguimientoService, this.data.proyecto, this.data.readonly);
+      id, proyectoPeriodoSeguimientoService, this.data.proyecto, this.data.proyectoPeriodosSeguimiento, this.data.readonly);
     this.documentos = new ProyectoPeriodoSeguimientoDocumentosFragment(
       logger, id, proyectoPeriodoSeguimientoService, periodoSeguimientoDocumentoService, documentoService, this.data.readonly);
 

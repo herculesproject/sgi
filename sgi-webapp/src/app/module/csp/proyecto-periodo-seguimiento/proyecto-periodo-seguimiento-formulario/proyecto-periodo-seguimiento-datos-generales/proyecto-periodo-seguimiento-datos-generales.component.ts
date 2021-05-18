@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
+import { TipoSeguimiento, TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -14,6 +15,7 @@ import { ProyectoPeriodoSeguimientoDatosGeneralesFragment } from './proyecto-per
 
 const PERIODO_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico.observaciones');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico');
+const PERIODO_SEGUIMIENTO_CIENTIFICO_TIPO_SEGUIMIENTO_KEY = marker('csp.proyecto-periodo-seguimiento-cientifico.tipo-seguimiento');
 
 @Component({
   selector: 'sgi-solicitud-proyecto-periodo-seguimiento-datos-generales',
@@ -31,6 +33,11 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
 
   msgParamEntity = {};
   msgParamObservacionesEntity = {};
+  msgParamTipoSeguimiento = {};
+
+  get TIPO_SEGUIMIENTO_MAP() {
+    return TIPO_SEGUIMIENTO_MAP;
+  }
 
   constructor(
     protected actionService: ProyectoPeriodoSeguimientoActionService,
@@ -63,8 +70,8 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
 
     this.subscriptions.push(
       merge(
-        this.formGroup.get('fechaInicio').valueChanges,
-        this.formGroup.get('fechaFin').valueChanges
+        this.formGroup.controls.fechaInicio.valueChanges,
+        this.formGroup.controls.fechaFin.valueChanges
       ).pipe(
         tap(() => this.checkOverlapsPeriodosSeguimiento())
       ).subscribe()
@@ -76,6 +83,11 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
       PERIODO_SEGUIMIENTO_CIENTIFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PERIODO_SEGUIMIENTO_CIENTIFICO_TIPO_SEGUIMIENTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoSeguimiento = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
       PERIODO_SEGUIMIENTO_CIENTIFICO_OBSERVACIONES_KEY,
@@ -95,7 +107,7 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
     const fechaInicio = fechaInicioForm.value ? fechaInicioForm.value.toMillis() : Number.MIN_VALUE;
     const fechaFin = fechaFinForm.value ? fechaFinForm.value.toMillis() : Number.MAX_VALUE;
 
-    const ranges = this.actionService.proyectoPeriodoSeguimiento
+    const ranges = this.formPart.proyectoPeriodosSeguimiento
       .map(periodo => {
         return {
           inicio: periodo.fechaInicio ? periodo.fechaInicio.toMillis() : Number.MIN_VALUE,
