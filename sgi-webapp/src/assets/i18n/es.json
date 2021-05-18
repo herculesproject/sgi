@@ -1076,6 +1076,7 @@
   "sgo.clasificacion": "Clasificaci{count,plural,=0{} one{ón} other{ones}}",
   "sgp.apellidos": "Apellidos",
   "sgp.datos-persona": "Introduzca nombre, apellidos o número del documento de identificación personal",
+  "sgp.entidad-externa": "Entidad externa",
   "sgp.nombre": "Nombre",
   "sgp.numero-documento": "Nº Documento",
   "sgp.persona": "Persona{count,plural,=0{} one{} other{s}}",

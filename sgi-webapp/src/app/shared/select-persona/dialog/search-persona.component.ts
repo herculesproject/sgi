@@ -6,12 +6,13 @@ import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 const MSG_LISTADO_ERROR = marker('error.load');
 
@@ -28,7 +29,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
 
   formGroup: FormGroup;
 
-  displayedColumns = ['nombre', 'apellidos', 'numeroDocumento', 'acciones'];
+  displayedColumns = ['nombre', 'apellidos', 'numeroDocumento', 'entidad', 'acciones'];
   elementosPagina = [5, 10, 25, 100];
   totalElementos = 0;
 
@@ -42,6 +43,7 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
     public dialogRef: MatDialogRef<SearchPersonaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SearchPersonaModalData,
     private personaService: PersonaService,
+    private empresaService: EmpresaService,
     private snackBarService: SnackBarService
   ) {
   }
@@ -80,6 +82,24 @@ export class SearchPersonaModalComponent implements OnInit, AfterViewInit {
         }
       )
       .pipe(
+        switchMap(response => {
+          const requestsEmpresa: Observable<IPersona>[] = [];
+          response.items.forEach(persona => {
+            if (persona.entidad) {
+              requestsEmpresa.push(this.empresaService.findById(persona.entidad.id).pipe(
+                map(empresa => {
+                  persona.entidad = empresa;
+                  return persona;
+                })
+              ));
+            } else {
+              requestsEmpresa.push(of(persona));
+            }
+          });
+          return of(response).pipe(
+            tap(() => merge(...requestsEmpresa).subscribe())
+          );
+        }),
         map((response) => {
           // Map response total
           this.totalElementos = response.total;
