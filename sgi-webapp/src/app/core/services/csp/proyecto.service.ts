@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ESTADO_PROYECTO_CONVERTER } from '@core/converters/csp/estado-proyecto.converter';
+import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-clasificacion.converter';
 import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
 import { PROYECTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-documento.converter';
 import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
@@ -16,6 +17,7 @@ import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.co
 import { PROYECTO_CONVERTER } from '@core/converters/csp/proyecto.converter';
 import { IEstadoProyectoBackend } from '@core/models/csp/backend/estado-proyecto-backend';
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
+import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
 import { IProyectoDocumentoBackend } from '@core/models/csp/backend/proyecto-documento-backend';
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
@@ -31,6 +33,7 @@ import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-b
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoClasificacion } from '@core/models/csp/proyecto-clasificacion';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
@@ -375,6 +378,22 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     const url = `${this.endpointUrl}/${id}/proyectohitos`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+   * Recupera los IProyectoClasificacion del proyecto
+   *
+   * @param proyectoId Id del proyecto
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IProyectoClasificacion del proyecto
+   */
+  findAllClasificacionesProyecto(proyectoId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoClasificacion>> {
+    return this.find<IProyectoClasificacionBackend, IProyectoClasificacion>(
+      `${this.endpointUrl}/${proyectoId}/proyecto-clasificaciones`,
+      options,
+      PROYECTO_CLASIFICACION_CONVERTER
     );
   }
 

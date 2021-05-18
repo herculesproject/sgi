@@ -3,10 +3,10 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ActionService } from '@core/services/action-service';
-import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
@@ -25,11 +25,13 @@ import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service'
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
+import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
 import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.fragment';
@@ -68,7 +70,8 @@ export class ProyectoActionService extends ActionService {
     EQUIPO_PROYECTO: 'equipo-proyecto',
     PRORROGAS: 'prorrogas',
     HISTORICO_ESTADOS: 'historico-estados',
-    DOCUMENTOS: 'documentos'
+    DOCUMENTOS: 'documentos',
+    CLASIFICACIONES: 'clasificaciones'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -85,6 +88,7 @@ export class ProyectoActionService extends ActionService {
   private documentos: ProyectoDocumentosFragment;
   private prorrogas: ProyectoProrrogasFragment;
   private historicoEstados: ProyectoHistoricoEstadosFragment;
+  private clasificaciones: ProyectoClasificacionesFragment;
 
   private readonly data: IProyectoData;
 
@@ -132,6 +136,8 @@ export class ProyectoActionService extends ActionService {
     proyectoDocumentoService: ProyectoDocumentoService,
     solicitudService: SolicitudService,
     proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
+    proyectoClasificacionService: ProyectoClasificacionService,
+    clasificacionService: ClasificacionService,
     translate: TranslateService,
   ) {
     super();
@@ -167,6 +173,8 @@ export class ProyectoActionService extends ActionService {
       this.documentos = new ProyectoDocumentosFragment(
         id, convocatoriaService, solicitudService, proyectoService, proyectoPeriodoSeguimientoService, proyectoSocioService,
         proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaService, translate);
+      this.clasificaciones = new ProyectoClasificacionesFragment(id, proyectoClasificacionService, proyectoService,
+        clasificacionService, this.readonly);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -181,6 +189,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.PRORROGAS, this.prorrogas);
       this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstados);
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
+      this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {

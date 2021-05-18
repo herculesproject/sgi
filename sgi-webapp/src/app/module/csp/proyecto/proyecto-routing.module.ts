@@ -9,6 +9,7 @@ import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
 import { ProyectoDataResolver, PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
+import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
 import { ProyectoDocumentosComponent } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.component';
@@ -155,6 +156,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS,
         component: ProyectoHistoricoEstadosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.CLASIFICACIONES,
+        component: ProyectoClasificacionesComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

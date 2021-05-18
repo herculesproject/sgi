@@ -12,5 +12,6 @@ export const PROYECTO_ROUTE_NAMES = {
   EQUIPO_PROYECTO: 'equipo-proyecto',
   PRORROGAS: 'prorrogas',
   HISTORICO_ESTADOS: 'historico-estados',
-  DOCUMENTOS: 'documentos'
+  DOCUMENTOS: 'documentos',
+  CLASIFICACIONES: 'clasificaciones'
 };

@@ -10,6 +10,10 @@
         [route]="[PROYECTO_ROUTE_NAMES.CONTEXTO_PROYECTO]" [title]="'csp.proyecto-contexto' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CONTEXTO_PROYECTO)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.CLASIFICACIONES]"
+        [title]="'csp.proyecto-clasificacion'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.CLASIFICACIONES)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E']"
         [route]="[PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS]"
         [title]="'menu.csp.proyectos.datos-generales.historicos-estados' | translate"

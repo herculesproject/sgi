@@ -5,6 +5,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { ProyectoContextoModalComponent } from './modals/proyecto-contexto-modal/proyecto-contexto-modal.component';
 import { ProyectoEntidadConvocanteModalComponent } from './modals/proyecto-entidad-convocante-modal/proyecto-entidad-convocante-modal.component';
@@ -15,6 +16,7 @@ import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-conv
 import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
 import { ProyectoDataResolver } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
+import { ProyectoClasificacionesComponent } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.component';
 import { ProyectoContextoComponent } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.component';
 import { ProyectoFichaGeneralComponent } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.component';
 import { ProyectoDocumentosComponent } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.component';
@@ -56,7 +58,9 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     ProyectoEquipoComponent,
     ProyectoProrrogasComponent,
     ProyectoHistoricoEstadosComponent,
-    ProyectoDocumentosComponent],
+    ProyectoDocumentosComponent,
+    ProyectoClasificacionesComponent
+  ],
   imports: [
     SharedModule,
     CommonModule,
@@ -66,7 +70,8 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule,
-    CspSharedModule
+    CspSharedModule,
+    SgoSharedModule
   ],
   providers: [
     ProyectoDataResolver,

@@ -14,20 +14,20 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ClasificacionDataModal, ClasificacionModalComponent } from 'src/app/esb/sgo/shared/clasificacion-modal/clasificacion-modal.component';
-import { SolicitudActionService } from '../../solicitud.action.service';
-import { SolicitudProyectoClasificacionesFragment, SolicitudProyectoClasificacionListado } from './solicitud-proyecto-clasificaciones.fragment';
+import { ProyectoActionService } from '../../proyecto.action.service';
+import { ProyectoClasificacionesFragment, ProyectoClasificacionListado } from './proyecto-clasificaciones.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
-const SOLICITUD_PROYECTO_CLASIFICACION_KEY = marker('csp.solicitud-proyecto-clasificacion');
+const PROYECTO_CLASIFICACION_KEY = marker('csp.proyecto-clasificacion');
 
 @Component({
-  selector: 'sgi-solicitud-proyecto-clasificaciones',
-  templateUrl: './solicitud-proyecto-clasificaciones.component.html',
-  styleUrls: ['./solicitud-proyecto-clasificaciones.component.scss']
+  selector: 'sgi-proyecto-clasificaciones',
+  templateUrl: './proyecto-clasificaciones.component.html',
+  styleUrls: ['./proyecto-clasificaciones.component.scss']
 })
-export class SolicitudProyectoClasificacionesComponent extends FragmentComponent implements OnInit, OnDestroy {
+export class ProyectoClasificacionesComponent extends FragmentComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-  formPart: SolicitudProyectoClasificacionesFragment;
+  formPart: ProyectoClasificacionesFragment;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -38,7 +38,7 @@ export class SolicitudProyectoClasificacionesComponent extends FragmentComponent
   msgParamEntity = {};
   textoDelete: string;
 
-  dataSource = new MatTableDataSource<StatusWrapper<SolicitudProyectoClasificacionListado>>();
+  dataSource = new MatTableDataSource<StatusWrapper<ProyectoClasificacionListado>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -47,14 +47,14 @@ export class SolicitudProyectoClasificacionesComponent extends FragmentComponent
   }
 
   constructor(
-    private actionService: SolicitudActionService,
+    private actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.CLASIFICACIONES, actionService);
 
-    this.formPart = this.fragment as SolicitudProyectoClasificacionesFragment;
+    this.formPart = this.fragment as ProyectoClasificacionesFragment;
   }
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class SolicitudProyectoClasificacionesComponent extends FragmentComponent
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
-      (wrapper: StatusWrapper<SolicitudProyectoClasificacionListado>, property: string) => {
+      (wrapper: StatusWrapper<ProyectoClasificacionListado>, property: string) => {
         switch (property) {
           case 'clasificacion':
             return wrapper.value.clasificacion.nombre;
@@ -85,12 +85,12 @@ export class SolicitudProyectoClasificacionesComponent extends FragmentComponent
 
   private setupI18N(): void {
     this.translate.get(
-      SOLICITUD_PROYECTO_CLASIFICACION_KEY,
+      PROYECTO_CLASIFICACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      SOLICITUD_PROYECTO_CLASIFICACION_KEY,
+      PROYECTO_CLASIFICACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -128,7 +128,7 @@ export class SolicitudProyectoClasificacionesComponent extends FragmentComponent
    *
    * @param wrapper la clasificacion
    */
-  deleteClasificacion(wrapper: StatusWrapper<SolicitudProyectoClasificacionListado>): void {
+  deleteClasificacion(wrapper: StatusWrapper<ProyectoClasificacionListado>): void {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {
