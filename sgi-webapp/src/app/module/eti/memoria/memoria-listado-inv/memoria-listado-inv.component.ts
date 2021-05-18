@@ -19,7 +19,6 @@ import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { TipoColectivo } from '@shared/select-persona/select-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -279,11 +278,12 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
   hasPermisoEnviarSecretaria(estadoMemoriaId: number, responsable: boolean): boolean {
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
-    // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
+    // 'Pendiente de correcciones', 'Completada seguimiento anual',
     // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
-    if ((estadoMemoriaId === 2 || estadoMemoriaId === 6 || estadoMemoriaId === 7
-      || estadoMemoriaId === 8 || estadoMemoriaId === 11 || estadoMemoriaId === 16
-      || estadoMemoriaId === 21) && !responsable) {
+    if ((estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA || estadoMemoriaId === ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS
+      || estadoMemoriaId === ESTADO_MEMORIA.PENDIENTE_CORRECCIONES || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL
+      || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL
+      || estadoMemoriaId === ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL) && !responsable) {
       return true;
     } else {
       return false;

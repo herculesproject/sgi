@@ -177,16 +177,16 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
 
   hasPermisoEnviarSecretaria(estadoMemoriaId: number): boolean {
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
-    // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
+    // 'Pendiente de correcciones', 'Completada seguimiento anual',
     // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
-    if (estadoMemoriaId === 2 || estadoMemoriaId === 6 || estadoMemoriaId === 7
-      || estadoMemoriaId === 8 || estadoMemoriaId === 11 || estadoMemoriaId === 16
-      || estadoMemoriaId === 21) {
+    if (estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA || estadoMemoriaId === ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS
+      || estadoMemoriaId === ESTADO_MEMORIA.PENDIENTE_CORRECCIONES || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL
+      || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL
+      || estadoMemoriaId === ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL) {
       return true;
     } else {
       return false;
     }
-
   }
 
   enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
