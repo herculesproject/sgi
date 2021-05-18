@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoSeguimientoCientificoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -102,7 +103,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
     AtomicInteger numPeriodo = new AtomicInteger(0);
 
     ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientificoAnterior = null;
-    for (ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientifico : convocatoriaPeriodoSeguimientoCientificos) {
+    ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientificoFinal = null;
+    for (int i = 0; i < convocatoriaPeriodoSeguimientoCientificos.size(); i++) {
+      ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientifico = (ConvocatoriaPeriodoSeguimientoCientifico) convocatoriaPeriodoSeguimientoCientificos
+          .get(i);
       // Actualiza el numero de periodo
       periodoSeguimientoCientifico.setNumPeriodo(numPeriodo.incrementAndGet());
 
@@ -143,6 +147,19 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
           periodoSeguimientoCientificoAnterior == null || (periodoSeguimientoCientificoAnterior != null
               && periodoSeguimientoCientificoAnterior.getMesFinal() < periodoSeguimientoCientifico.getMesInicial()),
           "El periodo se solapa con otro existente");
+
+      // Tipo seguimiento not null
+      Assert.notNull(periodoSeguimientoCientifico.getTipoSeguimiento(),
+          "El tipo de seguimiento científico no puede ser null");
+
+      // Solo puede haber un tipo de seguimiento 'final' y ha de ser el último"
+      if (periodoSeguimientoCientifico.getTipoSeguimiento().equals(TipoSeguimiento.FINAL)
+          && i != convocatoriaPeriodoSeguimientoCientificos.size() - 1) {
+        throw new IllegalArgumentException(
+            "Solo puede existir un periodo de seguimiento de tipo 'final' y este debe ser el último periodo");
+      } else if (periodoSeguimientoCientifico.getTipoSeguimiento().equals(TipoSeguimiento.FINAL)) {
+        periodoSeguimientoCientificoFinal = periodoSeguimientoCientifico;
+      }
 
       periodoSeguimientoCientificoAnterior = periodoSeguimientoCientifico;
     }

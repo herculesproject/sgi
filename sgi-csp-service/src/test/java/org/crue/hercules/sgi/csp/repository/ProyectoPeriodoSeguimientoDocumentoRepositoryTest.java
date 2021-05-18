@@ -5,6 +5,7 @@ import java.time.Period;
 import java.time.ZoneOffset;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
@@ -52,7 +53,8 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
     entityManager.persistAndFlush(proyecto2);
 
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento.builder()
-        .proyectoId(proyecto1.getId()).numPeriodo(1).fechaInicio(Instant.now().plus(Period.ofDays(1)))
+        .proyectoId(proyecto1.getId()).numPeriodo(1).tipoSeguimiento(TipoSeguimiento.FINAL)
+        .fechaInicio(Instant.now().plus(Period.ofDays(1)))
         .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1)))).build();
 
     entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
@@ -103,6 +105,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
           .builder()
           .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
           .fechaInicio(Instant.now().plus(Period.ofDays(i - 1)))
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
           .build();
@@ -163,6 +166,7 @@ public class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepos
           .builder()
           .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
           .fechaInicio(Instant.now().plus(Period.ofDays(i - 1)))
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
           .build();

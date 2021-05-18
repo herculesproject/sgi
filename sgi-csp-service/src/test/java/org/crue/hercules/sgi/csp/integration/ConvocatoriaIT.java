@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -937,10 +938,19 @@ public class ConvocatoriaIT extends BaseIT {
 
     Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(0).getObservaciones())
         .as("get(0).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 3));
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(0).getTipoSeguimiento())
+        .as("get(0).getTipoSeguimiento")
+        .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
     Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(1).getObservaciones())
         .as("get(1).getObservaciones())").isEqualTo("observaciones-" + String.format("%03d", 2));
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(1).getTipoSeguimiento())
+        .as("get(1).getTipoSeguimiento()")
+        .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
     Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(2).getObservaciones())
         .as("get(2).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 1));
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(2).getTipoSeguimiento())
+        .as("get(2).getTipoSeguimiento")
+        .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
   }
 
   /**

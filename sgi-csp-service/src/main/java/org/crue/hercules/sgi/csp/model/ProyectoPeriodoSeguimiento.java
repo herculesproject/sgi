@@ -4,6 +4,8 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -73,6 +77,11 @@ public class ProyectoPeriodoSeguimiento extends BaseEntity {
   /** Fecha fin. */
   @Column(name = "fecha_fin_presentacion", nullable = true)
   private Instant fechaFinPresentacion;
+
+  /** Tipo Seguimiento */
+  @Column(name = "tipo_seguimiento", length = 20, nullable = false)
+  @Enumerated(EnumType.STRING)
+  private TipoSeguimiento tipoSeguimiento;
 
   /** Observaciones */
   @Column(name = "observaciones", length = 2000, nullable = true)

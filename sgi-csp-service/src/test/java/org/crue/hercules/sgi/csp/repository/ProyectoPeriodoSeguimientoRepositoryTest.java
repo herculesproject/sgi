@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
@@ -53,6 +54,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
           .builder()
           .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
           .fechaInicio(Instant.now().plus(Period.ofDays(i - 1)))
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(i))))
           .build();
@@ -109,6 +111,7 @@ public class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest
           .builder()
           .proyectoId((i % 2 == 0) ? proyecto2.getId() : proyecto1.getId())
           .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
           .fechaInicio(Instant.now())
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1))))
           .observaciones("obs-" + i)

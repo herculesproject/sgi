@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoSeguimientoCientificoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -55,14 +56,17 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     Long convocatoriaId = 1L;
 
     List<ConvocatoriaPeriodoSeguimientoCientifico> peridosJustificiacionExistentes = new ArrayList<>();
-    peridosJustificiacionExistentes.add(generarMockConvocatoriaPeriodoSeguimientoCientifico(2L, 5, 10, 1L));
-    peridosJustificiacionExistentes.add(generarMockConvocatoriaPeriodoSeguimientoCientifico(4L, 11, 15, 1L));
-    peridosJustificiacionExistentes.add(generarMockConvocatoriaPeriodoSeguimientoCientifico(5L, 20, 25, 1L));
+    peridosJustificiacionExistentes
+        .add(generarMockConvocatoriaPeriodoSeguimientoCientifico(2L, 5, 10, 1L, TipoSeguimiento.PERIODICO));
+    peridosJustificiacionExistentes
+        .add(generarMockConvocatoriaPeriodoSeguimientoCientifico(4L, 11, 15, 1L, TipoSeguimiento.INTERMEDIO));
+    peridosJustificiacionExistentes
+        .add(generarMockConvocatoriaPeriodoSeguimientoCientifico(5L, 20, 25, 1L, TipoSeguimiento.FINAL));
 
     ConvocatoriaPeriodoSeguimientoCientifico newConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
-        null, 1, 10, 1L);
+        null, 1, 10, 1L, TipoSeguimiento.INTERMEDIO);
     ConvocatoriaPeriodoSeguimientoCientifico updatedConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
-        4L, 11, 19, 1L);
+        4L, 11, 19, 1L, TipoSeguimiento.FINAL);
 
     List<ConvocatoriaPeriodoSeguimientoCientifico> peridosJustificiacionActualizar = new ArrayList<>();
     peridosJustificiacionActualizar.add(newConvocatoriaPeriodoSeguimientoCientifico);
@@ -272,9 +276,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     // duracion convocatoria
     Long convocatoriaId = 1L;
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico1 = generarMockConvocatoriaPeriodoSeguimientoCientifico(
-        1L, 1, 10, 1L);
+        1L, 1, 10, 1L, TipoSeguimiento.PERIODICO);
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico2 = generarMockConvocatoriaPeriodoSeguimientoCientifico(
-        2L, 8, 15, 1L);
+        2L, 8, 15, 1L, TipoSeguimiento.FINAL);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
@@ -428,7 +432,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
    * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
    */
   private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id) {
-    return generarMockConvocatoriaPeriodoSeguimientoCientifico(id, 1, 2, id);
+    return generarMockConvocatoriaPeriodoSeguimientoCientifico(id, 1, 2, id, TipoSeguimiento.FINAL);
   }
 
   /**
@@ -442,7 +446,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
    * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
    */
   private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
-      Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
+      Integer mesInicial, Integer mesFinal, Long convocatoriaId, TipoSeguimiento tipoSeguimiento) {
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
     convocatoriaPeriodoSeguimientoCientifico.setId(id);
     convocatoriaPeriodoSeguimientoCientifico.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
@@ -452,6 +456,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseSer
     convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
     convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
+    convocatoriaPeriodoSeguimientoCientifico.setTipoSeguimiento(tipoSeguimiento);
 
     return convocatoriaPeriodoSeguimientoCientifico;
   }

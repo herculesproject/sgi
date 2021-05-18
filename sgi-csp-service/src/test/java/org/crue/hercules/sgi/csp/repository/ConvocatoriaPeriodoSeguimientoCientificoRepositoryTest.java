@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends Base
           .builder()
           .convocatoriaId((i % 2 == 0) ? convocatoria2.getId() : convocatoria1.getId())
           .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
           .mesInicial(i - 1)
           .mesFinal(i)
           .build();
@@ -105,6 +107,7 @@ public class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends Base
           .builder()
           .convocatoriaId((i % 2 == 0) ? convocatoria2.getId() : convocatoria1.getId())
           .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
           .mesInicial(i - 1)
           .mesFinal(i)
           .build();

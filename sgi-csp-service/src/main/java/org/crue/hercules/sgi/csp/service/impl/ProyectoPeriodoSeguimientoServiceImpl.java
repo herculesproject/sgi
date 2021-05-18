@@ -7,11 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion.Tipo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -247,6 +249,20 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
           proyecto.getFechaFin().isAfter(datosProyectoPeriodoSeguimiento.getFechaFin())
               || proyecto.getFechaFin().equals(datosProyectoPeriodoSeguimiento.getFechaFin()),
           "La fecha de fin del proyecto debe ser posterior o igual a la fecha de fin del periodo de seguimiento");
+
+      List<ProyectoPeriodoSeguimiento> listaPeriodosSeguimiento = repository.findAll();
+      boolean isFinal = false;
+      ProyectoPeriodoSeguimiento periodofinal = null;
+      for (int i = 0; i < listaPeriodosSeguimiento.size(); i++) {
+        if (!isFinal && listaPeriodosSeguimiento.get(i).getTipoSeguimiento().equals(TipoSeguimiento.FINAL)) {
+          isFinal = true;
+          periodofinal = listaPeriodosSeguimiento.get(i);
+        } else if (isFinal && listaPeriodosSeguimiento.get(i).getTipoSeguimiento().equals(TipoSeguimiento.FINAL)) {
+          throw new IllegalArgumentException("Solo puede haber un periodo 'final'");
+        } else if (isFinal && listaPeriodosSeguimiento.get(i).getFechaInicio().isAfter(periodofinal.getFechaInicio())) {
+          throw new IllegalArgumentException("El periodo 'final' ha de ser el último");
+        }
+      }
     }
 
     if (datosProyectoPeriodoSeguimiento.getFechaInicioPresentacion() != null
@@ -343,6 +359,9 @@ public class ProyectoPeriodoSeguimientoServiceImpl implements ProyectoPeriodoSeg
 
     Assert.notNull(datosProyectoPeriodoSeguimiento.getFechaFin(), "FechaFin no puede ser null para "
         + ((datosOriginales == null) ? "crear" : "actualizar") + " ProyectoPeriodoSeguimiento");
+
+    Assert.notNull(datosProyectoPeriodoSeguimiento.getTipoSeguimiento(), "TipoSeguimiento no puede ser null para "
+        + ((datosOriginales == null) ? "crear" : "actualizar") + "ProyectoPeriodoSeguimiento");
 
     // Se comprueba la existencia del proyecto
     Proyecto proyecto = proyectoRepository.findById(datosProyectoPeriodoSeguimiento.getProyectoId())

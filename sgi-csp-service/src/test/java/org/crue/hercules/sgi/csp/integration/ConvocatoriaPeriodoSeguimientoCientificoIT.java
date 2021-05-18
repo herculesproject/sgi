@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,9 +63,9 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     // otro nuevo y sin los otros 3 periodos existentes
     Long convocatoriaId = 1L;
     ConvocatoriaPeriodoSeguimientoCientifico newConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
-        null, 27, 30, 1L);
+        null, 27, 30, 1L, TipoSeguimiento.FINAL);
     ConvocatoriaPeriodoSeguimientoCientifico updatedConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
-        4L, 24, 26, 1L);
+        4L, 24, 26, 1L, TipoSeguimiento.INTERMEDIO);
 
     List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos = Arrays
         .asList(newConvocatoriaPeriodoSeguimientoCientifico, updatedConvocatoriaPeriodoSeguimientoCientifico);
@@ -96,6 +97,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     Assertions.assertThat(responseData.get(0).getFechaFinPresentacion()).as("get(0).getFechaFinPresentacion()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
     Assertions.assertThat(responseData.get(0).getNumPeriodo()).as("get(0).getNumPeriodo()").isEqualTo(1);
+    Assertions.assertThat(responseData.get(0).getTipoSeguimiento()).as("get(0).getTipoSeguimiento()")
+        .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
     Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones()")
         .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getObservaciones());
 
@@ -155,6 +158,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(1);
     Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1);
     Assertions.assertThat(responseData.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
+    Assertions.assertThat(responseData.getTipoSeguimiento()).as("getTipoSeguimiento()").isIn(TipoSeguimiento.FINAL,
+        TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
     Assertions.assertThat(responseData.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()").isEqualTo(2);
     Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
@@ -176,13 +181,14 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT extends BaseIT {
    * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
    */
   private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
-      Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
+      Integer mesInicial, Integer mesFinal, Long convocatoriaId, TipoSeguimiento tipoSeguimiento) {
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
     convocatoriaPeriodoSeguimientoCientifico.setId(id);
     convocatoriaPeriodoSeguimientoCientifico.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
     convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
     convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
     convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
+    convocatoriaPeriodoSeguimientoCientifico.setTipoSeguimiento(tipoSeguimiento);
     convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
     convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
     convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);

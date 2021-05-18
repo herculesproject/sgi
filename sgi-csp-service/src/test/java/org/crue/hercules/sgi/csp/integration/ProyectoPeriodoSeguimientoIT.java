@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,8 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
         .isEqualTo(newProyectoPeriodoSeguimiento.getProyectoId());
     Assertions.assertThat(responseData.getNumPeriodo()).as("getNumPeriodo()")
         .isEqualTo(newProyectoPeriodoSeguimiento.getNumPeriodo());
+    Assertions.assertThat(responseData.getTipoSeguimiento()).as("getTipoSeguimiento()")
+        .isEqualTo(newProyectoPeriodoSeguimiento.getTipoSeguimiento());
 
   }
 
@@ -88,6 +91,8 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
         .isEqualTo(proyectoPeriodoSeguimiento.getProyectoId());
     Assertions.assertThat(proyectoPeriodoSeguimientoActualizado.getNumPeriodo()).as("getNumPeriodo()")
         .isEqualTo(proyectoPeriodoSeguimiento.getNumPeriodo());
+    Assertions.assertThat(proyectoPeriodoSeguimientoActualizado.getTipoSeguimiento()).as("getTipoSeguimiento()")
+        .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
     Assertions.assertThat(proyectoPeriodoSeguimientoActualizado.getObservaciones()).as("getObservaciones()")
         .isEqualTo(proyectoPeriodoSeguimiento.getObservaciones());
 
@@ -155,6 +160,8 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = response.getBody();
     Assertions.assertThat(proyectoPeriodoSeguimiento.getId()).as("getId()").isNotNull();
     Assertions.assertThat(proyectoPeriodoSeguimiento.getProyectoId()).as("getProyectoId()").isEqualTo(1L);
+    Assertions.assertThat(proyectoPeriodoSeguimiento.getTipoSeguimiento()).as("getTipoSeguimiento()")
+        .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
     Assertions.assertThat(proyectoPeriodoSeguimiento.getObservaciones()).as("getObservaciones()")
         .isEqualTo("obs-" + String.format("%03d", idProyectoPeriodoSeguimiento));
 
@@ -174,6 +181,7 @@ public class ProyectoPeriodoSeguimientoIT extends BaseIT {
         .id(id)
         .proyectoId(proyectoId)
         .numPeriodo(1).fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
+        .tipoSeguimiento(TipoSeguimiento.FINAL)
         .fechaFin(Instant.parse("2020-10-04T23:59:59Z"))
         .observaciones("obs-" + (id == null ? "" : String.format("%03d", id)))
         .build();

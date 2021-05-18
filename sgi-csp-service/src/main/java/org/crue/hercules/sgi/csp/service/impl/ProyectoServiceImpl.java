@@ -527,6 +527,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.copyAreaTematica(proyecto);
     this.copyPeriodoSeguimiento(proyecto);
     this.copyConfiguracionEconomica(proyecto);
+
   }
 
   /**
@@ -634,6 +635,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       log.debug("Copy ConvocatoriaPeriodoSeguimientoCientifico with id: {0}", convocatoriaSeguimiento.getId());
       ProyectoPeriodoSeguimiento entidadProyecto = new ProyectoPeriodoSeguimiento();
       entidadProyecto.setNumPeriodo(convocatoriaSeguimiento.getNumPeriodo());
+      entidadProyecto.setTipoSeguimiento(convocatoriaSeguimiento.getTipoSeguimiento());
       entidadProyecto.setProyectoId(proyecto.getId());
       entidadProyecto.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
           .plus(Period.ofMonths(convocatoriaSeguimiento.getMesInicial() - 1))));
