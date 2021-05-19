@@ -502,7 +502,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
    */
   private getPlan(programa: IPrograma): IPrograma {
     let programaRaiz = programa;
-    while (programaRaiz.padre) {
+    while (programaRaiz?.padre) {
       programaRaiz = programaRaiz.padre;
     }
     return programaRaiz;
