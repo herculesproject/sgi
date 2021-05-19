@@ -35,22 +35,22 @@
         {{empresaListado.empresa.numeroIdentificacion}}
       </td>
     </ng-container>
-    <!-- Nombre -->
+    <!-- Entidad / Razón social -->
     <ng-container matColumnDef="nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'sgemp.empresa.nombre' | translate}}
       </th>
       <td mat-cell *matCellDef="let empresaListado">
-        {{empresaListado.empresa.nombre}}
+        {{empresaListado.empresa.nombre ? empresaListado.empresa.nombre : empresaListado.empresa.razonSocial}}
       </td>
     </ng-container>
-    <!-- Razon social -->
+    <!-- Datos económicos -->
     <ng-container matColumnDef="razonSocial">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'sgemp.empresa.razon-social' | translate}}
+        {{'sgemp.empresa.datos-economicos' | translate}}
       </th>
       <td mat-cell *matCellDef="let empresaListado">
-        {{empresaListado.empresa.razonSocial}}
+        {{(empresaListado.empresa.datosEconomicos ? 'label.si' : 'label.no') | translate}}
       </td>
     </ng-container>
     <!-- Acciones Column -->

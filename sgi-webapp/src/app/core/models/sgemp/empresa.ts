@@ -1,4 +1,4 @@
-import { ITipoIdentificador } from "./tipo-identificador";
+import { ITipoIdentificador } from './tipo-identificador';
 
 export interface IEmpresa {
   id: string;
@@ -6,4 +6,6 @@ export interface IEmpresa {
   tipoIdentificador: ITipoIdentificador;
   numeroIdentificacion: string;
   razonSocial: string;
+  datosEconomicos: boolean;
+  padreId: string;
 }
