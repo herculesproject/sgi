@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -122,6 +123,30 @@ public class SolicitudProyecto extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @NotNull
   private TipoPresupuesto tipoPresupuesto;
+
+  /** Importe Solicitado */
+  @Column(name = "importe_solicitado", nullable = true)
+  private BigDecimal importeSolicitado;
+
+  /** Importe presupuestado */
+  @Column(name = "importe_presupuestado", nullable = true)
+  private BigDecimal importePresupuestado;
+
+  /** Importe Solicitado socios */
+  @Column(name = "importe_solicitado_socios", nullable = true)
+  private BigDecimal importeSolicitadoSocios;
+
+  /** Importe presupuestado socios */
+  @Column(name = "importe_presupuestado_socios", nullable = true)
+  private BigDecimal importePresupuestadoSocios;
+
+  /** Total Importe Solicitado */
+  @Column(name = "total_importe_solicitado", nullable = true)
+  private BigDecimal totalImporteSolicitado;
+
+  /** Total Importe presupuestado */
+  @Column(name = "total_importe_presupuestado", nullable = true)
+  private BigDecimal totalImportePresupuestado;
 
   // Relation mappings for JPA metamodel generation only
   @OneToOne

@@ -3255,6 +3255,7 @@ industries" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2021" />
       <column name="importe_solicitado" value="1000.00" />
+      <column name="importe_presupuestado" value="3000.00" />
       <column name="observaciones" value="null" />
       <column name="financiacion_ajena" value="false" />
     </insert>
@@ -3265,6 +3266,7 @@ industries" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2022" />
       <column name="importe_solicitado" value="2000.00" />
+      <column name="importe_presupuestado" value="3000.00" />
       <column name="observaciones" value="null" />
       <column name="financiacion_ajena" value="false" />
     </insert>
@@ -3275,6 +3277,7 @@ industries" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2020" />
       <column name="importe_solicitado" value="12000.00" />
+      <column name="importe_presupuestado" value="15000.00" />
       <column name="observaciones" value="null" />
       <column name="financiacion_ajena" value="false" />
     </insert>
@@ -3285,6 +3288,7 @@ industries" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2022" />
       <column name="importe_solicitado" value="15000.00" />
+      <column name="importe_presupuestado" value="20000.00" />
       <column name="observaciones" value="null" />
       <column name="financiacion_ajena" value="false" />
     </insert>
@@ -3295,6 +3299,7 @@ industries" />
       <column name="entidad_ref" value="null" />
       <column name="anualidad" value="2021" />
       <column name="importe_solicitado" value="32000.00" />
+      <column name="importe_presupuestado" value="33000.00" />
       <column name="observaciones" value="null" />
       <column name="financiacion_ajena" value="false" />
     </insert>

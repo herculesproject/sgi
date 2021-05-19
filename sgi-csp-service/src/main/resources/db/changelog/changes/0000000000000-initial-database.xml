@@ -1571,6 +1571,10 @@
             <column name="coordinador_externo" type="BOOLEAN"/>
             <column name="duracion" type="INT"/>
             <column name="envio_etica" type="BOOLEAN"/>
+            <column name="importe_presupuestado" type="DECIMAL(19, 2)"/>
+            <column name="importe_presupuestado_socios" type="DECIMAL(19, 2)"/>
+            <column name="importe_solicitado" type="DECIMAL(19, 2)"/>
+            <column name="importe_solicitado_socios" type="DECIMAL(19, 2)"/>
             <column name="intereses" type="VARCHAR(2000)"/>
             <column name="objetivos" type="VARCHAR(2000)"/>
             <column name="resultados_previstos" type="VARCHAR(2000)"/>
@@ -1580,6 +1584,8 @@
             <column name="titulo" type="VARCHAR(250)">
                 <constraints nullable="false"/>
             </column>
+            <column name="total_importe_presupuestado" type="DECIMAL(19, 2)"/>
+            <column name="total_importe_solicitado" type="DECIMAL(19, 2)"/>
             <column name="area_tematica_id" type="BIGINT"/>
         </createTable>
     </changeSet>
@@ -1657,6 +1663,7 @@
             <column defaultValueBoolean="false" name="financiacion_ajena" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
+            <column name="importe_presupuestado" type="DECIMAL(19, 2)"/>
             <column name="importe_solicitado" type="DECIMAL(19, 2)"/>
             <column name="observaciones" type="VARCHAR(2000)"/>
             <column name="solicitud_proyecto_id" type="BIGINT">
@@ -1679,6 +1686,7 @@
             <column name="empresa_ref" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="importe_presupuestado" type="DECIMAL(19, 2)"/>
             <column name="importe_solicitado" type="DECIMAL(19, 2)"/>
             <column name="mes_fin" type="INT"/>
             <column name="mes_inicio" type="INT"/>

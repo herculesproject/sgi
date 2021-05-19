@@ -90,6 +90,12 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
       solicitudProyectoExistente.setCheckListRef(solicitudProyecto.getCheckListRef());
       solicitudProyectoExistente.setEnvioEtica(solicitudProyecto.getEnvioEtica());
       solicitudProyectoExistente.setTipoPresupuesto(solicitudProyecto.getTipoPresupuesto());
+      solicitudProyectoExistente.setImporteSolicitado(solicitudProyecto.getImporteSolicitado());
+      solicitudProyectoExistente.setImportePresupuestado(solicitudProyecto.getImportePresupuestado());
+      solicitudProyectoExistente.setImporteSolicitadoSocios(solicitudProyecto.getImporteSolicitadoSocios());
+      solicitudProyectoExistente.setImportePresupuestadoSocios(solicitudProyecto.getImportePresupuestadoSocios());
+      solicitudProyectoExistente.setTotalImporteSolicitado(solicitudProyecto.getTotalImporteSolicitado());
+      solicitudProyectoExistente.setTotalImportePresupuestado(solicitudProyecto.getTotalImportePresupuestado());
       SolicitudProyecto returnValue = repository.save(solicitudProyectoExistente);
 
       log.debug("update(SolicitudProyecto solicitudProyecto) - end");

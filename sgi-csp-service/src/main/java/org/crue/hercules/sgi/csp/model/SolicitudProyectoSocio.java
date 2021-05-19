@@ -84,6 +84,10 @@ public class SolicitudProyectoSocio extends BaseEntity {
   @Column(name = "importe_solicitado", nullable = true)
   private BigDecimal importeSolicitado;
 
+  /** Importe Presupuestado */
+  @Column(name = "importe_presupuestado", nullable = true)
+  private BigDecimal importePresupuestado;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "solicitud_proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOSOCIO_SOLICITUDPROYECTO"))

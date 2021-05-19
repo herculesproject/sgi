@@ -54,44 +54,70 @@ public class CustomSolicitudProyectoPresupuestoRepositoryImpl implements CustomS
     // Define FROM Solicitud clause
     Root<Solicitud> root = cq.from(Solicitud.class);
 
-    // Total convocatoria
-    Subquery<BigDecimal> sqTotalConvocatoria = cq.subquery(BigDecimal.class);
-    Root<SolicitudProyectoPresupuesto> rootTotalConvocatoria = sqTotalConvocatoria
+    // Total presupuestado no ajeno
+    Subquery<BigDecimal> sqTotalPresupuestadoNoAjeno = cq.subquery(BigDecimal.class);
+    Root<SolicitudProyectoPresupuesto> rootTotalPresupuestadoNoAjeno = sqTotalPresupuestadoNoAjeno
         .from(SolicitudProyectoPresupuesto.class);
-    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalConvocatoriaSolicitudProyecto = rootTotalConvocatoria
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalPresupuestadoNoAjenoSolicitudProyecto = rootTotalPresupuestadoNoAjeno
         .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
-    joinTotalConvocatoriaSolicitudProyecto.join(SolicitudProyecto_.solicitud);
+    joinTotalPresupuestadoNoAjenoSolicitudProyecto.join(SolicitudProyecto_.solicitud);
 
-    sqTotalConvocatoria.select(cb.sum(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.importeSolicitado)));
-    sqTotalConvocatoria
-        .where(cb.and(cb.isTrue(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.financiacionAjena)).not(),
-            cb.equal(rootTotalConvocatoria.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
+    sqTotalPresupuestadoNoAjeno.select(cb.sum(rootTotalPresupuestadoNoAjeno.get(SolicitudProyectoPresupuesto_.importePresupuestado)));
+    sqTotalPresupuestadoNoAjeno
+        .where(cb.and(cb.isTrue(rootTotalPresupuestadoNoAjeno.get(SolicitudProyectoPresupuesto_.financiacionAjena)).not(),
+            cb.equal(rootTotalPresupuestadoNoAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
                 .get(SolicitudProyecto_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
 
-    // Total ajeno
-    Subquery<BigDecimal> sqTotalAjeno = cq.subquery(BigDecimal.class);
-    Root<SolicitudProyectoPresupuesto> rootTotalAjeno = sqTotalAjeno.from(SolicitudProyectoPresupuesto.class);
-    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalAjenoSolicitudProyecto = rootTotalAjeno
+    // Total solicitado no ajeno
+    Subquery<BigDecimal> sqTotalSolicitadoNoAjeno = cq.subquery(BigDecimal.class);
+    Root<SolicitudProyectoPresupuesto> rootTotalSolicitadoNoAjeno = sqTotalSolicitadoNoAjeno
+        .from(SolicitudProyectoPresupuesto.class);
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalSolicitadoNoAjenoSolicitudProyecto = rootTotalSolicitadoNoAjeno
         .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
-    joinTotalAjenoSolicitudProyecto.join(SolicitudProyecto_.solicitud);
+    joinTotalSolicitadoNoAjenoSolicitudProyecto.join(SolicitudProyecto_.solicitud);
 
-    sqTotalAjeno.select(cb.sum(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.importeSolicitado)));
-    sqTotalAjeno.where(cb.and(cb.isTrue(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.financiacionAjena)),
-        cb.equal(rootTotalAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
+    sqTotalSolicitadoNoAjeno.select(cb.sum(rootTotalSolicitadoNoAjeno.get(SolicitudProyectoPresupuesto_.importeSolicitado)));
+    sqTotalSolicitadoNoAjeno
+        .where(cb.and(cb.isTrue(rootTotalSolicitadoNoAjeno.get(SolicitudProyectoPresupuesto_.financiacionAjena)).not(),
+            cb.equal(rootTotalSolicitadoNoAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
+                .get(SolicitudProyecto_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
+
+    // Total presupuestado ajeno
+    Subquery<BigDecimal> sqTotalPresupuestadoAjeno = cq.subquery(BigDecimal.class);
+    Root<SolicitudProyectoPresupuesto> rootTotalPresupuestadoAjeno = sqTotalPresupuestadoAjeno.from(SolicitudProyectoPresupuesto.class);
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalPresupuestadoAjenoSolicitudProyecto = rootTotalPresupuestadoAjeno
+        .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
+    joinTotalPresupuestadoAjenoSolicitudProyecto.join(SolicitudProyecto_.solicitud);
+
+    sqTotalPresupuestadoAjeno.select(cb.sum(rootTotalPresupuestadoAjeno.get(SolicitudProyectoPresupuesto_.importePresupuestado)));
+    sqTotalPresupuestadoAjeno.where(cb.and(cb.isTrue(rootTotalPresupuestadoAjeno.get(SolicitudProyectoPresupuesto_.financiacionAjena)),
+        cb.equal(rootTotalPresupuestadoAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
+            .get(SolicitudProyecto_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
+
+    // Total solicitado ajeno
+    Subquery<BigDecimal> sqTotalSolicitadoAjeno = cq.subquery(BigDecimal.class);
+    Root<SolicitudProyectoPresupuesto> rootTotalSolicitadoAjeno = sqTotalSolicitadoAjeno.from(SolicitudProyectoPresupuesto.class);
+    Join<SolicitudProyectoPresupuesto, SolicitudProyecto> joinTotalSolicitadoAjenoSolicitudProyecto = rootTotalSolicitadoAjeno
+        .join(SolicitudProyectoPresupuesto_.solicitudProyecto);
+    joinTotalSolicitadoAjenoSolicitudProyecto.join(SolicitudProyecto_.solicitud);
+
+    sqTotalSolicitadoAjeno.select(cb.sum(rootTotalSolicitadoAjeno.get(SolicitudProyectoPresupuesto_.importeSolicitado)));
+    sqTotalSolicitadoAjeno.where(cb.and(cb.isTrue(rootTotalSolicitadoAjeno.get(SolicitudProyectoPresupuesto_.financiacionAjena)),
+        cb.equal(rootTotalSolicitadoAjeno.get(SolicitudProyectoPresupuesto_.solicitudProyecto)
             .get(SolicitudProyecto_.solicitud).get(Solicitud_.id), root.get(Solicitud_.id))));
 
     cq.where(cb.equal(root.get(Solicitud_.id), solicitudId));
 
     // Define DTO projection
     cq.multiselect(
-        // total convocatoria
-        cb.coalesce(sqTotalConvocatoria.getSelection(), new BigDecimal(0)),
-        // total ajeno
-        cb.coalesce(sqTotalAjeno.getSelection(), new BigDecimal(0)),
-        // total
-        cb.sum(cb.coalesce(sqTotalConvocatoria.getSelection(), new BigDecimal(0)),
-            cb.coalesce(sqTotalAjeno.getSelection(), new BigDecimal(0))));
-
+        // total presupuestado no ajeno
+        cb.coalesce(sqTotalPresupuestadoNoAjeno.getSelection(), new BigDecimal(0)),
+        // total solicitado no ajeno
+        cb.coalesce(sqTotalSolicitadoNoAjeno.getSelection(), new BigDecimal(0)),
+        // total presupuestado ajeno 
+        cb.coalesce(sqTotalPresupuestadoAjeno.getSelection(), new BigDecimal(0)),
+        // total solicitado ajeno 
+        cb.coalesce(sqTotalSolicitadoAjeno.getSelection(), new BigDecimal(0)));
     // Execute query
     final TypedQuery<SolicitudProyectoPresupuestoTotales> q = entityManager.createQuery(cq);
 

@@ -71,6 +71,10 @@ public class SolicitudProyectoPresupuesto extends BaseEntity {
   @Column(name = "importe_solicitado", nullable = true)
   private BigDecimal importeSolicitado;
 
+  /** Importe presupuestado */
+  @Column(name = "importe_presupuestado", nullable = true)
+  private BigDecimal importePresupuestado;
+
   /** Observaciones */
   @Column(name = "observaciones", length = 2000, nullable = true)
   @Size(max = 2000)

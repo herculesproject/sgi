@@ -95,6 +95,8 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
 
       solicitudProyectoPresupuestoExistente.setAnualidad(solicitudProyectoPresupuesto.getAnualidad());
       solicitudProyectoPresupuestoExistente.setImporteSolicitado(solicitudProyectoPresupuesto.getImporteSolicitado());
+      solicitudProyectoPresupuestoExistente
+          .setImportePresupuestado(solicitudProyectoPresupuesto.getImportePresupuestado());
       solicitudProyectoPresupuestoExistente.setObservaciones(solicitudProyectoPresupuesto.getObservaciones());
 
       SolicitudProyectoPresupuesto returnValue = repository.save(solicitudProyectoPresupuestoExistente);

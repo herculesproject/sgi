@@ -21,8 +21,9 @@ public class SolicitudProyectoPresupuestoTotales implements Serializable {
    */
   private static final long serialVersionUID = 1L;
 
-  private BigDecimal importeTotalConvocatoria;
-  private BigDecimal importeTotalAjeno;
-  private BigDecimal importeTotal;
+  private BigDecimal importeTotalPresupuestadoNoAjeno;
+  private BigDecimal importeTotalSolicitadoNoAjeno;
+  private BigDecimal importeTotalPresupuestadoAjeno;
+  private BigDecimal importeTotalSolicitadoAjeno;
 
 }

@@ -115,6 +115,7 @@ public class SolicitudProyectoSocioServiceImpl implements SolicitudProyectoSocio
       solicitudProyectoSocioExistente.setRolSocio(solicitudProyectoSocio.getRolSocio());
       solicitudProyectoSocioExistente.setNumInvestigadores(solicitudProyectoSocio.getNumInvestigadores());
       solicitudProyectoSocioExistente.setImporteSolicitado(solicitudProyectoSocio.getImporteSolicitado());
+      solicitudProyectoSocioExistente.setImportePresupuestado(solicitudProyectoSocio.getImportePresupuestado());
       SolicitudProyectoSocio returnValue = repository.save(solicitudProyectoSocioExistente);
 
       log.debug("update(SolicitudProyectoSocio solicitudProyectoSocio) - end");
