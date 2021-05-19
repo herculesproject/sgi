@@ -58,14 +58,10 @@ export interface IProyectoBackend {
   observaciones: string;
   /** unidadGestionRef */
   unidadGestionRef: string;
-  /** finalista */
-  finalista: boolean;
-  /** limitativo */
-  limitativo: boolean;
   /** anualidades */
   anualidades: boolean;
   /** activo  */
   activo: boolean;
-  /**Tipo de seguimiento */
+  /** Tipo de seguimiento */
   tipoSeguimiento: TipoSeguimiento;
 }

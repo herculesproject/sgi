@@ -62,15 +62,11 @@ export interface IProyecto {
   iva: boolean;
   /** observaciones */
   observaciones: string;
-  /** finalista */
-  finalista: boolean;
-  /** limitativo */
-  limitativo: boolean;
   /** anualidades */
   anualidades: boolean;
   /** activo  */
   activo: boolean;
-  /**Tipo de Seguimiento */
+  /** Tipo de Seguimiento */
   tipoSeguimiento: TipoSeguimiento;
 }
 

@@ -37,8 +37,6 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       contratos: value.contratos,
       facturacion: value.facturacion,
       iva: value.iva,
-      finalista: value.finalista,
-      limitativo: value.limitativo,
       anualidades: value.anualidades,
       unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
       observaciones: value.observaciones,
@@ -78,8 +76,6 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       facturacion: value.facturacion,
       iva: value.iva,
       observaciones: value.observaciones,
-      finalista: value.finalista,
-      limitativo: value.limitativo,
       anualidades: value.anualidades,
       activo: value.activo,
       tipoSeguimiento: value.tipoSeguimiento
