@@ -19,24 +19,6 @@
     </faultSequence>
   </resource>
 
-  <resource methods="GET" uri-template="/categorias-profesionales/{id}/subcategorias-profesionales">
-    <inSequence>
-      <call-template target="sgi-auth-sequence-template">
-        <with-param name="requiredAuthorities" value=""/>
-      </call-template>
-      <send>
-        <endpoint key="sgp-endpoint"/>
-      </send>
-    </inSequence>
-    <outSequence>
-      <respond/>
-    </outSequence>
-    <faultSequence>
-      <sequence key="error-handling-sequence"/>
-    </faultSequence>
-  </resource>
-
-
   <!-- colectivos -->
   <resource methods="GET" url-mapping="/colectivos">
     <inSequence>
