@@ -269,9 +269,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setFechaFin(proyectoActualizar.getFechaFin());
       data.setFechaInicio(proyectoActualizar.getFechaInicio());
       data.setFinalidad(proyectoActualizar.getFinalidad());
-      data.setFinalista(proyectoActualizar.getFinalista());
       data.setIva(proyectoActualizar.getIva());
-      data.setLimitativo(proyectoActualizar.getLimitativo());
       data.setModeloEjecucion(proyectoActualizar.getModeloEjecucion());
       data.setObservaciones(proyectoActualizar.getObservaciones());
       data.setPermitePaquetesTrabajo(proyectoActualizar.getPermitePaquetesTrabajo());

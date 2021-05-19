@@ -179,14 +179,6 @@ public class Proyecto extends BaseEntity {
   @Size(max = 2000)
   private String observaciones;
 
-  /** Finalista */
-  @Column(name = "finalista", nullable = true)
-  private Boolean finalista;
-
-  /** Limitativo */
-  @Column(name = "limitativo", nullable = true)
-  private Boolean limitativo;
-
   /** Anualidades */
   @Column(name = "anualidades", nullable = true)
   private Boolean anualidades;

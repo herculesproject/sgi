@@ -3008,8 +3008,6 @@ industries" />
       <column name="facturacion" value="false" />
       <column name="iva" value="false" />
       <column name="observaciones" value="" />
-      <column name="finalista" value="null" />
-      <column name="limitativo" value="null" />
       <column name="anualidades" value="null" />
       <column name="activo" value="true" />
     </insert>
@@ -3040,8 +3038,6 @@ industries" />
       <column name="facturacion" value="false" />
       <column name="iva" value="false" />
       <column name="observaciones" value="" />
-      <column name="finalista" value="null" />
-      <column name="limitativo" value="null" />
       <column name="anualidades" value="null" />
       <column name="activo" value="true" />
     </insert>
@@ -3072,8 +3068,6 @@ industries" />
       <column name="facturacion" value="false" />
       <column name="iva" value="false" />
       <column name="observaciones" value="" />
-      <column name="finalista" value="null" />
-      <column name="limitativo" value="null" />
       <column name="anualidades" value="null" />
       <column name="activo" value="true" />
     </insert>
