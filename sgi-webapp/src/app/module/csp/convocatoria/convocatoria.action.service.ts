@@ -323,8 +323,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       switchMap((accept) => {
         if (accept) {
           return this.convocatoriaService.registrar(this.id);
-        } else {
-          return of(void 0);
         }
       })
     );
