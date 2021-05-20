@@ -31,6 +31,10 @@ describe('SolicitudProyectoClasificacionComponent', () => {
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
 
+  const state = {
+    idConvocatoria: 1
+  };
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SolicitudProyectoClasificacionesComponent],
@@ -56,6 +60,7 @@ describe('SolicitudProyectoClasificacionComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
     fixture = TestBed.createComponent(SolicitudProyectoClasificacionesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

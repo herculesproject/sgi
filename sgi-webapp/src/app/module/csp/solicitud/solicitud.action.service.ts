@@ -23,9 +23,11 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { CONVOCATORIA_ID_KEY } from './solicitud-crear/solicitud-crear.guard';
 import { SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
@@ -117,7 +119,7 @@ export class SolicitudActionService extends ActionService {
     route: ActivatedRoute,
     private solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
-    convocatoriaService: ConvocatoriaService,
+    private convocatoriaService: ConvocatoriaService,
     empresaService: EmpresaService,
     personaService: PersonaService,
     solicitudModalidadService: SolicitudModalidadService,
@@ -130,7 +132,8 @@ export class SolicitudActionService extends ActionService {
     solicitudEntidadFinanciadoraService: SolicitudProyectoEntidadFinanciadoraAjenaService,
     solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
     solicitudProyectoClasificacionService: SolicitudProyectoClasificacionService,
-    clasificacionService: ClasificacionService
+    clasificacionService: ClasificacionService,
+    authService: SgiAuthService
   ) {
     super();
 
@@ -139,6 +142,9 @@ export class SolicitudActionService extends ActionService {
       this.enableEdit();
       this.datosProyectoComplete$.next(this.data.hasSolicitudProyecto);
     }
+
+    const isInvestigador = authService.hasAuthority('CSP-SOL-INV-C');
+    const idConvocatoria = history.state[CONVOCATORIA_ID_KEY];
 
     this.datosGenerales = new SolicitudDatosGeneralesFragment(
       logger,
@@ -150,8 +156,15 @@ export class SolicitudActionService extends ActionService {
       personaService,
       solicitudModalidadService,
       unidadGestionService,
-      this.readonly
+      authService,
+      this.readonly,
+      isInvestigador
     );
+
+    if (isInvestigador && idConvocatoria) {
+      this.loadConvocatoria(idConvocatoria);
+    }
+
     this.documentos = new SolicitudDocumentosFragment(logger, this.data?.solicitud?.id, this.data?.solicitud?.convocatoriaId,
       configuracionSolicitudService, solicitudService, solicitudDocumentoService, this.readonly);
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
@@ -173,7 +186,8 @@ export class SolicitudActionService extends ActionService {
       solicitudService, clasificacionService, this.readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
-    if (this.isEdit()) {
+    // Por ahora solo está implementado para investigador la pestaña datos generales
+    if (this.isEdit() && !isInvestigador) {
       this.addFragment(this.FRAGMENT.HITOS, this.hitos);
       this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
@@ -256,6 +270,15 @@ export class SolicitudActionService extends ActionService {
       if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.ESTANDAR) {
         this.proyectoDatos.initialize();
       }
+    } else if (this.isEdit() && isInvestigador) {
+      this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
+        (value) => {
+          this.convocatoria = value;
+        }
+      ));
+
+      // Forzamos la inicialización de los datos principales
+      this.datosGenerales.initialize();
     }
   }
 
@@ -425,5 +448,13 @@ export class SolicitudActionService extends ActionService {
    */
   desistir(comentario: string): Observable<void> {
     return this.solicitudService.desistir(this.datosGenerales.getKey() as number, comentario);
+  }
+
+  private loadConvocatoria(id: number): void {
+    if (id) {
+      this.convocatoriaService.findById(id).subscribe(convocatoria => {
+        this.datosGenerales.setDatosConvocatoria(convocatoria);
+      });
+    }
   }
 }

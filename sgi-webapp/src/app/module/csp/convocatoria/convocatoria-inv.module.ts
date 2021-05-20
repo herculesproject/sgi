@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { ConvocatoriaDataResolver } from './convocatoria-data.resolver';
@@ -21,7 +22,8 @@ import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module'
     ReactiveFormsModule,
     TranslateModule,
     FormsModule,
-    CspSharedModule
+    CspSharedModule,
+    SgiAuthModule
   ],
   providers: [
     ConvocatoriaDataResolver

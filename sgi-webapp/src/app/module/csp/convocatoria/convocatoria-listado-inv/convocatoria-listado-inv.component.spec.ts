@@ -7,10 +7,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
-
 import { ConvocatoriaListadoInvComponent } from './convocatoria-listado-inv.component';
+
 
 describe('ConvocatoriaListadoInvComponent', () => {
   let component: ConvocatoriaListadoInvComponent;
@@ -34,7 +35,8 @@ describe('ConvocatoriaListadoInvComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

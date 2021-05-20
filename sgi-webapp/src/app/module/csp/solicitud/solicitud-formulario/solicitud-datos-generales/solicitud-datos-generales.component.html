@@ -18,8 +18,9 @@
     </div>
 
     <!-- Comentarios del estado -->
-    <div *ngIf="(formPart.showComentariosEstado$ | async)" [fxFlex.sm]="fxFlexProperties.sm"
-      [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="(formPart.showComentariosEstado$ | async) && !this.formPart.isInvestigador"
+      [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field fxFill>
         <mat-label>{{'csp.solicitud.estado-solicitud.comentario' | translate}}</mat-label>
         <textarea matInput formControlName="comentariosEstado" type="text" id="comentariosEstado"
@@ -29,8 +30,8 @@
     </div>
 
     <!-- Solicitante -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="!this.formPart.isInvestigador" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field fxFill>
         <mat-label>{{'csp.solicitud.solicitante' | translate}}</mat-label>
         <sgi-select-persona placeholder="{{'csp.solicitud.solicitante' | translate}}" formControlName="solicitante"
@@ -46,13 +47,14 @@
         <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
         <sgi-select-convocatoria authorities="CSP-SOL-C" placeholder="{{'csp.solicitud.convocatoria' | translate}}"
           formControlName="convocatoria" [required]="formPart.convocatoriaRequired">
+          [value]="this.formPart.convocatoria$ | async">
         </sgi-select-convocatoria>
       </mat-form-field>
     </div>
 
     <!-- Referencia externa convocatoria // Identificación convocatoria -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="!this.formPart.isInvestigador" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.solicitud.convocatoria-externa' | translate}}</mat-label>
         <input matInput formControlName="convocatoriaExterna" type="text" id="convocatoriaExterna"
@@ -69,8 +71,8 @@
     </div>
 
     <!-- Tipo forumlario-->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="!this.formPart.isInvestigador" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form" fxFill>
         <mat-label>{{'csp.solicitud.tipo-formulario' | translate}}</mat-label>
         <mat-select matNativeControl formControlName="formularioSolicitud"
@@ -85,8 +87,8 @@
     </div>
 
     <!-- Unidad de gestión -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="!this.formPart.isInvestigador" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.solicitud.unidad-gestion' | translate}}</mat-label>
         <input matInput formControlName="unidadGestion" type="text" id="unidadGestion"
@@ -107,8 +109,8 @@
     </div>
 
     <!-- Codigo de registro -->
-    <div *ngIf="fragment.isEdit()" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+    <div *ngIf="fragment.isEdit() && !this.formPart.isInvestigador" [fxFlex.sm]="fxFlexProperties.sm"
+      [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form">
         <mat-label>{{'csp.solicitud.codigo-registro' | translate}}</mat-label>
         <input matInput formControlName="codigoRegistro" type="text" id="codigoRegistro"
@@ -132,7 +134,7 @@
 
     <!-- Tabla entidades convocantes de la convocatoria -->
     <div [fxFlex.sm]="100" [fxFlex.md]="100" [fxFlex.gt-md]="100" [fxFlexOrder]="fxFlexProperties.order">
-      <ng-container *ngIf="formGroup.controls.convocatoria.value">
+      <ng-container>
         <mat-label>{{'list.entity' | translate:msgParamEntidadConvocanteEntity}}</mat-label>
 
         <table mat-table [dataSource]="dataSourceEntidadesConvocantes" matSort

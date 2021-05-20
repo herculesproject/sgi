@@ -376,4 +376,16 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     );
   }
 
+  /**
+   * Comprueba si tiene permisos para tramitar la convocatoria
+   *
+   * @param id Id de la convocatoria
+   */
+  tramitable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/tramitable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

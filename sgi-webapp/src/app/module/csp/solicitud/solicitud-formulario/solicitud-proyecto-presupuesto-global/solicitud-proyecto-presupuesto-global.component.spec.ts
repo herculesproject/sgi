@@ -31,6 +31,10 @@ describe('SolicitudProyectoPresupuestoGlobalComponent', () => {
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
 
+  const state = {
+    idConvocatoria: 1
+  };
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SolicitudProyectoPresupuestoGlobalComponent],
@@ -56,6 +60,7 @@ describe('SolicitudProyectoPresupuestoGlobalComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
     fixture = TestBed.createComponent(SolicitudProyectoPresupuestoGlobalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

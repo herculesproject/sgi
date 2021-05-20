@@ -13,6 +13,7 @@ import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-p
 import { SolicitiudHitosModalComponent } from './modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
+import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
 import { SolicitudDataResolver } from './solicitud-data.resolver';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
@@ -64,7 +65,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SgoSharedModule
   ],
   providers: [
-    SolicitudDataResolver
+    SolicitudDataResolver,
+    SolicitudCrearGuard
   ]
 })
 export class SolicitudModule { }

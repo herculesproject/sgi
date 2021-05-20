@@ -269,8 +269,11 @@
             <button class="button-accion" mat-stroked-button color="primary"
               [routerLink]="[element.convocatoria.id]">{{'btn.view' | translate}}</button>
           </ng-container>
-          <ng-container>
-            <button class="button-accion" mat-stroked-button color="primary">{{'btn.process' | translate}}</button>
+          <ng-container *sgiHasAuthority="'CSP-SOL-INV-C'">
+            <button *ngIf="mapTramitable.get(element.convocatoria.id) && element.convocatoria.activo === true"
+              [routerLink]="['../..', INV_ROUTE_NAMES.SOLICITUDES, ROUTE_NAMES.NEW]"
+              [state]="getSolicitudState(element.convocatoria.id)" class="button-accion" mat-stroked-button
+              color="primary">{{'btn.process' | translate}}</button>
           </ng-container>
         </td>
       </ng-container>

@@ -126,8 +126,9 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.loadUnidadesGestion();
-
+    if (!this.formPart.isInvestigador) {
+      this.loadUnidadesGestion();
+    }
     this.setupI18N();
 
     this.dataSourceEntidadesConvocantes = new MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>();
@@ -163,7 +164,8 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     this.translate.get(
       SOLICITUD_CODIGO_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodigoExternoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamCodigoExternoEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       SOLICITUD_CONVOCATORIA_EXTERNA_KEY,
@@ -173,7 +175,8 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     this.translate.get(
       SOLICITUD_OBSERVACIONES_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamObservacionesEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
     this.translate.get(
       SOLICITUD_UNIDAD_GESTION_KEY,

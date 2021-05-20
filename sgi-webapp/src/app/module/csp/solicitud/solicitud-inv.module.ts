@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
+import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
 import { SolicitudDataResolver } from './solicitud-data.resolver';
 import { SolicitudListadoInvComponent } from './solicitud-listado-inv/solicitud-listado-inv.component';
 import { SolicitudRoutingInvModule } from './solicitud-routing-inv.module';
@@ -26,7 +27,8 @@ import { SolicitudRoutingInvModule } from './solicitud-routing-inv.module';
     SgiAuthModule
   ],
   providers: [
-    SolicitudDataResolver
+    SolicitudDataResolver,
+    SolicitudCrearGuard
   ]
 })
 export class SolicitudInvModule { }

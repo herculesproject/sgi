@@ -16,6 +16,10 @@ import { SolicitudCrearComponent } from './solicitud-crear.component';
 describe('SolicitudCrearComponent', () => {
   let component: SolicitudCrearComponent;
   let fixture: ComponentFixture<SolicitudCrearComponent>;
+ 
+  const state = {
+    idConvocatoria: 1
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -45,6 +49,7 @@ describe('SolicitudCrearComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOnProperty(history, 'state', 'get').and.returnValue(state);
     fixture = TestBed.createComponent(SolicitudCrearComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

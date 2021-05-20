@@ -16,9 +16,12 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
 import { from, Observable, of } from 'rxjs';
-import { map, mergeAll, switchMap } from 'rxjs/operators';
+import { map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
+import { INV_ROUTE_NAMES } from 'src/app/module/inv/inv-route-names';
+import { CONVOCATORIA_ID_KEY } from '../../solicitud/solicitud-crear/solicitud-crear.guard';
 
 const MSG_ERROR = marker('error.load');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
@@ -45,18 +48,23 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   convocatorias$: Observable<IConvocatoriaListado[]>;
 
   busquedaAvanzada = false;
-
+  mapTramitable: Map<number, boolean> = new Map();
   msgParamAreaTematicaEntity = {};
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
 
+  get INV_ROUTE_NAMES() {
+    return INV_ROUTE_NAMES;
+  }
+
   constructor(
     protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authService: SgiAuthService
   ) {
     super(snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
@@ -120,6 +128,17 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
       }),
       switchMap((result) => {
         return from(result.items).pipe(
+          mergeMap(element => {
+            if (this.authService.hasAuthority('CSP-SOL-INV-C')) {
+              return this.convocatoriaService.tramitable(element.convocatoria.id).pipe(
+                map((value) => {
+                  this.mapTramitable.set(element.convocatoria.id, value);
+                  return element;
+                })
+              );
+            }
+            return of(element);
+          }),
           map((convocatoriaListado) => {
             return this.convocatoriaService.findEntidadesFinanciadoras(convocatoriaListado.convocatoria.id).pipe(
               map(entidadFinanciadora => {
@@ -222,6 +241,10 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue(!this.busquedaAvanzada);
     this.formGroup.controls.aplicarFiltro.setValue(!this.busquedaAvanzada);
     this.onSearch();
+  }
+
+  getSolicitudState(idConvocatoria: number) {
+    return { [CONVOCATORIA_ID_KEY]: idConvocatoria };
   }
 
 }
