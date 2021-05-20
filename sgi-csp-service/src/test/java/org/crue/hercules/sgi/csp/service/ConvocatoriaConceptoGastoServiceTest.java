@@ -93,29 +93,6 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaConceptoGasto when modificable returns False
-    Long convocatoriaId = 1L;
-    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
-    ConvocatoriaConceptoGasto newConvocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(1L);
-    newConvocatoriaConceptoGasto.setId(null);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-    BDDMockito.given(conceptoGastoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaConceptoGasto.getConceptoGasto()));
-
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaConceptoGasto
-        () -> service.create(newConvocatoriaConceptoGasto))
-        // then: throw exception as Convocatoria is not modificable
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede crear ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-  }
-
-  @Test
   public void update_WithConceptoGastoIdNoExists_ThrowsConceptoGastoNotFoundException() {
     // given: Un nuevo ConvocatoriaConceptoGasto sin tipo de enlace
     ConvocatoriaConceptoGasto convocatoriaConceptoGastoActualizar = generarMockConvocatoriaConceptoGasto(1L);
@@ -125,24 +102,6 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el concepto gasto es null
     Assertions.assertThatThrownBy(() -> service.update(convocatoriaConceptoGastoActualizar))
         .isInstanceOf(ConceptoGastoNotFoundException.class).hasMessage("ConceptoGasto 1 does not exist.");
-  }
-
-  @Test
-  public void delete_WithExistingId_NoReturnsAnyException() {
-    // given: existing convocatoriaConceptoGasto
-    Long id = 1L;
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaConceptoGasto(id)));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.TRUE);
-    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
-
-    Assertions.assertThatCode(
-        // when: delete by existing id
-        () -> service.delete(id))
-        // then: no exception is thrown
-        .doesNotThrowAnyException();
   }
 
   @Test
@@ -169,24 +128,6 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaConceptoGastoNotFoundException.class);
-  }
-
-  @Test
-  public void delete_WhenModificableReturnsFalse_ThrowsIllegalArgumentException() {
-    // given: existing ConvocatoriaConceptoGasto when modificable returns false
-    Long id = 1L;
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarMockConvocatoriaConceptoGasto(id)));
-    BDDMockito.given(convocatoriaService.modificable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(),
-        ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatCode(
-        // when: delete by existing id
-        () -> service.delete(id))
-        // then: throw exception as Convocatoria is not modificable
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede eliminar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

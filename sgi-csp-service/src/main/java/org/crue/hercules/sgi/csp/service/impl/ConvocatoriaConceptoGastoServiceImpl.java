@@ -82,12 +82,6 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaConceptoGasto.getConvocatoriaId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaConceptoGasto.getConvocatoriaId()));
 
-    // comprobar si convocatoria es modificable
-    Assert.isTrue(
-        convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef(), new String[] { "CSP-CON-E" }),
-        "No se puede crear ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-
     if (convocatoriaConceptoGasto.getMesInicial() != null && convocatoria.getDuracion() != null) {
       if (convocatoriaConceptoGasto.getMesFinal() != null) {
         Assert.isTrue(convocatoriaConceptoGasto.getMesInicial() < convocatoriaConceptoGasto.getMesFinal(),
@@ -172,12 +166,6 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
 
     return repository.findById(convocatoriaConceptoGastoActualizar.getId()).map(convocatoriaConceptoGasto -> {
 
-      // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaConceptoGasto.getConvocatoriaId(), null,
-              new String[] { "CSP-CON-E" }),
-          "No se puede modificar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
-
       convocatoriaConceptoGasto.setConceptoGasto(convocatoriaConceptoGastoActualizar.getConceptoGasto());
       convocatoriaConceptoGasto.setConvocatoriaId(convocatoriaConceptoGastoActualizar.getConvocatoriaId());
       convocatoriaConceptoGasto.setImporteMaximo(convocatoriaConceptoGastoActualizar.getImporteMaximo());
@@ -208,12 +196,6 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     Assert.notNull(id, "ConvocatoriaConceptoGasto id no puede ser null para eliminar un ConvocatoriaConceptoGasto");
 
     repository.findById(id).map(convocatoriaConvocatoriaConceptoGasto -> {
-
-      // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.modificable(convocatoriaConvocatoriaConceptoGasto.getConvocatoriaId(), null,
-              new String[] { "CSP-CON-E" }),
-          "No se puede eliminar ConvocatoriaConceptoGasto. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
 
       return convocatoriaConvocatoriaConceptoGasto;
     }).orElseThrow(() -> new ConvocatoriaConceptoGastoNotFoundException(id));
