@@ -57,21 +57,22 @@ export class ConvocatoriaConceptoGastoDataResolver extends SgiResolverResolver<I
                 return throwError('NOT_FOUND');
               }
               return this.loadConvocatoriaConceptoGastoData(
-                convocatoriaId, convocatoriaConceptoGastoId, permitido, convocatoriaData.readonly
+                convocatoriaId, convocatoriaConceptoGastoId, permitido, convocatoriaData.readonly, convocatoriaData.canEdit
               );
             })
           );
         })
       );
     }
-    return this.loadConvocatoriaConceptoGastoData(convocatoriaId, convocatoriaConceptoGastoId, permitido, convocatoriaData.readonly);
+    return this.loadConvocatoriaConceptoGastoData(convocatoriaId, convocatoriaConceptoGastoId, permitido, convocatoriaData.readonly, convocatoriaData.canEdit);
   }
 
   private loadConvocatoriaConceptoGastoData(
     convocatoriaId: number,
     convocatoriaConceptoGastoId: number,
     permitido: boolean,
-    readonly: boolean
+    readonly: boolean,
+    canEdit: boolean
   ): Observable<IConvocatoriaConceptoGastoData> {
     return this.convocatoriaService.findById(convocatoriaId).pipe(
       map(convocatoria => {
@@ -79,7 +80,8 @@ export class ConvocatoriaConceptoGastoDataResolver extends SgiResolverResolver<I
           convocatoria,
           selectedConvocatoriaConceptoGastos: [],
           permitido,
-          readonly
+          readonly,
+          canEdit
         };
       }),
       switchMap(data => {

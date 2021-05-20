@@ -40,13 +40,15 @@ export class ConvocatoriaDataResolver extends SgiResolverResolver<IConvocatoriaD
           return this.service.modificable(convocatoriaId).pipe(
             map(response => {
               return {
+                canEdit: this.authService.hasAnyAuthorityForAnyUO(['CSP-CON-E']),
                 readonly: !response
               };
             })
           );
         } else {
           return of({
-            readonly: this.authService.hasAuthorityForAnyUO('CSP-CON-INV-V')
+            readonly: this.authService.hasAuthorityForAnyUO('CSP-CON-INV-V'),
+            canEdit: false
           });
         }
       }),

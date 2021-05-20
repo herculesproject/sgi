@@ -15,6 +15,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     public readonly: boolean,
+    public canEdit: boolean
   ) {
     super(key);
     this.setComplete(true);

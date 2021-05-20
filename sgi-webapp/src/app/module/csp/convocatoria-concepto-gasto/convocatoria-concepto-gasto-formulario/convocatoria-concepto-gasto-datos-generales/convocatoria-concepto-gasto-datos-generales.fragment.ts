@@ -20,7 +20,7 @@ export class ConvocatoriaConceptoGastoDatosGeneralesFragment extends FormFragmen
     private service: ConvocatoriaConceptoGastoService,
     private selectedConvocatoriaConceptoGastos: IConvocatoriaConceptoGasto[],
     private permitido: boolean,
-    private readonly: boolean
+    private canEdit: boolean
   ) {
     super(key);
     this.convocatoriaConceptoGasto = {
@@ -55,7 +55,7 @@ export class ConvocatoriaConceptoGastoDatosGeneralesFragment extends FormFragmen
       ),
       observaciones: new FormControl('')
     });
-    if (this.readonly) {
+    if (!this.canEdit) {
       form.disable();
     }
 

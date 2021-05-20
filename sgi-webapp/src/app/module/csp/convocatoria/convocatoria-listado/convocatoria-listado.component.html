@@ -326,8 +326,8 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAnyAuthority="['CSP-CON-E', 'CSP-CON-E_' + element.convocatoria.unidadGestion.id ]">
-            <button *ngIf="mapModificable.get(element.convocatoria.id) && element.convocatoria.activo === true"
-              mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[element.convocatoria.id]">
+            <button *ngIf="element.convocatoria.activo===true" mat-button matTooltip="{{'btn.edit' | translate}}"
+              [routerLink]="[element.convocatoria.id]">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
           </ng-container>

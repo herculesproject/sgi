@@ -29,7 +29,8 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
     enlace: convocatoriaEnlace,
     idModeloEjecucion: 1,
     selectedUrls: [],
-    readonly: false
+    readonly: false,
+    canEdit: false
   };
 
   beforeEach(waitForAsync(() => {

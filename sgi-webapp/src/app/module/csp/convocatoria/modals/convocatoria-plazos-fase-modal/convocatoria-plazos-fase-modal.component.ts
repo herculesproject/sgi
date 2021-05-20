@@ -29,6 +29,7 @@ export interface ConvocatoriaPlazosFaseModalComponentData {
   plazo: IConvocatoriaFase;
   idModeloEjecucion: number;
   readonly: boolean;
+  canEdit: boolean;
 }
 
 @Component({
@@ -172,7 +173,7 @@ export class ConvocatoriaPlazosFaseModalComponent extends
       observaciones: new FormControl(this.data?.plazo?.observaciones, Validators.maxLength(250))
     });
 
-    if (this.data.readonly) {
+    if (!this.data.canEdit) {
       formGroup.disable();
     }
 

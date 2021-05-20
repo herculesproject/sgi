@@ -180,7 +180,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
       convocatoriaConceptoGastoCodigoEcsTabla,
       permitido,
       editModal: false,
-      readonly: this.formPart.readonly,
+      readonly: this.formPart.readonly
     };
 
     const config = {

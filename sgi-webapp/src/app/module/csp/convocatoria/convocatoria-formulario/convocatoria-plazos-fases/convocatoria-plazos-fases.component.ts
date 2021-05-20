@@ -96,7 +96,8 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
       plazos: this.formPart.getConvocatoriasFases(),
       plazo: plazo ? plazo.value : {} as IConvocatoriaFase,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.formPart.readonly
+      readonly: this.formPart.readonly,
+      canEdit: this.formPart.canEdit
     };
 
     const config = {

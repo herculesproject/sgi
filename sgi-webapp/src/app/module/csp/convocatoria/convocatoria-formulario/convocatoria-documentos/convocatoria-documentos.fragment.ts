@@ -105,7 +105,8 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
     key: number,
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaDocumentoService: ConvocatoriaDocumentoService,
-    public readonly: boolean
+    public readonly: boolean,
+    public canEdit: boolean
   ) {
     super(key);
     this.setComplete(true);

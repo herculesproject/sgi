@@ -17,6 +17,7 @@ export interface IConvocatoriaConceptoGastoData {
   selectedConvocatoriaConceptoGastos: IConvocatoriaConceptoGasto[];
   permitido: boolean;
   readonly: boolean;
+  canEdit: boolean;
 }
 
 @Injectable()
@@ -62,10 +63,10 @@ export class ConvocatoriaConceptoGastoActionService extends ActionService {
     }
 
     this.datosGenerales = new ConvocatoriaConceptoGastoDatosGeneralesFragment(id, this.data.convocatoria,
-      convocatoriaConceptoGastoService, this.convocatoriaConceptoGastos, this.data.permitido, this.data.readonly);
+      convocatoriaConceptoGastoService, this.convocatoriaConceptoGastos, this.data.permitido, this.data.canEdit);
 
     this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(id,
-      convocatoriaConceptoGastoService, convocatoriaConceptoGastoCodigoEcService, this.data.readonly);
+      convocatoriaConceptoGastoService, convocatoriaConceptoGastoCodigoEcService, !this.data.canEdit);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.CODIGOS_ECONOMICOS, this.codigosEconomicos);

@@ -53,7 +53,8 @@ describe('ConvocatoriaConceptoGastoCodigoEcModalComponent', () => {
     ] as IConvocatoriaConceptoGasto[],
     editModal: true,
     permitido: true,
-    readonly: false
+    readonly: false,
+    canEdit: false
   } as IConvocatoriaConceptoGastoCodigoEcModalComponent;
 
   beforeEach(waitForAsync(() => {

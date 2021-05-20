@@ -14,7 +14,8 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
     key: number,
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaFaseService: ConvocatoriaFaseService,
-    public readonly: boolean
+    public readonly: boolean,
+    public canEdit: boolean
   ) {
     super(key);
     this.setComplete(true);

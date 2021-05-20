@@ -110,7 +110,8 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
       hitos: this.dataSource.data.map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.formPart.readonly
+      readonly: this.formPart.readonly,
+      canEdit: this.formPart.canEdit
     };
     const config = {
       panelClass: 'sgi-dialog-container',

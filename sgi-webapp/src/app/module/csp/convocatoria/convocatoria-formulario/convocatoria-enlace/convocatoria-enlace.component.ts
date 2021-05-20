@@ -104,7 +104,8 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
       enlace: wrapper?.value ?? {} as IConvocatoriaEnlace,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
       selectedUrls: this.formPart.getSelectedUrls(),
-      readonly: this.formPart.readonly
+      readonly: this.formPart.readonly,
+      canEdit: this.formPart.canEdit,
     };
     const config = {
       panelClass: 'sgi-dialog-container',

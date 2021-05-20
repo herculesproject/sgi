@@ -18,7 +18,8 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     key: number,
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
-    public readonly: boolean
+    public readonly: boolean,
+    public canEdit: boolean
   ) {
     super(key, true);
     this.setComplete(true);

@@ -27,6 +27,7 @@ export interface ConvocatoriaEnlaceModalComponentData {
   idModeloEjecucion: number;
   selectedUrls: string[];
   readonly: boolean;
+  canEdit: boolean;
 }
 @Component({
   templateUrl: './convocatoria-enlace-modal.component.html',
@@ -119,7 +120,7 @@ export class ConvocatoriaEnlaceModalComponent extends
       descripcion: new FormControl(this.data.enlace.descripcion, [Validators.maxLength(250)]),
       tipoEnlace: new FormControl(this.data.enlace.tipoEnlace),
     });
-    if (this.data.readonly) {
+    if (!this.data.canEdit) {
       formGroup.disable();
     }
     return formGroup;

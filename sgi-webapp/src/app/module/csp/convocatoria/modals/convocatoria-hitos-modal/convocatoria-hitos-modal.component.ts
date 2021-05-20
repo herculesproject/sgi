@@ -29,6 +29,7 @@ export interface ConvocatoriaHitosModalComponentData {
   hito: IConvocatoriaHito;
   idModeloEjecucion: number;
   readonly: boolean;
+  canEdit: boolean;
 }
 
 @Component({
@@ -170,7 +171,7 @@ export class ConvocatoriaHitosModalComponent extends
       comentario: new FormControl(this.data?.hito?.comentario, Validators.maxLength(250)),
       aviso: new FormControl(this.data?.hito?.generaAviso ?? false)
     });
-    if (this.data.readonly) {
+    if (!this.data.canEdit) {
       formGroup.disable();
     }
     return formGroup;

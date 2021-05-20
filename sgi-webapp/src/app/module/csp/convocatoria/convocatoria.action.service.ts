@@ -47,6 +47,7 @@ const MSG_REGISTRAR = marker('msg.csp.convocatoria.registrar');
 
 export interface IConvocatoriaData {
   readonly: boolean;
+  canEdit: boolean;
 }
 
 @Injectable()
@@ -106,6 +107,10 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     return this.data?.readonly ?? false;
   }
 
+  get canEdit(): boolean {
+    return this.data?.canEdit ?? true;
+  }
+
   constructor(
     fb: FormBuilder,
     logger: NGXLogger,
@@ -148,21 +153,21 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       logger, this.id, convocatoriaService, convocatoriaEntidadConvocanteService,
       empresaService, this.readonly);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
-      this.id, convocatoriaService, convocatoriaFaseService, this.readonly);
+      this.id, convocatoriaService, convocatoriaFaseService, this.readonly, this.canEdit);
     this.hitos = new ConvocatoriaHitosFragment(this.id, convocatoriaService,
-      convocatoriaHitoService, this.readonly);
+      convocatoriaHitoService, this.readonly, this.canEdit);
     this.documentos = new ConvocatoriaDocumentosFragment(logger, this.id, convocatoriaService,
-      convocatoriaDocumentoService, this.readonly);
+      convocatoriaDocumentoService, this.readonly, this.canEdit);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(this.id,
       convocatoriaService, convocatoriaSeguimientoCientificoService, this.readonly);
     this.entidadesFinanciadoras = new ConvocatoriaEntidadesFinanciadorasFragment(
       this.id, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly);
     this.enlaces = new ConvocatoriaEnlaceFragment(this.id, convocatoriaService,
-      convocatoriaEnlaceService, this.readonly);
+      convocatoriaEnlaceService, this.readonly, this.canEdit);
     this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, this.id,
       convocatoriaRequisitoIPService, this.readonly);
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, this.id, convocatoriaService,
-      convocatoriaConceptoGastoService, this.readonly);
+      convocatoriaConceptoGastoService, this.readonly, this.canEdit);
     this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, this.id,
       convocatoriaRequisitoEquipoService, this.readonly);
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
