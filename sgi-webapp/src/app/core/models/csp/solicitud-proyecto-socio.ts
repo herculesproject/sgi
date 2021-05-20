@@ -10,4 +10,5 @@ export interface ISolicitudProyectoSocio {
   mesFin: number;
   numInvestigadores: number;
   importeSolicitado: number;
+  importePresupuestado: number;
 }

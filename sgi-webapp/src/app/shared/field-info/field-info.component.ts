@@ -1,5 +1,6 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, Input } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'sgi-field-info',
@@ -27,6 +28,16 @@ export class FieldInfoComponent {
   }
   // tslint:disable-next-line: variable-name
   private _visible = false;
+
+  @Input()
+  get color(): ThemePalette {
+    return this._color;
+  }
+  set color(value: ThemePalette) {
+    this._color = value;
+  }
+  // tslint:disable-next-line: variable-name
+  private _color: ThemePalette = 'primary';
 
   constructor() { }
 }

@@ -16,6 +16,7 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
       empresa: { id: value.entidadRef } as IEmpresa,
       anualidad: value.anualidad,
       importeSolicitado: value.importeSolicitado,
+      importePresupuestado: value.importePresupuestado,
       observaciones: value.observaciones,
       financiacionAjena: value.financiacionAjena
     };
@@ -32,6 +33,7 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
       entidadRef: value.empresa?.id,
       anualidad: value.anualidad,
       importeSolicitado: value.importeSolicitado,
+      importePresupuestado: value.importePresupuestado,
       observaciones: value.observaciones,
       financiacionAjena: value.financiacionAjena ? true : false
     };

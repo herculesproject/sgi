@@ -16,7 +16,6 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';

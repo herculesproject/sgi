@@ -22,7 +22,13 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       areaTematica: value.areaTematica,
       checkListRef: value.checkListRef,
       envioEtica: value.envioEtica,
-      tipoPresupuesto: value.tipoPresupuesto
+      tipoPresupuesto: value.tipoPresupuesto,
+      importeSolicitado: value.importeSolicitado,
+      importePresupuestado: value.importePresupuestado,
+      importeSolicitadoSocios: value.importeSolicitadoSocios,
+      importePresupuestadoSocios: value.importePresupuestadoSocios,
+      totalImporteSolicitado: value.totalImporteSolicitado,
+      totalImportePresupuestado: value.totalImportePresupuestado
     };
   }
 
@@ -44,7 +50,13 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       areaTematica: value.areaTematica,
       checkListRef: value.checkListRef,
       envioEtica: value.envioEtica,
-      tipoPresupuesto: value.tipoPresupuesto
+      tipoPresupuesto: value.tipoPresupuesto,
+      importeSolicitado: value.importeSolicitado,
+      importePresupuestado: value.importePresupuestado,
+      importeSolicitadoSocios: value.importeSolicitadoSocios,
+      importePresupuestadoSocios: value.importePresupuestadoSocios,
+      totalImporteSolicitado: value.totalImporteSolicitado,
+      totalImportePresupuestado: value.totalImportePresupuestado
     };
   }
 }

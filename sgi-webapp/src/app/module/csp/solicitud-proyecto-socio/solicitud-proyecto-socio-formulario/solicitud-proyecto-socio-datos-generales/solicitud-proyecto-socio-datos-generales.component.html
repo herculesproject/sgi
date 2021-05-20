@@ -76,6 +76,20 @@
           </mat-error>
         </mat-form-field>
       </div>
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.proyecto-socio.importe-presupuestado' | translate}}</mat-label>
+          <input matInput formControlName="importePresupuestado" type="number" id="numInvestigadores"
+            placeholder="{{'csp.proyecto-socio.importe-presupuestado' | translate}}">
+          <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.min">
+            {{'error.min.entity' | translate:msgParamImportePresupuestadoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.max">
+            {{'error.max.entity' | translate:msgParamImportePresupuestadoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
     </div>
     <div class="fieldset-form">
       {{'title.csp.proyecto-socio.periodo-participacion-previsto' | translate}}

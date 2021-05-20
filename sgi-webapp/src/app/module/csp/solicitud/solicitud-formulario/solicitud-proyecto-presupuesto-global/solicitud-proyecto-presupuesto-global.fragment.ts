@@ -1,34 +1,82 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
-import { Fragment } from '@core/services/action-service';
+import { FormFragment } from '@core/services/action-service';
 import { SolicitudProyectoPresupuestoService } from '@core/services/csp/solicitud-proyecto-presupuesto.service';
+import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
-  formGroup: FormGroup;
+export class SolicitudProyectoPresupuestoGlobalFragment extends FormFragment<ISolicitudProyecto> {
   partidasGastos$ = new BehaviorSubject<StatusWrapper<ISolicitudProyectoPresupuesto>[]>([]);
   private partidasGastosEliminadas: StatusWrapper<ISolicitudProyectoPresupuesto>[] = [];
+
+  private solicitudProyecto: ISolicitudProyecto;
 
   constructor(
     key: number,
     private solicitudService: SolicitudService,
     private solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
     private empresaService: EmpresaService,
+    private solicitudProyectoService: SolicitudProyectoService,
     public readonly: boolean
   ) {
-    super(key);
+    super(key, true);
     this.setComplete(true);
   }
 
-  protected onInitialize(): void {
-    this.formGroup = new FormGroup({
-      totalPresupuesto: new FormControl({ value: '', disabled: true })
+  protected buildFormGroup(): FormGroup {
+    const form = new FormGroup({
+      importePresupuestado: new FormControl('', [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      importeSolicitado: new FormControl('', [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      importePresupuestadoSocios: new FormControl('', [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      importeSolicitadoSocios: new FormControl('', [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      totalImportePresupuestado: new FormControl('', [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ]),
+      totalImporteSolicitado: new FormControl('', [
+        Validators.min(0),
+        Validators.max(2_147_483_647)
+      ])
     });
 
+    if (this.readonly) {
+      form.disable();
+    }
+
+    return form;
+  }
+
+  protected buildPatch(value: ISolicitudProyecto): { [key: string]: any; } {
+    this.solicitudProyecto = value;
+    const result = {
+      importePresupuestado: value.importePresupuestado,
+      importePresupuestadoSocios: value.importePresupuestadoSocios,
+      importeSolicitado: value.importeSolicitado,
+      importeSolicitadoSocios: value.importeSolicitadoSocios,
+      totalImportePresupuestado: value.totalImportePresupuestado,
+      totalImporteSolicitado: value.totalImporteSolicitado
+    } as ISolicitudProyecto;
+    return result;
+  }
+
+  protected initializer(key: number): Observable<ISolicitudProyecto> {
     const solicitudId = this.getKey() as number;
     if (solicitudId) {
       const subscription = this.solicitudService.findAllSolicitudProyectoPresupuesto(solicitudId).pipe(
@@ -57,18 +105,41 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
       ).subscribe(
         (solicitudProyectoPresupuestos) => {
           this.partidasGastos$.next(solicitudProyectoPresupuestos);
-          this.updateTotalPresupuesto();
         }
       );
       this.subscriptions.push(subscription);
     }
+
+    return this.solicitudService.findSolicitudProyecto(key).pipe(
+      map(response => {
+        return this.solicitudProyecto = response;
+      }),
+      catchError(() => {
+        return EMPTY;
+      })
+    );
+  }
+
+  getValue(): ISolicitudProyecto {
+    if (this.solicitudProyecto === null) {
+      this.solicitudProyecto = {} as ISolicitudProyecto;
+    }
+    const form = this.getFormGroup().value;
+    this.solicitudProyecto.importePresupuestado = form.importePresupuestado;
+    this.solicitudProyecto.importePresupuestadoSocios = form.importePresupuestadoSocios;
+    this.solicitudProyecto.importeSolicitado = form.importeSolicitado;
+    this.solicitudProyecto.importeSolicitadoSocios = form.importeSolicitadoSocios;
+    this.solicitudProyecto.totalImportePresupuestado = form.totalImportePresupuestado;
+    this.solicitudProyecto.totalImporteSolicitado = form.totalImporteSolicitado;
+    return this.solicitudProyecto;
   }
 
   saveOrUpdate(): Observable<void> {
     return merge(
       this.deleteSolicitudProyectoPresupuestos(),
       this.updateSolicitudProyectoPresupuestos(),
-      this.createSolicitudProyectoPresupuestos()
+      this.createSolicitudProyectoPresupuestos(),
+      this.updateSolicitudProyecto()
     ).pipe(
       takeLast(1),
       tap(() => {
@@ -94,7 +165,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
       current.splice(index, 1);
       this.partidasGastos$.next(current);
       this.setChanges(true);
-      this.updateTotalPresupuesto();
     }
   }
 
@@ -105,7 +175,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
     current.push(wrapped);
     this.partidasGastos$.next(current);
     this.setChanges(true);
-    this.updateTotalPresupuesto();
   }
 
   public updatePartidaGasto(wrapper: StatusWrapper<ISolicitudProyectoPresupuesto>) {
@@ -115,7 +184,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
       wrapper.setEdited();
       this.partidasGastos$.value[index] = wrapper;
       this.setChanges(true);
-      this.updateTotalPresupuesto();
     }
   }
 
@@ -136,6 +204,22 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
                 .filter(deletedEnlace => deletedEnlace.value.id !== wrapped.value.id);
             })
           );
+      })
+    );
+  }
+
+  /**
+   * Actualiza las SolicitudProyecto modificadas.
+   */
+  private updateSolicitudProyecto(): Observable<void> {
+    this.getValue();
+    if (!this.solicitudProyecto) {
+      return of(void 0);
+    }
+
+    return this.solicitudProyectoService.update(this.solicitudProyecto.id, this.solicitudProyecto).pipe(
+      catchError(() => {
+        return of(void 0);
       })
     );
   }
@@ -187,11 +271,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends Fragment {
   private isSaveOrUpdateComplete(): boolean {
     const touched: boolean = this.partidasGastos$.value.some((wrapper) => wrapper.touched);
     return (this.partidasGastosEliminadas.length > 0 || touched);
-  }
-
-  private updateTotalPresupuesto() {
-    const totalPresupuesto = this.partidasGastos$.value.reduce((total, partidaGasto) => total + partidaGasto.value.importeSolicitado, 0);
-    this.formGroup.controls.totalPresupuesto.setValue(totalPresupuesto);
   }
 
 }

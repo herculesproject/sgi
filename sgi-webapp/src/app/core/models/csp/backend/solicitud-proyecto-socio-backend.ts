@@ -9,4 +9,5 @@ export interface ISolicitudProyectoSocioBackend {
   mesFin: number;
   numInvestigadores: number;
   importeSolicitado: number;
+  importePresupuestado: number;
 }

@@ -166,9 +166,9 @@ export class SolicitudActionService extends ActionService {
     this.entidadesFinanciadoras = new SolicitudProyectoEntidadesFinanciadorasFragment(this.data?.solicitud?.id, solicitudService,
       solicitudEntidadFinanciadoraService, empresaService, this.readonly);
     this.desglosePresupuestoGlobal = new SolicitudProyectoPresupuestoGlobalFragment(this.data?.solicitud?.id, solicitudService,
-      solicitudProyectoPresupuestoService, empresaService, this.readonly);
+      solicitudProyectoPresupuestoService, empresaService, solicitudProyectoService, this.readonly);
     this.desglosePresupuestoEntidades = new SolicitudProyectoPresupuestoEntidadesFragment(this.data?.solicitud?.id,
-      this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaService, this.readonly);
+      this.data?.solicitud?.convocatoriaId, convocatoriaService, solicitudService, empresaService, solicitudProyectoService, this.readonly);
     this.clasificaciones = new SolicitudProyectoClasificacionesFragment(this.data?.solicitud?.id, solicitudProyectoClasificacionService,
       solicitudService, clasificacionService, this.readonly);
 

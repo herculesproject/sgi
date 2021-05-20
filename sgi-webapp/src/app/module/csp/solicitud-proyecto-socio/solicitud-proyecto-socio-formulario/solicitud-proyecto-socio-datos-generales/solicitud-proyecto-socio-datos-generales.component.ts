@@ -19,6 +19,7 @@ import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyec
 
 const MSG_ERROR_INIT = marker('error.load');
 const SOLICITUD_PROYECTO_SOCIO_IMPORTE_SOLICITADO_KEY = marker('csp.proyecto-socio.importe-solicitado');
+const SOLICITUD_PROYECTO_SOCIO_IMPORTE_PRESUPUESTADO_KEY = marker('csp.proyecto-socio.importe-presupuestado');
 const SOLICITUD_PROYECTO_SOCIO_MES_FIN_KEY = marker('csp.proyecto-socio.mes-fin');
 const SOLICITUD_PROYECTO_SOCIO_MES_INICIO_KEY = marker('csp.proyecto-socio.mes-inicio');
 const SOLICITUD_PROYECTO_SOCIO_NUMERO_INVESTIGADOR_KEY = marker('csp.proyecto-socio.num-investigadores');
@@ -47,7 +48,7 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
   msgParamImporteSolicitadoEntity = {};
   msgParamMesInicioEntity = {};
   msgParamMesFinEntity = {};
-
+  msgParamImportePresupuestadoEntity = {};
 
   constructor(
     private readonly logger: NGXLogger,
@@ -127,6 +128,11 @@ export class SolicitudProyectoSocioDatosGeneralesComponent extends FormFragmentC
       SOLICITUD_PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_SOCIO_IMPORTE_PRESUPUESTADO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamImportePresupuestadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
   }
 
   private loadRolProyectos(): void {

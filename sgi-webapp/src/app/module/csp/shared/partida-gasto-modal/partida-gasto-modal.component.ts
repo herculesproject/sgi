@@ -9,6 +9,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IPartidaGasto } from '@core/models/csp/partida-gasto';
+import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
@@ -31,7 +32,7 @@ export interface ConceptoGastoCodigoEc {
 }
 
 export interface PartidaGastoDataModal {
-  partidaGasto: IPartidaGasto;
+  partidaGasto: ISolicitudProyectoPresupuesto;
   convocatoriaId: number;
   readonly: boolean;
 }
@@ -44,6 +45,8 @@ const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES =
   marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO =
   marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_PRESUPUESTADO =
+  marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -75,6 +78,7 @@ export class PartidaGastoModalComponent extends
   msgParaConceptoGastoEntity = {};
   msgParamObservacionesEntity = {};
   msgParamImporteEntity = {};
+  msgParamImportePresupuestadoEntity = {};
 
   constructor(
     protected snackBarService: SnackBarService,
@@ -190,6 +194,11 @@ export class PartidaGastoModalComponent extends
       SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamImporteEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_PRESUPUESTADO,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamImportePresupuestadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   protected getFormGroup(): FormGroup {
@@ -215,6 +224,12 @@ export class PartidaGastoModalComponent extends
             Validators.min(0),
             Validators.max(2_147_483_647)
           ]),
+        importePresupuestado: new FormControl(this.data.partidaGasto.importePresupuestado,
+          [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(2_147_483_647)
+          ]),
         observaciones: new FormControl(this.data.partidaGasto.observaciones,
           [
             Validators.maxLength(2000)
@@ -233,6 +248,7 @@ export class PartidaGastoModalComponent extends
     entidad.conceptoGasto = this.formGroup.controls.conceptoGasto.value;
     entidad.anualidad = this.formGroup.controls.anualidad.value;
     entidad.importeSolicitado = this.formGroup.controls.importeSolicitado.value;
+    entidad.importePresupuestado = this.formGroup.controls.importePresupuestado.value;
     entidad.observaciones = this.formGroup.controls.observaciones.value;
     return entidad;
   }

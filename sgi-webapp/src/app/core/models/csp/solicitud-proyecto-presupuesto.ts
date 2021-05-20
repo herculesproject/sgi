@@ -5,4 +5,5 @@ export interface ISolicitudProyectoPresupuesto extends IPartidaGasto {
   solicitudProyectoId: number;
   empresa: IEmpresa;
   financiacionAjena: boolean;
+  importePresupuestado: number;
 }

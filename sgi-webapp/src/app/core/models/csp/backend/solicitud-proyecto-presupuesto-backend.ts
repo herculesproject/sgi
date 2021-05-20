@@ -7,6 +7,7 @@ export interface ISolicitudProyectoPresupuestoBackend {
   entidadRef: string;
   anualidad: number;
   importeSolicitado: number;
+  importePresupuestado: number;
   observaciones: string;
   financiacionAjena: boolean;
 }

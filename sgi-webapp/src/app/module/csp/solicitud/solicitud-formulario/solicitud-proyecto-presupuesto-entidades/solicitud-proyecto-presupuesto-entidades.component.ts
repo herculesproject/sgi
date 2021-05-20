@@ -6,19 +6,32 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud-proyecto-presupuesto-totales';
+import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { EntidadFinanciadoraDesglosePresupuesto, SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-proyecto-presupuesto-entidades.fragment';
 
 const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entidad-financiadora');
+
+interface IValoresCalculadosData {
+  totalPresupuestadoUniversidad: number;
+  totalSolicitadoUniversidad: number;
+  totalPresupuestadoSocios: number;
+  totalSolicitadoSocios: number;
+  totalPresupuestado: number;
+  totalSolicitado: number;
+  totales: ISolicitudProyectoPresupuestoTotales;
+}
 
 @Component({
   selector: 'sgi-solicitud-proyecto-presupuesto-entidades',
@@ -26,12 +39,15 @@ const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entida
   styleUrls: ['./solicitud-proyecto-presupuesto-entidades.component.scss']
 })
 export class SolicitudProyectoPresupuestoEntidadesComponent
-  extends FormFragmentComponent<ISolicitudProyectoPresupuestoTotales> implements OnInit, OnDestroy {
+  extends FormFragmentComponent<ISolicitudProyecto> implements OnInit, OnDestroy {
   SOLICITUD_ROUTE_NAMES = SOLICITUD_ROUTE_NAMES;
   ROUTE_NAMES = ROUTE_NAMES;
 
   private subscriptions: Subscription[] = [];
   formPart: SolicitudProyectoPresupuestoEntidadesFragment;
+
+  private solicitudProyectoSocio$: Observable<ISolicitudProyectoSocio[]>;
+  valoresCalculadosData = {} as IValoresCalculadosData;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -55,7 +71,8 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
     public actionService: SolicitudActionService,
     private router: Router,
     private route: ActivatedRoute,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private solicitudService: SolicitudService
   ) {
     super(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, actionService);
     this.formPart = this.fragment as SolicitudProyectoPresupuestoEntidadesFragment;
@@ -70,6 +87,9 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.solicitudProyectoSocio$ = this.solicitudService.findAllSolicitudProyectoSocio(this.formPart.getKey() as number).pipe(
+      map((response) => response.items));
   }
 
   ngOnInit(): void {
@@ -104,6 +124,7 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
     const subscription = this.formPart.entidadesFinanciadoras$.subscribe(
       (entidadesFinanciadoras) => {
         this.dataSource.data = entidadesFinanciadoras;
+        this.updateImportesTotales();
       }
     );
     this.subscriptions.push(subscription);
@@ -120,4 +141,30 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  private updateImportesTotales() {
+    this.subscriptions.push(this.solicitudService.getSolicitudProyectoPresupuestoTotales(this.formPart.getKey() as number).
+      subscribe(response => {
+        this.valoresCalculadosData.totales = response;
+        this.valoresCalculadosData.totalPresupuestadoUniversidad =
+          response.importeTotalPresupuestadoAjeno + response.importeTotalPresupuestadoNoAjeno;
+        this.valoresCalculadosData.totalSolicitadoUniversidad =
+          response.importeTotalSolicitadoAjeno + response.importeTotalSolicitadoNoAjeno;
+
+        this.solicitudProyectoSocio$.pipe(
+          map(solicitudProyectoSocios => solicitudProyectoSocios.reduce(
+            (total, solicitudProyectoSocio) => total + solicitudProyectoSocio.importePresupuestado, 0)
+          )).subscribe(result => {
+            this.valoresCalculadosData.totalPresupuestadoSocios = result;
+            this.valoresCalculadosData.totalPresupuestado = this.valoresCalculadosData.totalPresupuestadoUniversidad + result;
+          });
+
+        this.solicitudProyectoSocio$.pipe(
+          map(solicitudProyectoSocios => solicitudProyectoSocios.reduce(
+            (total, solicitudProyectoSocio) => total + solicitudProyectoSocio.importeSolicitado, 0))
+        ).subscribe(result => {
+          this.valoresCalculadosData.totalSolicitadoSocios = result;
+          this.valoresCalculadosData.totalSolicitado = this.valoresCalculadosData.totalSolicitadoUniversidad + result;
+        });
+      }));
+  }
 }

@@ -130,24 +130,45 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <!-- Importe solicitado -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <mat-form-field>
-        <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}
-        </mat-label>
-        <input matInput formControlName="importeSolicitado" type="number" min="0" step="1"
-          placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}"
-          required>
-        <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.required">
-          {{'error.required.entity' | translate:msgParamImporteEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.min">
-          {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.min' | translate}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.max">
-          {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.max' | translate}}
-        </mat-error>
-      </mat-form-field>
+      <!-- Importe presupuestado -->
+      <div>
+        <mat-form-field>
+          <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado' | translate}}
+          </mat-label>
+          <input matInput formControlName="importePresupuestado" type="number" min="0" step="1"
+            placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado' | translate}}"
+            required>
+          <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.required">
+            {{'error.required.entity' | translate:msgParamImportePresupuestadoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.min">
+            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado.min' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.max">
+            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado.max' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Importe solicitado -->
+      <div>
+        <mat-form-field>
+          <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}
+          </mat-label>
+          <input matInput formControlName="importeSolicitado" type="number" min="0" step="1"
+            placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}"
+            required>
+          <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.required">
+            {{'error.required.entity' | translate:msgParamImporteEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.min">
+            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.min' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.max">
+            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.max' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
     </div>
     <!-- Observaciones -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">

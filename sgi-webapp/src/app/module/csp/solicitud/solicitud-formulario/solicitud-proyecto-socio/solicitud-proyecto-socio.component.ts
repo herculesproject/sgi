@@ -40,7 +40,7 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns = ['empresa', 'rolSocio', 'numInvestigadores', 'mesInicio', 'mesFin', 'importeSolicitado', 'acciones'];
+  displayedColumns = ['empresa', 'rolSocio', 'numInvestigadores', 'mesInicio', 'mesFin', 'importePresupuestado', 'importeSolicitado', 'acciones'];
 
   dataSource = new MatTableDataSource<StatusWrapper<ISolicitudProyectoSocio>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;

@@ -1,6 +1,7 @@
 
 export interface ISolicitudProyectoPresupuestoTotales {
-  importeTotalConvocatoria: number;
-  importeTotalAjeno: number;
-  importeTotal: number;
+  importeTotalPresupuestadoNoAjeno: number;
+  importeTotalSolicitadoNoAjeno: number;
+  importeTotalPresupuestadoAjeno: number;
+  importeTotalSolicitadoAjeno: number;
 }

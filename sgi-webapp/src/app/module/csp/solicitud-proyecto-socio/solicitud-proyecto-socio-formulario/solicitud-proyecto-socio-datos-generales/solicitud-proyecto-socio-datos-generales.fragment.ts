@@ -36,6 +36,10 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
           Validators.min(1),
           Validators.max(2_147_483_647)
         ]),
+        importePresupuestado: new FormControl('', [
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]),
         mesInicio: new FormControl('', [
           Validators.min(1),
           Validators.max(9999)
@@ -65,6 +69,7 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
       rolSocio: solicitudProyectoSocio.rolSocio,
       numInvestigadores: solicitudProyectoSocio.numInvestigadores,
       importeSolicitado: solicitudProyectoSocio.importeSolicitado,
+      importePresupuestado: solicitudProyectoSocio.importePresupuestado,
       mesInicio: solicitudProyectoSocio.mesInicio,
       mesFin: solicitudProyectoSocio.mesFin,
     };
@@ -82,6 +87,7 @@ export class SolicitudProyectoSocioDatosGeneralesFragment extends FormFragment<I
     this.solicitudProyectoSocio.rolSocio = form.rolSocio.value;
     this.solicitudProyectoSocio.numInvestigadores = form.numInvestigadores.value;
     this.solicitudProyectoSocio.importeSolicitado = form.importeSolicitado.value;
+    this.solicitudProyectoSocio.importePresupuestado = form.importePresupuestado.value;
     this.solicitudProyectoSocio.mesInicio = form.mesInicio.value;
     this.solicitudProyectoSocio.mesFin = form.mesFin.value;
     return this.solicitudProyectoSocio;

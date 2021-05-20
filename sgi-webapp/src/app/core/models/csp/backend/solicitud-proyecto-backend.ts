@@ -16,4 +16,10 @@ export interface ISolicitudProyectoBackend {
   checkListRef: string;
   envioEtica: boolean;
   tipoPresupuesto: TipoPresupuesto;
+  importeSolicitado: number;
+  importePresupuestado: number;
+  importeSolicitadoSocios: number;
+  importePresupuestadoSocios: number;
+  totalImporteSolicitado: number;
+  totalImportePresupuestado: number;
 }
