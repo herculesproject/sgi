@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -453,6 +454,27 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede tramitarse.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return true si puede ser tramitada / false si no puede ser tramitada
+   */
+  @Override
+  public boolean tramitable(Long id) {
+    Convocatoria convocatoria = repository.findById(id).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
+
+    ConfiguracionSolicitud datosConfiguracionSolicitud = configuracionSolicitudRepository.findByConvocatoriaId(id)
+        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(id));
+
+    Instant fechaActual = Instant.now();
+
+    return convocatoria.getActivo() && datosConfiguracionSolicitud.getTramitacionSGI()
+        && datosConfiguracionSolicitud.getFasePresentacionSolicitudes().getFechaInicio().isBefore(fechaActual)
+        && datosConfiguracionSolicitud.getFasePresentacionSolicitudes().getFechaFin().isAfter(fechaActual);
+  }
+
+  /**
    * Comprueba y valida los datos de una convocatoria.
    * 
    * @param datosConvocatoria
@@ -701,5 +723,4 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     log.debug("validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
   }
-
 }

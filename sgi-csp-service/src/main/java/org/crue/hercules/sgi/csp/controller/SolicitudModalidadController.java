@@ -46,7 +46,7 @@ public class SolicitudModalidadController {
    * @return Nuevo {@link SolicitudModalidad} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-C')")
   public ResponseEntity<SolicitudModalidad> create(@Valid @RequestBody SolicitudModalidad solicitudModalidad) {
     log.debug("create(SolicitudModalidad solicitudModalidad) - start");
     SolicitudModalidad returnValue = service.create(solicitudModalidad);

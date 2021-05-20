@@ -132,4 +132,13 @@ public interface ConvocatoriaService {
    */
   Page<Convocatoria> findAllTodosRestringidos(String query, Pageable paging);
 
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede tramitarse.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return true si puede ser tramitada / false si no puede ser tramitada
+   */
+  boolean tramitable(Long id);
+
 }

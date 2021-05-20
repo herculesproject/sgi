@@ -31,7 +31,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   private static final String CONTROLLER_BASE_PATH = "/solicitudmodalidades";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-C" })
   public void create_ReturnsSolicitudModalidad() throws Exception {
     // given: new SolicitudModalidad
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
@@ -59,7 +59,7 @@ public class SolicitudModalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-INV-C" })
   public void create_WithId_Returns400() throws Exception {
     // given: a SolicitudModalidad with id filled
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);

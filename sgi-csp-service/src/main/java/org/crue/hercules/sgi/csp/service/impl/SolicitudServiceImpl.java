@@ -121,8 +121,8 @@ public class SolicitudServiceImpl implements SolicitudService {
           .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoriaId()));
 
       Assert.isTrue(
-          SgiSecurityContextHolder.hasAuthority(authority)
-              || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef()),
+          SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") || (SgiSecurityContextHolder.hasAuthority(authority)
+              || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef())),
           "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
       solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
@@ -287,7 +287,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     String authorityVisualizar = "CSP-SOL-V";
 
-    Assert.isTrue(
+    Assert.isTrue(SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") ||
         hasPermisosEdicion(returnValue.getUnidadGestionRef())
             || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar)
                 || SgiSecurityContextHolder.hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),

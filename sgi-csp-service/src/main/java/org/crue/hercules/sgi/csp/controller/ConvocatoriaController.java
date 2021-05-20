@@ -681,7 +681,7 @@ public class ConvocatoriaController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriaentidadconvocantes")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-INV-V', 'CSP-CON-C','CSP-CON-E', 'CSP-CON-R',  'CSP-CON-B', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-INV-V', 'CSP-SOL-INV-C', 'CSP-CON-C','CSP-CON-E', 'CSP-CON-R',  'CSP-CON-B', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-C')")
   ResponseEntity<Page<ConvocatoriaEntidadConvocante>> findAllConvocatoriaEntidadConvocantes(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllConvocatoriaEntidadConvocantes(Long id, String query, Pageable paging) - start");
@@ -866,6 +866,22 @@ public class ConvocatoriaController {
 
     log.debug("findAllConvocatoriaGastosCodigoEcNoPermitidos(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la {@link Convocatoria}
+   * puede tramitarse.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return HTTP-200 si puede ser tramitada / HTTP-204 si no puede ser tramitada
+   */
+  @RequestMapping(path = "/{id}/tramitable", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthority('CSP-SOL-INV-C')")
+  ResponseEntity<Convocatoria> tramitable(@PathVariable Long id) {
+    log.debug("registrable(Long id) - start");
+    boolean returnValue = service.tramitable(id);
+    log.debug("registrable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }
