@@ -9,7 +9,6 @@
   <name>sgi-esb-sge</name>
   <description>sgi-esb-sge</description>
   <modules>
-    <module>sge-data-service</module>
     <module>sge-integration-project</module>
     <module>sge-composite-application</module>
   </modules>
