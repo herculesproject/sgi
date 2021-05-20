@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
@@ -107,6 +109,9 @@ public class ProyectoController {
   /** ProyectoSocioPeriodoJustificacionDocumentoService service */
   private final ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService;
 
+  /** ProyectoClasificacionService service */
+  private final ProyectoClasificacionService proyectoClasificacionService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -126,6 +131,7 @@ public class ProyectoController {
    * @param prorrogaDocumentoService                          {@link ProrrogaDocumentoService}.
    * @param proyectoPeriodoSeguimientoDocumentoService        {@link ProyectoPeriodoSeguimientoDocumentoService}.
    * @param proyectoSocioPeriodoJustificacionDocumentoService {@link ProyectoSocioPeriodoJustificacionDocumentoService}.
+   * @param proyectoClasificacionService                      {@link ProyectoClasificacionService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
@@ -136,7 +142,8 @@ public class ProyectoController {
       ProyectoDocumentoService proyectoDocumentoService, EstadoProyectoService estadoProyectoService,
       ProrrogaDocumentoService prorrogaDocumentoService,
       ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService,
-      ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService) {
+      ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService,
+      ProyectoClasificacionService proyectoClasificacionService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -152,6 +159,7 @@ public class ProyectoController {
     this.prorrogaDocumentoService = prorrogaDocumentoService;
     this.proyectoPeriodoSeguimientoDocumentoService = proyectoPeriodoSeguimientoDocumentoService;
     this.proyectoSocioPeriodoJustificacionDocumentoService = proyectoSocioPeriodoJustificacionDocumentoService;
+    this.proyectoClasificacionService = proyectoClasificacionService;
   }
 
   /**
@@ -647,7 +655,7 @@ public class ProyectoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}/documentos", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Proyecto> hasProyectoDocumentos(@PathVariable Long id) {
     log.debug("hasProyectoDocumentos(Long id) - start");
     boolean returnValue = false;
@@ -668,7 +676,7 @@ public class ProyectoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}/proyectofases", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Proyecto> hasProyectoFases(@PathVariable Long id) {
     log.debug("hasProyectoFases(Long id) - start");
     boolean returnValue = proyectoFaseService.existsByProyecto(id);
@@ -684,12 +692,35 @@ public class ProyectoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}/proyectohitos", method = RequestMethod.HEAD)
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Proyecto> hasProyectoHitos(@PathVariable Long id) {
     log.debug("hasProyectoHitos(Long id) - start");
     boolean returnValue = proyectoHitoService.existsByProyecto(id);
     log.debug("hasProyectoHitos(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link ProyectoClasificacion}
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyecto-clasificaciones")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoClasificacion>> findAllProyectoClasificaciones(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoClasificaciones(Long id, String query, Pageable paging) - start");
+    Page<ProyectoClasificacion> page = proyectoClasificacionService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoClasificaciones(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoClasificaciones(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

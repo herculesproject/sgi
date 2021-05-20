@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
@@ -41,8 +42,8 @@ import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoServ
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
-import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
+import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -101,6 +102,9 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService;
+
+  @MockBean
+  private ProyectoClasificacionService proyectoClasificacionService;
 
   @MockBean
   private ProrrogaDocumentoService prorrogaDocumentoService;

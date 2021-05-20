@@ -1,20 +1,19 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioPeriodoPagoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioPeriodoPagoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioPeriodoPagoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioPeriodoPagoService;
