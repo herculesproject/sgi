@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
@@ -23,6 +24,7 @@ import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
@@ -90,6 +92,9 @@ public class SolicitudController {
   /** SolicitudProyectoClasificacion service */
   private final SolicitudProyectoClasificacionService solicitudProyectoClasificacionService;
 
+  /** SolicitudProyectoAreaConocimientoService */
+  private final SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
@@ -104,6 +109,7 @@ public class SolicitudController {
    * @param solicitudProyectoEntidadFinanciadoraAjenaService {@link SolicitudProyectoEntidadFinanciadoraAjenaService}.
    * @param solicitudProyectoPresupuestoService              {@link SolicitudProyectoPresupuestoService}.
    * @param solicitudProyectoClasificacionService            {@link SolicitudProyectoClasificacionService}.
+   * @param solicitudProyectoAreaConocimientoService         {@link SolicitudProyectoAreaConocimientoService}.
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
@@ -112,7 +118,8 @@ public class SolicitudController {
       SolicitudProyectoEquipoService solicitudProyectoEquipoService,
       SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService,
       SolicitudProyectoPresupuestoService solicitudProyectoPresupuestoService,
-      SolicitudProyectoClasificacionService solicitudProyectoClasificacionService) {
+      SolicitudProyectoClasificacionService solicitudProyectoClasificacionService,
+      SolicitudProyectoAreaConocimientoService solicitudProyectoAreaConocimientoService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
@@ -124,6 +131,7 @@ public class SolicitudController {
     this.solicitudProyectoEntidadFinanciadoraAjenaService = solicitudProyectoEntidadFinanciadoraAjenaService;
     this.solicitudProyectoPresupuestoService = solicitudProyectoPresupuestoService;
     this.solicitudProyectoClasificacionService = solicitudProyectoClasificacionService;
+    this.solicitudProyectoAreaConocimientoService = solicitudProyectoAreaConocimientoService;
   }
 
   /**
@@ -897,6 +905,30 @@ public class SolicitudController {
     }
 
     log.debug("findAllSolicitudProyectoClasificaciones(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista de {@link SolicitudProyectoAreaConocimiento} con una
+   * {@link SolicitudProyecto} con id indicado.
+   * 
+   * @param id Identificador de {@link SolicitudProyecto}.
+   * @return Lista de {@link SolicitudProyectoAreaConocimiento} correspondiente al
+   *         id
+   */
+  @GetMapping("/{id}/solicitud-proyecto-areas-conocimiento")
+  ResponseEntity<Page<SolicitudProyectoAreaConocimiento>> findAllBySolicitudProyectoId(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllBySolicitudProyectoId(Long id, String query, Pageable paging) - start");
+    Page<SolicitudProyectoAreaConocimiento> page = solicitudProyectoAreaConocimientoService
+        .findAllBySolicitudProyectoId(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllBySolicitudProyectoId(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllBySolicitudProyectoId(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
