@@ -4,6 +4,7 @@ import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitu
 import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
 import { SOLICITUD_HITO_CONVERTER } from '@core/converters/csp/solicitud-hito.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
+import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { SOLICITUD_PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-equipo.converter';
@@ -16,6 +17,7 @@ import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
 import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
 import { ISolicitudHitoBackend } from '@core/models/csp/backend/solicitud-hito-backend';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
+import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
@@ -28,6 +30,7 @@ import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { ISolicitudProyectoAreaConocimiento } from '@core/models/csp/solicitud-proyecto-area-conocimiento';
 import { ISolicitudProyectoClasificacion } from '@core/models/csp/solicitud-proyecto-clasificacion';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
@@ -145,6 +148,22 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       `${this.endpointUrl}/${solicitudId}/solicitudhitos`,
       options,
       SOLICITUD_HITO_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera las areas de conocimiento de la solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de areas de conocimiento de la solicitud
+   */
+  findAllSolicitudProyectoAreaConocimiento(solicitudId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<ISolicitudProyectoAreaConocimiento>> {
+    return this.find<ISolicitudProyectoAreaConocimientoBackend, ISolicitudProyectoAreaConocimiento>(
+      `${this.endpointUrl}/${solicitudId}/solicitud-proyecto-areas-conocimiento`,
+      options,
+      SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER
     );
   }
 

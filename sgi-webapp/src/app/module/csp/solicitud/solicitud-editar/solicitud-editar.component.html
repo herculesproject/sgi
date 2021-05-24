@@ -12,6 +12,10 @@
           [title]="'label.ficha-general' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_DATOS)">
         </sgi-action-fragment-menu-item>
+        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.PROYECTO_AREA_CONOCIMIENTO]"
+          [title]="'label.areas-conocimiento' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO)">
+        </sgi-action-fragment-menu-item>
         <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.CLASIFICACIONES]"
           [title]="'csp.solicitud-proyecto-clasificacion'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.CLASIFICACIONES)">
@@ -61,7 +65,7 @@
     </ng-container>
   </ng-container>
   <ng-container footer>
-    <sgi-action-footer *sgiHasAuthorityForAnyUO="'CSP-SOL-E'" [texto]="textoCrear" [actionService]="actionService">
+    <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">
       <ng-container *sgiHasAuthorityForAnyUO="'CSP-SOL-E'">
         <!-- Presentar-->
         <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.BORRADOR) && isPresentable" color="primary"

@@ -22,6 +22,7 @@ import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicit
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
 import { SolicitudProyectoClasificacionesComponent } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.component';
+import { SolicitudProyectoAreaConocimientoComponent } from './solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
@@ -50,7 +51,8 @@ import { SolicitudRoutingModule } from './solicitud-routing.module';
     SolicitudProyectoPresupuestoEntidadesComponent,
     SolicitudCrearProyectoModalComponent,
     CambioEstadoModalComponent,
-    SolicitudProyectoClasificacionesComponent
+    SolicitudProyectoClasificacionesComponent,
+    SolicitudProyectoAreaConocimientoComponent,
   ],
   imports: [
     CommonModule,

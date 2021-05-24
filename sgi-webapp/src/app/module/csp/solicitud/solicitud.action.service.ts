@@ -12,6 +12,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
+import { SolicitudProyectoAreaConocimientoService } from '@core/services/csp/solicitud-proyecto-area-conocimiento.service';
 import { SolicitudProyectoClasificacionService } from '@core/services/csp/solicitud-proyecto-clasificacion.service';
 import { SolicitudProyectoEntidadFinanciadoraAjenaService } from '@core/services/csp/solicitud-proyecto-entidad-financiadora-ajena.service';
 import { SolicitudProyectoEquipoService } from '@core/services/csp/solicitud-proyecto-equipo.service';
@@ -21,6 +22,7 @@ import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -34,6 +36,7 @@ import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-do
 import { SolicitudEquipoProyectoFragment } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.fragment';
 import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
 import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
+import { SolicitudProyectoAreaConocimientoFragment } from './solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.fragment';
 import { SolicitudProyectoClasificacionesFragment } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.fragment';
 import { SolicitudProyectoEntidadesFinanciadorasFragment } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.fragment';
 import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
@@ -55,6 +58,7 @@ export class SolicitudActionService extends ActionService {
     HISTORICO_ESTADOS: 'historicoEstados',
     DOCUMENTOS: 'documentos',
     PROYECTO_DATOS: 'proyectoDatos',
+    PROYECTO_AREA_CONOCIMIENTO: 'areaConocimiento',
     HITOS: 'hitos',
     EQUIPO_PROYECTO: 'equipoProyecto',
     SOCIOS: 'socios',
@@ -68,6 +72,7 @@ export class SolicitudActionService extends ActionService {
   private historicoEstado: SolicitudHistoricoEstadosFragment;
   private documentos: SolicitudDocumentosFragment;
   private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
+  private areaConocimiento: SolicitudProyectoAreaConocimientoFragment;
   private hitos: SolicitudHitosFragment;
   private equipoProyecto: SolicitudEquipoProyectoFragment;
   private socio: SolicitudProyectoSocioFragment;
@@ -133,7 +138,9 @@ export class SolicitudActionService extends ActionService {
     solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
     solicitudProyectoClasificacionService: SolicitudProyectoClasificacionService,
     clasificacionService: ClasificacionService,
-    authService: SgiAuthService
+    authService: SgiAuthService,
+    solicitudProyectoAreaConocimiento: SolicitudProyectoAreaConocimientoService,
+    areaConocimientoService: AreaConocimientoService
   ) {
     super();
 
@@ -167,8 +174,9 @@ export class SolicitudActionService extends ActionService {
 
     this.documentos = new SolicitudDocumentosFragment(logger, this.data?.solicitud?.id, this.data?.solicitud?.convocatoriaId,
       configuracionSolicitudService, solicitudService, solicitudDocumentoService, this.readonly);
+    this.areaConocimiento = new SolicitudProyectoAreaConocimientoFragment(this.data?.solicitud?.id,
+      solicitudProyectoAreaConocimiento, solicitudService, areaConocimientoService, this.readonly);
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
-
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.data?.solicitud?.id, solicitudService, this.readonly);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.data?.solicitud?.id, solicitudService,
       solicitudProyectoService, convocatoriaService, this.readonly, this.data?.solicitud.convocatoriaId);
@@ -200,6 +208,7 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
         this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
+        this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
       }
 
       // Si se encuentra en estado borrador se debe comprobar si cumple las validacones para  hacer el cambio a "Presentada".

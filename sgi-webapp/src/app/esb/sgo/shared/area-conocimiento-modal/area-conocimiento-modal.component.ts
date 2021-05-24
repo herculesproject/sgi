@@ -13,8 +13,15 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { SolicitudProyectoAreaConocimientoListado } from 'src/app/module/csp/solicitud/solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.fragment';
 
 const MSG_ERROR_LOAD = marker('error.load');
+
+interface AreaConocimientoListado {
+  niveles: IAreaConocimiento[];
+  nivelesTexto: string;
+  nivelSeleccionado: IAreaConocimiento;
+}
 
 export interface AreaConocimientoDataModal {
   selectedAreasConocimiento: IAreaConocimiento[];
@@ -93,10 +100,11 @@ function sortByName(nodes: NodeAreaConocimiento[]): NodeAreaConocimiento[] {
   styleUrls: ['./area-conocimiento-modal.component.scss']
 })
 export class AreaConocimientoModalComponent
-  extends BaseModalComponent<IAreaConocimiento[], AreaConocimientoModalComponent>
+  extends BaseModalComponent<AreaConocimientoListado[], AreaConocimientoModalComponent>
   implements OnInit {
 
-  areasConocimiento$ = new BehaviorSubject<NodeAreaConocimiento[]>([]);
+  areasConocimientoTree$ = new BehaviorSubject<NodeAreaConocimiento[]>([]);
+  readonly areasConocimiento$ = new BehaviorSubject<IAreaConocimiento[]>([]);
   selectedAreasConocimiento = [] as IAreaConocimiento[];
 
   @ViewChild(MatTree, { static: true }) private matTree: MatTree<NodeAreaConocimiento>;
@@ -118,7 +126,7 @@ export class AreaConocimientoModalComponent
     private areaConocimientoService: AreaConocimientoService,
     protected readonly snackBarService: SnackBarService
   ) {
-    super(snackBarService, matDialogRef, data.selectedAreasConocimiento);
+    super(snackBarService, matDialogRef, null);
 
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<NodeAreaConocimiento>(this.getLevel, this.isExpandable);
@@ -134,7 +142,7 @@ export class AreaConocimientoModalComponent
     this.loadInitialTree();
 
     this.subscriptions.push(
-      this.areasConocimiento$
+      this.areasConocimientoTree$
         .subscribe((areasConocimiento) => {
           this.dataSource.data = areasConocimiento;
         })
@@ -146,8 +154,16 @@ export class AreaConocimientoModalComponent
     return formGroup;
   }
 
-  protected getDatosForm(): IAreaConocimiento[] {
-    return this.selectedAreasConocimiento;
+  protected getDatosForm(): AreaConocimientoListado[] {
+    const selectedAreasConocimientoListado = this.selectedAreasConocimiento.map(areaConocimiento => {
+      const areasConocimientoListado: AreaConocimientoListado = {
+        niveles: [areaConocimiento],
+        nivelesTexto: undefined,
+        nivelSeleccionado: areaConocimiento
+      };
+      return this.fillAreaConocimientoListado(areasConocimientoListado);
+    });
+    return selectedAreasConocimientoListado;
   }
 
   /**
@@ -157,18 +173,10 @@ export class AreaConocimientoModalComponent
    * @param $event evento de seleccion
    */
   onCheckNode(node: NodeAreaConocimiento, $event: MatCheckboxChange): void {
+    node.checked = $event.checked;
     if ($event.checked) {
-      if (this.data.multiSelect) {
-        node.checked = true;
-        this.selectedAreasConocimiento.push(node.areaConocimiento);
-      } else {
-        this.treeControl.dataNodes.forEach(dataNode =>
-          dataNode.checked = $event.checked && dataNode.areaConocimiento.id === node.areaConocimiento.id
-        );
-        this.selectedAreasConocimiento = [node.areaConocimiento];
-      }
+      this.selectedAreasConocimiento.push(node.areaConocimiento);
     } else {
-      node.checked = false;
       this.selectedAreasConocimiento = this.selectedAreasConocimiento.filter(checkedNode => checkedNode.id !== node.areaConocimiento.id);
     }
   }
@@ -252,15 +260,14 @@ export class AreaConocimientoModalComponent
    * @param recreateTree (por defecto false) indica si se hace un "reset" del arbol antes de hacer la actualizacion.
    */
   private publishNodes(rootNodes?: NodeAreaConocimiento[], recreateTree = false): void {
-    let nodes = rootNodes ? rootNodes : this.areasConocimiento$.value;
+    let nodes = rootNodes ? rootNodes : this.areasConocimientoTree$.value;
     nodes = sortByName(nodes);
     this.data.selectedAreasConocimiento?.forEach(areaSeleccionada => {
       this.treeControl.dataNodes.find(node => node.areaConocimiento.id === areaSeleccionada.id)?.setCheckedAndDisabled();
     });
     this.refreshTree(nodes, recreateTree);
-    this.areasConocimiento$.next(nodes);
+    this.areasConocimientoTree$.next(nodes);
   }
-
 
   /**
    * Actualiza el arbol con los cambios realizados en la lista de nodos.
@@ -277,6 +284,31 @@ export class AreaConocimientoModalComponent
     }
 
     this.matTree.renderNodeChanges(nodes);
+  }
+
+  /**
+   * Rellena el objeto AreaConocimientoListado con los niveles.
+   *
+   * @param areaConocimientoListado un AreaConocimientoListado.
+   * @returns el AreaConocimientoListado relleno.
+   */
+  private fillAreaConocimientoListado(areaConocimientoListado: AreaConocimientoListado): AreaConocimientoListado {
+    const lastLevel = areaConocimientoListado.niveles[areaConocimientoListado.niveles.length - 1];
+    if (!lastLevel.padreId) {
+      areaConocimientoListado.nivelesTexto = areaConocimientoListado.niveles
+        .slice(1, areaConocimientoListado.niveles.length)
+        .reverse()
+        .map(clasificacion => clasificacion.nombre).join(' - ');
+      return areaConocimientoListado;
+    }
+
+    let areaConocimientoPadre = this.treeControl.dataNodes.find(node => node.areaConocimiento.id === lastLevel.padreId)?.areaConocimiento;
+    if (!areaConocimientoPadre) {
+      areaConocimientoPadre = this.areasConocimiento$.value.find(area => area.id === lastLevel.padreId);
+    }
+    areaConocimientoListado.niveles.push(areaConocimientoPadre);
+
+    return this.fillAreaConocimientoListado(areaConocimientoListado);
   }
 
 }

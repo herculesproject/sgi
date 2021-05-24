@@ -16,6 +16,7 @@ import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-d
 import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
+import { SolicitudProyectoAreaConocimientoComponent } from './solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.component';
 import { SolicitudProyectoClasificacionesComponent } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.component';
 import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
 import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
@@ -94,6 +95,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS,
         component: SolicitudProyectoFichaGeneralComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.PROYECTO_AREA_CONOCIMIENTO,
+        component: SolicitudProyectoAreaConocimientoComponent,
         canDeactivate: [FragmentGuard]
       },
       {

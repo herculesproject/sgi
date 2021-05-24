@@ -3,6 +3,7 @@ export const SOLICITUD_ROUTE_NAMES = {
   HISTORICO_ESTADOS: 'historico-estados',
   DOCUMENTOS: 'documentos',
   PROYECTO_DATOS: 'proyecto-datos',
+  PROYECTO_AREA_CONOCIMIENTO: 'proyecto-area-conocimiento',
   HITOS: 'hitos',
   EQUIPO_PROYECTO: 'equipo-proyecto',
   SOCIOS: 'socios',
