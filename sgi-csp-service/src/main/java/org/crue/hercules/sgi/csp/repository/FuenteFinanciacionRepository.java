@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FuenteFinanciacionRepository
-    extends JpaRepository<FuenteFinanciacion, Long>, JpaSpecificationExecutor<FuenteFinanciacion> {
+    extends ActivableRepository, JpaRepository<FuenteFinanciacion, Long>, JpaSpecificationExecutor<FuenteFinanciacion> {
 
   /**
    * Obtiene la entidad {@link FuenteFinanciacion} activo con el nombre indicado
@@ -21,5 +21,4 @@ public interface FuenteFinanciacionRepository
    * @return el {@link FuenteFinanciacion} con el nombre indicado
    */
   Optional<FuenteFinanciacion> findByNombreAndActivoIsTrue(String nombre);
-
 }

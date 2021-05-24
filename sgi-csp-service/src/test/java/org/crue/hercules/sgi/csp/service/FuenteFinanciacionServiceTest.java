@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.TipoAmbitoGeograficoNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.TipoOrigenFuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoOrigenFuenteFinanciacionRepository;
-import org.crue.hercules.sgi.csp.service.impl.FuenteFinanciacionServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,24 +31,21 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * FuenteFinanciacionServiceTest
  */
+@Import({ FuenteFinanciacionService.class })
 public class FuenteFinanciacionServiceTest extends BaseServiceTest {
 
-  @Mock
+  @MockBean
   private FuenteFinanciacionRepository repository;
 
-  @Mock
+  @MockBean
   private TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository;
 
-  @Mock
+  @MockBean
   private TipoOrigenFuenteFinanciacionRepository tipoOrigenFuenteFinanciacionRepository;
 
+  // This bean must be created by Spring so validations can be applied
+  @Autowired
   private FuenteFinanciacionService service;
-
-  @BeforeEach
-  public void setUp() throws Exception {
-    service = new FuenteFinanciacionServiceImpl(repository, tipoAmbitoGeograficoRepository,
-        tipoOrigenFuenteFinanciacionRepository);
-  }
 
   @Test
   public void create_ReturnsFuenteFinanciacion() {
@@ -58,9 +55,13 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
         .willReturn(Optional.empty());
 
+    BDDMockito.given(tipoAmbitoGeograficoRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
 
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
     BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
 
@@ -87,125 +88,96 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // given: Un nuevo FuenteFinanciacion que ya tiene id
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
 
+    BDDMockito.given(tipoAmbitoGeograficoRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
+
     // when: Creamos el FuenteFinanciacion
     // then: Lanza una excepcion porque el FuenteFinanciacion ya tiene id
-    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FuenteFinanciacion id tiene que ser null para crear un nuevo FuenteFinanciacion");
+    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
-  public void create_WithoutTipoAmbitoGeograficoId_ThrowsIllegalArgumentException() {
+  public void create_WithoutTipoAmbitoGeograficoId_ThrowsConstraintViolationException() {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
     fuenteFinanciacion.getTipoAmbitoGeografico().setId(null);
 
     // when: Creamos el FuenteFinanciacion
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id TipoAmbitoGeografico no puede ser null para crear un FuenteFinanciacion");
+    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion))
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void create_WithoutTipoOrigenFuenteFinanciacionId_ThrowsIllegalArgumentException() {
+  public void create_WithoutTipoOrigenFuenteFinanciacionId_ThrowsConstraintViolationException() {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
     fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setId(null);
 
     // when: Creamos el FuenteFinanciacion
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id TipoOrigenFuenteFinanciacion no puede ser null para crear un FuenteFinanciacion");
+    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion))
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void create_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
+  public void create_WithDuplicatedNombre_ThrowsConstraintViolationException() {
     // given: Un nuevo FuenteFinanciacion con un nombre que ya existe
     FuenteFinanciacion fuenteFinanciacionNew = generarMockFuenteFinanciacion(null, "nombreRepetido");
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "nombreRepetido");
 
+    BDDMockito.given(tipoAmbitoGeograficoRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionNew.getNombre()))
         .willReturn(Optional.of(fuenteFinanciacion));
 
     // when: Creamos el FuenteFinanciacion
     // then: Lanza una excepcion porque hay otro FuenteFinanciacion con ese nombre
     Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacionNew))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un FuenteFinanciacion con el nombre " + fuenteFinanciacionNew.getNombre());
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void create_WithNoExistingTipoAmbitoGeografico_ThrowsTipoAmbitoGeograficoNotFoundException() {
+  public void create_WithNoActivoTipoAmbitoGeografico_ThrowsConstraintViolationException() {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
         .willReturn(Optional.empty());
 
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(tipoAmbitoGeograficoRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(false);
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
 
     // when: Creamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion))
-        .isInstanceOf(TipoAmbitoGeograficoNotFoundException.class);
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void create_WithDisabledTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
-    // given: Un nuevo FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
-    fuenteFinanciacion.getTipoAmbitoGeografico().setActivo(false);
-
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    // when: Creamos el FuenteFinanciacion
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El TipoAmbitoGeografico debe estar Activo");
-  }
-
-  @Test
-  public void create_WithNoExistingTipoOrigenFuenteFinanciacion_ThrowsTipoOrigenFuenteFinanciacionNotFoundException() {
+  public void create_WithNoActivoTipoOrigenFuenteFinanciacion_ThrowsConstraintViolationException() {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
         .willReturn(Optional.empty());
 
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.empty());
+    BDDMockito.given(tipoAmbitoGeograficoRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(true);
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(false);
 
     // when: Creamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion))
-        .isInstanceOf(TipoOrigenFuenteFinanciacionNotFoundException.class);
-  }
-
-  @Test
-  public void create_WithDisabledTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentException() {
-    // given: Un nuevo FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
-    fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setActivo(false);
-
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
-
-    // when: Creamos el FuenteFinanciacion
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.create(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El TipoOrigenFuenteFinanciacion debe estar Activo");
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
@@ -214,14 +186,9 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     FuenteFinanciacion fuenteFinanciacionNombreActualizado = generarMockFuenteFinanciacion(1L, "NombreActualizado");
 
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(fuenteFinanciacion.getId())).willReturn(true);
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionNombreActualizado.getNombre()))
         .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
     BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
@@ -240,220 +207,106 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_WithIdNotExist_ThrowsFuenteFinanciacionNotFoundException() {
-    // given: Un FuenteFinanciacion actualizado con un id que no existe
+  public void update_NoActivo_ThrowsConstraintViolationException() {
+    // given: Un FuenteFinanciacion no activo
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "FuenteFinanciacion");
 
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(fuenteFinanciacion.getId())).willReturn(false);
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
         .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
 
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion porque el FuenteFinanciacion no existe
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion))
-        .isInstanceOf(FuenteFinanciacionNotFoundException.class);
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void update_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
+  public void update_WithDuplicatedNombre_ThrowsConstraintViolationException() {
     // given: Un FuenteFinanciacion actualizado con un nombre que ya existe
     FuenteFinanciacion fuenteFinanciacionActualizado = generarMockFuenteFinanciacion(1L, "nombreRepetido");
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(2L, "nombreRepetido");
 
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(fuenteFinanciacion.getId())).willReturn(true);
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizado.getNombre()))
         .willReturn(Optional.of(fuenteFinanciacion));
 
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion porque hay otro FuenteFinanciacion con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionActualizado))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un FuenteFinanciacion con el nombre " + fuenteFinanciacionActualizado.getNombre());
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void update_WithoutTipoAmbitoGeograficoId_ThrowsIllegalArgumentException() {
+  public void update_WithoutTipoAmbitoGeografico_ThrowsIllegalArgumentExceptionException() {
     // given: Un FuenteFinanciacion actualizado
+    FuenteFinanciacion fuenteFinanciacionExistente = generarMockFuenteFinanciacion(1L);
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.getTipoAmbitoGeografico().setId(null);
 
+    BDDMockito.given(repository.findById(fuenteFinanciacionExistente.getId()))
+        .willReturn(Optional.of(fuenteFinanciacionExistente));
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(fuenteFinanciacion.getId())).willReturn(true);
+
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id TipoAmbitoGeografico no puede ser null para crear un FuenteFinanciacion");
+    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
-  public void update_WithoutTipoOrigenFuenteFinanciacionId_ThrowsIllegalArgumentException() {
+  public void update_WithoutTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentExceptionException() {
     // given: Un FuenteFinanciacion actualizado
+    FuenteFinanciacion fuenteFinanciacionExistente = generarMockFuenteFinanciacion(1L);
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setId(null);
 
-    // when: Actualizamos el FuenteFinanciacion
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id TipoOrigenFuenteFinanciacion no puede ser null para crear un FuenteFinanciacion");
-  }
-
-  @Test
-  public void update_WithNoExistingTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
-    // given: Un FuenteFinanciacion actualizado
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findById(fuenteFinanciacionExistente.getId()))
+        .willReturn(Optional.of(fuenteFinanciacionExistente));
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(fuenteFinanciacion.getId())).willReturn(true);
 
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion))
-        .isInstanceOf(TipoAmbitoGeograficoNotFoundException.class);
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
-  public void update_WithDisabledTipoAmbitoGeograficoNoEdited_ReturnsFuenteFinanciacion() {
+  public void update_WithNoActivoTipoAmbitoGeografico_ThrowsConstraintViolationException() {
     // given: Un FuenteFinanciacion actualizado
+    FuenteFinanciacion fuenteFinanciacionExistente = generarMockFuenteFinanciacion(1L);
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-    fuenteFinanciacion.getTipoAmbitoGeografico().setActivo(false);
+    fuenteFinanciacion.getTipoAmbitoGeografico().setId(2L);
 
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
-
-    BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
-    // when: Actualizamos el FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacionActualizado = service.update(fuenteFinanciacion);
-
-    // then: El FuenteFinanciacion se actualiza correctamente.
-    Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isEqualTo(fuenteFinanciacion.getId());
-    Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
-        .isEqualTo(fuenteFinanciacion.getNombre());
-    Assertions.assertThat(fuenteFinanciacionActualizado.getActivo()).as("getActivo()")
-        .isEqualTo(fuenteFinanciacion.getActivo());
-  }
-
-  @Test
-  public void update_WithDisabledTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
-    // given: Un FuenteFinanciacion actualizado
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-
-    FuenteFinanciacion fuenteFinanciacionActualizado = generarMockFuenteFinanciacion(1L);
-    fuenteFinanciacionActualizado.getTipoAmbitoGeografico().setId(2L);
-    fuenteFinanciacionActualizado.getTipoAmbitoGeografico().setActivo(false);
-
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizado.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
-
-    // when: Actualizamos el FuenteFinanciacion
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionActualizado))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoAmbitoGeografico debe estar Activo");
-  }
-
-  @Test
-  public void update_WithNoExistingTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentException() {
-    // given: Un FuenteFinanciacion actualizado
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.empty());
+    BDDMockito.given(tipoAmbitoGeograficoRepository.existsByIdAndActivoIsTrue(ArgumentMatchers.anyLong()))
+        .willReturn(false);
+    BDDMockito.given(repository.findById(fuenteFinanciacionExistente.getId()))
+        .willReturn(Optional.of(fuenteFinanciacionExistente));
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(fuenteFinanciacion.getId())).willReturn(true);
 
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion))
-        .isInstanceOf(TipoOrigenFuenteFinanciacionNotFoundException.class);
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
-  public void update_WithDisabledTipoOrigenFuenteFinanciacionNoEdited_ReturnsFuenteFinanciacion() {
+  public void update_NoActivaFuenteFinanciacion_ThrowsConstraintViolationException() {
     // given: Un FuenteFinanciacion actualizado
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-    fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setActivo(false);
+    Long id = 1L;
+    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(id);
 
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
-
-    BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
-    // when: Actualizamos el FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacionActualizado = service.update(fuenteFinanciacion);
-
-    // then: El FuenteFinanciacion se actualiza correctamente.
-    Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isEqualTo(fuenteFinanciacion.getId());
-    Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
-        .isEqualTo(fuenteFinanciacion.getNombre());
-    Assertions.assertThat(fuenteFinanciacionActualizado.getActivo()).as("getActivo()")
-        .isEqualTo(fuenteFinanciacion.getActivo());
-  }
-
-  @Test
-  public void update_WithDisabledTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentException() {
-    // given: Un FuenteFinanciacion actualizado
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-
-    FuenteFinanciacion fuenteFinanciacionActualizado = generarMockFuenteFinanciacion(1L);
-    fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().setId(2L);
-    fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().setActivo(false);
-
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizado.getNombre()))
-        .willReturn(Optional.empty());
-
-    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoAmbitoGeografico()));
-
-    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+    BDDMockito.given(repository.existsByIdAndActivoIsTrue(id)).willReturn(false);
 
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionActualizado))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoOrigenFuenteFinanciacion debe estar Activo");
+    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion))
+        .isInstanceOf(ConstraintViolationException.class).hasMessageContaining("The Financial Source is not active");
   }
 
   @Test
   public void enable_ReturnsFuenteFinanciacion() {
-    // given: Un nuevo FuenteFinanciacion inactivo
+    // given: Un FuenteFinanciacion inactivo existente
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.setActivo(false);
 
@@ -464,7 +317,7 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Activamos el FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacionActualizado = service.enable(fuenteFinanciacion.getId());
+    FuenteFinanciacion fuenteFinanciacionActualizado = service.activar(fuenteFinanciacion.getId());
 
     // then: El FuenteFinanciacion se activa correctamente.
     Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
@@ -477,19 +330,22 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void enable_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
+  public void enable_WithDuplicatedNombre_ThrowsConstraintViolationException() {
     // given: Un FuenteFinanciacion inactivo con un nombre que ya existe activo
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "nombreRepetido");
+    Long id = 1L;
+    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(id, "nombreRepetido");
     fuenteFinanciacion.setActivo(false);
     FuenteFinanciacion fuenteFinanciacionRepetido = generarMockFuenteFinanciacion(2L, "nombreRepetido");
+
+    BDDMockito.given(repository.findById(fuenteFinanciacion.getId())).willReturn(Optional.of(fuenteFinanciacion));
 
     BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
         .willReturn(Optional.of(fuenteFinanciacionRepetido));
 
     // when: Activamos el FuenteFinanciacion
     // then: Lanza una excepcion porque hay otro FuenteFinanciacion con ese nombre
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un FuenteFinanciacion con el nombre %s", fuenteFinanciacion.getNombre());
+    Assertions.assertThatThrownBy(() -> service.activar(id)).isInstanceOf(ConstraintViolationException.class)
+        .hasMessageContaining("A Financial Source with name 'nombreRepetido' already exists");
   }
 
   @Test
@@ -499,7 +355,7 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     // when: activamos el FuenteFinanciacion
     // then: Lanza una excepcion porque el FuenteFinanciacion no existe
-    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste))
+    Assertions.assertThatThrownBy(() -> service.activar(idNoExiste))
         .isInstanceOf(FuenteFinanciacionNotFoundException.class);
   }
 
@@ -513,7 +369,7 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Desactivamos el FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacionActualizado = service.disable(fuenteFinanciacion.getId());
+    FuenteFinanciacion fuenteFinanciacionActualizado = service.desactivar(fuenteFinanciacion.getId());
 
     // then: El FuenteFinanciacion se desactiva correctamente.
     Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
@@ -531,24 +387,48 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     // when: desactivamos el FuenteFinanciacion
     // then: Lanza una excepcion porque el FuenteFinanciacion no existe
-    Assertions.assertThatThrownBy(() -> service.disable(idNoExiste))
+    Assertions.assertThatThrownBy(() -> service.desactivar(idNoExiste))
         .isInstanceOf(FuenteFinanciacionNotFoundException.class);
   }
 
   @Test
-  public void update_WithNombreRepetido_ThrowsIllegalArgumentException() {
-    // given: Un nuevo FuenteFinanciacion con un nombre que ya existe
-    FuenteFinanciacion fuenteFinanciacionUpdated = generarMockFuenteFinanciacion(1L, "nombreRepetido");
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(2L, "nombreRepetido");
+  public void findActivos_ReturnsPage() {
+    // given: Una lista con 37 FuenteFinanciacion
+    List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      fuenteFinanciaciones.add(generarMockFuenteFinanciacion(i, "FuenteFinanciacion" + String.format("%03d", i)));
+    }
 
-    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionUpdated.getNombre()))
-        .willReturn(Optional.of(fuenteFinanciacion));
+    BDDMockito.given(
+        repository.findAll(ArgumentMatchers.<Specification<FuenteFinanciacion>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<FuenteFinanciacion>>() {
+          @Override
+          public Page<FuenteFinanciacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > fuenteFinanciaciones.size() ? fuenteFinanciaciones.size() : toIndex;
+            List<FuenteFinanciacion> content = fuenteFinanciaciones.subList(fromIndex, toIndex);
+            Page<FuenteFinanciacion> page = new PageImpl<>(content, pageable, fuenteFinanciaciones.size());
+            return page;
+          }
+        });
 
-    // when: Actualizamos el FuenteFinanciacion
-    // then: Lanza una excepcion porque ya existe otro FuenteFinanciacion con ese
-    // nombre
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionUpdated))
-        .isInstanceOf(IllegalArgumentException.class);
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<FuenteFinanciacion> page = service.findActivos(null, paging);
+
+    // then: Devuelve la pagina 3 con los FuenteFinanciacion del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      FuenteFinanciacion fuenteFinanciacion = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(fuenteFinanciacion.getNombre()).isEqualTo("FuenteFinanciacion" + String.format("%03d", i));
+    }
   }
 
   @Test
@@ -579,46 +459,6 @@ public class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
     Page<FuenteFinanciacion> page = service.findAll(null, paging);
-
-    // then: Devuelve la pagina 3 con los FuenteFinanciacion del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
-    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
-    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
-    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
-    for (int i = 31; i <= 37; i++) {
-      FuenteFinanciacion fuenteFinanciacion = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(fuenteFinanciacion.getNombre()).isEqualTo("FuenteFinanciacion" + String.format("%03d", i));
-    }
-  }
-
-  @Test
-  public void findAllTodos_ReturnsPage() {
-    // given: Una lista con 37 FuenteFinanciacion
-    List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      fuenteFinanciaciones.add(generarMockFuenteFinanciacion(i, "FuenteFinanciacion" + String.format("%03d", i)));
-    }
-
-    BDDMockito.given(
-        repository.findAll(ArgumentMatchers.<Specification<FuenteFinanciacion>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<FuenteFinanciacion>>() {
-          @Override
-          public Page<FuenteFinanciacion> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            toIndex = toIndex > fuenteFinanciaciones.size() ? fuenteFinanciaciones.size() : toIndex;
-            List<FuenteFinanciacion> content = fuenteFinanciaciones.subList(fromIndex, toIndex);
-            Page<FuenteFinanciacion> page = new PageImpl<>(content, pageable, fuenteFinanciaciones.size());
-            return page;
-          }
-        });
-
-    // when: Get page=3 with pagesize=10
-    Pageable paging = PageRequest.of(3, 10);
-    Page<FuenteFinanciacion> page = service.findAllTodos(null, paging);
 
     // then: Devuelve la pagina 3 con los FuenteFinanciacion del 31 al 37
     Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);

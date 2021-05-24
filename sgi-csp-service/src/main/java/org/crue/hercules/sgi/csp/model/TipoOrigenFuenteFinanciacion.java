@@ -1,21 +1,22 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import javax.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tipo_origen_fuente_financiacion", uniqueConstraints = {
@@ -23,9 +24,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TipoOrigenFuenteFinanciacion extends BaseEntity {
+@SuperBuilder
+public class TipoOrigenFuenteFinanciacion extends BaseActivableEntity implements Serializable {
 
   /**
    * Serial version
@@ -44,9 +44,4 @@ public class TipoOrigenFuenteFinanciacion extends BaseEntity {
   @NotEmpty
   @Size(max = 50)
   private String nombre;
-
-  /** Activo */
-  @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
-  private Boolean activo;
-
 }

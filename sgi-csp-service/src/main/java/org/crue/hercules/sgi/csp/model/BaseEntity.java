@@ -7,7 +7,7 @@ import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable;
 /**
  * Base Entity.
  */
-public class BaseEntity extends Auditable implements Serializable {
+public abstract class BaseEntity extends Auditable implements Identifiable, Serializable {
 
   /** Serial version. */
   private static final long serialVersionUID = 1L;

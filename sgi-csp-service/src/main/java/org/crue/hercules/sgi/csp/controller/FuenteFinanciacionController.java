@@ -1,18 +1,22 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import javax.validation.Valid;
-import javax.validation.groups.Default;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
+import javax.validation.Valid;
+
+import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionInput;
+import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionOutput;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.service.FuenteFinanciacionService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,9 +33,12 @@ import lombok.extern.slf4j.Slf4j;
  * FuenteFinanciacionController
  */
 @RestController
-@RequestMapping("/fuentefinanciaciones")
+@RequestMapping(FuenteFinanciacionController.MAPPING)
 @Slf4j
 public class FuenteFinanciacionController {
+  public static final String MAPPING = "/fuentesfinanciacion";
+
+  private ModelMapper modelMapper;
 
   /** FuenteFinanciacion service */
   private final FuenteFinanciacionService service;
@@ -41,7 +48,8 @@ public class FuenteFinanciacionController {
    * 
    * @param service {@link FuenteFinanciacionService}
    */
-  public FuenteFinanciacionController(FuenteFinanciacionService service) {
+  public FuenteFinanciacionController(ModelMapper modelMapper, FuenteFinanciacionService service) {
+    this.modelMapper = modelMapper;
     this.service = service;
   }
 
@@ -53,10 +61,10 @@ public class FuenteFinanciacionController {
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V','CSP-CON-E','CSP-CON-C','CSP-CON-INV-V','CSP-SOL-V', 'CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-B', 'CSP-PRO-C', 'CSP-SOL-R', 'CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R')")
-  ResponseEntity<Page<FuenteFinanciacion>> findAll(@RequestParam(name = "q", required = false) String query,
+  ResponseEntity<Page<FuenteFinanciacionOutput>> findActivos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
-    Page<FuenteFinanciacion> page = service.findAll(query, paging);
+    Page<FuenteFinanciacion> page = service.findActivos(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAll(String query, Pageable paging) - end");
@@ -64,7 +72,7 @@ public class FuenteFinanciacionController {
     }
 
     log.debug("findAll(String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    return new ResponseEntity<>(convert(page), HttpStatus.OK);
   }
 
   /**
@@ -75,10 +83,10 @@ public class FuenteFinanciacionController {
    */
   @GetMapping("/todos")
   @PreAuthorize("hasAnyAuthority('CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R')")
-  ResponseEntity<Page<FuenteFinanciacion>> findAllTodos(@RequestParam(name = "q", required = false) String query,
+  ResponseEntity<Page<FuenteFinanciacionOutput>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");
-    Page<FuenteFinanciacion> page = service.findAllTodos(query, paging);
+    Page<FuenteFinanciacion> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAllTodos(String query, Pageable paging) - end");
@@ -86,7 +94,7 @@ public class FuenteFinanciacionController {
     }
 
     log.debug("findAllTodos(String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    return new ResponseEntity<>(convert(page), HttpStatus.OK);
   }
 
   /**
@@ -97,11 +105,11 @@ public class FuenteFinanciacionController {
    */
   @GetMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
-  FuenteFinanciacion findById(@PathVariable Long id) {
+  FuenteFinanciacionOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     FuenteFinanciacion returnValue = service.findById(id);
     log.debug("findById(Long id) - end");
-    return returnValue;
+    return convert(returnValue);
   }
 
   /**
@@ -112,11 +120,11 @@ public class FuenteFinanciacionController {
    */
   @PostMapping
   @PreAuthorize("hasAuthority('CSP-FNT-C')")
-  ResponseEntity<FuenteFinanciacion> create(@Valid @RequestBody FuenteFinanciacion fuenteFinanciacion) {
+  ResponseEntity<FuenteFinanciacionOutput> create(@Valid @RequestBody FuenteFinanciacionInput fuenteFinanciacion) {
     log.debug("create(FuenteFinanciacion fuenteFinanciacion) - start");
-    FuenteFinanciacion returnValue = service.create(fuenteFinanciacion);
+    FuenteFinanciacion returnValue = service.create(convert(fuenteFinanciacion));
     log.debug("create(FuenteFinanciacion fuenteFinanciacion) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+    return new ResponseEntity<>(convert(returnValue), HttpStatus.CREATED);
   }
 
   /**
@@ -128,29 +136,27 @@ public class FuenteFinanciacionController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('CSP-FNT-E')")
-  FuenteFinanciacion update(
-      @Validated({ Update.class, Default.class }) @RequestBody FuenteFinanciacion fuenteFinanciacion,
+  FuenteFinanciacionOutput update(@Valid @RequestBody FuenteFinanciacionInput fuenteFinanciacion,
       @PathVariable Long id) {
     log.debug("update(FuenteFinanciacion fuenteFinanciacion, Long id) - start");
-    fuenteFinanciacion.setId(id);
-    FuenteFinanciacion returnValue = service.update(fuenteFinanciacion);
+    FuenteFinanciacion returnValue = service.update(convert(id, fuenteFinanciacion));
     log.debug("update(FuenteFinanciacion fuenteFinanciacion, Long id) - end");
-    return returnValue;
+    return convert(returnValue);
   }
 
   /**
-   * Reactiva el {@link FuenteFinanciacion} con id indicado.
+   * Activa la {@link FuenteFinanciacion} con id indicado.
    * 
    * @param id Identificador de {@link FuenteFinanciacion}.
    * @return {@link FuenteFinanciacion} actualizado.
    */
-  @PatchMapping("/{id}/reactivar")
+  @PatchMapping("/{id}/activar")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-FNT-R')")
-  FuenteFinanciacion reactivar(@PathVariable Long id) {
+  FuenteFinanciacionOutput activar(@PathVariable Long id) {
     log.debug("reactivar(Long id) - start");
-    FuenteFinanciacion returnValue = service.enable(id);
+    FuenteFinanciacion returnValue = service.activar(id);
     log.debug("reactivar(Long id) - end");
-    return returnValue;
+    return convert(returnValue);
   }
 
   /**
@@ -160,11 +166,31 @@ public class FuenteFinanciacionController {
    */
   @PatchMapping("/{id}/desactivar")
   @PreAuthorize("hasAuthority('CSP-FNT-B')")
-  FuenteFinanciacion desactivar(@PathVariable Long id) {
+  FuenteFinanciacionOutput desactivar(@PathVariable Long id) {
     log.debug("desactivar(Long id) - start");
-    FuenteFinanciacion returnValue = service.disable(id);
+    FuenteFinanciacion returnValue = service.desactivar(id);
     log.debug("desactivar(Long id) - end");
-    return returnValue;
+    return convert(returnValue);
   }
 
+  private FuenteFinanciacionOutput convert(FuenteFinanciacion fuenteFinanciacion) {
+    return modelMapper.map(fuenteFinanciacion, FuenteFinanciacionOutput.class);
+  }
+
+  private FuenteFinanciacion convert(FuenteFinanciacionInput fuenteFinanciacionInput) {
+    return convert(null, fuenteFinanciacionInput);
+  }
+
+  private FuenteFinanciacion convert(Long id, FuenteFinanciacionInput fuenteFinanciacionInput) {
+    FuenteFinanciacion fuenteFinanciacion = modelMapper.map(fuenteFinanciacionInput, FuenteFinanciacion.class);
+    fuenteFinanciacion.setId(id);
+    return fuenteFinanciacion;
+  }
+
+  private Page<FuenteFinanciacionOutput> convert(Page<FuenteFinanciacion> page) {
+    List<FuenteFinanciacionOutput> content = page.getContent().stream()
+        .map((fuenteFinanciacion) -> convert(fuenteFinanciacion)).collect(Collectors.toList());
+
+    return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+  }
 }

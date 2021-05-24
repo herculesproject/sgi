@@ -15,6 +15,12 @@ spring:
   liquibase:
     # No Liquibase contexts
     contexts: none
+  mvc:
+    # Whether a "NoHandlerFoundException" should be thrown if no Handler was found to process a request
+    throw-exception-if-no-handler-found: true
+  resources:
+    # Disable the static resource handling
+    add-mappings: false
 ---
 spring:
   profiles: dev

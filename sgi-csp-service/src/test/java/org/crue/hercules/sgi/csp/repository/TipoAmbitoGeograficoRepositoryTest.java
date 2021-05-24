@@ -21,10 +21,10 @@ public class TipoAmbitoGeograficoRepositoryTest extends BaseRepositoryTest {
   public void findByNombre_ReturnsTipoAmbitoGeografico() throws Exception {
 
     // given: 2 TipoAmbitoGeografico de los que 1 coincide con el nombre buscado
-    TipoAmbitoGeografico tipoAmbitoGeografico1 = new TipoAmbitoGeografico(null, "nombre-1", true);
+    TipoAmbitoGeografico tipoAmbitoGeografico1 = TipoAmbitoGeografico.builder().nombre("nombre-1").activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico1);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico2 = new TipoAmbitoGeografico(null, "nombre-2", true);
+    TipoAmbitoGeografico tipoAmbitoGeografico2 = TipoAmbitoGeografico.builder().nombre("nombre-2").activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico2);
 
     String nombreBuscado = "nombre-1";
@@ -44,10 +44,10 @@ public class TipoAmbitoGeograficoRepositoryTest extends BaseRepositoryTest {
   public void findByNombreNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 TipoAmbitoGeografico que no coinciden con el nombre buscado
-    TipoAmbitoGeografico tipoAmbitoGeografico1 = new TipoAmbitoGeografico(null, "nombre-1", true);
+    TipoAmbitoGeografico tipoAmbitoGeografico1 = TipoAmbitoGeografico.builder().nombre("nombre-1").activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico1);
 
-    TipoAmbitoGeografico tipoAmbitoGeografico2 = new TipoAmbitoGeografico(null, "nombre-2", true);
+    TipoAmbitoGeografico tipoAmbitoGeografico2 = TipoAmbitoGeografico.builder().nombre("nombre-2").activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico2);
 
     String nombreBuscado = "nombre-noexiste";

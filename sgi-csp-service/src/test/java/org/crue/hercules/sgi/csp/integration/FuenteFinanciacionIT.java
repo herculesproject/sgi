@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
-import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
-import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
+import org.crue.hercules.sgi.csp.controller.FuenteFinanciacionController;
+import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionInput;
+import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionOutput;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,10 +28,11 @@ public class FuenteFinanciacionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
-  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
-  private static final String CONTROLLER_BASE_PATH = "/fuentefinanciaciones";
+  private static final String PATH_PARAMETER_ACTIVAR = "/activar";
+  private static final String CONTROLLER_BASE_PATH = FuenteFinanciacionController.MAPPING;
 
-  private HttpEntity<FuenteFinanciacion> buildRequest(HttpHeaders headers, FuenteFinanciacion entity) throws Exception {
+  private HttpEntity<FuenteFinanciacionInput> buildRequest(HttpHeaders headers, FuenteFinanciacionInput entity)
+      throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -41,7 +42,7 @@ public class FuenteFinanciacionIT extends BaseIT {
                 "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-B", "CSP-PRO-C", "CSP-SOL-R", "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-B",
                 "CSP-PRO-R", "CSP-FNT-V", "CSP-FNT-C", "CSP-FNT-E", "CSP-FNT-B", "CSP-FNT-R", "AUTH")));
 
-    HttpEntity<FuenteFinanciacion> request = new HttpEntity<>(entity, headers);
+    HttpEntity<FuenteFinanciacionInput> request = new HttpEntity<>(entity, headers);
     return request;
 
   }
@@ -50,14 +51,14 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void create_ReturnsFuenteFinanciacion() throws Exception {
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
+    FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
 
-    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, fuenteFinanciacion), FuenteFinanciacion.class);
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, fuenteFinanciacion), FuenteFinanciacionOutput.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-    FuenteFinanciacion fuenteFinanciacionCreado = response.getBody();
+    FuenteFinanciacionOutput fuenteFinanciacionCreado = response.getBody();
     Assertions.assertThat(fuenteFinanciacionCreado.getId()).as("getId()").isNotNull();
     Assertions.assertThat(fuenteFinanciacionCreado.getNombre()).as("getNombre()")
         .isEqualTo(fuenteFinanciacion.getNombre());
@@ -66,10 +67,10 @@ public class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(fuenteFinanciacionCreado.getFondoEstructural()).as("getFondoEstructural()")
         .isEqualTo(fuenteFinanciacion.getFondoEstructural());
     Assertions.assertThat(fuenteFinanciacionCreado.getTipoAmbitoGeografico().getId())
-        .as("getTipoAmbitoGeografico().getId()").isEqualTo(fuenteFinanciacion.getTipoAmbitoGeografico().getId());
+        .as("getTipoAmbitoGeografico().getId()").isEqualTo(fuenteFinanciacion.getTipoAmbitoGeograficoId());
     Assertions.assertThat(fuenteFinanciacionCreado.getTipoOrigenFuenteFinanciacion().getId())
         .as("getTipoOrigenFuenteFinanciacion().getId()")
-        .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId());
+        .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacionId());
     Assertions.assertThat(fuenteFinanciacionCreado.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
@@ -78,14 +79,16 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Test
   public void update_ReturnsFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(idFuenteFinanciacion, "nombre-actualizado");
+    FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
+    fuenteFinanciacion.setNombre("nombre-actualizado");
 
-    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, fuenteFinanciacion), FuenteFinanciacion.class, idFuenteFinanciacion);
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, fuenteFinanciacion),
+        FuenteFinanciacionOutput.class, idFuenteFinanciacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    FuenteFinanciacion fuenteFinanciacionActualizado = response.getBody();
+    FuenteFinanciacionOutput fuenteFinanciacionActualizado = response.getBody();
     Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isNotNull();
     Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
         .isEqualTo(fuenteFinanciacion.getNombre());
@@ -94,12 +97,10 @@ public class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(fuenteFinanciacionActualizado.getFondoEstructural()).as("getFondoEstructural()")
         .isEqualTo(fuenteFinanciacion.getFondoEstructural());
     Assertions.assertThat(fuenteFinanciacionActualizado.getTipoAmbitoGeografico().getId())
-        .as("getTipoAmbitoGeografico().getId()").isEqualTo(fuenteFinanciacion.getTipoAmbitoGeografico().getId());
+        .as("getTipoAmbitoGeografico().getId()").isEqualTo(fuenteFinanciacion.getTipoAmbitoGeograficoId());
     Assertions.assertThat(fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().getId())
         .as("getTipoOrigenFuenteFinanciacion().getId()")
-        .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId());
-    Assertions.assertThat(fuenteFinanciacionActualizado.getActivo()).as("getActivo()")
-        .isEqualTo(fuenteFinanciacion.getActivo());
+        .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacionId());
   }
 
   @Sql
@@ -108,13 +109,13 @@ public class FuenteFinanciacionIT extends BaseIT {
   public void desactivar_ReturnFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
-    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
-        buildRequest(null, null), FuenteFinanciacion.class, idFuenteFinanciacion);
+        buildRequest(null, null), FuenteFinanciacionOutput.class, idFuenteFinanciacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    FuenteFinanciacion fuenteFinanciacion = response.getBody();
+    FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
     Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
     Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
@@ -130,16 +131,16 @@ public class FuenteFinanciacionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void reactivar_ReturnFuenteFinanciacion() throws Exception {
+  public void activar_ReturnFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
-    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
-        FuenteFinanciacion.class, idFuenteFinanciacion);
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_ACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        FuenteFinanciacionOutput.class, idFuenteFinanciacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    FuenteFinanciacion fuenteFinanciacion = response.getBody();
+    FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
     Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
     Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
@@ -158,12 +159,13 @@ public class FuenteFinanciacionIT extends BaseIT {
   public void findById_ReturnsFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
-    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), FuenteFinanciacion.class, idFuenteFinanciacion);
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        FuenteFinanciacionOutput.class, idFuenteFinanciacion);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    FuenteFinanciacion fuenteFinanciacion = response.getBody();
+    FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
     Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
     Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
@@ -189,12 +191,12 @@ public class FuenteFinanciacionIT extends BaseIT {
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
 
-    final ResponseEntity<List<FuenteFinanciacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<FuenteFinanciacion>>() {
+    final ResponseEntity<List<FuenteFinanciacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<FuenteFinanciacionOutput>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<FuenteFinanciacion> fuenteFinanciaciones = response.getBody();
+    final List<FuenteFinanciacionOutput> fuenteFinanciaciones = response.getBody();
     Assertions.assertThat(fuenteFinanciaciones.size()).isEqualTo(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -223,12 +225,12 @@ public class FuenteFinanciacionIT extends BaseIT {
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<FuenteFinanciacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<FuenteFinanciacion>>() {
+    final ResponseEntity<List<FuenteFinanciacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<FuenteFinanciacionOutput>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<FuenteFinanciacion> fuenteFinanciaciones = response.getBody();
+    final List<FuenteFinanciacionOutput> fuenteFinanciaciones = response.getBody();
     Assertions.assertThat(fuenteFinanciaciones.size()).isEqualTo(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
@@ -243,39 +245,13 @@ public class FuenteFinanciacionIT extends BaseIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
-  /**
-   * Función que devuelve un objeto FuenteFinanciacion
-   * 
-   * @param id id del FuenteFinanciacion
-   * @return el objeto FuenteFinanciacion
-   */
-  private FuenteFinanciacion generarMockFuenteFinanciacion(Long id) {
-    return generarMockFuenteFinanciacion(id, "nombre-" + id);
-  }
-
-  /**
-   * Función que devuelve un objeto FuenteFinanciacion
-   * 
-   * @param id     id del FuenteFinanciacion
-   * @param nombre nombre del FuenteFinanciacion
-   * @return el objeto FuenteFinanciacion
-   */
-  private FuenteFinanciacion generarMockFuenteFinanciacion(Long id, String nombre) {
-    TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
-    tipoAmbitoGeografico.setId(1L);
-
-    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = new TipoOrigenFuenteFinanciacion();
-    tipoOrigenFuenteFinanciacion.setId(1L);
-
-    FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
-    fuenteFinanciacion.setId(id);
-    fuenteFinanciacion.setNombre(nombre);
-    fuenteFinanciacion.setDescripcion("descripcion-" + id);
+  private FuenteFinanciacionInput generarMockFuenteFinanciacionInput() {
+    FuenteFinanciacionInput fuenteFinanciacion = new FuenteFinanciacionInput();
+    fuenteFinanciacion.setNombre("nombre");
+    fuenteFinanciacion.setDescripcion("descripcion");
     fuenteFinanciacion.setFondoEstructural(true);
-    fuenteFinanciacion.setTipoAmbitoGeografico(tipoAmbitoGeografico);
-    fuenteFinanciacion.setTipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion);
-    fuenteFinanciacion.setActivo(true);
-
+    fuenteFinanciacion.setTipoAmbitoGeograficoId(1L);
+    fuenteFinanciacion.setTipoOrigenFuenteFinanciacionId(1L);
     return fuenteFinanciacion;
   }
 

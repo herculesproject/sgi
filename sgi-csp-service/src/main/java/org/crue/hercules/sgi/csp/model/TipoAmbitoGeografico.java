@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,11 +13,10 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tipo_ambito_geografico", uniqueConstraints = {
@@ -23,9 +24,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class TipoAmbitoGeografico extends BaseEntity {
+@SuperBuilder
+public class TipoAmbitoGeografico extends BaseActivableEntity implements Serializable {
 
   /**
    * Serial version
@@ -44,9 +44,4 @@ public class TipoAmbitoGeografico extends BaseEntity {
   @NotEmpty
   @Size(max = 50)
   private String nombre;
-
-  /** Activo */
-  @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
-  private Boolean activo;
-
 }

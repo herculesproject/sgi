@@ -22,19 +22,21 @@ public class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
   @Test
   public void findByNombreAndActivoIsTrue_ReturnsFuenteFinanciacion() throws Exception {
     // given: 2 FuenteFinanciacion de los que 1 coincide con el nombre buscado
-    TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico(null, "nombre-1", true);
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre("nombre-1").activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = new TipoOrigenFuenteFinanciacion(null, "nombre-1",
-        true);
+    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = TipoOrigenFuenteFinanciacion.builder()
+        .nombre("nombre-1").activo(true).build();
     entityManager.persistAndFlush(tipoOrigenFuenteFinanciacion);
 
-    FuenteFinanciacion fuenteFinanciacion1 = new FuenteFinanciacion(null, "nombre-1", "descripcion-1", true,
-        tipoAmbitoGeografico, tipoOrigenFuenteFinanciacion, true);
+    FuenteFinanciacion fuenteFinanciacion1 = FuenteFinanciacion.builder().nombre("nombre-1")
+        .descripcion("descripcion-1").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion1);
 
-    FuenteFinanciacion fuenteFinanciacion2 = new FuenteFinanciacion(null, "nombre-2", "descripcion-2", true,
-        tipoAmbitoGeografico, tipoOrigenFuenteFinanciacion, true);
+    FuenteFinanciacion fuenteFinanciacion2 = FuenteFinanciacion.builder().nombre("nombre-2")
+        .descripcion("descripcion-2").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion2);
 
     String nombreBuscado = "nombre-1";
@@ -62,19 +64,21 @@ public class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
   @Test
   public void findByNombreAndActivoIsTrue_WithNombreNoExiste_ReturnsNull() throws Exception {
     // given: 2 FuenteFinanciacion que no coinciden con el nombre buscado
-    TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico(null, "nombre-1", true);
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre("nombre-1").activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
-    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = new TipoOrigenFuenteFinanciacion(null, "nombre-1",
-        true);
+    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = TipoOrigenFuenteFinanciacion.builder()
+        .nombre("nombre-1").activo(true).build();
     entityManager.persistAndFlush(tipoOrigenFuenteFinanciacion);
 
-    FuenteFinanciacion fuenteFinanciacion1 = new FuenteFinanciacion(null, "nombre-1", "descripcion-1", true,
-        tipoAmbitoGeografico, tipoOrigenFuenteFinanciacion, true);
+    FuenteFinanciacion fuenteFinanciacion1 = FuenteFinanciacion.builder().nombre("nombre-1")
+        .descripcion("descripcion-1").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion1);
 
-    FuenteFinanciacion fuenteFinanciacion2 = new FuenteFinanciacion(null, "nombre-2", "descripcion-2", true,
-        tipoAmbitoGeografico, tipoOrigenFuenteFinanciacion, true);
+    FuenteFinanciacion fuenteFinanciacion2 = FuenteFinanciacion.builder().nombre("nombre-2")
+        .descripcion("descripcion-2").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion2);
 
     String nombreBuscado = "nombre-noexiste";
