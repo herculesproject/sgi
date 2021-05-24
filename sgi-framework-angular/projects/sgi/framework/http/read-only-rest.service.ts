@@ -9,6 +9,8 @@ import { SgiReadOnlyMutableRestService } from './read-only-mutable.rest.service'
  *
  * @template K type of ID
  * @template T type of return element
+ *
+ * @deprecated Use mixings
  */
 export class SgiReadOnlyRestService<K extends number | string, T> extends SgiReadOnlyMutableRestService<K, T, T> {
   constructor(serviceName: string, endpointUrl: string, http: HttpClient) {

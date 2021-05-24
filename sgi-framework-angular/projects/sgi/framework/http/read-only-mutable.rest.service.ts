@@ -15,6 +15,8 @@ import { SgiRestFindOptions, SgiRestListResult, SgiRestPageRequest } from './typ
  * @template K type of ID
  * @template S type of rest response
  * @template T type of return element
+ *
+ * @deprecated Use mixings
  */
 export abstract class SgiReadOnlyMutableRestService<K extends number | string, S, T> {
   /** The HttpClient to use in request */

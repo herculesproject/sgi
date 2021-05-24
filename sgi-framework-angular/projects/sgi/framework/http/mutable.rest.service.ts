@@ -9,10 +9,12 @@ import { SgiReadOnlyMutableRestService } from './read-only-mutable.rest.service'
  * Base service to consume REST endpoints with support for transformation
  *
  * Contains the common operations.
- * 
+ *
  * @template K type of ID
  * @template S type of rest response
  * @template T type of return element
+ *
+ * @deprecated Use mixings
  */
 export abstract class SgiMutableRestService<K extends number | string, S, T> extends SgiReadOnlyMutableRestService<K, S, T> {
 
