@@ -153,7 +153,7 @@ public class TipoFinalidadController {
    * @return TipoFinalidad {@link TipoFinalidad} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthority('CSP-PRO-C')")
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-C')")
   TipoFinalidad findById(@PathVariable Long id) {
     log.debug("TipoFinalidad findById(Long id) - start");
     TipoFinalidad returnValue = service.findById(id);
