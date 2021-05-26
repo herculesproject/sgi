@@ -88,4 +88,22 @@
     </faultSequence>
   </resource>
 
+  <!-- proyectos anualidades -->
+  <resource methods="POST" url-mapping="/proyectos/anualidades">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
 </api>
