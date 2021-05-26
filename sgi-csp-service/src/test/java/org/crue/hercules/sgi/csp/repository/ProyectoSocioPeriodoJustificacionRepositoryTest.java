@@ -63,12 +63,12 @@ public class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseReposit
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion1 = new ProyectoSocioPeriodoJustificacion(null,
         proyectoSocio1.getId(), 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
         Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1", Boolean.TRUE,
-        Instant.parse("2020-11-20T00:00:00Z"));
+        Instant.parse("2020-11-20T00:00:00Z"), null);
     entityManager.persistAndFlush(proyectoSocioPeriodoJustificacion1);
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion2 = new ProyectoSocioPeriodoJustificacion(null,
         proyectoSocio2.getId(), 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
         Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1", Boolean.TRUE,
-        Instant.parse("2020-11-20T00:00:00Z"));
+        Instant.parse("2020-11-20T00:00:00Z"), null);
     entityManager.persistAndFlush(proyectoSocioPeriodoJustificacion2);
 
     Long proyectoSocioIdBuscado = proyectoSocio1.getId();

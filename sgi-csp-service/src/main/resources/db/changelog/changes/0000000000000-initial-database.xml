@@ -1252,6 +1252,7 @@
             <column name="fecha_fin" type="TIMESTAMP"/>
             <column name="fecha_inicio" type="TIMESTAMP"/>
             <column name="importe_concedido" type="DECIMAL(19, 2)"/>
+            <column name="importe_presupuesto" type="DECIMAL(19, 2)"/>
             <column name="num_investigadores" type="INT"/>
             <column name="proyecto_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -1302,6 +1303,7 @@
             </column>
             <column name="fecha_inicio_presentacion" type="TIMESTAMP"/>
             <column name="fecha_recepcion" type="TIMESTAMP"/>
+            <column name="importe_justificado" type="DECIMAL(19, 2)"/>
             <column name="num_periodo" type="INT">
                 <constraints nullable="false"/>
             </column>

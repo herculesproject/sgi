@@ -59,12 +59,12 @@ public class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends Ba
         .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1.getId(), 1,
             Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
             Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1",
-            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z")));
+            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion2 = entityManager
         .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1.getId(), 1,
             Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
             Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-2",
-            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z")));
+            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
 
     TipoDocumento tipoDocumento = entityManager
         .persistAndFlush(TipoDocumento.builder().nombre("tipo1").activo(Boolean.TRUE).build());

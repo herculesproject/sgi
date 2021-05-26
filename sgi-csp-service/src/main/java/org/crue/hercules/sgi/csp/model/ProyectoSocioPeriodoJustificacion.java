@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -86,6 +87,10 @@ public class ProyectoSocioPeriodoJustificacion extends BaseEntity {
   /** Fecha Recepcion. */
   @Column(name = "fecha_recepcion", nullable = true)
   private Instant fechaRecepcion;
+
+  /** Importe justificado. */
+  @Column(name = "importe_justificado", nullable = true)
+  private BigDecimal importeJustificado;
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne

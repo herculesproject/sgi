@@ -111,6 +111,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
       proyectoSocioExistente.setFechaFin(proyectoSocio.getFechaFin());
       proyectoSocioExistente.setNumInvestigadores(proyectoSocio.getNumInvestigadores());
       proyectoSocioExistente.setImporteConcedido(proyectoSocio.getImporteConcedido());
+      proyectoSocioExistente.setImportePresupuesto(proyectoSocio.getImportePresupuesto());
 
       ProyectoSocio returnValue = repository.save(proyectoSocioExistente);
       log.debug("update(ProyectoSocio proyectoSocio) - end");
