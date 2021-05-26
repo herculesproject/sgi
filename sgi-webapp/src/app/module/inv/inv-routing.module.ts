@@ -41,7 +41,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_EVALUACIONES_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR-INV', 'ETI-EVC-EVALR-INV']
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR']
         }
       },
       {
@@ -53,7 +53,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_SEGUIMIENTOS_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR-INV', 'ETI-EVC-EVALR-INV']
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-INV-VR', 'ETI-EVC-INV-EVALR']
         }
       },
       {
@@ -65,7 +65,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_PETICIONES_EVALUACION_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-PEV-VR-INV', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-BR-INV']
+          hasAnyAuthorityForAnyUO: ['ETI-PEV-INV-VR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER', 'ETI-PEV-INV-BR']
         }
       },
       {
@@ -77,7 +77,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_MEMORIAS_TITLE,
-          hasAuthorityForAnyUO: 'ETI-PEV-VR-INV'
+          hasAuthorityForAnyUO: 'ETI-PEV-INV-VR'
         }
       },
       {
