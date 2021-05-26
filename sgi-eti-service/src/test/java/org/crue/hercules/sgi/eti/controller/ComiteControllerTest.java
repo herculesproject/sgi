@@ -334,7 +334,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void findTipoMemoriaEmtyList() throws Exception {
     // given: El comité no tiene tipos de memoria asociados
     Long id = 3L;
@@ -353,7 +353,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void findTipoMemoriaValid() throws Exception {
     // given: Datos existentes
     Long id = 3L;
@@ -391,7 +391,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void findMemoriasEmtyList() throws Exception {
     // given: El comité no tiene tipos de memoria asociados
     Long id = 3L;
@@ -410,7 +410,7 @@ public class ComiteControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void findMemoriaSValid() throws Exception {
     // given: Datos existentes
     Long id = 3L;

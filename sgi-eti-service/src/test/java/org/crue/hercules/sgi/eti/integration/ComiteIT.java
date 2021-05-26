@@ -298,7 +298,7 @@ public class ComiteIT extends BaseIT {
     // when: find unlimited asignables para el comité
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER")));
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID_COMITE + "/memorias-peticion-evaluacion/"
@@ -331,8 +331,7 @@ public class ComiteIT extends BaseIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-C")));
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
         COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID_COMITE + "/memorias-peticion-evaluacion/"
@@ -350,8 +349,7 @@ public class ComiteIT extends BaseIT {
 
     // when: find unlimited asignables para el comité
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-C")));
 
     final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(
         COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tipo-memorias", HttpMethod.GET,
@@ -379,7 +377,7 @@ public class ComiteIT extends BaseIT {
     // when: find unlimited asignables para el comité
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER")));
 
     final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(
         COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tipo-memorias", HttpMethod.GET,

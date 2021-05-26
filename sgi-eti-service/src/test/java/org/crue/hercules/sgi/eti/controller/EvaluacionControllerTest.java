@@ -603,7 +603,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVALR", "ETI-EVC-INV-EVALR" })
   public void createComentarioEvaluador_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id

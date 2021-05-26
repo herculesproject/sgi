@@ -188,7 +188,7 @@ public class EvaluacionController {
    * @return {@link Evaluacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-INV-VR', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   Evaluacion one(@PathVariable Long id) {
     log.debug("Evaluacion one(Long id) - start");
     Evaluacion returnValue = service.findById(id);
@@ -220,7 +220,7 @@ public class EvaluacionController {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @GetMapping("/{id}/comentarios-gestor")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-ER-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-INV-ER')")
   ResponseEntity<Page<Comentario>> getComentariosGestor(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getComentariosGestor(Long id, Pageable pageable) - start");
@@ -241,7 +241,7 @@ public class EvaluacionController {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @GetMapping("/{id}/comentarios-evaluador")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   ResponseEntity<Page<Comentario>> getComentariosEvaluador(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable, Authentication authorization) {
     log.debug("getComentariosEvaluador(Long id, Pageable pageable) - start");
@@ -278,7 +278,7 @@ public class EvaluacionController {
    * @return Nuevo {@link Comentario} creado.
    */
   @PostMapping("/{id}/comentario-evaluador")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   ResponseEntity<Comentario> createComentarioEvaluador(@PathVariable Long id, @Valid @RequestBody Comentario comentario,
       Authentication authorization) {
     log.debug("createComentarioEvaluador(Comentario comentario) - start");
@@ -319,7 +319,7 @@ public class EvaluacionController {
    * @return {@link Comentario} actualizado.
    */
   @PutMapping("/{id}/comentario-evaluador/{idComentario}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   public Comentario replaceComentarioEvaluador(@PathVariable Long id, @PathVariable Long idComentario,
       @Validated({ Comentario.Update.class }) @RequestBody Comentario comentario, Authentication authorization) {
     log.debug("replaceComentarioEvaluador( Long id,  Long idComentario, Comentario comentario) - start");
@@ -352,7 +352,7 @@ public class EvaluacionController {
    * @param ids Listado de identificadores de {@link Comentario}.
    */
   @DeleteMapping("/{id}/comentario-evaluador/{idComentario}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   void deleteComentarioEvaluacion(@PathVariable Long id, @PathVariable Long idComentario,
       Authentication authorization) {
     log.debug("deleteComentarioEvaluacion(Long id,  Long idComentario) - start");
