@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <api context="/sge" name="sge-api" publishSwagger="/_system/governance/swagger_files/sge-swagger.yaml" xmlns="http://ws.apache.org/ns/synapse">
 
-  <!-- codigos economicos -->
-  <resource methods="GET" url-mapping="/codigos-economicos/gasto">
+  <!-- codigos economicos gastos -->
+  <resource methods="GET" url-mapping="/codigos-economicos-gastos">
     <inSequence>
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
@@ -19,7 +19,7 @@
     </faultSequence>
   </resource>
 
-  <resource methods="GET" url-mapping="/codigos-economicos/ingreso">
+  <resource methods="GET" uri-template="/codigos-economicos-gastos/{id}">
     <inSequence>
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
@@ -36,7 +36,25 @@
     </faultSequence>
   </resource>
 
-  <resource methods="GET" uri-template="/codigos-economicos/{id}">
+  <!-- codigos economicos ingresos -->
+  <resource methods="GET" url-mapping="/codigos-economicos-ingresos">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value=""/>
+      </call-template>
+      <send>
+        <endpoint key="sge-endpoint"/>
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond/>
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence"/>
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/codigos-economicos-ingresos/{id}">
     <inSequence>
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
