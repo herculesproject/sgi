@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.repository;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,7 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface SolicitudProyectoAreaConocimientoRepository
     extends JpaRepository<SolicitudProyectoAreaConocimiento, Long>,
     JpaSpecificationExecutor<SolicitudProyectoAreaConocimiento> {
-
-  List<SolicitudProyectoAreaConocimiento> findAllById(Long id);
 
 }
