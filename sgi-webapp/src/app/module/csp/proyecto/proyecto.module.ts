@@ -33,6 +33,7 @@ import { ProyectoProrrogasComponent } from './proyecto-formulario/proyecto-prorr
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
 import { ProyectoRoutingModule } from './proyecto-routing.module';
+import { ProyectoAreaConocimientoComponent } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ProyectoRoutingModule } from './proyecto-routing.module';
     ProyectoProrrogasComponent,
     ProyectoHistoricoEstadosComponent,
     ProyectoDocumentosComponent,
-    ProyectoClasificacionesComponent
+    ProyectoClasificacionesComponent,
+    ProyectoAreaConocimientoComponent
   ],
   imports: [
     SharedModule,

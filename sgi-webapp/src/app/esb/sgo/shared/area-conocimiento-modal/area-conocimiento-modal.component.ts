@@ -13,10 +13,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { SolicitudProyectoAreaConocimientoListado } from 'src/app/module/csp/solicitud/solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.fragment';
 
 const MSG_ERROR_LOAD = marker('error.load');
-
 interface AreaConocimientoListado {
   niveles: IAreaConocimiento[];
   nivelesTexto: string;

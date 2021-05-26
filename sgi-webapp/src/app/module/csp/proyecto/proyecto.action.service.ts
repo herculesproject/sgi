@@ -7,6 +7,7 @@ import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.se
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
+import { ProyectoAreaConocimientoService } from '@core/services/csp/proyecto-area-conocimiento.service';
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
@@ -26,12 +27,14 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
+import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
+import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
 import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.fragment';
@@ -65,6 +68,7 @@ export class ProyectoActionService extends ActionService {
     PAQUETE_TRABAJO: 'paquete-trabajo',
     FASES: 'fases',
     CONTEXTO_PROYECTO: 'contexto-proyecto',
+    AREA_CONOCIMIENTO: 'area-conocimiento',
     SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
     ENTIDAD_GESTORA: 'entidad-gestora',
     EQUIPO_PROYECTO: 'equipo-proyecto',
@@ -89,6 +93,7 @@ export class ProyectoActionService extends ActionService {
   private prorrogas: ProyectoProrrogasFragment;
   private historicoEstados: ProyectoHistoricoEstadosFragment;
   private clasificaciones: ProyectoClasificacionesFragment;
+  private areaConocimiento: ProyectoAreaConocimientoFragment;
 
   private readonly data: IProyectoData;
 
@@ -138,6 +143,8 @@ export class ProyectoActionService extends ActionService {
     proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
     proyectoClasificacionService: ProyectoClasificacionService,
     clasificacionService: ClasificacionService,
+    proyectoAreaConocimiento: ProyectoAreaConocimientoService,
+    areaConocimientoService: AreaConocimientoService,
     translate: TranslateService,
   ) {
     super();
@@ -168,6 +175,8 @@ export class ProyectoActionService extends ActionService {
       this.proyectoEquipo = new ProyectoEquipoFragment(logger, id, proyectoService, proyectoEquipoService, personaService);
       this.entidadGestora = new ProyectoEntidadGestoraFragment(
         fb, id, proyectoService, proyectoEntidadGestora, empresaService, this.readonly);
+      this.areaConocimiento = new ProyectoAreaConocimientoFragment(this.data?.proyecto?.id,
+        proyectoAreaConocimiento, proyectoService, areaConocimientoService, this.readonly);
       this.prorrogas = new ProyectoProrrogasFragment(id, proyectoService, proyectoProrrogaService, documentoService);
       this.historicoEstados = new ProyectoHistoricoEstadosFragment(id, proyectoService);
       this.documentos = new ProyectoDocumentosFragment(
@@ -190,6 +199,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstados);
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
       this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
+      this.addFragment(this.FRAGMENT.AREA_CONOCIMIENTO, this.areaConocimiento);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {

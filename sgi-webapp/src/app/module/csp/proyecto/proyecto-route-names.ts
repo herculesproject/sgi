@@ -7,6 +7,7 @@ export const PROYECTO_ROUTE_NAMES = {
   PAQUETE_TRABAJO: 'paquete-trabajo',
   FASES: 'fases',
   CONTEXTO_PROYECTO: 'contexto-proyecto',
+  AREA_CONOCIMIENTO: 'area-conocimiento',
   SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientificos',
   ENTIDAD_GESTORA: 'entidad-gestora',
   EQUIPO_PROYECTO: 'equipo-proyecto',

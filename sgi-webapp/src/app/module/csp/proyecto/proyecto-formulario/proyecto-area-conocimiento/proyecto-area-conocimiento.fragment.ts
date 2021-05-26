@@ -1,29 +1,29 @@
-import { ISolicitudProyectoAreaConocimiento } from '@core/models/csp/solicitud-proyecto-area-conocimiento';
+import { IProyectoAreaConocimiento } from '@core/models/csp/proyecto-area-conocimiento';
 import { IAreaConocimiento } from '@core/models/sgo/area-conocimiento';
 import { Fragment } from '@core/services/action-service';
-import { SolicitudProyectoAreaConocimientoService } from '@core/services/csp/solicitud-proyecto-area-conocimiento.service';
-import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { ProyectoAreaConocimientoService } from '@core/services/csp/proyecto-area-conocimiento.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, concat, from, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
-export interface SolicitudProyectoAreaConocimientoListado {
+export interface ProyectoAreaConocimientoListado {
   id: number;
-  solicitudProyectoId: number;
+  proyectoId: number;
   niveles: IAreaConocimiento[];
   nivelesTexto: string;
   nivelSeleccionado: IAreaConocimiento;
 }
 
-export class SolicitudProyectoAreaConocimientoFragment extends Fragment {
-  areasConocimiento$ = new BehaviorSubject<StatusWrapper<SolicitudProyectoAreaConocimientoListado>[]>([]);
-  private areasConocimientoEliminadas: StatusWrapper<SolicitudProyectoAreaConocimientoListado>[] = [];
+export class ProyectoAreaConocimientoFragment extends Fragment {
+  areasConocimiento$ = new BehaviorSubject<StatusWrapper<ProyectoAreaConocimientoListado>[]>([]);
+  private areasConocimientoEliminadas: StatusWrapper<ProyectoAreaConocimientoListado>[] = [];
 
   constructor(
     key: number,
-    private service: SolicitudProyectoAreaConocimientoService,
-    private solicitudService: SolicitudService,
+    private service: ProyectoAreaConocimientoService,
+    private proyectoService: ProyectoService,
     private areaConocimientoService: AreaConocimientoService,
     public readonly: boolean
   ) {
@@ -33,12 +33,12 @@ export class SolicitudProyectoAreaConocimientoFragment extends Fragment {
 
   protected onInitialize(): void {
     if (this.getKey()) {
-      const subscription = this.solicitudService.findAllSolicitudProyectoAreaConocimiento(this.getKey() as number).pipe(
-        map(response => response.items.map(solicitudProyectoAreaConocimiento => {
-          const areasConocimientoListado: SolicitudProyectoAreaConocimientoListado = {
-            id: solicitudProyectoAreaConocimiento.id,
-            solicitudProyectoId: solicitudProyectoAreaConocimiento.solicitudProyectoId,
-            nivelSeleccionado: solicitudProyectoAreaConocimiento.areaConocimiento,
+      const subscription = this.proyectoService.findAllProyectoAreaConocimiento(this.getKey() as number).pipe(
+        map(response => response.items.map(proyectoAreaConocimiento => {
+          const areasConocimientoListado: ProyectoAreaConocimientoListado = {
+            id: proyectoAreaConocimiento.id,
+            proyectoId: proyectoAreaConocimiento.proyectoId,
+            nivelSeleccionado: proyectoAreaConocimiento.areaConocimiento,
             niveles: undefined,
             nivelesTexto: ''
           };
@@ -46,25 +46,25 @@ export class SolicitudProyectoAreaConocimientoFragment extends Fragment {
         })),
         switchMap((result) => {
           return from(result).pipe(
-            mergeMap((solicitudProyectoAreaConocimiento) => {
-              return this.areaConocimientoService.findById(solicitudProyectoAreaConocimiento.nivelSeleccionado.id).pipe(
+            mergeMap((proyectoAreaConocimiento) => {
+              return this.areaConocimientoService.findById(proyectoAreaConocimiento.nivelSeleccionado.id).pipe(
                 map((areaConocimiento) => {
-                  solicitudProyectoAreaConocimiento.nivelSeleccionado = areaConocimiento;
-                  solicitudProyectoAreaConocimiento.niveles = [areaConocimiento];
+                  proyectoAreaConocimiento.nivelSeleccionado = areaConocimiento;
+                  proyectoAreaConocimiento.niveles = [areaConocimiento];
                 }),
                 switchMap(() => {
-                  return this.getNiveles(solicitudProyectoAreaConocimiento);
+                  return this.getNiveles(proyectoAreaConocimiento);
                 })
               );
             })
           );
         })
-      ).subscribe((solicitudProyectoAreaConocimiento) => {
-        solicitudProyectoAreaConocimiento.nivelesTexto = solicitudProyectoAreaConocimiento.niveles
-          .slice(1, solicitudProyectoAreaConocimiento.niveles.length)
+      ).subscribe((proyectoAreaConocimiento) => {
+        proyectoAreaConocimiento.nivelesTexto = proyectoAreaConocimiento.niveles
+          .slice(1, proyectoAreaConocimiento.niveles.length)
           .reverse()
           .map(area => area.nombre).join(' - ');
-        this.areasConocimiento$.value.push(new StatusWrapper<SolicitudProyectoAreaConocimientoListado>(solicitudProyectoAreaConocimiento));
+        this.areasConocimiento$.value.push(new StatusWrapper<ProyectoAreaConocimientoListado>(proyectoAreaConocimiento));
         this.areasConocimiento$.next(this.areasConocimiento$.value);
       });
 
@@ -72,11 +72,11 @@ export class SolicitudProyectoAreaConocimientoFragment extends Fragment {
     }
   }
 
-  public addAreas(areas: SolicitudProyectoAreaConocimientoListado[]) {
+  public addAreas(areas: ProyectoAreaConocimientoListado[]) {
     if (areas && areas.length > 0) {
       areas.forEach((area) => {
-        area.solicitudProyectoId = this.getKey() as number;
-        const wrapped = new StatusWrapper<SolicitudProyectoAreaConocimientoListado>(area);
+        area.proyectoId = this.getKey() as number;
+        const wrapped = new StatusWrapper<ProyectoAreaConocimientoListado>(area);
         wrapped.setCreated();
         const current = this.areasConocimiento$.value;
         current.push(wrapped);
@@ -95,25 +95,25 @@ export class SolicitudProyectoAreaConocimientoFragment extends Fragment {
 
     return from(createdAreasConocimiento).pipe(
       mergeMap((wrappedAreaConocimiento) => {
-        const solicitudProyectoAreaConocimiento: ISolicitudProyectoAreaConocimiento = {
+        const proyectoAreaConocimiento: IProyectoAreaConocimiento = {
           id: undefined,
-          solicitudProyectoId: wrappedAreaConocimiento.value.solicitudProyectoId,
+          proyectoId: wrappedAreaConocimiento.value.proyectoId,
           areaConocimiento: wrappedAreaConocimiento.value.nivelSeleccionado,
         };
-        return this.service.create(solicitudProyectoAreaConocimiento).pipe(
+        return this.service.create(proyectoAreaConocimiento).pipe(
           map((createdAreaConocimiento) => {
-            const index = this.areasConocimiento$.value.findIndex((currentAreasConocimiento) =>
-              currentAreasConocimiento === wrappedAreaConocimiento);
+            const index = this.areasConocimiento$.value.findIndex((currentClasificaciones) =>
+              currentClasificaciones === wrappedAreaConocimiento);
             const areaConocimientoListado = wrappedAreaConocimiento.value;
             areaConocimientoListado.id = createdAreaConocimiento.id;
-            this.areasConocimiento$.value[index] = new StatusWrapper<SolicitudProyectoAreaConocimientoListado>(areaConocimientoListado);
+            this.areasConocimiento$.value[index] = new StatusWrapper<ProyectoAreaConocimientoListado>(areaConocimientoListado);
           })
         );
       })
     );
   }
 
-  public deleteArea(wrapper: StatusWrapper<SolicitudProyectoAreaConocimientoListado>) {
+  public deleteArea(wrapper: StatusWrapper<ProyectoAreaConocimientoListado>) {
     const current = this.areasConocimiento$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -164,17 +164,17 @@ export class SolicitudProyectoAreaConocimientoFragment extends Fragment {
     return (this.areasConocimientoEliminadas.length > 0 || touched);
   }
 
-  private getNiveles(solicitudProyectoAreaConocimiento: SolicitudProyectoAreaConocimientoListado):
-    Observable<SolicitudProyectoAreaConocimientoListado> {
-    const lastLevel = solicitudProyectoAreaConocimiento.niveles[solicitudProyectoAreaConocimiento.niveles.length - 1];
+  private getNiveles(proyectoAreaConocimiento: ProyectoAreaConocimientoListado):
+    Observable<ProyectoAreaConocimientoListado> {
+    const lastLevel = proyectoAreaConocimiento.niveles[proyectoAreaConocimiento.niveles.length - 1];
     if (!lastLevel.padreId) {
-      return of(solicitudProyectoAreaConocimiento);
+      return of(proyectoAreaConocimiento);
     }
 
     return this.areaConocimientoService.findById(lastLevel.padreId).pipe(
       switchMap(area => {
-        solicitudProyectoAreaConocimiento.niveles.push(area);
-        return this.getNiveles(solicitudProyectoAreaConocimiento);
+        proyectoAreaConocimiento.niveles.push(area);
+        return this.getNiveles(proyectoAreaConocimiento);
       })
     );
   }
