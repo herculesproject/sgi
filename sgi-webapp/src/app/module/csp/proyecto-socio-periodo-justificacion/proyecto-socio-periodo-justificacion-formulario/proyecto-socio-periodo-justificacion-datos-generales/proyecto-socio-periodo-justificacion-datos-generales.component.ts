@@ -15,6 +15,8 @@ const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_FIN_PRESENTACION_KEY = marker('
 const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_INICIO_KEY = marker('csp.proyecto-socio-periodo-justificacion.fecha-inicio');
 const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_FECHA_INICIO_PRESENTACION_KEY = marker('csp.proyecto-socio-periodo-justificacion.fecha-inicio-presentacion');
 const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY = marker('csp.proyecto-socio-periodo-justificacion.observaciones');
+const PROYECTO_SOCIO_PERIODO_JUSTIFICACION_IMPORTE_JUSTIFICADO_KEY = marker('csp.proyecto-socio-periodo-justificacion.importe-justificado');
+
 @Component({
   selector: 'sgi-proyecto-socio-periodo-justificacion-datos-generales',
   templateUrl: './proyecto-socio-periodo-justificacion-datos-generales.component.html',
@@ -32,6 +34,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesComponent extends
   msgParamFechaInicio = {};
   msgParamFechaInicioPresentacion = {}
   msgParamObservacionesEntity = {};
+  msgParamImporteJustificadoEntity = {};
 
   constructor(
     protected actionService: ProyectoSocioPeriodoJustificacionActionService,
@@ -83,6 +86,11 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesComponent extends
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_OBSERVACIONES_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
+    this.translate.get(
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_IMPORTE_JUSTIFICADO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamImporteJustificadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   ngOnDestroy(): void {

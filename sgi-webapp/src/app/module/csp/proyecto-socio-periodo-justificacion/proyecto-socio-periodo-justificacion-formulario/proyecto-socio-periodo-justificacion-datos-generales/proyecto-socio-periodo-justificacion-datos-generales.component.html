@@ -158,5 +158,25 @@
         </mat-form-field>
       </div>
     </div>
+
+    <!-- Importe justificado -->
+    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.proyecto-socio-periodo-justificacion.importe-justificado' | translate}}</mat-label>
+          <input matInput formControlName="importeJustificado" type="number"
+            placeholder="{{'csp.proyecto-socio-periodo-justificacion.importe-justificado' | translate}}">
+          <mat-error *ngIf="formGroup.controls.importeJustificado.errors?.min">
+            {{'error.min.entity' | translate:msgParamImporteJustificadoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importeJustificado.errors?.max">
+            {{'error.max.entity' | translate:msgParamImporteJustificadoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
   </form>
 </section>

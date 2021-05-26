@@ -11,4 +11,5 @@ export interface IProyectoSocioPeriodoJustificacion {
   observaciones: string;
   documentacionRecibida: boolean;
   fechaRecepcion: DateTime;
+  importeJustificado: number;
 }

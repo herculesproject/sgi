@@ -52,6 +52,10 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
         observaciones: new FormControl('', [Validators.maxLength(2_000)]),
         documentacionRecibida: new FormControl(false),
         fechaRecepcion: new FormControl(null),
+        importeJustificado: new FormControl('', [
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ])
       },
       {
         validators: [
@@ -84,7 +88,8 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
       fechaInicioPresentacion: value.fechaInicioPresentacion,
       fechaRecepcion: value.fechaRecepcion,
       observaciones: value.observaciones,
-      numPeriodo: value.numPeriodo
+      numPeriodo: value.numPeriodo,
+      importeJustificado: value.importeJustificado
     };
     return result;
   }
@@ -103,6 +108,7 @@ export class ProyectoSocioPeriodoJustificacionDatosGeneralesFragment extends For
     this.periodoJustificacion.fechaRecepcion = this.periodoJustificacion.documentacionRecibida ? form.fechaRecepcion.value : undefined;
     this.periodoJustificacion.observaciones = form.observaciones.value;
     this.periodoJustificacion.numPeriodo = form.numPeriodo.value;
+    this.periodoJustificacion.importeJustificado = form.importeJustificado.value;
     return this.periodoJustificacion;
   }
 

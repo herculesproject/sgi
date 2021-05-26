@@ -30,7 +30,7 @@ export class ProyectoSocioPeriodoJustificacionComponent extends FragmentComponen
 
   elementosPagina = [5, 10, 25, 100];
   displayedColumns = ['numPeriodo', 'fechaInicio', 'fechaFin', 'fechaInicioPresentacion', 'fechaFinPresentacion',
-    'documentacionRecibida', 'fechaRecepcion', 'acciones'];
+    'documentacionRecibida', 'fechaRecepcion', 'importeJustificado', 'acciones'];
 
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoSocioPeriodoJustificacion>>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;

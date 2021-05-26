@@ -16,7 +16,8 @@ import { ProyectoSocioActionService } from '../../proyecto-socio.action.service'
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-datos-generales.fragment';
 
 const MSG_ERROR_INIT = marker('error.load');
-const PROYECTO_SOCIO_IMPORTE_SOLICITADO_KEY = marker('csp.proyecto-socio.importe-solicitado');
+const PROYECTO_SOCIO_IMPORTE_CONCEDIDO_KEY = marker('csp.proyecto-socio.importe-concedido');
+const PROYECTO_SOCIO_IMPORTE_PRESUPUESTO_KEY = marker('csp.proyecto-socio.importe-presupuesto');
 const PROYECTO_SOCIO_FECHA_FIN_KEY = marker('csp.proyecto-socio.fecha-fin');
 const PROYECTO_SOCIO_FECHA_INICIO_KEY = marker('csp.proyecto-socio.fecha-inicio');
 const PROYECTO_SOCIO_NUMERO_INVESTIGADOR_KEY = marker('csp.proyecto-socio.num-investigadores');
@@ -41,7 +42,8 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
   msgParamEntity = {};
   msgParamRolSocioEntity = {};
   msgParamNumInvestigadoresEntity = {};
-  msgParamImporteSolicitadoEntity = {};
+  msgParamImportePresupuestoEntity = {};
+  msgParamImporteConcedidoEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamFechaFinEntity = {};
   msgParamPeriodoParticipacionEntity = {};
@@ -86,9 +88,14 @@ export class ProyectoSocioDatosGeneralesComponent extends FormFragmentComponent<
 
   private setupI18N(): void {
     this.translate.get(
-      PROYECTO_SOCIO_IMPORTE_SOLICITADO_KEY,
+      PROYECTO_SOCIO_IMPORTE_CONCEDIDO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamImporteSolicitadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamImporteConcedidoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
+    this.translate.get(
+      PROYECTO_SOCIO_IMPORTE_PRESUPUESTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamImportePresupuestoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
       PROYECTO_SOCIO_FECHA_FIN_KEY,

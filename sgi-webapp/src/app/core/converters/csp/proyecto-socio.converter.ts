@@ -18,7 +18,8 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       numInvestigadores: value.numInvestigadores,
-      importeConcedido: value.importeConcedido
+      importeConcedido: value.importeConcedido,
+      importePresupuesto: value.importePresupuesto
     };
   }
 
@@ -34,7 +35,8 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       numInvestigadores: value.numInvestigadores,
-      importeConcedido: value.importeConcedido
+      importeConcedido: value.importeConcedido,
+      importePresupuesto: value.importePresupuesto
     };
   }
 }

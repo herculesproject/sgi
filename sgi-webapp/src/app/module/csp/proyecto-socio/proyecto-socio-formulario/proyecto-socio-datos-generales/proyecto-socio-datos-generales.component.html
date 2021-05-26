@@ -51,7 +51,7 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-socio.num-investigadores' | translate}}</mat-label>
-          <input matInput formControlName="numInvestigadores" type="number" id="numInvestigadores"
+          <input matInput formControlName="numInvestigadores" type="number"
             placeholder="{{'csp.proyecto-socio.num-investigadores' | translate}}">
           <mat-error *ngIf="formGroup.controls.numInvestigadores.errors?.min">
             {{'error.min.entity' | translate:msgParamNumInvestigadoresEntity}}
@@ -63,20 +63,39 @@
       </div>
     </div>
 
+    <!-- Importe presupuesto -->
+    <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.proyecto-socio.importe-presupuesto' | translate}}</mat-label>
+          <input matInput formControlName="importePresupuesto" type="number"
+            placeholder="{{'csp.proyecto-socio.importe-presupuesto' | translate}}">
+          <mat-error *ngIf="formGroup.controls.importePresupuesto.errors?.min">
+            {{'error.min.entity' | translate:msgParamImportePresupuestoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importePresupuesto.errors?.max">
+            {{'error.max.entity' | translate:msgParamImportePresupuestoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
     <!-- Importe concedido -->
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
-          <mat-label>{{'csp.proyecto-socio.importe-solicitado' | translate}}</mat-label>
-          <input matInput formControlName="importeConcedido" type="number" id="numInvestigadores"
+          <mat-label>{{'csp.proyecto-socio.importe-concedido' | translate}}</mat-label>
+          <input matInput formControlName="importeConcedido" type="number"
             placeholder="{{'csp.proyecto-socio.importe-concedido' | translate}}">
           <mat-error *ngIf="formGroup.controls.importeConcedido.errors?.min">
-            {{'error.min.entity' | translate:msgParamImporteSolicitadoEntity}}
+            {{'error.min.entity' | translate:msgParamImporteConcedidoEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.importeConcedido.errors?.max">
-            {{'error.max.entity' | translate:msgParamImporteSolicitadoEntity}}
+            {{'error.max.entity' | translate:msgParamImporteConcedidoEntity}}
           </mat-error>
         </mat-form-field>
       </div>

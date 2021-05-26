@@ -20,7 +20,8 @@ class ProyectoSocioPeriodoJustificacionConverter extends
       fechaFinPresentacion: LuxonUtils.fromBackend(value.fechaFinPresentacion),
       observaciones: value.observaciones,
       documentacionRecibida: value.documentacionRecibida,
-      fechaRecepcion: LuxonUtils.fromBackend(value.fechaRecepcion)
+      fechaRecepcion: LuxonUtils.fromBackend(value.fechaRecepcion),
+      importeJustificado: value.importeJustificado
     };
   }
 
@@ -38,7 +39,8 @@ class ProyectoSocioPeriodoJustificacionConverter extends
       fechaFinPresentacion: LuxonUtils.toBackend(value.fechaFinPresentacion),
       observaciones: value.observaciones,
       documentacionRecibida: value.documentacionRecibida,
-      fechaRecepcion: LuxonUtils.toBackend(value.fechaRecepcion)
+      fechaRecepcion: LuxonUtils.toBackend(value.fechaRecepcion),
+      importeJustificado: value.importeJustificado
     };
   }
 }

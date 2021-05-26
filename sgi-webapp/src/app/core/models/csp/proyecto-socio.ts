@@ -11,4 +11,5 @@ export interface IProyectoSocio {
   fechaFin: DateTime;
   numInvestigadores: number;
   importeConcedido: number;
+  importePresupuesto: number;
 }

@@ -34,11 +34,15 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
           Validators.required,
           IsEntityValidator.isValid()
         ]),
-        numInvestigadores: new FormControl('', [
+        numInvestigadores: new FormControl(undefined, [
           Validators.min(1),
           Validators.max(9999)
         ]),
-        importeConcedido: new FormControl('', [
+        importePresupuesto: new FormControl(undefined, [
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]),
+        importeConcedido: new FormControl(undefined, [
           Validators.min(1),
           Validators.max(2_147_483_647)
         ]),
@@ -60,6 +64,7 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
       rolSocio: proyectoSocio.rolSocio,
       numInvestigadores: proyectoSocio.numInvestigadores,
       importeConcedido: proyectoSocio.importeConcedido,
+      importePresupuesto: proyectoSocio.importePresupuesto,
       fechaInicio: proyectoSocio.fechaInicio,
       fechaFin: proyectoSocio.fechaFin,
     };
@@ -88,6 +93,7 @@ export class ProyectoSocioDatosGeneralesFragment extends FormFragment<IProyectoS
     this.proyectoSocio.rolSocio = form.rolSocio.value;
     this.proyectoSocio.numInvestigadores = form.numInvestigadores.value;
     this.proyectoSocio.importeConcedido = form.importeConcedido.value;
+    this.proyectoSocio.importePresupuesto = form.importePresupuesto.value;
     this.proyectoSocio.fechaInicio = form.fechaInicio.value;
     this.proyectoSocio.fechaFin = form.fechaFin.value;
     return this.proyectoSocio;

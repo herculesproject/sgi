@@ -9,4 +9,5 @@ export interface IProyectoSocioBackend {
   fechaFin: string;
   numInvestigadores: number;
   importeConcedido: number;
+  importePresupuesto: number;
 }
