@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
+import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
@@ -106,6 +107,9 @@ public class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ProyectoClasificacionService proyectoClasificacionService;
+
+  @MockBean
+  private ProyectoProyectoSgeService proyectoProyectoSgeService;
 
   @MockBean
   private ProrrogaDocumentoService prorrogaDocumentoService;

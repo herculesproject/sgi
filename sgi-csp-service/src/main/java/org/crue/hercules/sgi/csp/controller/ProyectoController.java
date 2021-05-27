@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
@@ -32,6 +33,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
+import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
@@ -117,6 +119,9 @@ public class ProyectoController {
   /** ProyectoAreaConocimientoService */
   private final ProyectoAreaConocimientoService proyectoAreaConocimientoService;
 
+  /** ProyectoProyectoSgeService service */
+  private final ProyectoProyectoSgeService proyectoProyectoSgeService;
+
   /**
    * Instancia un nuevo ProyectoController.
    * 
@@ -138,6 +143,7 @@ public class ProyectoController {
    * @param proyectoSocioPeriodoJustificacionDocumentoService {@link ProyectoSocioPeriodoJustificacionDocumentoService}.
    * @param proyectoClasificacionService                      {@link ProyectoClasificacionService}.
    * @param proyectoAreaConocimientoService                   {@link proyectoAreaConocimientoService}.
+   * @param proyectoProyectoSgeService                        {@link ProyectoProyectoSgeService}.
    */
   public ProyectoController(ProyectoService proyectoService, ProyectoHitoService proyectoHitoService,
       ProyectoFaseService proyectoFaseService, ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService,
@@ -150,7 +156,8 @@ public class ProyectoController {
       ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService,
       ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService,
       ProyectoClasificacionService proyectoClasificacionService,
-      ProyectoAreaConocimientoService proyectoAreaConocimientoService) {
+      ProyectoAreaConocimientoService proyectoAreaConocimientoService,
+      ProyectoProyectoSgeService proyectoProyectoSgeService) {
     this.service = proyectoService;
     this.proyectoHitoService = proyectoHitoService;
     this.proyectoFaseService = proyectoFaseService;
@@ -168,6 +175,7 @@ public class ProyectoController {
     this.proyectoSocioPeriodoJustificacionDocumentoService = proyectoSocioPeriodoJustificacionDocumentoService;
     this.proyectoClasificacionService = proyectoClasificacionService;
     this.proyectoAreaConocimientoService = proyectoAreaConocimientoService;
+    this.proyectoProyectoSgeService = proyectoProyectoSgeService;
   }
 
   /**
@@ -751,6 +759,29 @@ public class ProyectoController {
     }
 
     log.debug("findAllByProyectoId(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link ProyectoProyectoSge}
+   * 
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/proyectos-sge")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  ResponseEntity<Page<ProyectoProyectoSge>> findAllProyectoProyectosSge(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProyectoProyectoSge(Long id, String query, Pageable paging) - start");
+    Page<ProyectoProyectoSge> page = proyectoProyectoSgeService.findAllByProyecto(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProyectoProyectoSge(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProyectoProyectoSge(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
