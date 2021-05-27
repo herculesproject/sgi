@@ -131,7 +131,10 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     );
     this.subscriptions.push(subcription);
     this.group.load(new FormGroup({
-      nombre: new FormControl('', Validators.required),
+      nombre: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
       fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       comentarios: new FormControl('')

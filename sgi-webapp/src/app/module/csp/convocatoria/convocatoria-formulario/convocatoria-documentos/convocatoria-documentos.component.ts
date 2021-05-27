@@ -121,7 +121,10 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
       this.dataSource.data = documentos;
     }));
     this.group.load(new FormGroup({
-      nombre: new FormControl('', Validators.required),
+      nombre: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
       fichero: new FormControl(null, Validators.required),
       fase: new FormControl(null),
       tipoDocumento: new FormControl(null),

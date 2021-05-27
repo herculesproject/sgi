@@ -47,6 +47,9 @@
           <mat-error *ngIf="formGroup.get('nombre').errors?.required">
             {{'error.required.entity' | translate:msgParamNombreEntity}}
           </mat-error>
+          <mat-error *ngIf="formGroup.get('nombre').errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamNombreEntity }}
+          </mat-error>
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.convocatoria-documento.fichero' | translate}}</mat-label>
