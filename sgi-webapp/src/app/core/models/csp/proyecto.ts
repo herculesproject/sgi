@@ -22,6 +22,8 @@ export interface IProyecto {
   fechaInicio: DateTime;
   /** Fecha Fin */
   fechaFin: DateTime;
+  /** Fecha Fin Definitiva */
+  fechaFinDefinitiva: DateTime;
   /** Comentario */
   comentario: string;
   /** Unidad gestion */

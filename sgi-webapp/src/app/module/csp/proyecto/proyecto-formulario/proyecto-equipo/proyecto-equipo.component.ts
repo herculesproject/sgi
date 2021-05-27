@@ -120,7 +120,7 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
       entidad: wrapper?.value ?? {} as IProyectoEquipo,
       selectedEntidades: this.dataSource.data.map(element => element.value),
       fechaInicioMin: this.actionService.proyecto.fechaInicio,
-      fechaFinMax: this.actionService.proyecto.fechaFin,
+      fechaFinMax: this.actionService.proyecto.fechaFinDefinitiva ?? this.actionService.proyecto.fechaFin,
       showHorasDedicacion: true,
       isEdit: Boolean(wrapper)
     };

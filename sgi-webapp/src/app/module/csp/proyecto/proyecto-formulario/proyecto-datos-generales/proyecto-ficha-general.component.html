@@ -263,6 +263,27 @@
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.range">
             {{'error.csp.proyecto-ficha-general.fecha-fin.range' | translate}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.afterThanProrroga">
+            {{'error.afterThanProrroga.fecha-fin' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Fecha fin Definitiva -->
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field color="primary">
+          <mat-label>{{'csp.proyecto.fecha-fin-definitiva'| translate}}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="pickerFechaFinDefinitiva" formControlName="fechaFinDefinitiva">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFinDefinitiva"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaFinDefinitiva showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
+          <mat-error *ngIf="formGroup.controls.fechaFinDefinitiva.errors?.after">
+            {{'error.after.fecha-fin-definitiva' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFinDefinitiva.errors?.afterThanProrroga">
+            {{'error.afterThanProrroga.fecha-fin-definitiva' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
 

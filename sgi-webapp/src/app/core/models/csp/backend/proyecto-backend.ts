@@ -20,6 +20,8 @@ export interface IProyectoBackend {
   fechaInicio: string;
   /** Fecha Fin */
   fechaFin: string;
+  /** Fecha Fin Definitiva */
+  fechaFinDefinitiva: string;
   /** modelo ejecucion */
   modeloEjecucion: IModeloEjecucion;
   /** finalidad */

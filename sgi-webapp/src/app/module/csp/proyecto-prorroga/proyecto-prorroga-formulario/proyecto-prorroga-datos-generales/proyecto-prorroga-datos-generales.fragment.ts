@@ -1,5 +1,6 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -21,6 +22,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
     private service: ProyectoProrrogaService,
     proyectoId: number,
     private fechaUltimaConcesion: DateTime,
+    private proyecto: IProyecto,
     private readonly: boolean,
     private dialogService: DialogService
   ) {
@@ -142,9 +144,13 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
 
   private addValidations(value: Tipo) {
     const form = this.getFormGroup().controls;
+
+    const fechaFinValidator = this.buildValidatorFechaFin(this.proyecto.fechaFinDefinitiva ?? this.proyecto.fechaFin,
+      !!this.proyecto.fechaFinDefinitiva);
+
     if (!this.readonly) {
       if (value === Tipo.TIEMPO) {
-        form.fechaFin.setValidators([Validators.required]);
+        form.fechaFin.setValidators([Validators.required, fechaFinValidator]);
         form.fechaFin.enable();
         form.importe.setValidators([
           Validators.min(1),
@@ -161,7 +167,7 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
         form.fechaFin.setValidators(null);
         form.fechaFin.disable();
       } else {
-        form.fechaFin.setValidators([Validators.required]);
+        form.fechaFin.setValidators([Validators.required, fechaFinValidator]);
         form.fechaFin.enable();
         form.importe.setValidators([
           Validators.required,
@@ -171,5 +177,14 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
         form.importe.enable();
       }
     }
+  }
+
+  private buildValidatorFechaFin(fechaFinProyecto: DateTime, definitiva: boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && fechaFinProyecto >= control.value) {
+        return definitiva ? { afterDefinitiva: true } : { after: true };
+      }
+      return null;
+    };
   }
 }

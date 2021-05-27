@@ -34,6 +34,7 @@ const PROYECTO_COORDINADOR_EXTERNO_KEY = marker('csp.proyecto.coordinador-extern
 const PROYECTO_CONVOCATORIA_EXTERNA_KEY = marker('csp.proyecto.convocatoria-externa');
 const PROYECTO_FACTURACION_KEY = marker('csp.proyecto.facturacion');
 const PROYECTO_FECHA_FIN_KEY = marker('csp.proyecto.fecha-fin');
+const PROYECTO_FECHA_FIN_DEFINITIVA_KEY = marker('csp.proyecto.fecha-fin-definitiva');
 const PROYECTO_FECHA_INICIO_KEY = marker('csp.proyecto.fecha-inicio');
 const PROYECTO_FINALIDAD_KEY = marker('csp.proyecto.finalidad');
 const PROYECTO_IVA_KEY = marker('csp.proyecto.iva');
@@ -94,6 +95,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamTituloEntity = {};
   msgParamTimesheetEntity = {};
   msgParamUnidadGestionEntity = {};
+  msgParamFechaFinDefinitivaEntity = {};
 
   get CLASIFICACION_CVN_MAP() {
     return CLASIFICACION_CVN_MAP;
@@ -203,6 +205,11 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       PROYECTO_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      PROYECTO_FECHA_FIN_DEFINITIVA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFechaFinDefinitivaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
 
     this.translate.get(
       PROYECTO_ACRONIMO_KEY,

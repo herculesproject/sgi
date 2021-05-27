@@ -50,7 +50,7 @@ export class ProyectoProrrogaActionService extends ActionService {
     }
 
     this.datosGenerales = new ProyectoProrrogaDatosGeneralesFragment(id,
-      proyectoProrrogaService, this.data.proyecto.id, this.getLastFechaConcesion(id), this.data.readonly, dialogService);
+      proyectoProrrogaService, this.data.proyecto.id, this.getLastFechaConcesion(id), this.data.proyecto, this.data.readonly, dialogService);
     this.documentos = new ProyectoProrrogaDocumentosFragment(logger, id, proyectoProrrogaService,
       periodoSeguimientoDocumentoService, documentoService, this.data.proyecto.modeloEjecucion.id, this.data.readonly);
 

@@ -1,8 +1,9 @@
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
@@ -36,6 +37,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   comentarioEstadoCancelado: boolean;
   mostrarSolicitud = false;
   solicitudProyecto: ISolicitudProyecto;
+  private ultimaProrroga: IProyectoProrroga;
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
@@ -57,6 +59,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
     this.proyecto = { activo: true } as IProyecto;
+    this.proyecto = {} as IProyecto;
   }
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {
@@ -98,6 +101,21 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
           return of(proyecto);
         }
       }),
+      switchMap((proyecto) => {
+        if (proyecto.id) {
+          const options: SgiRestFindOptions = {
+            sort: new RSQLSgiRestSort('numProrroga', SgiRestSortDirection.DESC)
+          };
+          return this.service.findAllProyectoProrrogaProyecto(proyecto.id, options).pipe(
+            map(prorrogas => {
+              this.ultimaProrroga = prorrogas.items.shift();
+              return proyecto;
+            })
+          );
+        } else {
+          return of(proyecto);
+        }
+      }),
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
@@ -118,7 +136,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       fechaInicio: new FormControl(null, [
         Validators.required]),
       fechaFin: new FormControl(null, [
-        Validators.required]),
+        Validators.required, this.buildValidatorFechaFin()]),
+      fechaFinDefinitiva: new FormControl(null, [this.buildValidatorFechaFin()]),
       convocatoria: new FormControl({
         value: '',
         disabled: this.isEdit()
@@ -151,7 +170,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     },
       {
         validators: [
-          DateValidator.isAfter('fechaInicio', 'fechaFin')]
+          DateValidator.isAfter('fechaInicio', 'fechaFin'),
+          DateValidator.isAfter('fechaInicio', 'fechaFinDefinitiva')]
       });
 
     this.subscriptions.push(
@@ -170,6 +190,17 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       })
     );
     if (!this.readonly) {
+
+      this.subscriptions.push(
+        form.controls.fechaFinDefinitiva.valueChanges.subscribe(
+          (value) => {
+            value ? form.controls.fechaFin.setValidators([Validators.required]) :
+              form.controls.fechaFin.setValidators([Validators.required, this.buildValidatorFechaFin()]);
+            form.controls.fechaFin.updateValueAndValidity();
+          }
+        )
+      );
+
       this.subscriptions.push(
         this.vinculacionesModeloEjecucion$.subscribe(
           value => {
@@ -196,6 +227,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       codigoExterno: proyecto.codigoExterno,
       fechaInicio: proyecto.fechaInicio,
       fechaFin: proyecto.fechaFin,
+      fechaFinDefinitiva: proyecto.fechaFinDefinitiva,
       convocatoria: proyecto.convocatoria,
       convocatoriaExterna: proyecto.convocatoriaExterna,
       unidadGestion: proyecto.unidadGestion,
@@ -234,6 +266,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.codigoExterno = form.codigoExterno.value;
     this.proyecto.fechaInicio = form.fechaInicio.value;
     this.proyecto.fechaFin = form.fechaFin.value;
+    this.proyecto.fechaFinDefinitiva = form.fechaFinDefinitiva.value;
     this.proyecto.convocatoriaId = form.convocatoria.value?.id;
     if (form.convocatoria.value) {
       this.proyecto.convocatoriaExterna = form.convocatoria.value?.codigo;
@@ -462,5 +495,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       formControl.setErrors({ range: true });
     }
     formControl.markAsTouched({ onlySelf: true });
+  }
+
+  private buildValidatorFechaFin(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (this.ultimaProrroga && control.value && this.ultimaProrroga.fechaFin >= control.value) {
+        return { afterThanProrroga: true };
+      }
+      return null;
+    };
   }
 }

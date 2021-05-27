@@ -66,6 +66,12 @@
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #pickerFechaFin showSeconds="true" [defaultTime]="[23,59,59]">
           </ngx-mat-datetime-picker>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+            {{'error.after.fecha-fin-proyecto' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.afterDefinitiva">
+            {{'error.after.fecha-fin-definitiva-proyecto' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
     </div>
