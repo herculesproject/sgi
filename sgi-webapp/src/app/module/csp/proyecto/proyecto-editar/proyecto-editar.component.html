@@ -25,6 +25,14 @@
       </sgi-action-fragment-menu-item>
     </sgi-action-fragment-menu-group>
     <sgi-action-fragment-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+      [title]="'menu.csp.proyectos.configuracion-economica' | translate">
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
+        [route]="[PROYECTO_ROUTE_NAMES.IDENTIFICACION]"
+        [title]="'menu.csp.proyectos.configuracion-economica.identificacion' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.FICHA_GENERAL)">
+      </sgi-action-fragment-menu-item>
+    </sgi-action-fragment-menu-group>
+    <sgi-action-fragment-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
       [title]="'menu.csp.proyectos.entidades' | translate">
       <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
         [route]="[PROYECTO_ROUTE_NAMES.ENTIDAD_GESTORA]" [title]="'menu.csp.proyectos.entidades-gestoras' | translate"

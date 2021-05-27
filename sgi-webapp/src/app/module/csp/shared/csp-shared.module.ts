@@ -8,6 +8,7 @@ import { EntidadFinanciadoraModalComponent } from './entidad-financiadora-modal/
 import { MiembroEquipoProyectoModalComponent } from './miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
 import { MiembroEquipoSolicitudModalComponent } from './miembro-equipo-solicitud-modal/miembro-equipo-solicitud-modal.component';
 import { PartidaGastoModalComponent } from './partida-gasto-modal/partida-gasto-modal.component';
+import { SearchProyectosEconomicosModalComponent } from './search-proyectos-economicos-modal/search-proyectos-economicos-modal.component';
 import { SelectAreaTematicaComponent } from './select-area-tematica/select-area-tematica.component';
 import { SearchConvocatoriaModalComponent } from './select-convocatoria/dialog/search-convocatoria.component';
 import { SelectConvocatoriaComponent } from './select-convocatoria/select-convocatoria.component';
@@ -32,7 +33,8 @@ import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-uni
     SelectProgramaComponent,
     SelectTipoAmbitoGeograficoComponent,
     SelectTipoFinalidadComponent,
-    SelectUnidadGestionComponent
+    SelectUnidadGestionComponent,
+    SearchProyectosEconomicosModalComponent
   ],
   imports: [
     SharedModule,
@@ -54,7 +56,8 @@ import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-uni
     SelectProgramaComponent,
     SelectTipoAmbitoGeograficoComponent,
     SelectTipoFinalidadComponent,
-    SelectUnidadGestionComponent
+    SelectUnidadGestionComponent,
+    SearchProyectosEconomicosModalComponent
   ]
 })
 export class CspSharedModule { }

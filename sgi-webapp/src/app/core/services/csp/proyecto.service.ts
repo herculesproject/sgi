@@ -14,6 +14,7 @@ import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyect
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
 import { PROYECTO_PLAZO_CONVERTER } from '@core/converters/csp/proyecto-plazo.converter';
 import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorroga.converter';
+import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
 import { PROYECTO_CONVERTER } from '@core/converters/csp/proyecto.converter';
 import { IEstadoProyectoBackend } from '@core/models/csp/backend/estado-proyecto-backend';
@@ -31,6 +32,7 @@ import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyect
 import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
 import { IProyectoPlazoBackend } from '@core/models/csp/backend/proyecto-plazo-backend';
 import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
+import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
 import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-backend';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
@@ -48,6 +50,7 @@ import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-traba
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoPlazos } from '@core/models/csp/proyecto-plazo';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
+import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { environment } from '@env';
 import {
@@ -413,6 +416,22 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       `${this.endpointUrl}/${proyectoId}/proyecto-clasificaciones`,
       options,
       PROYECTO_CLASIFICACION_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera los IProyectoProyectoSge del proyecto
+   *
+   * @param proyectoId Id del proyecto
+   * @param options opciones de busqueda
+   * @returns observable con la lista de IProyectoProyectoSge del proyecto
+   */
+  findAllProyectosSgeProyecto(proyectoId: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IProyectoProyectoSge>> {
+    return this.find<IProyectoProyectoSgeBackend, IProyectoProyectoSge>(
+      `${this.endpointUrl}/${proyectoId}/proyectos-sge`,
+      options,
+      PROYECTO_PROYECTO_SGE_CONVERTER
     );
   }
 

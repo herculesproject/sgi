@@ -27,28 +27,19 @@
     "logLevel": "debug"
   },
   "/api/sgp": {
-    "target": "http://wso-mi.ic.corp.treelogic.com",
-    "pathRewrite": {
-      "^/api/sgp": "/sgp"
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
-  "/api/sge/**": {
-    "target": "http://192.168.3.127:8280",
-    "pathRewrite": {
-      "^/api/sge": "/sge"
-    },
+  "/api/sge/": {
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/sgemp": {
-    "target": "http://wso-mi.ic.corp.treelogic.com",
-    "pathRewrite": {
-      "^/api/sgemp": "/sgemp"
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
@@ -63,10 +54,7 @@
     "logLevel": "debug"
   },
   "/api/sgo": {
-    "target": "http://wso-mi.ic.corp.treelogic.com",
-    "pathRewrite": {
-      "^/api/sgo": "/sgo"
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"

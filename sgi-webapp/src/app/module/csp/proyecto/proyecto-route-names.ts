@@ -14,5 +14,6 @@ export const PROYECTO_ROUTE_NAMES = {
   PRORROGAS: 'prorrogas',
   HISTORICO_ESTADOS: 'historico-estados',
   DOCUMENTOS: 'documentos',
-  CLASIFICACIONES: 'clasificaciones'
+  CLASIFICACIONES: 'clasificaciones',
+  IDENTIFICACION: 'identificacion'
 };

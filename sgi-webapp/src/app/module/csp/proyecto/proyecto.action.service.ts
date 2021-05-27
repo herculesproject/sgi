@@ -17,9 +17,11 @@ import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paque
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoPlazoService } from '@core/services/csp/proyecto-plazo.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
+import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
@@ -48,6 +50,7 @@ import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-p
 import { ProyectoPeriodoSeguimientosFragment } from './proyecto-formulario/proyecto-periodo-seguimientos/proyecto-periodo-seguimientos.fragment';
 import { ProyectoPlazosFragment } from './proyecto-formulario/proyecto-plazos/proyecto-plazos.fragment';
 import { ProyectoProrrogasFragment } from './proyecto-formulario/proyecto-prorrogas/proyecto-prorrogas.fragment';
+import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-proyectos-sge/proyecto-proyectos-sge.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
 
@@ -75,7 +78,8 @@ export class ProyectoActionService extends ActionService {
     PRORROGAS: 'prorrogas',
     HISTORICO_ESTADOS: 'historico-estados',
     DOCUMENTOS: 'documentos',
-    CLASIFICACIONES: 'clasificaciones'
+    CLASIFICACIONES: 'clasificaciones',
+    PROYECTOS_SGE: 'proyectos-sge'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -94,6 +98,7 @@ export class ProyectoActionService extends ActionService {
   private historicoEstados: ProyectoHistoricoEstadosFragment;
   private clasificaciones: ProyectoClasificacionesFragment;
   private areaConocimiento: ProyectoAreaConocimientoFragment;
+  private proyectosSge: ProyectoProyectosSgeFragment;
 
   private readonly data: IProyectoData;
 
@@ -145,6 +150,8 @@ export class ProyectoActionService extends ActionService {
     clasificacionService: ClasificacionService,
     proyectoAreaConocimiento: ProyectoAreaConocimientoService,
     areaConocimientoService: AreaConocimientoService,
+    proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    proyectoSgeService: ProyectoSgeService,
     translate: TranslateService,
   ) {
     super();
@@ -184,6 +191,8 @@ export class ProyectoActionService extends ActionService {
         proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaService, translate);
       this.clasificaciones = new ProyectoClasificacionesFragment(id, proyectoClasificacionService, proyectoService,
         clasificacionService, this.readonly);
+      this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
+        proyectoSgeService, this.readonly);
 
       this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
       this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -200,6 +209,7 @@ export class ProyectoActionService extends ActionService {
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
       this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
       this.addFragment(this.FRAGMENT.AREA_CONOCIMIENTO, this.areaConocimiento);
+      this.addFragment(this.FRAGMENT.PROYECTOS_SGE, this.proyectosSge);
 
       this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
         if (value) {
