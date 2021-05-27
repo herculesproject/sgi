@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -241,10 +242,12 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     // Se actualizan los miembros de equipo cuya fecha de fin coincida con la fecha
     // de fin del proyecto o sea mayor a la nueva fecha de fin del proyecto
     List<ProyectoEquipo> miembros = new ArrayList<ProyectoEquipo>();
+    Instant fechaFin = proyecto.get().getFechaFinDefinitiva() != null ? proyecto.get().getFechaFinDefinitiva()
+        : proyecto.get().getFechaFin();
     List<ProyectoEquipo> miembrosFechaFinEqual = proyectoEquipoRepository
-        .findAllByProyectoIdAndFechaFin(proyecto.get().getId(), proyecto.get().getFechaFin());
+        .findAllByProyectoIdAndFechaFin(proyecto.get().getId(), fechaFin);
     List<ProyectoEquipo> miembrosFechaFinGreater = proyectoEquipoRepository
-        .findAllByProyectoIdAndFechaFinGreaterThan(proyecto.get().getId(), proyectoProrroga.getFechaFin());
+        .findAllByProyectoIdAndFechaFinGreaterThan(proyecto.get().getId(), fechaFin);
 
     if (CollectionUtils.isNotEmpty(miembrosFechaFinEqual)) {
       miembros.addAll(miembrosFechaFinEqual);
@@ -262,6 +265,9 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     }
 
     proyecto.get().setFechaFin(proyectoProrroga.getFechaFin());
+    if (proyecto.get().getFechaFinDefinitiva() != null) {
+      proyecto.get().setFechaFinDefinitiva(proyectoProrroga.getFechaFin());
+    }
     proyectoRepository.save(proyecto.get());
     log.debug("actualizarFechaFin(ProyectoProrroga proyectoProrroga) - end");
   }
@@ -289,9 +295,14 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
     // Se comprueba la existencia del proyecto
     Long proyectoId = datosProyectoProrroga.getProyectoId();
-    if (!proyectoRepository.existsById(proyectoId)) {
-      throw new ProyectoNotFoundException(proyectoId);
-    }
+    Proyecto proyecto = proyectoRepository.findById(proyectoId)
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
+
+    Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
+        : proyecto.getFechaFin();
+
+    Assert.isTrue(datosProyectoProrroga.getFechaFin().isAfter(fechaFinProyecto),
+        "Fecha de fin debe ser posterior a la fecha de fin del proyecto");
 
     // Se recupera el ProyectoProrroga con la última fecha de concesión
     Optional<ProyectoProrroga> ultimoProyectoProrroga = repository

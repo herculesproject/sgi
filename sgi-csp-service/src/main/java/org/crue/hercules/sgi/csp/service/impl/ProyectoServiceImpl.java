@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -28,6 +29,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
@@ -51,6 +53,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
@@ -131,6 +134,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
   private final SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
   private final ProgramaRepository programaRepository;
+  private final ProyectoProrrogaRepository proyectoProrrogaRepository;
 
   public ProyectoServiceImpl(ProyectoRepository repository, EstadoProyectoRepository estadoProyectoRepository,
       ModeloUnidadRepository modeloUnidadRepository, ConvocatoriaRepository convocatoriaRepository,
@@ -156,7 +160,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService,
       ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository,
       SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository,
-      ProgramaRepository programaRepository) {
+      ProgramaRepository programaRepository, ProyectoProrrogaRepository proyectoProrrogaRepository) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -187,6 +191,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.convocatoriaConceptoGastoRepository = convocatoriaConceptoGastoRepository;
     this.solicitudProyectoEntidadFinanciadoraAjenaRepository = solicitudProyectoEntidadFinanciadoraAjenaRepository;
     this.programaRepository = programaRepository;
+    this.proyectoProrrogaRepository = proyectoProrrogaRepository;
   }
 
   /**
@@ -204,9 +209,9 @@ public class ProyectoServiceImpl implements ProyectoService {
     Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
         "La Unidad de Gestión no es gestionable por el usuario");
 
-    this.validarDatos(proyecto);
-
     proyecto.setActivo(Boolean.TRUE);
+
+    this.validarDatos(proyecto);
 
     // Crea el proyecto
     repository.save(proyecto);
@@ -277,11 +282,72 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setTipoHorasAnuales(proyectoActualizar.getTipoHorasAnuales());
       data.setTitulo(proyectoActualizar.getTitulo());
       data.setUnidadGestionRef(proyectoActualizar.getUnidadGestionRef());
+      List<ProyectoEquipo> equipos = null;
+      if (data.getFechaFinDefinitiva() == null && proyectoActualizar.getFechaFinDefinitiva() != null) {
+        // Si se informa por primera vez la fecha fin definitiva del proyecto, se
+        // actualizan todos los equipos cuya fecha de fin sea igual a la del proyecto
+        equipos = getEquiposUpdateFechaFinProyectoEquipo(data.getId(), data.getFechaFin(),
+            proyectoActualizar.getFechaFinDefinitiva());
+      } else if (data.getFechaFinDefinitiva() != null && proyectoActualizar.getFechaFinDefinitiva() != null
+          && data.getFechaFinDefinitiva() != proyectoActualizar.getFechaFinDefinitiva()) {
+        // Si la fecha de fin definitiva del proyecto cambia de valor, se actualizan
+        // todos los equipos cuya fecha de fin sea igual a la fecha definitiva del
+        // proyecto
+        equipos = getEquiposUpdateFechaFinProyectoEquipo(data.getId(), data.getFechaFinDefinitiva(),
+            proyectoActualizar.getFechaFinDefinitiva());
+      } else if (data.getFechaFinDefinitiva() != null && proyectoActualizar.getFechaFinDefinitiva() == null) {
+        // Si la fecha de fin definitiva del proyecto cambia de valor a nulo
+        equipos = getEquiposUpdateFechaFinProyectoEquipo(data.getId(), data.getFechaFinDefinitiva(),
+            proyectoActualizar.getFechaFin());
+      }
+      data.setFechaFinDefinitiva(proyectoActualizar.getFechaFinDefinitiva());
 
       Proyecto returnValue = repository.save(data);
+      if (!CollectionUtils.isEmpty(equipos)) {
+        proyectoEquipoService.update(data.getId(), equipos);
+      }
       log.debug("update(Proyecto proyecto) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(proyectoActualizar.getId()));
+  }
+
+  /**
+   * Se obtienen los {@link ProyectoEquipo} a actualizar la fecha de fin del
+   * equipo
+   * 
+   * @param proyectoId    identificador del {@link Proyecto}
+   * @param fechaBusqueda fecha fin para filtrar el {@link ProyectoEquipo}
+   * @param fechaFinNew   fecha fin nueva para actualizar el
+   *                      {@link ProyectoEquipo}
+   */
+  private List<ProyectoEquipo> getEquiposUpdateFechaFinProyectoEquipo(Long proyectoId, Instant fechaBusqueda,
+      Instant fechaFinNew) {
+    List<ProyectoEquipo> equipos = new ArrayList<ProyectoEquipo>();
+    List<ProyectoEquipo> equiposFechaFinIgualAFechaFinActual = proyectoEquipoService
+        .findAllByProyectoIdAndFechaFin(proyectoId, fechaBusqueda);
+    List<ProyectoEquipo> equiposFechaFinMayorAFechaFinNueva = proyectoEquipoService
+        .findAllByProyectoIdAndFechaFinGreaterThan(proyectoId, fechaFinNew);
+    if (!CollectionUtils.isEmpty(equiposFechaFinIgualAFechaFinActual)) {
+      equipos.addAll(
+          equiposFechaFinIgualAFechaFinActual.stream().filter(e -> !equipos.contains(e)).collect(Collectors.toList()));
+    }
+    if (!CollectionUtils.isEmpty(equiposFechaFinMayorAFechaFinNueva)) {
+      equipos.addAll(
+          equiposFechaFinMayorAFechaFinNueva.stream().filter(e -> !equipos.contains(e)).collect(Collectors.toList()));
+    }
+    if (!CollectionUtils.isEmpty(equipos)) {
+      equipos.stream().map(equipo -> {
+        equipo.setFechaFin(fechaFinNew);
+        return equipo;
+      }).collect(Collectors.toList());
+    }
+    List<ProyectoEquipo> proyectoEquiposBD = proyectoEquipoService.findAllByProyectoId(proyectoId);
+    if (!CollectionUtils.isEmpty(proyectoEquiposBD)) {
+      equipos.addAll(proyectoEquiposBD.stream()
+          .filter(equipo -> !equipos.stream().map(ProyectoEquipo::getId).anyMatch(id -> id == equipo.getId()))
+          .collect(Collectors.toList()));
+    }
+    return equipos;
   }
 
   /**
@@ -471,6 +537,23 @@ public class ProyectoServiceImpl implements ProyectoService {
       Assert.isTrue(proyecto.getTimesheet() != null && proyecto.getTimesheet(), "El proyecto requiere timesheet");
       Assert.isTrue(proyecto.getTipoHorasAnuales() != null,
           "El campo tipoHorasAnuales debe ser obligatorio para el proyecto");
+    }
+
+    // FechasFin after than última prórroga
+    Optional<ProyectoProrroga> prorroga = proyectoProrrogaRepository
+        .findFirstByProyectoIdOrderByFechaConcesionDesc(proyecto.getId());
+
+    if (prorroga.isPresent()) {
+      Assert.isTrue(
+          proyecto.getFechaFin().isAfter(prorroga.get().getFechaFin())
+              || proyecto.getFechaFin().equals(prorroga.get().getFechaFin()),
+          "La fecha de fin debe ser posterior a la fecha de fin de la última prórroga");
+      if (proyecto.getFechaFinDefinitiva() != null) {
+        Assert.isTrue(
+            proyecto.getFechaFinDefinitiva().isAfter(prorroga.get().getFechaFin())
+                || proyecto.getFechaFinDefinitiva().equals(prorroga.get().getFechaFin()),
+            "La fecha de fin definitiva debe ser posterior a la fecha de fin de la última prórroga");
+      }
     }
 
     // Validación de campos obligatorios según estados. Solo aplicaría en el
@@ -1015,9 +1098,9 @@ public class ProyectoServiceImpl implements ProyectoService {
     Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
         "La Unidad de Gestión no es gestionable por el usuario");
 
-    this.validarDatos(proyecto);
-
     proyecto.setActivo(Boolean.TRUE);
+
+    this.validarDatos(proyecto);
 
     // Crea el proyecto
     repository.save(proyecto);

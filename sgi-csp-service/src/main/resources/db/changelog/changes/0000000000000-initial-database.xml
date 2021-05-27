@@ -919,6 +919,7 @@
             <column name="fecha_fin" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
+            <column name="fecha_fin_definitiva" type="TIMESTAMP"/>
             <column name="fecha_inicio" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>

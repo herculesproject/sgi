@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -42,5 +43,34 @@ public interface ProyectoEquipoService {
    *         paginadas y filtradas.
    */
   Page<ProyectoEquipo> findAllByProyecto(Long proyectoId, String query, Pageable paging);
+
+  /**
+   * Devuelve un listado de {@link ProyectoEquipo} asociados a un {@link Proyecto}
+   * y una fecha de fin
+   * 
+   * @param proyectoId Identificador de {@link Proyecto}.
+   * @param fechaFin   Fecha de fin del miembro de equipo
+   * @return listado de {@link ProyectoEquipo}.
+   */
+  List<ProyectoEquipo> findAllByProyectoIdAndFechaFin(Long proyectoId, Instant fechaFin);
+
+  /**
+   * Devuelve un listado de {@link ProyectoEquipo} asociados a un {@link Proyecto}
+   * y una fecha de fin mayor a la indicada
+   * 
+   * @param proyectoId Identificador de {@link Proyecto}.
+   * @param fechaFin   Fecha de fin del miembro de equipo
+   * @return listado de {@link ProyectoEquipo}.
+   */
+  List<ProyectoEquipo> findAllByProyectoIdAndFechaFinGreaterThan(Long proyectoId, Instant fechaFin);
+
+  /**
+   * Obtiene los {@link ProyectoEquipo} para una {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @return la lista de entidades {@link ProyectoEquipo} del {@link Proyecto}
+   * 
+   */
+  List<ProyectoEquipo> findAllByProyectoId(Long proyectoId);
 
 }

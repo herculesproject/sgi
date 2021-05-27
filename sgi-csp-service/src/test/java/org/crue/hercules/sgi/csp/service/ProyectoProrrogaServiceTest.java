@@ -60,7 +60,8 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().plus(Period.ofDays(1)));
     proyectoProrroga.setId(null);
 
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaAnterior));
     BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
@@ -201,8 +202,6 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
     proyectoProrroga.setId(null);
 
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
-
     Assertions.assertThatThrownBy(
         // when: create ProyectoProrroga
         () -> service.create(proyectoProrroga))
@@ -218,7 +217,8 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minus(Period.ofDays(1)));
     proyectoProrroga.setId(null);
 
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaAnterior));
 
@@ -231,7 +231,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void creaye_FechaFinBeforeProyectoFechaInicio_ThrowsIllegalArgumentException() {
+  public void create_FechaFinBeforeProyectoFechaFin_ThrowsIllegalArgumentException() {
     // given: Fecha Fin anterior a la de inicio del proyecto
     Proyecto proyecto = generarMockProyecto(1L);
     ProyectoProrroga proyectoProrrogaAnterior = generarMockProyectoProrroga(1L, 1L);
@@ -240,23 +240,15 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
     proyectoProrroga.setFechaFin(proyecto.getFechaInicio().minus(Period.ofDays(1)));
     proyectoProrroga.setId(null);
 
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoProrrogaAnterior));
-    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
-
-    BDDMockito.given(repository.save(proyectoProrroga)).will((InvocationOnMock invocation) -> {
-      ProyectoProrroga proyectoProrrogaCreado = invocation.getArgument(0);
-      proyectoProrrogaCreado.setId(1L);
-      return proyectoProrrogaCreado;
-    });
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoProrroga
         () -> service.create(proyectoProrroga))
         // then: IllegalArgumentException is thrown
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio del proyecto");
+        .hasMessage("Fecha de fin debe ser posterior a la fecha de fin del proyecto");
   }
 
   @Test
@@ -271,7 +263,8 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrroga));
 
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrroga));
     BDDMockito.given(repository.findFirstByIdNotAndProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any(),
@@ -413,7 +406,6 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoProrroga
@@ -431,7 +423,8 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(generarMockProyectoProrroga(2L, 1L)));
 
@@ -453,7 +446,8 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
     BDDMockito.given(repository.findFirstByIdNotAndProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any(),
@@ -468,7 +462,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void update_FechaFinBeforeProyectoFechaInicio_ThrowsIllegalArgumentException() throws Exception {
+  public void update_FechaFinBeforeProyectoFechaFin_ThrowsIllegalArgumentException() throws Exception {
     // given: Fecha Fin anterior a la de inicio del proyecto
     Proyecto proyecto = generarMockProyecto(1L);
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
@@ -478,20 +472,15 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
-    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
-    BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(proyectoProrrogaOriginal));
-    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
-
-    BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoProrroga>any()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoProrroga
         () -> service.update(proyectoProrroga))
         // then: IllegalArgumentException is thrown
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio del proyecto");
+        .hasMessage("Fecha de fin debe ser posterior a la fecha de fin del proyecto");
   }
 
   @Test
@@ -666,7 +655,7 @@ public class ProyectoProrrogaServiceTest extends BaseServiceTest {
         .numProrroga(1)
         .fechaConcesion(Instant.parse("2020-01-01T00:00:00Z"))
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
-        .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
+        .fechaFin(Instant.parse("2021-12-01T23:59:59Z"))
         .importe(BigDecimal.valueOf(123.45))
         .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();

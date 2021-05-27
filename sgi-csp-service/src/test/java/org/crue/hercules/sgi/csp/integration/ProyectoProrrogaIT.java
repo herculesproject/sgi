@@ -100,7 +100,7 @@ public class ProyectoProrrogaIT extends BaseIT {
         .isEqualTo(Instant.parse("2020-06-01T00:00:00Z"));
     Assertions.assertThat(proyectoProrrogaActualizado.getNumProrroga()).as("getNumProrroga()").isEqualTo(1);
     Assertions.assertThat(proyectoProrrogaActualizado.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(Instant.parse("2021-12-31T23:59:59Z"));
+        .isEqualTo(Instant.parse("2022-12-31T23:59:59Z"));
     Assertions.assertThat(proyectoProrrogaActualizado.getTipo()).as("getTipo()")
         .isEqualTo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     Assertions.assertThat(proyectoProrrogaActualizado.getImporte()).as("getImporte()")
@@ -178,7 +178,7 @@ public class ProyectoProrrogaIT extends BaseIT {
         .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
     Assertions.assertThat(proyectoProrroga.getNumProrroga()).as("getNumProrroga()").isEqualTo(1);
     Assertions.assertThat(proyectoProrroga.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(Instant.parse("2020-02-01T23:59:59Z"));
+        .isEqualTo(Instant.parse("2022-01-31T23:59:59Z"));
     Assertions.assertThat(proyectoProrroga.getTipo()).as("getTipo()").isEqualTo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     Assertions.assertThat(proyectoProrroga.getImporte()).as("getImporte()").isEqualTo(BigDecimal.valueOf(123.45));
     Assertions.assertThat(proyectoProrroga.getObservaciones()).as("getObservaciones()")
@@ -251,7 +251,7 @@ public class ProyectoProrrogaIT extends BaseIT {
         .numProrroga(1)
         .fechaConcesion(Instant.parse("2020-06-01T00:00:00Z"))
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
-        .fechaFin(Instant.parse("2021-12-31T23:59:59Z"))
+        .fechaFin(Instant.parse("2022-12-31T23:59:59Z"))
         .importe(BigDecimal.valueOf(123.45))
         .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
         .build();

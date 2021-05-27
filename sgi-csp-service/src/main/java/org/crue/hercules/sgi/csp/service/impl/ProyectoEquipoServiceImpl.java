@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -103,12 +104,22 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
       if (proyectoEquipo.getFechaInicio() != null && proyectoEquipo.getFechaFin() != null) {
         Assert.isTrue(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()),
             "La fecha de inicio no puede ser superior a la fecha de fin");
-
+      }
+      if (proyectoEquipo.getFechaInicio() != null) {
         Assert.isTrue(
             (proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaInicio())
-                || proyectoEquipo.getFechaInicio().equals(proyecto.getFechaInicio()))
-                && (proyectoEquipo.getFechaFin().isBefore(proyecto.getFechaFin())
-                    || proyectoEquipo.getFechaFin().equals(proyecto.getFechaFin())),
+                || proyectoEquipo.getFechaInicio().equals(proyecto.getFechaInicio())),
+            "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
+      }
+      if (proyecto.getFechaFinDefinitiva() != null && proyectoEquipo.getFechaFin() != null) {
+        Assert.isTrue(
+            proyectoEquipo.getFechaFin().isBefore(proyecto.getFechaFinDefinitiva())
+                || proyectoEquipo.getFechaFin().equals(proyecto.getFechaFinDefinitiva()),
+            "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
+      } else if (proyectoEquipo.getFechaFin() != null) {
+        Assert.isTrue(
+            proyectoEquipo.getFechaFin().isBefore(proyecto.getFechaFin())
+                || proyectoEquipo.getFechaFin().equals(proyecto.getFechaFin()),
             "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
       }
 
@@ -176,6 +187,53 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
     Page<ProyectoEquipo> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve un listado de {@link ProyectoEquipo} asociados a un {@link Proyecto}
+   * y una fecha de fin
+   * 
+   * @param proyectoId Identificador de {@link Proyecto}.
+   * @param fechaFin   Fecha de fin del miembro de equipo
+   * @return listado de {@link ProyectoEquipo}.
+   */
+  @Override
+  public List<ProyectoEquipo> findAllByProyectoIdAndFechaFin(Long proyectoId, Instant fechaFin) {
+    log.debug("findAllByProyectoIdAndFechaFin(Long proyectoId, Instant fechaFin) - start");
+    List<ProyectoEquipo> returnValue = repository.findAllByProyectoIdAndFechaFin(proyectoId, fechaFin);
+    log.debug("findAllByProyectoIdAndFechaFin(Long proyectoId, Instant fechaFin) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve un listado de {@link ProyectoEquipo} asociados a un {@link Proyecto}
+   * y una fecha de fin mayor a la indicada
+   * 
+   * @param proyectoId Identificador de {@link Proyecto}.
+   * @param fechaFin   Fecha de fin del miembro de equipo
+   * @return listado de {@link ProyectoEquipo}.
+   */
+  @Override
+  public List<ProyectoEquipo> findAllByProyectoIdAndFechaFinGreaterThan(Long proyectoId, Instant fechaFin) {
+    log.debug("findAllByProyectoIdAndFechaFinGreaterThan(Long proyectoId, Instant fechaFin) - start");
+    List<ProyectoEquipo> returnValue = repository.findAllByProyectoIdAndFechaFinGreaterThan(proyectoId, fechaFin);
+    log.debug("findAllByProyectoIdAndFechaFinGreaterThan(Long proyectoId, Instant fechaFin) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link ProyectoEquipo} para una {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @return la lista de entidades {@link ProyectoEquipo} del {@link Proyecto}
+   * 
+   */
+  @Override
+  public List<ProyectoEquipo> findAllByProyectoId(Long proyectoId) {
+    log.debug("findAllByProyectoId(Long proyectoId) - start");
+    List<ProyectoEquipo> returnValue = repository.findAllByProyectoId(proyectoId);
+    log.debug("findAllByProyectoId(Long proyectoId) - end");
     return returnValue;
   }
 

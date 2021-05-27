@@ -101,6 +101,10 @@ public class Proyecto extends BaseEntity {
   @NotNull
   private Instant fechaFin;
 
+  /** Fecha Fin definitiva */
+  @Column(name = "fecha_fin_definitiva", nullable = true)
+  private Instant fechaFinDefinitiva;
+
   /** Unidad gestion ref */
   @Column(name = "unidad_gestion_ref", length = 50, nullable = false)
   @Size(max = 50)
