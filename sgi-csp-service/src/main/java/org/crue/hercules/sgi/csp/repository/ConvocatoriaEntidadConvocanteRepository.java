@@ -29,11 +29,11 @@ public interface ConvocatoriaEntidadConvocanteRepository extends JpaRepository<C
 
   /**
    * Recupera aquellas {@link ConvocatoriaEntidadConvocante} de la
-   * {@link Convocatoria} que no tengan {@link Programa} asociado.
+   * {@link Convocatoria} que tengan {@link Programa} asociado.
    * 
    * @param idConvocatoria Id de la {@link Convocatoria}
    * @return listado de {@link ConvocatoriaEntidadConvocante}
    */
-  List<ConvocatoriaEntidadConvocante> findByProgramaIsNullAndConvocatoriaId(Long idConvocatoria);
+  List<ConvocatoriaEntidadConvocante> findByProgramaIsNotNullAndConvocatoriaId(Long idConvocatoria);
 
 }

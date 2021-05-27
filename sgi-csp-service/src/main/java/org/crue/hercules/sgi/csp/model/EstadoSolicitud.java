@@ -47,30 +47,56 @@ public class EstadoSolicitud extends BaseEntity {
   public enum Estado {
     /** Borrador */
     BORRADOR,
-    /** Presentada */
-    PRESENTADA,
-    /** Admitida provisional */
-    ADMITIDA_PROVISIONAL,
+    /** Solicitrada */
+    SOLICITADA,
+    /** En subsanación */
+    SUBSANACION,
+    /** Presentada subsanación */
+    PRESENTADA_SUBSANACION,
     /** Excluida provisional */
     EXCLUIDA_PROVISIONAL,
-    /** Alegada admisión */
-    ALEGADA_ADMISION,
-    /** Excluida */
-    EXCLUIDA,
+    /** Admitida provisional */
+    ADMITIDA_PROVISIONAL,
+    /** Alegación fase admisión */
+    ALEGACION_FASE_ADMISION,
     /** Admitida definitiva */
     ADMITIDA_DEFINITIVA,
+    /** DExcluida definitiva */
+    EXCLUIDA_DEFINITIVA,
+    /** Recurso fase admisión */
+    RECURSO_FASE_ADMISION,
     /** Concedida provisional */
-    CONCECIDA_PROVISIONAL,
+    CONCEDIDA_PROVISIONAL,
     /** Denegada provisional */
     DENEGADA_PROVISIONAL,
-    /** Alegada admisión */
-    ALEGADA_CONCESION,
+    /** Alegación fase provisional */
+    ALEGACION_FASE_PROVISIONAL,
+    /** Concedida provisional alegada */
+    CONCEDIDA_PROVISIONAL_ALEGADA,
+    /** Concedida provisional no alegada */
+    CONCEDIDA_PROVISIONAL_NO_ALEGADA,
+    /** Denegada provisional alegada */
+    DENEGADA_PROVISIONAL_ALEGADA,
+    /** Denegada provisional no alegada */
+    DENEGADA_PROVISIONAL_NO_ALEGADA,
     /** Desistida */
     DESISTIDA,
+    /** Reserva provisional */
+    RESERVA_PROVISIONAL,
+    /** En negociación */
+    NEGOCIACION,
     /** Concedida */
-    CONCECIDA,
+    CONCEDIDA,
     /** Denegada */
-    DENEGADA;
+    DENEGADA,
+    /** Recurso fase concesión */
+    RECURSO_FASE_CONCESION,
+    /** Reserva */
+    RESERVA,
+    /** Firmada */
+    FIRMADA,
+    /** Renunciada */
+    RENUNCIADA;
   }
 
   /** Id */
@@ -82,7 +108,6 @@ public class EstadoSolicitud extends BaseEntity {
 
   /** Solicitud Id */
   @Column(name = "solicitud_id", nullable = false)
-  @NotNull
   private Long solicitudId;
 
   /** Tipo estado solicitud */
@@ -93,7 +118,6 @@ public class EstadoSolicitud extends BaseEntity {
 
   /** Fecha. */
   @Column(name = "fecha_estado", nullable = false)
-  @NotNull
   private Instant fechaEstado;
 
   /** Comentario */

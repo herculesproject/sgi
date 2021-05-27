@@ -52,8 +52,8 @@ INSERT INTO csp.solicitud (id, codigo_externo, codigo_registro_interno, estado_s
 
 -- ESTADO SOLICITUD
 INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
-INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (2, 1, 'PRESENTADA', '2020-11-17T00:00:00Z', 'comentario presentada');
-INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (3, 1, 'EXCLUIDA', '2020-11-17T00:00:00Z', 'comentario excluida');
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (2, 1, 'SOLICITADA', '2020-11-17T00:00:00Z', 'comentario solicitada');
+INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (3, 1, 'EXCLUIDA_DEFINITIVA', '2020-11-17T00:00:00Z', 'comentario excluida definnitiva');
 INSERT INTO csp.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (4, 2, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
 
 -- UPDATE SOLICITUD

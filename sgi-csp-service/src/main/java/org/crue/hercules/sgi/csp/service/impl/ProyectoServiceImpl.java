@@ -977,8 +977,8 @@ public class ProyectoServiceImpl implements ProyectoService {
    * 
    */
   private void validarDatosSolicitud(Solicitud solicitud) {
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA,
-        "La solicitud debe estar en estado " + EstadoSolicitud.Estado.CONCECIDA);
+    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCEDIDA,
+        "La solicitud debe estar en estado " + EstadoSolicitud.Estado.CONCEDIDA);
 
     Assert.isTrue(!repository.existsBySolicitudId(solicitud.getId()),
         "La solicitud con id: " + solicitud.getId() + " ya está asociada a un proyecto");

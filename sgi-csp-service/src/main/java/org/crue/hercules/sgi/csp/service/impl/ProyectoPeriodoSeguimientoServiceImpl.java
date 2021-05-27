@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundEx
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion.Tipo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;

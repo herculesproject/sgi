@@ -103,7 +103,6 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
     AtomicInteger numPeriodo = new AtomicInteger(0);
 
     ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientificoAnterior = null;
-    ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientificoFinal = null;
     for (int i = 0; i < convocatoriaPeriodoSeguimientoCientificos.size(); i++) {
       ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientifico = (ConvocatoriaPeriodoSeguimientoCientifico) convocatoriaPeriodoSeguimientoCientificos
           .get(i);
@@ -157,8 +156,6 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
           && i != convocatoriaPeriodoSeguimientoCientificos.size() - 1) {
         throw new IllegalArgumentException(
             "Solo puede existir un periodo de seguimiento de tipo 'final' y este debe ser el último periodo");
-      } else if (periodoSeguimientoCientifico.getTipoSeguimiento().equals(TipoSeguimiento.FINAL)) {
-        periodoSeguimientoCientificoFinal = periodoSeguimientoCientifico;
       }
 
       periodoSeguimientoCientificoAnterior = periodoSeguimientoCientifico;

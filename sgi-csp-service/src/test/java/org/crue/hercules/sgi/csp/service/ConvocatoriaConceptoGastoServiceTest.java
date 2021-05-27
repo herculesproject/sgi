@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
@@ -43,13 +42,11 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   private ConvocatoriaConceptoGastoService service;
   @Mock
   private ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
-  @Mock
-  private ConvocatoriaService convocatoriaService;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaConceptoGastoServiceImpl(repository, convocatoriaRepository, conceptoGastoRepository,
-        convocatoriaConceptoGastoCodigoEcRepository, convocatoriaService);
+        convocatoriaConceptoGastoCodigoEcRepository);
   }
 
   @Test
@@ -196,12 +193,6 @@ public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
       ConvocatoriaConceptoGasto item = page.getContent().get(i);
       Assertions.assertThat(item.getId()).isEqualTo(j);
     }
-  }
-
-  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
-    return convocatoria;
   }
 
   /**

@@ -11,10 +11,8 @@ import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -24,7 +22,6 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
@@ -66,7 +63,6 @@ public class SolicitudServiceImpl implements SolicitudService {
   private final ProyectoRepository proyectoRepository;
   private final DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository;
   private final SolicitudDocumentoRepository solicitudDocumentoRepository;
-  private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
   private final SolicitudProyectoRepository solicitudProyectoRepository;
   private final SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository;
   private final SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
@@ -77,7 +73,6 @@ public class SolicitudServiceImpl implements SolicitudService {
       SolicitudProyectoRepository solicitudProyectoRepository,
       DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository,
       SolicitudDocumentoRepository solicitudDocumentoRepository,
-      ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository,
       SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository,
       SolicitudProyectoSocioRepository solicitudProyectoSocioRepository,
       ConvocatoriaRepository convocatoriaRepository) {
@@ -87,7 +82,6 @@ public class SolicitudServiceImpl implements SolicitudService {
     this.proyectoRepository = proyectoRepository;
     this.documentoRequeridoSolicitudRepository = documentoRequeridoSolicitudRepository;
     this.solicitudDocumentoRepository = solicitudDocumentoRepository;
-    this.convocatoriaEntidadConvocanteRepository = convocatoriaEntidadConvocanteRepository;
     this.solicitudProyectoRepository = solicitudProyectoRepository;
     this.solicitudProyectoEquipoRepository = solicitudProyectoEquipoRepository;
     this.solicitudProyectoSocioRepository = solicitudProyectoSocioRepository;
@@ -287,11 +281,13 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     String authorityVisualizar = "CSP-SOL-V";
 
-    Assert.isTrue(SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") ||
-        hasPermisosEdicion(returnValue.getUnidadGestionRef())
-            || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar)
-                || SgiSecurityContextHolder.hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),
-        "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+    Assert
+        .isTrue(
+            SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C")
+                || hasPermisosEdicion(returnValue.getUnidadGestionRef())
+                || (SgiSecurityContextHolder.hasAuthority(authorityVisualizar) || SgiSecurityContextHolder
+                    .hasAuthorityForUO(authorityVisualizar, returnValue.getUnidadGestionRef())),
+            "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
 
     log.debug("findById(Long id) - end");
     return returnValue;
@@ -393,11 +389,13 @@ public class SolicitudServiceImpl implements SolicitudService {
    */
   @Override
   @Transactional
-  public Solicitud presentarSolicitud(Long id) {
+  public Solicitud cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) {
 
-    log.debug("presentarSolicitud(Long idSolicitud) - start");
+    log.debug("cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+    estadoSolicitud.setSolicitudId(solicitud.getId());
 
     // VALIDACIONES
 
@@ -405,550 +403,31 @@ public class SolicitudServiceImpl implements SolicitudService {
     Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
         "El usuario no tiene permisos para presentar la solicitud.");
 
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Existe una convocatoria asociada a la solicitud
-    if (solicitud.getConvocatoriaId() != null) {
-
-      // Se comprueba que la documentación requerida de la configuración de la
-      // convocatoria solicitud ha sido adjuntada.
-      Assert.isTrue(hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId()),
-          "La solicitud no tiene la documentación requerida asociada.");
-
-      Assert.isTrue(hasModalidadEntidadesConvocantes(solicitud.getConvocatoriaId()),
-          "Las entidades convocantes de la convocatoria deben tener rellenada la modalidad.");
-
+    // El nuevo estado es diferente al estado actual de la solicitud
+    if (estadoSolicitud.getEstado().equals(solicitud.getEstado().getEstado())) {
+      throw new IllegalArgumentException("La solicitud ya se encuentra en el estado al que se quiere modificar.");
     }
 
-    // Si el formulario es de tipo Estándar
-    if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
-
-      SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitud.getId())
-          .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitud.getId()));
-
-      Assert.notNull(solicitudProyecto.getTitulo(), "El título de la solicitud de proyecto no puede ser null");
-      Assert.notNull(solicitudProyecto.getColaborativo(),
-          "El campo colaborativo de la solicitud de proyecto no puede ser null");
-
-      // En caso de ser colaborativo coordinador externo es obligatorio.
-      if (solicitudProyecto.getColaborativo()) {
-        Assert.notNull(solicitudProyecto.getCoordinadorExterno(),
-            "El campo coordinador externo de la solicitud de proyecto no puede ser null");
-      }
-
-      Assert.isTrue(isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef()),
-          "El solicitante debe ser miembro del equipo.");
-
-      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
-        List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
-            .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
-        Assert.isTrue(!CollectionUtils.isEmpty(solicitudProyectoSocios),
-            "Al menos debe existir un socio con Rol socio coordinador.");
-
-      }
-
-    }
-    // Se cambia el estado de la solicitud a presentada
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.PRESENTADA, null);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("presentarSolicitud(Long idSolicitud) - end");
-    return returnValue;
-
-  }
-
-  /**
-   * Cambio de estado de "Presentada" a "Admitida provisionalmente".
-   * 
-   * @param id Identificador de {@link Solicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud admitirProvisionalmente(Long id) {
-    log.debug("admitirProvisionalmente(Long idSolicitud) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Se cambia el estado de la solicitud a "Admitida provisionalmente".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL, null);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("admitirProvisionalmente(Long idSolicitud) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Admitida provisionalmente" a "Admitida definitivamente".
-   * 
-   * @param id Identificador de {@link Solicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud admitirDefinitivamente(Long id) {
-    log.debug("admitirDefinitivamente(Long idSolicitud) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Se cambia el estado de la solicitud a "Admitida definitivamente".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA, null);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("admitirDefinitivamente(Long idSolicitud) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Admitida definitivamente" a "Concedida provisional".
-   * 
-   * @param id Identificador de {@link Solicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud concederProvisionalmente(Long id) {
-    log.debug("concederProvisionalmente(Long idSolicitud) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Se cambia el estado de la solicitud a "Concedida provisional".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL, null);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("concederProvisionalmente(Long idSolicitud) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Concedida provisional" o "Alegada concesión" a
-   * "Concedida".
-   * 
-   * @param id Identificador de {@link Solicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud conceder(Long id) {
-    log.debug("conceder(Long idSolicitud) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Se cambia el estado de la solicitud a "Concedida".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.CONCECIDA, null);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("conceder(Long idSolicitud) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Presentada" a "Excluir provisionalmente".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud exlcluirProvisionalmente(Long id, String comentario) {
-    log.debug("exlcluirProvisionalmente(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Excluir provisionalmente".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL,
-        comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("exlcluirProvisionalmente(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Excluida provisional" a "Alegada admisión".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud alegarAdmision(Long id, String comentario) {
-    log.debug("alegarAdmision(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Alegada admisión".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ALEGADA_ADMISION,
-        comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("alegarAdmision(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Alegada admisión" a "Excluida".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud excluir(Long id, String comentario) {
-    log.debug("excluir(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Excluida".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.EXCLUIDA, comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("excluir(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Admitida definitiva" a "Denegada provisional".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud denegarProvisionalmente(Long id, String comentario) {
-    log.debug("denegarProvisionalmente(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Denegada provisional".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.DENEGADA_PROVISIONAL,
-        comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("denegarProvisionalmente(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Denegada provisional" a "Alegada concesión".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud alegarConcesion(Long id, String comentario) {
-    log.debug("alegarConcesion(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Alegada concesión".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.ALEGADA_CONCESION,
-        comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("alegarConcesion(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Alegada concesión" a "Denegada".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud denegar(Long id, String comentario) {
-    log.debug("denegar(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Denegada provisional".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.DENEGADA, comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("denegar(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Cambio de estado de "Presentada", "Admitida provisional", "Excluida
-   * provisional", "Admitida definitiva", "Denegada provisional" o "Concedida
-   * provisional" a "Desistida".
-   * 
-   * @param id         Identificador de {@link Solicitud}.
-   * @param comentario Comentario de {@link EstadoSolicitud}.
-   * @return {@link Solicitud} actualizado.
-   */
-  @Override
-  @Transactional
-  public Solicitud desistir(Long id, String comentario) {
-    log.debug("desistir(Long idSolicitud, String comentario) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    // Estado
-    Assert.isTrue(
-        solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.DENEGADA_PROVISIONAL
-            || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL,
-        "La solicitud no se encuentra en un estado correcto.");
-
-    // Comentario
-    Assert.notNull(comentario, "El comentario no puede ser null para el cambio de estado.");
-
-    // Se cambia el estado de la solicitud a "Desistida".
-
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.DESISTIDA, comentario);
-
-    // Actualiza el estado actual de la solicitud con el nuevo estado
-    solicitud.setEstado(estadoSolicitud);
-
-    Solicitud returnValue = repository.save(solicitud);
-
-    log.debug("desistir(Long idSolicitud, String comentario) - end");
-    return returnValue;
-  }
-
-  /**
-   * Comprueba si se cumplen todas las condiciones para que la solicitud pueda
-   * pasar al estado de "Presentada."
-   * 
-   * @param id Id del {@link Solicitud}.
-   * @return <code>true</code> Cumple condiciones para el cambio de estado.
-   *         <code>false</code>No cumple condiciones.
-   */
-  @Override
-  public boolean isValidPresentar(Long id) {
-    log.debug("isValidPresentar(Long id) - start");
-
-    Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-    // Permisos
-    Assert.isTrue(
-        SgiSecurityContextHolder.hasAuthority("CSP-SOL-V")
-            || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef())
-            || hasPermisosEdicion(solicitud.getUnidadGestionRef()),
-        "El usuario no tiene permisos para presentar la solicitud.");
-
-    if (solicitud == null || solicitud.getEstado().getEstado() != EstadoSolicitud.Estado.BORRADOR) {
-      log.debug("isValidPresentar(Long id) - end");
-      return false;
+    // En caso de pasar de cualquier estado a cualquier otro estado que no sea
+    // Desistida ni Renunciada se deben realizar
+    // validaciones
+    if ((!estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.DESISTIDA)
+        && !estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.RENUNCIADA))
+        && !isValidCambioNoDesistidaRenunciada(solicitud)) {
+      throw new IllegalArgumentException("No se puede cambiar el estado de la Solicitud al estado seleccionado.");
     }
 
-    if (solicitud.getConvocatoriaId() != null
-        && (!hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId())
-            || !hasModalidadEntidadesConvocantes(solicitud.getConvocatoriaId()))) {
-      log.debug("isValidPresentar(Long id) - end");
-      return false;
-    }
+    // Se cambia el estado de la solicitud
+    // Actualiza el estado actual de la solicitud con el nuevo estado
+    estadoSolicitud.setFechaEstado(Instant.now());
+    estadoSolicitudRepository.save(estadoSolicitud);
+    solicitud.setEstado(estadoSolicitud);
 
-    // Si el formulario es de tipo Estándar
-    if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
+    Solicitud returnValue = repository.save(solicitud);
 
-      SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitud.getId())
-          .orElse(null);
-      if (solicitudProyecto == null) {
-        log.debug("isValidPresentar(Long id) - end");
-        return false;
-      }
+    log.debug("cambiarEstado(Long id, EstadoSolicitud estadoSolicitud) - end");
+    return returnValue;
 
-      // En caso de que no tenga titulo o sea colaborativo y no tenga coordinador
-      // externo releno
-      if (StringUtils.isEmpty(solicitudProyecto.getTitulo())
-          || (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null)) {
-        log.debug("isValidPresentar(Long id) - end");
-        return false;
-      }
-
-      if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
-        log.debug("isValidPresentar(Long id) - end");
-        return false;
-      }
-
-      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
-        List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
-            .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
-        log.debug("isValidPresentar(Long id) - end");
-        return !CollectionUtils.isEmpty(solicitudProyectoSocios);
-
-      }
-    }
-    log.debug("isValidPresentar(Long id) - end");
-    return true;
   }
 
   /**
@@ -960,7 +439,7 @@ public class SolicitudServiceImpl implements SolicitudService {
    * @return <code>true</code> En caso de tener asociada la documentación;
    *         <code>false</code>Documentación no asociada.
    */
-  private Boolean hasDocumentacionRequerida(Long idSolicitud, Long idConvocatoria) {
+  private boolean hasDocumentacionRequerida(Long idSolicitud, Long idConvocatoria) {
     log.debug("hasDocumentacionRequerida(Long idConvocatoria) - start");
 
     Specification<DocumentoRequeridoSolicitud> specByConvocatoria = DocumentoRequeridoSolicitudSpecifications
@@ -971,7 +450,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         .findAll(specs);
 
     if (CollectionUtils.isEmpty(documentosRequeridosSolicitud)) {
-      return Boolean.TRUE;
+      return true;
     }
 
     List<Long> tiposDocumentoRequeridosSolicitud = documentosRequeridosSolicitud.stream()
@@ -986,26 +465,6 @@ public class SolicitudServiceImpl implements SolicitudService {
   }
 
   /**
-   * Comprueba si todas las entidades convocantes asociadas a la convocatoria de
-   * la solicitud tienen cumplimentada la modalidad.
-   * 
-   * @param idConvocatoria Identificador de {@link Convocatoria}.
-   * @return <code>true</code> Modalidad cumplimentada;
-   *         <code>false</code>Modalidad no cumplimentada.
-   */
-  private Boolean hasModalidadEntidadesConvocantes(Long idConvocatoria) {
-    log.debug("hasModalidadEntidadesConvocantes(Long idConvocatoria) - start");
-
-    // Se comprueba que todas las entidades convocantes tienen rellenada una
-    // modalidad.
-    List<ConvocatoriaEntidadConvocante> convocatoriasEntidadConvocante = convocatoriaEntidadConvocanteRepository
-        .findByProgramaIsNullAndConvocatoriaId(idConvocatoria);
-
-    log.debug("hasModalidadEntidadesConvocantes(Long idConvocatoria) - end");
-    return CollectionUtils.isEmpty(convocatoriasEntidadConvocante);
-  }
-
-  /**
    * Comprueba si el solicitante es miembro del equipo.
    * 
    * @param idSolicitudProyecto Identificador de {@link SolicitudProyecto}.
@@ -1013,7 +472,7 @@ public class SolicitudServiceImpl implements SolicitudService {
    * @return <code>true</code> El solicitante es miembro del equipo;
    *         <code>false</code>No pertenece al equipo.
    */
-  private Boolean isSolicitanteMiembroEquipo(Long idSolicitudProyecto, String solicitanteRef) {
+  private boolean isSolicitanteMiembroEquipo(Long idSolicitudProyecto, String solicitanteRef) {
     // El solicitante debe pertenecer al equipo
     List<SolicitudProyectoEquipo> solicitudProyectoEquipos = solicitudProyectoEquipoRepository
         .findAllBySolicitudProyectoIdAndPersonaRef(idSolicitudProyecto, solicitanteRef);
@@ -1077,7 +536,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     final Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
     // Si la solicitud no está en estado CONCEDIDA no se puede crear el proyecto a
     // partir de la misma
-    if (!solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCECIDA)) {
+    if (!solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA)) {
       return false;
     }
 
@@ -1115,33 +574,16 @@ public class SolicitudServiceImpl implements SolicitudService {
     log.debug("modificable(Long id) - start");
 
     Solicitud solicitud = repository.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+    boolean existsProyecto = proyectoRepository.existsBySolicitudId(id);
 
-    // Si no tiene permisos ni de administrador o gestor ni investigador no se podrá
-    // realizar la acción
-    if (!solicitud.getActivo()) {
+    // Administrador y gestor:
+    // solicitud no activa
+    // no tiene el usuario permisos de edición para la UO de la solicitud
+    // tiene proyecto asociado
+    // NO se permite modificar
+    if (!solicitud.getActivo() || !this.hasPermisosEdicion(solicitud.getUnidadGestionRef()) || existsProyecto) {
       return false;
-    } else if (!this.hasPermisosEdicion(solicitud.getUnidadGestionRef())) {
-      return false;
-    } else if (this.hasPermisosEdicion(solicitud.getUnidadGestionRef())) {
-
-      return (solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.BORRADOR
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.PRESENTADA
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_PROVISIONAL
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_ADMISION
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ADMITIDA_DEFINITIVA
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCECIDA_PROVISIONAL
-          || solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.ALEGADA_CONCESION);
     }
-
-    // TODO Permisos investigador
-    // if (returnValue && isInvestigador) {
-    // returnValue = (solicitud.getEstado().getEstado() ==
-    // EstadoSolicitud.Estado.BORRADOR
-    // || solicitud.getEstado().getEstado() ==
-    // EstadoSolicitud.Estado.EXCLUIDA_PROVISIONAL
-    // || solicitud.getEstado().getEstado() ==
-    // EstadoSolicitud.Estado.DENEGADA_PROVISIONAL);
-    // }
 
     log.debug("modificable(Long id) - end");
     return true;
@@ -1161,4 +603,56 @@ public class SolicitudServiceImpl implements SolicitudService {
         || SgiSecurityContextHolder.hasAuthorityForUO(authority, unidadGestionRef);
   }
 
+  /**
+   * Comprueba si se cumplen todas las condiciones para que la solicitud pueda
+   * pasar de cualquier estado a cualquier otro estado que no sea Desistida ni
+   * Renunciada
+   * 
+   * @param solicitud Solicitud a comprobar.
+   * @return <code>true</code> Cumple condiciones para el cambio de estado.
+   *         <code>false</code>No cumple condiciones.
+   */
+  private boolean isValidCambioNoDesistidaRenunciada(Solicitud solicitud) {
+    log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - start");
+
+    if (solicitud.getConvocatoriaId() != null
+        && !hasDocumentacionRequerida(solicitud.getId(), solicitud.getConvocatoriaId())) {
+      log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+      return false;
+    }
+
+    // Si el formulario es de tipo Estándar
+    if (solicitud.getFormularioSolicitud() == FormularioSolicitud.ESTANDAR) {
+
+      SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findBySolicitudId(solicitud.getId())
+          .orElse(null);
+      if (solicitudProyecto == null) {
+        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        return false;
+      }
+
+      // En caso de que no tenga titulo o sea colaborativo y no tenga coordinador
+      // externo releno
+      if (StringUtils.isEmpty(solicitudProyecto.getTitulo())
+          || (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno() == null)) {
+        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        return false;
+      }
+
+      if (!isSolicitanteMiembroEquipo(solicitudProyecto.getId(), solicitud.getSolicitanteRef())) {
+        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        return false;
+      }
+
+      if (solicitudProyecto.getColaborativo() && solicitudProyecto.getCoordinadorExterno()) {
+        List<SolicitudProyectoSocio> solicitudProyectoSocios = solicitudProyectoSocioRepository
+            .findAllBySolicitudProyectoIdAndRolSocioCoordinadorTrue(solicitudProyecto.getId());
+        log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+        return !CollectionUtils.isEmpty(solicitudProyectoSocios);
+
+      }
+    }
+    log.debug("isValidCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
+    return true;
+  }
 }

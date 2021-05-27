@@ -14,7 +14,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,17 +36,14 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConceptoGastoRepository conceptoGastoRepository;
   private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
-  private final ConvocatoriaService convocatoriaService;
 
   public ConvocatoriaConceptoGastoServiceImpl(ConvocatoriaConceptoGastoRepository repository,
       ConvocatoriaRepository convocatoriaRepository, ConceptoGastoRepository conceptoGastoRepository,
-      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository,
-      ConvocatoriaService convocatoriaService) {
+      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.conceptoGastoRepository = conceptoGastoRepository;
     this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
-    this.convocatoriaService = convocatoriaService;
   }
 
   /**

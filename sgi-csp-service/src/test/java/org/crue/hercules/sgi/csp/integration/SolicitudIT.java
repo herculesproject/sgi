@@ -346,9 +346,9 @@ public class SolicitudIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
     Assertions.assertThat(estadosSolicitud.get(0).getEstado()).as("get(0).getEstado()")
-        .isEqualTo(EstadoSolicitud.Estado.EXCLUIDA);
+        .isEqualTo(EstadoSolicitud.Estado.EXCLUIDA_DEFINITIVA);
     Assertions.assertThat(estadosSolicitud.get(1).getEstado()).as("get(1).getEstado()")
-        .isEqualTo(EstadoSolicitud.Estado.PRESENTADA);
+        .isEqualTo(EstadoSolicitud.Estado.SOLICITADA);
     Assertions.assertThat(estadosSolicitud.get(2).getEstado()).as("get(2).getEstado()")
         .isEqualTo(EstadoSolicitud.Estado.BORRADOR);
   }

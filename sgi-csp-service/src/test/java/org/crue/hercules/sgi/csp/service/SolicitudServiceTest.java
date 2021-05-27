@@ -15,14 +15,13 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudServiceImpl;
@@ -61,9 +60,6 @@ public class SolicitudServiceTest extends BaseServiceTest {
   private SolicitudDocumentoRepository solicitudDocumentoRepository;
 
   @Mock
-  private ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
-
-  @Mock
   private SolicitudProyectoRepository solicitudProyectoRepository;
 
   @Mock
@@ -84,8 +80,8 @@ public class SolicitudServiceTest extends BaseServiceTest {
   public void setUp() throws Exception {
     service = new SolicitudServiceImpl(repository, estadoSolicitudRepository, configuracionSolicitudRepository,
         proyectoRepository, solicitudProyectoRepository, documentoRequeridoSolicitudRepository,
-        solicitudDocumentoRepository, convocatoriaEntidadConvocanteRepository, solicitudProyectoEquipoRepository,
-        solicitudProyectoSocioRepository, convocatoriaRepository);
+        solicitudDocumentoRepository, solicitudProyectoEquipoRepository, solicitudProyectoSocioRepository,
+        convocatoriaRepository);
   }
 
   @Test

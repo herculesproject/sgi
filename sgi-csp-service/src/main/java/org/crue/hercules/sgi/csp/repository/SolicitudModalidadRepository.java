@@ -17,4 +17,5 @@ public interface SolicitudModalidadRepository
    * @return Listado de solicitudes modalidad
    */
   List<SolicitudModalidad> findAllBySolicitudId(Long solicitudId);
+
 }
