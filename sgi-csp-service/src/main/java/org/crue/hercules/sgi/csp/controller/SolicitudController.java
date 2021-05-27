@@ -481,7 +481,7 @@ public class SolicitudController {
    * @return {@link SolicitudProyecto}
    */
   @RequestMapping(path = "/{id}/solicitudproyecto", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
   public ResponseEntity<?> existSolictudProyectoDatos(@PathVariable Long id) {
     log.debug("existSolictudProyectoDatos(Long id) - start");
     boolean returnValue = solicitudProyectoService.existsBySolicitudId(id);
@@ -622,7 +622,7 @@ public class SolicitudController {
    *         modificación
    */
   @RequestMapping(path = "/{id}/modificable", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
   ResponseEntity<Solicitud> modificable(@PathVariable Long id) {
     log.debug("modificable(Long id) - start");
     Boolean returnValue = service.modificable(id);
@@ -657,7 +657,7 @@ public class SolicitudController {
    *         investigador paginadas y filtradas.
    */
   @GetMapping("/investigador")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-INV-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-INV-ER' , 'CSP-SOL-INV-BR')")
   ResponseEntity<Page<Solicitud>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllInvestigador(String query, Pageable paging) - start");
