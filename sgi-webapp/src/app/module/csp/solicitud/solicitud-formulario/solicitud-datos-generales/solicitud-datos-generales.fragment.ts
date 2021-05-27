@@ -109,17 +109,11 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         return of(solicitud);
       }),
       map((solicitud) => {
-        const estadosComentarioVisble = [
-          Estado.EXCLUIDA_PROVISIONAL,
-          Estado.DESISTIDA,
-          Estado.ALEGADA_ADMISION,
-          Estado.EXCLUIDA,
-          Estado.DENEGADA_PROVISIONAL,
-          Estado.ALEGADA_CONCESION,
-          Estado.DENEGADA
+        const estadosComentarioNoVisble = [
+          Estado.BORRADOR
         ];
 
-        this.showComentariosEstado$.next(estadosComentarioVisble.includes(solicitud.estado.estado));
+        this.showComentariosEstado$.next(!estadosComentarioNoVisble.includes(solicitud.estado.estado));
 
         return solicitud;
       }),

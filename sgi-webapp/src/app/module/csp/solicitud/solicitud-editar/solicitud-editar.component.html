@@ -67,74 +67,9 @@
   <ng-container footer>
     <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">
       <ng-container *sgiHasAuthorityForAnyUO="'CSP-SOL-E'">
-        <!-- Presentar-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.BORRADOR) && isPresentable" color="primary"
-          [text]="textoPresentar" (buttonClick)="cambioEstado(textoPresentar)" [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Excluir provisionalmente-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.PRESENTADA)" color="primary"
-          [text]="textoExcluirProvisionalmente" (buttonClick)="cambioEstado(textoExcluirProvisionalmente)"
+        <!-- Cambio estado-->
+        <sgi-action-footer-button color="primary" [text]="textoCambioEstado" (buttonClick)="openCambioEstado()"
           [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Admiitir provisionalmente-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.PRESENTADA)" color="primary"
-          [text]="textoAdmitirProvisionalmente" (buttonClick)="cambioEstado(textoAdmitirProvisionalmente)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Desistir-->
-        <sgi-action-footer-button
-          *ngIf="hasEstadoCambio(Estado.PRESENTADA, Estado.ADMITIDA_PROVISIONAL,
-       Estado.EXCLUIDA_PROVISIONAL, Estado.ADMITIDA_DEFINITIVA,  Estado.DENEGADA_PROVISIONAL, Estado.CONCECIDA_PROVISIONAL)" color="primary"
-          [text]="textoDesistir" (buttonClick)="cambioEstado(textoDesistir)" [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Alegar Admisión-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.EXCLUIDA_PROVISIONAL)" color="primary"
-          [text]="textoAlegarAdmision" (buttonClick)="cambioEstado(textoAlegarAdmision)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Excluir-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.ALEGADA_ADMISION)" color="primary" [text]="textoExcluir"
-          (buttonClick)="cambioEstado(textoExcluir)" [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Admitir definitivamente-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.ADMITIDA_PROVISIONAL, Estado.ALEGADA_ADMISION)"
-          color="primary" [text]="textoAdmitirDefinitivamente" (buttonClick)="cambioEstado(textoAdmitirDefinitivamente)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Conceder provisionalmente-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.ADMITIDA_DEFINITIVA)" color="primary"
-          [text]="textoConcederProvisionalmente" (buttonClick)="cambioEstado(textoConcederProvisionalmente)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Denegar provisionalmente-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.ADMITIDA_DEFINITIVA)" color="primary"
-          [text]="textoDenegarProvisionalmente" (buttonClick)="cambioEstado(textoDenegarProvisionalmente)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Alegar concesión-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.DENEGADA_PROVISIONAL)" color="primary"
-          [text]="textoAlegarConcesion" (buttonClick)="cambioEstado(textoAlegarConcesion)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Conceder-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio(Estado.CONCECIDA_PROVISIONAL, Estado.ALEGADA_CONCESION)"
-          color="primary" [text]="textoConceder" (buttonClick)="cambioEstado(textoConceder)"
-          [disabled]="disableCambioEstado">
-        </sgi-action-footer-button>
-
-        <!-- Denegar-->
-        <sgi-action-footer-button *ngIf="hasEstadoCambio( Estado.ALEGADA_CONCESION)" color="primary"
-          [text]="textoDenegar" (buttonClick)="cambioEstado(textoDenegar)" [disabled]="disableCambioEstado">
         </sgi-action-footer-button>
       </ng-container>
     </sgi-action-footer>

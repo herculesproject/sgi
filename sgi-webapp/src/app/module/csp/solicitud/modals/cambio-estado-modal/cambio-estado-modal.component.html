@@ -13,25 +13,19 @@
       <div>
         <mat-form-field>
           <mat-label>{{'csp.solicitud.cambio-estado.actual' | translate}}</mat-label>
-          <mat-select formControlName="estadoActual" disabled
-            placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}">
-            <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
-              {{ estado.value | translate}}
-            </mat-option>
-          </mat-select>
-
+          <input matInput formControlName="estadoActual" type="text"
+            placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}" required>
         </mat-form-field>
       </div>
+    </div>
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+      [fxLayoutGap]="fxLayoutProperties.gap">
       <!-- Estado nuevo -->
       <div>
         <mat-form-field>
           <mat-label>{{'csp.solicitud.cambio-estado.nuevo' | translate}}</mat-label>
-          <mat-select formControlName="estadoNuevo" disabled
-            placeholder="{{'csp.solicitud.cambio-estado.nuevo' | translate}}">
-            <mat-option *ngFor="let estado of ESTADO_MAP | keyvalue" [value]="estado.key">
-              {{ estado.value | translate}}
-            </mat-option>
-          </mat-select>
+          <sgi-select-enum formControlName="estadoNuevo" [enumMap]="estadosNuevos">
+          </sgi-select-enum>
         </mat-form-field>
       </div>
     </div>
@@ -39,7 +33,7 @@
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <span class="mat-small">{{'csp.solicitud.cambio-estado.comentario' | translate}}</span>
       <mat-form-field fxFill>
-        <textarea matInput formControlName="comentario" type="text" required>
+        <textarea matInput formControlName="comentario" type="text">
             </textarea>
         <mat-error *ngIf="formGroup.get('comentario').errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}

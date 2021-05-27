@@ -375,8 +375,7 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAnyAuthority="['CSP-SOL-E', 'CSP-SOL-E_' + element.unidadGestion.id ]">
-            <button *ngIf="mapModificable.get(element.id)" mat-button matTooltip="{{'btn.edit' | translate}}"
-              [routerLink]="[element.id]">
+            <button mat-button matTooltip="{{'btn.edit' | translate}}" [routerLink]="[element.id]">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
           </ng-container>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { Estado } from '@core/models/csp/estado-solicitud';
+import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
@@ -86,7 +86,6 @@ export class SolicitudActionService extends ActionService {
   readonly showDesglosePresupuestoGlobal$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly showDesglosePresupuestoEntidad$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly datosProyectoComplete$: Subject<boolean> = new BehaviorSubject<boolean>(false);
-  readonly isPresentable$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   private readonly data: ISolicitudData;
   private convocatoria: IConvocatoria;
@@ -209,15 +208,6 @@ export class SolicitudActionService extends ActionService {
         this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
         this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
         this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
-      }
-
-      // Si se encuentra en estado borrador se debe comprobar si cumple las validacones para  hacer el cambio a "Presentada".
-      if (this.data.solicitud.estado.estado === Estado.BORRADOR) {
-        this.presentable(this.data.solicitud.id).subscribe(
-          (isPrentable) => {
-            this.isPresentable$.next(isPrentable);
-          }
-        );
       }
 
       this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
@@ -350,113 +340,8 @@ export class SolicitudActionService extends ActionService {
    * Cambio de estado a **Presentada** desde:
    * - **Borrador**
    */
-  presentar(): Observable<void> {
-    return this.solicitudService.presentar(this.datosGenerales.getKey() as number);
-  }
-
-  presentable(id: number): Observable<boolean> {
-    return this.solicitudService.presentable(id);
-  }
-
-  /**
-   * Cambio de estado a **Admitida provisionalmente** desde:
-   * - **Presentada**
-   */
-  admitirProvisionalmente(): Observable<void> {
-    return this.solicitudService.admitirProvisionalmente(this.datosGenerales.getKey() as number);
-  }
-
-  /**
-   * Cambio de estado a **Admitida definitivamente** desde:
-   * - **Admitida provisionalmente**
-   */
-  admitirDefinitivamente(): Observable<void> {
-    return this.solicitudService.admitirDefinitivamente(this.datosGenerales.getKey() as number);
-  }
-
-  /**
-   * Cambio de estado a **Concedida provisional** desde:
-   * - **Admitida definitivamente**
-   */
-  concederProvisionalmente(): Observable<void> {
-    return this.solicitudService.concederProvisionalmente(this.datosGenerales.getKey() as number);
-  }
-
-  /**
-   * Cambio de estado a **Concedida** desde:
-   * - **Concedida provisional**
-   * - **Alegada concesión**
-   */
-  conceder(): Observable<void> {
-    return this.solicitudService.conceder(this.datosGenerales.getKey() as number);
-  }
-
-  /**
-   * Cambio de estado a **Excluida provisional** desde:
-   * - **Presentada**
-   * @param comentario Comentario del cambio de estado.
-   */
-  excluirProvisionalmente(comentario: string): Observable<void> {
-    return this.solicitudService.excluirProvisionalmente(this.datosGenerales.getKey() as number, comentario);
-  }
-
-  /**
-   * Cambio de estado a **Alegada admisión** desde:
-   * - **Excluida provisional**
-   * @param comentario Comentario del cambio de estado.
-   */
-  alegarAdmision(comentario: string): Observable<void> {
-    return this.solicitudService.alegarAdmision(this.datosGenerales.getKey() as number, comentario);
-  }
-
-  /**
-   * Cambio de estado a **Excluida** desde:
-   * - **Alegada admisión**
-   * @param comentario Comentario del cambio de estado.
-   */
-  excluir(comentario: string): Observable<void> {
-    return this.solicitudService.excluir(this.datosGenerales.getKey() as number, comentario);
-  }
-
-  /**
-   * Cambio de estado a **Denegada provisional** desde:
-   * - **Admitida definitiva**
-   * @param comentario Comentario del cambio de estado.
-   */
-  denegarProvisionalmente(comentario: string): Observable<void> {
-    return this.solicitudService.denegarProvisionalmente(this.datosGenerales.getKey() as number, comentario);
-  }
-
-  /**
-   * Cambio de estado a **Alegada concesión** desde:
-   * * **Denegada provisional**
-   * @param comentario Comentario del cambio de estado.
-   */
-  alegarConcesion(comentario: string): Observable<void> {
-    return this.solicitudService.alegarConcesion(this.datosGenerales.getKey() as number, comentario);
-  }
-
-  /**
-   * Cambio de estado a **Denegada** desde:
-   * * **Alegada concesión**
-   * @param comentario Comentario del cambio de estado.
-   */
-  denegar(comentario: string): Observable<void> {
-    return this.solicitudService.denegar(this.datosGenerales.getKey() as number, comentario);
-  }
-
-  /**
-   * Cambio de estado a **Desistida** desde:
-   * - **Presentada**
-   * - **Admitida provisional**
-   * - **Excluida provisional**
-   * - **Admitida definitiva**
-   * - **Denegada provisional**
-   * - **Concedida provisional**
-   * @param comentario Comentario del cambio de estado.
-   */
-  desistir(comentario: string): Observable<void> {
-    return this.solicitudService.desistir(this.datosGenerales.getKey() as number, comentario);
+  cambiarEstado(estadoNuevo: IEstadoSolicitud): Observable<void> {
+    return this.solicitudService.cambiarEstado(this.datosGenerales.getKey() as number, estadoNuevo);
   }
 
   private loadConvocatoria(id: number): void {

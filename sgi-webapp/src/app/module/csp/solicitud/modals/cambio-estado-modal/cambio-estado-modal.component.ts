@@ -8,6 +8,7 @@ import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
 
 const SOLICITUD_CAMBIO_ESTADO_COMENTARIO = marker('csp.solicitud.estado-solicitud.comentario');
 
@@ -27,6 +28,7 @@ export class CambioEstadoModalComponent extends
   fxLayoutProperties: FxLayoutProperties;
 
   msgParamComentarioEntity = {};
+  readonly estadosNuevos: Map<string, string>;
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -42,6 +44,14 @@ export class CambioEstadoModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    const estados = new Map<string, string>();
+    ESTADO_MAP.forEach((value, key) => {
+      if (key !== this.data.estadoActual) {
+        estados.set(key, value);
+      }
+    });
+    this.estadosNuevos = estados;
   }
 
   ngOnInit(): void {
@@ -65,9 +75,9 @@ export class CambioEstadoModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      estadoActual: new FormControl(this.data.estadoActual),
+      estadoActual: new FormControl({ value: this.data.estadoActual, disabled: true }),
       estadoNuevo: new FormControl(this.data.estadoNuevo),
-      comentario: new FormControl('', [Validators.maxLength(2000), Validators.required])
+      comentario: new FormControl('', [Validators.maxLength(2000)])
     });
     return formGroup;
   }
