@@ -42,8 +42,9 @@
       <div class="opciones-accordion" *ngIf="opened">
         <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-CON-INV-V'" [routerLink]="[INV_ROUTE_NAMES.CONVOCATORIAS]"
           [routerLinkActive]="['is-active']">{{'menu.principal.inv.convocatoria' | translate}}</a>
-        <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-SOL-INV-V'" [routerLink]="[INV_ROUTE_NAMES.SOLICITUDES]"
-          [routerLinkActive]="['is-active']" [routerLinkActive]="['is-active']">{{'csp.solicitud' |
+        <a mat-list-item *sgiHasAnyAuthorityForAnyUO="['CSP-SOL-INV-ER', 'CSP-SOL-INV-BR']"
+          [routerLink]="[INV_ROUTE_NAMES.SOLICITUDES]" [routerLinkActive]="['is-active']"
+          [routerLinkActive]="['is-active']">{{'csp.solicitud' |
           translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>
         <a mat-list-item [routerLinkActive]="['is-active']">{{'csp.proyecto' |
           translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</a>

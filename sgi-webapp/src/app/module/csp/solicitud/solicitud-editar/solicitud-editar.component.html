@@ -1,7 +1,7 @@
 <sgi-action [actionService]="actionService">
   <ng-container menu>
     <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DATOS_GENERALES]"
-      *sgiHasAnyAuthorityForAnyUO="['CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-V']"
+      *sgiHasAnyAuthorityForAnyUO="['CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER', 'CSP-SOL-INV-BR']"
       [title]="'label.datos-generales' | translate"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
     </sgi-action-fragment-menu-item>

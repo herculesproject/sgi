@@ -27,7 +27,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_SOLICITUD_TITLE,
-      hasAuthority: 'CSP-SOL-INV-V',
+      hasAnyAuthority: ['CSP-SOL-INV-ER', 'CSP-SOL-INV-BR'],
     }
   },
   {
@@ -65,7 +65,7 @@ const routes: SgiRoutes = [
     data: {
       title: SOLICITUD_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
-      hasAuthority: 'CSP-SOL-INV-V'
+      hasAnyAuthority: ['CSP-SOL-INV-ER', 'CSP-SOL-INV-BR'],
     },
     children: [
       {

@@ -100,7 +100,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIAS_TITLE,
-          hasAuthorityForAnyUO: 'CSP-SOL-INV-V'
+          hasAnyAuthorityForAnyUO: ['CSP-SOL-INV-ER', 'CSP-SOL-INV-BR'],
         }
       },
       { path: '**', component: null }
