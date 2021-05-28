@@ -26,9 +26,10 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -40,12 +41,16 @@ const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
 const PROYECTO_KEY = marker('csp.proyecto');
 
+interface IProyectoData extends IProyecto {
+  prorrogado: boolean;
+}
+
 @Component({
   selector: 'sgi-proyecto-listado',
   templateUrl: './proyecto-listado.component.html',
   styleUrls: ['./proyecto-listado.component.scss']
 })
-export class ProyectoListadoComponent extends AbstractTablePaginationComponent<IProyecto> implements OnInit {
+export class ProyectoListadoComponent extends AbstractTablePaginationComponent<IProyectoData> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   textoCrear = MSG_BUTTON_NEW;
   textoDesactivar: string;
@@ -57,7 +62,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  proyecto$: Observable<IProyecto[]>;
+  proyecto$: Observable<IProyectoData[]>;
 
   colectivosResponsableProyecto: string[];
   colectivosMiembroEquipo: string[];
@@ -88,6 +93,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
+  }
+
+  get fechaActual() {
+    return DateTime.now();
   }
 
   constructor(
@@ -137,7 +146,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       entidadConvocante: new FormControl(''),
       planInvestigacion: new FormControl(''),
       entidadFinanciadora: new FormControl(''),
-      fuenteFinanciacion: new FormControl('')
+      fuenteFinanciacion: new FormControl(''),
+      codigoExterno: new FormControl(''),
+      finalizado: new FormControl(''),
+      prorrogado: new FormControl('')
     });
     this.loadUnidadesGestion();
     this.loadAmbitoGeografico();
@@ -243,21 +255,67 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.onSearch();
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IProyecto>> {
+  protected createObservable(): Observable<SgiRestListResult<IProyectoData>> {
     let observable$ = null;
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
-      observable$ = this.proyectoService.findTodos(this.getFindOptions());
+      observable$ = this.proyectoService.findTodos(this.getFindOptions()).pipe(
+        map((response) => {
+          return response as SgiRestListResult<IProyecto>;
+        }),
+        switchMap((response) => {
+          const requestsProyecto: Observable<IProyectoData>[] = [];
+          response.items.forEach(proyecto => {
+            const proyectoData = proyecto as IProyectoData;
+            if (proyecto.id) {
+              requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
+                map(value => {
+                  proyectoData.prorrogado = value;
+                  return proyectoData;
+                })
+              ));
+            } else {
+              requestsProyecto.push(of(proyectoData));
+            }
+          });
+          return of(response).pipe(
+            tap(() => merge(...requestsProyecto).subscribe())
+          );
+        })
+      );
     } else {
-      observable$ = this.proyectoService.findAll(this.getFindOptions());
+      observable$ = this.proyectoService.findAll(this.getFindOptions()).pipe(
+        map((response) => {
+          return response as SgiRestListResult<IProyecto>;
+        }),
+        switchMap((response) => {
+          const requestsProyecto: Observable<IProyectoData>[] = [];
+          response.items.forEach(proyecto => {
+            const proyectoData = proyecto as IProyectoData;
+            if (proyecto.id) {
+              requestsProyecto.push(this.proyectoService.hasProyectoProrrogas(proyecto.id).pipe(
+                map(value => {
+                  proyectoData.prorrogado = value;
+                  return proyectoData;
+                })
+              ));
+            } else {
+              requestsProyecto.push(of(proyectoData));
+            }
+          });
+          return of(response).pipe(
+            tap(() => merge(...requestsProyecto).subscribe())
+          );
+        })
+      );
     }
     return observable$;
   }
 
   protected initColumns(): void {
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
-      this.columnas = ['titulo', 'acronimo', 'fechaInicio', 'fechaFin', 'estado', 'activo', 'acciones'];
+      this.columnas = ['titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'activo', 'acciones'];
     } else {
-      this.columnas = ['titulo', 'acronimo', 'fechaInicio', 'fechaFin', 'estado', 'acciones'];
+      this.columnas = ['titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'acciones'];
     }
   }
 
@@ -269,8 +327,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     const controls = this.formGroup.controls;
     const filter = new RSQLSgiRestFilter('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.acronimo.value)
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
-      .and('acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
-      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value);
+      .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
+      .and('codigoExterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoExterno.value);
     if (controls.activo.value !== 'todos') {
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
@@ -279,7 +337,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
       .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
       .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
+      .or('fechaFinDefinitiva', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
       .and('fechaFin', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
+      .or('fechaFinDefinitiva', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
       .and('ambitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
       .and('responsableProyecto', SgiRestFilterOperator.EQUALS, controls.responsableProyecto.value?.id)
       .and('equipos.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
@@ -288,7 +348,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('entidadesConvocantes.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadConvocante.value?.id)
       .and('planInvestigacion', SgiRestFilterOperator.EQUALS, controls.planInvestigacion.value?.id?.toString())
       .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id)
-      .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString());
+      .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
+      .and('finalizado', SgiRestFilterOperator.EQUALS, controls.finalizado.value?.toString())
+      .and('prorrogado', SgiRestFilterOperator.EQUALS, controls.prorrogado.value?.toString());
 
     return filter;
   }

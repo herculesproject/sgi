@@ -26,6 +26,15 @@
             </mat-form-field>
           </div>
 
+          <!-- Código Externo -->
+          <div class="col">
+            <mat-form-field>
+              <mat-label>{{'csp.proyecto.codigo-externo' | translate}}</mat-label>
+              <input matInput placeholder="{{'csp.proyecto.codigo-externo' | translate}}"
+                formControlName="codigoExterno">
+            </mat-form-field>
+          </div>
+
           <!-- Estado -->
           <ng-container>
             <div class="col">
@@ -94,6 +103,27 @@
               </mat-autocomplete>
             </mat-form-field>
           </div>
+
+          <!-- Finalizado -->
+          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+            <mat-form-field>
+              <mat-label>{{'csp.proyecto.finalizado' | translate}}</mat-label>
+              <sgi-select-boolean formControlName="finalizado">
+              </sgi-select-boolean>
+            </mat-form-field>
+          </div>
+
+          <!-- Prorrogado -->
+          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+            <mat-form-field>
+              <mat-label>{{'csp.proyecto.prorrogado' | translate}}</mat-label>
+              <sgi-select-boolean formControlName="prorrogado">
+              </sgi-select-boolean>
+            </mat-form-field>
+          </div>
+
         </div>
 
         <div class="ml-10" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -310,6 +340,13 @@
         <td mat-cell *matCellDef="let proyecto">{{proyecto.acronimo}}</td>
       </ng-container>
 
+      <!-- Referencia en entidad convocante -->
+      <ng-container matColumnDef="codigoExterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.ref-codigo-externo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let proyecto">{{proyecto.codigoExterno}}</td>
+      </ng-container>
+
       <!-- Fecha inicio -->
       <ng-container matColumnDef="fechaInicio">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -325,6 +362,33 @@
           {{'csp.proyecto.fecha-fin' | translate}} </th>
         <td mat-cell *matCellDef="let proyecto">
           {{proyecto.fechaFin | luxon:'short'}}
+        </td>
+      </ng-container>
+
+      <!-- Fecha fin definitiva -->
+      <ng-container matColumnDef="fechaFinDefinitiva">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto.fecha-fin-definitiva' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          {{proyecto.fechaFinDefinitiva | luxon:'short'}}
+        </td>
+      </ng-container>
+
+      <!-- Finalizado -->
+      <ng-container matColumnDef="finalizado">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.finalizado' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          {{(proyecto.fechaFinDefinitiva ? proyecto.fechaFinDefinitiva < this.fechaActual ? 'label.si' : 'label.no' :
+            proyecto.fechaFin < this.fechaActual ? 'label.si' : 'label.no' ) | translate}} </td>
+      </ng-container>
+
+      <!-- Prorrogado -->
+      <ng-container matColumnDef="prorrogado">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.prorrogado' | translate}} </th>
+        <td mat-cell *matCellDef="let proyecto">
+          {{(proyecto.prorrogado ? 'label.si' : 'label.no') | translate}}
         </td>
       </ng-container>
 

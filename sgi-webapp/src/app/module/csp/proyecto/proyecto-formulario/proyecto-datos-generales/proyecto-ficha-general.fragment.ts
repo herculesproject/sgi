@@ -59,7 +59,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
     this.proyecto = { activo: true } as IProyecto;
-    this.proyecto = {} as IProyecto;
   }
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {

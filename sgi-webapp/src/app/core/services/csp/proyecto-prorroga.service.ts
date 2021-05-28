@@ -15,7 +15,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProyectoProrrogaService extends SgiMutableRestService<number, IProyectoProrrogaBackend, IProyectoProrroga>  {
-  private static readonly MAPPING = '/proyectoprorrogas';
+  private static readonly MAPPING = '/proyecto-prorrogas';
 
   constructor(protected http: HttpClient) {
     super(

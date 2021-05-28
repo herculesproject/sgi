@@ -305,7 +305,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    */
   findAllProyectoProrrogaProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoProrroga>> {
     return this.find<IProyectoProrrogaBackend, IProyectoProrroga>(
-      `${this.endpointUrl}/${id}/proyectoprorrogas`,
+      `${this.endpointUrl}/${id}/proyecto-prorrogas`,
       options,
       PROYECTO_PRORROGA_CONVERTER
     );
@@ -432,6 +432,18 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       `${this.endpointUrl}/${proyectoId}/proyectos-sge`,
       options,
       PROYECTO_PROYECTO_SGE_CONVERTER
+    );
+  }
+
+  /**
+   * Comprueba si Proyecto tiene ProyectoProrroga relacionado
+   *
+   * @param id Proyecto
+   */
+  hasProyectoProrrogas(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/proyecto-prorrogas`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
     );
   }
 
