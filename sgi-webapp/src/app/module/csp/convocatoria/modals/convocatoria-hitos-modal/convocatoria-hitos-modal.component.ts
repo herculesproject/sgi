@@ -83,6 +83,8 @@ export class ConvocatoriaHitosModalComponent extends
 
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
 
+    this.validarFecha(this.formGroup.get('fechaInicio').value);
+
     this.subscriptions.push(this.formGroup.get('fechaInicio').valueChanges.subscribe(
       (value) => this.validarFecha(value)));
   }
