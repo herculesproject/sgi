@@ -227,7 +227,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       fechaInicio: proyecto.fechaInicio,
       fechaFin: proyecto.fechaFin,
       fechaFinDefinitiva: proyecto.fechaFinDefinitiva,
-      convocatoria: proyecto.convocatoria,
+      convocatoria: proyecto.convocatoria ?? '',
       convocatoriaExterna: proyecto.convocatoriaExterna,
       unidadGestion: proyecto.unidadGestion,
       modeloEjecucion: proyecto.modeloEjecucion,
@@ -246,7 +246,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       tipoHorasAnuales: proyecto.tipoHorasAnuales,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
-      solicitudProyecto: proyecto.solicitudProyecto?.titulo
+      solicitudProyecto: proyecto.solicitudProyecto?.titulo ?? ''
     };
 
     this.checkEstado(this.getFormGroup(), proyecto);
