@@ -129,7 +129,7 @@ public class ProyectoControllerTest extends BaseControllerTest {
   private static final String PATH_ENTIDAD_GESTORA = "/proyectoentidadgestoras";
   private static final String PATH_SEGUIMIENTO = "/proyectoperiodoseguimientos";
   private static final String PATH_PROYECTO_EQUIPO = "/proyectoequipos";
-  private static final String PATH_PRORROGA = "/proyectoprorrogas";
+  private static final String PATH_PRORROGA = "/proyecto-prorrogas";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-C" })

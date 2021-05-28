@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * ProyectoProrrogaController
  */
 @RestController
-@RequestMapping("/proyectoprorrogas")
+@RequestMapping("/proyecto-prorrogas")
 @Slf4j
 public class ProyectoProrrogaController {
 

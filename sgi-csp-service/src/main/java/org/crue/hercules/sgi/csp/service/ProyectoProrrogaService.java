@@ -62,4 +62,12 @@ public interface ProyectoProrrogaService {
    */
   Page<ProyectoProrroga> findAllByProyecto(Long proyectoId, String query, Pageable pageable);
 
+  /**
+   * Indica si existen {@link ProyectoProrroga} de un {@link Proyecto}
+   * 
+   * @param proyectoId identificador de la {@link Proyecto}
+   * @return si existe la entidad {@link ProyectoProrroga}
+   */
+  boolean existsByProyecto(Long proyectoId);
+
 }

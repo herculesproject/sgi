@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ProyectoProrrogaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONTROLLER_BASE_PATH = "/proyectoprorrogas";
+  private static final String CONTROLLER_BASE_PATH = "/proyecto-prorrogas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/prorrogadocumentos";
 
   private HttpEntity<ProyectoProrroga> buildRequest(HttpHeaders headers, ProyectoProrroga entity) throws Exception {

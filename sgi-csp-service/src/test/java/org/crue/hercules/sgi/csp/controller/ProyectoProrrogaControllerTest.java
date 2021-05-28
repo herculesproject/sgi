@@ -47,7 +47,7 @@ public class ProyectoProrrogaControllerTest extends BaseControllerTest {
   private ProrrogaDocumentoService prorrogaDocumentoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONTROLLER_BASE_PATH = "/proyectoprorrogas";
+  private static final String CONTROLLER_BASE_PATH = "/proyecto-prorrogas";
   private static final String PATH_ENTIDAD_DOCUMENTO = "/prorrogadocumentos";
 
   @Test

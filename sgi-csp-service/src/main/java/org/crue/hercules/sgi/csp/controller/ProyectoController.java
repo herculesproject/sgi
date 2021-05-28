@@ -594,7 +594,7 @@ public class ProyectoController {
    * @param query  filtro de búsqueda.
    * @param paging pageable.
    */
-  @GetMapping("/{id}/proyectoprorrogas")
+  @GetMapping("/{id}/proyecto-prorrogas")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<ProyectoProrroga>> findAllProyectoProrroga(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
@@ -608,6 +608,25 @@ public class ProyectoController {
 
     log.debug("findAllProyectoProrroga(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si existen datos vinculados a {@link Proyecto} de
+   * {@link ProyectoProrroga}
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}/proyecto-prorrogas", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  ResponseEntity<Proyecto> hasProyectoProrrogas(@PathVariable Long id) {
+    log.debug("hasProyectoProrrogas(Long id) - start");
+    boolean returnValue = false;
+    if (proyectoProrrogaService.existsByProyecto(id)) {
+      returnValue = true;
+    }
+    log.debug("hasProyectoProrrogas(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**

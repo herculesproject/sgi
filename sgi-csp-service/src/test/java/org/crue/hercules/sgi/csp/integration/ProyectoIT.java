@@ -61,7 +61,7 @@ public class ProyectoIT {
   private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
   private static final String PATH_PROYECTO_EQUIPO = "/proyectoequipos";
   private static final String PATH_ENTIDAD_GESTORA = "/proyectoentidadgestoras";
-  private static final String PATH_PRORROGA = "/proyectoprorrogas";
+  private static final String PATH_PRORROGA = "/proyecto-prorrogas";
 
   private HttpEntity<Proyecto> buildRequest(HttpHeaders headers, Proyecto entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

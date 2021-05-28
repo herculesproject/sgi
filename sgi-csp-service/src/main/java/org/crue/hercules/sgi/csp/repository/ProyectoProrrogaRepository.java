@@ -46,4 +46,12 @@ public interface ProyectoProrrogaRepository extends JpaRepository<ProyectoProrro
    */
   List<ProyectoProrroga> findAllByProyectoIdOrderByFechaConcesion(Long proyectoId);
 
+  /**
+   * Indica si existen {@link ProyectoProrroga} de un {@link Proyecto}
+   * 
+   * @param proyectoId identificador de la {@link Proyecto}
+   * @return si existe la entidad {@link ProyectoProrroga}
+   */
+  boolean existsByProyectoId(Long proyectoId);
+
 }

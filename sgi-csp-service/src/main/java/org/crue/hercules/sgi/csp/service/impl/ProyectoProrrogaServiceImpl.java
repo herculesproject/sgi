@@ -405,4 +405,17 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     repository.saveAll(listadoProyectoProrrogaBD);
   }
 
+  /**
+   * Indica si existen {@link ProyectoProrroga} de un {@link Proyecto}
+   * 
+   * @param proyectoId identificador de la {@link Proyecto}
+   * @return si existe la entidad {@link ProyectoProrroga}
+   */
+  @Override
+  public boolean existsByProyecto(Long proyectoId) {
+    log.debug("existsByProyecto(Long proyectoId) - start");
+    boolean returnValue = repository.existsByProyectoId(proyectoId);
+    log.debug("existsByProyecto(Long proyectoId) - end");
+    return returnValue;
+  }
 }

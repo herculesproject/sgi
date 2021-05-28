@@ -437,8 +437,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Page<Proyecto> findAllRestringidos(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Proyecto> specs = ProyectoSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query, ProyectoPredicateResolver.getInstance(programaRepository)));
+    Specification<Proyecto> specs = ProyectoSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query,
+        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository)));
 
     // No tiene acceso a todos los UO
     List<String> unidadesGestion = SgiSecurityContextHolder
@@ -465,7 +465,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Page<Proyecto> findAllTodosRestringidos(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Proyecto> specs = SgiRSQLJPASupport.toSpecification(query);
+    Specification<Proyecto> specs = SgiRSQLJPASupport.toSpecification(query,
+        ProyectoPredicateResolver.getInstance(programaRepository, proyectoProrrogaRepository));
 
     List<String> unidadesGestion = SgiSecurityContextHolder
         .getUOsForAnyAuthority(new String[] { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
