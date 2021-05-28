@@ -7,19 +7,16 @@ import { SelectValue } from '@core/component/select-common/select-common.compone
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
-import { ICodigoEconomico } from '@core/models/sge/codigo-economico';
+import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { CodigoEconomicoService } from '@core/services/sge/codigo-economico.service';
+import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { SelectValidator } from '@core/validators/select-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http/types';
-import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
-const MSG_ERROR_INIT = marker('error.load');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
 const CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico');
@@ -48,7 +45,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
   convocatoriaConceptoGastosFiltered: IConvocatoriaConceptoGasto[];
   convocatoriaConceptoGastos$: Observable<IConvocatoriaConceptoGasto[]>;
 
-  codigosEconomicos$: Observable<ICodigoEconomico[]>;
+  codigosEconomicos$: Observable<ICodigoEconomicoGasto[]>;
   textSaveOrUpdate: string;
 
   msgParamEntity = {};
@@ -58,7 +55,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
   constructor(
     protected snackBarService: SnackBarService,
     public matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoCodigoEcModalComponent>,
-    codigoEconomicoService: CodigoEconomicoService,
+    codigoEconomicoGastoService: CodigoEconomicoGastoService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoCodigoEcModalComponent,
     private readonly translate: TranslateService
   ) {
@@ -69,7 +66,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.xs = 'column';
 
-    this.codigosEconomicos$ = codigoEconomicoService.findByGastos().pipe(
+    this.codigosEconomicos$ = codigoEconomicoGastoService.findAll().pipe(
       map(response => response.items)
     );
   }
@@ -81,7 +78,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
 
     this.subscriptions.push(this.codigosEconomicos$.subscribe(
       (codigosEconomicos) => this.formGroup.controls.codigoEconomicoRef.setValidators(
-        SelectValidator.isSelectOption(codigosEconomicos.map(cod => cod.codigoEconomicoRef), true)
+        SelectValidator.isSelectOption(codigosEconomicos.map(cod => cod.id), true)
       )
     ));
 
@@ -102,7 +99,10 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodigoEconomigoSgeEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamCodigoEconomigoSgeEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.MALE,
+      ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_CODIGO_ECONOMICO_KEY,
@@ -146,23 +146,23 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
     }
   }
 
-  comparerCodigoEconomico(o1: ICodigoEconomico, o2: ICodigoEconomico): boolean {
+  comparerCodigoEconomico(o1: ICodigoEconomicoGasto, o2: ICodigoEconomicoGasto): boolean {
     if (o1 && o2) {
-      return o1?.codigoEconomicoRef === o2?.codigoEconomicoRef;
+      return o1?.id === o2?.id;
     }
     return o1 === o2;
   }
 
-  displayerCodigoEconomico(codigoEconomico: ICodigoEconomico) {
-    return codigoEconomico?.codigoEconomicoRef ?? '';
+  displayerCodigoEconomico(codigoEconomico: ICodigoEconomicoGasto) {
+    return codigoEconomico?.id ?? '';
   }
 
-  sorterCodigoEconomico(o1: SelectValue<ICodigoEconomico>, o2: SelectValue<ICodigoEconomico>): number {
+  sorterCodigoEconomico(o1: SelectValue<ICodigoEconomicoGasto>, o2: SelectValue<ICodigoEconomicoGasto>): number {
     return o1?.displayText.localeCompare(o2?.displayText);
   }
 
   protected getDatosForm(): IConvocatoriaConceptoGastoCodigoEcModalComponent {
-    this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef = this.formGroup.controls.codigoEconomicoRef.value?.codigoEconomicoRef;
+    this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef = this.formGroup.controls.codigoEconomicoRef.value?.id;
     this.data.convocatoriaConceptoGastoCodigoEc.observaciones = this.formGroup.controls.observaciones.value;
     this.data.convocatoriaConceptoGastoCodigoEc.fechaInicio = this.formGroup.controls.fechaInicio.value;
     this.data.convocatoriaConceptoGastoCodigoEc.fechaFin = this.formGroup.controls.fechaFin.value;
@@ -171,7 +171,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
 
   protected getFormGroup(): FormGroup {
     const codigoEconomico = this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef
-      ? { codigoEconomicoRef: this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef } as ICodigoEconomico
+      ? { id: this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef } as ICodigoEconomicoGasto
       : null;
     const formGroup = new FormGroup(
       {
@@ -228,7 +228,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent extends
         const finRangoNumber = finRangoControl.value ? finRangoControl.value.toMillis() : Number.MAX_VALUE;
 
         const ranges = this.data.convocatoriaConceptoGastoCodigoEcsTabla.filter(
-          conceptoGasto => conceptoGasto.codigoEconomicoRef === filterFieldControl.value
+          conceptoGasto => conceptoGasto.codigoEconomicoRef === filterFieldControl.value.id
         ).map(conceptoGasto => {
           return {
             inicio: conceptoGasto.fechaInicio ? conceptoGasto.fechaInicio.toMillis() : Number.MIN_VALUE,

@@ -2,10 +2,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { CodigoEconomicoService } from './codigo-economico.service';
+import { CodigoEconomicoGastoService } from './codigo-economico-gasto.service';
 
-describe('CodigoEconomicoService', () => {
-  let service: CodigoEconomicoService;
+describe('CodigoEconomicoGastoService', () => {
+  let service: CodigoEconomicoGastoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,7 +14,7 @@ describe('CodigoEconomicoService', () => {
         LoggerTestingModule
       ]
     });
-    service = TestBed.inject(CodigoEconomicoService);
+    service = TestBed.inject(CodigoEconomicoGastoService);
   });
 
   it('should be created', () => {
