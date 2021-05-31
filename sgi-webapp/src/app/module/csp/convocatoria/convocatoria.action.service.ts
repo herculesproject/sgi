@@ -145,7 +145,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
 
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
       logger, this.id, convocatoriaService, empresaService,
-      convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService,
+      convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService, configuracionSolicitudService,
       this.readonly);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
       this.id, convocatoriaService, convocatoriaPeriodoJustificacionService, this.readonly);

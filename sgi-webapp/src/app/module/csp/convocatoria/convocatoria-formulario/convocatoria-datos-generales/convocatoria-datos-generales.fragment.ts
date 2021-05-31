@@ -6,12 +6,14 @@ import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entid
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FormFragment } from '@core/services/action-service';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -29,6 +31,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private convocatoria: IConvocatoria;
   private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
+  public showAddAreaTematica: boolean;
+
   readonly modeloEjecucion$: Subject<IModeloEjecucion> = new BehaviorSubject<IModeloEjecucion>(null);
   readonly vinculacionesModeloEjecucion$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -40,6 +44,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     private convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     private unidadGestionService: UnidadGestionService,
     private convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
+    private configuracionSolicitudService: ConfiguracionSolicitudService,
     public readonly: boolean
   ) {
     super(key, true);
@@ -48,6 +53,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       activo: true,
       estado: Estado.BORRADOR
     } as IConvocatoria;
+    this.checkIfAddAreaTematicaIsAllowed();
     this.convocatoriaEntidadGestora = {} as IConvocatoriaEntidadGestora;
   }
 
@@ -179,6 +185,31 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         return EMPTY;
       })
     );
+  }
+
+  private checkIfAddAreaTematicaIsAllowed(): void {
+    const fechaActual = DateTime.now();
+    if (this.isEdit()) {
+      this.configuracionSolicitudService.findByConvocatoriaId(this.getKey() as number).pipe(
+        map(configuracionSolicitud => {
+          if (configuracionSolicitud === null) {
+            this.showAddAreaTematica = true;
+          }
+          else if (configuracionSolicitud.fasePresentacionSolicitudes === null) {
+            this.showAddAreaTematica = true;
+          }
+          return configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio ?? null;
+        })
+      ).subscribe(fechaInicio => {
+        if ((this.convocatoria.estado === Estado.REGISTRADA || this.convocatoria.estado === Estado.BORRADOR)
+          && (fechaInicio === null || fechaInicio > fechaActual)) {
+          return this.showAddAreaTematica = true;
+        }
+        return this.showAddAreaTematica = false;
+      });
+    } else {
+      this.showAddAreaTematica = true;
+    }
   }
 
   private loadAreasTematicas(id: number): void {

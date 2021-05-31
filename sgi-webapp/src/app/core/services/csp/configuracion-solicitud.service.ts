@@ -10,6 +10,7 @@ import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,18 @@ export class ConfiguracionSolicitudService extends SgiMutableRestService<number,
    */
   findAllTipoDocumentosFasePresentacion(id: number): Observable<SgiRestListResult<ITipoDocumento>> {
     return this.find<ITipoDocumento, ITipoDocumento>(`${this.endpointUrl}/${id}/tipodocumentofasepresentaciones`);
+  }
+
+  /**
+   * Recupera la configuracion de solicitud asociada a la convocatoria.
+   *
+   * @param id Id de la convocatoria
+   */
+  findByConvocatoriaId(id: number): Observable<IConfiguracionSolicitud> {
+    return this.http.get<IConfiguracionSolicitudBackend>(`${this.endpointUrl}/${id}`).pipe(
+      map(response => CONFIGURACION_SOLICITUD_CONVERTER.toTarget(response))
+    );
+
   }
 
 }

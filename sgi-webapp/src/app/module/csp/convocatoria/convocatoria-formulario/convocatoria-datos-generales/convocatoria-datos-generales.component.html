@@ -268,7 +268,7 @@
     </table>
     <div class="separation-button">
       <button color="three" aria-label="Center Align" mat-raised-button (click)="openModal()"
-        *ngIf="convocatoriaAreaTematicas.data.length === 0 && !formPart.readonly">
+        *ngIf="convocatoriaAreaTematicas.data.length === 0 && !formPart.readonly && formPart.showAddAreaTematica">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamAreaTematicaEntity }}
       </button>
