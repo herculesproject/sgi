@@ -6,24 +6,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.crue.hercules.sgi.framework.core.convert.converter.SortCriteriaConverter;
 import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
-import org.crue.hercules.sgi.framework.web.controller.SgiErrorController;
 import org.crue.hercules.sgi.framework.web.method.annotation.RequestPageableArgumentResolver;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.Formatter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,12 +32,6 @@ public class SgiWebConfig implements WebMvcConfigurer {
   private static SortCriteriaConverter sortOperationConverter = new SortCriteriaConverter();
   private static RequestPageableArgumentResolver requestPageableArgumentResolver = new RequestPageableArgumentResolver(
       sortOperationConverter);
-
-  @Order(Ordered.HIGHEST_PRECEDENCE)
-  @ControllerAdvice
-  public static class SgiResponseEntityExceptionHandler
-      extends org.crue.hercules.sgi.framework.web.servlet.mvc.method.annotation.SgiResponseEntityExceptionHandler {
-  }
 
   /**
    * Configure cross origin requests processing.
@@ -119,27 +107,6 @@ public class SgiWebConfig implements WebMvcConfigurer {
     log.debug("addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) - start");
     resolvers.add(requestPageableArgumentResolver);
     log.debug("addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) - end");
-  }
-
-  /**
-   * Registers a custom JSON {@link ErrorController}
-   * 
-   * @return SgiErrorController {@link SgiErrorController}
-   */
-  @Bean
-  public SgiErrorController sgiErrorController() {
-    log.debug("sgiErrorController() - start");
-    SgiErrorController returnValue = new SgiErrorController();
-    log.debug("sgiErrorController() - end");
-    return returnValue;
-  }
-
-  @Bean
-  public ResponseEntityExceptionHandler sgiResponseEntityExceptionHandler() {
-    log.debug("sgiResponseEntityExceptionHandler() - start");
-    ResponseEntityExceptionHandler returnValue = new SgiResponseEntityExceptionHandler();
-    log.debug("sgiResponseEntityExceptionHandler() - end");
-    return returnValue;
   }
 
   @Bean

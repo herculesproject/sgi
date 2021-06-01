@@ -12,9 +12,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Data
+@SuperBuilder
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
   @CreatedBy
