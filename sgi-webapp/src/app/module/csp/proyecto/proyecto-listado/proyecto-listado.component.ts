@@ -13,7 +13,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ROUTE_NAMES } from '@core/route.names';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
+import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';

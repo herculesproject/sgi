@@ -4,7 +4,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceComponent } from '@core/component/select-service/select-service.component';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
+import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

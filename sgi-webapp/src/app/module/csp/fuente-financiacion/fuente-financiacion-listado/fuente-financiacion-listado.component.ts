@@ -9,7 +9,7 @@ import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
+import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -413,7 +413,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     const subcription = this.dialogService.showConfirmation(this.textoReactivar)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.fuenteFinanciacionService.reactivar(fuenteFinanciacion.id);
+          return this.fuenteFinanciacionService.activar(fuenteFinanciacion.id);
         } else {
           return of();
         }
