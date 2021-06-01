@@ -431,10 +431,11 @@ public class MemoriaIT extends BaseIT {
     // given: search query with comité y fecha límite de una convocatoria de tipo
     // ordinario o extraordinario
     String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01T00:00:00Z";
+    String sort = "titulo,asc";
     // String query = "comite.id:1";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
-        .queryParam("q", query).build(false).toUri();
+        .queryParam("s", sort).queryParam("q", query).build(false).toUri();
 
     // when: find unlimited asignables para tipo convocatoria ordinaria o
     // extraordinaria
