@@ -126,6 +126,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <liquibase-hibernate5.version>4.1.1</liquibase-hibernate5.version>
+    <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     <org.hibernate-jpamodelgen.version>5.3.15.Final</org.hibernate-jpamodelgen.version>
     <lombok.version>1.18.20</lombok.version>
 
@@ -660,6 +661,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${project.parent.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation-api.version}</version>
           </dependency>
         </dependencies>
       </plugin>
