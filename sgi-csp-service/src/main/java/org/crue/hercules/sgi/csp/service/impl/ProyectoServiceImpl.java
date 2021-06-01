@@ -24,6 +24,8 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
@@ -37,6 +39,8 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -54,8 +58,12 @@ import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
@@ -133,6 +141,10 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
   private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
   private final SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
+  private final ProyectoAreaConocimientoRepository proyectoAreaConocimientoRepository;
+  private final ProyectoClasificacionRepository proyectoClasificacionRepository;
+  private final SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository;
+  private final SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository;
   private final ProgramaRepository programaRepository;
   private final ProyectoProrrogaRepository proyectoProrrogaRepository;
 
@@ -160,7 +172,12 @@ public class ProyectoServiceImpl implements ProyectoService {
       ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService,
       ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository,
       SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository,
-      ProgramaRepository programaRepository, ProyectoProrrogaRepository proyectoProrrogaRepository) {
+      ProyectoProrrogaRepository proyectoProrrogaRepository,
+      ProyectoAreaConocimientoRepository proyectoAreaConocimientoRepository,
+      ProyectoClasificacionRepository proyectoClasificacionRepository,
+      SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository,
+      SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository,
+      ProgramaRepository programaRepository) {
     this.repository = repository;
     this.estadoProyectoRepository = estadoProyectoRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -190,6 +207,10 @@ public class ProyectoServiceImpl implements ProyectoService {
     this.proyectoSocioPeriodoJustificacionService = proyectoSocioPeriodoJustificacionService;
     this.convocatoriaConceptoGastoRepository = convocatoriaConceptoGastoRepository;
     this.solicitudProyectoEntidadFinanciadoraAjenaRepository = solicitudProyectoEntidadFinanciadoraAjenaRepository;
+    this.proyectoAreaConocimientoRepository = proyectoAreaConocimientoRepository;
+    this.proyectoClasificacionRepository = proyectoClasificacionRepository;
+    this.solicitudProyectoAreaConocimientoRepository = solicitudProyectoAreaConocimientoRepository;
+    this.solicitudProyectoClasificacionRepository = solicitudProyectoClasificacionRepository;
     this.programaRepository = programaRepository;
     this.proyectoProrrogaRepository = proyectoProrrogaRepository;
   }
@@ -796,7 +817,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug(
         "copyDatosSolicitudToProyecto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - start");
     this.copyContexto(proyecto, solicitud, solicitudProyecto);
-    this.copyAreasConocimiento(proyecto);
+    this.copyAreasConocimiento(proyecto, solicitudProyecto.getId());
+    this.copyClasificaciones(proyecto, solicitudProyecto.getId());
     this.copyCodigosUNESCO(proyecto);
     this.copyCodigosNABS(proyecto);
     this.copyCodigosCNAE(proyecto);
@@ -838,12 +860,47 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyContexto(Proyecto proyecto, Solicitud solicitud, SolicitudProyecto solicitudProyecto) - end");
   }
 
-  private void copyAreasConocimiento(Proyecto proyecto) {
-    log.debug("copyAreasConocimiento(Proyecto proyecto) - start");
-    // TODO Se copian de las áreas definidas en la solicitud, por cada registro en
-    // la tabla "SolicitudProyectoArea" se creará un registro en la tabla
-    // "ProyectoArea" con la área indicada en la solicitud.
-    log.debug("copyAreasConocimiento(Proyecto proyecto) - end");
+  /**
+   * Copia las áreas de conocimiento de una {@link Solicitud} a un
+   * {@link Proyecto}
+   * 
+   * @param proyecto            entidad {@link Proyecto}
+   * @param solicitudProyectoId id de la {@link SolicitudProyecto}
+   */
+  private void copyAreasConocimiento(Proyecto proyecto, Long solicitudProyectoId) {
+    log.debug("ccopyAreasConocimiento(Proyecto proyecto, Long solicitudProyectoId) - start");
+    List<SolicitudProyectoAreaConocimiento> areasConocimineto = solicitudProyectoAreaConocimientoRepository
+        .findAllBySolicitudProyectoId(solicitudProyectoId);
+    areasConocimineto.stream().forEach((areaConocimentoSolicitud) -> {
+      log.debug("Copy SolicitudProyectoAreaConocimiento with id: {0}", areaConocimentoSolicitud.getId());
+      ProyectoAreaConocimiento areaConocimientoProyecto = new ProyectoAreaConocimiento();
+      areaConocimientoProyecto.setProyectoId(proyecto.getId());
+      areaConocimientoProyecto.setAreaConocimientoRef(areaConocimentoSolicitud.getAreaConocimientoRef());
+
+      this.proyectoAreaConocimientoRepository.save(areaConocimientoProyecto);
+    });
+    log.debug("copyAreasConocimiento(Proyecto proyecto, Long solicitudProyectoId) - end");
+  }
+
+  /**
+   * Copia las Clasificaciones de una {@link Solicitud} a un {@link Proyecto}
+   * 
+   * @param proyecto            entidad {@link Proyecto}
+   * @param solicitudProyectoId id de la {@link SolicitudProyecto}
+   */
+  private void copyClasificaciones(Proyecto proyecto, Long solicitudProyectoId) {
+    log.debug("copyClasificaciones(Proyecto proyecto, Long solicitudProyectoId) - start");
+    List<SolicitudProyectoClasificacion> clasificaciones = solicitudProyectoClasificacionRepository
+        .findAllBySolicitudProyectoId(solicitudProyectoId);
+    clasificaciones.stream().forEach((clasificacionSolicitud) -> {
+      log.debug("Copy SolicitudProyectoClasificacion with id: {0}", clasificacionSolicitud.getId());
+      ProyectoClasificacion clasificacionProyecto = new ProyectoClasificacion();
+      clasificacionProyecto.setProyectoId(proyecto.getId());
+      clasificacionProyecto.setClasificacionRef(clasificacionSolicitud.getClasificacionRef());
+
+      this.proyectoClasificacionRepository.save(clasificacionProyecto);
+    });
+    log.debug("copyClasificaciones(Proyecto proyecto, Long solicitudProyectoId) - end");
   }
 
   private void copyCodigosUNESCO(Proyecto proyecto) {

@@ -26,8 +26,12 @@ import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
@@ -115,6 +119,14 @@ public class ProyectoServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
   @Mock
+  private SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository;
+  @Mock
+  private SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository;
+  @Mock
+  private ProyectoAreaConocimientoRepository proyectoAreaConocimientoRepository;
+  @Mock
+  private ProyectoClasificacionRepository proyectoClasificacionRepository;
+  @Mock
   ProgramaRepository programaRepository;
   @Mock
   ProyectoProrrogaRepository proyectoProrrogaRepository;
@@ -132,7 +144,9 @@ public class ProyectoServiceTest extends BaseServiceTest {
         solicitudSocioRepository, proyectoSocioService, solicitudEquipoSocioRepository, proyectoEquipoSocioService,
         solicitudPeriodoPagoRepository, proyectoSocioPeriodoPagoService, solicitudPeriodoJustificacionRepository,
         proyectoSocioPeriodoJustificacionService, convocatoriaConceptoGastoRepository,
-        solicitudProyectoEntidadFinanciadoraAjenaRepository, programaRepository, proyectoProrrogaRepository);
+        solicitudProyectoEntidadFinanciadoraAjenaRepository, proyectoProrrogaRepository,
+        proyectoAreaConocimientoRepository, proyectoClasificacionRepository,
+        solicitudProyectoAreaConocimientoRepository, solicitudProyectoClasificacionRepository, programaRepository);
   }
 
   @Test
