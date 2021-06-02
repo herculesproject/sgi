@@ -392,9 +392,9 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAnyAuthority="['CSP-PRO-C', 'CSP-PRO-C_' + element.unidadGestion.id ]">
-            <button color="primary" aria-label="Center Align" mat-raised-button *ngIf="mapCrearProyecto.get(element.id)"
-              (click)="crearProyectoModal(element)">
-              {{'csp.solicitud.listado.crear.proyecto' | translate}}
+            <button color="primary" mat-button *ngIf="mapCrearProyecto.get(element.id)"
+              matTooltip="{{'csp.solicitud.listado.crear.proyecto' | translate}}" (click)="crearProyectoModal(element)">
+              <mat-icon color="primary">next_week</mat-icon>
             </button>
           </ng-container>
         </td>

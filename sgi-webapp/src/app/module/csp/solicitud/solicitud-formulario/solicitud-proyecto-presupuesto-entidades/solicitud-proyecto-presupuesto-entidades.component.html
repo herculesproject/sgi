@@ -56,8 +56,9 @@
   </mat-paginator>
 
   <div class="separation-button" *ngIf="!formPart.readonly">
-    <button color="primary" aria-label="Center Align" mat-raised-button>
-      {{'csp.solicitud-desglose-presupuesto.global.presupuesto-completo'| translate}}
+    <button color="primary" class="rounded" mat-raised-button (click)="showPresupuestoCompleto()">
+      <mat-icon>cases</mat-icon>
+      {{'title.csp.presupuesto-completo'| translate}}
     </button>
   </div>
 

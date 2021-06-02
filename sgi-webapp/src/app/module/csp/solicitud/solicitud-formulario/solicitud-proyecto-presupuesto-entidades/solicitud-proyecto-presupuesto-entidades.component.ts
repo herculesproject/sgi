@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { SolicitiudPresupuestoModalComponent, SolicitudPresupuestoModalData } from '../../../shared/solicitud-presupuesto-modal/solicitud-presupuesto-modal.component';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { EntidadFinanciadoraDesglosePresupuesto, SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-proyecto-presupuesto-entidades.fragment';
@@ -71,6 +73,7 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
     public actionService: SolicitudActionService,
     private router: Router,
     private route: ActivatedRoute,
+    private matDialog: MatDialog,
     private readonly translate: TranslateService,
     private solicitudService: SolicitudService
   ) {
@@ -139,6 +142,19 @@ export class SolicitudProyectoPresupuestoEntidadesComponent
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  showPresupuestoCompleto() {
+    const data: SolicitudPresupuestoModalData = {
+      idSolicitudProyecto: this.fragment.getKey() as number,
+      presupuestos: [],
+      global: false
+    };
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    this.matDialog.open(SolicitiudPresupuestoModalComponent, config);
   }
 
   private updateImportesTotales() {

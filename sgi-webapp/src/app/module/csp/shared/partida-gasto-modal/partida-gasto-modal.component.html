@@ -9,7 +9,7 @@
     <!-- Concepto gasto -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
-        <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
+        <mat-label>{{'csp.solicitud-proyecto-presupuesto.concepto-gasto' | translate}}
         </mat-label>
         <sgi-select-entity formControlName="conceptoGasto" required [options]="conceptosGasto$ | async">
         </sgi-select-entity>
@@ -21,7 +21,7 @@
     <div *ngIf="showCodigosEconomicosInfo">
       <div>
         <mat-label>
-          {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigos-economicos-permitidos' | translate}}
+          {{'csp.partida-gasto.codigos-economicos-permitidos' | translate}}
         </mat-label>
 
         <table class="mat-elevation-z8" mat-table [dataSource]="dataSourceCodigosEconomicosPermitidos" matSort
@@ -29,7 +29,7 @@
           matSortDisableClear>
           <ng-container matColumnDef="conceptoGasto">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
+              {{'csp.partida-gasto.codigo-economico.concepto-gasto' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.conceptoGasto.nombre}}
@@ -37,7 +37,7 @@
           </ng-container>
           <ng-container matColumnDef="importeMaximo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-maximo' | translate}}
+              {{'csp.partida-gasto.codigo-economico.importe-maximo' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.importeMaximo}}
@@ -45,7 +45,7 @@
           </ng-container>
           <ng-container matColumnDef="permitidoDesde">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.permitido-desde' | translate}}
+              {{'csp.partida-gasto.codigo-economico.permitido-desde' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.mesInicial}}
@@ -53,7 +53,7 @@
           </ng-container>
           <ng-container matColumnDef="permitidoHasta">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.permitido-hasta' | translate}}
+              {{'csp.partida-gasto.codigo-economico.permitido-hasta' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.mesFinal}}
@@ -61,7 +61,7 @@
           </ng-container>
           <ng-container matColumnDef="codigoEconomico">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico' | translate}}
+              {{'csp.partida-gasto.codigo-economico' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.codigoEconomicoRef}}
@@ -73,14 +73,14 @@
       </div>
       <div>
         <mat-label>
-          {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigos-economicos-no-permitidos' | translate}}
+          {{'csp.partida-gasto.codigos-economicos-no-permitidos' | translate}}
         </mat-label>
         <table class="mat-elevation-z8" mat-table [dataSource]="dataSourceCodigosEconomicosNoPermitidos" matSort
           #sortCodigosEconomicosNoPermitidos="matSort" matSortActive="noPermitidoDesde" matSortDirection="asc"
           matSortDisableClear>
           <ng-container matColumnDef="conceptoGasto">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto' | translate}}
+              {{'csp.partida-gasto.codigo-economico.concepto-gasto' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.conceptoGasto.nombre}}
@@ -88,7 +88,7 @@
           </ng-container>
           <ng-container matColumnDef="noPermitidoDesde">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.no-permitido-desde' | translate}}
+              {{'csp.partida-gasto.codigo-economico.no-permitido-desde' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.mesInicial}}
@@ -96,7 +96,7 @@
           </ng-container>
           <ng-container matColumnDef="noPermitidoHasta">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.no-permitido-hasta' | translate}}
+              {{'csp.partida-gasto.codigo-economico.no-permitido-hasta' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.convocatoriaConceptoGasto?.mesFinal}}
@@ -104,7 +104,7 @@
           </ng-container>
           <ng-container matColumnDef="codigoEconomico">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.codigo-economico' | translate}}
+              {{'csp.partida-gasto.codigo-economico' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
               {{data.codigoEconomicoRef}}
@@ -118,15 +118,15 @@
     <!-- Anualidad -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
-        <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad' | translate}}
+        <mat-label>{{'csp.solicitud-proyecto-presupuesto.anualidad' | translate}}
         </mat-label>
         <input matInput formControlName="anualidad" type="number" min="0" step="1"
-          placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad' | translate}}">
+          placeholder="{{'csp.solicitud-proyecto-presupuesto.anualidad' | translate}}">
         <mat-error *ngIf="formGroup.controls.anualidad.errors?.min">
-          {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad.min' | translate}}
+          {{'error.csp.solicitud-proyecto-presupuesto.anualidad.min' | translate}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.anualidad.errors?.max">
-          {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.anualidad.max' | translate}}
+          {{'error.csp.solicitud-proyecto-presupuesto.anualidad.max' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -134,38 +134,36 @@
       <!-- Importe presupuestado -->
       <div>
         <mat-form-field>
-          <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado' | translate}}
+          <mat-label>{{'csp.solicitud-proyecto-presupuesto.importe-presupuestado' | translate}}
           </mat-label>
           <input matInput formControlName="importePresupuestado" type="number" min="0" step="1"
-            placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado' | translate}}"
-            required>
+            placeholder="{{'csp.solicitud-proyecto-presupuesto.importe-presupuestado' | translate}}" required>
           <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.required">
             {{'error.required.entity' | translate:msgParamImportePresupuestadoEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.min">
-            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado.min' | translate}}
+            {{'error.csp.solicitud-proyecto-presupuesto.importe-presupuestado.min' | translate}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.importePresupuestado.errors?.max">
-            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado.max' | translate}}
+            {{'error.csp.solicitud-proyecto-presupuesto.importe-presupuestado.max' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
       <!-- Importe solicitado -->
       <div>
         <mat-form-field>
-          <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}
+          <mat-label>{{'csp.solicitud-proyecto-presupuesto.importe-solicitado' | translate}}
           </mat-label>
           <input matInput formControlName="importeSolicitado" type="number" min="0" step="1"
-            placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado' | translate}}"
-            required>
+            placeholder="{{'csp.solicitud-proyecto-presupuesto.importe-solicitado' | translate}}" required>
           <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.required">
             {{'error.required.entity' | translate:msgParamImporteEntity}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.min">
-            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.min' | translate}}
+            {{'error.csp.solicitud-proyecto-presupuesto.importe-solicitado.min' | translate}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.importeSolicitado.errors?.max">
-            {{'error.csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado.max' | translate}}
+            {{'error.csp.solicitud-proyecto-presupuesto.importe-solicitado.max' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -173,9 +171,9 @@
     <!-- Observaciones -->
     <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
       <mat-form-field>
-        <mat-label>{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones' | translate}}</mat-label>
+        <mat-label>{{'csp.solicitud-proyecto-presupuesto.observaciones' | translate}}</mat-label>
         <textarea matInput formControlName="observaciones" type="text"
-          placeholder="{{'csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones' | translate}}">
+          placeholder="{{'csp.solicitud-proyecto-presupuesto.observaciones' | translate}}">
               </textarea>
         <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}

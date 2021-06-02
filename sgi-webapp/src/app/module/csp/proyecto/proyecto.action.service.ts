@@ -6,8 +6,8 @@ import { ActionService } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
 import { ProyectoAreaConocimientoService } from '@core/services/csp/proyecto-area-conocimiento.service';
+import { ProyectoClasificacionService } from '@core/services/csp/proyecto-clasificacion.service';
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoEntidadFinanciadoraService } from '@core/services/csp/proyecto-entidad-financiadora.service';
 import { ProyectoEntidadGestoraService } from '@core/services/csp/proyecto-entidad-gestora.service';
@@ -21,22 +21,22 @@ import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
-import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
+import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
-import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
 import { ProyectoAreaConocimientoFragment } from './proyecto-formulario/proyecto-area-conocimiento/proyecto-area-conocimiento.fragment';
+import { ProyectoClasificacionesFragment } from './proyecto-formulario/proyecto-clasificaciones/proyecto-clasificaciones.fragment';
 import { ProyectoContextoFragment } from './proyecto-formulario/proyecto-contexto/proyecto-contexto.fragment';
 import { ProyectoFichaGeneralFragment } from './proyecto-formulario/proyecto-datos-generales/proyecto-ficha-general.fragment';
 import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-documentos/proyecto-documentos.fragment';
@@ -170,7 +170,7 @@ export class ProyectoActionService extends ActionService {
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
     if (this.isEdit()) {
       this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(
-        id, proyectoService, proyectoEntidadFinanciadoraService, empresaService, false);
+        id, this.data.proyecto?.solicitudId, proyectoService, proyectoEntidadFinanciadoraService, empresaService, solicitudService, false);
       this.socios = new ProyectoSociosFragment(id, empresaService, proyectoService, proyectoSocioService);
       this.hitos = new ProyectoHitosFragment(id, proyectoService, proyectoHitoService);
       this.plazos = new ProyectoPlazosFragment(id, proyectoService, proyectoPlazoService);

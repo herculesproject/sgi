@@ -131,8 +131,8 @@ body {
 /** TABLES */
 /**/
 
-table {
-  [mat-header-row] {
+.mat-table {
+  .mat-header-row {
     background-color: map-get($palette-primary, 50);
   }
   width: 100%;

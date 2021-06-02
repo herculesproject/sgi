@@ -8,6 +8,7 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { IPartidaGasto } from '@core/models/csp/partida-gasto';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -18,17 +19,11 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
-import { DateTime } from 'luxon';
 import { merge, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
-export interface ConceptoGastoCodigoEc {
-  id: number;
+export interface ConvocatoriaConceptoGastoCodigoEc extends IConvocatoriaConceptoGastoCodigoEc {
   convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
-  codigoEconomicoRef: string;
-  fechaInicio: DateTime;
-  fechaFin: DateTime;
-  observaciones: string;
 }
 
 export interface PartidaGastoDataModal {
@@ -39,14 +34,14 @@ export interface PartidaGastoDataModal {
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
-const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto');
-const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_CONCEPTO_GASTO = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.concepto-gasto');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO = marker('csp.partida-gasto');
+const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_CONCEPTO_GASTO = marker('csp.solicitud-proyecto-presupuesto.concepto-gasto');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_OBSERVACIONES =
-  marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.observaciones');
+  marker('csp.solicitud-proyecto-presupuesto.observaciones');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_SOLICITADO =
-  marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-solicitado');
+  marker('csp.solicitud-proyecto-presupuesto.importe-solicitado');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_IMPORTE_PRESUPUESTADO =
-  marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto.importe-presupuestado');
+  marker('csp.solicitud-proyecto-presupuesto.importe-presupuestado');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -57,11 +52,11 @@ export class PartidaGastoModalComponent extends
   BaseModalComponent<IPartidaGasto, PartidaGastoDataModal> implements OnInit {
 
   conceptosGasto$: Observable<IConceptoGasto[]>;
-  private conceptosGastoCodigoEcPermitidos = [] as ConceptoGastoCodigoEc[];
-  private conceptosGastoCodigoEcNoPermitidos = [] as ConceptoGastoCodigoEc[];
+  private conceptosGastoCodigoEcPermitidos: ConvocatoriaConceptoGastoCodigoEc[] = [];
+  private conceptosGastoCodigoEcNoPermitidos: ConvocatoriaConceptoGastoCodigoEc[] = [];
 
-  dataSourceCodigosEconomicosPermitidos = new MatTableDataSource<ConceptoGastoCodigoEc>();
-  dataSourceCodigosEconomicosNoPermitidos = new MatTableDataSource<ConceptoGastoCodigoEc>();
+  dataSourceCodigosEconomicosPermitidos = new MatTableDataSource<ConvocatoriaConceptoGastoCodigoEc>();
+  dataSourceCodigosEconomicosNoPermitidos = new MatTableDataSource<ConvocatoriaConceptoGastoCodigoEc>();
   columnsCodigosEconomicosPermitidos = ['conceptoGasto', 'importeMaximo', 'permitidoDesde', 'permitidoHasta', 'codigoEconomico'];
   columnsCodigosEconomicosNoPermitidos = ['conceptoGasto', 'noPermitidoDesde', 'noPermitidoHasta', 'codigoEconomico'];
   @ViewChild('sortCodigosEconomicosPermitidos') sortCodigosEconomicosPermitidos: MatSort;
@@ -274,12 +269,13 @@ export class PartidaGastoModalComponent extends
   private getConvocatoriaConceptoGastoCodigoEcPermitidos(
     convocatoriaId: number,
     convocatoriaConceptoGastoMap: Map<number, IConvocatoriaConceptoGasto>
-  ): Observable<ConceptoGastoCodigoEc[]> {
+  ): Observable<ConvocatoriaConceptoGastoCodigoEc[]> {
     return this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(convocatoriaId).pipe(
       map(conceptoGatosCodigoEc => {
         return conceptoGatosCodigoEc.items.map(conceptoGasto => {
-          const data: ConceptoGastoCodigoEc = {
+          const data: ConvocatoriaConceptoGastoCodigoEc = {
             codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
+            convocatoriaConceptoGastoId: conceptoGasto.convocatoriaConceptoGastoId,
             convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.convocatoriaConceptoGastoId),
             fechaFin: conceptoGasto.fechaFin,
             fechaInicio: conceptoGasto.fechaInicio,
@@ -300,12 +296,13 @@ export class PartidaGastoModalComponent extends
   private getConvocatoriaConceptoGastoCodigoEcNoPermitidos(
     convocatoriaId: number,
     convocatoriaConceptoGastoMap: Map<number, IConvocatoriaConceptoGasto>
-  ): Observable<ConceptoGastoCodigoEc[]> {
+  ): Observable<ConvocatoriaConceptoGastoCodigoEc[]> {
     return this.convocatoriaService.findAllConvocatoriaConceptoGastoCodigoEcsNoPermitidos(convocatoriaId).pipe(
       map(conceptoGatosCodigoEc => {
         return conceptoGatosCodigoEc.items.map(conceptoGasto => {
-          const data: ConceptoGastoCodigoEc = {
+          const data: ConvocatoriaConceptoGastoCodigoEc = {
             codigoEconomicoRef: conceptoGasto.codigoEconomicoRef,
+            convocatoriaConceptoGastoId: conceptoGasto.convocatoriaConceptoGastoId,
             convocatoriaConceptoGasto: convocatoriaConceptoGastoMap.get(conceptoGasto.convocatoriaConceptoGastoId),
             fechaFin: conceptoGasto.fechaFin,
             fechaInicio: conceptoGasto.fechaInicio,
@@ -320,7 +317,7 @@ export class PartidaGastoModalComponent extends
 
   private setTablesSort() {
     this.dataSourceCodigosEconomicosPermitidos.sortingDataAccessor =
-      (conceptoGastoCodigoEc: ConceptoGastoCodigoEc, property: string) => {
+      (conceptoGastoCodigoEc: ConvocatoriaConceptoGastoCodigoEc, property: string) => {
         switch (property) {
           case 'conceptoGasto':
             return conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre;
@@ -338,7 +335,7 @@ export class PartidaGastoModalComponent extends
       };
     this.dataSourceCodigosEconomicosPermitidos.sort = this.sortCodigosEconomicosPermitidos;
     this.dataSourceCodigosEconomicosNoPermitidos.sortingDataAccessor =
-      (conceptoGastoCodigoEc: ConceptoGastoCodigoEc, property: string) => {
+      (conceptoGastoCodigoEc: ConvocatoriaConceptoGastoCodigoEc, property: string) => {
         switch (property) {
           case 'conceptoGasto':
             return conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre;

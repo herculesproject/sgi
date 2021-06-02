@@ -316,6 +316,25 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }
 
   /**
+   * Comprueba la existencia de presupuestos de una solicitud, para una entidad concreta con relación ajena o no.
+   *
+   * @param id ID de la Solicitud
+   * @param entidadRef Id de la Entidad
+   * @param ajena Indica si es Ajena a la convocatoria
+   * @returns **true** si existe alguna relación, **false** en cualquier otro caso
+   */
+  existsSolicitudProyectoPresupuesto(id: number, entidadRef: string, ajena: boolean): Observable<boolean> {
+    return this.http.head(
+      ajena
+        ? `${this.endpointUrl}/${id}/solicitudproyectopresupuestos/entidadajena/${entidadRef}`
+        : `${this.endpointUrl}/${id}/solicitudproyectopresupuestos/entidadconvocatoria/${entidadRef}`,
+      { observe: 'response' }
+    ).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
    * Devuelve los datos del proyecto de una solicitud
    *
    * @param solicitudId Id de la solicitud

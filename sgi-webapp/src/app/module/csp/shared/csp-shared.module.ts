@@ -18,6 +18,7 @@ import { SelectProgramaComponent } from './select-programa/select-programa.compo
 import { SelectTipoAmbitoGeograficoComponent } from './select-tipo-ambito-geografico/select-tipo-ambito-geografico.component';
 import { SelectTipoFinalidadComponent } from './select-tipo-finalidad/select-tipo-finalidad.component';
 import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-unidad-gestion.component';
+import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-modal/solicitud-presupuesto-modal.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-uni
     SelectTipoAmbitoGeograficoComponent,
     SelectTipoFinalidadComponent,
     SelectUnidadGestionComponent,
-    SearchProyectosEconomicosModalComponent
+    SearchProyectosEconomicosModalComponent,
+    SolicitiudPresupuestoModalComponent
   ],
   imports: [
     SharedModule,
@@ -57,7 +59,8 @@ import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-uni
     SelectTipoAmbitoGeograficoComponent,
     SelectTipoFinalidadComponent,
     SelectUnidadGestionComponent,
-    SearchProyectosEconomicosModalComponent
+    SearchProyectosEconomicosModalComponent,
+    SolicitiudPresupuestoModalComponent
   ]
 })
 export class CspSharedModule { }

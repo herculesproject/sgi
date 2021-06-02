@@ -6,15 +6,15 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../shared/entidad-financiadora-modal/entidad-financiadora-modal.component';
+import { SolicitiudPresupuestoModalComponent, SolicitudPresupuestoModalData } from '../../../shared/solicitud-presupuesto-modal/solicitud-presupuesto-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
-import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-entidades-financiadoras.fragment';
+import { IEntidadFinanciadora, ProyectoEntidadesFinanciadorasFragment } from './proyecto-entidades-financiadoras.fragment';
 
 const MODAL_ENTIDAD_FINANCIADORA_TITLE = marker('title.csp.proyecto.entidad-financiadora');
 const MSG_DELETE = marker('msg.deactivate.entity');
@@ -43,8 +43,8 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
   elementsPagePropias = [...this.elementsPage];
   elementsPageAjenas = [...this.elementsPage];
 
-  dataSourcePropias = new MatTableDataSource<StatusWrapper<IProyectoEntidadFinanciadora>>();
-  dataSourceAjenas = new MatTableDataSource<StatusWrapper<IProyectoEntidadFinanciadora>>();
+  dataSourcePropias = new MatTableDataSource<StatusWrapper<IEntidadFinanciadora>>();
+  dataSourceAjenas = new MatTableDataSource<StatusWrapper<IEntidadFinanciadora>>();
   @ViewChild('paginatorPropias', { static: true }) paginatorPropias: MatPaginator;
   @ViewChild('sortPropias', { static: true }) sortPropias: MatSort;
   @ViewChild('paginatorAjenas', { static: true }) paginatorAjenas: MatPaginator;
@@ -103,10 +103,10 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  openModal(targetPropias: boolean, wrapper?: StatusWrapper<IProyectoEntidadFinanciadora>): void {
+  openModal(targetPropias: boolean, wrapper?: StatusWrapper<IEntidadFinanciadora>): void {
     const data: EntidadFinanciadoraDataModal = {
       title: MODAL_ENTIDAD_FINANCIADORA_TITLE,
-      entidad: wrapper ? wrapper.value : {} as IProyectoEntidadFinanciadora,
+      entidad: wrapper ? wrapper.value : {} as IEntidadFinanciadora,
       selectedEmpresas: targetPropias
         ? this.dataSourcePropias.data.map(entidad => entidad.value.empresa)
         : this.dataSourceAjenas.data.map(entidad => entidad.value.empresa),
@@ -122,14 +122,14 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
         if (!wrapper) {
           this.formPart.addEntidadFinanciadora(entidadFinanciadora, targetPropias);
         } else if (!wrapper.created) {
-          const entidad = new StatusWrapper<IProyectoEntidadFinanciadora>(wrapper.value);
+          const entidad = new StatusWrapper<IEntidadFinanciadora>(wrapper.value);
           this.formPart.updateEntidadFinanciadora(entidad, targetPropias);
         }
       }
     });
   }
 
-  deleteEntidadFinanciadora(targetPropias: boolean, wrapper: StatusWrapper<IProyectoEntidadFinanciadora>) {
+  deleteEntidadFinanciadora(targetPropias: boolean, wrapper: StatusWrapper<IEntidadFinanciadora>) {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDeactivate).subscribe(
         (aceptado) => {
@@ -139,5 +139,19 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
         }
       )
     );
+  }
+
+  showPresupuesto(wrapper: StatusWrapper<IEntidadFinanciadora>) {
+    const data: SolicitudPresupuestoModalData = {
+      idSolicitudProyecto: this.formPart.solicitudId,
+      entidadId: wrapper.value.empresa.id,
+      presupuestos: [],
+      global: false
+    };
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    this.matDialog.open(SolicitiudPresupuestoModalComponent, config);
   }
 }

@@ -19,12 +19,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { PartidaGastoDataModal, PartidaGastoModalComponent } from '../../../shared/partida-gasto-modal/partida-gasto-modal.component';
+import { SolicitiudPresupuestoModalComponent, SolicitudPresupuestoModalData } from '../../../shared/solicitud-presupuesto-modal/solicitud-presupuesto-modal.component';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-proyecto-presupuesto-global.fragment';
 
 const MSG_DELETE = marker('msg.delete.entity');
-const SOLICITUD_PROYECTO_PRESUPUESTO_GLOBAL_PARTIDA_GASTO_KEY = marker('csp.solicitud-proyecto-presupuesto-global-partida-gasto');
+const SOLICITUD_PROYECTO_PRESUPUESTO_GLOBAL_PARTIDA_GASTO_KEY = marker('csp.partida-gasto');
 const SOLICITUD_PROYECTO_PRESUPUESTO_PARTIDA_GASTO_KEY = marker('csp.solicitud-desglose-presupuesto.global.partidas-gasto');
 
 interface IValoresCalculadosData {
@@ -222,4 +223,16 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FormFragmentCom
     });
   }
 
+  showPresupuestoCompleto() {
+    const data: SolicitudPresupuestoModalData = {
+      idSolicitudProyecto: this.fragment.getKey() as number,
+      presupuestos: this.dataSource.data.map(wrapper => wrapper.value),
+      global: true
+    };
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data
+    };
+    this.matDialog.open(SolicitiudPresupuestoModalComponent, config);
+  }
 }

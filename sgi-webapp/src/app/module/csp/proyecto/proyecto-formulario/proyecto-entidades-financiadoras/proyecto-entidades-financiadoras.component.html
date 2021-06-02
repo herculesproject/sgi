@@ -75,6 +75,10 @@
                 <mat-icon color="warn">highlight_off</mat-icon>
               </button>
             </ng-container>
+            <button mat-button matTooltip="{{'csp.proyecto-entidad-financiadora.presupuesto' | translate}}"
+              *ngIf="wrapper.value.hasPresupuesto" (click)="showPresupuesto(wrapper)">
+              <mat-icon color="primary">cases</mat-icon>
+            </button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="columnsPropias"></tr>
@@ -168,6 +172,10 @@
                 <mat-icon color="warn">highlight_off</mat-icon>
               </button>
             </ng-container>
+            <button mat-button matTooltip="{{'csp.proyecto-entidad-financiadora.presupuesto' | translate}}"
+              *ngIf="wrapper.value.hasPresupuesto" (click)="showPresupuesto(wrapper)">
+              <mat-icon color="primary">cases</mat-icon>
+            </button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="columnsAjenas"></tr>
