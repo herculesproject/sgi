@@ -15,6 +15,7 @@ import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convo
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
 import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
+import { ConvocatoriaPartidaPresupuestariaService } from '@core/services/csp/convocatoria-partidas-presupuestarias.service';
 import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
@@ -36,6 +37,7 @@ import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocator
 import { ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
 import { ConvocatoriaHitosFragment } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.fragment';
+import { ConvocatoriaPartidaPresupuestariaFragment } from './convocatoria-formulario/convocatoria-partidas-presupuestarias/convocatoria-partidas-presupuestarias.fragment';
 import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.fragment';
 import { ConvocatoriaPlazosFasesFragment } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
 import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.fragment';
@@ -66,6 +68,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     ELEGIBILIDAD: 'elegibilidad',
     REQUISITOS_EQUIPO: 'requisitos-equipo',
     DOCUMENTOS: 'documentos',
+    PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
     CONFIGURACION_SOLICITUDES: 'configuracion-solicitudes'
   };
 
@@ -82,6 +85,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
   private requisitosEquipo: ConvocatoriaRequisitosEquipoFragment;
   private documentos: ConvocatoriaDocumentosFragment;
   private configuracionSolicitudes: ConvocatoriaConfiguracionSolicitudesFragment;
+  private partidasPresupuestarias: ConvocatoriaPartidaPresupuestariaFragment;
 
   private dialogService: DialogService;
 
@@ -133,6 +137,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     convocatoriaDocumentoService: ConvocatoriaDocumentoService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
     documentoRequeridoSolicitudService: DocumentoRequeridoSolicitudService,
+    convocatoriaPartidaPresupuestariaService: ConvocatoriaPartidaPresupuestariaService,
     dialogService: DialogService,
   ) {
     super();
@@ -173,6 +178,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
       logger, this.id, configuracionSolicitudService, documentoRequeridoSolicitudService,
       this.readonly);
+    this.partidasPresupuestarias = new ConvocatoriaPartidaPresupuestariaFragment(this.id, convocatoriaService, convocatoriaPartidaPresupuestariaService,
+      this.readonly, this.canEdit);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
@@ -181,6 +188,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodoJustificacion);
     this.addFragment(this.FRAGMENT.FASES, this.plazosFases);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+    this.addFragment(this.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, this.partidasPresupuestarias);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     this.addFragment(this.FRAGMENT.ENLACES, this.enlaces);
     this.addFragment(this.FRAGMENT.REQUISITOS_IP, this.requisitosIP);

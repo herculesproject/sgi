@@ -18,6 +18,7 @@ import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocato
 import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.component';
 import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
 import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.component';
+import { ConvocatoriaPartidaPresupuestariaComponent } from './convocatoria-formulario/convocatoria-partidas-presupuestarias/convocatoria-partidas-presupuestarias.component';
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
 import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.component';
@@ -78,6 +79,10 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.HITOS,
         component: ConvocatoriaHitosComponent
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS,
+        component: ConvocatoriaPartidaPresupuestariaComponent
       },
       {
         path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
@@ -162,6 +167,10 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.HITOS,
         component: ConvocatoriaHitosComponent
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS,
+        component: ConvocatoriaPartidaPresupuestariaComponent
       },
       {
         path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES,

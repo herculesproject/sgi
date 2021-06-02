@@ -9,6 +9,7 @@ export const CONVOCATORIA_ROUTE_NAMES = {
   ENLACES: 'enlaces',
   REQUISITOS_IP: 'requisitos-ip',
   ELEGIBILIDAD: 'elegibilidad',
+  PARTIDAS_PRESUPUESTARIAS: 'partidas-presupuestarias',
   CONCEPTO_GATO_PERMITIDO: 'concepto-gasto-permitido',
   CONCEPTO_GATO_NO_PERMITIDO: 'concepto-gasto-no-permitido',
   REQUISITOS_EQUIPO: 'requisitos-equipo',

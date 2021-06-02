@@ -47,6 +47,10 @@
       [title]="'csp.convocatoria-elegibilidad' | translate"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
     </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS]"
+      [title]="'csp.convocatoria-partida-presupuestaria' | translate"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS)">
+    </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-CON-C', 'CSP-CON-E']"
       [route]="[CONVOCATORIA_ROUTE_NAMES.CONFIGURACION_SOLICITUDES]"
       [title]="'csp.convocatoria-configuracion-solicitud' | translate"

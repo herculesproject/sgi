@@ -10,6 +10,7 @@ import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/cs
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
 import { CONVOCATORIA_FASE_CONVERTER } from '@core/converters/csp/convocatoria-fase.converter';
 import { CONVOCATORIA_HITO_CONVERTER } from '@core/converters/csp/convocatoria-hito.converter';
+import { CONVOCATORIA_PARTIDA_PRESUPUESTARIA_CONVERTER } from '@core/converters/csp/convocatoria-partida.converter';
 import { CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/convocatoria-periodo-justificacion.converter';
 import { CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER } from '@core/converters/csp/convocatoria-periodo-seguimiento-cientifico.converter';
 import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
@@ -24,6 +25,7 @@ import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backen
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoriaFaseBackend } from '@core/models/csp/backend/convocatoria-fase-backend';
 import { IConvocatoriaHitoBackend } from '@core/models/csp/backend/convocatoria-hito-backend';
+import { IConvocatoriaPartidaPresupuestariaBackend } from '@core/models/csp/backend/convocatoria-partida-backend';
 import { IConvocatoriaPeriodoJustificacionBackend } from '@core/models/csp/backend/convocatoria-periodo-justificacion-backend';
 import { IConvocatoriaPeriodoSeguimientoCientificoBackend } from '@core/models/csp/backend/convocatoria-periodo-seguimiento-cientifico-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -37,6 +39,7 @@ import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
@@ -202,6 +205,20 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     const url = `${this.endpointUrl}/${id}/convocatoriafases`;
     return this.http.head(url, { observe: 'response' }).pipe(
       map(response => response.status === 200)
+    );
+  }
+
+  /**
+ * Recupera listado de partidas presupuestarias.
+ * @param id partida presupuestaria
+ * @param options opciones de búsqueda.
+ */
+  findPartidasPresupuestarias(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IConvocatoriaPartidaPresupuestaria>> {
+    return this.find<IConvocatoriaPartidaPresupuestariaBackend, IConvocatoriaPartidaPresupuestaria>(
+      `${this.endpointUrl}/${id}/convocatoria-partidas-presupuestarias`,
+      options,
+      CONVOCATORIA_PARTIDA_PRESUPUESTARIA_CONVERTER
     );
   }
 
