@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
@@ -25,6 +26,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
@@ -82,6 +84,9 @@ public class ConvocatoriaController {
   /** ConvocatoriaHitoservice */
   private final ConvocatoriaHitoService convocatoriaHitoService;
 
+  /** ConvocatoriaPartidaservice */
+  private final ConvocatoriaPartidaService convocatoriaPartidaService;
+
   /** ConvocatoriaPeriodoJustificacion service */
   private final ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
 
@@ -106,6 +111,7 @@ public class ConvocatoriaController {
    * @param convocatoriaEntidadGestoraService               {@link ConvocatoriaEntidadGestoraService}.
    * @param convocatoriaFaseService                         {@link ConvocatoriaFaseService}
    * @param convocatoriaHitoService                         {@link ConvocatoriaHitoService}
+   * @param convocatoriaPartidaService                      {@link ConvocatoriaPartidaService}
    * @param convocatoriaPeriodoJustificacionService         {@link ConvocatoriaPeriodoJustificacionService}.
    * @param convocatoriaPeriodoSeguimientoCientificoService {@link ConvocatoriaPeriodoSeguimientoCientificoService}
    * @param convocatoriaConceptoGastoService                {@link ConvocatoriaConceptoGastoService}
@@ -118,6 +124,7 @@ public class ConvocatoriaController {
       ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService,
       ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
       ConvocatoriaFaseService convocatoriaFaseService, ConvocatoriaHitoService convocatoriaHitoService,
+      ConvocatoriaPartidaService convocatoriaPartidaService,
       ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService,
       ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService,
       ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService,
@@ -131,6 +138,7 @@ public class ConvocatoriaController {
     this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
     this.convocatoriaFaseService = convocatoriaFaseService;
     this.convocatoriaHitoService = convocatoriaHitoService;
+    this.convocatoriaPartidaService = convocatoriaPartidaService;
     this.convocatoriaPeriodoJustificacionService = convocatoriaPeriodoJustificacionService;
     this.convocatoriaPeriodoSeguimientoCientificoService = convocatoriaPeriodoSeguimientoCientificoService;
     this.convocatoriaConceptoGastoService = convocatoriaConceptoGastoService;
@@ -425,6 +433,36 @@ public class ConvocatoriaController {
     }
     log.debug("Convocatoria hasConvocatoriaHitos(Long id) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA PARTIDA PRESUPUESTARIA
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaPartidaPresupuestaria} de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoria-partidas-presupuestarias")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V')")
+  ResponseEntity<Page<ConvocatoriaPartida>> findAllConvocatoriaPartida(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaPartida(Long id, String query, Pageable paging) - start");
+    Page<ConvocatoriaPartida> page = convocatoriaPartidaService.findAllByConvocatoria(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaPartida(Long id, String query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaPartida(Long id, String query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**

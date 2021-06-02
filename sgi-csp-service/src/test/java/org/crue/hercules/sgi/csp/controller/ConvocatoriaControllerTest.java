@@ -48,6 +48,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
@@ -95,6 +96,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaFaseService convocatoriaFaseService;
   @MockBean
   private ConvocatoriaHitoService convocatoriaHitoService;
+  @MockBean
+  private ConvocatoriaPartidaService convocatoriaPartidaService;
   @MockBean
   private ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService;
   @MockBean
