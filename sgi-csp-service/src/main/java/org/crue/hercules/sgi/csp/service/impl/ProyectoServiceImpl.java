@@ -1013,25 +1013,29 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   private void copySocios(Proyecto proyecto, Long solicitudProyectoId) {
     log.debug("copySocios(Proyecto proyecto) - start");
-    List<SolicitudProyectoSocio> entidadesSolicitud = solicitudSocioRepository
+    List<SolicitudProyectoSocio> solicitudProyectosSocios = solicitudSocioRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
-    entidadesSolicitud.stream().forEach((entidadSolicitud) -> {
-      log.debug("Copy SolicitudProyectoSocio with id: {0}", entidadSolicitud.getId());
+    solicitudProyectosSocios.stream().forEach((solicitudProyectoSocio) -> {
+      log.debug("Copy SolicitudProyectoSocio with id: {0}", solicitudProyectoSocio.getId());
       ProyectoSocio proyectoSocio = new ProyectoSocio();
       proyectoSocio.setProyectoId(proyecto.getId());
-      proyectoSocio.setFechaInicio(Instant.from(
-          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesInicio() - 1))));
-      proyectoSocio.setFechaFin(Instant.from(
-          proyecto.getFechaInicio().atZone(ZoneOffset.UTC).plus(Period.ofMonths(entidadSolicitud.getMesFin() - 1))));
-      proyectoSocio.setRolSocio(entidadSolicitud.getRolSocio());
-      proyectoSocio.setEmpresaRef(entidadSolicitud.getEmpresaRef());
-      proyectoSocio.setImporteConcedido(entidadSolicitud.getImporteSolicitado());
-      proyectoSocio.setNumInvestigadores(entidadSolicitud.getNumInvestigadores());
+      if (solicitudProyectoSocio.getMesInicio() != null) {
+        proyectoSocio.setFechaInicio(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(solicitudProyectoSocio.getMesInicio() - 1))));
+      }
+      if (solicitudProyectoSocio.getMesFin() != null) {
+        proyectoSocio.setFechaFin(Instant.from(proyecto.getFechaInicio().atZone(ZoneOffset.UTC)
+            .plus(Period.ofMonths(solicitudProyectoSocio.getMesFin() - 1))));
+      }
+      proyectoSocio.setRolSocio(solicitudProyectoSocio.getRolSocio());
+      proyectoSocio.setEmpresaRef(solicitudProyectoSocio.getEmpresaRef());
+      proyectoSocio.setImporteConcedido(solicitudProyectoSocio.getImporteSolicitado());
+      proyectoSocio.setNumInvestigadores(solicitudProyectoSocio.getNumInvestigadores());
       ProyectoSocio proyectoSocioCreado = this.proyectoSocioService.create(proyectoSocio);
 
       // ProyectoSocioEquipo
       List<SolicitudProyectoSocioEquipo> entidadesEquipoSolicitud = solicitudEquipoSocioRepository
-          .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId());
+          .findAllBySolicitudProyectoSocioId(solicitudProyectoSocio.getId());
 
       List<ProyectoSocioEquipo> proyectoSocioEquipos = new ArrayList<ProyectoSocioEquipo>();
       entidadesEquipoSolicitud.stream().forEach((entidadEquipoSolicitud) -> {
@@ -1050,7 +1054,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
       // ProyectoSocioPeriodoPago
       List<SolicitudProyectoSocioPeriodoPago> entidadesPeriodoPagoSolicitud = solicitudPeriodoPagoRepository
-          .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId());
+          .findAllBySolicitudProyectoSocioId(solicitudProyectoSocio.getId());
 
       List<ProyectoSocioPeriodoPago> proyectoSocioPeriodoPagos = new ArrayList<ProyectoSocioPeriodoPago>();
       entidadesPeriodoPagoSolicitud.stream().forEach((entidadPeriodoPagoSolicitud) -> {
@@ -1068,7 +1072,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
       // ProyectoSocioPeriodoJustificacion
       List<SolicitudProyectoSocioPeriodoJustificacion> entidadesPeriodoJustificacionSolicitud = solicitudPeriodoJustificacionRepository
-          .findAllBySolicitudProyectoSocioId(entidadSolicitud.getId());
+          .findAllBySolicitudProyectoSocioId(solicitudProyectoSocio.getId());
 
       entidadesPeriodoJustificacionSolicitud.stream().forEach((entidadPeriodoJustificacionSolicitud) -> {
         log.debug("Copy ProyectoSocioPeriodoJustificacion with id: {0}", entidadPeriodoJustificacionSolicitud.getId());
@@ -1118,9 +1122,14 @@ public class ProyectoServiceImpl implements ProyectoService {
    * 
    */
   private void validarDatosSolicitud(Solicitud solicitud) {
-    Assert.isTrue(solicitud.getEstado().getEstado() == EstadoSolicitud.Estado.CONCEDIDA,
-        "La solicitud debe estar en estado " + EstadoSolicitud.Estado.CONCEDIDA);
 
+    if (!solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA)
+        && !solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA_PROVISIONAL)
+        && !solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA_PROVISIONAL_ALEGADA)
+        && !solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.CONCEDIDA_PROVISIONAL_NO_ALEGADA)) {
+      throw new IllegalArgumentException(
+          "La solicitud no se encuentra en un estado correcto para la creación del proyecto.");
+    }
     Assert.isTrue(!repository.existsBySolicitudId(solicitud.getId()),
         "La solicitud con id: " + solicitud.getId() + " ya está asociada a un proyecto");
 
