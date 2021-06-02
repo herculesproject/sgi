@@ -8,7 +8,6 @@ import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
 
 const SOLICITUD_CAMBIO_ESTADO_COMENTARIO = marker('csp.solicitud.estado-solicitud.comentario');
 
@@ -74,11 +73,13 @@ export class CambioEstadoModalComponent extends
   }
 
   protected getFormGroup(): FormGroup {
+   
     const formGroup = new FormGroup({
       estadoActual: new FormControl({ value: this.data.estadoActual, disabled: true }),
       estadoNuevo: new FormControl(this.data.estadoNuevo),
       comentario: new FormControl('', [Validators.maxLength(2000)])
     });
+
     return formGroup;
   }
 

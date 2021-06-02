@@ -13,8 +13,8 @@
       <div>
         <mat-form-field>
           <mat-label>{{'csp.solicitud.cambio-estado.actual' | translate}}</mat-label>
-          <input matInput formControlName="estadoActual" type="text"
-            placeholder="{{'csp.solicitud.cambio-estado.actual' | translate}}" required>
+          <sgi-select-enum formControlName="estadoActual" [enumMap]="ESTADO_MAP">
+          </sgi-select-enum>
         </mat-form-field>
       </div>
     </div>
