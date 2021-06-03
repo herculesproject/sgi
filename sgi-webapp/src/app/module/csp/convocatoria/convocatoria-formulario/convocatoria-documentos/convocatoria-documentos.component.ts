@@ -161,7 +161,9 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
                 tiposDocumentos = [];
                 this.tipoDocumentosFase.set(idTipoFase, tiposDocumentos);
               }
-              tiposDocumentos.push(tipo.tipoDocumento);
+              if (!tiposDocumentos.some(tipoDocumento => tipoDocumento.id === tipo.tipoDocumento.id)) {
+                tiposDocumentos.push(tipo.tipoDocumento);
+              }
             });
             return value;
           })
