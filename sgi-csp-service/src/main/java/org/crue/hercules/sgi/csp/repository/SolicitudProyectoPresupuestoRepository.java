@@ -1,12 +1,12 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.repository.custom.CustomSolicitudProyectoPresupuestoRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-import java.util.List;
 
 public interface SolicitudProyectoPresupuestoRepository extends JpaRepository<SolicitudProyectoPresupuesto, Long>,
     JpaSpecificationExecutor<SolicitudProyectoPresupuesto>, CustomSolicitudProyectoPresupuestoRepository {
@@ -20,5 +20,18 @@ public interface SolicitudProyectoPresupuestoRepository extends JpaRepository<So
    * @return listado de {@link SolicitudProyectoPresupuesto}
    */
   List<SolicitudProyectoPresupuesto> findBySolicitudProyectoId(Long solicitudProyectoId);
+
+  /**
+   * Comprueba la existencia de {@link SolicitudProyectoPresupuesto} asociados a
+   * una solicitud para una entidadRef y financiacionAjena
+   * 
+   * @param solicitudId       Id de la Solicitud
+   * @param entidadRef        Referencia de la Entidad
+   * @param financiacionAjena Si es financiacionAjena
+   * @return <code>true</code> si existe alguna relación, <code>false</code> en
+   *         cualquier otro caso
+   */
+  boolean existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(Long solicitudId, String entidadRef,
+      Boolean financiacionAjena);
 
 }

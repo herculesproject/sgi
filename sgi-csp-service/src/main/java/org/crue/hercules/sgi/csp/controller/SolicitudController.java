@@ -13,8 +13,8 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
@@ -23,8 +23,8 @@ import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
-import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoAreaConocimientoService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
@@ -498,7 +498,7 @@ public class SolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuesto(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllSolicitudProyectoPresupuesto(Long id, String query, Pageable paging) - start");
@@ -521,7 +521,7 @@ public class SolicitudController {
    * @param paging pageable.
    */
   @GetMapping("/{id}/solicitudproyectopresupuestos/entidadconvocatoria/{entidadRef}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-PRO-V', 'CSP-PRO-E')")
   ResponseEntity<Page<SolicitudProyectoPresupuesto>> findAllSolicitudProyectoPresupuestoEntidadConvocatoria(
       @PathVariable Long id, @PathVariable String entidadRef, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -539,6 +539,27 @@ public class SolicitudController {
     log.debug(
         "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba la existencia de {@link SolicitudProyectoPresupuesto} asociados a
+   * una solicitud para una entidadRef y relacionada con la convocatorai
+   * 
+   * @param id         Id de la Solicitud
+   * @param entidadRef Referencia de la Entidad
+   * @return {@link HttpStatus.OK} si existe alguna relación,
+   *         {@link HttpStatus.NO_CONTENT} en cualquier otro caso
+   */
+  @RequestMapping(path = "/{id}/solicitudproyectopresupuestos/entidadconvocatoria/{entidadRef}", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-E')")
+  ResponseEntity<?> existSolicitudProyectoPresupuestoEntidadConvocatoria(@PathVariable Long id,
+      @PathVariable String entidadRef) {
+    log.debug("existSolicitudProyectoPresupuestoEntidadConvocatoria(Long id, String entidadRef) - start");
+    boolean returnValue = solicitudProyectoPresupuestoService
+        .existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(id, entidadRef, false);
+
+    log.debug("existSolicitudProyectoPresupuestoEntidadConvocatoria(Long id, String entidadRef) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -567,6 +588,27 @@ public class SolicitudController {
     log.debug(
         "findAllSolicitudProyectoPresupuestoEntidad(Long id, String entidadRef, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba la existencia de {@link SolicitudProyectoPresupuesto} asociados a
+   * una solicitud para una entidadRef y NO relacionada con la convocatorai
+   * 
+   * @param id         Id de la Solicitud
+   * @param entidadRef Referencia de la Entidad
+   * @return {@link HttpStatus.OK} si existe alguna relación,
+   *         {@link HttpStatus.NO_CONTENT} en cualquier otro caso
+   */
+  @RequestMapping(path = "/{id}/solicitudproyectopresupuestos/entidadajena/{entidadRef}", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E', 'CSP-SOL-V', 'CSP-PRO-V', 'CSP-PRO-E')")
+  ResponseEntity<?> existSolicitudProyectoPresupuestoEntidadAjena(@PathVariable Long id,
+      @PathVariable String entidadRef) {
+    log.debug("existSolicitudProyectoPresupuestoEntidadAjena(Long id, String entidadRef) - start");
+    boolean returnValue = solicitudProyectoPresupuestoService
+        .existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(id, entidadRef, true);
+
+    log.debug("existSolicitudProyectoPresupuestoEntidadAjena(Long id, String entidadRef) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**

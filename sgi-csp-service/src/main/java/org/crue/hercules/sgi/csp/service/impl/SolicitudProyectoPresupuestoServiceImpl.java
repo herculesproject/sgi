@@ -192,6 +192,18 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
     return returnValue;
   }
 
+  @Override
+  public boolean existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(Long solicitudId,
+      String entidadRef, boolean ajena) {
+    log.debug(
+        "existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(Long solicitudId, String entidadRef, boolean ajena) - start");
+    boolean returnValue = repository.existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(solicitudId,
+        entidadRef, ajena);
+    log.debug(
+        "existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(Long solicitudId, String entidadRef, boolean ajena) - end");
+    return returnValue;
+  }
+
   /**
    * Obtiene el {@link SolicitudProyectoPresupuestoTotales} de la
    * {@link Solicitud}.

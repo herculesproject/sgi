@@ -80,6 +80,19 @@ public interface SolicitudProyectoPresupuestoService {
       String query, Pageable paging);
 
   /**
+   * Comprueba la existencia de {@link SolicitudProyectoPresupuesto} asociados a
+   * una solicitud para una entidadRef y financiacionAjena
+   * 
+   * @param solicitudId Id de la Solicitud
+   * @param entidadRef  Referencia de la Entidad
+   * @param ajena       Si es financiacionAjena
+   * @return <code>true</code> si existe alguna relación, <code>false</code> en
+   *         cualquier otro caso
+   */
+  boolean existsBySolicitudProyectoSolicitudIdAndEntidadRefAndFinanciacionAjena(Long solicitudId, String entidadRef,
+      boolean ajena);
+
+  /**
    * Obtiene el {@link SolicitudProyectoPresupuestoTotales} de la
    * {@link Solicitud}.
    * 
