@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.framework.spring.context.support;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
@@ -88,5 +89,12 @@ public class ApplicationContextSupport implements ApplicationContextAware {
       throw new IllegalStateException("ApplicationContextSupport does not run in an ApplicationContext");
     }
     return messageSourceAccessor.getMessage(clazz.getName() + "." + property + ".message", args);
+  }
+
+  public static String getMessage(MessageSourceResolvable resolvable) throws IllegalStateException {
+    if (messageSourceAccessor == null) {
+      throw new IllegalStateException("ApplicationContextSupport does not run in an ApplicationContext");
+    }
+    return messageSourceAccessor.getMessage(resolvable);
   }
 }

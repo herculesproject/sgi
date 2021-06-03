@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.framework.problem.Problem.ProblemBuilder;
 import org.crue.hercules.sgi.framework.problem.exception.ProblemException;
 import org.crue.hercules.sgi.framework.problem.extension.FieldError;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -391,7 +392,8 @@ public class ProblemExceptionHandler extends ResponseEntityExceptionHandler {
 
   private ProblemBuilder from(BindingResult bindingResult) {
     ArrayList<FieldError> details = new ArrayList<>();
-    bindingResult.getFieldErrors().forEach(f -> details.add(new FieldError(f.getField(), f.getDefaultMessage())));
+    bindingResult.getFieldErrors()
+        .forEach(f -> details.add(new FieldError(f.getField(), ApplicationContextSupport.getMessage(f))));
     return Problem.builder().type(VALIDATION_PROBLEM_TYPE)
         .detail(ProblemMessage.builder().key(BindingResult.class).build()).extension("errors", details);
   }
